@@ -1,0 +1,15 @@
+<bin file="analyze_SVfit4tau.cc" name="analyze_SVfit4tau">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/FWLite"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="hhAnalysis/4tau"/>
+  <use   name="tthAnalysis/HiggsToTauTau"/>
+  <use   name="TauAnalysis/ClassicSVfit4tau"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+  <use   name="boost"/>
+</bin>
