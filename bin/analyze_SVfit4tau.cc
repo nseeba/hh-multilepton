@@ -60,6 +60,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h" // HistManagerBase
 #include "tthAnalysis/HiggsToTauTau/interface/TTreeWrapper.h" // TTreeWrapper
 
+#include "hhAnalysis/tttt/interface/EvtHistManager_4tau.h" // EvtHistManager_4tau
 #include "hhAnalysis/tttt/interface/SVfit4tauDiHiggsHistManager.h" // SVfit4tauDiHiggsHistManager
 #include "hhAnalysis/tttt/interface/SVfit4tauHiggsHistManager.h" // SVfit4tauHiggsHistManager
 
@@ -391,7 +392,8 @@ int main(int argc, char* argv[])
     SVfit4tauHiggsHistManager* higgs2_woMassContraint_correctAssoc_;
     SVfit4tauDiHiggsHistManager* dihiggs_woMassContraint_incorrectAssoc_;
     SVfit4tauHiggsHistManager* higgs1_woMassContraint_incorrectAssoc_;
-    SVfit4tauHiggsHistManager* higgs2_woMassContraint_incorrectAssoc_;    
+    SVfit4tauHiggsHistManager* higgs2_woMassContraint_incorrectAssoc_;  
+    EvtHistManager_4tau* evt_;
     WeightHistManager* weights_;
   };
   std::map<int, selHistManagerType*> selHistManagers;
@@ -484,6 +486,9 @@ int main(int argc, char* argv[])
     selHistManager->higgs2_woMassContraint_incorrectAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/higgs2_woMassContraint_incorrectAssoc", histogramDir.data(), category->data()), central_or_shift));
     selHistManager->higgs2_woMassContraint_incorrectAssoc_->bookHistograms(fs);    
+    selHistManager->evt_ = new EvtHistManager_4tau(makeHistManager_cfg(process_string,
+      Form("%s/%s/evt", histogramDir.data(), category->data()), central_or_shift));
+    selHistManager->evt_->bookHistograms(fs);
     selHistManager->weights_ = new WeightHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/weights", histogramDir.data(), category->data()), central_or_shift));
     selHistManager->weights_->bookHistograms(fs, { "genWeight", "pileupWeight" });
@@ -746,7 +751,7 @@ int main(int argc, char* argv[])
     selHistManager->subleadJet_->fillHistograms(selJets, evtWeight);
     selHistManager->BJets_loose_->fillHistograms(selBJets_loose, evtWeight);
     selHistManager->BJets_medium_->fillHistograms(selBJets_medium, evtWeight);
-    selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
+    selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);        
     selHistManager->weights_->fillHistograms("genWeight", eventInfo.genWeight);
     selHistManager->weights_->fillHistograms("pileupWeight", eventInfo.pileupWeight);
 
@@ -864,6 +869,7 @@ int main(int argc, char* argv[])
 	      const Particle::LorentzVector* genHiggs1P4 = nullptr;
 	      const Particle::LorentzVector* genHiggs2P4 = nullptr;
 	      if ( isCorrectAssoc ) {
+		selHistManager->evt_->fillHistograms((*measuredTau1)->p4(), (*measuredTau2)->p4(), (*measuredTau3)->p4(), (*measuredTau4)->p4(), evtWeight);
 		histograms_dihiggs_wMassContraint = selHistManager->dihiggs_wMassContraint_correctAssoc_;
 		histograms_higgs1_wMassContraint = selHistManager->higgs1_wMassContraint_correctAssoc_;
 		histograms_higgs2_wMassContraint = selHistManager->higgs2_wMassContraint_correctAssoc_;
