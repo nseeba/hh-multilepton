@@ -1,5 +1,5 @@
-#ifndef hhAnalysis_4tau_SVfit4tauDiHiggsHistManager_h
-#define hhAnalysis_4tau_SVfit4tauDiHiggsHistManager_h
+#ifndef hhAnalysis_tttt_SVfit4tauDiHiggsHistManager_h
+#define hhAnalysis_tttt_SVfit4tauDiHiggsHistManager_h
 
 /** \class SVfit4tauDiHiggsHistManager
  *

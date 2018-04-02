@@ -6,7 +6,7 @@
   <use   name="DataFormats/FWLite"/>
   <use   name="DataFormats/Math"/>
   <use   name="PhysicsTools/FWLite"/>
-  <use   name="hhAnalysis/4tau"/>
+  <use   name="hhAnalysis/tttt"/>
   <use   name="tthAnalysis/HiggsToTauTau"/>
   <use   name="TauAnalysis/ClassicSVfit4tau"/>
   <use   name="root"/>

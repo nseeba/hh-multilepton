@@ -1,4 +1,4 @@
-#include "hhAnalysis/4tau/interface/SVfit4tauHiggsHistManager.h"
+#include "hhAnalysis/tttt/interface/SVfit4tauHiggsHistManager.h"
 
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow()
 

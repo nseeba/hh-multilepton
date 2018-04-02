@@ -56,11 +56,12 @@
 #include "tthAnalysis/HiggsToTauTau/interface/GenEvtHistManager.h" // GenEvtHistManager
 #include "tthAnalysis/HiggsToTauTau/interface/leptonTypes.h" // getLeptonType, kElectron, kMuon
 #include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // isHigherPt, isMatched
+#include "tthAnalysis/HiggsToTauTau/interface/sysUncertOptions.h" // getHadTauPt_option, getMET_option
 #include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h" // HistManagerBase
 #include "tthAnalysis/HiggsToTauTau/interface/TTreeWrapper.h" // TTreeWrapper
 
-#include "hhAnalysis/4tau/interface/SVfit4tauDiHiggsHistManager.h" // SVfit4tauDiHiggsHistManager
-#include "hhAnalysis/4tau/interface/SVfit4tauHiggsHistManager.h" // SVfit4tauHiggsHistManager
+#include "hhAnalysis/tttt/interface/SVfit4tauDiHiggsHistManager.h" // SVfit4tauDiHiggsHistManager
+#include "hhAnalysis/tttt/interface/SVfit4tauHiggsHistManager.h" // SVfit4tauHiggsHistManager
 
 #include "TauAnalysis/ClassicSVfit4tau/interface/ClassicSVfit4tau.h" // ClassicSVfit4tau
 #include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h" // classic_svFit::MeasuredTauLepton
@@ -234,39 +235,8 @@ int main(int argc, char* argv[])
   bool isDEBUG = ( cfg_analyze.exists("isDEBUG") ) ? cfg_analyze.getParameter<bool>("isDEBUG") : false;
   if ( isDEBUG ) std::cout << "Warning: DEBUG mode enabled -> trigger selection will not be applied for data !!" << std::endl;
 
-  int met_option = RecoMEtReader::kMEt_central;
-  int hadTauPt_option = RecoHadTauReader::kHadTauPt_central;
-  if ( central_or_shift != "central" ) {
-    TString central_or_shift_tstring = central_or_shift.data();
-    std::string shiftUp_or_Down = "";
-    if      ( central_or_shift_tstring.EndsWith("Up")   ) shiftUp_or_Down = "Up";
-    else if ( central_or_shift_tstring.EndsWith("Down") ) shiftUp_or_Down = "Down";
-    else throw cms::Exception("analyze_SVfit4tau")
-      << "Invalid Configuration parameter 'central_or_shift' = " << central_or_shift << " !!\n";
-    if ( central_or_shift_tstring.BeginsWith("CMS_JES") ) {
-      if ( isMC ) {
-        if ( shiftUp_or_Down == "Up" ) met_option = RecoMEtReader::kMEt_shifted_JetEnUp;
-        else if ( shiftUp_or_Down == "Down" ) met_option = RecoMEtReader::kMEt_shifted_JetEnDown;
-        else assert(0);
-      } else throw cms::Exception("analyze_SVfit4tau")
-          << "Configuration parameter 'central_or_shift' = " << central_or_shift << " not supported for data !!\n";
-    } else if ( central_or_shift_tstring.BeginsWith("CMS_JER") ) {
-      if ( central_or_shift_tstring.EndsWith("Up") ) met_option = RecoMEtReader::kMEt_shifted_JetResUp;
-      else if ( central_or_shift_tstring.EndsWith("Down") ) met_option = RecoMEtReader::kMEt_shifted_JetResDown;
-      else assert(0);
-    } else if ( central_or_shift_tstring.BeginsWith("CMS_UnclusteredEn") ) {
-      if ( central_or_shift_tstring.EndsWith("Up") ) met_option = RecoMEtReader::kMEt_shifted_UnclusteredEnUp;
-      else if ( central_or_shift_tstring.EndsWith("Down") ) met_option = RecoMEtReader::kMEt_shifted_UnclusteredEnDown;
-      else assert(0);
-    } else if ( central_or_shift_tstring.BeginsWith("CMS_tauES") ) {
-      if ( isMC ) {
-        if      ( shiftUp_or_Down == "Up"   ) hadTauPt_option = RecoHadTauReader::kHadTauPt_shiftUp;
-        else if ( shiftUp_or_Down == "Down" ) hadTauPt_option = RecoHadTauReader::kHadTauPt_shiftDown;
-        else assert(0);
-      } else throw cms::Exception("analyze_SVfit4tau")
-          << "Configuration parameter 'central_or_shift' = " << central_or_shift << " not supported for data !!\n";
-    }
-  }
+  const int hadTauPt_option = getHadTauPt_option(central_or_shift, isMC);
+  const int met_option = getMET_option(central_or_shift, isMC);
 
   bool fillGenEvtHistograms = cfg_analyze.getParameter<bool>("fillGenEvtHistograms");
 
