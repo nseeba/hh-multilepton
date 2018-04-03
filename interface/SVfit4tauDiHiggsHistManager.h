@@ -40,6 +40,8 @@ class SVfit4tauDiHiggsHistManager
   TH1* histogram_deltaphi_;
   TH1* histogram_deltamass_;
 
+  TH1* histogram_ratiomass_;
+
   std::vector<TH1*> histograms_;
 };
 

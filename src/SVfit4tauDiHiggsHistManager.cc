@@ -19,6 +19,8 @@ void SVfit4tauDiHiggsHistManager::bookHistograms(TFileDirectory& dir)
   histogram_deltaeta_  = book1D(dir, "deltaeta",  "deltaeta",   80,   -0.2,   +0.2);
   histogram_deltaphi_  = book1D(dir, "deltaphi",  "deltaphi",  200,   -0.5,   +0.5);
   histogram_deltamass_ = book1D(dir, "deltamass", "deltamass", 400, -200.,  +200.);
+
+  histogram_ratiomass_ = book1D(dir, "ratiomass", "ratiomass", 100,    0.,    10.);
 }
 
 void
@@ -37,5 +39,9 @@ SVfit4tauDiHiggsHistManager::fillHistograms(const classic_svFit::LorentzVector& 
     fillWithOverFlow(histogram_deltaeta_,  recDiHiggsP4.eta()  - genDiHiggsP4->eta(),  evtWeight, evtWeightErr);
     fillWithOverFlow(histogram_deltaphi_,  recDiHiggsP4.phi()  - genDiHiggsP4->phi(),  evtWeight, evtWeightErr);
     fillWithOverFlow(histogram_deltamass_, recDiHiggsP4.mass() - genDiHiggsP4->mass(), evtWeight, evtWeightErr);
+
+    if ( genDiHiggsP4->mass() > 5.e+1 ) {
+      fillWithOverFlow(histogram_ratiomass_, recDiHiggsP4.mass()/genDiHiggsP4->mass(), evtWeight, evtWeightErr);
+    }
   }
 }

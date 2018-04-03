@@ -118,6 +118,21 @@ const GenParticle* findGenTau(const GenParticle& measuredTau, const std::vector<
   return bestMatch;
 }
 
+Particle::LorentzVector getGenMeasuredTauP4(const GenParticle& measuredTau)
+{
+  Particle::LorentzVector measuredTauP4_gen;
+  if ( dynamic_cast<const RecoLepton*>(&measuredTau) ) {
+    const RecoLepton* measuredLepton = dynamic_cast<const RecoLepton*>(&measuredTau);
+    if      ( measuredLepton->genLepton() ) measuredTauP4_gen = measuredLepton->genLepton()->p4();
+    else if ( measuredLepton->genHadTau() ) measuredTauP4_gen = measuredLepton->genHadTau()->p4();
+  } else if ( dynamic_cast<const RecoLepton*>(&measuredTau) ) {
+    const RecoHadTau* measuredHadTau = dynamic_cast<const RecoHadTau*>(&measuredTau);
+    if      ( measuredHadTau->genLepton() ) measuredTauP4_gen = measuredHadTau->genLepton()->p4();
+    else if ( measuredHadTau->genHadTau() ) measuredTauP4_gen = measuredHadTau->genHadTau()->p4();
+  } else assert(0);
+  return measuredTauP4_gen;
+}
+
 double square(double x)
 {
   return x*x;
@@ -800,6 +815,24 @@ int main(int argc, char* argv[])
 	      // require that no generator-level tau decay product is unmatched
 	      if ( !(genTau1 && genTau2 && genTau3 && genTau4) ) continue;
 	      
+	      Particle::LorentzVector measuredTau1P4_gen = getGenMeasuredTauP4(**measuredTau1);
+	      Particle::LorentzVector measuredTau2P4_gen = getGenMeasuredTauP4(**measuredTau2);
+	      Particle::LorentzVector measuredTau3P4_gen = getGenMeasuredTauP4(**measuredTau3);
+	      Particle::LorentzVector measuredTau4P4_gen = getGenMeasuredTauP4(**measuredTau4);
+
+	      bool isGenMatched = (measuredTau1P4_gen.pt() > 1. && measuredTau2P4_gen.pt() > 1. && measuredTau3P4_gen.pt() > 1. && measuredTau4P4_gen.pt() > 1.);
+	      
+	      double metPx_gen = 
+		 (genTau1->p4().px() - measuredTau1P4_gen.px()) 
+               + (genTau2->p4().px() - measuredTau2P4_gen.px()) 
+               + (genTau3->p4().px() - measuredTau3P4_gen.px()) 
+               + (genTau4->p4().px() - measuredTau4P4_gen.px());
+	      double metPy_gen = 
+                 (genTau1->p4().py() - measuredTau1P4_gen.py()) 
+               + (genTau2->p4().py() - measuredTau2P4_gen.py()) 
+               + (genTau3->p4().py() - measuredTau3P4_gen.py()) 
+               + (genTau4->p4().py() - measuredTau4P4_gen.py());
+
 	      //-------------------------------------------------------------------------------------
 	      // CV: run ClassicSVfit4tau algorithm
 	      double metPx = met.pt()*TMath::Cos(met.phi());
@@ -869,7 +902,13 @@ int main(int argc, char* argv[])
 	      const Particle::LorentzVector* genHiggs1P4 = nullptr;
 	      const Particle::LorentzVector* genHiggs2P4 = nullptr;
 	      if ( isCorrectAssoc ) {
-		selHistManager->evt_->fillHistograms((*measuredTau1)->p4(), (*measuredTau2)->p4(), (*measuredTau3)->p4(), (*measuredTau4)->p4(), evtWeight);
+		selHistManager->evt_->fillHistograms(
+                  (*measuredTau1)->p4(), measuredTau1P4_gen, 
+		  (*measuredTau2)->p4(), measuredTau2P4_gen,  
+		  (*measuredTau3)->p4(), measuredTau3P4_gen,  
+		  (*measuredTau4)->p4(), measuredTau4P4_gen,  
+		  metPx, metPy, metCov, metPx_gen, metPy_gen, isGenMatched,
+		  evtWeight);
 		histograms_dihiggs_wMassContraint = selHistManager->dihiggs_wMassContraint_correctAssoc_;
 		histograms_higgs1_wMassContraint = selHistManager->higgs1_wMassContraint_correctAssoc_;
 		histograms_higgs2_wMassContraint = selHistManager->higgs2_wMassContraint_correctAssoc_;
