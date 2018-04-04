@@ -30,7 +30,7 @@ class EvtHistManager_4tau
 		 const Particle::LorentzVector& measuredTau2P4, const Particle::LorentzVector& measuredTau2P4_gen, 
 		 const Particle::LorentzVector& measuredTau3P4, const Particle::LorentzVector& measuredTau3P4_gen, 
 		 const Particle::LorentzVector& measuredTau4P4, const Particle::LorentzVector& measuredTau4P4_gen,
-		 double metPx, double metPy, const TMatrixD& metCov, double metPx_gen, double metPy_gen, bool isGenMatched,
+		 double metPx, double metPy, const TMatrixD& metCov, double metPx_gen, double metPy_gen, 
 		 double evtWeight);
 
   const TH1 *

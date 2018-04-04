@@ -20,6 +20,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/GenLepton.h" // GenLepton
 #include "tthAnalysis/HiggsToTauTau/interface/GenJet.h" // GenJet
 #include "tthAnalysis/HiggsToTauTau/interface/GenHadTau.h" // GenHadTau
+#include "tthAnalysis/HiggsToTauTau/interface/Particle.h" // Particle::LorentzVector
 #include "tthAnalysis/HiggsToTauTau/interface/RecoMEt.h" // RecoMEt
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h" // EventInfo
 #include "tthAnalysis/HiggsToTauTau/interface/RecoElectronReader.h" // RecoElectronReader
@@ -63,6 +64,8 @@
 #include "hhAnalysis/tttt/interface/EvtHistManager_4tau.h" // EvtHistManager_4tau
 #include "hhAnalysis/tttt/interface/SVfit4tauDiHiggsHistManager.h" // SVfit4tauDiHiggsHistManager
 #include "hhAnalysis/tttt/interface/SVfit4tauHiggsHistManager.h" // SVfit4tauHiggsHistManager
+#include "hhAnalysis/tttt/interface/GenHadTauSmearer.h" // GenHadTauSmearer
+#include "hhAnalysis/tttt/interface/GenMEtSmearer.h" // GenMEtSmearer
 
 #include "TauAnalysis/ClassicSVfit4tau/interface/ClassicSVfit4tau.h" // ClassicSVfit4tau
 #include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h" // classic_svFit::MeasuredTauLepton
@@ -80,6 +83,8 @@
 #include <assert.h> // assert
 
 typedef std::vector<std::string> vstring;
+
+enum { kMode_undefined, kMode_rec, kMode_gen, kMode_genSmeared };
 
 enum { k4lepton, k3lepton_1tau, k2lepton_2tau, k1lepton_3tau, k4tau };
 
@@ -118,19 +123,19 @@ const GenParticle* findGenTau(const GenParticle& measuredTau, const std::vector<
   return bestMatch;
 }
 
-Particle::LorentzVector getGenMeasuredTauP4(const GenParticle& measuredTau)
+const GenParticle* getGenMeasuredTau(const GenParticle& measuredTau)
 {
-  Particle::LorentzVector measuredTauP4_gen;
+  const GenParticle* measuredTau_gen = nullptr;
   if ( dynamic_cast<const RecoLepton*>(&measuredTau) ) {
     const RecoLepton* measuredLepton = dynamic_cast<const RecoLepton*>(&measuredTau);
-    if      ( measuredLepton->genLepton() ) measuredTauP4_gen = measuredLepton->genLepton()->p4();
-    else if ( measuredLepton->genHadTau() ) measuredTauP4_gen = measuredLepton->genHadTau()->p4();
+    if      ( measuredLepton->genLepton() ) measuredTau_gen = measuredLepton->genLepton();
+    else if ( measuredLepton->genHadTau() ) measuredTau_gen = measuredLepton->genHadTau();
   } else if ( dynamic_cast<const RecoLepton*>(&measuredTau) ) {
     const RecoHadTau* measuredHadTau = dynamic_cast<const RecoHadTau*>(&measuredTau);
-    if      ( measuredHadTau->genLepton() ) measuredTauP4_gen = measuredHadTau->genLepton()->p4();
-    else if ( measuredHadTau->genHadTau() ) measuredTauP4_gen = measuredHadTau->genHadTau()->p4();
+    if      ( measuredHadTau->genLepton() ) measuredTau_gen = measuredHadTau->genLepton();
+    else if ( measuredHadTau->genHadTau() ) measuredTau_gen = measuredHadTau->genHadTau();
   } else assert(0);
-  return measuredTauP4_gen;
+  return measuredTau_gen;
 }
 
 double square(double x)
@@ -153,20 +158,45 @@ const GenParticle* findGenHiggs(const Particle::LorentzVector& p4, const std::ve
   return bestMatch;
 }
 
-classic_svFit::MeasuredTauLepton makeMeasuredTauLepton(const GenParticle& measuredTau)
+classic_svFit::MeasuredTauLepton makeMeasuredTauLepton(const Particle::LorentzVector& measuredTauP4, int measuredTauType, int measuredHadTauDecayMode = -1)
+{
+  if ( measuredTauType == classic_svFit::MeasuredTauLepton::kTauToElecDecay || 
+       measuredTauType == classic_svFit::MeasuredTauLepton::kTauToMuDecay   ) {
+    return classic_svFit::MeasuredTauLepton(measuredTauType, measuredTauP4.pt(), measuredTauP4.eta(), measuredTauP4.phi(), measuredTauP4.mass());
+  } else {
+    return classic_svFit::MeasuredTauLepton(measuredTauType, measuredTauP4.pt(), measuredTauP4.eta(), measuredTauP4.phi(), measuredTauP4.mass(), measuredHadTauDecayMode);
+  }
+}
+
+int getMeasuredTauLeptonType(const GenParticle& measuredTau)
 {
   int measuredTauType = classic_svFit::MeasuredTauLepton::kUndefinedDecayType;
   if      ( TMath::Abs(measuredTau.pdgId()) == 11 ) measuredTauType = classic_svFit::MeasuredTauLepton::kTauToElecDecay;
   else if ( TMath::Abs(measuredTau.pdgId()) == 13 ) measuredTauType = classic_svFit::MeasuredTauLepton::kTauToMuDecay;
   else                                              measuredTauType = classic_svFit::MeasuredTauLepton::kTauToHadDecay;
-  if ( measuredTauType == classic_svFit::MeasuredTauLepton::kTauToElecDecay || 
-       measuredTauType == classic_svFit::MeasuredTauLepton::kTauToMuDecay   ) {
-    return classic_svFit::MeasuredTauLepton(measuredTauType, measuredTau.pt(), measuredTau.eta(), measuredTau.phi(), measuredTau.mass());
-  } else {
+  return measuredTauType;
+}
+
+bool isGenHadTau(const GenParticle& measuredTau)
+{
+  if ( getMeasuredTauLeptonType(measuredTau) == classic_svFit::MeasuredTauLepton::kTauToHadDecay ) return true;
+  else return false;
+}
+
+bool getHadTauDecayMode(const GenParticle& measuredTau)
+{
+  int decayMode = -1;
+  if ( isGenHadTau(measuredTau) ) {
     const RecoHadTau* recHadTau = dynamic_cast<const RecoHadTau*>(&measuredTau);
-    assert(recHadTau);
-    return classic_svFit::MeasuredTauLepton(measuredTauType, measuredTau.pt(), measuredTau.eta(), measuredTau.phi(), measuredTau.mass(), recHadTau->decayMode());
+    if ( recHadTau ) {
+      decayMode = recHadTau->decayMode();
+    } else {
+      double mass = measuredTau.mass();
+      if ( mass < 0.2 ) decayMode = 0; // 1prong0pi0
+      else decayMode = 11;             // 3prong1pi0
+    }
   }
+  return decayMode;
 }
 
 const int hadTauSelection_antiElectron = 1; // vLoose
@@ -215,6 +245,14 @@ int main(int argc, char* argv[])
   else throw cms::Exception("analyze_SVfit4tau")
     << "Invalid Configuration parameter 'era' = " << era_string << " !!\n";
 
+  std::string mode_string = cfg_analyze.getParameter<std::string>("mode");
+  int mode = kMode_undefined;
+  if      ( mode_string == "rec"         ) mode = kMode_rec;
+  else if ( mode_string == "gen"         ) mode = kMode_gen;
+  else if ( mode_string == "gen_smeared" ) mode = kMode_genSmeared;
+  else throw cms::Exception("analyze_SVfit4tau")
+    << "Invalid Configuration parameter 'mode' = " << mode_string << " !!\n";
+
   std::string leptonSelection_string = cfg_analyze.getParameter<std::string>("leptonSelection").data();
   std::cout << "leptonSelection_string = " << leptonSelection_string << std::endl;
   int leptonSelection = -1;
@@ -237,8 +275,9 @@ int main(int argc, char* argv[])
   std::string hadTauSelection_part2 = ( hadTauSelection_parts->GetEntries() == 2 ) ? (dynamic_cast<TObjString*>(hadTauSelection_parts->At(1)))->GetString().Data() : "";
   delete hadTauSelection_parts;
  
-  double logM_wMassConstraint = cfg_analyze.getParameter<double>("SVfit4tau_logM_wMassConstraint");
-  double logM_woMassConstraint = cfg_analyze.getParameter<double>("SVfit4tau_logM_woMassConstraint");
+  edm::ParameterSet cfgSVfit4tau = cfg_analyze.getParameter<edm::ParameterSet>("cfgSVfit4tau");
+  double logM_wMassConstraint = cfgSVfit4tau.getParameter<double>("logM_wMassConstraint");
+  double logM_woMassConstraint = cfgSVfit4tau.getParameter<double>("logM_woMassConstraint");
 
   bool use_HIP_mitigation_mediumMuonId = cfg_analyze.getParameter<bool>("use_HIP_mitigation_mediumMuonId");
   std::cout << "use_HIP_mitigation_mediumMuonId = " << use_HIP_mitigation_mediumMuonId << std::endl;
@@ -266,11 +305,17 @@ int main(int argc, char* argv[])
   std::string branchName_genLeptons2 = cfg_analyze.getParameter<std::string>("branchName_genLeptons2");
   std::string branchName_genHadTaus = cfg_analyze.getParameter<std::string>("branchName_genHadTaus");
   std::string branchName_genJets = cfg_analyze.getParameter<std::string>("branchName_genJets");
+  bool redoGenMatching = cfg_analyze.getParameter<bool>("redoGenMatching");
 
   std::string branchName_genTaus = cfg_analyze.getParameter<std::string>("branchName_genTaus");
   std::string branchName_genHiggsBosons = cfg_analyze.getParameter<std::string>("branchName_genHiggsBosons");
 
-  bool redoGenMatching = cfg_analyze.getParameter<bool>("redoGenMatching");
+  edm::ParameterSet cfgGenHadTauSmearing = cfg_analyze.getParameter<edm::ParameterSet>("genHadTauSmearing");
+  GenHadTauSmearer genHadTauSmearer(cfgGenHadTauSmearing);
+  edm::ParameterSet cfgGenMEtSmearing = cfg_analyze.getParameter<edm::ParameterSet>("genMEtSmearing");
+  GenMEtSmearer genMEtSmearer(cfgGenMEtSmearing);
+  double sigmaX = cfgGenMEtSmearing.getParameter<double>("sigmaX");
+  double sigmaY = cfgGenMEtSmearing.getParameter<double>("sigmaY");
 
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
   std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
@@ -416,96 +461,97 @@ int main(int argc, char* argv[])
   vstring categories = { "4lepton", "3lepton_1tau", "2lepton_2tau", "1lepton_3tau", "4tau" };
   for ( vstring::const_iterator category = categories.begin();
 	category != categories.end(); ++category ) {
+
     TString histogramDir_category = histogramDir.data();
     histogramDir_category.ReplaceAll("SVfit4tau", Form("SVfit4tau_%s", category->data()));
 
     selHistManagerType* selHistManager = new selHistManagerType();
     selHistManager->electrons_ = new ElectronHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/electrons", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/electrons", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->electrons_->bookHistograms(fs);
     selHistManager->leadElectron_ = new ElectronHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/leadElectron", histogramDir.data(), category->data()), central_or_shift, 0));
+      Form("%s/%s/leadElectron", histogramDir_category.Data(), mode_string.data()), central_or_shift, 0));
     selHistManager->leadElectron_->bookHistograms(fs);
     selHistManager->subleadElectron_ = new ElectronHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/subleadElectron", histogramDir.data(), category->data()), central_or_shift, 1));
+      Form("%s/%s/subleadElectron", histogramDir_category.Data(), mode_string.data()), central_or_shift, 1));
     selHistManager->subleadElectron_->bookHistograms(fs);
     selHistManager->muons_ = new MuonHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/muons", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/muons", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->muons_->bookHistograms(fs);
     selHistManager->leadMuon_ = new MuonHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/leadMuon", histogramDir.data(), category->data()), central_or_shift, 0));
+      Form("%s/%s/leadMuon", histogramDir_category.Data(), mode_string.data()), central_or_shift, 0));
     selHistManager->leadMuon_->bookHistograms(fs);
     selHistManager->subleadMuon_ = new MuonHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/subleadMuon", histogramDir.data(), category->data()), central_or_shift, 1));
+      Form("%s/%s/subleadMuon", histogramDir_category.Data(), mode_string.data()), central_or_shift, 1));
     selHistManager->subleadMuon_->bookHistograms(fs);
     selHistManager->hadTaus_ = new HadTauHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/hadTaus", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/hadTaus", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->hadTaus_->bookHistograms(fs);
     selHistManager->leadHadTau_ = new HadTauHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/leadHadTau", histogramDir.data(), category->data()), central_or_shift, 0));
+      Form("%s/%s/leadHadTau", histogramDir_category.Data(), mode_string.data()), central_or_shift, 0));
     selHistManager->leadHadTau_->bookHistograms(fs);
     selHistManager->subleadHadTau_ = new HadTauHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/subleadHadTau", histogramDir.data(), category->data()), central_or_shift, 1));
+      Form("%s/%s/subleadHadTau", histogramDir_category.Data(), mode_string.data()), central_or_shift, 1));
     selHistManager->subleadHadTau_->bookHistograms(fs);
     selHistManager->jets_ = new JetHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/jets", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/jets", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->jets_->bookHistograms(fs);
     selHistManager->leadJet_ = new JetHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/leadJet", histogramDir.data(), category->data()), central_or_shift, 0));
+      Form("%s/%s/leadJet", histogramDir_category.Data(), mode_string.data()), central_or_shift, 0));
     selHistManager->leadJet_->bookHistograms(fs);
     selHistManager->subleadJet_ = new JetHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/subleadJet", histogramDir.data(), category->data()), central_or_shift, 1));
+      Form("%s/%s/subleadJet", histogramDir_category.Data(), mode_string.data()), central_or_shift, 1));
     selHistManager->subleadJet_->bookHistograms(fs);
     selHistManager->BJets_loose_ = new JetHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/BJets_loose", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/BJets_loose", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->BJets_loose_->bookHistograms(fs);
     selHistManager->BJets_medium_ = new JetHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/BJets_medium", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/BJets_medium", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->BJets_medium_->bookHistograms(fs);
     selHistManager->met_ = new MEtHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/met", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/met", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->met_->bookHistograms(fs);
     selHistManager->dihiggs_wMassContraint_correctAssoc_ = new SVfit4tauDiHiggsHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/dihiggs_wMassContraint_correctAssoc", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/dihiggs_wMassContraint_correctAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->dihiggs_wMassContraint_correctAssoc_->bookHistograms(fs);
     selHistManager->higgs1_wMassContraint_correctAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/higgs1_wMassContraint_correctAssoc", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/higgs1_wMassContraint_correctAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs1_wMassContraint_correctAssoc_->bookHistograms(fs);
     selHistManager->higgs2_wMassContraint_correctAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/higgs2_wMassContraint_correctAssoc", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/higgs2_wMassContraint_correctAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs2_wMassContraint_correctAssoc_->bookHistograms(fs);
     selHistManager->dihiggs_wMassContraint_incorrectAssoc_ = new SVfit4tauDiHiggsHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/dihiggs_wMassContraint_incorrectAssoc", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/dihiggs_wMassContraint_incorrectAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->dihiggs_wMassContraint_incorrectAssoc_->bookHistograms(fs);
     selHistManager->higgs1_wMassContraint_incorrectAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/higgs1_wMassContraint_incorrectAssoc", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/higgs1_wMassContraint_incorrectAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs1_wMassContraint_incorrectAssoc_->bookHistograms(fs);
     selHistManager->higgs2_wMassContraint_incorrectAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/higgs2_wMassContraint_incorrectAssoc", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/higgs2_wMassContraint_incorrectAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs2_wMassContraint_incorrectAssoc_->bookHistograms(fs);
     selHistManager->dihiggs_woMassContraint_correctAssoc_ = new SVfit4tauDiHiggsHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/dihiggs_woMassContraint_correctAssoc", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/dihiggs_woMassContraint_correctAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->dihiggs_woMassContraint_correctAssoc_->bookHistograms(fs);
     selHistManager->higgs1_woMassContraint_correctAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/higgs1_woMassContraint_correctAssoc", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/higgs1_woMassContraint_correctAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs1_woMassContraint_correctAssoc_->bookHistograms(fs);
     selHistManager->higgs2_woMassContraint_correctAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/higgs2_woMassContraint_correctAssoc", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/higgs2_woMassContraint_correctAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs2_woMassContraint_correctAssoc_->bookHistograms(fs);
     selHistManager->dihiggs_woMassContraint_incorrectAssoc_ = new SVfit4tauDiHiggsHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/dihiggs_woMassContraint_incorrectAssoc", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/dihiggs_woMassContraint_incorrectAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->dihiggs_woMassContraint_incorrectAssoc_->bookHistograms(fs);
     selHistManager->higgs1_woMassContraint_incorrectAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/higgs1_woMassContraint_incorrectAssoc", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/higgs1_woMassContraint_incorrectAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs1_woMassContraint_incorrectAssoc_->bookHistograms(fs);
     selHistManager->higgs2_woMassContraint_incorrectAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/higgs2_woMassContraint_incorrectAssoc", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/higgs2_woMassContraint_incorrectAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs2_woMassContraint_incorrectAssoc_->bookHistograms(fs);    
     selHistManager->evt_ = new EvtHistManager_4tau(makeHistManager_cfg(process_string,
-      Form("%s/%s/evt", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/evt", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->evt_->bookHistograms(fs);
     selHistManager->weights_ = new WeightHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/weights", histogramDir.data(), category->data()), central_or_shift));
+      Form("%s/%s/weights", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->weights_->bookHistograms(fs, { "genWeight", "pileupWeight" });
     int idxCategory = get_idxCategory(*category);
     selHistManagers[idxCategory] = selHistManager;
@@ -815,12 +861,18 @@ int main(int argc, char* argv[])
 	      // require that no generator-level tau decay product is unmatched
 	      if ( !(genTau1 && genTau2 && genTau3 && genTau4) ) continue;
 	      
-	      Particle::LorentzVector measuredTau1P4_gen = getGenMeasuredTauP4(**measuredTau1);
-	      Particle::LorentzVector measuredTau2P4_gen = getGenMeasuredTauP4(**measuredTau2);
-	      Particle::LorentzVector measuredTau3P4_gen = getGenMeasuredTauP4(**measuredTau3);
-	      Particle::LorentzVector measuredTau4P4_gen = getGenMeasuredTauP4(**measuredTau4);
+	      const GenParticle* measuredTau1_gen = getGenMeasuredTau(**measuredTau1);
+	      const GenParticle* measuredTau2_gen = getGenMeasuredTau(**measuredTau2);
+	      const GenParticle* measuredTau3_gen = getGenMeasuredTau(**measuredTau3);
+	      const GenParticle* measuredTau4_gen = getGenMeasuredTau(**measuredTau4);
 
-	      bool isGenMatched = (measuredTau1P4_gen.pt() > 1. && measuredTau2P4_gen.pt() > 1. && measuredTau3P4_gen.pt() > 1. && measuredTau4P4_gen.pt() > 1.);
+	      bool isGenMatched = (measuredTau1_gen && measuredTau2_gen && measuredTau3_gen && measuredTau4_gen);
+	      if ( !isGenMatched ) continue;
+
+	      Particle::LorentzVector measuredTau1P4_gen = measuredTau1_gen->p4();
+	      Particle::LorentzVector measuredTau2P4_gen = measuredTau2_gen->p4();
+	      Particle::LorentzVector measuredTau3P4_gen = measuredTau3_gen->p4();
+	      Particle::LorentzVector measuredTau4P4_gen = measuredTau4_gen->p4();
 	      
 	      double metPx_gen = 
 		 (genTau1->p4().px() - measuredTau1P4_gen.px()) 
@@ -833,22 +885,78 @@ int main(int argc, char* argv[])
                + (genTau3->p4().py() - measuredTau3P4_gen.py()) 
                + (genTau4->p4().py() - measuredTau4P4_gen.py());
 
+	      Particle::LorentzVector measuredTau1P4_rec;
+	      int measuredTau1Type_rec = classic_svFit::MeasuredTauLepton::kUndefinedDecayType;
+	      int measuredHadTau1DecayMode = -1;
+	      Particle::LorentzVector measuredTau2P4_rec;
+	      int measuredTau2Type_rec = classic_svFit::MeasuredTauLepton::kUndefinedDecayType;
+	      int measuredHadTau2DecayMode = -1;
+	      Particle::LorentzVector measuredTau3P4_rec;
+	      int measuredTau3Type_rec = classic_svFit::MeasuredTauLepton::kUndefinedDecayType;
+	      int measuredHadTau3DecayMode = -1;
+	      Particle::LorentzVector measuredTau4P4_rec;
+	      int measuredTau4Type_rec = classic_svFit::MeasuredTauLepton::kUndefinedDecayType;
+	      int measuredHadTau4DecayMode = -1;
+	      double metPx_rec, metPy_rec;
+	      TMatrixD metCov(2,2);
+	      if ( mode == kMode_rec ) {
+		measuredTau1P4_rec = (*measuredTau1)->p4();
+		measuredTau1Type_rec = getMeasuredTauLeptonType(**measuredTau1);
+		if ( isGenHadTau(**measuredTau1) ) measuredHadTau1DecayMode = getHadTauDecayMode(**measuredTau1);
+		measuredTau2P4_rec = (*measuredTau2)->p4();
+		measuredTau2Type_rec = getMeasuredTauLeptonType(**measuredTau2);
+		if ( isGenHadTau(**measuredTau2) ) measuredHadTau1DecayMode = getHadTauDecayMode(**measuredTau2);
+		measuredTau3P4_rec = (*measuredTau3)->p4();
+		measuredTau3Type_rec = getMeasuredTauLeptonType(**measuredTau3);
+		if ( isGenHadTau(**measuredTau3) ) measuredHadTau1DecayMode = getHadTauDecayMode(**measuredTau3);
+		measuredTau4P4_rec = (*measuredTau4)->p4();
+		measuredTau4Type_rec = getMeasuredTauLeptonType(**measuredTau4);
+		if ( isGenHadTau(**measuredTau4) ) measuredHadTau1DecayMode = getHadTauDecayMode(**measuredTau4);
+		metPx_rec = met.pt()*TMath::Cos(met.phi());
+		metPy_rec = met.pt()*TMath::Sin(met.phi());
+		metCov[0][0] = met.covXX();
+		metCov[1][0] = met.covXY();
+		metCov[0][1] = met.covXY();
+		metCov[1][1] = met.covYY();
+	      } else if ( mode == kMode_gen || mode == kMode_genSmeared ) {
+		assert(isGenMatched);
+		if ( mode == kMode_gen ) {
+		  measuredTau1P4_rec = measuredTau1P4_gen;
+		  measuredTau2P4_rec = measuredTau2P4_gen;
+		  measuredTau3P4_rec = measuredTau3P4_gen;
+		  measuredTau4P4_rec = measuredTau4P4_gen;
+		  metPx_rec = metPx_gen;
+		  metPy_rec = metPy_gen;
+		} else if ( mode == kMode_genSmeared ) {
+		  measuredTau1P4_rec = ( isGenHadTau(*measuredTau1_gen) ) ? genHadTauSmearer(measuredTau1P4_gen) : measuredTau1P4_gen;
+		  measuredTau2P4_rec = ( isGenHadTau(*measuredTau2_gen) ) ? genHadTauSmearer(measuredTau2P4_gen) : measuredTau2P4_gen;
+		  measuredTau3P4_rec = ( isGenHadTau(*measuredTau3_gen) ) ? genHadTauSmearer(measuredTau3P4_gen) : measuredTau3P4_gen;
+		  measuredTau4P4_rec = ( isGenHadTau(*measuredTau4_gen) ) ? genHadTauSmearer(measuredTau4P4_gen) : measuredTau4P4_gen;
+		  std::pair<double, double> metPxPy_rec = genMEtSmearer(metPx_gen, metPy_gen);
+		  metPx_rec = metPxPy_rec.first;
+		  metPy_rec = metPxPy_rec.second;
+		} else assert(0);
+		measuredTau1Type_rec = getMeasuredTauLeptonType(*measuredTau1_gen);
+		if ( isGenHadTau(*measuredTau1_gen) ) measuredHadTau1DecayMode = getHadTauDecayMode(*measuredTau1_gen);
+		measuredTau2Type_rec = getMeasuredTauLeptonType(*measuredTau2_gen);
+		if ( isGenHadTau(*measuredTau2_gen) ) measuredHadTau2DecayMode = getHadTauDecayMode(*measuredTau2_gen);
+		measuredTau3Type_rec = getMeasuredTauLeptonType(*measuredTau3_gen);
+		if ( isGenHadTau(*measuredTau3_gen) ) measuredHadTau3DecayMode = getHadTauDecayMode(*measuredTau3_gen);
+		measuredTau4Type_rec = getMeasuredTauLeptonType(*measuredTau4_gen);
+		if ( isGenHadTau(*measuredTau4_gen) ) measuredHadTau4DecayMode = getHadTauDecayMode(*measuredTau4_gen);
+		metCov[0][0] = square(sigmaX);
+		metCov[1][0] = 0.;
+		metCov[0][1] = 0.;
+		metCov[1][1] = square(sigmaY);
+	      } else assert(0);
+
 	      //-------------------------------------------------------------------------------------
 	      // CV: run ClassicSVfit4tau algorithm
-	      double metPx = met.pt()*TMath::Cos(met.phi());
-	      double metPy = met.pt()*TMath::Sin(met.phi());
-	      
-	      TMatrixD metCov(2,2);
-	      metCov[0][0] = met.covXX();
-	      metCov[1][0] = met.covXY();
-	      metCov[0][1] = met.covXY();
-	      metCov[1][1] = met.covYY();
-	      
 	      std::vector<classic_svFit::MeasuredTauLepton> measuredTauLeptons;
-	      measuredTauLeptons.push_back(makeMeasuredTauLepton(**measuredTau1));
-	      measuredTauLeptons.push_back(makeMeasuredTauLepton(**measuredTau2));
-	      measuredTauLeptons.push_back(makeMeasuredTauLepton(**measuredTau3));
-	      measuredTauLeptons.push_back(makeMeasuredTauLepton(**measuredTau4));
+	      measuredTauLeptons.push_back(makeMeasuredTauLepton(measuredTau1P4_rec, measuredTau1Type_rec, measuredHadTau1DecayMode));
+	      measuredTauLeptons.push_back(makeMeasuredTauLepton(measuredTau2P4_rec, measuredTau2Type_rec, measuredHadTau2DecayMode));
+	      measuredTauLeptons.push_back(makeMeasuredTauLepton(measuredTau3P4_rec, measuredTau3Type_rec, measuredHadTau3DecayMode));
+	      measuredTauLeptons.push_back(makeMeasuredTauLepton(measuredTau4P4_rec, measuredTau4Type_rec, measuredHadTau4DecayMode));
 	      
 	      int verbosity = 1;
 	      ClassicSVfit4tau svFitAlgo(verbosity);
@@ -860,7 +968,7 @@ int main(int argc, char* argv[])
 	      }
 	      svFitAlgo.setDiTau1MassConstraint(massContraint);
 	      svFitAlgo.setDiTau2MassConstraint(massContraint);  
-	      svFitAlgo.integrate(measuredTauLeptons, metPx, metPy, metCov);
+	      svFitAlgo.integrate(measuredTauLeptons, metPx_rec, metPy_rec, metCov);
 	      bool isValidSolution_wMassConstaint = svFitAlgo.isValidSolution();
 	      classic_svFit::LorentzVector dihiggsP4_wMassConstaint = static_cast<classic_svFit::HistogramAdapterDiHiggs*>(svFitAlgo.getHistogramAdapter())->getP4();
 	      classic_svFit::LorentzVector higgs1P4_wMassConstaint = static_cast<classic_svFit::HistogramAdapterDiHiggs*>(svFitAlgo.getHistogramAdapter())->ditau1()->getP4();
@@ -872,7 +980,7 @@ int main(int argc, char* argv[])
 	      }
 	      svFitAlgo.setDiTau1MassConstraint(-1.);
 	      svFitAlgo.setDiTau2MassConstraint(-1.);
-	      svFitAlgo.integrate(measuredTauLeptons, metPx, metPy, metCov);
+	      svFitAlgo.integrate(measuredTauLeptons, metPx_rec, metPy_rec, metCov);
 	      bool isValidSolution_woMassConstaint = svFitAlgo.isValidSolution();
 	      classic_svFit::LorentzVector dihiggsP4_woMassConstaint = static_cast<classic_svFit::HistogramAdapterDiHiggs*>(svFitAlgo.getHistogramAdapter())->getP4();
 	      classic_svFit::LorentzVector higgs1P4_woMassConstaint = static_cast<classic_svFit::HistogramAdapterDiHiggs*>(svFitAlgo.getHistogramAdapter())->ditau1()->getP4();
@@ -903,11 +1011,11 @@ int main(int argc, char* argv[])
 	      const Particle::LorentzVector* genHiggs2P4 = nullptr;
 	      if ( isCorrectAssoc ) {
 		selHistManager->evt_->fillHistograms(
-                  (*measuredTau1)->p4(), measuredTau1P4_gen, 
-		  (*measuredTau2)->p4(), measuredTau2P4_gen,  
-		  (*measuredTau3)->p4(), measuredTau3P4_gen,  
-		  (*measuredTau4)->p4(), measuredTau4P4_gen,  
-		  metPx, metPy, metCov, metPx_gen, metPy_gen, isGenMatched,
+                  measuredTau1P4_rec, measuredTau1P4_gen, 
+		  measuredTau2P4_rec, measuredTau2P4_gen,  
+		  measuredTau3P4_rec, measuredTau3P4_gen,  
+		  measuredTau4P4_rec, measuredTau4P4_gen,  
+		  metPx_rec, metPy_rec, metCov, metPx_gen, metPy_gen, 
 		  evtWeight);
 		histograms_dihiggs_wMassContraint = selHistManager->dihiggs_wMassContraint_correctAssoc_;
 		histograms_higgs1_wMassContraint = selHistManager->higgs1_wMassContraint_correctAssoc_;

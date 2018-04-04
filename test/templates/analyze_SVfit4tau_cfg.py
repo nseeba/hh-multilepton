@@ -23,12 +23,16 @@ process.analyze_SVfit4tau = cms.PSet(
 
     era = cms.string('2016'),
 
+    mode = cms.string("rec"), # CV: 'rec', 'gen', or 'gen_smeared'
+
     leptonSelection = cms.string('Tight'),
 
     hadTauSelection = cms.string('Tight|dR03mvaMedium'),
 
-    SVfit4tau_logM_wMassConstraint = cms.double(0.),
-    SVfit4tau_logM_woMassConstraint = cms.double(0.),
+    SVfit4tau = cms.PSet(
+        logM_wMassConstraint = cms.double(0.),
+        logM_woMassConstraint = cms.double(0.)
+    ),
 
     use_HIP_mitigation_mediumMuonId = cms.bool(False),
 
@@ -51,9 +55,18 @@ process.analyze_SVfit4tau = cms.PSet(
     branchName_genHadTaus = cms.string('GenVisTau'),
     branchName_genJets = cms.string('GenJet'),
     redoGenMatching = cms.bool(True),
-
+    
     branchName_genTaus = cms.string('GenTau'),
     branchName_genHiggsBosons = cms.string('GenHiggsBosons'), # CV: use 'GenHiggsBoson' in CMSSW_8_0_x, 'GenHiggs' in  CMSSW_9_4_x
+
+    genHadTauSmearing = cms.PSet(
+        inputFileName = cms.string("hhAnalysis/tttt/data/hadTauSmearingCDF_toyMC.root"),
+        graphName = cms.string("rCDF")
+    ),
+    genMEtSmearing = cms.PSet(
+        sigmaX = cms.double(10.),
+        sigmaY = cms.double(10.)
+    ),
 
     selEventsFileName_input = cms.string(''),
 )

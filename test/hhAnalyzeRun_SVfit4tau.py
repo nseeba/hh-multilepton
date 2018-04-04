@@ -67,6 +67,7 @@ if __name__ == '__main__':
       hadTau_selection                      = "Tight|dR03mvaMedium",
       SVfit4tau_logM_wMassConstraint        = 0.,
       SVfit4tau_logM_woMassConstraint       = 0.,
+      modes                                 = [ "rec", "gen", "gen_smeared" ],
       central_or_shifts                     = central_or_shift,
       max_files_per_job                     = max_files_per_job,
       era                                   = era,

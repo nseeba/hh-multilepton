@@ -44,7 +44,7 @@ EvtHistManager_4tau::fillHistograms(const Particle::LorentzVector& measuredTau1P
 				    const Particle::LorentzVector& measuredTau2P4, const Particle::LorentzVector& measuredTau2P4_gen, 
 				    const Particle::LorentzVector& measuredTau3P4, const Particle::LorentzVector& measuredTau3P4_gen, 
 				    const Particle::LorentzVector& measuredTau4P4, const Particle::LorentzVector& measuredTau4P4_gen,
-				    double metPx, double metPy, const TMatrixD& metCov, double metPx_gen, double metPy_gen, bool isGenMatched,
+				    double metPx, double metPy, const TMatrixD& metCov, double metPx_gen, double metPy_gen, 
 				    double evtWeight)
 {
   const double evtWeightErr = 0.;
@@ -70,18 +70,16 @@ EvtHistManager_4tau::fillHistograms(const Particle::LorentzVector& measuredTau1P
     fillWithOverFlow(histogram_ratiomeasuredTau4Pt_, measuredTau4P4.pt()/measuredTau4P4_gen.pt(), evtWeight, evtWeightErr);
   }
 
-  if ( isGenMatched ) {
-    fillWithOverFlow(histogram_deltametPx_, metPx - metPx_gen, evtWeight, evtWeightErr);
-    double metPxErr = TMath::Sqrt(metCov[0][0]);
-    if ( metPxErr > 1. ) {
-      fillWithOverFlow(histogram_pullmetPx_, (metPx - metPx_gen)/metPxErr, evtWeight, evtWeightErr);
-    }    
-    fillWithOverFlow(histogram_deltametPy_, metPy - metPy_gen, evtWeight, evtWeightErr);
-    double metPyErr = TMath::Sqrt(metCov[1][1]);
-    if ( metPyErr > 1. ) {
-      fillWithOverFlow(histogram_pullmetPy_, (metPy - metPy_gen)/metPyErr, evtWeight, evtWeightErr);
-    }  
-  }
+  fillWithOverFlow(histogram_deltametPx_, metPx - metPx_gen, evtWeight, evtWeightErr);
+  double metPxErr = TMath::Sqrt(metCov[0][0]);
+  if ( metPxErr > 1. ) {
+    fillWithOverFlow(histogram_pullmetPx_, (metPx - metPx_gen)/metPxErr, evtWeight, evtWeightErr);
+  }    
+  fillWithOverFlow(histogram_deltametPy_, metPy - metPy_gen, evtWeight, evtWeightErr);
+  double metPyErr = TMath::Sqrt(metCov[1][1]);
+  if ( metPyErr > 1. ) {
+    fillWithOverFlow(histogram_pullmetPy_, (metPy - metPy_gen)/metPyErr, evtWeight, evtWeightErr);
+  }  
 
   fillWithOverFlow(histogram_EventCounter_, 0., evtWeight, evtWeightErr);
 }
