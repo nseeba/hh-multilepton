@@ -5,7 +5,7 @@ import os
 process = cms.PSet()
 
 process.fwliteInput = cms.PSet(
-    fileNames = cms.vstring(''),
+    fileNames = cms.vstring('/home/karl/test_nanoAOD_tools/GluGluToRadionToHHTo4Tau_M-400_narrow_13TeV-madgraph_nanoAOD_1_i.root'),
     maxEvents = cms.int32(-1),
     outputEvery = cms.uint32(100000)
 )
@@ -21,7 +21,7 @@ process.analyze_SVfit4tau = cms.PSet(
 
     histogramDir = cms.string('SVfit4tau'),
 
-    era = cms.string('2016'),
+    era = cms.string('2017'),
 
     mode = cms.string("rec"), # CV: 'rec', 'gen', or 'gen_smeared'
 

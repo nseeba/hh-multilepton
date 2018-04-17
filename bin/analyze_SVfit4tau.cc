@@ -91,9 +91,9 @@ enum { k4lepton, k3lepton_1tau, k2lepton_2tau, k1lepton_3tau, k4tau };
 int get_idxCategory(const std::string& category) 
 {
   if      ( category == "4lepton"      ) return k4lepton;
-  else if ( category == "4lepton_1tau" ) return k3lepton_1tau;
-  else if ( category == "4lepton_2tau" ) return k2lepton_2tau;
-  else if ( category == "4lepton_3tau" ) return k1lepton_3tau;
+  else if ( category == "3lepton_1tau" ) return k3lepton_1tau;
+  else if ( category == "2lepton_2tau" ) return k2lepton_2tau;
+  else if ( category == "1lepton_3tau" ) return k1lepton_3tau;
   else if ( category == "4tau"         ) return k4tau;
   else assert(0);
 }
@@ -275,7 +275,7 @@ int main(int argc, char* argv[])
   std::string hadTauSelection_part2 = ( hadTauSelection_parts->GetEntries() == 2 ) ? (dynamic_cast<TObjString*>(hadTauSelection_parts->At(1)))->GetString().Data() : "";
   delete hadTauSelection_parts;
  
-  edm::ParameterSet cfgSVfit4tau = cfg_analyze.getParameter<edm::ParameterSet>("cfgSVfit4tau");
+  edm::ParameterSet cfgSVfit4tau = cfg_analyze.getParameter<edm::ParameterSet>("SVfit4tau");
   double logM_wMassConstraint = cfgSVfit4tau.getParameter<double>("logM_wMassConstraint");
   double logM_woMassConstraint = cfgSVfit4tau.getParameter<double>("logM_woMassConstraint");
 
@@ -340,7 +340,7 @@ int main(int argc, char* argv[])
 
 //--- declare event-level variables
   EventInfo eventInfo(isSignal, isMC, false);
-  EventInfoReader eventInfoReader(&eventInfo);
+  EventInfoReader eventInfoReader(&eventInfo, false, false); // CV: reading of 'puWeight' branch temporaily disabled, because it does not exist in the Ntuples produced by Karl/Xandra
   inputTree->registerReader(&eventInfoReader);
 
 //--- declare particle collections

@@ -33,7 +33,7 @@ void EvtHistManager_4tau::bookHistograms(TFileDirectory & dir)
   
   histogram_deltametPx_ = book1D(dir, "deltametPx", "deltametPx", 200, -100., +100.);
   histogram_pullmetPx_  = book1D(dir, "pullmetPx",  "pullmetPx",  200,  -10.,  +10.);
-  histogram_deltametPy_ = book1D(dir, "deltametPx", "deltametPx", 200, -100., +100.);
+  histogram_deltametPy_ = book1D(dir, "deltametPy", "deltametPy", 200, -100., +100.);
   histogram_pullmetPy_  = book1D(dir, "pullmetPy",  "pullmetPy",  200,  -10.,  +10.);
 
   histogram_EventCounter_ = book1D(dir, "EventCounter", "EventCounter", 1, -0.5, +0.5);

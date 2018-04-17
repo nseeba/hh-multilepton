@@ -26,6 +26,7 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
       verbose = verbose,
       dry_run = dry_run,
       isDebug = isDebug,
+      template_dir = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'tttt', 'test', 'templates')
     )
 
     self.samples = samples
@@ -56,6 +57,7 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
     lines.append("process.fwliteInput.fileNames = cms.vstring(%s)" % jobOptions['ntupleFiles'])
     lines.append("process.fwliteOutput.fileName = cms.string('%s')" % os.path.basename(jobOptions['histogramFile']))
     lines.append("process.analyze_SVfit4tau.process = cms.string('%s')" % jobOptions['sample_category'])
+    lines.append("process.analyze_SVfit4tau.era = cms.string('%s')" % self.era)
     lines.append("process.analyze_SVfit4tau.mode = cms.string('%s')" % jobOptions['mode'])
     lines.append("process.analyze_SVfit4tau.leptonSelection = cms.string('%s')" % jobOptions['lepton_selection'])
     lines.append("process.analyze_SVfit4tau.hadTauSelection = cms.string('%s')" % jobOptions['hadTau_selection'])
@@ -125,8 +127,8 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
           for jobId in inputFileList.keys():
 
             # build config files for executing analysis code
-            key_dir = getKey(process_name, lepton_selection_and_frWeight, chargeSumSelection)
-            key_analyze_job = getKey(process_name, lepton_selection_and_frWeight, chargeSumSelection, central_or_shift, jobId)
+            key_dir = getKey(process_name, mode)
+            key_analyze_job = getKey(process_name, mode, central_or_shift, jobId)
             ntupleFiles = inputFileList[jobId]
             if len(ntupleFiles) == 0:
               logging.warning("No input ntuples for %s --> skipping job !!" % (key_analyze_job))

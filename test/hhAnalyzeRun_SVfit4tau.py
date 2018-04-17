@@ -21,10 +21,10 @@ debug              = args.debug
 
 # Use the arguments
 max_job_resubmission = resubmission_limit if resubmit else 1
-central_or_shift     = "central"
+central_or_shift     = [ "central" ]
 max_files_per_job    = 1
 
-from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017 import samples_2017
+from hhAnalysis.tttt.samples.hhAnalyzeSamples_2016_nanoAOD import samples_2017
 
 if era == "2017":
   from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2017 as lumi
@@ -58,8 +58,8 @@ if __name__ == '__main__':
     logging.info("Job submission #%i:" % (idx_job_resubmission + 1))
 
     analysis = analyzeConfig_SVfit4tau(
-      configDir = os.path.join("/home",       getpass.getuser(), "ttHAnalysis", era, version),
-      outputDir = os.path.join("/hdfs/local", getpass.getuser(), "ttHAnalysis", era, version),
+      configDir = os.path.join("/home",       getpass.getuser(), "hhAnalysis", era, version),
+      outputDir = os.path.join("/hdfs/local", getpass.getuser(), "hhAnalysis", era, version),
       executable_analyze                    = "analyze_SVfit4tau",
       cfgFile_analyze                       = "analyze_SVfit4tau_cfg.py",
       samples                               = samples,
