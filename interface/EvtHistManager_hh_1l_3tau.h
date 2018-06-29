@@ -31,7 +31,8 @@ public:
                  int numBJets_loose,
                  int numBJets_medium,
                  double m4Vis,
-		 double m4,
+		 double m4_1,
+		 double m4_2,
                  double evtWeight);
 
   const TH1 *

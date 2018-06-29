@@ -8,6 +8,7 @@
   <use   name="PhysicsTools/FWLite"/>
   <use   name="tthAnalysis/HiggsToTauTau"/>
   <use   name="hhAnalysis/tttt"/>
+  <use   name="TauAnalysis/ClassicSVfit4tau"/>
   <use   name="root"/>
   <use   name="roottmva"/>
   <use   name="boost"/>

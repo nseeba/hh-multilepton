@@ -33,22 +33,26 @@ process.analyze_1l_2tau = cms.PSet(
     use_triggers_1mu = cms.bool(True),
     triggers_1mu1tau = cms.vstring(),
     use_triggers_1mu1tau = cms.bool(False),
+    triggers_2tau = cms.vstring(),
+    use_triggers_2tau = cms.bool(False),
 
     apply_offline_e_trigger_cuts_1e = cms.bool(True),
     apply_offline_e_trigger_cuts_1e1tau = cms.bool(True),
     apply_offline_e_trigger_cuts_1mu = cms.bool(True),
     apply_offline_e_trigger_cuts_1mu1tau = cms.bool(True),
+    apply_offline_e_trigger_cuts_2tau = cms.bool(True),
 
     electronSelection = cms.string('Tight'),
     muonSelection = cms.string('Tight'),
-    lep_mva_cut = cms.double(0.75), # CV: used for tight lepton selection only
+    lep_mva_cut = cms.double(0.90), # CV: used for tight lepton selection only
     apply_leptonGenMatching = cms.bool(False),
 
     hadTauSelection = cms.string('Tight|dR03mvaTight'),
-    hadTauChargeSelection = cms.string('OS'),
     apply_hadTauGenMatching = cms.bool(False),
 
-    applyFakeRateWeights = cms.string("disabled"), # either "disabled", "3L" or "2tau"
+    chargeSumSelection = cms.string('OS'),
+    
+    applyFakeRateWeights = cms.string("disabled"), # either "disabled", "4L" or "3tau"
     leptonFakeRateWeight = cms.PSet(
         inputFileName = cms.string("tthAnalysis/HiggsToTauTau/data/FR_lep_ttH_mva_2017_Tallinn_2018May22.root"),
         histogramName_e = cms.string("FR_mva090_el_data_comb"),
@@ -64,6 +68,13 @@ process.analyze_1l_2tau = cms.PSet(
             applyFitFunction = cms.bool(True),
         ),
         sublead = cms.PSet(
+            absEtaBins = cms.vdouble(-1., 1.479, 9.9),
+            graphName = cms.string("jetToTauFakeRate/$hadTauSelection/$etaBin/jetToTauFakeRate_mc_hadTaus_pt"),
+            applyGraph = cms.bool(True),
+            fitFunctionName = cms.string("jetToTauFakeRate/$hadTauSelection/$etaBin/fitFunction_data_div_mc_hadTaus_pt"),
+            applyFitFunction = cms.bool(True),
+        ),
+        third = cms.PSet(
             absEtaBins = cms.vdouble(-1., 1.479, 9.9),
             graphName = cms.string("jetToTauFakeRate/$hadTauSelection/$etaBin/jetToTauFakeRate_mc_hadTaus_pt"),
             applyGraph = cms.bool(True),
@@ -89,12 +100,6 @@ process.analyze_1l_2tau = cms.PSet(
     branchName_muons = cms.string('Muon'),
     branchName_hadTaus = cms.string('Tau'),
     branchName_jets = cms.string('Jet'),
-    branchName_jetsHTTv2 = cms.string('HTTV2'),
-    branchName_subjetsHTTv2 = cms.string('HTTV2Subjets'),
-    branchName_jetsAK12 = cms.string('FatJetAK12'),
-    branchName_subjetsAK12 = cms.string('SubJetAK12'),
-    branchName_jetsAK8 = cms.string('FatJet'),
-    branchName_subjetsAK8 = cms.string('SubJet'),
     branchName_met = cms.string('MET'),
 
     branchName_genLeptons = cms.string('GenLep'),
@@ -103,22 +108,9 @@ process.analyze_1l_2tau = cms.PSet(
     branchName_genJets = cms.string('GenJet'),
     redoGenMatching = cms.bool(True),
 
-    branchName_genTopQuarks = cms.string('GenTop'),
-    branchName_genBJets = cms.string('GenBQuarkFromTop'),
-    branchName_genWBosons = cms.string('GenVbosons'),
-    branchName_genWJets = cms.string('GenWZQuark'),
-    branchName_genQuarkFromTop = cms.string('GenQuarkFromTop'),
-
     selEventsFileName_input = cms.string(''),
     selEventsFileName_output = cms.string(''),
-    selectBDT = cms.bool(False),
 
-    syncNtuple = cms.PSet(
-        tree = cms.string(''),
-        output = cms.string(''),
-        requireGenMatching = cms.bool(False),
-    ),
-    useNonNominal = cms.bool(False),
     isDEBUG = cms.bool(False),
     hasLHE = cms.bool(True),
 )

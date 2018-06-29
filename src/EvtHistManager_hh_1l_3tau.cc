@@ -36,20 +36,22 @@ EvtHistManager_hh_1l_3tau::fillHistograms(int numElectrons,
 					  int numBJets_loose,
 					  int numBJets_medium,
 					  double m4Vis,
-					  double m4,
+					  double m4_1,
+					  double m4_2,
 					  double evtWeight)
 {
   const double evtWeightErr = 0.;
 
-  fillWithOverFlow(histogram_numElectrons_,    numElectrons,    evtWeight, evtWeightErr);
-  fillWithOverFlow(histogram_numMuons_,        numMuons,        evtWeight, evtWeightErr);
-  fillWithOverFlow(histogram_numHadTaus_,      numHadTaus,      evtWeight, evtWeightErr);
-  fillWithOverFlow(histogram_numJets_,         numJets,         evtWeight, evtWeightErr);
-  fillWithOverFlow(histogram_numBJets_loose_,  numBJets_loose,  evtWeight, evtWeightErr);
-  fillWithOverFlow(histogram_numBJets_medium_, numBJets_medium, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_numElectrons_,    numElectrons,        evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_numMuons_,        numMuons,            evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_numHadTaus_,      numHadTaus,          evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_numJets_,         numJets,             evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_numBJets_loose_,  numBJets_loose,      evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_numBJets_medium_, numBJets_medium,     evtWeight,     evtWeightErr);
 
-  fillWithOverFlow(histogram_m4Vis_,           m4Vis,           evtWeight, evtWeightErr);
-  fillWithOverFlow(histogram_m4_,              m4,              evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_m4Vis_,           m4Vis,               evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_m4_,              m4_1,            0.5*evtWeight, 0.5*evtWeightErr);
+  fillWithOverFlow(histogram_m4_,              m4_2,            0.5*evtWeight, 0.5*evtWeightErr);
   
-  fillWithOverFlow(histogram_EventCounter_,    0.,              evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_EventCounter_,    0.,                  evtWeight,     evtWeightErr);
 }
