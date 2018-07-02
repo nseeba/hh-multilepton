@@ -1,9 +1,9 @@
-#ifndef hhAnalysis_tttt_EvtHistManager_hh_1l_3tau_h
-#define hhAnalysis_tttt_EvtHistManager_hh_1l_3tau_h
+#ifndef hhAnalysis_tttt_EvtHistManager_hh_0l_4tau_h
+#define hhAnalysis_tttt_EvtHistManager_hh_0l_4tau_h
 
-/** \class EvtHistManager_hh_1l_3tau
+/** \class EvtHistManager_hh_0l_4tau
  *
- * Book and fill histograms for event-level quantities in the 1l+3tau_h category 
+ * Book and fill histograms for event-level quantities in the 0l+4tau_h category 
  * of the HH->tttt, WWtt, and WWWW analysis 
  *
  * \author Christian Veelken, Tallinn
@@ -12,12 +12,12 @@
 
 #include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h" // HistManagerBase
 
-class EvtHistManager_hh_1l_3tau
+class EvtHistManager_hh_0l_4tau
   : public HistManagerBase
 {
 public:
-  EvtHistManager_hh_1l_3tau(const edm::ParameterSet & cfg);
-  ~EvtHistManager_hh_1l_3tau() {}
+  EvtHistManager_hh_0l_4tau(const edm::ParameterSet & cfg);
+  ~EvtHistManager_hh_0l_4tau() {}
 
   /// book and fill histograms
   void

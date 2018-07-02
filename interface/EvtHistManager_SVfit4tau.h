@@ -1,7 +1,7 @@
-#ifndef hhAnalysis_tttt_EvtHistManager_4tau_h
-#define hhAnalysis_tttt_EvtHistManager_4tau_h
+#ifndef hhAnalysis_tttt_EvtHistManager_SVfit4tau_h
+#define hhAnalysis_tttt_EvtHistManager_SVfit4tau_h
 
-/** \class EvtHistManager_4tau
+/** \class EvtHistManager_SVfit4tau
  *
  * Book and fill histograms for event-level quantities in hh->4tau analysis
  *
@@ -15,12 +15,12 @@
 
 #include <TMatrixD.h> // TMatrixD
 
-class EvtHistManager_4tau
+class EvtHistManager_SVfit4tau
   : public HistManagerBase
 {
  public:
-  EvtHistManager_4tau(const edm::ParameterSet & cfg);
-  ~EvtHistManager_4tau() {}
+  EvtHistManager_SVfit4tau(const edm::ParameterSet & cfg);
+  ~EvtHistManager_SVfit4tau() {}
 
   void
   bookHistograms(TFileDirectory & dir) override;

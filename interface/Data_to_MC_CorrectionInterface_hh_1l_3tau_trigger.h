@@ -37,12 +37,6 @@ public:
   //-----------------------------------------------------------------------------
 
   //-----------------------------------------------------------------------------
-  // trigger efficiency turn-on curves for Spring16 non-reHLT MC (not yet implemented)
-  double
-  getWeight_triggerEff() const;
-  //-----------------------------------------------------------------------------
-
-  //-----------------------------------------------------------------------------
   // data/MC correction for trigger efficiency 
   double
   getSF_triggerEff() const;

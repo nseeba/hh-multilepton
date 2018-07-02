@@ -13,51 +13,28 @@ process.fwliteInput = cms.PSet(
 )
 
 process.fwliteOutput = cms.PSet(
-    fileName = cms.string('analyze_hh_1l_3tau.root')
+    fileName = cms.string('analyze_hh_0l_4tau.root')
 )
 
-process.analyze_hh_1l_3tau = cms.PSet(
+process.analyze_hh_0l_4tau = cms.PSet(
     treeName = cms.string('Events'),
 
     process = cms.string('HH'),
 
-    histogramDir = cms.string('1l_3tau_OS_Tight'),
+    histogramDir = cms.string('0l_4tau_OS_Tight'),
 
     era = cms.string('2017'),
 
-    triggers_1e = cms.vstring("HLT_BIT_HLT_Ele23_WPLoose_Gsf_v"),
-    use_triggers_1e = cms.bool(True),
-    triggers_1e1tau = cms.vstring(),
-    use_triggers_1e1tau = cms.bool(False),
-    triggers_1mu = cms.vstring("HLT_BIT_HLT_IsoMu20_v", "HLT_BIT_HLT_IsoTkMu20_v"),
-    use_triggers_1mu = cms.bool(True),
-    triggers_1mu1tau = cms.vstring(),
-    use_triggers_1mu1tau = cms.bool(False),
     triggers_2tau = cms.vstring(),
     use_triggers_2tau = cms.bool(False),
 
-    apply_offline_e_trigger_cuts_1e = cms.bool(True),
-    apply_offline_e_trigger_cuts_1e1tau = cms.bool(True),
-    apply_offline_e_trigger_cuts_1mu = cms.bool(True),
-    apply_offline_e_trigger_cuts_1mu1tau = cms.bool(True),
-    apply_offline_e_trigger_cuts_2tau = cms.bool(True),
-
-    electronSelection = cms.string('Tight'),
-    muonSelection = cms.string('Tight'),
     lep_mva_cut = cms.double(0.90), # CV: used for tight lepton selection only
-    apply_leptonGenMatching = cms.bool(False),
 
     hadTauSelection = cms.string('Tight|dR03mvaTight'),
+    hadTauChargeSelection = cms.string('OS'),
     apply_hadTauGenMatching = cms.bool(False),
-
-    chargeSumSelection = cms.string('OS'),
     
-    applyFakeRateWeights = cms.string("disabled"), # either "disabled", "4L" or "3tau"
-    leptonFakeRateWeight = cms.PSet(
-        inputFileName = cms.string("tthAnalysis/HiggsToTauTau/data/FR_lep_ttH_mva_2017_Tallinn_2018May22.root"),
-        histogramName_e = cms.string("FR_mva090_el_data_comb"),
-        histogramName_mu = cms.string("FR_mva090_mu_data_comb"),
-    ),
+    applyFakeRateWeights = cms.string("disabled"), # either "disabled" or "4tau"
     hadTauFakeRateWeight = cms.PSet(
         inputFileName = cms.string("tthAnalysis/HiggsToTauTau/data/FR_tau_2017_v2.root"),
         lead = cms.PSet(
@@ -75,6 +52,13 @@ process.analyze_hh_1l_3tau = cms.PSet(
             applyFitFunction = cms.bool(True),
         ),
         third = cms.PSet(
+            absEtaBins = cms.vdouble(-1., 1.479, 9.9),
+            graphName = cms.string("jetToTauFakeRate/$hadTauSelection/$etaBin/jetToTauFakeRate_mc_hadTaus_pt"),
+            applyGraph = cms.bool(True),
+            fitFunctionName = cms.string("jetToTauFakeRate/$hadTauSelection/$etaBin/fitFunction_data_div_mc_hadTaus_pt"),
+            applyFitFunction = cms.bool(True),
+        ),
+        fourth = cms.PSet(
             absEtaBins = cms.vdouble(-1., 1.479, 9.9),
             graphName = cms.string("jetToTauFakeRate/$hadTauSelection/$etaBin/jetToTauFakeRate_mc_hadTaus_pt"),
             applyGraph = cms.bool(True),

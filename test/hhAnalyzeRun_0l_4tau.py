@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 import os, logging, sys, getpass, numpy as np
-from hhAnalysis.tttt.configs.analyzeConfig_hh_1l_3tau import analyzeConfig_hh_1l_3tau
+from hhAnalysis.tttt.configs.analyzeConfig_hh_0l_4tau import analyzeConfig_hh_0l_4tau
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
 
-# E.g.: ./hhAnalyzeRun_1l_3tau.py -v 2017Dec13 -m default -e 2017
+# E.g.: ./hhAnalyzeRun_0l_4tau.py -v 2017Dec13 -m default -e 2017
 
 mode_choices     = [ 'default' ]
 sys_choices      = [ 'full' ] + systematics.an_extended_opts
@@ -55,7 +55,7 @@ for systematic_label in systematics_label:
       central_or_shifts.append(central_or_shift)
 do_sync = mode.startswith('sync')
 
-chargeSumSelections = [ "OS", "SS" ]
+hadTau_charge_selections = [ "OS", "SS" ]
 
 if mode == "default":
   if use_preselected:
@@ -63,7 +63,7 @@ if mode == "default":
   else:
     from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017 import samples_2017
   hadTau_selection     = "dR03mvaLoose"
-  applyFakeRateWeights = "4L"
+  applyFakeRateWeights = "4tau"
 else:
   raise ValueError("Internal logic error")
 
@@ -72,6 +72,12 @@ if era == "2017":
   samples = samples_2017
 else:
   raise ValueError("Invalid era: %s" % era)
+
+for sample_name, sample_info in samples.items():
+  if sample_info["type"] == "mc":
+    sample_info["triggers"] = [ "2tau" ]
+  if sample_name.startswith(("/DoubleEG/", "/DoubleMuon/", "/MuonEG/", "/SingleElectron/", "/SingleMuon/")):
+    sample_info["use_it"] = False
 
 if __name__ == '__main__':
   logging.basicConfig(
@@ -94,16 +100,16 @@ if __name__ == '__main__':
     logging.info("Changing tau ID working point: %s -> %s" % (hadTau_selection, args.tau_id_wp))
     hadTau_selection = args.tau_id_wp
 
-  analysis = analyzeConfig_hh_1l_3tau(
+  analysis = analyzeConfig_hh_0l_4tau(
     configDir = os.path.join("/home",       getpass.getuser(), "hhAnalysis", era, version),
     outputDir = os.path.join("/hdfs/local", getpass.getuser(), "hhAnalysis", era, version),
-    executable_analyze                    = "analyze_hh_1l_3tau",
-    cfgFile_analyze                       = "analyze_hh_1l_3tau_cfg.py",
+    executable_analyze                    = "analyze_hh_0l_4tau",
+    cfgFile_analyze                       = "analyze_hh_0l_4tau_cfg.py",
     samples                               = samples,
     lep_mva_wp                            = lep_mva_wp,
     hadTau_selection                      = hadTau_selection,
     applyFakeRateWeights                  = applyFakeRateWeights,
-    chargeSumSelections                   = chargeSumSelections,
+    hadTau_charge_selections              = hadTau_charge_selections,
     central_or_shifts                     = central_or_shifts,
     max_files_per_job                     = files_per_job,
     era                                   = era,

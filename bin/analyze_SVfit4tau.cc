@@ -62,7 +62,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h" // HistManagerBase
 #include "tthAnalysis/HiggsToTauTau/interface/TTreeWrapper.h" // TTreeWrapper
 
-#include "hhAnalysis/tttt/interface/EvtHistManager_4tau.h" // EvtHistManager_4tau
+#include "hhAnalysis/tttt/interface/EvtHistManager_SVfit4tau.h" // EvtHistManager_SVfit4tau
 #include "hhAnalysis/tttt/interface/SVfit4tauDiHiggsHistManager.h" // SVfit4tauDiHiggsHistManager
 #include "hhAnalysis/tttt/interface/SVfit4tauHiggsHistManager.h" // SVfit4tauHiggsHistManager
 #include "hhAnalysis/tttt/interface/GenHadTauSmearer.h" // GenHadTauSmearer
@@ -419,7 +419,7 @@ int main(int argc, char* argv[])
     SVfit4tauDiHiggsHistManager* dihiggs_woMassContraint_incorrectAssoc_;
     SVfit4tauHiggsHistManager* higgs1_woMassContraint_incorrectAssoc_;
     SVfit4tauHiggsHistManager* higgs2_woMassContraint_incorrectAssoc_;  
-    EvtHistManager_4tau* evt_;
+    EvtHistManager_SVfit4tau* evt_;
     WeightHistManager* weights_;
   };
   std::map<int, selHistManagerType*> selHistManagers;
@@ -513,7 +513,7 @@ int main(int argc, char* argv[])
     selHistManager->higgs2_woMassContraint_incorrectAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/higgs2_woMassContraint_incorrectAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs2_woMassContraint_incorrectAssoc_->bookHistograms(fs);    
-    selHistManager->evt_ = new EvtHistManager_4tau(makeHistManager_cfg(process_string,
+    selHistManager->evt_ = new EvtHistManager_SVfit4tau(makeHistManager_cfg(process_string,
       Form("%s/%s/evt", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->evt_->bookHistograms(fs);
     selHistManager->weights_ = new WeightHistManager(makeHistManager_cfg(process_string,

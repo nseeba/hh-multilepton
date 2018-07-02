@@ -1,4 +1,4 @@
-#include "hhAnalysis/tttt/interface/EvtHistManager_4tau.h"
+#include "hhAnalysis/tttt/interface/EvtHistManager_SVfit4tau.h"
 
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow()
 #include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // kEra_2017
@@ -6,17 +6,17 @@
 
 #include <TMath.h> // TMath::Sqrt
 
-EvtHistManager_4tau::EvtHistManager_4tau(const edm::ParameterSet& cfg)
+EvtHistManager_SVfit4tau::EvtHistManager_SVfit4tau(const edm::ParameterSet& cfg)
   : HistManagerBase(cfg)
 {}
 
 const TH1 *
-EvtHistManager_4tau::getHistogram_EventCounter() const
+EvtHistManager_SVfit4tau::getHistogram_EventCounter() const
 {
   return histogram_EventCounter_;
 }
 
-void EvtHistManager_4tau::bookHistograms(TFileDirectory & dir)
+void EvtHistManager_SVfit4tau::bookHistograms(TFileDirectory & dir)
 {
   histogram_mh1Vis_ = book1D(dir, "mh1Vis", "mh1Vis",  50, 0.,  500.);
   histogram_mh1Vis_gen_ = book1D(dir, "mh1Vis_gen", "mh1Vis_gen",  50, 0.,  500.);
@@ -40,12 +40,12 @@ void EvtHistManager_4tau::bookHistograms(TFileDirectory & dir)
 }
 
 void
-EvtHistManager_4tau::fillHistograms(const Particle::LorentzVector& measuredTau1P4, const Particle::LorentzVector& measuredTau1P4_gen, 
-				    const Particle::LorentzVector& measuredTau2P4, const Particle::LorentzVector& measuredTau2P4_gen, 
-				    const Particle::LorentzVector& measuredTau3P4, const Particle::LorentzVector& measuredTau3P4_gen, 
-				    const Particle::LorentzVector& measuredTau4P4, const Particle::LorentzVector& measuredTau4P4_gen,
-				    double metPx, double metPy, const TMatrixD& metCov, double metPx_gen, double metPy_gen, 
-				    double evtWeight)
+EvtHistManager_SVfit4tau::fillHistograms(const Particle::LorentzVector& measuredTau1P4, const Particle::LorentzVector& measuredTau1P4_gen, 
+					 const Particle::LorentzVector& measuredTau2P4, const Particle::LorentzVector& measuredTau2P4_gen, 
+					 const Particle::LorentzVector& measuredTau3P4, const Particle::LorentzVector& measuredTau3P4_gen, 
+					 const Particle::LorentzVector& measuredTau4P4, const Particle::LorentzVector& measuredTau4P4_gen,
+					 double metPx, double metPy, const TMatrixD& metCov, double metPx_gen, double metPy_gen, 
+					 double evtWeight)
 {
   const double evtWeightErr = 0.;
 
