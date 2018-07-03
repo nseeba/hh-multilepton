@@ -155,7 +155,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
     Args:
       inputFiles: list of input files (Ntuples)
       outputFile: output file of the job -- a ROOT file containing histogram
-      process: either `TT`, `TTW`, `TTZ`, `EWK`, `Rares`, `data_obs`, `ttH_hww`, 'ttH_hzg', 'ttH_hmm', `ttH_hzz` or `ttH_htt`
+      process: either `TT`, `TTW`, `TTZ`, `EWK`, `Rares`, `data_obs`, or `signal`
       is_mc: flag indicating whether job runs on MC (True) or data (False)
       lumi_scale: event weight (= xsection * luminosity / number of events)
       central_or_shift: either 'central' or one of the systematic uncertainties defined in $CMSSW_BASE/src/hhAnalysis/tttt/bin/analyze_hh_0l_4tau.cc
@@ -380,7 +380,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
 
               sample_categories = [ sample_category ]
               if is_signal:
-                sample_categories = [ "signal", "HH" ]
+                sample_categories = [ "signal" ]
               for sample_category in sample_categories:
                 # sum non-fake and fake contributions for each MC sample separately
                 genMatch_categories = [ "nonfake", "fake" ]
@@ -401,10 +401,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
                       hadTau_genMatches.extend(self.hadTau_genMatches_nonfakes)
                       hadTau_genMatches.extend(self.hadTau_genMatches_fakes)
                       processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in hadTau_genMatches ]
-                    elif sample_category in [ "HH" ]:
-                      hadTau_genMatches = []
-                      hadTau_genMatches.extend(self.hadTau_genMatches_nonfakes)
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in hadTau_genMatches ]
                     else:
                       processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_nonfakes ]
                     process_output = sample_category
@@ -418,8 +414,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
                     # input processes: TT1l0g0j&1t0e0m1j, TT1l0g0j&0t1e0m1j, TT1l0g0j&0t0e1m1j, TT1l0g0j&0t0e0m2j; ...
                     # output processes: TT_fake; ...
                     if sample_category in [ "signal" ]:
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_fakes ]
-                    elif sample_category in [ "HH" ]:
                       processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_fakes ]
                     else:
                       processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_fakes ]

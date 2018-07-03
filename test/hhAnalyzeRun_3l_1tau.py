@@ -1,13 +1,13 @@
 #!/usr/bin/env python
-import os, logging, sys, getpass, numpy as np
-from hhAnalysis.tttt.configs.analyzeConfig_hh_1l_3tau import analyzeConfig_hh_1l_3tau
+import os, logging, sys, getpass
+from hhAnalysis.tttt.configs.analyzeConfig_hh_3l_1tau import analyzeConfig_hh_3l_1tau
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
 
-# E.g.: ./hhAnalyzeRun_1l_3tau.py -v 2017Dec13 -m default -e 2017
+# E.g.: ./tthAnalyzeRun_hh_3l_1tau.py -v 2017Dec13 -m default -e 2017
 
-mode_choices     = [ 'default' ]
+mode_choices         = [ 'default' ]
 sys_choices      = [ 'full' ] + systematics.an_extended_opts
 systematics.full = systematics.an_extended
 
@@ -53,7 +53,6 @@ for systematic_label in systematics_label:
   for central_or_shift in getattr(systematics, systematic_label):
     if central_or_shift not in central_or_shifts:
       central_or_shifts.append(central_or_shift)
-do_sync = mode.startswith('sync')
 
 chargeSumSelections = [ "OS", "SS" ]
 
@@ -77,7 +76,7 @@ if __name__ == '__main__':
   logging.basicConfig(
     stream = sys.stdout,
     level  = logging.INFO,
-    format = '%(asctime)s - %(levelname)s: %(message)s'
+    format = '%(asctime)s - %(levelname)s: %(message)s',
   )
 
   logging.info(
@@ -94,11 +93,11 @@ if __name__ == '__main__':
     logging.info("Changing tau ID working point: %s -> %s" % (hadTau_selection, args.tau_id_wp))
     hadTau_selection = args.tau_id_wp
 
-  analysis = analyzeConfig_hh_1l_3tau(
-    configDir = os.path.join("/home",       getpass.getuser(), "hhAnalysis", era, version),
-    outputDir = os.path.join("/hdfs/local", getpass.getuser(), "hhAnalysis", era, version),
-    executable_analyze                    = "analyze_hh_1l_3tau",
-    cfgFile_analyze                       = "analyze_hh_1l_3tau_cfg.py",
+  analysis = analyzeConfig_hh_3l_1tau(
+    configDir = os.path.join("/home",       getpass.getuser(), "ttHAnalysis", era, version),
+    outputDir = os.path.join("/hdfs/local", getpass.getuser(), "ttHAnalysis", era, version),
+    executable_analyze                    = "analyze_hh_3l_1tau",
+    cfgFile_analyze                       = "analyze_hh_3l_1tau_cfg.py",
     samples                               = samples,
     lep_mva_wp                            = lep_mva_wp,
     hadTau_selection                      = hadTau_selection,
@@ -117,12 +116,14 @@ if __name__ == '__main__':
     histograms_to_fit                     = {
       "EventCounter"                      : {},
       "numJets"                           : {},
+      "mTauTauVis"                        : {},
       "m4Vis"                             : {},
       "m4"                                : {},
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,
     isDebug                               = debug,
+    rle_select                            = rle_select,
     use_nonnominal                        = use_nonnominal,
     hlt_filter                            = hlt_filter,
     use_home                              = use_home,

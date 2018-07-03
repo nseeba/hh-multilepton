@@ -1,19 +1,19 @@
-#include "hhAnalysis/tttt/interface/EvtHistManager_hh_0l_4tau.h"
+#include "hhAnalysis/tttt/interface/EvtHistManager_hh_3l_1tau.h"
 
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow(), fillWithOverFlow2d()
 
-EvtHistManager_hh_0l_4tau::EvtHistManager_hh_0l_4tau(const edm::ParameterSet & cfg)
+EvtHistManager_hh_3l_1tau::EvtHistManager_hh_3l_1tau(const edm::ParameterSet & cfg)
   : HistManagerBase(cfg)
 {}
 
 const TH1 *
-EvtHistManager_hh_0l_4tau::getHistogram_EventCounter() const
+EvtHistManager_hh_3l_1tau::getHistogram_EventCounter() const
 {
   return histogram_EventCounter_;
 }
 
 void
-EvtHistManager_hh_0l_4tau::bookHistograms(TFileDirectory & dir)
+EvtHistManager_hh_3l_1tau::bookHistograms(TFileDirectory & dir)
 {
   histogram_numElectrons_    = book1D(dir, "numElectrons",    "numElectrons",      5, -0.5,  +4.5);
   histogram_numMuons_        = book1D(dir, "numMuons",        "numMuons",          5, -0.5,  +4.5);
@@ -29,7 +29,7 @@ EvtHistManager_hh_0l_4tau::bookHistograms(TFileDirectory & dir)
 }
 
 void
-EvtHistManager_hh_0l_4tau::fillHistograms(int numElectrons,
+EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
 					  int numMuons,
 					  int numHadTaus,
 					  int numJets,

@@ -18,9 +18,6 @@
 #include "tthAnalysis/HiggsToTauTau/interface/GenHadTau.h" // GenHadTau
 #include "tthAnalysis/HiggsToTauTau/interface/RecoMEt.h" // RecoMEt
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h" // EventInfo
-#include "tthAnalysis/HiggsToTauTau/interface/TMVAInterface.h" // TMVAInterface
-#include "tthAnalysis/HiggsToTauTau/interface/mvaAuxFunctions.h" // check_mvaInputs, get_mvaInputVariables
-#include "tthAnalysis/HiggsToTauTau/interface/mvaInputVariables.h" // auxiliary functions for computing input variables of the MVA used for signal extraction in the 3l category
 #include "tthAnalysis/HiggsToTauTau/interface/LeptonFakeRateInterface.h" // LeptonFakeRateInterface
 #include "tthAnalysis/HiggsToTauTau/interface/JetToTauFakeRateInterface.h" // JetToTauFakeRateInterface
 #include "tthAnalysis/HiggsToTauTau/interface/RecoElectronReader.h" // RecoElectronReader
@@ -53,7 +50,6 @@
 #include "tthAnalysis/HiggsToTauTau/interface/JetHistManager.h" // JetHistManager
 #include "tthAnalysis/HiggsToTauTau/interface/MEtHistManager.h" // MEtHistManager
 #include "tthAnalysis/HiggsToTauTau/interface/MEtFilterHistManager.h" // MEtFilterHistManager
-#include "tthAnalysis/HiggsToTauTau/interface/MVAInputVarHistManager.h" // MVAInputVarHistManager
 #include "tthAnalysis/HiggsToTauTau/interface/EvtYieldHistManager.h" // EvtYieldHistManager
 #include "tthAnalysis/HiggsToTauTau/interface/CutFlowTableHistManager.h" // CutFlowTableHistManager
 #include "tthAnalysis/HiggsToTauTau/interface/WeightHistManager.h" // WeightHistManager
@@ -558,7 +554,6 @@ int main(int argc, char* argv[])
     "sel lepton charge",
     "Z-boson mass veto",
     "H->ZZ*->4l veto",
-    //"met LD",
     "MEt filters",
     "signal region veto",
   };
@@ -966,8 +961,8 @@ int main(int argc, char* argv[])
       }
       continue;
     }
-    cutFlowTable.update(">= 4 sel leptons", 1.);
-    cutFlowHistManager->fillHistograms(">= 4 sel leptons", 1.);
+    cutFlowTable.update(">= 4 sel leptons", lumiScale);
+    cutFlowHistManager->fillHistograms(">= 4 sel leptons", lumiScale);
     const RecoLepton* selLepton_lead = selLeptons[0];
     int selLepton_lead_type = getLeptonType(selLepton_lead->pdgId());
     const RecoLepton* selLepton_sublead = selLeptons[1];
@@ -1270,20 +1265,6 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update("H->ZZ*->4l veto", evtWeight);
     cutFlowHistManager->fillHistograms("H->ZZ*->4l veto", evtWeight);
-
-    //double met_LD_cut = 0.;
-    //if      ( selJets.size() >= 4 ) met_LD_cut = -1.; // MET LD cut not applied
-    //else if ( isSameFlavor_OS     ) met_LD_cut = 45.;
-    //else                            met_LD_cut = 30.;
-    //if ( met_LD_cut > 0 && met_LD < met_LD_cut ) {
-    //  if ( run_lumi_eventSelector ) {
-    //	std::cout << "event " << eventInfo.str() << " FAILS MET LD selection." << std::endl;
-    //	std::cout << " (met_LD = " << met_LD << ", met_LD_cut = " << met_LD_cut << ")" << std::endl;
-    //  }
-    //  continue;
-    //}
-    //cutFlowTable.update("met LD", evtWeight);
-    //cutFlowHistManager->fillHistograms("met LD", evtWeight);
 
     if ( apply_met_filters ) {
       if ( !metFilterSelector(metFilters) ) {

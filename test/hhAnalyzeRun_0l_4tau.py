@@ -119,7 +119,6 @@ if __name__ == '__main__':
     running_method                        = running_method,
     num_parallel_jobs                     = num_parallel_jobs,
     executable_addBackgrounds             = "addBackgrounds",
-    # CV: use common executable for estimating jet->lepton and jet->tau_h fake background
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
     histograms_to_fit                     = {
       "EventCounter"                      : {},

@@ -865,8 +865,8 @@ int main(int argc, char* argv[])
       }
       continue;
     }
-    cutFlowTable.update(">= 4 sel taus", 1.);
-    cutFlowHistManager->fillHistograms(">= 4 sel taus", 1.);
+    cutFlowTable.update(">= 4 sel taus", lumiScale);
+    cutFlowHistManager->fillHistograms(">= 4 sel taus", lumiScale);
 
     if ( isMC ) {
       lheInfoReader->read();

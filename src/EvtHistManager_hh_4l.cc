@@ -47,8 +47,14 @@ EvtHistManager_hh_4l::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_numBJets_medium_, numBJets_medium,     evtWeight,     evtWeightErr);
 
   fillWithOverFlow(histogram_m4Vis_,           m4Vis,               evtWeight,     evtWeightErr);
-  fillWithOverFlow(histogram_m4_,              m4_1,            0.5*evtWeight, 0.5*evtWeightErr);
-  fillWithOverFlow(histogram_m4_,              m4_2,            0.5*evtWeight, 0.5*evtWeightErr);
+  if ( m4_1 > 0. ) {
+    double factor = ( m4_2 > 0. ) ? 0.5 : 1.;
+    fillWithOverFlow(histogram_m4_,            m4_1,         factor*evtWeight, factor*evtWeightErr);
+  }
+  if ( m4_2 > 0. ) {
+    double factor = ( m4_1 > 0. ) ? 0.5 : 1.;
+    fillWithOverFlow(histogram_m4_,            m4_2,         factor*evtWeight, factor*evtWeightErr);
+  }
   
   fillWithOverFlow(histogram_EventCounter_,    0.,                  evtWeight,     evtWeightErr);
 }

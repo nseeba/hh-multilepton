@@ -1,19 +1,19 @@
-#include "hhAnalysis/tttt/interface/EvtHistManager_hh_0l_4tau.h"
+#include "hhAnalysis/tttt/interface/EvtHistManager_hh_2l_2tau.h"
 
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow(), fillWithOverFlow2d()
 
-EvtHistManager_hh_0l_4tau::EvtHistManager_hh_0l_4tau(const edm::ParameterSet & cfg)
+EvtHistManager_hh_2l_2tau::EvtHistManager_hh_2l_2tau(const edm::ParameterSet & cfg)
   : HistManagerBase(cfg)
 {}
 
 const TH1 *
-EvtHistManager_hh_0l_4tau::getHistogram_EventCounter() const
+EvtHistManager_hh_2l_2tau::getHistogram_EventCounter() const
 {
   return histogram_EventCounter_;
 }
 
 void
-EvtHistManager_hh_0l_4tau::bookHistograms(TFileDirectory & dir)
+EvtHistManager_hh_2l_2tau::bookHistograms(TFileDirectory & dir)
 {
   histogram_numElectrons_    = book1D(dir, "numElectrons",    "numElectrons",      5, -0.5,  +4.5);
   histogram_numMuons_        = book1D(dir, "numMuons",        "numMuons",          5, -0.5,  +4.5);
@@ -22,6 +22,8 @@ EvtHistManager_hh_0l_4tau::bookHistograms(TFileDirectory & dir)
   histogram_numBJets_loose_  = book1D(dir, "numBJets_loose",  "numBJets_loose",   10, -0.5,  +9.5);
   histogram_numBJets_medium_ = book1D(dir, "numBJets_medium", "numBJets_medium",  10, -0.5,  +9.5);
 
+  histogram_mTauTauVis_      = book1D(dir, "mTauTauVis",      "mTauTauVis",       40,  0.,  200.);
+
   histogram_m4Vis_           = book1D(dir, "m4Vis",           "m4Vis",           150,  0., 1500.);
   histogram_m4_              = book1D(dir, "m4",              "m4",              150,  0., 1500.);
 
@@ -29,12 +31,13 @@ EvtHistManager_hh_0l_4tau::bookHistograms(TFileDirectory & dir)
 }
 
 void
-EvtHistManager_hh_0l_4tau::fillHistograms(int numElectrons,
+EvtHistManager_hh_2l_2tau::fillHistograms(int numElectrons,
 					  int numMuons,
 					  int numHadTaus,
 					  int numJets,
 					  int numBJets_loose,
 					  int numBJets_medium,
+					  double mTauTauVis,
 					  double m4Vis,
 					  double m4_1,
 					  double m4_2,
@@ -48,6 +51,8 @@ EvtHistManager_hh_0l_4tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_numJets_,         numJets,             evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_numBJets_loose_,  numBJets_loose,      evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_numBJets_medium_, numBJets_medium,     evtWeight,     evtWeightErr);
+
+  fillWithOverFlow(histogram_mTauTauVis_,      mTauTauVis,          evtWeight,     evtWeightErr);
 
   fillWithOverFlow(histogram_m4Vis_,           m4Vis,               evtWeight,     evtWeightErr);
   if ( m4_1 > 0. ) {
