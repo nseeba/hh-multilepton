@@ -74,7 +74,6 @@ process.analyze_hh_0l_4tau = cms.PSet(
     apply_hlt_filter = cms.bool(False),
     apply_met_filters = cms.bool(True),
     cfgMEtFilter = recommendedMEtFilters,
-    apply_hadTauFakeRateSF = cms.bool(False),
 
     fillGenEvtHistograms = cms.bool(False),
     cfgEvtYieldHistManager = EvtYieldHistManager_2017,

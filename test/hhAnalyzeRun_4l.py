@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-import os, logging, sys, getpass, numpy as np
-from hhAnalysis.tttt.configs.analyzeConfig_hh_1l_3tau import analyzeConfig_hh_1l_3tau
+import os, logging, sys, getpass
+from hhAnalysis.tttt.configs.analyzeConfig_hh_4l import analyzeConfig_hh_4l
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
 
-# E.g.: ./hhAnalyzeRun_1l_3tau.py -v 2017Dec13 -m default -e 2017
+# E.g.: ./hhAnalyzeRun_4l.py -v 2017Dec13 -m default -e 2017
 
 mode_choices     = [ 'default' ]
 sys_choices      = [ 'full' ] + systematics.an_extended_opts
@@ -14,14 +14,11 @@ systematics.full = systematics.an_extended
 parser = tthAnalyzeParser()
 parser.add_modes(mode_choices)
 parser.add_sys(sys_choices)
-parser.add_preselect()
 parser.add_rle_select()
 parser.add_nonnominal()
-parser.add_tau_id_wp()
 parser.add_hlt_filter()
 parser.add_files_per_job()
 parser.add_use_home()
-parser.add_lep_mva_wp()
 args = parser.parse_args()
 
 # Common arguments
@@ -39,13 +36,11 @@ running_method     = args.running_method
 # Additional arguments
 mode              = args.mode
 systematics_label = args.systematics
-use_preselected   = args.use_preselected
 rle_select        = os.path.expanduser(args.rle_select)
 use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
 files_per_job     = args.files_per_job
 use_home          = args.use_home
-lep_mva_wp        = args.lep_mva_wp
 
 # Use the arguments
 central_or_shifts = []
@@ -53,17 +48,11 @@ for systematic_label in systematics_label:
   for central_or_shift in getattr(systematics, systematic_label):
     if central_or_shift not in central_or_shifts:
       central_or_shifts.append(central_or_shift)
-do_sync = mode.startswith('sync')
 
 chargeSumSelections = [ "OS", "SS" ]
 
 if mode == "default":
-  if use_preselected:
-    from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017_preselected import samples_2017
-  else:
-    from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017 import samples_2017
-  hadTau_selection     = "dR03mvaLoose"
-  applyFakeRateWeights = "4L"
+  from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017 import samples_2017
 else:
   raise ValueError("Internal logic error")
 
@@ -73,36 +62,32 @@ if era == "2017":
 else:
   raise ValueError("Invalid era: %s" % era)
 
+for sample_name, sample_info in samples.items():
+  if sample_name.startswith('/Tau/Run'):
+    sample_info["use_it"] = False
+
 if __name__ == '__main__':
   logging.basicConfig(
     stream = sys.stdout,
     level  = logging.INFO,
-    format = '%(asctime)s - %(levelname)s: %(message)s'
+    format = '%(asctime)s - %(levelname)s: %(message)s',
   )
 
   logging.info(
     "Running the jobs with the following systematic uncertainties enabled: %s" % \
     ', '.join(central_or_shifts)
   )
-  if not use_preselected:
-    logging.warning('Running the analysis on fully inclusive samples!')
 
   if sample_filter:
     samples = filter_samples(samples, sample_filter)
 
-  if args.tau_id_wp:
-    logging.info("Changing tau ID working point: %s -> %s" % (hadTau_selection, args.tau_id_wp))
-    hadTau_selection = args.tau_id_wp
-
-  analysis = analyzeConfig_hh_1l_3tau(
-    configDir = os.path.join("/home",       getpass.getuser(), "hhAnalysis", era, version),
-    outputDir = os.path.join("/hdfs/local", getpass.getuser(), "hhAnalysis", era, version),
-    executable_analyze                    = "analyze_hh_1l_3tau",
-    cfgFile_analyze                       = "analyze_hh_1l_3tau_cfg.py",
+  analysis = analyzeConfig_4l(
+    configDir = os.path.join("/home",       getpass.getuser(), "ttHAnalysis", era, version),
+    outputDir = os.path.join("/hdfs/local", getpass.getuser(), "ttHAnalysis", era, version),
+    executable_analyze                    = "analyze_hh_4l",
+    cfgFile_analyze                       = "analyze_hh_4l_cfg.py",
     samples                               = samples,
-    lep_mva_wp                            = lep_mva_wp,
-    hadTau_selection                      = hadTau_selection,
-    applyFakeRateWeights                  = applyFakeRateWeights,
+    applyFakeRateWeights                  = "4lepton",
     chargeSumSelections                   = chargeSumSelections,
     central_or_shifts                     = central_or_shifts,
     max_files_per_job                     = files_per_job,
@@ -113,17 +98,17 @@ if __name__ == '__main__':
     running_method                        = running_method,
     num_parallel_jobs                     = num_parallel_jobs,
     executable_addBackgrounds             = "addBackgrounds",
-    # CV: use common executable for estimating jet->lepton and jet->tau_h fake background
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
-    histograms_to_fit                     = {
+    histograms_to_fit                     = [
       "EventCounter"                      : {},
       "numJets"                           : {},
       "m4Vis"                             : {},
       "m4"                                : {},
-    },
+    ],
     select_rle_output                     = True,
     dry_run                               = dry_run,
     isDebug                               = debug,
+    rle_select                            = rle_select,
     use_nonnominal                        = use_nonnominal,
     hlt_filter                            = hlt_filter,
     use_home                              = use_home,

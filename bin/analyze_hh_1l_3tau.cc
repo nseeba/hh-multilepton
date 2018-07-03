@@ -478,7 +478,6 @@ int main(int argc, char* argv[])
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
-
   typedef std::map<int, selHistManagerType*> int_to_selHistManagerMap;
   std::map<int, int_to_selHistManagerMap> selHistManagers;
   for ( std::vector<leptonGenMatchEntry>::const_iterator leptonGenMatch_definition = leptonGenMatch_definitions.begin();
@@ -1051,7 +1050,7 @@ int main(int argc, char* argv[])
     Particle::LorentzVector mht_p4 = compMHT(fakeableLeptons, fakeableHadTaus, selJets);
     double met_LD = compMEt_LD(met.p4(), mht_p4);
 
-    double m4Vis_presel = (preselLepton ->p4() + preselHadTau_lead->p4() + preselHadTau_sublead->p4() + preselHadTau_third->p4()).mass();
+    double m4Vis_presel = (preselLepton->p4() + preselHadTau_lead->p4() + preselHadTau_sublead->p4() + preselHadTau_third->p4()).mass();
     double m4_presel_1 = -1.; // CV: do not run SVfit on preselected leptons and taus to save computing time
     double m4_presel_2 = -1.;
 
@@ -1485,7 +1484,7 @@ int main(int argc, char* argv[])
     cutFlowTable.update("signal region veto", evtWeight);
     cutFlowHistManager->fillHistograms("signal region veto", evtWeight);
     
-    double m4Vis_sel = (selLepton ->p4() + selHadTau_lead->p4() + selHadTau_sublead->p4() + selHadTau_third->p4()).mass();
+    double m4Vis_sel = (selLepton->p4() + selHadTau_lead->p4() + selHadTau_sublead->p4() + selHadTau_third->p4()).mass();
     double m4_sel_1 = -1.; 
     double m4_sel_2 = -1.; 
     

@@ -123,6 +123,7 @@ if __name__ == '__main__':
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
     histograms_to_fit                     = {
       "EventCounter"                      : {},
+      "numJets"                           : {},
       "m4Vis"                             : {},
       "m4"                                : {},
     },
