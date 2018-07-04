@@ -187,7 +187,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
     self.histogramDir_prep_dcard_SS = "2l_2tau_sumSS_Tight"
     self.make_plots_backgrounds = [ "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW" ] + [ "conversions", "fakes_data" ]
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2l_2tau_cfg.py")
-    self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2l_2tau_cfg.py") #TODO
+    self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2l_2tau_cfg.py") 
 
     self.select_rle_output = select_rle_output
     self.rle_select = rle_select

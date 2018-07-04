@@ -94,8 +94,8 @@ if __name__ == '__main__':
     hadTau_selection = args.tau_id_wp
 
   analysis = analyzeConfig_hh_3l_1tau(
-    configDir = os.path.join("/home",       getpass.getuser(), "ttHAnalysis", era, version),
-    outputDir = os.path.join("/hdfs/local", getpass.getuser(), "ttHAnalysis", era, version),
+    configDir = os.path.join("/home",       getpass.getuser(), "hhAnalysis", era, version),
+    outputDir = os.path.join("/hdfs/local", getpass.getuser(), "hhAnalysis", era, version),
     executable_analyze                    = "analyze_hh_3l_1tau",
     cfgFile_analyze                       = "analyze_hh_3l_1tau_cfg.py",
     samples                               = samples,
