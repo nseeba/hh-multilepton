@@ -34,7 +34,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
 
   Sets up a folder structure by defining full path names; no directory creation is delegated here.
 
-  Args specific to analyzeConfig_2l_2tau:
+  Args specific to analyzeConfig_hh_2l_2tau:
     hadTau_selection: either `Tight`, `Loose` or `Fakeable`
     hadTau_charge_selection: either `OS` or `SS` (opposite-sign or same-sign)
 
@@ -98,6 +98,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
       dry_run                   = dry_run,
       isDebug                   = isDebug,
       use_home                  = use_home,
+      template_dir              = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'tttt', 'test', 'templates')
     )
 
     self.samples = samples
@@ -175,11 +176,18 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
+    self.prep_dcard_signals = []
+    for sample_name, sample_info in self.samples.items():
+      if not sample_info["use_it"]:
+        continue
+      sample_category = sample_info["sample_category"]
+      if sample_category.startswith("signal"):
+        prep_dcard_signals.append(sample_category)
     self.histogramDir_prep_dcard = "2l_2tau_sumOS_Tight"
     self.histogramDir_prep_dcard_SS = "2l_2tau_sumSS_Tight"
     self.make_plots_backgrounds = [ "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW" ] + [ "conversions", "fakes_data" ]
-    self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_2l_2tau_cfg.py")
-    self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_2l_2tau_cfg.py") #TODO
+    self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2l_2tau_cfg.py")
+    self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2l_2tau_cfg.py") #TODO
 
     self.select_rle_output = select_rle_output
     self.rle_select = rle_select
@@ -235,7 +243,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
       jobOptions['hadTauFakeRateWeight.applyFitFunction_sublead'] = True
       jobOptions['apply_hadTauFakeRateSF'] = True
 
-    lines = super(analyzeConfig_2l_2tau, self).createCfg_analyze(jobOptions, sample_info)
+    lines = super(analyzeConfig_hh_2l_2tau, self).createCfg_analyze(jobOptions, sample_info)
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
 
   def createCfg_makePlots_mcClosure(self, jobOptions): #TODO
@@ -366,7 +374,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
 
                 sample_category = sample_info["sample_category"]
                 is_mc = (sample_info["type"] == "mc")
-                is_signal = (sample_category == "signal")
+                is_signal = (sample_category.startswith("signal"))
 
                 for central_or_shift in self.central_or_shifts:
 
@@ -380,7 +388,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
                       if not is_mc and not isFR_shape_shift:
                         continue
 
-                    if central_or_shift in systematics.LHE().ttH and sample_category != "signal":
+                    if central_or_shift in systematics.LHE().ttH and not sample_category.startswith("signal"):
                       continue
                     if central_or_shift in systematics.LHE().ttW and sample_category != "TTW":
                       continue
@@ -447,8 +455,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
                   logging.info("Creating configuration files to run 'addBackgrounds' for sample %s" % process_name)
 
                   sample_categories = [ sample_category ]
-                  if is_signal:
-                    sample_categories = [ "signal" ]
                   for sample_category in sample_categories:
                     # sum non-fake and fake contributions for each MC sample separately
                     genMatch_categories = [ "nonfake", "conversions", "fake" ]
@@ -465,11 +471,11 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
                         # sum non-fake contributions for each MC sample separately
                         # input processes: TT2l0g0j,...
                         # output processes: TT; ...
-                        if sample_category in [ "signal" ]:
+                        if sample_category.startswith("signal"):
                           lepton_and_hadTau_genMatches = []
                           lepton_and_hadTau_genMatches.extend(self.lepton_and_hadTau_genMatches_nonfakes)
                           lepton_and_hadTau_genMatches.extend(self.lepton_and_hadTau_genMatches_conversions)
-                          lepton_and_hadTau_genMatches.extend(self.lepton_and_hadTau_genMatches_fakes)
+                          ##lepton_and_hadTau_genMatches.extend(self.lepton_and_hadTau_genMatches_fakes)
                           processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in lepton_and_hadTau_genMatches ]
                         else:
                           processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_and_hadTau_genMatches_nonfakes ]
@@ -486,7 +492,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
                         # sum conversion background contributions for each MC sample separately
                         # input processes: TT1l1g0j,...
                         # output processes: TT_conversions; ...
-                        if sample_category in [ "signal" ]:
+                        if sample_category.startswith("signal"):
                           processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_and_hadTau_genMatches_conversions ]
                         else:
                           processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_and_hadTau_genMatches_conversions ]
@@ -503,7 +509,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
                         # sum fake background contributions for each MC sample separately
                         # input processes: TT1l1j, TT0l2j; ...
                         # output processes: TT_fake; ...
-                        if sample_category in [ "signal" ]:
+                        if sample_category.startswith("signal"):
                           processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_and_hadTau_genMatches_fakes ]
                         else:
                           processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_and_hadTau_genMatches_fakes ]
@@ -553,7 +559,8 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
               key_hadd_stage1_5 = getKey(lepton_charge_selection, hadTau_charge_selection, lepton_and_hadTau_selection_and_frWeight, chargeSumSelection)
               sample_categories = []
               sample_categories.extend(self.nonfake_backgrounds)
-              sample_categories.extend([ "signal" ])
+              if "signal_nonresonant" in self.prep_dcard_signals:
+                sample_categories.extend([ "signal_nonresonant" ])
               processes_input = []
               for sample_category in sample_categories:
                 processes_input.append("%s_fake" % sample_category)
@@ -578,7 +585,8 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
               key_addBackgrounds_job_conversions = getKey(lepton_charge_selection, hadTau_charge_selection, lepton_and_hadTau_selection_and_frWeight, chargeSumSelection, "conversions")
               sample_categories = []
               sample_categories.extend(self.nonfake_backgrounds)
-              sample_categories.extend([ "signal" ])
+              if "signal_nonresonant" in self.prep_dcard_signals:
+                sample_categories.extend([ "signal_nonresonant" ])
               processes_input = []
               for sample_category in sample_categories:
                 processes_input.append("%s_conversion" % sample_category)
