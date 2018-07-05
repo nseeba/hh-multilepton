@@ -302,7 +302,7 @@ int main(int argc, char* argv[])
 
 //--- declare event-level variables
   EventInfo eventInfo(isSignal, isMC, false);
-  EventInfoReader eventInfoReader(&eventInfo, false, false); // CV: reading of 'puWeight' branch temporaily disabled, because it does not exist in the Ntuples produced by Karl/Xandra
+  EventInfoReader eventInfoReader(&eventInfo);
   inputTree->registerReader(&eventInfoReader);
 
 //--- declare particle collections

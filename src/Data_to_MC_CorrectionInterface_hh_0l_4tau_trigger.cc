@@ -150,7 +150,7 @@ Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::getSF_triggerEff() const
 	    double prob_tau4_data = getProb_tau(tau4_status, eff_2tau_tauLeg4_data);
 	    double prob_tau4_mc   = getProb_tau(tau4_status, eff_2tau_tauLeg4_mc);
 	    
-	    bool isTrig_2tau_toy   = nTrig_2tau_tauLeg >= 2;
+	    bool isTrig_2tau_toy = nTrig_2tau_tauLeg >= 2;
 	    
 	    if ( isTriggered_2tau_ == isTrig_2tau_toy ) {
 	      prob_data += prob_tau1_data * prob_tau2_data * prob_tau3_data * prob_tau4_data;

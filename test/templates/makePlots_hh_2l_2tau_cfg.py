@@ -4,21 +4,31 @@ import os
 
 from tthAnalysis.HiggsToTauTau.configs.makePlots_cfi import process
 
+process.makePlots.pluginType = cms.string("Plotter_HH")
+
 process.makePlots.processesBackground = cms.vstring(
+    "ZZ",
+    "WZ",
+    "WW",    
+    "fakes_data",
     "TT",
     "TTW",
+    "TTWW",
     "TTZ",
-    "EWK",
-    "Rares",
     "conversions",
-    "fakes_data"
+    "Other",
+    "VH",
+    "TTH",
+    "TH"
 )
-process.makePlots.processSignal = cms.string("signal")
+process.makePlots.processSignal = cms.string("signal_nonresonant")
+process.makePlots.scaleSignal = cms.double(50.)
+process.makePlots.legendEntrySignal = cms.string("50x SM HH#rightarrow WWWW,WW#tau#tau,#tau#tau#tau#tau")
 
 process.makePlots.categories = cms.VPSet(
     cms.PSet(
-        name = cms.string("2l_2tau_sumOS_Tight"),
-        label = cms.string("2l_2tau")
+        name = cms.string("hh_2l_2tau_sumOS_Tight"),
+        label = cms.string("2l+2tau_{h}")
     )
 )
 
@@ -73,3 +83,11 @@ process.makePlots.distributions.extend([
         yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
     )
 ])
+
+process.makePlots.nuisanceParameters.normalization.ZZ    = cms.string("1.0 +/- 0.20")
+process.makePlots.nuisanceParameters.normalization.WZ    = cms.string("1.0 +/- 0.20")
+process.makePlots.nuisanceParameters.normalization.WW    = cms.string("1.0 +/- 0.20")
+process.makePlots.nuisanceParameters.normalization.Other = cms.string("1.0 +/- 0.20")
+process.makePlots.nuisanceParameters.normalization.VH    = cms.string("1.0 +/- 0.20")
+process.makePlots.nuisanceParameters.normalization.TTH   = cms.string("1.0 +/- 0.20")
+process.makePlots.nuisanceParameters.normalization.TH    = cms.string("1.0 +/- 0.20")

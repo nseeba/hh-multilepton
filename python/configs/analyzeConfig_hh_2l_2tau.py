@@ -16,7 +16,7 @@ def get_lepton_and_hadTau_selection_and_frWeight(lepton_and_hadTau_selection, le
   return lepton_and_hadTau_selection_and_frWeight
 
 def getHistogramDir(lepton_selection, hadTau_selection, lepton_and_hadTau_frWeight, lepton_charge_selection, hadTau_charge_selection, chargeSumSelection):
-  histogramDir = "2l_2tau"
+  histogramDir = "hh_2l_2tau"
   if lepton_charge_selection != "disabled":
     histogramDir += "_lep%s" % lepton_charge_selection
   if hadTau_charge_selection != "disabled":
@@ -77,28 +77,28 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
         use_home                  = True,
       ):
     analyzeConfig.__init__(self,
-      configDir                 = configDir,
-      outputDir                 = outputDir,
-      executable_analyze        = executable_analyze,
-      channel                   = "2l_2tau",
-      lep_mva_wp                = lep_mva_wp,
-      central_or_shifts         = central_or_shifts,
-      max_files_per_job         = max_files_per_job,
-      era                       = era,
-      use_lumi                  = use_lumi,
-      lumi                      = lumi,
-      check_output_files        = check_output_files,
-      running_method            = running_method,
-      num_parallel_jobs         = num_parallel_jobs,
-      histograms_to_fit         = histograms_to_fit,
-      triggers                  = [ '1e', '1mu', '2e', '2mu', '1e1mu' ],
-      executable_prep_dcard     = executable_prep_dcard,
-      executable_add_syst_dcard = executable_add_syst_dcard,
-      verbose                   = verbose,
-      dry_run                   = dry_run,
-      isDebug                   = isDebug,
-      use_home                  = use_home,
-      template_dir              = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'tttt', 'test', 'templates')
+      configDir                       = configDir,
+      outputDir                       = outputDir,
+      executable_analyze              = executable_analyze,
+      channel                         = "hh_2l_2tau",
+      lep_mva_wp                      = lep_mva_wp,
+      central_or_shifts               = central_or_shifts,
+      max_files_per_job               = max_files_per_job,
+      era                             = era,
+      use_lumi                        = use_lumi,
+      lumi                            = lumi,
+      check_output_files              = check_output_files,
+      running_method                  = running_method,
+      num_parallel_jobs               = num_parallel_jobs,
+      histograms_to_fit               = histograms_to_fit,
+      triggers                        = [ '1e', '1mu', '2e', '2mu', '1e1mu' ],
+      executable_prep_dcard           = executable_prep_dcard,
+      executable_add_syst_dcard       = executable_add_syst_dcard,
+      verbose                         = verbose,
+      dry_run                         = dry_run,
+      isDebug                         = isDebug,
+      use_home                        = use_home,
+      template_dir                    = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'tttt', 'test', 'templates')
     )
 
     self.samples = samples
@@ -172,7 +172,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
     self.executable_addBackgrounds = executable_addBackgrounds
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
 
-    self.nonfake_backgrounds = [ "TT", "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW", "VH" ]
+    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
@@ -183,9 +183,9 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
       sample_category = sample_info["sample_category"]
       if sample_category.startswith("signal"):
         prep_dcard_signals.append(sample_category)
-    self.histogramDir_prep_dcard = "2l_2tau_sumOS_Tight"
-    self.histogramDir_prep_dcard_SS = "2l_2tau_sumSS_Tight"
-    self.make_plots_backgrounds = [ "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW" ] + [ "conversions", "fakes_data" ]
+    self.histogramDir_prep_dcard = "hh_2l_2tau_sumOS_Tight"
+    self.histogramDir_prep_dcard_SS = "hh_2l_2tau_sumSS_Tight"
+    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2l_2tau_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2l_2tau_cfg.py") 
 
@@ -254,10 +254,10 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
     """
     lines = []
     lines.append("process.fwliteInput.fileNames = cms.vstring('%s')" % jobOptions['inputFile'])
-    lines.append("process.makePlots_mcClosure.outputFileName = cms.string('%s')" % jobOptions['outputFile'])
-    lines.append("process.makePlots_mcClosure.processesBackground = cms.vstring(%s)" % self.make_plots_backgrounds)
-    lines.append("process.makePlots_mcClosure.processSignal = cms.string('%s')" % self.make_plots_signal)
-    lines.append("process.makePlots_mcClosure.categories = cms.VPSet(")
+    lines.append("process.makePlots.outputFileName = cms.string('%s')" % jobOptions['outputFile'])
+    lines.append("process.makePlots.processesBackground = cms.vstring(%s)" % self.make_plots_backgrounds)
+    lines.append("process.makePlots.processSignal = cms.string('%s')" % self.make_plots_signal)
+    lines.append("process.makePlots.categories = cms.VPSet(")
     lines.append("  cms.PSet(")
     lines.append("    signal = cms.string('%s')," % self.histogramDir_prep_dcard)
     lines.append("    sideband = cms.string('%s')," % self.histogramDir_prep_dcard.replace("Tight", "Fakeable_mcClosure_wFakeRateWeights"))

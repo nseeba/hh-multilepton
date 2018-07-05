@@ -430,7 +430,6 @@ int main(int argc, char* argv[])
     }
     lheInfoReader = new LHEInfoReader(hasLHE);
     inputTree -> registerReader(lheInfoReader);
-
   }
 
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
@@ -1063,6 +1062,7 @@ int main(int argc, char* argv[])
       preselMuons.size(),
       selHadTaus.size(),
       selJets.size(),
+      countHighPtObjects(selJets, 40.),
       selBJets_loose.size(),
       selBJets_medium.size(),
       m4Vis_presel,
@@ -1402,11 +1402,10 @@ int main(int argc, char* argv[])
 	}
       }
     }
-
     bool failsZbosonMassVeto = isSameFlavor_OS && std::fabs(massSameFlavor_OS - z_mass) < z_window;
     if ( failsZbosonMassVeto ) {
       if ( run_lumi_eventSelector ) {
-    std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
+	std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
       }
       continue;
     }
@@ -1550,6 +1549,7 @@ int main(int argc, char* argv[])
       selMuons.size(),
       selHadTaus.size(),
       selJets.size(),
+      countHighPtObjects(selJets, 40.),
       selBJets_loose.size(),
       selBJets_medium.size(),
       m4Vis_sel,
@@ -1567,6 +1567,7 @@ int main(int argc, char* argv[])
 	  selMuons.size(),
 	  selHadTaus.size(),
 	  selJets.size(),
+	  countHighPtObjects(selJets, 40.),
 	  selBJets_loose.size(),
 	  selBJets_medium.size(),
 	  m4Vis_sel,

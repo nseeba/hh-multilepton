@@ -28,6 +28,7 @@ public:
                  int numMuons,
                  int numHadTaus,
                  int numJets,
+		 int numJetsPtGt40,
                  int numBJets_loose,
                  int numBJets_medium,
 		 double mTauTauVis,
@@ -44,6 +45,7 @@ public:
   TH1 * histogram_numMuons_;
   TH1 * histogram_numHadTaus_;
   TH1 * histogram_numJets_;
+  TH1 * histogram_numJetsPtGt40_;
   TH1 * histogram_numBJets_loose_;
   TH1 * histogram_numBJets_medium_;
 

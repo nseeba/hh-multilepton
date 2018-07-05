@@ -1073,6 +1073,7 @@ int main(int argc, char* argv[])
       preselMuons.size(),
       selHadTaus.size(),
       selJets.size(),
+      countHighPtObjects(selJets, 40.),
       selBJets_loose.size(),
       selBJets_medium.size(),
       m4Vis_presel,
@@ -1589,6 +1590,7 @@ int main(int argc, char* argv[])
       selMuons.size(),
       selHadTaus.size(),
       selJets.size(),
+      countHighPtObjects(selJets, 40.),
       selBJets_loose.size(),
       selBJets_medium.size(),
       m4Vis_sel,
@@ -1604,6 +1606,7 @@ int main(int argc, char* argv[])
           selMuons.size(),
           selHadTaus.size(),
           selJets.size(),
+	  countHighPtObjects(selJets, 40.),
           selBJets_loose.size(),
           selBJets_medium.size(),
           m4Vis_sel,
@@ -1624,8 +1627,8 @@ int main(int argc, char* argv[])
     selHistManager->weights_->fillHistograms("fakeRate", weight_fakeRate);
 
     std::string category;
-    if      ( selElectrons.size() >= 1 ) category = "1e_3tau";
-    else if ( selMuons.size()     >= 1 ) category = "1mu_3tau";
+    if      ( selMuons.size()     >= 1 ) category = "1mu_3tau";
+    else if ( selElectrons.size() >= 1 ) category = "1e_3tau";
     else assert(0);
 
     if ( selHistManager->electrons_in_categories_.find(category) != selHistManager->electrons_in_categories_.end() ) {
@@ -1643,6 +1646,7 @@ int main(int argc, char* argv[])
       selMuons.size(),
       selHadTaus.size(),
       selJets.size(),
+      countHighPtObjects(selJets, 40.),
       selBJets_loose.size(),
       selBJets_medium.size(),
       m4Vis_sel,

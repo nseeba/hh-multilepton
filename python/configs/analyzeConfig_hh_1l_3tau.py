@@ -20,7 +20,7 @@ def getHistogramDir(lepton_selection, hadTau_selection, lepton_and_hadTau_frWeig
   for separator in [ "|" ]:
     if hadTau_selection_part1.find(separator) != -1:
       hadTau_selection_part1 = hadTau_selection_part1[:hadTau_selection_part1.find(separator)]
-  histogramDir = "1l_3tau_%s_%s" % (chargeSumSelection, hadTau_selection_part1)
+  histogramDir = "hh_1l_3tau_%s_%s" % (chargeSumSelection, hadTau_selection_part1)
   if lepton_selection.find("Fakeable") != -1 or hadTau_selection.find("Fakeable") != -1:
     if lepton_and_hadTau_frWeight == "enabled":
       histogramDir += "_wFakeRateWeights"
@@ -33,7 +33,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
 
   Sets up a folder structure by defining full path names; no directory creation is delegated here.
 
-  Args specific to analyzeConfig_1l_3tau:
+  Args specific to analyzeConfig_hh_1l_3tau:
     hadTau_selection: either `Tight`, `Loose` or `Fakeable`
 
   See $CMSSW_BASE/src/tthAnalysis/HiggsToTauTau/python/analyzeConfig.py
@@ -75,7 +75,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
       configDir          = configDir,
       outputDir          = outputDir,
       executable_analyze = executable_analyze,
-      channel            = "1l_3tau",
+      channel            = "hh_1l_3tau",
       lep_mva_wp         = lep_mva_wp,
       central_or_shifts  = central_or_shifts,
       max_files_per_job  = max_files_per_job,
@@ -151,8 +151,8 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
     self.executable_addBackgrounds = executable_addBackgrounds
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
 
-    self.nonfake_backgrounds = [ "TT", "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW", "VH" ]
-
+    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
+    
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
     self.prep_dcard_signals = []
     for sample_name, sample_info in self.samples.items():
@@ -161,10 +161,10 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
       sample_category = sample_info["sample_category"]
       if sample_category.startswith("signal"):
         prep_dcard_signals.append(sample_category)
-    self.make_plots_backgrounds = [ "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW" ] + [ "conversions", "fakes_data" ]
+    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
-    self.histogramDir_prep_dcard = "1l_3tau_OS_Tight"
-    self.histogramDir_prep_dcard_SS = "1l_3tau_SS_Tight"
+    self.histogramDir_prep_dcard = "hh_1l_3tau_OS_Tight"
+    self.histogramDir_prep_dcard_SS = "hh_1l_3tau_SS_Tight"
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_1l_3tau_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_1l_3tau_cfg.py") 
 
@@ -238,10 +238,10 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
     """
     lines = []
     lines.append("process.fwliteInput.fileNames = cms.vstring('%s')" % jobOptions['inputFile'])
-    lines.append("process.makePlots_mcClosure.outputFileName = cms.string('%s')" % jobOptions['outputFile'])
-    lines.append("process.makePlots_mcClosure.processesBackground = cms.vstring(%s)" % self.make_plots_backgrounds)
-    lines.append("process.makePlots_mcClosure.processSignal = cms.string('%s')" % self.make_plots_signal)
-    lines.append("process.makePlots_mcClosure.categories = cms.VPSet(")
+    lines.append("process.makePlots.outputFileName = cms.string('%s')" % jobOptions['outputFile'])
+    lines.append("process.makePlots.processesBackground = cms.vstring(%s)" % self.make_plots_backgrounds)
+    lines.append("process.makePlots.processSignal = cms.string('%s')" % self.make_plots_signal)
+    lines.append("process.makePlots.categories = cms.VPSet(")
     lines.append("  cms.PSet(")
     lines.append("    signal = cms.string('%s')," % self.histogramDir_prep_dcard)
     lines.append("    sideband = cms.string('%s')," % self.histogramDir_prep_dcard.replace("Tight", "Fakeable_mcClosure_wFakeRateWeights"))
@@ -579,9 +579,9 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
       key_hadd_stage1_5 = getKey(get_lepton_and_hadTau_selection_and_frWeight("Fakeable", "enabled"), chargeSumSelection)
       category_sideband = None
       if self.applyFakeRateWeights == "4L":
-        category_sideband = "1l_3tau_%s_Fakeable_wFakeRateWeights" % chargeSumSelection
+        category_sideband = "hh_1l_3tau_%s_Fakeable_wFakeRateWeights" % chargeSumSelection
       elif self.applyFakeRateWeights == "3tau":
-        category_sideband = "1l_3tau_%s_Fakeable_wFakeRateWeights" % chargeSumSelection
+        category_sideband = "hh_1l_3tau_%s_Fakeable_wFakeRateWeights" % chargeSumSelection
       else:
         raise ValueError("Invalid Configuration parameter 'applyFakeRateWeights' = %s !!" % self.applyFakeRateWeights)
       self.jobOptions_addFakes[key_addFakes_job] = {
@@ -592,7 +592,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
           (self.channel, chargeSumSelection)),
         'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgroundLeptonFakes_%s_%s.log" % \
           (self.channel, chargeSumSelection)),
-        'category_signal' : "1l_3tau_%s_Tight" % chargeSumSelection,
+        'category_signal' : "hh_1l_3tau_%s_Tight" % chargeSumSelection,
         'category_sideband' : category_sideband
       }
       self.createCfg_addFakes(self.jobOptions_addFakes[key_addFakes_job])

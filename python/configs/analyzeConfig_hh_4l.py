@@ -15,7 +15,7 @@ def get_lepton_selection_and_frWeight(lepton_selection, lepton_frWeight):
   return lepton_selection_and_frWeight
 
 def getHistogramDir(lepton_selection, lepton_frWeight, chargeSumSelection):
-  histogramDir = "4l_%s_%s" % (chargeSumSelection, lepton_selection)
+  histogramDir = "hh_4l_%s_%s" % (chargeSumSelection, lepton_selection)
   if lepton_selection.find("Fakeable") != -1:
     if lepton_frWeight == "enabled":
       histogramDir += "_wFakeRateWeights"
@@ -28,7 +28,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
 
   Sets up a folder structure by defining full path names; no directory creation is delegated here.
 
-  Args specific to analyzeConfig_4l:
+  Args specific to analyzeConfig_hh_4l:
     lepton_selection: either `Tight`, `Loose` or `Fakeable`
 
   See $CMSSW_BASE/src/tthAnalysis/HiggsToTauTau/python/analyzeConfig.py
@@ -69,7 +69,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
       configDir                 = configDir,
       outputDir                 = outputDir,
       executable_analyze        = executable_analyze,
-      channel                   = "4l",
+      channel                   = "hh_4l",
       central_or_shifts         = central_or_shifts,
       max_files_per_job         = max_files_per_job,
       era                       = era,
@@ -127,10 +127,10 @@ class analyzeConfig_hh_4l(analyzeConfig):
     self.executable_addBackgrounds = executable_addBackgrounds
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
 
-    self.nonfake_backgrounds = [ "TT", "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW", "VH" ]
+    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
-    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "fakes_data", "fakes_mc" ]
+    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
     self.prep_dcard_signals = []
     for sample_name, sample_info in self.samples.items():
       if not sample_info["use_it"]:
@@ -138,9 +138,9 @@ class analyzeConfig_hh_4l(analyzeConfig):
       sample_category = sample_info["sample_category"]
       if sample_category.startswith("signal"):
         prep_dcard_signals.append(sample_category)
-    self.histogramDir_prep_dcard = "4l_OS_Tight"
-    self.histogramDir_prep_dcard_SS = "4l_SS_Tight"
-    self.make_plots_backgrounds = [ "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW" ] + [ "conversions", "fakes_data" ]
+    self.histogramDir_prep_dcard = "hh_4l_OS_Tight"
+    self.histogramDir_prep_dcard_SS = "hh_4l_SS_Tight"
+    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_4l_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_4l_cfg.py")
 
@@ -150,7 +150,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
     self.hlt_filter = hlt_filter
 
   def createCfg_analyze(self, jobOptions, sample_info, lepton_selection):
-    """Create python configuration file for the analyze_4l executable (analysis code)
+    """Create python configuration file for the analyze_hh_4l executable (analysis code)
 
     Args:
       inputFiles: list of input files (Ntuples)
@@ -182,10 +182,10 @@ class analyzeConfig_hh_4l(analyzeConfig):
     """
     lines = []
     lines.append("process.fwliteInput.fileNames = cms.vstring('%s')" % jobOptions['inputFile'])
-    lines.append("process.makePlots_mcClosure.outputFileName = cms.string('%s')" % jobOptions['outputFile'])
-    lines.append("process.makePlots_mcClosure.processesBackground = cms.vstring(%s)" % self.make_plots_backgrounds)
-    lines.append("process.makePlots_mcClosure.processSignal = cms.string('%s')" % self.make_plots_signal)
-    lines.append("process.makePlots_mcClosure.categories = cms.VPSet(")
+    lines.append("process.makePlots.outputFileName = cms.string('%s')" % jobOptions['outputFile'])
+    lines.append("process.makePlots.processesBackground = cms.vstring(%s)" % self.make_plots_backgrounds)
+    lines.append("process.makePlots.processSignal = cms.string('%s')" % self.make_plots_signal)
+    lines.append("process.makePlots.categories = cms.VPSet(")
     lines.append("  cms.PSet(")
     lines.append("    signal = cms.string('%s')," % self.histogramDir_prep_dcard)
     lines.append("    sideband = cms.string('%s')," % self.histogramDir_prep_dcard.replace("Tight", "Fakeable_mcClosure_wFakeRateWeights"))
@@ -493,7 +493,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
     for chargeSumSelection in self.chargeSumSelections:
       key_addFakes_job = getKey("fakes_data", chargeSumSelection)
       key_hadd_stage1_5 = getKey(get_lepton_selection_and_frWeight("Fakeable", "enabled"), chargeSumSelection)
-      category_sideband = "4l_%s_Fakeable" % chargeSumSelection
+      category_sideband = "hh_4l_%s_Fakeable" % chargeSumSelection
       self.jobOptions_addFakes[key_addFakes_job] = {
         'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5],
         'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgroundLeptonFakes_%s_%s_cfg.py" % \
@@ -502,7 +502,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
           (self.channel, chargeSumSelection)),
         'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgroundLeptonFakes_%s_%s.log" % \
           (self.channel, chargeSumSelection)),
-        'category_signal' : "4l_%s_Tight" % chargeSumSelection,
+        'category_signal' : "hh_4l_%s_Tight" % chargeSumSelection,
         'category_sideband' : category_sideband
       }
       self.createCfg_addFakes(self.jobOptions_addFakes[key_addFakes_job])

@@ -20,7 +20,7 @@ def getHistogramDir(hadTau_selection, hadTau_frWeight, hadTau_charge_selection):
   for separator in [ "|" ]:
     if hadTau_selection_part1.find(separator) != -1:
       hadTau_selection_part1 = hadTau_selection_part1[:hadTau_selection_part1.find(separator)]
-  histogramDir = "0l_4tau_%s_%s" % (hadTau_charge_selection, hadTau_selection_part1)
+  histogramDir = "hh_0l_4tau_%s_%s" % (hadTau_charge_selection, hadTau_selection_part1)
   if hadTau_selection_part1.find("Fakeable") != -1:
     if hadTau_frWeight == "enabled":
       histogramDir += "_wFakeRateWeights"
@@ -75,7 +75,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
       configDir          = configDir,
       outputDir          = outputDir,
       executable_analyze = executable_analyze,
-      channel            = "0l_4tau",
+      channel            = "hh_0l_4tau",
       lep_mva_wp         = lep_mva_wp,
       central_or_shifts  = central_or_shifts,
       max_files_per_job  = max_files_per_job,
@@ -133,8 +133,8 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
     self.executable_addBackgrounds = executable_addBackgrounds
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
 
-    self.nonfake_backgrounds = [ "TT", "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW", "VH" ]
-
+    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
+    
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "fakes_data", "fakes_mc" ]
     self.prep_dcard_signals = []
     for sample_name, sample_info in self.samples.items():
@@ -143,10 +143,10 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
       sample_category = sample_info["sample_category"]
       if sample_category.startswith("signal"):
         prep_dcard_signals.append(sample_category)
-    self.make_plots_backgrounds = [ "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW" ] + [ "fakes_data" ]
+    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "fakes_data" ]
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
-    self.histogramDir_prep_dcard = "0l_4tau_OS_Tight"
-    self.histogramDir_prep_dcard_SS = "0l_4tau_SS_Tight"
+    self.histogramDir_prep_dcard = "hh_0l_4tau_OS_Tight"
+    self.histogramDir_prep_dcard_SS = "hh_0l_4tau_SS_Tight"
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_0l_4tau_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_0l_4tau_cfg.py") 
 
@@ -220,10 +220,10 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
     """
     lines = []
     lines.append("process.fwliteInput.fileNames = cms.vstring('%s')" % jobOptions['inputFile'])
-    lines.append("process.makePlots_mcClosure.outputFileName = cms.string('%s')" % jobOptions['outputFile'])
-    lines.append("process.makePlots_mcClosure.processesBackground = cms.vstring(%s)" % self.make_plots_backgrounds)
-    lines.append("process.makePlots_mcClosure.processSignal = cms.string('%s')" % self.make_plots_signal)
-    lines.append("process.makePlots_mcClosure.categories = cms.VPSet(")
+    lines.append("process.makePlots.outputFileName = cms.string('%s')" % jobOptions['outputFile'])
+    lines.append("process.makePlots.processesBackground = cms.vstring(%s)" % self.make_plots_backgrounds)
+    lines.append("process.makePlots.processSignal = cms.string('%s')" % self.make_plots_signal)
+    lines.append("process.makePlots.categories = cms.VPSet(")
     lines.append("  cms.PSet(")
     lines.append("    signal = cms.string('%s')," % self.histogramDir_prep_dcard)
     lines.append("    sideband = cms.string('%s')," % self.histogramDir_prep_dcard.replace("Tight", "Fakeable_mcClosure_wFakeRateWeights"))
@@ -499,7 +499,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
       key_hadd_stage1_5 = getKey(get_hadTau_selection_and_frWeight("Fakeable", "enabled"), hadTau_charge_selection)
       category_sideband = None
       if self.applyFakeRateWeights == "4tau":
-        category_sideband = "0l_4tau_%s_Fakeable_wFakeRateWeights" % hadTau_charge_selection
+        category_sideband = "hh_0l_4tau_%s_Fakeable_wFakeRateWeights" % hadTau_charge_selection
       else:
         raise ValueError("Invalid Configuration parameter 'applyFakeRateWeights' = %s !!" % self.applyFakeRateWeights)
       self.jobOptions_addFakes[key_addFakes_job] = {
@@ -510,7 +510,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
           (self.channel, hadTau_charge_selection)),
         'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgroundLeptonFakes_%s_%s.log" % \
           (self.channel, hadTau_charge_selection)),
-        'category_signal' : "0l_4tau_%s_Tight" % hadTau_charge_selection,
+        'category_signal' : "hh_0l_4tau_%s_Tight" % hadTau_charge_selection,
         'category_sideband' : category_sideband
       }
       self.createCfg_addFakes(self.jobOptions_addFakes[key_addFakes_job])

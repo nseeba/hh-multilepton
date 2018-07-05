@@ -19,7 +19,7 @@ def getHistogramDir(lepton_selection, hadTau_selection, lepton_and_hadTau_frWeig
   for separator in [ "|" ]:
     if hadTau_selection_part1.find(separator) != -1:
       hadTau_selection_part1 = hadTau_selection_part1[:hadTau_selection_part1.find(separator)]
-  histogramDir = "3l_1tau_%s_lep%s_tau%s" % (chargeSumSelection, lepton_selection, hadTau_selection_part1)
+  histogramDir = "hh_3l_1tau_%s_lep%s_tau%s" % (chargeSumSelection, lepton_selection, hadTau_selection_part1)
   if lepton_selection.find("Fakeable") != -1 or hadTau_selection.find("Fakeable") != -1:
     if lepton_and_hadTau_frWeight == "enabled":
       histogramDir += "_wFakeRateWeights"
@@ -75,7 +75,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
       configDir                 = configDir,
       outputDir                 = outputDir,
       executable_analyze        = executable_analyze,
-      channel                   = "3l_1tau",
+      channel                   = "hh_3l_1tau",
       lep_mva_wp                = lep_mva_wp,
       central_or_shifts         = central_or_shifts,
       max_files_per_job         = max_files_per_job,
@@ -165,8 +165,8 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
     self.executable_addBackgrounds = executable_addBackgrounds
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
 
-    self.nonfake_backgrounds = [ "TT", "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW", "VH" ]
-
+    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
+    
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
     self.prep_dcard_signals = []
@@ -176,19 +176,19 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
       sample_category = sample_info["sample_category"]
       if sample_category.startswith("signal"):
         prep_dcard_signals.append(sample_category)
-    self.histogramDir_prep_dcard = "3l_1tau_OS_lepTight_tauTight"
-    self.histogramDir_prep_dcard_SS = "3l_1tau_SS_lepTight_tauTight"
-    self.make_plots_backgrounds = [ "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW" ] + [ "conversions", "fakes_data" ]
+    self.histogramDir_prep_dcard = "hh_3l_1tau_OS_lepTight_tauTight"
+    self.histogramDir_prep_dcard_SS = "hh_3l_1tau_SS_lepTight_tauTight"
+    
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_3l_1tau_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_3l_1tau_cfg.py") #TODO
-
+    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
     self.select_rle_output = select_rle_output
     self.rle_select = rle_select
     self.use_nonnominal = use_nonnominal
     self.hlt_filter = hlt_filter
 
   def createCfg_analyze(self, jobOptions, sample_info, lepton_and_hadTau_selection):
-    """Create python configuration file for the analyze_3l_1tau executable (analysis code)
+    """Create python configuration file for the analyze_hh_3l_1tau executable (analysis code)
 
     Args:
       inputFiles: list of input files (Ntuples)
@@ -237,10 +237,10 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
     """
     lines = []
     lines.append("process.fwliteInput.fileNames = cms.vstring('%s')" % jobOptions['inputFile'])
-    lines.append("process.makePlots_mcClosure.outputFileName = cms.string('%s')" % jobOptions['outputFile'])
-    lines.append("process.makePlots_mcClosure.processesBackground = cms.vstring(%s)" % self.make_plots_backgrounds)
-    lines.append("process.makePlots_mcClosure.processSignal = cms.string('%s')" % self.make_plots_signal)
-    lines.append("process.makePlots_mcClosure.categories = cms.VPSet(")
+    lines.append("process.makePlots.outputFileName = cms.string('%s')" % jobOptions['outputFile'])
+    lines.append("process.makePlots.processesBackground = cms.vstring(%s)" % self.make_plots_backgrounds)
+    lines.append("process.makePlots.processSignal = cms.string('%s')" % self.make_plots_signal)
+    lines.append("process.makePlots.categories = cms.VPSet(")
     lines.append("  cms.PSet(")
     lines.append("    signal = cms.string('%s')," % self.histogramDir_prep_dcard)
     lines.append("    sideband = cms.string('%s')," % self.histogramDir_prep_dcard.replace("Tight", "Fakeable_mcClosure_wFakeRateWeights"))
@@ -574,11 +574,11 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
       key_hadd_stage1_5 = getKey(get_lepton_and_hadTau_selection_and_frWeight("Fakeable", "enabled"), chargeSumSelection)
       category_sideband = None
       if self.applyFakeRateWeights == "3lepton":
-        category_sideband = "3l_1tau_%s_lepFakeable_tauTight_wFakeRateWeights" % chargeSumSelection
+        category_sideband = "hh_3l_1tau_%s_lepFakeable_tauTight_wFakeRateWeights" % chargeSumSelection
       elif self.applyFakeRateWeights == "4L":
-        category_sideband = "3l_1tau_%s_lepFakeable_tauFakeable_wFakeRateWeights" % chargeSumSelection
+        category_sideband = "hh_3l_1tau_%s_lepFakeable_tauFakeable_wFakeRateWeights" % chargeSumSelection
       elif self.applyFakeRateWeights == "1tau":
-        category_sideband = "3l_1tau_%s_lepTight_tauFakeable_wFakeRateWeights" % chargeSumSelection
+        category_sideband = "hh_3l_1tau_%s_lepTight_tauFakeable_wFakeRateWeights" % chargeSumSelection
       else:
         raise ValueError("Invalid Configuration parameter 'applyFakeRateWeights' = %s !!" % self.applyFakeRateWeights)
       self.jobOptions_addFakes[key_addFakes_job] = {
@@ -589,7 +589,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
           (self.channel, chargeSumSelection)),
         'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgroundLeptonFakes_%s_%s.log" % \
           (self.channel, chargeSumSelection)),
-        'category_signal' : "3l_1tau_%s_lepTight_tauTight" % chargeSumSelection,
+        'category_signal' : "hh_3l_1tau_%s_lepTight_tauTight" % chargeSumSelection,
         'category_sideband' : category_sideband
       }
       self.createCfg_addFakes(self.jobOptions_addFakes[key_addFakes_job])

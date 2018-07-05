@@ -942,6 +942,7 @@ int main(int argc, char* argv[])
       preselElectrons.size(),
       preselMuons.size(),
       selJets.size(),
+      countHighPtObjects(selJets, 40.),
       selBJets_loose.size(),
       selBJets_medium.size(),
       m4Vis_presel,
@@ -1225,11 +1226,10 @@ int main(int argc, char* argv[])
 	}
       }
     }
-
     bool failsZbosonMassVeto = isSameFlavor_OS && std::fabs(massSameFlavor_OS - z_mass) < z_window;
     if ( failsZbosonMassVeto ) {
       if ( run_lumi_eventSelector ) {
-    std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
+	std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
       }
       continue;
     }
@@ -1242,7 +1242,7 @@ int main(int argc, char* argv[])
       for ( std::vector<const RecoLepton*>::const_iterator lepton2 = lepton1 + 1;
       lepton2 != preselLeptonsFull.end(); ++lepton2 ) {
 	if ( (*lepton1)->pdgId() == -(*lepton2)->pdgId() ) { // first pair of same flavor leptons of opposite charge
-    for ( std::vector<const RecoLepton*>::const_iterator lepton3 = preselLeptonsFull.begin();
+	  for ( std::vector<const RecoLepton*>::const_iterator lepton3 = preselLeptonsFull.begin();
 	  lepton3 != preselLeptonsFull.end(); ++lepton3 ) {
 	    if ( (*lepton3) == (*lepton1) || (*lepton3) == (*lepton2) ) continue;
 	    for ( std::vector<const RecoLepton*>::const_iterator lepton4 = lepton3 + 1;
@@ -1397,6 +1397,7 @@ int main(int argc, char* argv[])
       selElectrons.size(),
       selMuons.size(),
       selJets.size(),
+      countHighPtObjects(selJets, 40.),
       selBJets_loose.size(),
       selBJets_medium.size(),
       m4Vis_sel,
@@ -1413,6 +1414,7 @@ int main(int argc, char* argv[])
           selElectrons.size(),
           selMuons.size(),
           selJets.size(),
+	  countHighPtObjects(selJets, 40.),
           selBJets_loose.size(),
           selBJets_medium.size(),
           evtWeight

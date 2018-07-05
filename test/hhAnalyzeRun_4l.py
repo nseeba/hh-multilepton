@@ -52,7 +52,10 @@ for systematic_label in systematics_label:
 chargeSumSelections = [ "OS", "SS" ]
 
 if mode == "default":
-  from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017 import samples_2017
+  if use_preselected:
+    from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017_preselected import samples_2017
+  else:
+    from hhAnalysis.tttt.samples.hhAnalyzeSamples_2017 import samples_2017
 else:
   raise ValueError("Internal logic error")
 
