@@ -137,7 +137,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
         continue
       sample_category = sample_info["sample_category"]
       if sample_category.startswith("signal"):
-        prep_dcard_signals.append(sample_category)
+        self.prep_dcard_signals.append(sample_category)
     self.histogramDir_prep_dcard = "hh_4l_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_4l_SS_Tight"
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]

@@ -182,7 +182,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
         continue
       sample_category = sample_info["sample_category"]
       if sample_category.startswith("signal"):
-        prep_dcard_signals.append(sample_category)
+        self.prep_dcard_signals.append(sample_category)
     self.histogramDir_prep_dcard = "hh_2l_2tau_sumOS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_2l_2tau_sumSS_Tight"
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]

@@ -24,6 +24,7 @@ for sample_name, sample_info in samples.items():
     sample_info["sample_category"] = "TH"
 
 # CV: add dummy signal MC sample for testing
+from collections import OrderedDict as OD
 samples_2017["dummy_signal"] = OD([
   ("type",                            "mc"),
   ("sample_category",                 "signal_nonresonant"),
