@@ -63,8 +63,8 @@
 #include "tthAnalysis/HiggsToTauTau/interface/TTreeWrapper.h" // TTreeWrapper
 
 #include "hhAnalysis/tttt/interface/EvtHistManager_SVfit4tau.h" // EvtHistManager_SVfit4tau
-#include "hhAnalysis/tttt/interface/SVfit4tauDiHiggsHistManager.h" // SVfit4tauDiHiggsHistManager
-#include "hhAnalysis/tttt/interface/SVfit4tauHiggsHistManager.h" // SVfit4tauHiggsHistManager
+#include "hhAnalysis/tttt/interface/SVfit4tauDiHiggsResolutionHistManager.h" // SVfit4tauDiHiggsResolutionHistManager
+#include "hhAnalysis/tttt/interface/SVfit4tauHiggsResolutionHistManager.h" // SVfit4tauHiggsResolutionHistManager
 #include "hhAnalysis/tttt/interface/GenHadTauSmearer.h" // GenHadTauSmearer
 #include "hhAnalysis/tttt/interface/GenMEtSmearer.h" // GenMEtSmearer
 #include "hhAnalysis/tttt/interface/mySVfit4tauAuxFunctions.h" // getMeasuredTauLeptonType, getHadTauDecayMode
@@ -407,18 +407,18 @@ int main(int argc, char* argv[])
     JetHistManager* BJets_loose_;
     JetHistManager* BJets_medium_;
     MEtHistManager* met_;
-    SVfit4tauDiHiggsHistManager* dihiggs_wMassContraint_correctAssoc_;
-    SVfit4tauHiggsHistManager* higgs1_wMassContraint_correctAssoc_;
-    SVfit4tauHiggsHistManager* higgs2_wMassContraint_correctAssoc_;
-    SVfit4tauDiHiggsHistManager* dihiggs_wMassContraint_incorrectAssoc_;
-    SVfit4tauHiggsHistManager* higgs1_wMassContraint_incorrectAssoc_;
-    SVfit4tauHiggsHistManager* higgs2_wMassContraint_incorrectAssoc_;
-    SVfit4tauDiHiggsHistManager* dihiggs_woMassContraint_correctAssoc_;
-    SVfit4tauHiggsHistManager* higgs1_woMassContraint_correctAssoc_;
-    SVfit4tauHiggsHistManager* higgs2_woMassContraint_correctAssoc_;
-    SVfit4tauDiHiggsHistManager* dihiggs_woMassContraint_incorrectAssoc_;
-    SVfit4tauHiggsHistManager* higgs1_woMassContraint_incorrectAssoc_;
-    SVfit4tauHiggsHistManager* higgs2_woMassContraint_incorrectAssoc_;  
+    SVfit4tauDiHiggsResolutionHistManager* dihiggs_wMassContraint_correctAssoc_;
+    SVfit4tauHiggsResolutionHistManager* higgs1_wMassContraint_correctAssoc_;
+    SVfit4tauHiggsResolutionHistManager* higgs2_wMassContraint_correctAssoc_;
+    SVfit4tauDiHiggsResolutionHistManager* dihiggs_wMassContraint_incorrectAssoc_;
+    SVfit4tauHiggsResolutionHistManager* higgs1_wMassContraint_incorrectAssoc_;
+    SVfit4tauHiggsResolutionHistManager* higgs2_wMassContraint_incorrectAssoc_;
+    SVfit4tauDiHiggsResolutionHistManager* dihiggs_woMassContraint_correctAssoc_;
+    SVfit4tauHiggsResolutionHistManager* higgs1_woMassContraint_correctAssoc_;
+    SVfit4tauHiggsResolutionHistManager* higgs2_woMassContraint_correctAssoc_;
+    SVfit4tauDiHiggsResolutionHistManager* dihiggs_woMassContraint_incorrectAssoc_;
+    SVfit4tauHiggsResolutionHistManager* higgs1_woMassContraint_incorrectAssoc_;
+    SVfit4tauHiggsResolutionHistManager* higgs2_woMassContraint_incorrectAssoc_;  
     EvtHistManager_SVfit4tau* evt_;
     WeightHistManager* weights_;
   };
@@ -477,40 +477,40 @@ int main(int argc, char* argv[])
     selHistManager->met_ = new MEtHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/met", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->met_->bookHistograms(fs);
-    selHistManager->dihiggs_wMassContraint_correctAssoc_ = new SVfit4tauDiHiggsHistManager(makeHistManager_cfg(process_string,
+    selHistManager->dihiggs_wMassContraint_correctAssoc_ = new SVfit4tauDiHiggsResolutionHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/dihiggs_wMassContraint_correctAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->dihiggs_wMassContraint_correctAssoc_->bookHistograms(fs);
-    selHistManager->higgs1_wMassContraint_correctAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
+    selHistManager->higgs1_wMassContraint_correctAssoc_ = new SVfit4tauHiggsResolutionHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/higgs1_wMassContraint_correctAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs1_wMassContraint_correctAssoc_->bookHistograms(fs);
-    selHistManager->higgs2_wMassContraint_correctAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
+    selHistManager->higgs2_wMassContraint_correctAssoc_ = new SVfit4tauHiggsResolutionHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/higgs2_wMassContraint_correctAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs2_wMassContraint_correctAssoc_->bookHistograms(fs);
-    selHistManager->dihiggs_wMassContraint_incorrectAssoc_ = new SVfit4tauDiHiggsHistManager(makeHistManager_cfg(process_string,
+    selHistManager->dihiggs_wMassContraint_incorrectAssoc_ = new SVfit4tauDiHiggsResolutionHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/dihiggs_wMassContraint_incorrectAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->dihiggs_wMassContraint_incorrectAssoc_->bookHistograms(fs);
-    selHistManager->higgs1_wMassContraint_incorrectAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
+    selHistManager->higgs1_wMassContraint_incorrectAssoc_ = new SVfit4tauHiggsResolutionHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/higgs1_wMassContraint_incorrectAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs1_wMassContraint_incorrectAssoc_->bookHistograms(fs);
-    selHistManager->higgs2_wMassContraint_incorrectAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
+    selHistManager->higgs2_wMassContraint_incorrectAssoc_ = new SVfit4tauHiggsResolutionHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/higgs2_wMassContraint_incorrectAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs2_wMassContraint_incorrectAssoc_->bookHistograms(fs);
-    selHistManager->dihiggs_woMassContraint_correctAssoc_ = new SVfit4tauDiHiggsHistManager(makeHistManager_cfg(process_string,
+    selHistManager->dihiggs_woMassContraint_correctAssoc_ = new SVfit4tauDiHiggsResolutionHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/dihiggs_woMassContraint_correctAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->dihiggs_woMassContraint_correctAssoc_->bookHistograms(fs);
-    selHistManager->higgs1_woMassContraint_correctAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
+    selHistManager->higgs1_woMassContraint_correctAssoc_ = new SVfit4tauHiggsResolutionHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/higgs1_woMassContraint_correctAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs1_woMassContraint_correctAssoc_->bookHistograms(fs);
-    selHistManager->higgs2_woMassContraint_correctAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
+    selHistManager->higgs2_woMassContraint_correctAssoc_ = new SVfit4tauHiggsResolutionHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/higgs2_woMassContraint_correctAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs2_woMassContraint_correctAssoc_->bookHistograms(fs);
-    selHistManager->dihiggs_woMassContraint_incorrectAssoc_ = new SVfit4tauDiHiggsHistManager(makeHistManager_cfg(process_string,
+    selHistManager->dihiggs_woMassContraint_incorrectAssoc_ = new SVfit4tauDiHiggsResolutionHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/dihiggs_woMassContraint_incorrectAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->dihiggs_woMassContraint_incorrectAssoc_->bookHistograms(fs);
-    selHistManager->higgs1_woMassContraint_incorrectAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
+    selHistManager->higgs1_woMassContraint_incorrectAssoc_ = new SVfit4tauHiggsResolutionHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/higgs1_woMassContraint_incorrectAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs1_woMassContraint_incorrectAssoc_->bookHistograms(fs);
-    selHistManager->higgs2_woMassContraint_incorrectAssoc_ = new SVfit4tauHiggsHistManager(makeHistManager_cfg(process_string,
+    selHistManager->higgs2_woMassContraint_incorrectAssoc_ = new SVfit4tauHiggsResolutionHistManager(makeHistManager_cfg(process_string,
       Form("%s/%s/higgs2_woMassContraint_incorrectAssoc", histogramDir_category.Data(), mode_string.data()), central_or_shift));
     selHistManager->higgs2_woMassContraint_incorrectAssoc_->bookHistograms(fs);    
     selHistManager->evt_ = new EvtHistManager_SVfit4tau(makeHistManager_cfg(process_string,
@@ -971,12 +971,12 @@ int main(int argc, char* argv[])
 		}
 	      }
 	      
-	      SVfit4tauDiHiggsHistManager* histograms_dihiggs_wMassContraint = nullptr;
-	      SVfit4tauHiggsHistManager* histograms_higgs1_wMassContraint = nullptr;
-	      SVfit4tauHiggsHistManager* histograms_higgs2_wMassContraint = nullptr;
-	      SVfit4tauDiHiggsHistManager* histograms_dihiggs_woMassContraint = nullptr;
-	      SVfit4tauHiggsHistManager* histograms_higgs1_woMassContraint = nullptr;
-	      SVfit4tauHiggsHistManager* histograms_higgs2_woMassContraint = nullptr;	      
+	      SVfit4tauDiHiggsResolutionHistManager* histograms_dihiggs_wMassContraint = nullptr;
+	      SVfit4tauHiggsResolutionHistManager* histograms_higgs1_wMassContraint = nullptr;
+	      SVfit4tauHiggsResolutionHistManager* histograms_higgs2_wMassContraint = nullptr;
+	      SVfit4tauDiHiggsResolutionHistManager* histograms_dihiggs_woMassContraint = nullptr;
+	      SVfit4tauHiggsResolutionHistManager* histograms_higgs1_woMassContraint = nullptr;
+	      SVfit4tauHiggsResolutionHistManager* histograms_higgs2_woMassContraint = nullptr;	      
 	      const Particle::LorentzVector* genHiggs1P4 = nullptr;
 	      const Particle::LorentzVector* genHiggs2P4 = nullptr;
 	      if ( isCorrectAssoc ) {

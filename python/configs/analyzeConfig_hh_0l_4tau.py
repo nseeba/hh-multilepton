@@ -144,6 +144,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
       if sample_category.startswith("signal"):
         self.prep_dcard_signals.append(sample_category)
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "fakes_data" ]
+    self.make_plots_signal = "signal_nonresonant"
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.histogramDir_prep_dcard = "hh_0l_4tau_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_0l_4tau_SS_Tight"

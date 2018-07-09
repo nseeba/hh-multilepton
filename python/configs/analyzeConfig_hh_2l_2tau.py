@@ -186,6 +186,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
     self.histogramDir_prep_dcard = "hh_2l_2tau_sumOS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_2l_2tau_sumSS_Tight"
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
+    self.make_plots_signal = "signal_nonresonant"
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2l_2tau_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2l_2tau_cfg.py") 
 

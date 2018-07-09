@@ -141,6 +141,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
     self.histogramDir_prep_dcard = "hh_4l_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_4l_SS_Tight"
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
+    self.make_plots_signal = "signal_nonresonant"
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_4l_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_4l_cfg.py")
 

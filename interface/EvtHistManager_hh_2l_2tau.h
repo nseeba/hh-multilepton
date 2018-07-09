@@ -12,6 +12,8 @@
 
 #include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h" // HistManagerBase
 
+#include "hhAnalysis/tttt/interface/mySVfit4tauAuxFunctions.h" // SVfit4tauResult
+
 class EvtHistManager_hh_2l_2tau
   : public HistManagerBase
 {
@@ -32,9 +34,10 @@ public:
                  int numBJets_loose,
                  int numBJets_medium,
 		 double mTauTauVis,
-                 double m4Vis,
-		 double m4_1,
-		 double m4_2,
+		 double leptonPairCharge,
+                 double hadTauPairCharge,
+		 double HT,
+		 double STMET,
                  double evtWeight);
 
   const TH1 *
@@ -51,9 +54,12 @@ public:
 
   TH1 * histogram_mTauTauVis_;
 
-  TH1 * histogram_m4Vis_;
-  TH1 * histogram_m4_;
-  
+  TH1 * histogram_leptonPairCharge_;
+  TH1 * histogram_hadTauPairCharge_;
+
+  TH1 * histogram_HT_;
+  TH1 * histogram_STMET_;
+      
   TH1 * histogram_EventCounter_;
 };
 

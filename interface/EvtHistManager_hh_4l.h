@@ -30,9 +30,8 @@ public:
 		 int numJetsPtGt40,
                  int numBJets_loose,
                  int numBJets_medium,
-                 double m4Vis,
-		 double m4_1,
-		 double m4_2,
+		 double HT,
+		 double STMET,
                  double evtWeight);
 
   const TH1 *
@@ -46,8 +45,8 @@ public:
   TH1 * histogram_numBJets_loose_;
   TH1 * histogram_numBJets_medium_;
 
-  TH1 * histogram_m4Vis_;
-  TH1 * histogram_m4_;
+  TH1 * histogram_HT_;
+  TH1 * histogram_STMET_;
   
   TH1 * histogram_EventCounter_;
 };

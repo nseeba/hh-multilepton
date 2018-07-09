@@ -23,8 +23,8 @@ EvtHistManager_hh_3l_1tau::bookHistograms(TFileDirectory & dir)
   histogram_numBJets_loose_  = book1D(dir, "numBJets_loose",  "numBJets_loose",   10, -0.5,  +9.5);
   histogram_numBJets_medium_ = book1D(dir, "numBJets_medium", "numBJets_medium",  10, -0.5,  +9.5);
 
-  histogram_m4Vis_           = book1D(dir, "m4Vis",           "m4Vis",           150,  0., 1500.);
-  histogram_m4_              = book1D(dir, "m4",              "m4",              150,  0., 1500.);
+  histogram_HT_              = book1D(dir, "HT",              "HT",              150,  0., 1500.);
+  histogram_STMET_           = book1D(dir, "STMET",           "STMET",           150,  0., 1500.);
 
   histogram_EventCounter_    = book1D(dir, "EventCounter",    "EventCounter",      1, -0.5,  +0.5);
 }
@@ -37,9 +37,8 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
 					  int numJetsPtGt40,
 					  int numBJets_loose,
 					  int numBJets_medium,
-					  double m4Vis,
-					  double m4_1,
-					  double m4_2,
+					  double HT,
+					  double STMET,
 					  double evtWeight)
 {
   const double evtWeightErr = 0.;
@@ -52,15 +51,8 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_numBJets_loose_,  numBJets_loose,      evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_numBJets_medium_, numBJets_medium,     evtWeight,     evtWeightErr);
 
-  fillWithOverFlow(histogram_m4Vis_,           m4Vis,               evtWeight,     evtWeightErr);
-  if ( m4_1 > 0. ) {
-    double factor = ( m4_2 > 0. ) ? 0.5 : 1.;
-    fillWithOverFlow(histogram_m4_,            m4_1,         factor*evtWeight, factor*evtWeightErr);
-  }
-  if ( m4_2 > 0. ) {
-    double factor = ( m4_1 > 0. ) ? 0.5 : 1.;
-    fillWithOverFlow(histogram_m4_,            m4_2,         factor*evtWeight, factor*evtWeightErr);
-  }
+  fillWithOverFlow(histogram_HT_,              HT,              evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_STMET_,           STMET,           evtWeight, evtWeightErr);
   
   fillWithOverFlow(histogram_EventCounter_,    0.,                  evtWeight,     evtWeightErr);
 }

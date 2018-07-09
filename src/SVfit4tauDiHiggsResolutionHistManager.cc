@@ -1,14 +1,14 @@
-#include "hhAnalysis/tttt/interface/SVfit4tauDiHiggsHistManager.h"
+#include "hhAnalysis/tttt/interface/SVfit4tauDiHiggsResolutionHistManager.h"
 
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow()
 
 #include <TMath.h> // TMath::Pi()
 
-SVfit4tauDiHiggsHistManager::SVfit4tauDiHiggsHistManager(const edm::ParameterSet& cfg)
+SVfit4tauDiHiggsResolutionHistManager::SVfit4tauDiHiggsResolutionHistManager(const edm::ParameterSet& cfg)
   : HistManagerBase(cfg)
 {}
 
-void SVfit4tauDiHiggsHistManager::bookHistograms(TFileDirectory& dir)
+void SVfit4tauDiHiggsResolutionHistManager::bookHistograms(TFileDirectory& dir)
 {
   histogram_pt_        = book1D(dir, "pt",        "pt",        200,    0.,  1000.);
   histogram_eta_       = book1D(dir, "eta",       "eta",        46,   -2.3,   +2.3);
@@ -24,8 +24,8 @@ void SVfit4tauDiHiggsHistManager::bookHistograms(TFileDirectory& dir)
 }
 
 void
-SVfit4tauDiHiggsHistManager::fillHistograms(const classic_svFit::LorentzVector& recDiHiggsP4, 
-					    double evtWeight, const Particle::LorentzVector* genDiHiggsP4)
+SVfit4tauDiHiggsResolutionHistManager::fillHistograms(const classic_svFit::LorentzVector& recDiHiggsP4, 
+						      double evtWeight, const Particle::LorentzVector* genDiHiggsP4)
 {
   const double evtWeightErr = 0.;
 

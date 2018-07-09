@@ -3,7 +3,7 @@
 
 /** \class EvtHistManager_SVfit4tau
  *
- * Book and fill histograms for event-level quantities in hh->4tau analysis
+ * Book and fill histograms for event-level quantities in HH->4tau analysis
  *
  * \author Christian Veelken, Tallin
  *

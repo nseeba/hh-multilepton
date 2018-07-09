@@ -70,6 +70,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 
 #include "hhAnalysis/tttt/interface/EvtHistManager_hh_4l.h" // EvtHistManager_hh_4l
+#include "hhAnalysis/tttt/interface/SVfit4tauHistManager.h" // SVfit4tauHistManager
 #include "hhAnalysis/tttt/interface/Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger.h"
 #include "hhAnalysis/tttt/interface/mySVfit4tauAuxFunctions.h" // getMeasuredTauLeptonType, getHadTauDecayMode
 
@@ -400,7 +401,11 @@ int main(int argc, char* argv[])
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
     EvtHistManager_hh_4l* evt_;
+    SVfit4tauHistManager* svFit4tau_woMassConstraint_;
+    SVfit4tauHistManager* svFit4tau_wMassConstraint_;
     std::map<std::string, EvtHistManager_hh_4l*> evt_in_decayModes_;
+    std::map<std::string, SVfit4tauHistManager*> svFit4tau_woMassConstraint_in_decayModes_;
+    std::map<std::string, SVfit4tauHistManager*> svFit4tau_wMassConstraint_in_decayModes_;
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
@@ -484,6 +489,12 @@ int main(int argc, char* argv[])
     selHistManager->evt_ = new EvtHistManager_hh_4l(makeHistManager_cfg(process_and_genMatch,
       Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
     selHistManager->evt_->bookHistograms(fs);
+    selHistManager->svFit4tau_woMassConstraint_ = new SVfit4tauHistManager(makeHistManager_cfg(process_and_genMatch,
+      Form("%s/sel/svFit4tau_woMassConstraint", histogramDir.data()), central_or_shift));
+    selHistManager->svFit4tau_woMassConstraint_->bookHistograms(fs);
+    selHistManager->svFit4tau_wMassConstraint_ = new SVfit4tauHistManager(makeHistManager_cfg(process_and_genMatch,
+      Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), central_or_shift));
+    selHistManager->svFit4tau_wMassConstraint_->bookHistograms(fs);
 /*
     const vstring decayModes_evt = eventInfo.getDecayModes();
     if(isSignal)
@@ -493,13 +504,15 @@ int main(int argc, char* argv[])
 	std::string decayMode_and_genMatch = decayMode_evt;
 	if ( apply_leptonGenMatching ) decayMode_and_genMatch += leptonGenMatch_definition -> name_;
         
-	selHistManager -> evt_in_decayModes_[decayMode_evt] = new EvtHistManager_hh_4l(makeHistManager_cfg(
-          decayMode_and_genMatch,
-	  Form("%s/sel/evt", histogramDir.data()),
-	  era_string,
-	  central_or_shift
-        ));
-	selHistManager -> evt_in_decayModes_[decayMode_evt] -> bookHistograms(fs);
+	selHistManager->evt_in_decayModes_[decayMode_evt] = new EvtHistManager_hh_4l(makeHistManager_cfg(decayMode_and_genMatch,
+	  Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift)); 
+	selHistManager->evt_in_decayModes_[decayMode_evt]->bookHistograms(fs);
+	selHistManager->svFit4tau_woMassConstraint_in_decayModes_[decayMode_evt] = new SVfit4tauHistManager(makeHistManager_cfg(decayMode_and_genMatch,
+          Form("%s/sel/svFit4tau_woMassConstraint", histogramDir.data()), central_or_shift));
+        selHistManager->svFit4tau_woMassConstraint_in_decayModes_[decayMode_evt]->bookHistograms(fs);
+        selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayMode_evt] = new SVfit4tauHistManager(makeHistManager_cfg(decayMode_and_genMatch,
+          Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), central_or_shift));
+        selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayMode_evt]->bookHistograms(fs);
       }
     }
  */
@@ -828,6 +841,7 @@ int main(int argc, char* argv[])
     std::vector<const RecoJet*> selJets = jetSelector(cleanedJets, isHigherPt);
     std::vector<const RecoJet*> selBJets_loose = jetSelectorBtagLoose(cleanedJets, isHigherPt);
     std::vector<const RecoJet*> selBJets_medium = jetSelectorBtagMedium(cleanedJets, isHigherPt);
+    int numSelJetsPtGt40 = countHighPtObjects(selJets, 40.);
     if(isDEBUG || run_lumi_eventSelector)
     {
       printCollection("uncleanedJets", jet_ptrs);
@@ -923,10 +937,9 @@ int main(int argc, char* argv[])
     RecoMEt met = metReader->read();
     Particle::LorentzVector mht_p4 = compMHT(fakeableLeptons, {}, selJets);
     double met_LD = compMEt_LD(met.p4(), mht_p4);
-
-    double m4Vis_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + preselLepton_third->p4() + preselLepton_fourth->p4()).mass();
-    double m4_presel_1 = -1.; // CV: do not run SVfit on preselected leptons and taus to save computing time
-    double m4_presel_2 = -1.;
+    
+    double HT = compHT(fakeableLeptons, {}, selJets);
+    double STMET = compSTMEt(fakeableLeptons, {}, selJets, met.p4());
 
 //--- fill histograms with events passing preselection
     preselHistManagerType* preselHistManager = preselHistManagers[idxPreselLepton_genMatch];
@@ -942,12 +955,11 @@ int main(int argc, char* argv[])
       preselElectrons.size(),
       preselMuons.size(),
       selJets.size(),
-      countHighPtObjects(selJets, 40.),
+      numSelJetsPtGt40,
       selBJets_loose.size(),
       selBJets_medium.size(),
-      m4Vis_presel,
-      m4_presel_1,
-      m4_presel_2, 
+      HT, 
+      STMET,
       1.
     );
     preselHistManager->evtYield_->fillHistograms(eventInfo, 1.);
@@ -1295,90 +1307,12 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update("signal region veto", evtWeight);
     cutFlowHistManager->fillHistograms("signal region veto", evtWeight);
-
-    double m4Vis_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selLepton_third->p4() + selLepton_fourth->p4()).mass();
-    double m4_sel_1 = -1.; 
-    double m4_sel_2 = -1.; 
-    
-    std::vector<const GenParticle*> measuredTaus;
-    measuredTaus.push_back(selLepton_lead);
-    measuredTaus.push_back(selLepton_sublead);
-    measuredTaus.push_back(selLepton_third);
-    measuredTaus.push_back(selLepton_fourth);
-    for ( std::vector<const GenParticle*>::const_iterator measuredTau1 = measuredTaus.begin();
-	  measuredTau1 != measuredTaus.end(); ++measuredTau1 ) {
-      for ( std::vector<const GenParticle*>::const_iterator measuredTau2 = measuredTau1 + 1;
-	    measuredTau2 != measuredTaus.end(); ++measuredTau2 ) {
-	// require decay products of 1st Higgs boson to have opposite charge
-	if ( ((*measuredTau1)->charge() + (*measuredTau2)->charge()) != 0 ) continue;
-	for ( std::vector<const GenParticle*>::const_iterator measuredTau3 = measuredTaus.begin();
-	      measuredTau3 != measuredTaus.end(); ++measuredTau3 ) {
-	  for ( std::vector<const GenParticle*>::const_iterator measuredTau4 = measuredTau3 + 1;
-		measuredTau4 != measuredTaus.end(); ++measuredTau4 ) {
-	    // require decay products of 2nd Higgs boson to have opposite or same charge, 
-	    // depending on chargeSumSelection flag
-	    if ( (chargeSumSelection == kOS && ((*measuredTau3)->charge() + (*measuredTau4)->charge()) != 0) ||
-		 (chargeSumSelection == kSS && ((*measuredTau3)->charge() + (*measuredTau4)->charge()) == 0) ) continue;
-
-	    // require that all taus are different
-	    if ( (*measuredTau3) == (*measuredTau1) || (*measuredTau3) == (*measuredTau2) ) continue;
-	    if ( (*measuredTau4) == (*measuredTau1) || (*measuredTau4) == (*measuredTau2) ) continue;
-	    	      
-	    // require that tau1 has higher pT than tau3,
-	    // in order prevent that SVfit mass is computed for both combinations (tau1,..,tau3,..) and (tau3,..,tau1,..)
-	    if ( !((*measuredTau1)->pt() > (*measuredTau3)->pt()) ) continue;
-
-	    Particle::LorentzVector measuredTau1P4 = (*measuredTau1)->p4();
-	    int  measuredTau1Type = getMeasuredTauLeptonType(**measuredTau1);
-	    int measuredHadTau1DecayMode = getHadTauDecayMode(**measuredTau1);
-	    Particle::LorentzVector measuredTau2P4 = (*measuredTau2)->p4();
-	    int measuredTau2Type = getMeasuredTauLeptonType(**measuredTau2);
-	    int measuredHadTau2DecayMode = getHadTauDecayMode(**measuredTau2);
-	    Particle::LorentzVector measuredTau3P4 = (*measuredTau3)->p4();
-	    int measuredTau3Type = getMeasuredTauLeptonType(**measuredTau3);
-	    int measuredHadTau3DecayMode = getHadTauDecayMode(**measuredTau3);
-	    Particle::LorentzVector measuredTau4P4 = (*measuredTau4)->p4();
-	    int measuredTau4Type = getMeasuredTauLeptonType(**measuredTau4);
-	    int measuredHadTau4DecayMode = getHadTauDecayMode(**measuredTau4);
-	    double metPx = met.pt()*TMath::Cos(met.phi());
-	    double metPy = met.pt()*TMath::Sin(met.phi());
-	    TMatrixD metCov(2,2);
-	    metCov[0][0] = met.covXX();
-	    metCov[1][0] = met.covXY();
-	    metCov[0][1] = met.covXY();
-	    metCov[1][1] = met.covYY();
-
-	    //-------------------------------------------------------------------------------------
-	    // CV: run ClassicSVfit4tau algorithm
-	    std::vector<classic_svFit::MeasuredTauLepton> measuredTauLeptons;
-	    measuredTauLeptons.push_back(makeMeasuredTauLepton(measuredTau1P4, measuredTau1Type, measuredHadTau1DecayMode));
-	    measuredTauLeptons.push_back(makeMeasuredTauLepton(measuredTau2P4, measuredTau2Type, measuredHadTau2DecayMode));
-	    measuredTauLeptons.push_back(makeMeasuredTauLepton(measuredTau3P4, measuredTau3Type, measuredHadTau3DecayMode));
-	    measuredTauLeptons.push_back(makeMeasuredTauLepton(measuredTau4P4, measuredTau4Type, measuredHadTau4DecayMode));
-	      
-	    int verbosity = 1;
-	    ClassicSVfit4tau svFitAlgo(verbosity);
-	    double logM_wMassConstraint = 2.;
-	    double massContraint = 125.;
-	    if ( logM_wMassConstraint > 0. ) {
-	      svFitAlgo.addLogM_fixed(true, logM_wMassConstraint);
-	    } else {
-	      svFitAlgo.addLogM_fixed(false);
-	    }
-	    svFitAlgo.setDiTau1MassConstraint(massContraint);
-	    svFitAlgo.setDiTau2MassConstraint(massContraint);  
-	    svFitAlgo.integrate(measuredTauLeptons, metPx, metPy, metCov);
-	    bool isValidSolution_wMassConstaint = svFitAlgo.isValidSolution();
-	    if ( isValidSolution_wMassConstaint ) {
-	      classic_svFit::LorentzVector dihiggsP4_wMassConstaint = static_cast<classic_svFit::HistogramAdapterDiHiggs*>(svFitAlgo.getHistogramAdapter())->getP4();
-	      if      ( m4_sel_1 == -1. ) m4_sel_1 = dihiggsP4_wMassConstaint.mass();
-	      else if ( m4_sel_2 == -1. ) m4_sel_2 = dihiggsP4_wMassConstaint.mass();
-	    }
-	  }
-	}
-      }
-    }
-    
+            
+    std::vector<SVfit4tauResult> svFit4tauResults_woMassConstraint = compSVfit4(
+      *selLepton_lead, *selLepton_sublead, *selLepton_third, *selLepton_fourth, met, chargeSumSelection_string,  -1.);
+    std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4(
+      *selLepton_lead, *selLepton_sublead, *selLepton_third, *selLepton_fourth, met, chargeSumSelection_string, 125.);
+        
 //--- fill histograms with events passing final selection
     selHistManagerType* selHistManager = selHistManagers[idxSelLepton_genMatch];
     assert(selHistManager != 0);
@@ -1397,13 +1331,14 @@ int main(int argc, char* argv[])
       selElectrons.size(),
       selMuons.size(),
       selJets.size(),
-      countHighPtObjects(selJets, 40.),
+      numSelJetsPtGt40,
       selBJets_loose.size(),
       selBJets_medium.size(),
-      m4Vis_sel,
-      m4_sel_1,
-      m4_sel_2,
+      HT, 
+      STMET,
       evtWeight);
+    selHistManager->svFit4tau_woMassConstraint_->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
+    selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
 /*
     if(isSignal)
     {
@@ -1414,11 +1349,14 @@ int main(int argc, char* argv[])
           selElectrons.size(),
           selMuons.size(),
           selJets.size(),
-	  countHighPtObjects(selJets, 40.),
+	  numSelJetsPtGt40,
           selBJets_loose.size(),
           selBJets_medium.size(),
-          evtWeight
-        );
+	  HT, 
+	  STMET,
+          evtWeight);
+	selHistManager->svFit4tau_woMassConstraint_in_decayModes_[decayModeStr]->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
+        selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayModeStr]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
       }
     }
  */

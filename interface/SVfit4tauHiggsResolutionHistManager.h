@@ -1,9 +1,9 @@
-#ifndef hhAnalysis_tttt_SVfit4tauHiggsHistManager_h
-#define hhAnalysis_tttt_SVfit4tauHiggsHistManager_h
+#ifndef hhAnalysis_tttt_SVfit4tauHiggsResolutionHistManager_h
+#define hhAnalysis_tttt_SVfit4tauHiggsResolutionHistManager_h
 
-/** \class SVfit4tauDiHiggsHistManager
+/** \class SVfit4tauHiggsResolutionHistManager
  *
- * Book and fill histograms for reconstructed pT, eta, phi, and mass of Higgs bosons reconstructed by ClassicSVfit4tau algorithm
+ * Book and fill histograms for pT, eta, phi, and mass resolution of Higgs bosons reconstructed by ClassicSVfit4tau algorithm
  *
  * \author Christian Veelken, Tallin
  *
@@ -14,12 +14,12 @@
 
 #include "TauAnalysis/ClassicSVfit/interface/svFitAuxFunctions.h" // classic_svFit::LorentzVector
 
-class SVfit4tauHiggsHistManager
+class SVfit4tauHiggsResolutionHistManager
   : public HistManagerBase
 {
  public:
-  SVfit4tauHiggsHistManager(const edm::ParameterSet& cfg);
-  ~SVfit4tauHiggsHistManager() {}
+  SVfit4tauHiggsResolutionHistManager(const edm::ParameterSet& cfg);
+  ~SVfit4tauHiggsResolutionHistManager() {}
 
   /// book and fill histograms
   void

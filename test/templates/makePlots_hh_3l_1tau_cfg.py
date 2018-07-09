@@ -46,21 +46,62 @@ process.makePlots.distributions.extend([
         yAxisTitle = cms.string('dN/d#eta')
     ),
     cms.PSet(
-        histogramName = cms.string('sel/evt/$PROCESS/m4Vis'),
+        histogramName = cms.string('sel/evt/$PROCESS/mTauTauVis'),
+        xAxisTitle = cms.string('m_{#tau#tau}^{vis} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{#tau#tau}^{vis} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/evt/$PROCESS/HT'),
+        xAxisTitle = cms.string('H_{T} [GeV]'),
+        yAxisTitle = cms.string('dN/d}H_{T} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/evt/$PROCESS/STMET'),
+        xAxisTitle = cms.string('S_{T}^{MET} [GeV]'),
+        yAxisTitle = cms.string('dN/dS_{T}^{MET} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsVisMass'),
         xAxisTitle = cms.string('m_{HH}^{vis} [GeV]'),
         yAxisTitle = cms.string('dN/dm_{HH}^{vis} [1/GeV]')
     ),
     cms.PSet(
-        histogramName = cms.string('sel/evt/$PROCESS/m4'),
+        histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsMass1'),
         xAxisTitle = cms.string('m_{HH} [GeV]'),
         yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/svFit4tau_woMassConstraint/$PROCESS/ditau1Mass1'),
+        xAxisTitle = cms.string('m_{H}^{(1)} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{H}^{(1)} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/svFit4tau_woMassConstraint/$PROCESS/ditau1Mass2'),
+        xAxisTitle = cms.string('m_{H}^{(1)} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{H}^{(1)} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsMass2'),
+        xAxisTitle = cms.string('m_{HH} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/svFit4tau_woMassConstraint/$PROCESS/ditau2Mass1'),
+        xAxisTitle = cms.string('m_{H}^{(2)} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{H}^{(2)} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/svFit4tau_woMassConstraint/$PROCESS/ditau2Mass2'),
+        xAxisTitle = cms.string('m_{H}^{(2)} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{H}^{(2)} [1/GeV]')
     )
 ])
 
-process.makePlots.nuisanceParameters.normalization.ZZ    = cms.string("1.0 +/- 0.20")
-process.makePlots.nuisanceParameters.normalization.WZ    = cms.string("1.0 +/- 0.20")
-process.makePlots.nuisanceParameters.normalization.WW    = cms.string("1.0 +/- 0.20")
-process.makePlots.nuisanceParameters.normalization.Other = cms.string("1.0 +/- 0.20")
-process.makePlots.nuisanceParameters.normalization.VH    = cms.string("1.0 +/- 0.20")
-process.makePlots.nuisanceParameters.normalization.TTH   = cms.string("1.0 +/- 0.20")
-process.makePlots.nuisanceParameters.normalization.TH    = cms.string("1.0 +/- 0.20")
+process.makePlots.nuisanceParameters.normalization.ZZ                 = cms.string("1.0 +/- 0.20")
+process.makePlots.nuisanceParameters.normalization.WZ                 = cms.string("1.0 +/- 0.20")
+process.makePlots.nuisanceParameters.normalization.WW                 = cms.string("1.0 +/- 0.20")
+process.makePlots.nuisanceParameters.normalization.Other              = cms.string("1.0 +/- 0.20")
+process.makePlots.nuisanceParameters.normalization.VH                 = cms.string("1.0 +/- 0.20")
+process.makePlots.nuisanceParameters.normalization.TTH                = cms.string("1.0 +/- 0.20")
+process.makePlots.nuisanceParameters.normalization.TH                 = cms.string("1.0 +/- 0.20")
+process.makePlots.nuisanceParameters.normalization.signal_nonresonant = cms.string("1.0 +/- 0.20")    
