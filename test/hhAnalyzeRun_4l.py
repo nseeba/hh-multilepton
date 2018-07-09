@@ -52,10 +52,7 @@ for systematic_label in systematics_label:
 chargeSumSelections = [ "OS", "SS" ]
 
 if mode == "default":
-  if use_preselected:
-    from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017_preselected import samples_2017
-  else:
-    from hhAnalysis.tttt.samples.hhAnalyzeSamples_2017 import samples_2017
+  from hhAnalysis.tttt.samples.hhAnalyzeSamples_2017 import samples_2017
 else:
   raise ValueError("Internal logic error")
 
@@ -80,11 +77,12 @@ if __name__ == '__main__':
     "Running the jobs with the following systematic uncertainties enabled: %s" % \
     ', '.join(central_or_shifts)
   )
+  logging.warning('Running the analysis on fully inclusive samples!')
 
   if sample_filter:
     samples = filter_samples(samples, sample_filter)
 
-  analysis = analyzeConfig_4l(
+  analysis = analyzeConfig_hh_4l(
     configDir = os.path.join("/home",       getpass.getuser(), "hhAnalysis", era, version),
     outputDir = os.path.join("/hdfs/local", getpass.getuser(), "hhAnalysis", era, version),
     executable_analyze                    = "analyze_hh_4l",
@@ -102,12 +100,12 @@ if __name__ == '__main__':
     num_parallel_jobs                     = num_parallel_jobs,
     executable_addBackgrounds             = "addBackgrounds",
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
-    histograms_to_fit                     = [
+    histograms_to_fit                     = {
       "EventCounter"                      : {},
       "numJets"                           : {},
-      "m4Vis"                             : {},
-      "m4"                                : {},
-    ],
+      "HT"                                : {},
+      "STMET"                             : {}
+    },
     select_rle_output                     = True,
     dry_run                               = dry_run,
     isDebug                               = debug,

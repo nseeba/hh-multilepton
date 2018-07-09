@@ -39,7 +39,6 @@ running_method     = args.running_method
 # Additional arguments
 mode              = args.mode
 systematics_label = args.systematics
-use_preselected   = args.use_preselected
 rle_select        = os.path.expanduser(args.rle_select)
 use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
@@ -58,10 +57,7 @@ do_sync = mode.startswith('sync')
 hadTau_charge_selections = [ "OS", "SS" ]
 
 if mode == "default":
-  if use_preselected:
-    from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017_preselected import samples_2017
-  else:
-    from hhAnalysis.tttt.samples.hhAnalyzeSamples_2017 import samples_2017
+  from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017_preselected import samples_2017
   hadTau_selection     = "dR03mvaLoose"
   applyFakeRateWeights = "4tau"
 else:
@@ -90,8 +86,7 @@ if __name__ == '__main__':
     "Running the jobs with the following systematic uncertainties enabled: %s" % \
     ', '.join(central_or_shifts)
   )
-  if not use_preselected:
-    logging.warning('Running the analysis on fully inclusive samples!')
+  logging.warning('Running the analysis on fully inclusive samples!')
 
   if sample_filter:
     samples = filter_samples(samples, sample_filter)
@@ -123,8 +118,8 @@ if __name__ == '__main__':
     histograms_to_fit                     = {
       "EventCounter"                      : {},
       "numJets"                           : {},
-      "m4Vis"                             : {},
-      "m4"                                : {},
+      "HT"                                : {},
+      "STMET"                             : {}
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,

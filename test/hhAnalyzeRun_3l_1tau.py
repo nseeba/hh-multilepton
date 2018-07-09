@@ -116,9 +116,8 @@ if __name__ == '__main__':
     histograms_to_fit                     = {
       "EventCounter"                      : {},
       "numJets"                           : {},
-      "mTauTauVis"                        : {},
-      "m4Vis"                             : {},
-      "m4"                                : {},
+      "HT"                                : {},
+      "STMET"                             : {}
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,
