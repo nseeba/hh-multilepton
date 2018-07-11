@@ -57,7 +57,7 @@ do_sync = mode.startswith('sync')
 hadTau_charge_selections = [ "OS", "SS" ]
 
 if mode == "default":
-  from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017_preselected import samples_2017
+  from hhAnalysis.tttt.samples.hhAnalyzeSamples_2017 import samples_2017
   hadTau_selection     = "dR03mvaLoose"
   applyFakeRateWeights = "4tau"
 else:

@@ -34,15 +34,15 @@ process.makePlots.categories = cms.VPSet(
 
 process.makePlots.distributions.extend([
     cms.PSet(
-        histogramName = cms.string('sel/leadHadTau/$PROCESS/pt'),
+        histogramName = cms.string('sel/hadTaus/$PROCESS/pt'),
         xMin = cms.double(20.),
         xMax = cms.double(200.),
-        xAxisTitle = cms.string('leading #tau_{h} p_{T} [GeV]'),
+        xAxisTitle = cms.string('#tau_{h} p_{T} [GeV]'),
         yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
     ),
     cms.PSet(
-        histogramName = cms.string('sel/leadHadTau/$PROCESS/eta'),
-        xAxisTitle = cms.string('leading #tau_{h} #eta'),
+        histogramName = cms.string('sel/hadTaus/$PROCESS/eta'),
+        xAxisTitle = cms.string('#tau_{h} #eta'),
         yAxisTitle = cms.string('dN/d#eta')
     ),
     cms.PSet(

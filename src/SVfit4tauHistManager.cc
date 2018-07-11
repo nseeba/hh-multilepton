@@ -19,6 +19,10 @@ SVfit4tauHistManager::bookHistograms(TFileDirectory & dir)
   histogram_ditau1Mass1_    = book1D(dir, "ditau1Mass1",    "ditau1Mass1",     50,   0.,  250.);
   histogram_ditau1Mass2_    = book1D(dir, "ditau1Mass2",    "ditau1Mass2",     50,   0.,  250.);
 
+  histogram_ditau2VisMass_  = book1D(dir, "ditau2VisMass",  "ditau2VisMass",   50,   0.,  250.);
+  histogram_ditau2Mass1_    = book1D(dir, "ditau2Mass1",    "ditau2Mass1",     50,   0.,  250.);
+  histogram_ditau2Mass2_    = book1D(dir, "ditau2Mass2",    "ditau2Mass2",     50,   0.,  250.);
+
   histogram_logProbMax1_    = book1D(dir, "logProbMax1",    "logProbMax1",    200, -50.,  +50.);
   histogram_logProbMax2_    = book1D(dir, "logProbMax2",    "logProbMax2",    200, -50.,  +50.);
 }

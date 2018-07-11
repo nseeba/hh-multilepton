@@ -188,6 +188,8 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
     if "mcClosure" in hadTau_selection:
       jobOptions['hadTauFakeRateWeight.applyGraph_lead'] = True
       jobOptions['hadTauFakeRateWeight.applyGraph_sublead'] = True
+      jobOptions['hadTauFakeRateWeight.applyGraph_third'] = True
+      jobOptions['hadTauFakeRateWeight.applyGraph_fourth'] = True
       jobOptions['hadTauFakeRateWeight.applyFitFunction_lead'] = False
       jobOptions['hadTauFakeRateWeight.applyFitFunction_sublead'] = False
       jobOptions['hadTauFakeRateWeight.applyFitFunction_third'] = False

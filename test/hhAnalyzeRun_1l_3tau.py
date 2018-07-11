@@ -58,10 +58,7 @@ do_sync = mode.startswith('sync')
 chargeSumSelections = [ "OS", "SS" ]
 
 if mode == "default":
-  if use_preselected:
-    from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017_preselected import samples_2017
-  else:
-    from hhAnalysis.tttt.samples.hhAnalyzeSamples_2017 import samples_2017
+  from hhAnalysis.tttt.samples.hhAnalyzeSamples_2017 import samples_2017
   hadTau_selection     = "dR03mvaLoose"
   applyFakeRateWeights = "4L"
 else:

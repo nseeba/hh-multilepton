@@ -20,6 +20,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/GenJet.h" // GenJet
 #include "tthAnalysis/HiggsToTauTau/interface/GenHadTau.h" // GenHadTau
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h" // EventInfo
+#include "tthAnalysis/HiggsToTauTau/interface/TrigObj.h" // TrigObj
 #include "tthAnalysis/HiggsToTauTau/interface/LeptonFakeRateInterface.h" // LeptonFakeRateInterface
 #include "tthAnalysis/HiggsToTauTau/interface/JetToTauFakeRateInterface.h" // JetToTauFakeRateInterface
 #include "tthAnalysis/HiggsToTauTau/interface/RecoElectronReader.h" // RecoElectronReader
@@ -28,6 +29,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/RecoJetReader.h" // RecoJetReader
 #include "tthAnalysis/HiggsToTauTau/interface/RecoMEtReader.h" // RecoMEtReader
 #include "tthAnalysis/HiggsToTauTau/interface/MEtFilterReader.h" // MEtFilterReader
+#include "tthAnalysis/HiggsToTauTau/interface/TrigObjReader.h" // TrigObjReader
 #include "tthAnalysis/HiggsToTauTau/interface/GenLeptonReader.h" // GenLeptonReader
 #include "tthAnalysis/HiggsToTauTau/interface/GenHadTauReader.h" // GenHadTauReader
 #include "tthAnalysis/HiggsToTauTau/interface/GenPhotonReader.h" // GenPhotonReader
@@ -256,6 +258,7 @@ int main(int argc, char* argv[])
   std::string branchName_hadTaus = cfg_analyze.getParameter<std::string>("branchName_hadTaus");
   std::string branchName_jets = cfg_analyze.getParameter<std::string>("branchName_jets");
   std::string branchName_met = cfg_analyze.getParameter<std::string>("branchName_met");
+  std::string branchName_trigObjs = cfg_analyze.getParameter<std::string>("branchName_trigObjs");
 
   std::string branchName_genLeptons = cfg_analyze.getParameter<std::string>("branchName_genLeptons");
   std::string branchName_genHadTaus = cfg_analyze.getParameter<std::string>("branchName_genHadTaus");
@@ -300,6 +303,9 @@ int main(int argc, char* argv[])
 
   hltPathReader hltPathReader_instance({ triggers_2tau });
   inputTree -> registerReader(&hltPathReader_instance);
+
+  TrigObjReader trigObjReader(branchName_trigObjs);
+  inputTree -> registerReader(&trigObjReader);
 
 //--- declare particle collections
   const bool readGenObjects = isMC && !redoGenMatching;
@@ -692,7 +698,15 @@ int main(int argc, char* argv[])
       genEvtHistManager_beforeCuts->fillHistograms(genElectrons, genMuons, genHadTaus, genPhotons, genJets);
     }
 
-    bool isTriggered_2tau = hltPaths_isTriggered(triggers_2tau, isDEBUG);
+    // CV: require DoubleTau trigger in 2017 MC to pass L1 tau pT > 32 GeV threshold
+    //    (cf. slide 6 of https://indico.cern.ch/event/700042/contributions/2871830/attachments/1591232/2527113/180129_TauPOGmeeting_TriggerEfficiency_hsert.pdf )
+    bool isTriggered_2tau_L1 = true;
+    if ( era == kEra_2017 && isMC ) { 
+      std::vector<TrigObj> trigObjs = trigObjReader.read();
+      isTriggered_2tau_L1 = (countTrigObjs_passingL1(trigObjs, 15, 32.) >= 2); 
+    } 
+
+    bool isTriggered_2tau = hltPaths_isTriggered(triggers_2tau, isDEBUG) && isTriggered_2tau_L1;
     //std::cout << "isTriggered_2tau = " << isTriggered_2tau << std::endl;
 
     bool selTrigger_2tau = use_triggers_2tau && isTriggered_2tau;

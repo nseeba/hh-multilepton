@@ -67,7 +67,7 @@ else:
   raise ValueError("Internal logic error")
 
 if era == "2017":
-  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2017 as lumi
+  from hhAnalysis.tttt.samples.hhAnalyzeSamples_2017 import samples_2017
   samples = samples_2017
 else:
   raise ValueError("Invalid era: %s" % era)

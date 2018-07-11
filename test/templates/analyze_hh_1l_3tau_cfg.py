@@ -100,6 +100,7 @@ process.analyze_hh_1l_3tau = cms.PSet(
     branchName_hadTaus = cms.string('Tau'),
     branchName_jets = cms.string('Jet'),
     branchName_met = cms.string('MET'),
+    branchName_trigObjs = cms.string('TrigObj'),
 
     branchName_genLeptons = cms.string('GenLep'),
     branchName_genHadTaus = cms.string('GenVisTau'),

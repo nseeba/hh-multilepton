@@ -210,6 +210,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
     if "mcClosure" in lepton_and_hadTau_selection:
       jobOptions['hadTauFakeRateWeight.applyGraph_lead'] = True
       jobOptions['hadTauFakeRateWeight.applyGraph_sublead'] = True
+      jobOptions['hadTauFakeRateWeight.applyGraph_third'] = True
       jobOptions['hadTauFakeRateWeight.applyFitFunction_lead'] = False
       jobOptions['hadTauFakeRateWeight.applyFitFunction_sublead'] = False
       jobOptions['hadTauFakeRateWeight.applyFitFunction_third'] = False
