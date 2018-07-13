@@ -65,40 +65,36 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
         executable_addBackgrounds,
         executable_addBackgroundJetToTauFakes,
         histograms_to_fit,
-        select_rle_output         = False,
-        executable_prep_dcard     = "prepareDatacards",
-        executable_add_syst_dcard = "addSystDatacards",
-        verbose                   = False,
-        dry_run                   = False,
-        isDebug                   = False,
-        rle_select                = '',
-        use_nonnominal            = False,
-        hlt_filter                = False,
-        use_home                  = True,
+        select_rle_output = False,
+        verbose           = False,
+        dry_run           = False,
+        isDebug           = False,
+        use_nonnominal    = False,
+        hlt_filter        = False,
+        use_home          = True,
       ):
     analyzeConfig.__init__(self,
-      configDir                       = configDir,
-      outputDir                       = outputDir,
-      executable_analyze              = executable_analyze,
-      channel                         = "hh_2l_2tau",
-      lep_mva_wp                      = lep_mva_wp,
-      central_or_shifts               = central_or_shifts,
-      max_files_per_job               = max_files_per_job,
-      era                             = era,
-      use_lumi                        = use_lumi,
-      lumi                            = lumi,
-      check_output_files              = check_output_files,
-      running_method                  = running_method,
-      num_parallel_jobs               = num_parallel_jobs,
-      histograms_to_fit               = histograms_to_fit,
-      triggers                        = [ '1e', '1mu', '2e', '2mu', '1e1mu' ],
-      executable_prep_dcard           = executable_prep_dcard,
-      executable_add_syst_dcard       = executable_add_syst_dcard,
-      verbose                         = verbose,
-      dry_run                         = dry_run,
-      isDebug                         = isDebug,
-      use_home                        = use_home,
-      template_dir                    = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'tttt', 'test', 'templates')
+      configDir          = configDir,
+      outputDir          = outputDir,
+      executable_analyze = executable_analyze,
+      channel            = "hh_2l_2tau",
+      samples            = samples,                    
+      central_or_shifts  = central_or_shifts,
+      max_files_per_job  = max_files_per_job,
+      era                = era,
+      use_lumi           = use_lumi,
+      lumi               = lumi,
+      check_output_files = check_output_files,
+      running_method     = running_method,
+      num_parallel_jobs  = num_parallel_jobs,
+      histograms_to_fit  = histograms_to_fit,
+      triggers           = [ '1e', '1mu', '2e', '2mu', '1e1mu' ],
+      lep_mva_wp         = lep_mva_wp,             
+      verbose            = verbose,
+      dry_run            = dry_run,
+      isDebug            = isDebug,
+      use_home           = use_home,
+      template_dir       = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'tttt', 'test', 'templates')
     )
 
     self.samples = samples
@@ -191,7 +187,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2l_2tau_cfg.py") 
 
     self.select_rle_output = select_rle_output
-    self.rle_select = rle_select
     self.use_nonnominal = use_nonnominal
     self.hlt_filter = hlt_filter
 

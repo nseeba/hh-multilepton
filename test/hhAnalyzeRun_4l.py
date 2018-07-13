@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os, logging, sys, getpass
+from collections import OrderedDict as OD
 from hhAnalysis.tttt.configs.analyzeConfig_hh_4l import analyzeConfig_hh_4l
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
@@ -14,11 +15,11 @@ systematics.full = systematics.an_extended
 parser = tthAnalyzeParser()
 parser.add_modes(mode_choices)
 parser.add_sys(sys_choices)
-parser.add_rle_select()
 parser.add_nonnominal()
 parser.add_hlt_filter()
 parser.add_files_per_job()
 parser.add_use_home()
+parser.add_lep_mva_wp()
 args = parser.parse_args()
 
 # Common arguments
@@ -36,11 +37,11 @@ running_method     = args.running_method
 # Additional arguments
 mode              = args.mode
 systematics_label = args.systematics
-rle_select        = os.path.expanduser(args.rle_select)
 use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
 files_per_job     = args.files_per_job
 use_home          = args.use_home
+lep_mva_wp        = args.lep_mva_wp
 
 # Use the arguments
 central_or_shifts = []
@@ -88,6 +89,7 @@ if __name__ == '__main__':
     executable_analyze                    = "analyze_hh_4l",
     cfgFile_analyze                       = "analyze_hh_4l_cfg.py",
     samples                               = samples,
+    lep_mva_wp                            = lep_mva_wp,
     applyFakeRateWeights                  = "4lepton",
     chargeSumSelections                   = chargeSumSelections,
     central_or_shifts                     = central_or_shifts,
@@ -109,7 +111,6 @@ if __name__ == '__main__':
     select_rle_output                     = True,
     dry_run                               = dry_run,
     isDebug                               = debug,
-    rle_select                            = rle_select,
     use_nonnominal                        = use_nonnominal,
     hlt_filter                            = hlt_filter,
     use_home                              = use_home,

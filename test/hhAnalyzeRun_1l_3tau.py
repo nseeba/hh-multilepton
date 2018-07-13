@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os, logging, sys, getpass, numpy as np
+from collections import OrderedDict as OD
 from hhAnalysis.tttt.configs.analyzeConfig_hh_1l_3tau import analyzeConfig_hh_1l_3tau
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics

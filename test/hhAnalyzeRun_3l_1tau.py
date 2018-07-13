@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os, logging, sys, getpass
+from collections import OrderedDict as OD
 from hhAnalysis.tttt.configs.analyzeConfig_hh_3l_1tau import analyzeConfig_hh_3l_1tau
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
@@ -15,7 +16,6 @@ parser = tthAnalyzeParser()
 parser.add_modes(mode_choices)
 parser.add_sys(sys_choices)
 parser.add_preselect()
-parser.add_rle_select()
 parser.add_nonnominal()
 parser.add_tau_id_wp()
 parser.add_hlt_filter()
@@ -40,7 +40,6 @@ running_method     = args.running_method
 mode              = args.mode
 systematics_label = args.systematics
 use_preselected   = args.use_preselected
-rle_select        = os.path.expanduser(args.rle_select)
 use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
 files_per_job     = args.files_per_job
@@ -57,17 +56,14 @@ for systematic_label in systematics_label:
 chargeSumSelections = [ "OS", "SS" ]
 
 if mode == "default":
-  if use_preselected:
-    from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017_preselected import samples_2017
-  else:
-    from hhAnalysis.tttt.samples.hhAnalyzeSamples_2017 import samples_2017
+  from hhAnalysis.tttt.samples.hhAnalyzeSamples_2017 import samples_2017
   hadTau_selection     = "dR03mvaLoose"
   applyFakeRateWeights = "4L"
 else:
   raise ValueError("Internal logic error")
 
 if era == "2017":
-  from hhAnalysis.tttt.samples.hhAnalyzeSamples_2017 import samples_2017
+  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2017 as lumi
   samples = samples_2017
 else:
   raise ValueError("Invalid era: %s" % era)
@@ -122,7 +118,6 @@ if __name__ == '__main__':
     select_rle_output                     = True,
     dry_run                               = dry_run,
     isDebug                               = debug,
-    rle_select                            = rle_select,
     use_nonnominal                        = use_nonnominal,
     hlt_filter                            = hlt_filter,
     use_home                              = use_home,

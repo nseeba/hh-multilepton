@@ -62,11 +62,9 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
         executable_addBackgroundJetToTauFakes,
         histograms_to_fit,
         select_rle_output = False,
-        do_sync           = False,
         verbose           = False,
         dry_run           = False,
         isDebug           = False,
-        rle_select        = '',
         use_nonnominal    = False,
         hlt_filter        = False,
         use_home          = True
@@ -76,7 +74,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
       outputDir          = outputDir,
       executable_analyze = executable_analyze,
       channel            = "hh_0l_4tau",
-      lep_mva_wp         = lep_mva_wp,
+      samples            = samples,
       central_or_shifts  = central_or_shifts,
       max_files_per_job  = max_files_per_job,
       era                = era,
@@ -87,7 +85,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
       num_parallel_jobs  = num_parallel_jobs,
       histograms_to_fit  = histograms_to_fit,
       triggers           = [ '2tau' ],
-      do_sync            = do_sync,
+      lep_mva_wp         = lep_mva_wp,                   
       verbose            = verbose,
       dry_run            = dry_run,
       isDebug            = isDebug,
@@ -152,7 +150,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_0l_4tau_cfg.py") 
 
     self.select_rle_output = select_rle_output
-    self.rle_select = rle_select
     self.use_nonnominal = use_nonnominal
     self.hlt_filter = hlt_filter
 

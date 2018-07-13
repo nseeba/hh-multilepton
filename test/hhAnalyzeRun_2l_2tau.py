@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os, logging, sys, getpass
+from collections import OrderedDict as OD
 from hhAnalysis.tttt.configs.analyzeConfig_hh_2l_2tau import analyzeConfig_hh_2l_2tau
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
@@ -15,7 +16,6 @@ parser = tthAnalyzeParser()
 parser.add_modes(mode_choices)
 parser.add_sys(sys_choices)
 parser.add_preselect()
-parser.add_rle_select()
 parser.add_nonnominal()
 parser.add_tau_id_wp()
 parser.add_hlt_filter()
@@ -40,7 +40,6 @@ running_method     = args.running_method
 mode              = args.mode
 systematics_label = args.systematics
 use_preselected   = args.use_preselected
-rle_select        = os.path.expanduser(args.rle_select)
 use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
 files_per_job     = args.files_per_job
@@ -123,7 +122,6 @@ if __name__ == '__main__':
     select_rle_output                     = True,
     dry_run                               = dry_run,
     isDebug                               = debug,
-    rle_select                            = rle_select,
     use_nonnominal                        = use_nonnominal,
     hlt_filter                            = hlt_filter,
     use_home                              = use_home,

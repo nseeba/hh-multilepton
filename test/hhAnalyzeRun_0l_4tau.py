@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os, logging, sys, getpass, numpy as np
+from collections import OrderedDict as OD
 from hhAnalysis.tttt.configs.analyzeConfig_hh_0l_4tau import analyzeConfig_hh_0l_4tau
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
@@ -70,6 +71,8 @@ else:
   raise ValueError("Invalid era: %s" % era)
 
 for sample_name, sample_info in samples.items():
+  if not isinstance(sample_info, OD):
+    continue
   if sample_info["type"] == "mc":
     sample_info["triggers"] = [ "2tau" ]
   if sample_name.startswith(("/DoubleEG/", "/DoubleMuon/", "/MuonEG/", "/SingleElectron/", "/SingleMuon/")):

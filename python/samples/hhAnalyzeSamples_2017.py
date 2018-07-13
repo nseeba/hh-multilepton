@@ -1,8 +1,13 @@
 from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017 import samples_2017
 
-samples = samples_2017
-for sample_name, sample_info in samples.items():
-  if sample_name.find('HHTo4Tau'):
+from collections import OrderedDict as OD
+
+for sample_name, sample_info in samples_2017.items():
+
+  if not isinstance(sample_info, OD):
+    continue
+
+  if sample_name.find('HHTo4Tau') != -1:
     sample_info["use_it"] = True
 
   if sample_name.startswith('/ZZ'):
