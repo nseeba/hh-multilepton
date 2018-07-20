@@ -51,7 +51,7 @@ process.analyze_hh_1l_3tau = cms.PSet(
     apply_hadTauGenMatching = cms.bool(False),
 
     chargeSumSelection = cms.string('OS'),
-    
+
     applyFakeRateWeights = cms.string("disabled"), # either "disabled", "4L" or "3tau"
     leptonFakeRateWeight = cms.PSet(
         inputFileName = cms.string("tthAnalysis/HiggsToTauTau/data/FR_lep_ttH_mva_2017_Tallinn_2018May22.root"),
@@ -113,4 +113,14 @@ process.analyze_hh_1l_3tau = cms.PSet(
 
     isDEBUG = cms.bool(False),
     hasLHE = cms.bool(True),
+
+    evtWeight = cms.PSet(
+        apply = cms.bool(False),
+        histogramFile = cms.string(''),
+        histogramName = cms.string(''),
+        branchNameXaxis = cms.string(''),
+        branchNameYaxis = cms.string(''),
+        branchTypeXaxis = cms.string(''),
+        branchTypeYaxis = cms.string(''),
+    ),
 )

@@ -55,7 +55,7 @@ process.analyze_SVfit4tau = cms.PSet(
     branchName_genHadTaus = cms.string('GenVisTau'),
     branchName_genJets = cms.string('GenJet'),
     redoGenMatching = cms.bool(True),
-    
+
     branchName_genTaus = cms.string('GenTau'),
     branchName_genHiggsBosons = cms.string('GenHiggsBosons'), # CV: use 'GenHiggsBoson' in CMSSW_8_0_x, 'GenHiggs' in  CMSSW_9_4_x
 
@@ -69,4 +69,14 @@ process.analyze_SVfit4tau = cms.PSet(
     ),
 
     selEventsFileName_input = cms.string(''),
+
+    evtWeight = cms.PSet(
+        apply = cms.bool(False),
+        histogramFile = cms.string(''),
+        histogramName = cms.string(''),
+        branchNameXaxis = cms.string(''),
+        branchNameYaxis = cms.string(''),
+        branchTypeXaxis = cms.string(''),
+        branchTypeYaxis = cms.string(''),
+    ),
 )

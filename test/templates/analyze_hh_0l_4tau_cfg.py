@@ -33,7 +33,7 @@ process.analyze_hh_0l_4tau = cms.PSet(
     hadTauSelection = cms.string('Tight|dR03mvaTight'),
     hadTauChargeSelection = cms.string('OS'),
     apply_hadTauGenMatching = cms.bool(False),
-    
+
     applyFakeRateWeights = cms.string("disabled"), # either "disabled" or "4tau"
     hadTauFakeRateWeight = cms.PSet(
         inputFileName = cms.string("tthAnalysis/HiggsToTauTau/data/FR_tau_2017_v2.root"),
@@ -96,4 +96,14 @@ process.analyze_hh_0l_4tau = cms.PSet(
 
     isDEBUG = cms.bool(False),
     hasLHE = cms.bool(True),
+
+    evtWeight = cms.PSet(
+        apply = cms.bool(False),
+        histogramFile = cms.string(''),
+        histogramName = cms.string(''),
+        branchNameXaxis = cms.string(''),
+        branchNameYaxis = cms.string(''),
+        branchTypeXaxis = cms.string(''),
+        branchTypeYaxis = cms.string(''),
+    ),
 )
