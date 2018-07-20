@@ -3,3 +3,5 @@
 *.creator
 *.files
 *.includes
+*.pyc
+__init__.py
