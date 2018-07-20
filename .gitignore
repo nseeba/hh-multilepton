@@ -1,6 +1,7 @@
 .idea
 *.config
 *.creator
+*.creator.user
 *.files
 *.includes
 *.pyc
