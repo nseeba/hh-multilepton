@@ -24,17 +24,26 @@ max_job_resubmission = resubmission_limit if resubmit else 1
 central_or_shift     = [ "central" ]
 max_files_per_job    = 1
 
-from hhAnalysis.tttt.samples.hhAnalyzeSamples_2016_nanoAOD import samples_2017
+if era == "2016":
+  from hhAnalysis.tttt.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
+elif era == "2017":
+  from hhAnalysis.tttt.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
+elif era == "2018":
+  from hhAnalysis.tttt.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
+else:
+  raise ValueError("Invalid era: %s" % era)
 
-if era == "2017":
+if era == "2016":
+  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2016 as lumi
+elif era == "2017":
   from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2017 as lumi
-  samples = samples_2017
+elif era == "2018":
+  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2018 as lumi
 else:
   raise ValueError("Invalid era: %s" % era)
 
 for sample_name, sample_info in samples.items():
-  if not sample_name.find('HHTo4Tau') != -1:
-    sample_info["use_it"] = False
+  sample_info["use_it"] = sample_name.startswith('x_to_hh_')
 
 if __name__ == '__main__':
   logging.basicConfig(
