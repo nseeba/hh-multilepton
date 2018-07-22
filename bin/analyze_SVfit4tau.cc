@@ -201,11 +201,7 @@ int main(int argc, char* argv[])
   std::string histogramDir = cfg_analyze.getParameter<std::string>("histogramDir");
 
   std::string era_string = cfg_analyze.getParameter<std::string>("era");
-  int era = kEra_undefined;
-  if      ( era_string == "2016" ) era = kEra_2016;
-  else if ( era_string == "2017" ) era = kEra_2017;
-  else throw cms::Exception("analyze_SVfit4tau")
-    << "Invalid Configuration parameter 'era' = " << era_string << " !!\n";
+  const int era = get_era(era_string);
 
   std::string mode_string = cfg_analyze.getParameter<std::string>("mode");
   int mode = kMode_undefined;
