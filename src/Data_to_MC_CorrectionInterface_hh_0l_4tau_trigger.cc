@@ -269,21 +269,8 @@ Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::getSF_triggerEff() const
   const double sf = aux::compSF(prob_data, prob_mc);
   if(isDEBUG_)
   {
-    int idxCase = 0;
-    if(isTriggered_2tau_ )
-    {
-      idxCase += 1;
-    }
-
-    std::string text_2tau;
-    if(isTriggered_2tau_)
-    {
-      text_2tau = "ditau trigger doesn't fire";
-    }
-    else
-    {
-      text_2tau = "ditau trigger fires";
-    }
+    const int idxCase = isTriggered_2tau_ ? 1 : 0;
+    const std::string text_2tau = isTriggered_2tau_ ? "ditau trigger doesn't fire" : "ditau trigger fires";
     std::cout << "case " << idxCase << ": " << text_2tau << "\n"
                  " eff: data = " << prob_data << ", MC = " << prob_mc << " --> SF = " << sf << '\n'
     ;
@@ -297,17 +284,11 @@ Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::getProb_tau(int tau_status,
                                                                double eff_2tau_tauLeg) const
 {
   double prob = 0.;
-  if(tau_status == k2tau)
+  switch(tau_status)
   {
-    prob = eff_2tau_tauLeg;
-  }
-  else if(tau_status == kNot2tau)
-  {
-    prob = 1. - eff_2tau_tauLeg;
-  }
-  else
-  {
-    assert(0);
+    case k2tau:    prob = eff_2tau_tauLeg;      break;
+    case kNot2tau: prob = 1. - eff_2tau_tauLeg; break;
+    default:       assert(0);
   }
   return prob;
 }
