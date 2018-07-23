@@ -238,9 +238,12 @@ int main(int argc, char* argv[])
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiElectron_sublead", hadTauSelection_antiElectron);
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiMuon_sublead", hadTauSelection_antiMuon);
   cfg_dataToMCcorrectionInterface.addParameter<std::string>("central_or_shift", central_or_shift);
-  //cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", isDEBUG);
   cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", false);
-  //cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", true);
+  if(era == kEra_2016)
+  {
+    const edm::ParameterSet cfg_triggerSF_2tau = cfg_analyze.getParameter<edm::ParameterSet>("triggerSF_2tau");
+    cfg_dataToMCcorrectionInterface.addParameter<edm::ParameterSet>("triggerSF_2tau", cfg_triggerSF_2tau);
+  }
   Data_to_MC_CorrectionInterface_Base * dataToMCcorrectionInterface = nullptr;
   switch(era)
   {
@@ -997,11 +1000,32 @@ int main(int argc, char* argv[])
         selHadTau_third_genPdgId, selHadTau_third->pt(), selHadTau_third->eta(),
         selHadTau_fourth_genPdgId, selHadTau_fourth->pt(), selHadTau_fourth->eta());
 
-      dataToMCcorrectionInterface_hh_0l_4tau_trigger->setHadTaus(
-        selHadTau_lead->pt(), selHadTau_lead->eta(), selHadTau_lead->phi(),
-        selHadTau_sublead->pt(), selHadTau_sublead->eta(), selHadTau_sublead->phi(),
-        selHadTau_third->pt(), selHadTau_third->eta(), selHadTau_third->phi(),
-        selHadTau_fourth->pt(), selHadTau_fourth->eta(), selHadTau_fourth->phi());
+      if(era == kEra_2016)
+      {
+        dataToMCcorrectionInterface_hh_0l_4tau_trigger->setHadTaus(
+          selHadTau_lead_genPdgId,    selHadTau_lead->pt(),    selHadTau_lead->eta(),    selHadTau_lead->decayMode(),
+          selHadTau_sublead_genPdgId, selHadTau_sublead->pt(), selHadTau_sublead->eta(), selHadTau_sublead->decayMode(),
+          selHadTau_third_genPdgId,   selHadTau_third->pt(),   selHadTau_third->eta(),   selHadTau_third->decayMode(),
+          selHadTau_fourth_genPdgId,  selHadTau_fourth->pt(),  selHadTau_fourth->eta(),   selHadTau_fourth->decayMode()
+        );
+      }
+      else if(era == kEra_2017)
+      {
+        dataToMCcorrectionInterface_hh_0l_4tau_trigger->setHadTaus(
+          selHadTau_lead->pt(),    selHadTau_lead->eta(),    selHadTau_lead->phi(),
+          selHadTau_sublead->pt(), selHadTau_sublead->eta(), selHadTau_sublead->phi(),
+          selHadTau_third->pt(),   selHadTau_third->eta(),   selHadTau_third->phi(),
+          selHadTau_fourth->pt(),  selHadTau_fourth->eta(),  selHadTau_fourth->phi()
+        );
+      }
+      else if(era == kEra_2018)
+      {
+        throw cmsException("analyze_hh_0l_4tau", __LINE__) << "Implement me!";
+      }
+      else
+      {
+        throw cmsException("analyze_hh_0l_4tau", __LINE__) << "Invalid era = " << era;
+      }
       dataToMCcorrectionInterface_hh_0l_4tau_trigger->setTriggerBits(isTriggered_2tau);
 
 //--- apply data/MC corrections for trigger efficiency

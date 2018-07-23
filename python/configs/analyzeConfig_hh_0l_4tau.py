@@ -85,7 +85,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
       num_parallel_jobs  = num_parallel_jobs,
       histograms_to_fit  = histograms_to_fit,
       triggers           = [ '2tau' ],
-      lep_mva_wp         = lep_mva_wp,                   
+      lep_mva_wp         = lep_mva_wp,
       verbose            = verbose,
       dry_run            = dry_run,
       isDebug            = isDebug,
@@ -132,7 +132,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
 
     self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
-    
+
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "fakes_data", "fakes_mc" ]
     self.prep_dcard_signals = []
     for sample_name, sample_info in self.samples.items():
@@ -147,7 +147,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
     self.histogramDir_prep_dcard = "hh_0l_4tau_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_0l_4tau_SS_Tight"
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_0l_4tau_cfg.py")
-    self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_0l_4tau_cfg.py") 
+    self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_0l_4tau_cfg.py")
 
     self.select_rle_output = select_rle_output
     self.use_nonnominal = use_nonnominal
@@ -210,6 +210,21 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
       jobOptions['apply_hadTauFakeRateSF'] = True
 
     lines = super(analyzeConfig_hh_0l_4tau, self).createCfg_analyze(jobOptions, sample_info)
+    if self.era == "2016":
+      lines.extend([
+        "",
+        "jsonFileName = os.path.expandvars('$CMSSW_BASE/src/tthAnalysis/HiggsToTauTau/data/triggerSF/2016/trigger_sf_tt.json')",
+        "jsonFile = open(jsonFileName)",
+        "import json",
+        "jsonData = json.load(jsonFile)",
+        "for fit, parameters in jsonData.items():",
+        "  pset = cms.PSet()",
+        "  for parameterName, parameterValue in parameters.items():",
+        "    setattr(pset, parameterName, cms.double(parameterValue))",
+        "    setattr(process.analyze_hh_0l_4tau.triggerSF_2tau, fit, pset)",
+        "",
+      ])
+
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
 
   def createCfg_makePlots_mcClosure(self, jobOptions): #TODO
@@ -275,7 +290,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
           create_if_not_exists(self.dirs[key][dir_type])
       else:
         create_if_not_exists(self.dirs[key])
-        
+
     inputFileLists = {}
     for sample_name, sample_info in self.samples.items():
       if not sample_info["use_it"] or sample_info["sample_category"] in [ "additional_signal_overlap", "background_data_estimate" ]:
@@ -293,7 +308,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
         hadTau_selection_and_frWeight = get_hadTau_selection_and_frWeight(hadTau_selection, hadTau_frWeight)
 
         for hadTau_charge_selection in self.hadTau_charge_selections:
-          
+
           for sample_name, sample_info in self.samples.items():
             if not sample_info["use_it"] or sample_info["sample_category"] in [ "additional_signal_overlap", "background_data_estimate" ]:
               continue
@@ -303,7 +318,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
             sample_category = sample_info["sample_category"]
             is_mc = (sample_info["type"] == "mc")
             is_signal = (sample_category.startswith("signal"))
-            
+
             for central_or_shift in self.central_or_shifts:
 
               inputFileList = inputFileLists[sample_name]
