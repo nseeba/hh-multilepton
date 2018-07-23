@@ -16,12 +16,16 @@
 
 Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger(const edm::ParameterSet & cfg)
   : Data_to_MC_CorrectionInterface_0l_2tau_trigger(cfg)
+  , hadTau3_genPdgId_(0)
   , hadTau3_pt_(0.)
   , hadTau3_eta_(0.)
-  , hadTau3_phi_(0.)  
+  , hadTau3_phi_(0.)
+  , hadTau3_decayMode_(0)
+  , hadTau4_genPdgId_(0)
   , hadTau4_pt_(0.)
   , hadTau4_eta_(0.)
   , hadTau4_phi_(0.)
+  , hadTau4_decayMode_(0)
 {}
 
 Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::~Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger()
