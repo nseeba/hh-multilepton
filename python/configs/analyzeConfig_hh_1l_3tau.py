@@ -85,12 +85,12 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
       num_parallel_jobs  = num_parallel_jobs,
       histograms_to_fit  = histograms_to_fit,
       triggers           = [ '1e', '1e1tau', '1mu', '1mu1tau', '2tau' ],
-      lep_mva_wp         = lep_mva_wp,                     
+      lep_mva_wp         = lep_mva_wp,
       verbose            = verbose,
       dry_run            = dry_run,
       isDebug            = isDebug,
       use_home           = use_home,
-      template_dir       = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'tttt', 'test', 'templates')                      
+      template_dir       = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'tttt', 'test', 'templates')
     )
 
     self.samples = samples
@@ -100,6 +100,9 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
     self.hadTau_selection_part2 = hadTau_selection
     self.applyFakeRateWeights = applyFakeRateWeights
     run_mcClosure = 'central' not in self.central_or_shifts or len(central_or_shifts) > 1 or self.do_sync
+    if self.era != '2017':
+      logging.warning('mcClosure for lepton FR not possible for era %s' % self.era)
+      run_mcClosure = False
     if run_mcClosure:
       # Run MC closure jobs only if the analysis is run w/ (at least some) systematic uncertainties
       #self.lepton_and_hadTau_selections.extend([ "Fakeable_mcClosure_all" ]) #TODO
@@ -150,7 +153,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
 
     self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
-    
+
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
     self.prep_dcard_signals = []
     for sample_name, sample_info in self.samples.items():
@@ -165,7 +168,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
     self.histogramDir_prep_dcard = "hh_1l_3tau_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_1l_3tau_SS_Tight"
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_1l_3tau_cfg.py")
-    self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_1l_3tau_cfg.py") 
+    self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_1l_3tau_cfg.py")
 
     self.select_rle_output = select_rle_output
     self.use_nonnominal = use_nonnominal
@@ -227,6 +230,21 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
       jobOptions['apply_hadTauFakeRateSF'] = True
 
     lines = super(analyzeConfig_hh_1l_3tau, self).createCfg_analyze(jobOptions, sample_info)
+    if self.era == "2016":
+      lines.extend([
+        "",
+        "jsonFileName = os.path.expandvars('$CMSSW_BASE/src/tthAnalysis/HiggsToTauTau/data/triggerSF/2016/trigger_sf_tt.json')",
+        "jsonFile = open(jsonFileName)",
+        "import json",
+        "jsonData = json.load(jsonFile)",
+        "for fit, parameters in jsonData.items():",
+        "  pset = cms.PSet()",
+        "  for parameterName, parameterValue in parameters.items():",
+        "    setattr(pset, parameterName, cms.double(parameterValue))",
+        "    setattr(process.analyze_hh_1l_3tau.triggerSF_2tau, fit, pset)",
+        "",
+      ])
+
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
 
   def createCfg_makePlots_mcClosure(self, jobOptions): #TODO
@@ -292,7 +310,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
           create_if_not_exists(self.dirs[key][dir_type])
       else:
         create_if_not_exists(self.dirs[key])
-        
+
     inputFileLists = {}
     for sample_name, sample_info in self.samples.items():
       if not sample_info["use_it"] or sample_info["sample_category"] in [ "additional_signal_overlap", "background_data_estimate" ]:
@@ -335,7 +353,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
         lepton_and_hadTau_selection_and_frWeight = get_lepton_and_hadTau_selection_and_frWeight(lepton_and_hadTau_selection, lepton_and_hadTau_frWeight)
 
         for chargeSumSelection in self.chargeSumSelections:
-          
+
           for sample_name, sample_info in self.samples.items():
             if not sample_info["use_it"] or sample_info["sample_category"] in [ "additional_signal_overlap", "background_data_estimate" ]:
               continue
@@ -345,7 +363,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
             sample_category = sample_info["sample_category"]
             is_mc = (sample_info["type"] == "mc")
             is_signal = (sample_category.startswith("signal"))
-            
+
             for central_or_shift in self.central_or_shifts:
 
               inputFileList = inputFileLists[sample_name]

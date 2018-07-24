@@ -73,7 +73,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
       outputDir          = outputDir,
       executable_analyze = executable_analyze,
       channel            = "hh_3l_1tau",
-      samples            = samples,                           
+      samples            = samples,
       central_or_shifts  = central_or_shifts,
       max_files_per_job  = max_files_per_job,
       era                = era,
@@ -84,7 +84,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
       num_parallel_jobs  = num_parallel_jobs,
       histograms_to_fit  = histograms_to_fit,
       triggers           = [ '1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '1e2mu', '2e1mu' ],
-      lep_mva_wp         = lep_mva_wp,                     
+      lep_mva_wp         = lep_mva_wp,
       verbose            = verbose,
       dry_run            = dry_run,
       isDebug            = isDebug,
@@ -99,6 +99,9 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
     self.hadTau_selection_part2 = hadTau_selection
     self.applyFakeRateWeights = applyFakeRateWeights
     run_mcClosure = 'central' not in self.central_or_shifts or len(central_or_shifts) > 1 or self.do_sync
+    if self.era != '2017':
+      logging.warning('mcClosure for lepton FR not possible for era %s' % self.era)
+      run_mcClosure = False
     if run_mcClosure:
       # Run MC closure jobs only if the analysis is run w/ (at least some) systematic uncertainties
       #self.lepton_and_hadTau_selections.extend([ "Fakeable_mcClosure_all" ]) #TODO
@@ -162,7 +165,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
 
     self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
-    
+
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
     self.prep_dcard_signals = []
@@ -174,7 +177,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
         self.prep_dcard_signals.append(sample_category)
     self.histogramDir_prep_dcard = "hh_3l_1tau_OS_lepTight_tauTight"
     self.histogramDir_prep_dcard_SS = "hh_3l_1tau_SS_lepTight_tauTight"
-    
+
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_3l_1tau_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_3l_1tau_cfg.py") #TODO
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
@@ -339,7 +342,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
             sample_category = sample_info["sample_category"]
             is_mc = (sample_info["type"] == "mc")
             is_signal = (sample_category.startswith("signal"))
-            
+
             for central_or_shift in self.central_or_shifts:
 
               inputFileList = inputFileLists[sample_name]

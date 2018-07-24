@@ -41,7 +41,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
         executable_analyze,
         cfgFile_analyze,
         samples,
-        lep_mva_wp,       
+        lep_mva_wp,
         applyFakeRateWeights,
         chargeSumSelections,
         central_or_shifts,
@@ -68,7 +68,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
       outputDir          = outputDir,
       executable_analyze = executable_analyze,
       channel            = "hh_4l",
-      samples            = samples,                     
+      samples            = samples,
       central_or_shifts  = central_or_shifts,
       max_files_per_job  = max_files_per_job,
       era                = era,
@@ -79,7 +79,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
       num_parallel_jobs  = num_parallel_jobs,
       histograms_to_fit  = histograms_to_fit,
       triggers           = [ '1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '1e2mu', '2e1mu' ],
-      lep_mva_wp         = lep_mva_wp,                                
+      lep_mva_wp         = lep_mva_wp,
       verbose            = verbose,
       dry_run            = dry_run,
       isDebug            = isDebug,
@@ -93,6 +93,9 @@ class analyzeConfig_hh_4l(analyzeConfig):
     self.lepton_frWeights = [ "enabled", "disabled" ]
     self.applyFakeRateWeights = applyFakeRateWeights
     run_mcClosure = 'central' not in self.central_or_shifts or len(central_or_shifts) > 1 or self.do_sync
+    if self.era != '2017':
+      logging.warning('mcClosure for lepton FR not possible for era %s' % self.era)
+      run_mcClosure = False
     if run_mcClosure:
       # Run MC closure jobs only if the analysis is run w/ (at least some) systematic uncertainties
       # self.lepton_and_hadTau_selections.extend([ "Fakeable_mcClosure_all" ]) #TODO
@@ -267,7 +270,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
             sample_category = sample_info["sample_category"]
             is_mc = (sample_info["type"] == "mc")
             is_signal = (sample_category.startswith("signal"))
-            
+
             for central_or_shift in self.central_or_shifts:
 
               inputFileList = inputFileLists[sample_name]
@@ -296,7 +299,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
                 if len(ntupleFiles) == 0:
                   logging.warning("No input ntuples for %s --> skipping job !!" % (key_analyze_job))
                   continue
-              
+
                 cfg_key = getKey(self.channel, process_name, lepton_selection_and_frWeight, chargeSumSelection, central_or_shift, jobId)
                 cfgFile_modified_path = os.path.join(self.dirs[key_dir][DKEY_CFGS], "analyze_%s_cfg.py" % cfg_key)
                 logFile_path = os.path.join(self.dirs[key_dir][DKEY_LOGS], "analyze_%s.log" % cfg_key)

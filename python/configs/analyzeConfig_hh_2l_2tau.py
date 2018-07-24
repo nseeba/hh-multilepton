@@ -78,7 +78,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
       outputDir          = outputDir,
       executable_analyze = executable_analyze,
       channel            = "hh_2l_2tau",
-      samples            = samples,                    
+      samples            = samples,
       central_or_shifts  = central_or_shifts,
       max_files_per_job  = max_files_per_job,
       era                = era,
@@ -89,7 +89,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
       num_parallel_jobs  = num_parallel_jobs,
       histograms_to_fit  = histograms_to_fit,
       triggers           = [ '1e', '1mu', '2e', '2mu', '1e1mu' ],
-      lep_mva_wp         = lep_mva_wp,             
+      lep_mva_wp         = lep_mva_wp,
       verbose            = verbose,
       dry_run            = dry_run,
       isDebug            = isDebug,
@@ -106,6 +106,9 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
     self.lepton_charge_selections = lepton_charge_selections
     self.hadTau_charge_selections = hadTau_charge_selections
     run_mcClosure = 'central' not in self.central_or_shifts or len(central_or_shifts) > 1 or self.do_sync
+    if self.era != '2017':
+      logging.warning('mcClosure for lepton FR not possible for era %s' % self.era)
+      run_mcClosure = False
     if run_mcClosure:
       # Run MC closure jobs only if the analysis is run w/ (at least some) systematic uncertainties
       #self.lepton_and_hadTau_selections.extend([ "Fakeable_mcClosure_all" ]) #TODO
@@ -184,7 +187,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
     self.make_plots_signal = "signal_nonresonant"
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2l_2tau_cfg.py")
-    self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2l_2tau_cfg.py") 
+    self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2l_2tau_cfg.py")
 
     self.select_rle_output = select_rle_output
     self.use_nonnominal = use_nonnominal
