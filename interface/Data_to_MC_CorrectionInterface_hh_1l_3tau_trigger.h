@@ -94,6 +94,11 @@ private:
 
   //-----------------------------------------------------------------------------
   // data/MC corrections for trigger efficiencies in 2017 ReReco data and Summer17 MC
+  std::map<int, vLutWrapperBase> effTrigger_2tau_perLeg_data_gentau_;  // key = reconstructed tau decay mode
+  std::map<int, vLutWrapperBase> effTrigger_2tau_perLeg_data_faketau_; // key = reconstructed tau decay mode
+  std::map<int, vLutWrapperBase> effTrigger_2tau_perLeg_mc_gentau_;    // key = reconstructed tau decay mode
+  std::map<int, vLutWrapperBase> effTrigger_2tau_perLeg_mc_faketau_;   // key = reconstructed tau decay mode
+
   bool isTriggered_2tau_;
 
   int hadTau3_genPdgId_;

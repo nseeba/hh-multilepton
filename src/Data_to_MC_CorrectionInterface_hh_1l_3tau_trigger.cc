@@ -21,10 +21,56 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::Data_to_MC_CorrectionInterfac
   , hadTau3_eta_(0.)
   , hadTau3_phi_(0.)
   , hadTau3_decayMode_(0)
-{}
+{
+  if(era_ == kEra_2016)
+  {
+    const edm::ParameterSet cfg_triggerSF_2tau = cfg.getParameter<edm::ParameterSet>("triggerSF_2tau");
+
+    const std::string hadTauSelectionLabel = aux::getHadTauSelectionLabel(hadTauSelection_);
+    const std::vector<int> hadTauDecayModes_2tau_perLeg = { 0, 1, 2, 10 };
+    for(int hadTauDecayMode: hadTauDecayModes_2tau_perLeg)
+    {
+      const std::string hadTauDecayModeLabel = aux::getHadTauDecayModeLabel(hadTauDecayMode);
+      const std::string fitName_2tau_data_gentau = Form("data_genuine_%s_%s", hadTauSelectionLabel.data(), hadTauDecayModeLabel.data());
+      const edm::ParameterSet cfg_fit_2tau_data_gentau = cfg_triggerSF_2tau.getParameter<edm::ParameterSet>(fitName_2tau_data_gentau);
+      effTrigger_2tau_perLeg_data_gentau_[hadTauDecayMode].push_back(new lutWrapperCrystalBall(
+        fitName_2tau_data_gentau, cfg_fit_2tau_data_gentau,
+        lut::kXpt, 20., 170.
+      ));
+
+      const std::string fitName_2tau_data_faketau = Form("data_fake_%s_%s", hadTauSelectionLabel.data(), hadTauDecayModeLabel.data());
+      const edm::ParameterSet cfg_fit_2tau_data_faketau = cfg_triggerSF_2tau.getParameter<edm::ParameterSet>(fitName_2tau_data_faketau);
+      effTrigger_2tau_perLeg_data_faketau_[hadTauDecayMode].push_back(new lutWrapperCrystalBall(
+        fitName_2tau_data_faketau, cfg_fit_2tau_data_faketau,
+        lut::kXpt, 20., 170.
+      ));
+
+      const std::string fitName_2tau_mc_gentau = Form("mc_genuine_%s_%s", hadTauSelectionLabel.data(), hadTauDecayModeLabel.data());
+      const edm::ParameterSet cfg_fit_2tau_mc_gentau = cfg_triggerSF_2tau.getParameter<edm::ParameterSet>(fitName_2tau_mc_gentau);
+      effTrigger_2tau_perLeg_mc_gentau_[hadTauDecayMode].push_back(new lutWrapperCrystalBall(
+        fitName_2tau_mc_gentau, cfg_fit_2tau_mc_gentau,
+        lut::kXpt, 20., 170.
+      ));
+      const std::string fitName_2tau_mc_faketau = Form("mc_fake_%s_%s", hadTauSelectionLabel.data(), hadTauDecayModeLabel.data());
+      const edm::ParameterSet cfg_fit_2tau_mc_faketau = cfg_triggerSF_2tau.getParameter<edm::ParameterSet>(fitName_2tau_mc_faketau);
+      effTrigger_2tau_perLeg_mc_faketau_[hadTauDecayMode].push_back(new lutWrapperCrystalBall(
+        fitName_2tau_mc_faketau, cfg_fit_2tau_mc_faketau,
+        lut::kXpt, 20., 170.
+      ));
+    }
+  }
+}
 
 Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::~Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger()
-{}
+{
+  if(era_ == kEra_2016)
+  {
+    aux::clearCollection(effTrigger_2tau_perLeg_data_gentau_);
+    aux::clearCollection(effTrigger_2tau_perLeg_data_faketau_);
+    aux::clearCollection(effTrigger_2tau_perLeg_mc_gentau_);
+    aux::clearCollection(effTrigger_2tau_perLeg_mc_faketau_);
+  }
+}
 
 void
 Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::setTriggerBits(bool isTriggered_1e,
@@ -218,7 +264,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
       assert(0);
     }
   }
-  if(era_ == kEra_2017)
+  else if(era_ == kEra_2017)
   {
     if(lepton_type_ == kElectron)
     {
@@ -310,14 +356,70 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
     throw cmsException(this, __func__, __LINE__) << "Invalid era = " << era_;
   }
 
-  const double eff_2tau_tauLeg1_data   = effTrigger_tauLeg_->getDiTauEfficiencyData(hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, triggerSF_option_);
-  const double eff_2tau_tauLeg1_mc     = effTrigger_tauLeg_->getDiTauEfficiencyMC  (hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, triggerSF_option_);
+  double eff_2tau_tauLeg1_data = 0.;
+  double eff_2tau_tauLeg1_mc = 0.;
+  double eff_2tau_tauLeg2_data = 0.;
+  double eff_2tau_tauLeg2_mc = 0.;
+  double eff_2tau_tauLeg3_data = 0.;
+  double eff_2tau_tauLeg3_mc = 0.;
 
-  const double eff_2tau_tauLeg2_data   = effTrigger_tauLeg_->getDiTauEfficiencyData(hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, triggerSF_option_);
-  const double eff_2tau_tauLeg2_mc     = effTrigger_tauLeg_->getDiTauEfficiencyMC  (hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, triggerSF_option_);
+  if(era_ == kEra_2016)
+  {
+    const bool hadTau1_isGenTau = (hadTau1_genPdgId_ == 11 || hadTau1_genPdgId_ == 13 || hadTau1_genPdgId_ == 15);
+    if(hadTau1_isGenTau)
+    {
+      eff_2tau_tauLeg1_data = get_from_lut(effTrigger_2tau_perLeg_data_gentau_, hadTau1_pt_, hadTau1_eta_, hadTau1_decayMode_, isDEBUG_);
+      eff_2tau_tauLeg1_mc   = get_from_lut(effTrigger_2tau_perLeg_mc_gentau_,   hadTau1_pt_, hadTau1_eta_, hadTau1_decayMode_, isDEBUG_);
+    }
+    else
+    {
+      eff_2tau_tauLeg1_data = get_from_lut(effTrigger_2tau_perLeg_data_faketau_, hadTau1_pt_, hadTau1_eta_, hadTau1_decayMode_, isDEBUG_);
+      eff_2tau_tauLeg1_mc   = get_from_lut(effTrigger_2tau_perLeg_mc_faketau_,   hadTau1_pt_, hadTau1_eta_, hadTau1_decayMode_, isDEBUG_);
+    }
 
-  const double eff_2tau_tauLeg3_data   = effTrigger_tauLeg_->getDiTauEfficiencyData(hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, triggerSF_option_);
-  const double eff_2tau_tauLeg3_mc     = effTrigger_tauLeg_->getDiTauEfficiencyMC  (hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, triggerSF_option_);
+    const bool hadTau2_isGenTau = (hadTau2_genPdgId_ == 11 || hadTau2_genPdgId_ == 13 || hadTau2_genPdgId_ == 15);
+    if(hadTau2_isGenTau)
+    {
+      eff_2tau_tauLeg2_data = get_from_lut(effTrigger_2tau_perLeg_data_gentau_, hadTau2_pt_, hadTau2_eta_, hadTau2_decayMode_, isDEBUG_);
+      eff_2tau_tauLeg2_mc   = get_from_lut(effTrigger_2tau_perLeg_mc_gentau_,   hadTau2_pt_, hadTau2_eta_, hadTau2_decayMode_, isDEBUG_);
+    }
+    else
+    {
+      eff_2tau_tauLeg2_data = get_from_lut(effTrigger_2tau_perLeg_data_faketau_, hadTau2_pt_, hadTau2_eta_, hadTau2_decayMode_, isDEBUG_);
+      eff_2tau_tauLeg2_mc   = get_from_lut(effTrigger_2tau_perLeg_mc_faketau_,   hadTau2_pt_, hadTau2_eta_, hadTau2_decayMode_, isDEBUG_);
+    }
+
+    const bool hadTau3_isGenTau = (hadTau3_genPdgId_ == 11 || hadTau3_genPdgId_ == 13 || hadTau3_genPdgId_ == 15);
+    if(hadTau3_isGenTau)
+    {
+      eff_2tau_tauLeg3_data = get_from_lut(effTrigger_2tau_perLeg_data_gentau_, hadTau3_pt_, hadTau3_eta_, hadTau3_decayMode_, isDEBUG_);
+      eff_2tau_tauLeg3_mc   = get_from_lut(effTrigger_2tau_perLeg_mc_gentau_,   hadTau3_pt_, hadTau3_eta_, hadTau3_decayMode_, isDEBUG_);
+    }
+    else
+    {
+      eff_2tau_tauLeg3_data = get_from_lut(effTrigger_2tau_perLeg_data_faketau_, hadTau3_pt_, hadTau3_eta_, hadTau3_decayMode_, isDEBUG_);
+      eff_2tau_tauLeg3_mc   = get_from_lut(effTrigger_2tau_perLeg_mc_faketau_,   hadTau3_pt_, hadTau3_eta_, hadTau3_decayMode_, isDEBUG_);
+    }
+  }
+  else if(era_ == kEra_2017)
+  {
+    eff_2tau_tauLeg1_data   = effTrigger_tauLeg_->getDiTauEfficiencyData(hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, triggerSF_option_);
+    eff_2tau_tauLeg1_mc     = effTrigger_tauLeg_->getDiTauEfficiencyMC  (hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, triggerSF_option_);
+
+    eff_2tau_tauLeg2_data   = effTrigger_tauLeg_->getDiTauEfficiencyData(hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, triggerSF_option_);
+    eff_2tau_tauLeg2_mc     = effTrigger_tauLeg_->getDiTauEfficiencyMC  (hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, triggerSF_option_);
+
+    eff_2tau_tauLeg3_data   = effTrigger_tauLeg_->getDiTauEfficiencyData(hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, triggerSF_option_);
+    eff_2tau_tauLeg3_mc     = effTrigger_tauLeg_->getDiTauEfficiencyMC  (hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, triggerSF_option_);
+  }
+  else if(era_ == kEra_2018)
+  {
+    throw cmsException(this, __func__, __LINE__) << "Implement me!";
+  }
+  else
+  {
+    throw cmsException(this, __func__, __LINE__) << "Invalid era = " << era_;
+  }
 
   double prob_data = 0.;
   double prob_mc   = 0.;
