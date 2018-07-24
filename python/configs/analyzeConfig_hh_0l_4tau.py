@@ -214,19 +214,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
 
     lines = super(analyzeConfig_hh_0l_4tau, self).createCfg_analyze(jobOptions, sample_info)
     if self.era == "2016":
-      lines.extend([
-        "",
-        "jsonFileName = os.path.expandvars('$CMSSW_BASE/src/tthAnalysis/HiggsToTauTau/data/triggerSF/2016/trigger_sf_tt.json')",
-        "jsonFile = open(jsonFileName)",
-        "import json",
-        "jsonData = json.load(jsonFile)",
-        "for fit, parameters in jsonData.items():",
-        "  pset = cms.PSet()",
-        "  for parameterName, parameterValue in parameters.items():",
-        "    setattr(pset, parameterName, cms.double(parameterValue))",
-        "    setattr(process.analyze_hh_0l_4tau.triggerSF_2tau, fit, pset)",
-        "",
-      ])
+      lines = self.set_triggerSF_2tau(lines)
 
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
 
