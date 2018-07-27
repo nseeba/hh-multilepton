@@ -1,6 +1,6 @@
 from collections import OrderedDict as OD
 
-# file generated at 2018-07-23 02:23:18 with the following command:
+# file generated at 2018-07-27 14:14:05 with the following command:
 # create_dictionary.py -m python/samples/metaDict_2016.py -p /hdfs/local/karl/ttHNtupleProduction/2016/2018Jul23_woPresel_nom_hh/ntuples -Z zeroes.txt -z zombies.txt -N samples_2016 -E 2016 -g hhAnalyzeSamples_2016.py -o python/samples -M
 
 samples_2016 = OD()
@@ -26,7 +26,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-250_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     222306675), # 222.31MB, avg file size 222.31MB
   ("fsize_db",                        3867669738), # 3.87GB, avg file size 276.26MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -72,7 +72,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-260_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     222544647), # 222.54MB, avg file size 222.54MB
   ("fsize_db",                        3825455757), # 3.83GB, avg file size 239.09MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -118,7 +118,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-270_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     226328260), # 226.33MB, avg file size 226.33MB
   ("fsize_db",                        3828027078), # 3.83GB, avg file size 255.20MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -164,7 +164,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-280_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     224889853), # 224.89MB, avg file size 224.89MB
   ("fsize_db",                        3819426599), # 3.82GB, avg file size 181.88MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -210,7 +210,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-300_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     206475354), # 206.48MB, avg file size 206.48MB
   ("fsize_db",                        3475966865), # 3.48GB, avg file size 193.11MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -256,7 +256,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-320_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     235556894), # 235.56MB, avg file size 235.56MB
   ("fsize_db",                        3892930646), # 3.89GB, avg file size 324.41MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -302,7 +302,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-340_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     239055049), # 239.06MB, avg file size 239.06MB
   ("fsize_db",                        3947815706), # 3.95GB, avg file size 281.99MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -348,7 +348,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-350_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     236831125), # 236.83MB, avg file size 236.83MB
   ("fsize_db",                        3939843876), # 3.94GB, avg file size 179.08MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -394,7 +394,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-400_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     243607415), # 243.61MB, avg file size 243.61MB
   ("fsize_db",                        3967336020), # 3.97GB, avg file size 208.81MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -440,7 +440,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-450_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     258082038), # 258.08MB, avg file size 258.08MB
   ("fsize_db",                        4142163410), # 4.14GB, avg file size 197.25MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -486,7 +486,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-500_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     134743564), # 134.74MB, avg file size 134.74MB
   ("fsize_db",                        2135623539), # 2.14GB, avg file size 142.37MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -532,7 +532,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-550_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     138769735), # 138.77MB, avg file size 138.77MB
   ("fsize_db",                        2093059468), # 2.09GB, avg file size 418.61MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -578,7 +578,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-600_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     142512264), # 142.51MB, avg file size 142.51MB
   ("fsize_db",                        2163109704), # 2.16GB, avg file size 180.26MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -624,7 +624,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-650_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     139211665), # 139.21MB, avg file size 139.21MB
   ("fsize_db",                        2147010667), # 2.15GB, avg file size 107.35MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -670,7 +670,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-700_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     148965603), # 148.97MB, avg file size 148.97MB
   ("fsize_db",                        2213964233), # 2.21GB, avg file size 201.27MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -716,7 +716,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-750_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     149436783), # 149.44MB, avg file size 149.44MB
   ("fsize_db",                        2195753227), # 2.20GB, avg file size 199.61MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -762,7 +762,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-800_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     154034494), # 154.03MB, avg file size 154.03MB
   ("fsize_db",                        2222020975), # 2.22GB, avg file size 277.75MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -808,7 +808,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-900_narrow_13TeV-madgraph/RunIISummer1
   ("fsize_local",                     157775835), # 157.78MB, avg file size 157.78MB
   ("fsize_db",                        2320248894), # 2.32GB, avg file size 128.90MB
   ("use_it",                          True),
-  ("xsection",                        1.0),
+  ("xsection",                        0.003934),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
