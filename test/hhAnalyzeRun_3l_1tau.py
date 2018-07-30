@@ -131,6 +131,8 @@ if __name__ == '__main__':
     histograms_to_fit                     = {
       "EventCounter"                      : {},
       "numJets"                           : {},
+      "dihiggsVisMass"                    : {},
+      "dihiggsMass"                       : {},
       "HT"                                : {},
       "STMET"                             : {}
     },

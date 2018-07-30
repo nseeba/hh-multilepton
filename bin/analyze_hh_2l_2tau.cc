@@ -1149,6 +1149,8 @@ int main(int argc, char* argv[])
     double leptonPairCharge_presel = preselLepton_lead->charge() + preselLepton_sublead->charge();
     double hadTauPairCharge_presel = preselHadTau_lead->charge() + preselHadTau_sublead->charge();
 
+    double dihiggsVisMass_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + preselHadTau_lead->p4() + preselHadTau_sublead->p4()).mass();
+
     double HT = compHT(fakeableLeptons, fakeableHadTaus, selJets);
     double STMET = compSTMEt(fakeableLeptons, fakeableHadTaus, selJets, met.p4());
 
@@ -1174,6 +1176,8 @@ int main(int argc, char* argv[])
       mTauTauVis_presel,
       leptonPairCharge_presel,
       hadTauPairCharge_presel,
+      dihiggsVisMass_presel,
+      -1.,
       HT, 
       STMET,
       1.
@@ -1425,7 +1429,7 @@ int main(int argc, char* argv[])
     }
     if ( failsLowMassVeto ) {
       if ( run_lumi_eventSelector ) {
-    std::cout << "event " << eventInfo.str() << " FAILS low mass lepton pair veto." << std::endl;
+	std::cout << "event " << eventInfo.str() << " FAILS low mass lepton pair veto." << std::endl;
       }
       continue;
     }
@@ -1433,12 +1437,13 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms("m(ll) > 12 GeV", evtWeight);
 
     double minPt_lead = -1.;
-    if ( era == kEra_2017 ) minPt_lead = 25.;
+    if      ( era == kEra_2016 ) minPt_lead = 25.;
+    else if ( era == kEra_2017 ) minPt_lead = 25.;
     else assert(0);
     double minPt_sublead = 15.;
     if ( !(selLepton_lead->cone_pt() > minPt_lead && selLepton_sublead->cone_pt() > minPt_sublead) ) {
       if ( run_lumi_eventSelector ) {
-    std::cout << "event " << eventInfo.str() << " FAILS lepton pT selection." << std::endl;
+	std::cout << "event " << eventInfo.str() << " FAILS lepton pT selection." << std::endl;
 	std::cout << " (leading selLepton pT = " << selLepton_lead->pt() << ", minPt_lead = " << minPt_lead
 		  << ", subleading selLepton pT = " << selLepton_sublead->pt() << ", minPt_sublead = " << minPt_sublead << ")" << std::endl;
       }
@@ -1569,10 +1574,14 @@ int main(int argc, char* argv[])
     double leptonPairCharge_sel = selLepton_lead->charge() + selLepton_sublead->charge();
     double hadTauPairCharge_sel = selHadTau_lead->charge() + selHadTau_sublead->charge();
 
-    std::vector<SVfit4tauResult> svFit4tauResults_woMassConstraint = compSVfit4(
+    std::vector<SVfit4tauResult> svFit4tauResults_woMassConstraint = compSVfit4tau(
       *selLepton_lead, *selLepton_sublead, *selHadTau_lead, *selHadTau_sublead, met, chargeSumSelection_string,  -1.);
-    std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4(
+    std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4tau(
       *selLepton_lead, *selLepton_sublead, *selHadTau_lead, *selHadTau_sublead, met, chargeSumSelection_string, 125.);
+
+    double dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selHadTau_lead->p4() + selHadTau_sublead->p4()).mass();
+    double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ? 
+      svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
 
 //--- fill histograms with events passing final selection
     selHistManagerType* selHistManager = selHistManagers[idxSelLepton_genMatch][idxSelHadTau_genMatch];
@@ -1614,6 +1623,8 @@ int main(int argc, char* argv[])
       mTauTauVis_sel,
       leptonPairCharge_sel,
       hadTauPairCharge_sel,
+      dihiggsVisMass_sel,
+      dihiggsMass,
       HT, 
       STMET,
       evtWeight);
@@ -1635,6 +1646,8 @@ int main(int argc, char* argv[])
 	  mTauTauVis_sel,
 	  leptonPairCharge_sel,
 	  hadTauPairCharge_sel,
+	  dihiggsVisMass_sel,
+          dihiggsMass,
 	  HT, 
 	  STMET,
 	  evtWeight);
@@ -1708,6 +1721,8 @@ int main(int argc, char* argv[])
         mTauTauVis_sel,
 	leptonPairCharge_sel,
 	hadTauPairCharge_sel,
+	dihiggsVisMass_sel,
+	dihiggsMass,
 	HT, 
 	STMET,
 	evtWeight);

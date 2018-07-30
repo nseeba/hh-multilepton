@@ -63,14 +63,20 @@ namespace
   }
 }
 
-std::vector<SVfit4tauResult> compSVfit4(const GenParticle& measuredTau1, 
-					const GenParticle& measuredTau2, 
-					const GenParticle& measuredTau3, 
-					const GenParticle& measuredTau4, 
-					const RecoMEt& met,
-					const std::string& chargeSumSelection_string,
-					double massConstraint)
+std::vector<SVfit4tauResult> compSVfit4tau(const GenParticle& measuredTau1, 
+					   const GenParticle& measuredTau2, 
+					   const GenParticle& measuredTau3, 
+					   const GenParticle& measuredTau4, 
+					   const RecoMEt& met,
+					   const std::string& chargeSumSelection_string,
+					   double massConstraint,
+					   int verbosity)
 {
+  if ( verbosity >= 1 ) {
+    std::cout << "<compSVfit4tau>:" << std::endl;
+    std::cout << " massConstraint = " << massConstraint << std::endl;
+  }
+
   enum { kOS, kSS };
   int chargeSumSelection = -1;
   if      ( chargeSumSelection_string == "OS"       ) chargeSumSelection = kOS;
@@ -108,6 +114,11 @@ std::vector<SVfit4tauResult> compSVfit4(const GenParticle& measuredTau1,
 	  // in order prevent that SVfit mass is computed for both combinations (tau1,..,tau3,..) and (tau3,..,tau1,..)
 	  if ( !((*measuredTau1)->pt() > (*measuredTau3)->pt()) ) continue;
 	  
+	  // CV: require that visible mass of tau1+tau2 and of tau3+tau4 is less than the Higgs boson mass,
+	  //     as SVfit will otherwise not find a physical solution anyway
+	  if ( (massConstraint > 0. && ((*measuredTau1)->p4() + (*measuredTau2)->p4()).mass() > massConstraint) || 
+	       (massConstraint > 0. && ((*measuredTau3)->p4() + (*measuredTau4)->p4()).mass() > massConstraint) ) continue;
+
 	  Particle::LorentzVector measuredTau1P4 = (*measuredTau1)->p4();
 	  int  measuredTau1Type = getMeasuredTauLeptonType(**measuredTau1);
 	  int measuredHadTau1DecayMode = getHadTauDecayMode(**measuredTau1);
@@ -136,7 +147,6 @@ std::vector<SVfit4tauResult> compSVfit4(const GenParticle& measuredTau1,
 	  measuredTauLeptons.push_back(makeMeasuredTauLepton(measuredTau3P4, measuredTau3Type, measuredHadTau3DecayMode));
 	  measuredTauLeptons.push_back(makeMeasuredTauLepton(measuredTau4P4, measuredTau4Type, measuredHadTau4DecayMode));
 	  
-	  int verbosity = 1;
 	  ClassicSVfit4tau svFitAlgo(verbosity);
 	  double logM_wMassConstraint = 2.;
 	  if ( logM_wMassConstraint > 0. ) {
@@ -163,6 +173,7 @@ std::vector<SVfit4tauResult> compSVfit4(const GenParticle& measuredTau1,
 	    result.ditau2_massErr_  = ditau2->getMassErr();
 	    result.probMax_         = svFitAlgo.getProbMax();
 	    result.isValidSolution_ = true;
+	    results.push_back(result);
 	  } else {
 	    SVfit4tauResult result;
 	    result.isValidSolution_ = false;

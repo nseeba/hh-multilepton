@@ -30,6 +30,8 @@ public:
 		 int numJetsPtGt40,
                  int numBJets_loose,
                  int numBJets_medium,
+		 double dihiggsVisMass,
+		 double dihiggsMass,
 		 double HT,
 		 double STMET,
                  double evtWeight);
@@ -44,6 +46,9 @@ public:
   TH1 * histogram_numJetsPtGt40_;
   TH1 * histogram_numBJets_loose_;
   TH1 * histogram_numBJets_medium_;
+
+  TH1 * histogram_dihiggsVisMass_;
+  TH1 * histogram_dihiggsMass_;
 
   TH1 * histogram_HT_;
   TH1 * histogram_STMET_;

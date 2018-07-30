@@ -202,44 +202,41 @@ Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::getSF_triggerEff() const
 
   for(int tau1_status = k2tau; tau1_status <= kNot2tau; ++tau1_status)
   {
-    int nTrig_2tau_tauLeg = 0;
-    if(tau1_status == k2tau)
-    {
-      ++nTrig_2tau_tauLeg;
-    }
-
     const double prob_tau1_data = getProb_tau(tau1_status, eff_2tau_tauLeg1_data);
     const double prob_tau1_mc   = getProb_tau(tau1_status, eff_2tau_tauLeg1_mc);
 
     for(int tau2_status = k2tau; tau2_status <= kNot2tau; ++tau2_status)
     {
-      if(tau2_status == k2tau)
-      {
-        ++nTrig_2tau_tauLeg;
-      }
-
       const double prob_tau2_data = getProb_tau(tau2_status, eff_2tau_tauLeg2_data);
       const double prob_tau2_mc   = getProb_tau(tau2_status, eff_2tau_tauLeg2_mc);
 
       for(int tau3_status = k2tau; tau3_status <= kNot2tau; ++tau3_status)
       {
-        if(tau3_status == k2tau)
-        {
-          ++nTrig_2tau_tauLeg;
-        }
-
         const double prob_tau3_data = getProb_tau(tau3_status, eff_2tau_tauLeg3_data);
         const double prob_tau3_mc   = getProb_tau(tau3_status, eff_2tau_tauLeg3_mc);
 
         for(int tau4_status = k2tau; tau4_status <= kNot2tau; ++tau4_status)
         {
+	  const double prob_tau4_data = getProb_tau(tau4_status, eff_2tau_tauLeg4_data);
+          const double prob_tau4_mc   = getProb_tau(tau4_status, eff_2tau_tauLeg4_mc);
+
+	  int nTrig_2tau_tauLeg = 0;
+	  if(tau1_status == k2tau)
+	  {
+	    ++nTrig_2tau_tauLeg;
+	  }
+	  if(tau2_status == k2tau)
+          {
+	    ++nTrig_2tau_tauLeg;
+	  }
+	  if(tau3_status == k2tau)
+          {
+            ++nTrig_2tau_tauLeg;
+          }
           if(tau4_status == k2tau)
           {
             ++nTrig_2tau_tauLeg;
           }
-
-          const double prob_tau4_data = getProb_tau(tau4_status, eff_2tau_tauLeg4_data);
-          const double prob_tau4_mc   = getProb_tau(tau4_status, eff_2tau_tauLeg4_mc);
 
           const bool isTrig_2tau_toy = nTrig_2tau_tauLeg >= 2;
 

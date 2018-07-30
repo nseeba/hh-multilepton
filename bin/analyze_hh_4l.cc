@@ -964,6 +964,8 @@ int main(int argc, char* argv[])
     Particle::LorentzVector mht_p4 = compMHT(fakeableLeptons, {}, selJets);
     double met_LD = compMEt_LD(met.p4(), mht_p4);
     
+    double dihiggsVisMass_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + preselLepton_third->p4() + preselLepton_fourth->p4()).mass();
+    
     double HT = compHT(fakeableLeptons, {}, selJets);
     double STMET = compSTMEt(fakeableLeptons, {}, selJets, met.p4());
 
@@ -984,6 +986,8 @@ int main(int argc, char* argv[])
       numSelJetsPtGt40,
       selBJets_loose.size(),
       selBJets_medium.size(),
+      dihiggsVisMass_presel,
+      -1.,
       HT, 
       STMET,
       1.
@@ -1198,7 +1202,8 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms("m(ll) > 12 GeV", evtWeight);
 
     double minPt_lead = -1.;
-    if ( era == kEra_2017 ) minPt_lead = 25.; // CV: increase minimum lepton pT cut to 25 GeV to keep-up with higher trigger thresholds in 2016 data
+    if      ( era == kEra_2016 ) minPt_lead = 25.;
+    else if ( era == kEra_2017 ) minPt_lead = 25.;
     else assert(0);
     double minPt_sublead = 15.;
     double minPt_third = 15.;
@@ -1330,11 +1335,15 @@ int main(int argc, char* argv[])
     cutFlowTable.update("signal region veto", evtWeight);
     cutFlowHistManager->fillHistograms("signal region veto", evtWeight);
             
-    std::vector<SVfit4tauResult> svFit4tauResults_woMassConstraint = compSVfit4(
+    std::vector<SVfit4tauResult> svFit4tauResults_woMassConstraint = compSVfit4tau(
       *selLepton_lead, *selLepton_sublead, *selLepton_third, *selLepton_fourth, met, chargeSumSelection_string,  -1.);
-    std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4(
+    std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4tau(
       *selLepton_lead, *selLepton_sublead, *selLepton_third, *selLepton_fourth, met, chargeSumSelection_string, 125.);
         
+    double dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selLepton_third->p4() + selLepton_fourth->p4()).mass();
+    double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ? 
+      svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
+
 //--- fill histograms with events passing final selection
     selHistManagerType* selHistManager = selHistManagers[idxSelLepton_genMatch];
     assert(selHistManager != 0);
@@ -1356,6 +1365,8 @@ int main(int argc, char* argv[])
       numSelJetsPtGt40,
       selBJets_loose.size(),
       selBJets_medium.size(),
+      dihiggsVisMass_sel,
+      dihiggsMass,
       HT, 
       STMET,
       evtWeight);
@@ -1374,6 +1385,8 @@ int main(int argc, char* argv[])
 	  numSelJetsPtGt40,
           selBJets_loose.size(),
           selBJets_medium.size(),
+	  dihiggsVisMass,
+	  dihiggsMass,
 	  HT, 
 	  STMET,
           evtWeight);

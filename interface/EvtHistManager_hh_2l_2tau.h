@@ -36,6 +36,8 @@ public:
 		 double mTauTauVis,
 		 double leptonPairCharge,
                  double hadTauPairCharge,
+		 double dihiggsVisMass,
+		 double dihiggsMass,
 		 double HT,
 		 double STMET,
                  double evtWeight);
@@ -56,6 +58,9 @@ public:
 
   TH1 * histogram_leptonPairCharge_;
   TH1 * histogram_hadTauPairCharge_;
+
+  TH1 * histogram_dihiggsVisMass_;
+  TH1 * histogram_dihiggsMass_;
 
   TH1 * histogram_HT_;
   TH1 * histogram_STMET_;

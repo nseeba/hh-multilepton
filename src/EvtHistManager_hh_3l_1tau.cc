@@ -23,6 +23,9 @@ EvtHistManager_hh_3l_1tau::bookHistograms(TFileDirectory & dir)
   histogram_numBJets_loose_  = book1D(dir, "numBJets_loose",  "numBJets_loose",   10, -0.5,  +9.5);
   histogram_numBJets_medium_ = book1D(dir, "numBJets_medium", "numBJets_medium",  10, -0.5,  +9.5);
 
+  histogram_dihiggsVisMass_  = book1D(dir, "dihiggsVisMass",  "dihiggsVisMass",  150,  0., 1500.);
+  histogram_dihiggsMass_     = book1D(dir, "dihiggsMass",     "dihiggsMass",     150,  0., 1500.);
+
   histogram_HT_              = book1D(dir, "HT",              "HT",              150,  0., 1500.);
   histogram_STMET_           = book1D(dir, "STMET",           "STMET",           150,  0., 1500.);
 
@@ -37,6 +40,8 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
 					  int numJetsPtGt40,
 					  int numBJets_loose,
 					  int numBJets_medium,
+					  double dihiggsVisMass,
+					  double dihiggsMass,
 					  double HT,
 					  double STMET,
 					  double evtWeight)
@@ -50,6 +55,9 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_numJetsPtGt40_,   numJetsPtGt40,       evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_numBJets_loose_,  numBJets_loose,      evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_numBJets_medium_, numBJets_medium,     evtWeight,     evtWeightErr);
+
+  fillWithOverFlow(histogram_dihiggsVisMass_,  dihiggsVisMass,  evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_dihiggsMass_,     dihiggsMass,     evtWeight, evtWeightErr);
 
   fillWithOverFlow(histogram_HT_,              HT,              evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_STMET_,           STMET,           evtWeight, evtWeightErr);

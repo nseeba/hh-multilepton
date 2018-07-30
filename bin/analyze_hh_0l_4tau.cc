@@ -735,11 +735,14 @@ int main(int argc, char* argv[])
     bool isTriggered_2tau_L1 = true;
     if ( era == kEra_2017 && isMC ) { 
       std::vector<TrigObj> trigObjs = trigObjReader.read();
-      isTriggered_2tau_L1 = (countTrigObjs_passingL1(trigObjs, 15, 32.) >= 2); 
+      int numTrigObjs = countTrigObjs_passingL1(trigObjs, 15, 32.);
+      std::cout << "numTrigObjs = " << numTrigObjs << std::endl;
+      isTriggered_2tau_L1 = (numTrigObjs >= 2); 
     } 
+    std::cout << "isTriggered_2tau_L1 = " << isTriggered_2tau_L1 << std::endl;
 
     bool isTriggered_2tau = hltPaths_isTriggered(triggers_2tau, isDEBUG) && isTriggered_2tau_L1;
-    //std::cout << "isTriggered_2tau = " << isTriggered_2tau << std::endl;
+    std::cout << "isTriggered_2tau = " << isTriggered_2tau << std::endl;
 
     bool selTrigger_2tau = use_triggers_2tau && isTriggered_2tau;
     if ( !selTrigger_2tau ) {
@@ -882,6 +885,8 @@ int main(int argc, char* argv[])
     Particle::LorentzVector mht_p4 = compMHT(fakeableLeptons, fakeableHadTaus, selJets);
     double met_LD = compMEt_LD(met.p4(), mht_p4);
 
+    double dihiggsVisMass_presel = (preselHadTau_lead->p4() + preselHadTau_sublead->p4() + preselHadTau_third->p4() + preselHadTau_fourth->p4()).mass();
+
     double HT = compHT(fakeableLeptons, fakeableHadTaus, selJets);
     double STMET = compSTMEt(fakeableLeptons, fakeableHadTaus, selJets, met.p4());
 
@@ -908,6 +913,8 @@ int main(int argc, char* argv[])
       numSelJetsPtGt40,
       selBJets_loose.size(),
       selBJets_medium.size(),
+      dihiggsVisMass_presel,
+      -1.,
       HT, 
       STMET,
       1.
@@ -1206,11 +1213,15 @@ int main(int argc, char* argv[])
     cutFlowTable.update("signal region veto", evtWeight);
     cutFlowHistManager->fillHistograms("signal region veto", evtWeight);
     
-    std::vector<SVfit4tauResult> svFit4tauResults_woMassConstraint = compSVfit4(
+    std::vector<SVfit4tauResult> svFit4tauResults_woMassConstraint = compSVfit4tau(
       *selHadTau_lead, *selHadTau_sublead, *selHadTau_third, *selHadTau_fourth, met, hadTauChargeSelection_string,  -1.);
-    std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4(
+    std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4tau(
       *selHadTau_lead, *selHadTau_sublead, *selHadTau_third, *selHadTau_fourth, met, hadTauChargeSelection_string, 125.);
     
+    double dihiggsVisMass_sel = (selHadTau_lead->p4() + selHadTau_sublead->p4() + selHadTau_third->p4() + selHadTau_fourth->p4()).mass();
+    double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ? 
+      svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
+
 //--- fill histograms with events passing final selection
     selHistManagerType* selHistManager = selHistManagers[idxSelHadTau_genMatch];
     assert(selHistManager != 0);
@@ -1238,6 +1249,8 @@ int main(int argc, char* argv[])
       numSelJetsPtGt40,
       selBJets_loose.size(),
       selBJets_medium.size(),
+      dihiggsVisMass_sel,
+      dihiggsMass,
       HT, 
       STMET,
       evtWeight);
@@ -1255,7 +1268,9 @@ int main(int argc, char* argv[])
 	  numSelJetsPtGt40,
           selBJets_loose.size(),
           selBJets_medium.size(),
-	  HT, 
+	  dihiggsVisMass_sel,
+          dihiggsMass,
+          HT, 
 	  STMET,
           evtWeight);
 	selHistManager->svFit4tau_woMassConstraint_in_decayModes_[decayModeStr]->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);

@@ -44,12 +44,13 @@ struct SVfit4tauResult
 };
 
 std::vector<SVfit4tauResult>
-compSVfit4(const GenParticle& measuredTau1, 
-	   const GenParticle& measuredTau2, 
-	   const GenParticle& measuredTau3, 
-	   const GenParticle& measuredTau4, 
-	   const RecoMEt& met,
-	   const std::string& chargeSumSelection_string,
-	   double massConstraint = -1.); // CV: default is not to apply mass constraint
+compSVfit4tau(const GenParticle& measuredTau1, 
+	      const GenParticle& measuredTau2, 
+	      const GenParticle& measuredTau3, 
+	      const GenParticle& measuredTau4, 
+	      const RecoMEt& met,
+	      const std::string& chargeSumSelection_string,
+	      double massConstraint = -1., // CV: default is not to apply mass constraint
+	      int verbosity = 1); 
 
 #endif

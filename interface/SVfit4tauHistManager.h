@@ -31,20 +31,25 @@ public:
 
  private:
 
-  TH1 * histogram_dihiggsVisMass_;
+  TH1 * histogram_numValidSolutions_;
+
+  TH1 * histogram_dihiggsVisMass1_;
+  TH1 * histogram_ditau1VisMass1_;
+  TH1 * histogram_ditau2VisMass1_;
   TH1 * histogram_dihiggsMass1_;
-  TH1 * histogram_dihiggsMass2_;
-
-  TH1 * histogram_ditau1VisMass_;
   TH1 * histogram_ditau1Mass1_;
-  TH1 * histogram_ditau1Mass2_;
-
-  TH1 * histogram_ditau2VisMass_;
   TH1 * histogram_ditau2Mass1_;
-  TH1 * histogram_ditau2Mass2_;
-
   TH1 * histogram_logProbMax1_;
+
+  TH1 * histogram_dihiggsVisMass2_;
+  TH1 * histogram_ditau1VisMass2_;
+  TH1 * histogram_ditau2VisMass2_;
+  TH1 * histogram_dihiggsMass2_;
+  TH1 * histogram_ditau1Mass2_;
+  TH1 * histogram_ditau2Mass2_;
   TH1 * histogram_logProbMax2_;
+
+  TH1 * histogram_logProbMax2_minus_logProbMax1_;
 };
 
 #endif

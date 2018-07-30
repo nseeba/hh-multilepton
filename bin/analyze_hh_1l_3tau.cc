@@ -271,8 +271,8 @@ int main(int argc, char* argv[])
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiElectron_sublead", hadTauSelection_antiElectron);
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiMuon_sublead", hadTauSelection_antiMuon);
   cfg_dataToMCcorrectionInterface.addParameter<std::string>("central_or_shift", central_or_shift);
-  //cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", isDEBUG);
-  cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", false);
+  cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", isDEBUG);
+  //cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", false);
   //cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", true);
   if(era == kEra_2016)
   {
@@ -285,7 +285,7 @@ int main(int argc, char* argv[])
     case kEra_2016: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2016(cfg_dataToMCcorrectionInterface); break;
     case kEra_2017: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2017(cfg_dataToMCcorrectionInterface); break;
     case kEra_2018: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2018(cfg_dataToMCcorrectionInterface); break;
-    default: throw cmsException("analyze_0l_2tau", __LINE__) << "Invalid era = " << era;
+    default: throw cmsException("analyze_hh_1l_3tau", __LINE__) << "Invalid era = " << era;
   }
   Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger* dataToMCcorrectionInterface_hh_1l_3tau_trigger = new Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger(cfg_dataToMCcorrectionInterface);
 
@@ -853,8 +853,11 @@ int main(int argc, char* argv[])
     bool isTriggered_2tau_L1 = true;
     if ( era == kEra_2017 && isMC ) { 
       std::vector<TrigObj> trigObjs = trigObjReader.read();
-      isTriggered_2tau_L1 = (countTrigObjs_passingL1(trigObjs, 15, 32.) >= 2); 
+      int numTrigObjs = countTrigObjs_passingL1(trigObjs, 15, 32.);
+      //std::cout << "numTrigObjs = " << numTrigObjs << std::endl;
+      isTriggered_2tau_L1 = (numTrigObjs >= 2); 
     } 
+    //std::cout << "isTriggered_2tau_L1 = " << isTriggered_2tau_L1 << std::endl;
 
     bool isTriggered_1e = hltPaths_isTriggered(triggers_1e, isDEBUG);
     //std::cout << "isTriggered_1e = " << isTriggered_1e << std::endl;
@@ -1121,6 +1124,8 @@ int main(int argc, char* argv[])
     Particle::LorentzVector mht_p4 = compMHT(fakeableLeptons, fakeableHadTaus, selJets);
     double met_LD = compMEt_LD(met.p4(), mht_p4);
 
+    double dihiggsVisMass_presel = (preselLepton->p4() + preselHadTau_lead->p4() + preselHadTau_sublead->p4() + preselHadTau_third->p4()).mass();
+
     double HT = compHT(fakeableLeptons, fakeableHadTaus, selJets);
     double STMET = compSTMEt(fakeableLeptons, fakeableHadTaus, selJets, met.p4());
 
@@ -1146,6 +1151,8 @@ int main(int argc, char* argv[])
       numSelJetsPtGt40,
       selBJets_loose.size(),
       selBJets_medium.size(),
+      dihiggsVisMass_presel,
+      -1.,
       HT, 
       STMET,
       1.
@@ -1569,11 +1576,15 @@ int main(int argc, char* argv[])
     cutFlowTable.update("signal region veto", evtWeight);
     cutFlowHistManager->fillHistograms("signal region veto", evtWeight);
     
-    std::vector<SVfit4tauResult> svFit4tauResults_woMassConstraint = compSVfit4(
+    std::vector<SVfit4tauResult> svFit4tauResults_woMassConstraint = compSVfit4tau(
       *selLepton, *selHadTau_lead, *selHadTau_sublead, *selHadTau_third, met, chargeSumSelection_string,  -1.);
-    std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4(
+    std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4tau(
       *selLepton, *selHadTau_lead, *selHadTau_sublead, *selHadTau_third, met, chargeSumSelection_string, 125.);
         
+    double dihiggsVisMass_sel = (selLepton->p4() + selHadTau_lead->p4() + selHadTau_sublead->p4() + selHadTau_third->p4()).mass();
+    double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ? 
+      svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
+
 //--- fill histograms with events passing final selection
     selHistManagerType* selHistManager = selHistManagers[idxSelLepton_genMatch][idxSelHadTau_genMatch];
     assert(selHistManager != 0);
@@ -1600,6 +1611,8 @@ int main(int argc, char* argv[])
       numSelJetsPtGt40,
       selBJets_loose.size(),
       selBJets_medium.size(),
+      dihiggsVisMass_sel,
+      dihiggsMass,
       HT, 
       STMET,
       evtWeight);
@@ -1617,6 +1630,8 @@ int main(int argc, char* argv[])
 	  numSelJetsPtGt40,
           selBJets_loose.size(),
           selBJets_medium.size(),
+	  dihiggsVisMass_sel,
+	  dihiggsMass,
 	  HT, 
 	  STMET,
           evtWeight);
@@ -1657,6 +1672,8 @@ int main(int argc, char* argv[])
       numSelJetsPtGt40,
       selBJets_loose.size(),
       selBJets_medium.size(),
+      dihiggsVisMass_sel,
+      dihiggsMass,
       HT, 
       STMET,
       evtWeight);

@@ -135,6 +135,8 @@ if __name__ == '__main__':
       "EventCounter"                      : {},
       "numJets"                           : {},
       "mTauTauVis"                        : {},
+      "dihiggsVisMass"                    : {},
+      "dihiggsMass"                       : {},
       "HT"                                : {},
       "STMET"                             : {}
     },

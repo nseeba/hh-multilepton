@@ -356,6 +356,24 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
     throw cmsException(this, __func__, __LINE__) << "Invalid era = " << era_;
   }
 
+  if(isDEBUG_)
+  {
+    std::cout << "isTriggered_1l = " << isTriggered_1l << std::endl;
+    std::cout << "isTriggered_1l1tau = " << isTriggered_1l1tau << std::endl;
+    
+    std::cout << "eff_1l_data = " << eff_1l_data << std::endl;
+    std::cout << "eff_1l_mc = " << eff_1l_mc << std::endl;
+    std::cout << "eff_1l1tau_lepLeg_data = " << eff_1l1tau_lepLeg_data << std::endl;
+    std::cout << "eff_1l1tau_lepLeg_mc = " << eff_1l1tau_lepLeg_mc << std::endl;
+    
+    std::cout << "eff_1l1tau_tauLeg1_data = " << eff_1l1tau_tauLeg1_data << std::endl;
+    std::cout << "eff_1l1tau_tauLeg1_mc = " << eff_1l1tau_tauLeg1_mc << std::endl;
+    std::cout << "eff_1l1tau_tauLeg2_data = " << eff_1l1tau_tauLeg2_data << std::endl;
+    std::cout << "eff_1l1tau_tauLeg2_mc = " << eff_1l1tau_tauLeg2_mc << std::endl;
+    std::cout << "eff_1l1tau_tauLeg3_data = " << eff_1l1tau_tauLeg3_data << std::endl;
+    std::cout << "eff_1l1tau_tauLeg3_mc = " << eff_1l1tau_tauLeg3_mc << std::endl;
+  }
+  
   double eff_2tau_tauLeg1_data = 0.;
   double eff_2tau_tauLeg1_mc = 0.;
   double eff_2tau_tauLeg2_data = 0.;
@@ -421,6 +439,16 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
     throw cmsException(this, __func__, __LINE__) << "Invalid era = " << era_;
   }
 
+  if(isDEBUG_)
+  {
+    std::cout << "eff_2tau_tauLeg1_data = " << eff_2tau_tauLeg1_data << std::endl;
+    std::cout << "eff_2tau_tauLeg1_mc = " << eff_2tau_tauLeg1_mc << std::endl;
+    std::cout << "eff_2tau_tauLeg2_data = " << eff_2tau_tauLeg2_data << std::endl;
+    std::cout << "eff_2tau_tauLeg2_mc = " << eff_2tau_tauLeg2_mc << std::endl;
+    std::cout << "eff_2tau_tauLeg3_data = " << eff_2tau_tauLeg3_data << std::endl;
+    std::cout << "eff_2tau_tauLeg3_mc = " << eff_2tau_tauLeg3_mc << std::endl;
+  }
+
   double prob_data = 0.;
   double prob_mc   = 0.;
 
@@ -443,48 +471,50 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
 
     for(int tau1_status = k1l1tauAnd2tau; tau1_status <= kNot1l1tauAndNot2tau; ++tau1_status)
     {
-      int nTrig_1l1tau_tauLeg = 0;
-      if(tau1_status == k1l1tauAnd2tau || tau1_status == k1l1tauAndNot2tau)
-      {
-        ++nTrig_1l1tau_tauLeg;
-      }
-
-      int nTrig_2tau_tauLeg = 0;
-      if(tau1_status == k1l1tauAnd2tau || tau1_status == kNot1l1tauAnd2tau)
-      {
-        ++nTrig_2tau_tauLeg;
-      }
-
       const double prob_tau1_data = getProb_tau(tau1_status, eff_1l1tau_lepLeg_data, eff_2tau_tauLeg1_data);
       const double prob_tau1_mc   = getProb_tau(tau1_status, eff_1l1tau_lepLeg_mc,   eff_2tau_tauLeg1_mc);
 
       for(int tau2_status = k1l1tauAnd2tau; tau2_status <= kNot1l1tauAndNot2tau; ++tau2_status)
       {
-        if(tau2_status == k1l1tauAnd2tau || tau2_status == k1l1tauAndNot2tau)
-        {
-          ++nTrig_1l1tau_tauLeg;
-        }
-        if(tau2_status == k1l1tauAnd2tau || tau2_status == kNot1l1tauAnd2tau)
-        {
-          ++nTrig_2tau_tauLeg;
-        }
-
         const double prob_tau2_data = getProb_tau(tau2_status, eff_1l1tau_lepLeg_data, eff_2tau_tauLeg2_data);
         const double prob_tau2_mc   = getProb_tau(tau2_status, eff_1l1tau_lepLeg_mc,   eff_2tau_tauLeg2_mc);
 
         for(int tau3_status = k1l1tauAnd2tau; tau3_status <= kNot1l1tauAndNot2tau; ++tau3_status)
         {
-          if(tau3_status == k1l1tauAnd2tau || tau3_status == k1l1tauAndNot2tau)
+	  const double prob_tau3_data = getProb_tau(tau3_status, eff_1l1tau_lepLeg_data, eff_2tau_tauLeg3_data);
+          const double prob_tau3_mc   = getProb_tau(tau3_status, eff_1l1tau_lepLeg_mc,   eff_2tau_tauLeg3_mc);
+
+	  int nTrig_1l1tau_tauLeg = 0;
+	  if(tau1_status == k1l1tauAnd2tau || tau1_status == k1l1tauAndNot2tau)
+	  {
+	    ++nTrig_1l1tau_tauLeg;
+	  }
+	  if(tau2_status == k1l1tauAnd2tau || tau2_status == k1l1tauAndNot2tau)
           {
             ++nTrig_1l1tau_tauLeg;
+          }
+	  if(tau3_status == k1l1tauAnd2tau || tau3_status == k1l1tauAndNot2tau)
+          {
+            ++nTrig_1l1tau_tauLeg;
+          }
+
+	  int nTrig_2tau_tauLeg = 0;
+	  if(tau1_status == k1l1tauAnd2tau || tau1_status == kNot1l1tauAnd2tau)
+          {
+            ++nTrig_2tau_tauLeg;
+          }
+	  if(tau2_status == k1l1tauAnd2tau || tau2_status == kNot1l1tauAnd2tau)
+          {
+            ++nTrig_2tau_tauLeg;
           }
           if(tau3_status == k1l1tauAnd2tau || tau3_status == kNot1l1tauAnd2tau)
           {
             ++nTrig_2tau_tauLeg;
           }
 
-          const double prob_tau3_data = getProb_tau(tau3_status, eff_1l1tau_lepLeg_data, eff_2tau_tauLeg3_data);
-          const double prob_tau3_mc   = getProb_tau(tau3_status, eff_1l1tau_lepLeg_mc,   eff_2tau_tauLeg3_mc);
+	  std::cout << "nTrig_1l = " << nTrig_1l << "," 
+		    << " nTrig_1l1tau_lepLeg = " << nTrig_1l1tau_lepLeg << ", nTrig_1l1tau_tauLeg = " << nTrig_1l1tau_tauLeg << "," 
+		    << " nTrig_2tau_tauLeg = " << nTrig_2tau_tauLeg << std::endl;
 
           const bool isTrig_1l_toy     = nTrig_1l >= 1;
           const bool isTrig_1l1tau_toy = nTrig_1l1tau_lepLeg >= 1 && nTrig_1l1tau_tauLeg >= 1;
@@ -494,6 +524,9 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
              isTriggered_1l1tau == isTrig_1l1tau_toy &&
              isTriggered_2tau_ == isTrig_2tau_toy     )
           {
+	    std::cout << "isTrig_1l_toy = " << isTrig_1l_toy << ", isTrig_1l1tau_toy = " << isTrig_1l1tau_toy << ", isTrig_2tau_toy = " << isTrig_2tau_toy << ":"
+		      << " prob_data = " << (prob_lepton_data * prob_tau1_data * prob_tau2_data * prob_tau3_data) << ","
+		      << " prob_mc = " << (prob_lepton_mc * prob_tau1_mc * prob_tau2_mc * prob_tau3_mc) << std::endl;
             prob_data += prob_lepton_data * prob_tau1_data * prob_tau2_data * prob_tau3_data;
             prob_mc   += prob_lepton_mc   * prob_tau1_mc   * prob_tau2_mc   * prob_tau3_mc;
           }
@@ -526,9 +559,9 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
     if(isTriggered_1l1tau) idxCase += 2;
     if(isTriggered_2tau_ ) idxCase += 4;
 
-    const std::string text_1l     = isTriggered_1l     ? "single lepton trigger doesn't fire"    : "single lepton trigger fires";
-    const std::string text_1l1tau = isTriggered_1l1tau ? "lepton+tau cross trigger doesn't fire" : "lepton+tau cross trigger fires";
-    const std::string text_2tau   = isTriggered_2tau_  ? "ditau trigger doesn't fire"            : "ditau trigger fires";
+    const std::string text_1l     = isTriggered_1l     ? "single lepton trigger fires"    : "single lepton trigger doesn't fire";
+    const std::string text_1l1tau = isTriggered_1l1tau ? "lepton+tau cross trigger fires" : "lepton+tau cross trigger doesn't fire";
+    const std::string text_2tau   = isTriggered_2tau_  ? "ditau trigger fires"            : "ditau trigger doesn't fire";
     std::cout << "case " << idxCase << ": "
               << text_1l     << " and "
               << text_1l1tau << " and "
@@ -557,6 +590,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_lepton(int lepton_sta
     case kNot1lAndNot1l1tau: prob = 1. - std::max(eff_1l, eff_1l1tau_lepLeg);    break;
     default:                 assert(0);
   }
+  std::cout << "<Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_lepton>: prob = " << prob << std::endl;
   return prob;
 }
  
@@ -574,5 +608,6 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_tau(int tau_status,
     case kNot1l1tauAndNot2tau: prob = 1. - std::max(eff_1l1tau_tauLeg, eff_2tau_tauLeg);    break;
     default:                   assert(0);
   }
+  std::cout << "<Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_tau>: prob = " << prob << std::endl;
   return prob;
 }
