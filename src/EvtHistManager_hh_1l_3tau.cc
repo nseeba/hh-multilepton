@@ -57,7 +57,9 @@ EvtHistManager_hh_1l_3tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_numBJets_medium_, numBJets_medium, evtWeight, evtWeightErr);
 
   fillWithOverFlow(histogram_dihiggsVisMass_,  dihiggsVisMass,  evtWeight, evtWeightErr);
-  fillWithOverFlow(histogram_dihiggsMass_,     dihiggsMass,     evtWeight, evtWeightErr);
+  if ( dihiggsMass > 0. ) {
+    fillWithOverFlow(histogram_dihiggsMass_,   dihiggsMass,     evtWeight, evtWeightErr);
+  }
 
   fillWithOverFlow(histogram_HT_,              HT,              evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_STMET_,           STMET,           evtWeight, evtWeightErr);

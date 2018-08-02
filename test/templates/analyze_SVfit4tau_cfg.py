@@ -26,12 +26,13 @@ process.analyze_SVfit4tau = cms.PSet(
     mode = cms.string("rec"), # CV: 'rec', 'gen', or 'gen_smeared'
 
     leptonSelection = cms.string('Tight'),
+    lep_mva_cut = cms.double(1.),
 
     hadTauSelection = cms.string('Tight|dR03mvaMedium'),
 
     SVfit4tau = cms.PSet(
-        logM_wMassConstraint = cms.double(0.),
-        logM_woMassConstraint = cms.double(0.)
+        logM_wMassConstraint = cms.vdouble(0., 2.),
+        logM_woMassConstraint = cms.vdouble(0., 2.)
     ),
 
     use_HIP_mitigation_mediumMuonId = cms.bool(False),
@@ -50,15 +51,15 @@ process.analyze_SVfit4tau = cms.PSet(
     branchName_met = cms.string('MET'),
     branchName_memOutput = cms.string(''),
 
-    branchName_genLeptons1 = cms.string('GenLep'),
-    branchName_genLeptons2 = cms.string(''),
+    branchName_genLeptons = cms.string('GenLep'),
     branchName_genHadTaus = cms.string('GenVisTau'),
+    branchName_genPhotons = cms.string('GenPhoton'),
     branchName_genJets = cms.string('GenJet'),
     redoGenMatching = cms.bool(True),
 
     branchName_genTaus = cms.string('GenTau'),
-    branchName_genHiggsBosons = cms.string('GenHiggsBosons'), # CV: use 'GenHiggsBoson' in CMSSW_8_0_x, 'GenHiggs' in  CMSSW_9_4_x
-
+    branchName_genHiggsBosons = cms.string('GenHiggs'),
+    
     genHadTauSmearing = cms.PSet(
         inputFileName = cms.string("hhAnalysis/tttt/data/hadTauSmearingCDF_toyMC.root"),
         graphName = cms.string("rCDF")

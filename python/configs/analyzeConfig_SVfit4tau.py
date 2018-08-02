@@ -17,16 +17,31 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
 
   """
   def __init__(self, configDir, outputDir, executable_analyze, cfgFile_analyze, samples,
-               lepton_selection, hadTau_selection, SVfit4tau_logM_wMassConstraint, SVfit4tau_logM_woMassConstraint, modes, central_or_shifts,
-               max_files_per_job, era, use_lumi, lumi, check_input_files, running_method, num_parallel_jobs,
-               verbose = False, dry_run = False, isDebug = False):
-    analyzeConfig.__init__(self, configDir, outputDir, executable_analyze, "SVfit4tau", central_or_shifts,
-      max_files_per_job, era, use_lumi, lumi, check_input_files, running_method, num_parallel_jobs,
-      [],
-      verbose = verbose,
-      dry_run = dry_run,
-      isDebug = isDebug,
-      template_dir = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'tttt', 'test', 'templates')
+               lepton_selection, lep_mva_wp, hadTau_selection, SVfit4tau_logM_wMassConstraint, SVfit4tau_logM_woMassConstraint, modes, central_or_shifts,
+               max_files_per_job, era, use_lumi, lumi, check_output_files, running_method, num_parallel_jobs,
+               verbose = False, dry_run = False, isDebug = False, use_home = True):
+    analyzeConfig.__init__(self,
+      configDir                 = configDir,
+      outputDir                 = outputDir,
+      executable_analyze        = executable_analyze,
+      channel                   = "SVfit4tau",
+      samples                   = samples,
+      lep_mva_wp                = lep_mva_wp,
+      central_or_shifts         = central_or_shifts,
+      max_files_per_job         = max_files_per_job,
+      era                       = era,
+      use_lumi                  = use_lumi,
+      lumi                      = lumi,
+      check_output_files        = check_output_files,
+      running_method            = running_method,
+      num_parallel_jobs         = num_parallel_jobs,
+      histograms_to_fit         = [],
+      triggers                  = [],
+      verbose                   = verbose,
+      dry_run                   = dry_run,
+      isDebug                   = isDebug,
+      use_home                  = use_home,
+      template_dir              = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'tttt', 'test', 'templates')
     )
 
     self.samples = samples
@@ -36,7 +51,7 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
     
     self.SVfit4tau_logM_wMassConstraint = SVfit4tau_logM_wMassConstraint
     self.SVfit4tau_logM_woMassConstraint = SVfit4tau_logM_woMassConstraint
-
+      
     self.modes = modes
     
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
@@ -60,9 +75,10 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
     lines.append("process.analyze_SVfit4tau.era = cms.string('%s')" % self.era)
     lines.append("process.analyze_SVfit4tau.mode = cms.string('%s')" % jobOptions['mode'])
     lines.append("process.analyze_SVfit4tau.leptonSelection = cms.string('%s')" % jobOptions['lepton_selection'])
+    lines.append("process.analyze_SVfit4tau.lep_mva_cut = cms.double(%f)" % jobOptions['lep_mva_cut'])
     lines.append("process.analyze_SVfit4tau.hadTauSelection = cms.string('%s')" % jobOptions['hadTau_selection'])
-    lines.append("process.analyze_SVfit4tau.SVfit4tau.logM_wMassConstraint = cms.double(%1.1f)" % jobOptions['SVfit4tau_logM_wMassConstraint'])
-    lines.append("process.analyze_SVfit4tau.SVfit4tau.logM_woMassConstraint = cms.double(%1.1f)" % jobOptions['SVfit4tau_logM_woMassConstraint'])
+    lines.append("process.analyze_SVfit4tau.SVfit4tau.logM_wMassConstraint = cms.vdouble(%s)" % jobOptions['SVfit4tau_logM_wMassConstraint'])
+    lines.append("process.analyze_SVfit4tau.SVfit4tau.logM_woMassConstraint = cms.vdouble(%s)" % jobOptions['SVfit4tau_logM_woMassConstraint'])
     lines.append("process.analyze_SVfit4tau.use_HIP_mitigation_mediumMuonId = cms.bool(%s)" % jobOptions['use_HIP_mitigation_mediumMuonId'])
     lines.append("process.analyze_SVfit4tau.isMC = cms.bool(%s)" % jobOptions['is_mc'])
     lines.append("process.analyze_SVfit4tau.central_or_shift = cms.string('%s')" % jobOptions['central_or_shift'])
@@ -108,7 +124,7 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
       if not sample_info["use_it"] or sample_info["sample_category"] in [ "additional_signal_overlap", "background_data_estimate" ]:
         continue
       logging.info("Checking input files for sample %s" % sample_info["process_name_specific"])
-      inputFileLists[sample_name] = generateInputFileList(sample_info, self.max_files_per_job, self.check_input_files)
+      inputFileLists[sample_name] = generateInputFileList(sample_info, self.max_files_per_job)
 
     for mode in self.modes:
       for sample_name, sample_info in self.samples.items():
@@ -145,13 +161,14 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
               'sample_category' : sample_category,
               'mode' : mode,
               'lepton_selection' : self.lepton_selection,
+              'lep_mva_cut' : self.lep_mva_cut,
               'hadTau_selection' : self.hadTau_selection,
               'SVfit4tau_logM_wMassConstraint' : self.SVfit4tau_logM_wMassConstraint,
               'SVfit4tau_logM_woMassConstraint' : self.SVfit4tau_logM_woMassConstraint,
               'use_HIP_mitigation_mediumMuonId' : False,
               'is_mc' : is_mc,
               'central_or_shift' : central_or_shift,
-              'lumi_scale' : 1. if not (self.use_lumi and is_mc) else sample_info["xsection"] * self.lumi / sample_info["nof_events"],
+              'lumi_scale' : 1.,
               'apply_genWeight' : sample_info["genWeight"] if (is_mc and "genWeight" in sample_info) else False,
             }
             self.createCfg_analyze(self.jobOptions_analyze[key_analyze_job])

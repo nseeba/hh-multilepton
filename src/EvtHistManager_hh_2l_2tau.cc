@@ -70,7 +70,9 @@ EvtHistManager_hh_2l_2tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_hadTauPairCharge_, hadTauPairCharge, evtWeight, evtWeightErr);
 
   fillWithOverFlow(histogram_dihiggsVisMass_,   dihiggsVisMass,   evtWeight, evtWeightErr);
-  fillWithOverFlow(histogram_dihiggsMass_,      dihiggsMass,      evtWeight, evtWeightErr);
+  if ( dihiggsMass > 0. ) {
+    fillWithOverFlow(histogram_dihiggsMass_,    dihiggsMass,      evtWeight, evtWeightErr);
+  }
 
   fillWithOverFlow(histogram_HT_,               HT,               evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_STMET_,            STMET,            evtWeight, evtWeightErr);
