@@ -63,6 +63,15 @@ isHigherProbMax(const SVfit4tauResult& result1,
   return result1.probMax_ > result2.probMax_;
 }
 
+bool
+isLowerMassErr(const SVfit4tauResult& result1,
+	       const SVfit4tauResult& result2)
+{
+  if ( result1.isValidSolution_ && !result2.isValidSolution_ ) return true;
+  if ( result2.isValidSolution_ && !result1.isValidSolution_ ) return false;
+  return result1.dihiggs_massErr_ < result2.dihiggs_massErr_;
+}
+
 std::vector<SVfit4tauResult> compSVfit4tau(const GenParticle& measuredTau1, 
 					   const GenParticle& measuredTau2, 
 					   const GenParticle& measuredTau3, 

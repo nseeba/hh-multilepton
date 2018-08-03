@@ -13,6 +13,8 @@
 
 #include "tthAnalysis/HiggsToTauTau/interface/Particle.h" // Particle::LorentzVector
 
+#include "hhAnalysis/tttt/interface/mySVfit4tauAuxFunctions.h" // SVfit4tauResult
+
 #include <TMatrixD.h> // TMatrixD
 
 class EvtHistManager_SVfit4tau
@@ -26,7 +28,11 @@ class EvtHistManager_SVfit4tau
   bookHistograms(TFileDirectory & dir) override;
 
   void
-  fillHistograms(const Particle::LorentzVector& measuredTau1P4, const Particle::LorentzVector& measuredTau1P4_gen, 
+  fillHistograms(const SVfit4tauResult& svFit4tauResult,
+		 const Particle::LorentzVector* genDiHiggsP4, 
+		 const Particle::LorentzVector* genDiTau1P4, 
+		 const Particle::LorentzVector* genDiTau2P4, 
+		 const Particle::LorentzVector& measuredTau1P4, const Particle::LorentzVector& measuredTau1P4_gen, 
 		 const Particle::LorentzVector& measuredTau2P4, const Particle::LorentzVector& measuredTau2P4_gen, 
 		 const Particle::LorentzVector& measuredTau3P4, const Particle::LorentzVector& measuredTau3P4_gen, 
 		 const Particle::LorentzVector& measuredTau4P4, const Particle::LorentzVector& measuredTau4P4_gen,
@@ -39,13 +45,19 @@ class EvtHistManager_SVfit4tau
  private:
   int era_;
 
+  TH1 * histogram_mhh_;
+  TH1 * histogram_mhh_gen_;
+  TH1 * histogram_mh1_;
+  TH1 * histogram_mh1_gen_;
+  TH1 * histogram_mh2_;
+  TH1 * histogram_mh2_gen_;
+
+  TH1 * histogram_mhhVis_;
+  TH1 * histogram_mhhVis_gen_;
   TH1 * histogram_mh1Vis_;
   TH1 * histogram_mh1Vis_gen_;
   TH1 * histogram_mh2Vis_;
   TH1 * histogram_mh2Vis_gen_;
-
-  TH1 * histogram_mhhVis_;
-  TH1 * histogram_mhhVis_gen_;
 
   TH1* histogram_ratiomeasuredTau1Pt_;
   TH1* histogram_ratiomeasuredTau2Pt_;

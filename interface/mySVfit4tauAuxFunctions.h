@@ -116,6 +116,10 @@ bool
 isHigherProbMax(const SVfit4tauResult& result1,
 		const SVfit4tauResult& result2);
 
+bool
+isLowerMassErr(const SVfit4tauResult& result1,
+	       const SVfit4tauResult& result2);
+
 // reconstruct di-Higgs system for each possible pairing of visible tau decay products
 std::vector<SVfit4tauResult>
 compSVfit4tau(const GenParticle& measuredTau1, 

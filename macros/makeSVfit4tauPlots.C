@@ -246,7 +246,7 @@ void makeSVfit4tauPlots()
       0.055, 0.63, 0.76, 0.89, 0.89,
       samples[*massPoint],
       0.4, 8., "m_{HH}/m_{HH}^{true}", 1.2,
-      true, 1.e-3, 1.e0, "dN/d(m_{HH}/m_{HH}^{true})", 1.3,
+      true, 2.e-3, 8.9e0, "dN/d(m_{HH}/m_{HH}^{true})", 1.3,
       outputFileName_chosen_full);
 
     std::string outputFileName_discarded_full = outputFilePath;
@@ -258,7 +258,7 @@ void makeSVfit4tauPlots()
       0.055, 0.63, 0.76, 0.26, 0.13,
       samples[*massPoint],
       0.4, 8., "m_{HH}/m_{HH}^{true}", 1.2,
-      true, 1.e-3, 1.e0, "dN/d(m_{HH}/m_{HH}^{true})", 1.3,
+      true, 2.e-3, 8.9e0, "dN/d(m_{HH}/m_{HH}^{true})", 1.3,
       outputFileName_chosen_full);
 
     delete inputFile;

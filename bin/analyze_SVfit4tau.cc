@@ -512,7 +512,7 @@ int main(int argc, char* argv[])
     selHistManager->met_->bookHistograms(fs);
     for ( vdouble::const_iterator logM = logM_wMassConstraint.begin();
 	  logM != logM_wMassConstraint.end(); ++logM ) {
-      std::string logM_string = TString(Form("%1.1f", *logM)).ReplaceAll(".", "p").Data();
+      std::string logM_string = TString(Form("logM%1.1f", *logM)).ReplaceAll(".", "p").Data();
       selHistManager->svFit4tau_wMassConstraint_correctAssoc_chosen_[*logM] = new SVfit4tauHistManager(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tau_wMassContraint_%s_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_correctAssoc_chosen_[*logM]->bookHistograms(fs);
@@ -540,7 +540,7 @@ int main(int argc, char* argv[])
     }
     for ( vdouble::const_iterator logM = logM_woMassConstraint.begin();
 	  logM != logM_woMassConstraint.end(); ++logM ) {
-      std::string logM_string = TString(Form("%1.1f", *logM)).ReplaceAll(".", "p").Data();
+      std::string logM_string = TString(Form("logM%1.1f", *logM)).ReplaceAll(".", "p").Data();
       selHistManager->svFit4tau_woMassConstraint_correctAssoc_chosen_[*logM] = new SVfit4tauHistManager(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tau_woMassContraint_%s_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tau_woMassConstraint_correctAssoc_chosen_[*logM]->bookHistograms(fs);
@@ -886,26 +886,48 @@ int main(int argc, char* argv[])
 	      // require that no generator-level tau decay product is unmatched
 	      if ( !(genTau1 && genTau2 && genTau3 && genTau4) ) continue;
 	      
+	      //std::cout << "measuredTau1: pT = " << (*measuredTau1)->pt() << ", eta = " << (*measuredTau1)->eta() << ", phi = " << (*measuredTau1)->phi() << std::endl;
+	      //std::cout << "genTau1: pT = " << genTau1->pt() << ", eta = " << genTau1->eta() << ", phi = " << genTau1->phi() << std::endl;
+	      //std::cout << "measuredTau2: pT = " << (*measuredTau2)->pt() << ", eta = " << (*measuredTau2)->eta() << ", phi = " << (*measuredTau2)->phi() << std::endl;
+	      //std::cout << "genTau2: pT = " << genTau2->pt() << ", eta = " << genTau2->eta() << ", phi = " << genTau2->phi() << std::endl;
+	      //std::cout << "measuredTau3: pT = " << (*measuredTau3)->pt() << ", eta = " << (*measuredTau3)->eta() << ", phi = " << (*measuredTau3)->phi() << std::endl;
+	      //std::cout << "genTau3: pT = " << genTau3->pt() << ", eta = " << genTau3->eta() << ", phi = " << genTau3->phi() << std::endl;
+	      //std::cout << "measuredTau4: pT = " << (*measuredTau4)->pt() << ", eta = " << (*measuredTau4)->eta() << ", phi = " << (*measuredTau4)->phi() << std::endl;
+	      //std::cout << "genTau4: pT = " << genTau4->pt() << ", eta = " << genTau4->eta() << ", phi = " << genTau4->phi() << std::endl;
+	      
 	      const GenParticle* genHiggs1 = nullptr;
 	      const GenParticle* genHiggs2 = nullptr;	      
 	      bool isCorrectAssoc = false;
-	      if ( (genTau1->charge() + genTau2->charge()) == 0 && TMath::Abs((genTau1->p4() + genTau2->p4()).mass() - 125.) < 10. &&
-		   (genTau3->charge() + genTau4->charge()) == 0 && TMath::Abs((genTau3->p4() + genTau4->p4()).mass() - 125.) < 10. ) {
+	      if ( (genTau1->charge() + genTau2->charge()) == 0 &&
+		   (genTau3->charge() + genTau4->charge()) == 0 ) {
 		genHiggs1 = findGenHiggs(genTau1->p4() + genTau2->p4(), genHiggsBosons);
 		genHiggs2 = findGenHiggs(genTau3->p4() + genTau4->p4(), genHiggsBosons);
+		//if ( genHiggs1 && genHiggs2 ) {
+		//  std::cout << "genHiggs1: pT = " << genHiggs1->pt() << ", eta = " << genHiggs1->eta() << ", phi = " << genHiggs1->phi() << " (matches genTau1+genTau2)" << std::endl;
+		//  std::cout << "genHiggs2: pT = " << genHiggs2->pt() << ", eta = " << genHiggs2->eta() << ", phi = " << genHiggs2->phi() << " (matches genTau3+genTau4)" << std::endl;
+		//} 
 		if ( genHiggs1 && genHiggs2 ) {
 		  isCorrectAssoc = true;
 		} 
 		if ( !(genHiggs1 && genHiggs2) ) {
 		  genHiggs1 = findGenHiggs(genTau1->p4() + genTau3->p4(), genHiggsBosons);
 		  genHiggs2 = findGenHiggs(genTau2->p4() + genTau4->p4(), genHiggsBosons);
+		  //if ( genHiggs1 && genHiggs2 ) {
+		  //  std::cout << "genHiggs1: pT = " << genHiggs1->pt() << ", eta = " << genHiggs1->eta() << ", phi = " << genHiggs1->phi() << " (matches genTau1+genTau3)" << std::endl;
+		  //  std::cout << "genHiggs2: pT = " << genHiggs2->pt() << ", eta = " << genHiggs2->eta() << ", phi = " << genHiggs2->phi() << " (matches genTau2+genTau4)" << std::endl;
+		  //}
 		}
 		if ( !(genHiggs1 && genHiggs2) ) {
 		  genHiggs1 = findGenHiggs(genTau1->p4() + genTau4->p4(), genHiggsBosons);
 		  genHiggs2 = findGenHiggs(genTau2->p4() + genTau3->p4(), genHiggsBosons);
+		  //if ( genHiggs1 && genHiggs2 ) {
+		  //  std::cout << "genHiggs1: pT = " << genHiggs1->pt() << ", eta = " << genHiggs1->eta() << ", phi = " << genHiggs1->phi() << " (matches genTau1+genTau4)" << std::endl;
+		  //  std::cout << "genHiggs2: pT = " << genHiggs2->pt() << ", eta = " << genHiggs2->eta() << ", phi = " << genHiggs2->phi() << " (matches genTau2+genTau3)" << std::endl;
+		  //}
 		}
 	      }
 	      if ( !(genHiggs1 && genHiggs2) ) continue;
+	      //std::cout << "isCorrectAssoc = " << isCorrectAssoc << std::endl;
 	      Particle::LorentzVector genDiTau1P4 = genHiggs1->p4();
 	      Particle::LorentzVector genDiTau2P4 = genHiggs2->p4();
 
@@ -1035,12 +1057,20 @@ int main(int argc, char* argv[])
 		result.genDiTau1P4_ = genDiTau1P4;
 		result.genDiTau2P4_ = genDiTau2P4;
 		result.isCorrectAssoc_ = isCorrectAssoc;
-		results_wMassConstraint[*logM].push_back(result);
+		results_woMassConstraint[*logM].push_back(result);
 	      }
 	      //-------------------------------------------------------------------------------------
 	      
 	      if ( isCorrectAssoc ) {
+		SVfit4tauResult_wPtrs* result;
+		if ( results_wMassConstraint.find(0.) != results_wMassConstraint.end() ) result = &results_wMassConstraint[0.].front();
+		else result = &results_wMassConstraint.begin()->second.front();
+		assert(result);
 		selHistManager->evt_->fillHistograms(
+		  *result,
+		  &genDiHiggsP4, 
+		  &genDiTau1P4, 
+		  &genDiTau2P4,		     
                   measuredTau1P4_rec, measuredTau1P4_gen, 
 		  measuredTau2P4_rec, measuredTau2P4_gen,  
 		  measuredTau3P4_rec, measuredTau3P4_gen,  
@@ -1058,6 +1088,9 @@ int main(int argc, char* argv[])
 	std::sort(results.begin(), results.end(), isHigherProbMax);
 	for ( size_t idxResult = 0; idxResult < results.size(); ++idxResult ) {
 	  const SVfit4tauResult_wPtrs& result = results[idxResult];
+	  //std::cout << "logM = " << (*logM) << " (wMassConstraint), result #" << idxResult << ":" 
+	  //	      << " mass = " << result.dihiggs_mass_ << " +/- " << result.dihiggs_massErr_
+	  //          << " (isValidSolution = " << result.isValidSolution_ << ", probMax = " << result.probMax_ << ", isCorrectAssoc = " << result.isCorrectAssoc_ << ")" << std::endl;
 	  SVfit4tauHistManager* histograms_svFit4tau = nullptr;
 	  SVfit4tauResolutionHistManager* histograms_svFit4tauResolution = nullptr;
 	  if ( result.isCorrectAssoc_ ) {
@@ -1097,6 +1130,9 @@ int main(int argc, char* argv[])
 	std::sort(results.begin(), results.end(), isHigherProbMax);
 	for ( size_t idxResult = 0; idxResult < results.size(); ++idxResult ) {
 	  const SVfit4tauResult_wPtrs& result = results[idxResult];
+	  //std::cout << "logM = " << (*logM) << " (woMassConstraint), result #" << idxResult << ":" 
+	  //	      << " mass = " << result.dihiggs_mass_ << " +/- " << result.dihiggs_massErr_
+	  //	      << " (isValidSolution = " << result.isValidSolution_ << ", probMax = " << result.probMax_ << ", isCorrectAssoc = " << result.isCorrectAssoc_ << ")" << std::endl;
 	  SVfit4tauHistManager* histograms_svFit4tau = nullptr;
 	  SVfit4tauResolutionHistManager* histograms_svFit4tauResolution = nullptr;
 	  if ( result.isCorrectAssoc_ ) {
