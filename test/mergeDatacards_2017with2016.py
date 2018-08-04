@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 
-/hdfs/local/veelken/hhAnalysis/2016/2018Aug01v2/histograms/hh_2l_2tau/histograms_harvested_stage1_5_hh_2l_2tau_disabled_disabled_Tight_OS.root
-
-
+import os
 
 channels = {
-##     '0l_4tau' : {
+##     'hh_0l_4tau' : {
 ##         'directory_histograms_2016'     : "/hdfs/local/veelken/hhAnalysis/2017/2018Jul12/histograms/hh_0l_4tau/",
 ##         'filename_hadd_stage2_2016'     : "histograms_harvested_stage1_5_hh_0l_4tau_Tight_OS.root",
 ##         'directory_histograms_2017'     : "/hdfs/local/veelken/hhAnalysis/2017/2018Jul12/histograms/hh_0l_4tau/",
@@ -15,7 +13,7 @@ channels = {
 ##         'directory_cfgs_2017'           : "/home/veelken/hhAnalysis/2017/2018Jul12/cfgs/hh_0l_4tau/",
 ##         'filename_prepareDatacards_cfg' : "prepareDatacards_cfg.py"
 ##     },
-##     '1l_3tau' : {
+##     'hh_1l_3tau' : {
 ##         'directory_histograms_2016'     : "/hdfs/local/veelken/hhAnalysis/2017/2018Jul12/histograms/hh_1l_3tau/",
 ##         'filename_hadd_stage2_2016'     : "histograms_harvested_stage1_5_hh_1l_3tau_Tight_OS.root",
 ##         'directory_histograms_2017'     : "/hdfs/local/veelken/hhAnalysis/2017/2018Jul12/histograms/hh_1l_3tau/",
@@ -25,8 +23,8 @@ channels = {
 ##         'directory_cfgs_2017'           : "/home/veelken/hhAnalysis/2017/2018Jul12/cfgs/hh_1l_3tau/",
 ##         'filename_prepareDatacards_cfg' : "prepareDatacards_cfg.py"
 ##     },
-    '2l_2tau' : {
-        'directory_histograms_2016'     : "/hdfs/local/veelken/hhAnalysis/2016/2018Aug01v2/histograms/hh_2l_2tau/";
+    'hh_2l_2tau' : {
+        'directory_histograms_2016'     : "/hdfs/local/veelken/hhAnalysis/2016/2018Aug04v2/histograms/hh_2l_2tau/",
         'filename_hadd_stage2_2016'     : "histograms_harvested_stage1_5_hh_2l_2tau_disabled_disabled_Tight_OS.root",
         'directory_histograms_2017'     : "/hdfs/local/veelken/hhAnalysis/2017/2018Aug01v1/histograms/hh_2l_2tau/",
         'filename_hadd_stage2_2017'     : "histograms_harvested_stage2_hh_2l_2tau_disabled_disabled_Tight_OS.root",
@@ -35,7 +33,7 @@ channels = {
         'directory_cfgs_2017'           : "/home/veelken/hhAnalysis/2017/2018Aug01v1/cfgs/hh_2l_2tau/",
         'filename_prepareDatacards_cfg' : "prepareDatacards_cfg.py"
     },
-##     '3l_1tau' : {
+##     'hh_3l_1tau' : {
 ##         'directory_histograms_2016'     : "/hdfs/local/veelken/hhAnalysis/2017/2018Jul12/histograms/hh_3l_1tau/",
 ##         'filename_hadd_stage2_2016'     : "histograms_harvested_stage1_5_hh_3l_1tau_Tight_OS.root",
 ##         'directory_histograms_2017'     : "/hdfs/local/veelken/hhAnalysis/2017/2018Jul12/histograms/hh_3l_1tau/",
@@ -45,7 +43,7 @@ channels = {
 ##         'directory_cfgs_2017'           : "/home/veelken/hhAnalysis/2017/2018Jul12/cfgs/hh_3l_1tau/",
 ##         'filename_prepareDatacards_cfg' : "prepareDatacards_cfg.py"
 ##     },
-##     '4l' : {
+##     'hh_4l' : {
 ##         'directory_histograms_2016'     : "/hdfs/local/veelken/hhAnalysis/2017/2018Jul12/histograms/hh_4l/",
 ##         'filename_hadd_stage2_2016'     : "",
 ##         'directory_histograms_2017'     : "/hdfs/local/veelken/hhAnalysis/2017/2018Jul12/histograms/hh_4l/",
@@ -59,6 +57,7 @@ channels = {
 
 filename_shell_script = "mergeDatacards_2017with2016.sh"
 
+executable_cp = 'cp'
 executable_rm = 'rm'
 executable_hadd = 'hadd'
 executable_prepareDatacards = 'prepareDatacards'
@@ -72,11 +71,15 @@ for channel_name in channels:
     filename_hadd_input2 = os.path.join(channels[channel_name]['directory_histograms_2017'],
       channels[channel_name]['filename_hadd_stage2_2017'])
     filename_hadd_output = os.path.join(channels[channel_name]['directory_histograms_2017'],
-      channels[channel_name]['filename_hadd_stage2_2017'].replace(".root", "_with2016.root")
-    command_rm = '%s -f %s' % (executable_rm, filename_hadd_output)                              
+      channels[channel_name]['filename_hadd_stage2_2017'].replace(".root", "_with2016.root"))
+    command_rm = '%s -f %s' % (executable_rm, os.path.basename(filename_hadd_output))                             
     lines_shell_script.append(command_rm)       
-    command_hadd = '%s %s %s %s' % (executable_hadd, filename_hadd_output, filename_hadd_input1, filename_hadd_input2)                                            
+    command_hadd = '%s %s %s %s' % (executable_hadd, os.path.basename(filename_hadd_output), filename_hadd_input1, filename_hadd_input2)                                            
     lines_shell_script.append(command_hadd)
+    command_cp = '%s %s %s' % (executable_cp, os.path.basename(filename_hadd_output), filename_hadd_output)
+    lines_shell_script.append(command_cp)
+    command_rm = '%s %s' % (executable_rm, os.path.basename(filename_hadd_output))
+    lines_shell_script.append(command_rm)
     filenames_hadd_output[channel_name] = filename_hadd_output
 
 from hhAnalysis.tttt.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
@@ -85,9 +88,9 @@ signals = []
 for sample_name, sample_info in samples.items():
     if not type(sample_info) is OD:
         continue
-    if sample_info['sample_category'] == "signal":
+    if sample_info['sample_category'].find("signal") != -1:
         signals.append(sample_info['process_name_specific'])
-#print "signals = %s" % signals
+print "signals = %s" % signals
 
 from tthAnalysis.HiggsToTauTau.analysisTools import create_cfg
 for channel_name in channels:
@@ -104,9 +107,12 @@ for channel_name in channels:
           "prepareDatacards_%s_%s_with2016.root" % (channel_name, histogram_to_fit))
         lines_prepareDatacards.append("process.fwliteInput.fileNames = cms.vstring('%s')" % filenames_hadd_output[channel_name])
         lines_prepareDatacards.append("process.fwliteOutput.fileName = cms.string('%s')" % filename_prepareDatacards_output)
-        create_cfg(filename_prepareDatacards_cfg_original, filename_prepareDatacards_cfg_modified, lines_prepareDatacards):
+        create_cfg(filename_prepareDatacards_cfg_original, filename_prepareDatacards_cfg_modified, lines_prepareDatacards)
         command_prepareDatacards = '%s %s' % (executable_prepareDatacards, filename_prepareDatacards_cfg_modified)
         lines_shell_script.append(command_prepareDatacards)
 
 from tthAnalysis.HiggsToTauTau.analysisTools import createFile
 createFile(filename_shell_script, lines_shell_script)
+
+print "Finished creating config files."
+print "Now execute: 'source %s'" % filename_shell_script

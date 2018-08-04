@@ -137,11 +137,6 @@ std::vector<SVfit4tauResult> compSVfit4tau(const GenParticle& measuredTau1,
 	  // in order prevent that SVfit mass is computed for both combinations (tau1,..,tau3,..) and (tau3,..,tau1,..)
 	  if ( !(measuredTau1->pt() > measuredTau3->pt()) ) continue;
 	  
-	  // CV: require that visible mass of tau1+tau2 and of tau3+tau4 is less than the Higgs boson mass,
-	  //     as SVfit will otherwise not find a physical solution anyway
-	  if ( (massConstraint > 0. && (measuredTau1->p4() + measuredTau2->p4()).mass() > massConstraint) || 
-	       (massConstraint > 0. && (measuredTau3->p4() + measuredTau4->p4()).mass() > massConstraint) ) continue;
-
 	  Particle::LorentzVector measuredTau1P4 = measuredTau1->p4();
 	  int  measuredTau1Type = getMeasuredTauLeptonType(*measuredTau1);
 	  int measuredHadTau1DecayMode = getHadTauDecayMode(*measuredTau1);
@@ -199,6 +194,20 @@ compSVfit4tau(const Particle::LorentzVector& measuredTau1Higgs1P4, int measuredT
     std::cout << " massConstraint = " << massConstraint << ", logM = " << logM << std::endl;
   }
 
+  // CV: require that visible mass of tau1+tau2 and of tau3+tau4 is less than the Higgs boson mass,
+  //     as SVfit will otherwise not find a physical solution anyway
+  if ( (massConstraint > 0. && (measuredTau1Higgs1P4 + measuredTau2Higgs1P4).mass() > massConstraint) || 
+       (massConstraint > 0. && (measuredTau1Higgs2P4 + measuredTau2Higgs2P4).mass() > massConstraint) ) {
+    if ( verbosity >= 1 ) {
+      std::cout << "skipping event, because either" 
+		<< " ditau1VisMass = " << (measuredTau1Higgs1P4 + measuredTau2Higgs1P4).mass() << " or"
+		<< " ditau2VisMass = " << (measuredTau1Higgs2P4 + measuredTau2Higgs2P4).mass() << " exceeds massConstraint !!" << std::endl;
+    }
+    SVfit4tauResult result;
+    result.isValidSolution_ = false;
+    return result;
+  }
+  
   std::vector<classic_svFit::MeasuredTauLepton> measuredTauLeptons;
   measuredTauLeptons.push_back(makeMeasuredTauLepton(measuredTau1Higgs1P4, measuredTau1Higgs1Type, measuredHadTau1Higgs1DecayMode));
   measuredTauLeptons.push_back(makeMeasuredTauLepton(measuredTau2Higgs1P4, measuredTau2Higgs1Type, measuredHadTau2Higgs1DecayMode));

@@ -7,7 +7,7 @@ process = cms.PSet()
 process.fwliteInput = cms.PSet(
     fileNames = cms.vstring('/home/karl/test_nanoAOD_tools/GluGluToRadionToHHTo4Tau_M-400_narrow_13TeV-madgraph_nanoAOD_1_i.root'),
     maxEvents = cms.int32(-1),
-    outputEvery = cms.uint32(100000)
+    outputEvery = cms.uint32(1000)
 )
 
 process.fwliteOutput = cms.PSet(

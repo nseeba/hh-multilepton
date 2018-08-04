@@ -1026,15 +1026,17 @@ int main(int argc, char* argv[])
 	      // CV: run ClassicSVfit4tau algorithm
 	      for ( vdouble::const_iterator logM = logM_wMassConstraint.begin();
 		    logM != logM_wMassConstraint.end(); ++logM ) {
-		if ( (*logM) > 0. ) std::cout << "running SVfit4tau algorithm with mH=125 GeV mass constraint and with logM = " << (*logM) << "..." << std::endl;
-		else std::cout << "running SVfit4tau algorithm with mH=125 GeV mass constraint and without logM term..." << std::endl;
+		if ( isDEBUG ) {
+		  if ( (*logM) > 0. ) std::cout << "running SVfit4tau algorithm with mH=125 GeV mass constraint and with logM = " << (*logM) << "..." << std::endl;
+		  else std::cout << "running SVfit4tau algorithm with mH=125 GeV mass constraint and without logM term..." << std::endl;
+		}
   	        SVfit4tauResult_wPtrs result(compSVfit4tau(
                   measuredTau1P4_rec, measuredTau1Type_rec, measuredHadTau1DecayMode,
 		  measuredTau2P4_rec, measuredTau2Type_rec, measuredHadTau2DecayMode,
 		  measuredTau3P4_rec, measuredTau3Type_rec, measuredHadTau3DecayMode,
 		  measuredTau4P4_rec, measuredTau4Type_rec, measuredHadTau4DecayMode,
 		  metPx_rec, metPy_rec, metCov,
-		  125., *logM));
+		  125., *logM, isDEBUG ? 1 : 0));
 		result.genDiHiggsP4_ = genDiHiggsP4;
 		result.genDiTau1P4_ = genDiTau1P4;
 		result.genDiTau2P4_ = genDiTau2P4;
@@ -1044,15 +1046,17 @@ int main(int argc, char* argv[])
 
 	      for ( vdouble::const_iterator logM = logM_woMassConstraint.begin();
 		    logM != logM_woMassConstraint.end(); ++logM ) {
-		if ( (*logM) > 0. ) std::cout << "running SVfit4tau algorithm without mass constraint and with logM = " << (*logM) << "..." << std::endl;
-		else std::cout << "running SVfit4tau algorithm without mass constraint and without logM term..." << std::endl;
+		if ( isDEBUG ) {
+		  if ( (*logM) > 0. ) std::cout << "running SVfit4tau algorithm without mass constraint and with logM = " << (*logM) << "..." << std::endl;
+		  else std::cout << "running SVfit4tau algorithm without mass constraint and without logM term..." << std::endl;
+		}
 	        SVfit4tauResult_wPtrs result(compSVfit4tau(
                   measuredTau1P4_rec, measuredTau1Type_rec, measuredHadTau1DecayMode,
 	  	  measuredTau2P4_rec, measuredTau2Type_rec, measuredHadTau2DecayMode,
   		  measuredTau3P4_rec, measuredTau3Type_rec, measuredHadTau3DecayMode,
 		  measuredTau4P4_rec, measuredTau4Type_rec, measuredHadTau4DecayMode,
 		  metPx_rec, metPy_rec, metCov,
-		  -1., *logM));
+		  -1., *logM, isDEBUG ? 1 : 0));
 		result.genDiHiggsP4_ = genDiHiggsP4;
 		result.genDiTau1P4_ = genDiTau1P4;
 		result.genDiTau2P4_ = genDiTau2P4;
