@@ -82,6 +82,9 @@ for channel_name in channels:
     lines_shell_script.append(command_rm)
     filenames_hadd_output[channel_name] = filename_hadd_output
 
+# CV: skip 'hadd' step
+lines_shell_script = []
+
 from hhAnalysis.tttt.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
 from collections import OrderedDict as OD
 signals = []
@@ -89,7 +92,8 @@ for sample_name, sample_info in samples.items():
     if not type(sample_info) is OD:
         continue
     if sample_info['sample_category'].find("signal") != -1:
-        signals.append(sample_info['process_name_specific'])
+        #signals.append(sample_info['process_name_specific'])
+        signals.append(sample_info['sample_category'])
 print "signals = %s" % signals
 
 from tthAnalysis.HiggsToTauTau.analysisTools import create_cfg

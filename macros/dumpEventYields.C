@@ -73,18 +73,18 @@ void dumpEventYields()
 
   typedef std::vector<std::string> vstring;
   vstring channels;
-  channels.push_back("hh_0l_4tau");
-  channels.push_back("hh_1l_3tau");
+  //channels.push_back("hh_0l_4tau");
+  //channels.push_back("hh_1l_3tau");
   channels.push_back("hh_2l_2tau");
-  channels.push_back("hh_3l_1tau");
+  //channels.push_back("hh_3l_1tau");
   //channels.push_back("hh_4l");
 
-  std::string inputFilePath = "/hdfs/local/veelken/hhAnalysis/2017/2018Jul12/histograms/";
+  std::string inputFilePath = "/hdfs/local/veelken/hhAnalysis/2017/";
 
   std::map<std::string, std::string> inputFileNames; // key = channel
   inputFileNames["hh_0l_4tau"] = "hh_0l_4tau/histograms_harvested_stage2_hh_0l_4tau_Tight_OS.root";
   inputFileNames["hh_1l_3tau"] = "hh_1l_3tau/histograms_harvested_stage2_hh_1l_3tau_Tight_OS.root";
-  inputFileNames["hh_2l_2tau"] = "hh_2l_2tau/histograms_harvested_stage2_hh_2l_2tau_disabled_disabled_Tight_OS.root";
+  inputFileNames["hh_2l_2tau"] = "2018Aug01v1/histograms/hh_2l_2tau/histograms_harvested_stage2_hh_2l_2tau_disabled_disabled_Tight_OS_with2016.root";
   inputFileNames["hh_3l_1tau"] = "hh_3l_1tau/histograms_harvested_stage2_hh_3l_1tau_Tight_OS.root";
   inputFileNames["hh_4l"]      = "";
 

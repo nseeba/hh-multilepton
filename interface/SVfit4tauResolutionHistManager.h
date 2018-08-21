@@ -46,10 +46,13 @@ class SVfit4tauResolutionHistManager
   TH1* histogram_ditau2Phi1_;
   
   TH1* histogram_dihiggsDeltaMass1_;
+  TH1* histogram_dihiggsRatioVisMass1_;
   TH1* histogram_dihiggsRatioMass1_;
   TH1* histogram_ditau1DeltaMass1_;
+  TH1* histogram_ditau1RatioVisMass1_;
   TH1* histogram_ditau1RatioMass1_;
   TH1* histogram_ditau2DeltaMass1_;
+  TH1* histogram_ditau2RatioVisMass1_;
   TH1* histogram_ditau2RatioMass1_;
   
   TH1* histogram_dihiggsDeltaPt1_;
@@ -73,10 +76,13 @@ class SVfit4tauResolutionHistManager
   TH1* histogram_ditau2Phi2_;
   
   TH1* histogram_dihiggsDeltaMass2_;
+  TH1* histogram_dihiggsRatioVisMass2_;
   TH1* histogram_dihiggsRatioMass2_;
   TH1* histogram_ditau1DeltaMass2_;
+  TH1* histogram_ditau1RatioVisMass2_;
   TH1* histogram_ditau1RatioMass2_;
   TH1* histogram_ditau2DeltaMass2_;
+  TH1* histogram_ditau2RatioVisMass2_;
   TH1* histogram_ditau2RatioMass2_;
   
   TH1* histogram_dihiggsDeltaPt2_;

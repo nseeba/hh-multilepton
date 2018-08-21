@@ -818,6 +818,17 @@ int main(int argc, char* argv[])
 
     if ( !((selLeptons.size() + selHadTaus.size()) >= 4) ) continue;
 
+    double minPt_lead = 25.;
+    double minPt_sublead = 15.;
+    if ( selLeptons.size() >= 1 ) {
+      const RecoLepton* selLepton_lead = selLeptons[0];
+      if ( !(selLepton_lead->pt() > minPt_lead) ) continue;
+    }
+    if ( selLeptons.size() >= 2 ) {
+      const RecoLepton* selLepton_sublead = selLeptons[1];
+      if ( !(selLepton_sublead->pt() > minPt_sublead) ) continue;
+    }
+
     int idxCategory = get_idxCategory(selLeptons.size(), selHadTaus.size());
     selHistManagerType* selHistManager = selHistManagers[idxCategory];
     assert(selHistManager != 0);
