@@ -1,17 +1,17 @@
-#include "hhAnalysis/tttt/interface/SVfit4tauHistManager.h"
+#include "hhAnalysis/tttt/interface/SVfit4tauHistManager_MarkovChain.h"
 
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow(), fillWithOverFlow2d()
 
 #include <TMath.h> // TMath::Log
 
-SVfit4tauHistManager::SVfit4tauHistManager(const edm::ParameterSet & cfg)
+SVfit4tauHistManager_MarkovChain::SVfit4tauHistManager_MarkovChain(const edm::ParameterSet & cfg)
   : HistManagerBase(cfg)
 {}
 
 void
-SVfit4tauHistManager::bookHistograms(TFileDirectory & dir)
+SVfit4tauHistManager_MarkovChain::bookHistograms(TFileDirectory & dir)
 {
-  histogram_numValidSolutions_             = book1D(dir, "numValidSolutions",             "numValidSolutions",               5,  -0.5,  4.5);
+  histogram_numValidSolutions_             = book1D(dir, "numValidSolutions",             "numValidSolutions",               5,  -0.5,   4.5);
             
   histogram_dihiggsVisMass1_               = book1D(dir, "dihiggsVisMass1",               "dihiggsVisMass1",               150,   0., 1500.);
   histogram_ditau1VisMass1_                = book1D(dir, "ditau1VisMass1",                "ditau1VisMass1",                 50,   0.,  250.);
@@ -33,8 +33,8 @@ SVfit4tauHistManager::bookHistograms(TFileDirectory & dir)
 }
 
 void
-SVfit4tauHistManager::fillHistograms(const std::vector<SVfit4tauResult>& results,
-				     double evtWeight)
+SVfit4tauHistManager_MarkovChain::fillHistograms(const std::vector<SVfit4tauResult>& results,
+						 double evtWeight)
 {
   const double evtWeightErr = 0.;
 

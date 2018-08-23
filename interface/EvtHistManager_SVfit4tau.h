@@ -28,7 +28,7 @@ class EvtHistManager_SVfit4tau
   bookHistograms(TFileDirectory & dir) override;
 
   void
-  fillHistograms(const SVfit4tauResult& svFit4tauResult,
+  fillHistograms(const SVfit4tauResult& svFit4tauResult_MarkovChain, const SVfit4tauResult& svFit4tauResult_VAMP, 
 		 const Particle::LorentzVector* genDiHiggsP4, 
 		 const Particle::LorentzVector* genDiTau1P4, 
 		 const Particle::LorentzVector* genDiTau2P4, 
@@ -45,7 +45,8 @@ class EvtHistManager_SVfit4tau
  private:
   int era_;
 
-  TH1 * histogram_mhh_;
+  TH1 * histogram_mhh_MarkovChain_;
+  TH1 * histogram_mhh_VAMP_;
   TH1 * histogram_mhh_gen_;
   TH1 * histogram_mh1_;
   TH1 * histogram_mh1_gen_;

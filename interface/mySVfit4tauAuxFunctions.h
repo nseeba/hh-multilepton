@@ -5,6 +5,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/RecoMEt.h" // RecoMEt
 
 #include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h" // classic_svFit::MeasuredTauLepton
+#include "TauAnalysis/ClassicSVfit4tau/interface/ClassicSVfit4tau.h" // ClassicSVfit4tau::kAlgoMarkovChain
 
 #include <TRandom.h> // TRandom
 
@@ -47,6 +48,7 @@ struct SVfit4tauResult
     , ditau2_phi_(-1.)
     , ditau2_phiErr_(-1.)
     , probMax_(-1.)
+    , Lmax_(-1.)
     , isValidSolution_(false)
   {}
   SVfit4tauResult(const SVfit4tauResult& result)
@@ -78,6 +80,7 @@ struct SVfit4tauResult
     , ditau2_phi_(result.ditau2_phi_)
     , ditau2_phiErr_(result.ditau2_phiErr_)
     , probMax_(result.probMax_)
+    , Lmax_(result.Lmax_)
     , isValidSolution_(result.isValidSolution_)
   {}
   ~SVfit4tauResult() {}
@@ -109,12 +112,17 @@ struct SVfit4tauResult
   double ditau2_phi_;
   double ditau2_phiErr_;
   double probMax_;
+  double Lmax_;
   bool isValidSolution_;
 };
 
 bool
 isHigherProbMax(const SVfit4tauResult& result1,
 		const SVfit4tauResult& result2);
+
+bool
+isHigherLmax(const SVfit4tauResult& result1,
+	     const SVfit4tauResult& result2);
 
 bool
 isLowerMassErr(const SVfit4tauResult& result1,
@@ -128,8 +136,9 @@ compSVfit4tau(const GenParticle& measuredTau1,
 	      const GenParticle& measuredTau4, 
 	      const RecoMEt& met,
 	      const std::string& chargeSumSelection_string, TRandom& rnd,
-	      double massConstraint = -1., // CV: default is not to apply mass constraint
-	      double logM = 0.,            // CV: default is not to apply log(M) term
+	      int intAlgo = ClassicSVfit4tau::kAlgoMarkovChain, // CV: default is to use Markov-Chain integration
+	      double massConstraint = -1.,                      // CV: default is not to apply mass constraint
+	      double logM = 0.,                                 // CV: default is not to apply log(M) term
 	      int verbosity = 1); 
 
 // reconstruct di-Higgs system for one particular (given) pairing of visible tau decay products
@@ -139,8 +148,9 @@ compSVfit4tau(const Particle::LorentzVector& measuredTau1Higgs1P4, int measuredT
 	      const Particle::LorentzVector& measuredTau1Higgs2P4, int measuredTau1Higgs2Type, int measuredHadTau1Higgs2DecayMode,
 	      const Particle::LorentzVector& measuredTau2Higgs2P4, int measuredTau2Higgs2Type, int measuredHadTau2Higgs2DecayMode,
 	      double metPx, double metPy, const TMatrixD& metCov,
-	      double massConstraint = -1., // CV: default is not to apply mass constraint
-	      double logM = 0.,            // CV: default is not to apply log(M) term
+	      int intAlgo = ClassicSVfit4tau::kAlgoMarkovChain, // CV: default is to use Markov-Chain integration
+	      double massConstraint = -1.,                      // CV: default is not to apply mass constraint
+	      double logM = 0.,                                 // CV: default is not to apply log(M) term
 	      int verbosity = 1); 
 
 #endif

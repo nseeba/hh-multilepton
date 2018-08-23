@@ -31,8 +31,9 @@ process.analyze_SVfit4tau = cms.PSet(
     hadTauSelection = cms.string('Tight|dR03mvaMedium'),
 
     SVfit4tau = cms.PSet(
-        logM_wMassConstraint = cms.vdouble(0., 2.),
-        logM_woMassConstraint = cms.vdouble(0., 2.)
+        logM_wMassConstraint_MarkovChain = cms.vdouble(0.),
+        logM_woMassConstraint_MarkovChain = cms.vdouble(0.),
+        logM_wMassConstraint_VAMP = cms.vdouble(0.)
     ),
 
     use_HIP_mitigation_mediumMuonId = cms.bool(False),

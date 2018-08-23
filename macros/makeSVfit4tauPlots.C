@@ -278,7 +278,7 @@ void makeSVfit4tauPlots()
     std::string outputFileName_chosen_full = outputFilePath;
     if ( outputFileName_chosen_full.back() != '/' ) outputFileName_chosen_full.append("/");
     outputFileName_chosen_full.append(TString(outputFileNames[*massPoint].data()).ReplaceAll("_log.pdf", "_chosen_log.pdf").Data());
-    makePlot(800, 600, 
+    makePlot(800, 650, 
       histogram_correctAssoc_chosen, "Correct pairing",
       histogram_incorrectAssoc_chosen, "Spurious pairing",
       0.055, 0.61, 0.74, 0.28, 0.15,
@@ -290,7 +290,7 @@ void makeSVfit4tauPlots()
     std::string outputFileName_discarded_full = outputFilePath;
     if ( outputFileName_discarded_full.back() != '/' ) outputFileName_discarded_full.append("/");
     outputFileName_discarded_full.append(TString(outputFileNames[*massPoint].data()).ReplaceAll("_log.pdf", "_discarded_log.pdf").Data());
-    makePlot(800, 600, 
+    makePlot(800, 650, 
       histogram_correctAssoc_discarded, "Correct pairing",
       histogram_incorrectAssoc_discarded, "Spurious pairing",
       0.055, 0.61, 0.74, 0.28, 0.15,

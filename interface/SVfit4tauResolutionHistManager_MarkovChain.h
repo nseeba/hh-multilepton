@@ -1,9 +1,9 @@
-#ifndef hhAnalysis_tttt_SVfit4tauResolutionHistManager_h
-#define hhAnalysis_tttt_SVfit4tauResolutionHistManager_h
+#ifndef hhAnalysis_tttt_SVfit4tauResolutionHistManager_MarkovChain_h
+#define hhAnalysis_tttt_SVfit4tauResolutionHistManager_MarkovChain_h
 
-/** \class SVfit4tauResolutionHistManager
+/** \class SVfit4tauResolutionHistManager_MarkovChain
  *
- * Book and fill histograms for pT, eta, phi, and mass resolution of di-Higgs system reconstructed by ClassicSVfit4tau algorithm
+ * Book and fill histograms for pT, eta, phi, and mass resolution of di-Higgs system reconstructed by ClassicSVfit4tau algorithm with Markov-Chain integration
  *
  * \author Christian Veelken, Tallin
  *
@@ -16,12 +16,12 @@
 
 #include "hhAnalysis/tttt/interface/mySVfit4tauAuxFunctions.h" // SVfit4tauResult
 
-class SVfit4tauResolutionHistManager
+class SVfit4tauResolutionHistManager_MarkovChain
   : public HistManagerBase
 {
  public:
-  SVfit4tauResolutionHistManager(const edm::ParameterSet& cfg);
-  ~SVfit4tauResolutionHistManager() {}
+  SVfit4tauResolutionHistManager_MarkovChain(const edm::ParameterSet& cfg);
+  ~SVfit4tauResolutionHistManager_MarkovChain() {}
 
   /// book and fill histograms
   void

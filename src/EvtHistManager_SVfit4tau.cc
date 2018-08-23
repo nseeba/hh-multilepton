@@ -18,7 +18,8 @@ EvtHistManager_SVfit4tau::getHistogram_EventCounter() const
 
 void EvtHistManager_SVfit4tau::bookHistograms(TFileDirectory & dir)
 {
-  histogram_mhh_                 = book1D(dir, "mhh",                 "mhh",                 100,    0., 1000.);
+  histogram_mhh_MarkovChain_     = book1D(dir, "mhh_MarkovChain",     "mhh_MarkovChain",     100,    0., 1000.);
+  histogram_mhh_VAMP_            = book1D(dir, "mhh_VAMP",            "mhh_VAMP",            100,    0., 1000.);
   histogram_mhh_gen_             = book1D(dir, "mhh_gen",             "mhh_gen",             100,    0., 1000.);
   histogram_mh1_                 = book1D(dir, "mh1",                 "mh1",                  50,    0.,  500.);
   histogram_mh1_gen_             = book1D(dir, "mh1_gen",             "mh1_gen",              50,    0.,  500.);
@@ -46,7 +47,7 @@ void EvtHistManager_SVfit4tau::bookHistograms(TFileDirectory & dir)
 }
 
 void
-EvtHistManager_SVfit4tau::fillHistograms(const SVfit4tauResult& svFit4tauResult,
+EvtHistManager_SVfit4tau::fillHistograms(const SVfit4tauResult& svFit4tauResult_MarkovChain, const SVfit4tauResult& svFit4tauResult_VAMP,
 					 const Particle::LorentzVector* genDiHiggsP4, 
 					 const Particle::LorentzVector* genDiTau1P4, 
 					 const Particle::LorentzVector* genDiTau2P4,
@@ -59,10 +60,13 @@ EvtHistManager_SVfit4tau::fillHistograms(const SVfit4tauResult& svFit4tauResult,
 {
   const double evtWeightErr = 0.;
 
-  if ( svFit4tauResult.isValidSolution_ ) {
-    fillWithOverFlow(histogram_mhh_, svFit4tauResult.dihiggs_mass_, evtWeight, evtWeightErr);
-    fillWithOverFlow(histogram_mh1_, svFit4tauResult.ditau1_mass_, evtWeight, evtWeightErr);
-    fillWithOverFlow(histogram_mh2_, svFit4tauResult.ditau2_mass_, evtWeight, evtWeightErr);
+  if ( svFit4tauResult_MarkovChain.isValidSolution_ ) {
+    fillWithOverFlow(histogram_mhh_MarkovChain_, svFit4tauResult_MarkovChain.dihiggs_mass_, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogram_mh1_, svFit4tauResult_MarkovChain.ditau1_mass_, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogram_mh2_, svFit4tauResult_MarkovChain.ditau2_mass_, evtWeight, evtWeightErr);
+  }
+  if ( svFit4tauResult_VAMP.isValidSolution_ ) {
+    fillWithOverFlow(histogram_mhh_VAMP_, svFit4tauResult_VAMP.dihiggs_mass_, evtWeight, evtWeightErr);
   }
   if ( genDiHiggsP4 ) {
     fillWithOverFlow(histogram_mhh_gen_, genDiHiggsP4->mass(), evtWeight, evtWeightErr);

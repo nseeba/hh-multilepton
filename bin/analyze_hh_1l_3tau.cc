@@ -79,7 +79,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
 
 #include "hhAnalysis/tttt/interface/EvtHistManager_hh_1l_3tau.h" // EvtHistManager_hh_1l_3tau
-#include "hhAnalysis/tttt/interface/SVfit4tauHistManager.h" // SVfit4tauHistManager
+#include "hhAnalysis/tttt/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
 #include "hhAnalysis/tttt/interface/Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger.h"
 #include "hhAnalysis/tttt/interface/mySVfit4tauAuxFunctions.h" // getMeasuredTauLeptonType, getHadTauDecayMode
 
@@ -506,14 +506,14 @@ int main(int argc, char* argv[])
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
     EvtHistManager_hh_1l_3tau* evt_;
-    SVfit4tauHistManager* svFit4tau_woMassConstraint_;
-    SVfit4tauHistManager* svFit4tau_wMassConstraint_;
+    SVfit4tauHistManager_MarkovChain* svFit4tau_woMassConstraint_;
+    SVfit4tauHistManager_MarkovChain* svFit4tau_wMassConstraint_;
     std::map<std::string, EvtHistManager_hh_1l_3tau*> evt_in_decayModes_;
-    std::map<std::string, SVfit4tauHistManager*> svFit4tau_woMassConstraint_in_decayModes_;
-    std::map<std::string, SVfit4tauHistManager*> svFit4tau_wMassConstraint_in_decayModes_;
+    std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_woMassConstraint_in_decayModes_;
+    std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_wMassConstraint_in_decayModes_;
     std::map<std::string, EvtHistManager_hh_1l_3tau*> evt_in_categories_;
-    std::map<std::string, SVfit4tauHistManager*> svFit4tau_woMassConstraint_in_categories_;
-    std::map<std::string, SVfit4tauHistManager*> svFit4tau_wMassConstraint_in_categories_;
+    std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_woMassConstraint_in_categories_;
+    std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_wMassConstraint_in_categories_;
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
@@ -667,10 +667,10 @@ int main(int argc, char* argv[])
       selHistManager->evt_ = new EvtHistManager_hh_1l_3tau(makeHistManager_cfg(process_and_genMatch,
        Form("%s/sel/evt", histogramDir.data()), central_or_shift));
       selHistManager->evt_->bookHistograms(fs);
-      selHistManager->svFit4tau_woMassConstraint_ = new SVfit4tauHistManager(makeHistManager_cfg(process_and_genMatch,
+      selHistManager->svFit4tau_woMassConstraint_ = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
         Form("%s/sel/svFit4tau_woMassConstraint", histogramDir.data()), central_or_shift));
       selHistManager->svFit4tau_woMassConstraint_->bookHistograms(fs);
-      selHistManager->svFit4tau_wMassConstraint_ = new SVfit4tauHistManager(makeHistManager_cfg(process_and_genMatch,
+      selHistManager->svFit4tau_wMassConstraint_ = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
         Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_->bookHistograms(fs);
 /*
@@ -687,10 +687,10 @@ int main(int argc, char* argv[])
           selHistManager->evt_in_decayModes_[decayMode_evt] = new EvtHistManager_hh_1l_3tau(makeHistManager_cfg(decayMode_and_genMatch,
             Form("%s/sel/evt", histogramDir.data()), central_or_shift));
           selHistManager->evt_in_decayModes_[decayMode_evt]->bookHistograms(fs);
-	  selHistManager->svFit4tau_woMassConstraint_in_decayModes_[decayMode_evt] = new SVfit4tauHistManager(makeHistManager_cfg(decayMode_and_genMatch,
+	  selHistManager->svFit4tau_woMassConstraint_in_decayModes_[decayMode_evt] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(decayMode_and_genMatch,
             Form("%s/sel/svFit4tau_woMassConstraint", histogramDir.data()), central_or_shift));
           selHistManager->svFit4tau_woMassConstraint_in_decayModes_[decayMode_evt]->bookHistograms(fs);
-          selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayMode_evt] = new SVfit4tauHistManager(makeHistManager_cfg(decayMode_and_genMatch,
+          selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayMode_evt] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(decayMode_and_genMatch,
             Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), central_or_shift));
           selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayMode_evt]->bookHistograms(fs);
         }
@@ -706,10 +706,10 @@ int main(int argc, char* argv[])
         selHistManager->evt_in_categories_[*category] = new EvtHistManager_hh_1l_3tau(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/evt", histogramDir_category.Data()), central_or_shift));
         selHistManager->evt_in_categories_[*category]->bookHistograms(fs);
-	selHistManager->svFit4tau_woMassConstraint_in_categories_[*category] = new SVfit4tauHistManager(makeHistManager_cfg(process_and_genMatch,
+	selHistManager->svFit4tau_woMassConstraint_in_categories_[*category] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/svFit4tau_woMassConstraint", histogramDir_category.Data()), central_or_shift));
         selHistManager->svFit4tau_woMassConstraint_in_categories_[*category]->bookHistograms(fs);
-        selHistManager->svFit4tau_wMassConstraint_in_categories_[*category] = new SVfit4tauHistManager(makeHistManager_cfg(process_and_genMatch,
+        selHistManager->svFit4tau_wMassConstraint_in_categories_[*category] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/svFit4tau_wMassConstraint", histogramDir_category.Data()), central_or_shift));
         selHistManager->svFit4tau_wMassConstraint_in_categories_[*category]->bookHistograms(fs);
       }

@@ -1,14 +1,14 @@
-#include "hhAnalysis/tttt/interface/SVfit4tauResolutionHistManager.h"
+#include "hhAnalysis/tttt/interface/SVfit4tauResolutionHistManager_MarkovChain.h"
 
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow()
 
 #include <TMath.h> // TMath::Pi()
 
-SVfit4tauResolutionHistManager::SVfit4tauResolutionHistManager(const edm::ParameterSet& cfg)
+SVfit4tauResolutionHistManager_MarkovChain::SVfit4tauResolutionHistManager_MarkovChain(const edm::ParameterSet& cfg)
   : HistManagerBase(cfg)
 {}
 
-void SVfit4tauResolutionHistManager::bookHistograms(TFileDirectory& dir)
+void SVfit4tauResolutionHistManager_MarkovChain::bookHistograms(TFileDirectory& dir)
 {
   histogram_dihiggsPt1_           = book1D(dir, "dihiggsPt1",           "dihiggsPt1",           200,    0.,  1000.);
   histogram_dihiggsEta1_          = book1D(dir, "dihiggsEta1",          "dihiggsEta1",           46,   -2.3,   +2.3);
@@ -129,11 +129,11 @@ namespace
 }
 
 void
-SVfit4tauResolutionHistManager::fillHistograms(const std::vector<SVfit4tauResult>& results,
-					       const Particle::LorentzVector* genDiHiggsP4, 
-					       const Particle::LorentzVector* genDiTau1P4, 
-					       const Particle::LorentzVector* genDiTau2P4, 
-					       double evtWeight)
+SVfit4tauResolutionHistManager_MarkovChain::fillHistograms(const std::vector<SVfit4tauResult>& results,
+							   const Particle::LorentzVector* genDiHiggsP4, 
+							   const Particle::LorentzVector* genDiTau1P4, 
+							   const Particle::LorentzVector* genDiTau2P4, 
+							   double evtWeight)
 {
   const double evtWeightErr = 0.;
   

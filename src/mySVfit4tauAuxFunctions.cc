@@ -64,6 +64,15 @@ isHigherProbMax(const SVfit4tauResult& result1,
 }
 
 bool
+isHigherLmax(const SVfit4tauResult& result1,
+	     const SVfit4tauResult& result2)
+{
+  if ( result1.isValidSolution_ && !result2.isValidSolution_ ) return true;
+  if ( result2.isValidSolution_ && !result1.isValidSolution_ ) return false;
+  return result1.Lmax_ > result2.Lmax_;
+}
+
+bool
 isLowerMassErr(const SVfit4tauResult& result1,
 	       const SVfit4tauResult& result2)
 {
@@ -78,6 +87,7 @@ std::vector<SVfit4tauResult> compSVfit4tau(const GenParticle& measuredTau1,
 					   const GenParticle& measuredTau4, 
 					   const RecoMEt& met,
 					   const std::string& chargeSumSelection_string, TRandom& rnd,
+					   int intAlgo,
 					   double massConstraint,
 					   double logM,
 					   int verbosity)
@@ -164,6 +174,7 @@ std::vector<SVfit4tauResult> compSVfit4tau(const GenParticle& measuredTau1,
 	    measuredTau3P4, measuredTau3Type, measuredHadTau3DecayMode,
 	    measuredTau4P4, measuredTau4Type, measuredHadTau4DecayMode,
 	    metPx, metPy, metCov,
+	    intAlgo,
 	    massConstraint,
 	    logM,
 	    verbosity);
@@ -185,6 +196,7 @@ compSVfit4tau(const Particle::LorentzVector& measuredTau1Higgs1P4, int measuredT
 	      const Particle::LorentzVector& measuredTau1Higgs2P4, int measuredTau1Higgs2Type, int measuredHadTau1Higgs2DecayMode,
 	      const Particle::LorentzVector& measuredTau2Higgs2P4, int measuredTau2Higgs2Type, int measuredHadTau2Higgs2DecayMode,
 	      double metPx, double metPy, const TMatrixD& metCov,
+	      int intAlgo,
 	      double massConstraint,
 	      double logM,
 	      int verbosity)
@@ -214,7 +226,7 @@ compSVfit4tau(const Particle::LorentzVector& measuredTau1Higgs1P4, int measuredT
   measuredTauLeptons.push_back(makeMeasuredTauLepton(measuredTau1Higgs2P4, measuredTau1Higgs2Type, measuredHadTau1Higgs2DecayMode));
   measuredTauLeptons.push_back(makeMeasuredTauLepton(measuredTau2Higgs2P4, measuredTau2Higgs2Type, measuredHadTau2Higgs2DecayMode));
   
-  ClassicSVfit4tau svFitAlgo(verbosity);
+  ClassicSVfit4tau svFitAlgo(intAlgo, verbosity);
   if ( logM > 0. ) {
     svFitAlgo.addLogM_fixed(true, logM);
   } else {
@@ -226,40 +238,46 @@ compSVfit4tau(const Particle::LorentzVector& measuredTau1Higgs1P4, int measuredT
 
   SVfit4tauResult result;
   if ( svFitAlgo.isValidSolution() ) {
-    result.dihiggs_visMass_ = (measuredTau1Higgs1P4 + measuredTau2Higgs1P4 + measuredTau1Higgs2P4 + measuredTau2Higgs2P4).mass();
-    classic_svFit::HistogramAdapterDiHiggs* dihiggs = static_cast<classic_svFit::HistogramAdapterDiHiggs*>(svFitAlgo.getHistogramAdapter());
-    result.dihiggs_mass_    = dihiggs->getMass();
-    result.dihiggs_massErr_ = dihiggs->getMassErr();
-    result.dihiggs_pt_      = dihiggs->getPt();
-    result.dihiggs_ptErr_   = dihiggs->getPtErr();
-    result.dihiggs_eta_     = dihiggs->getEta();
-    result.dihiggs_etaErr_  = dihiggs->getEtaErr();
-    result.dihiggs_phi_     = dihiggs->getPhi();
-    result.dihiggs_phiErr_  = dihiggs->getPhiErr();
-    result.ditau1_visMass_  = (measuredTau1Higgs1P4 + measuredTau2Higgs1P4).mass();
-    classic_svFit::HistogramAdapterDiTau* ditau1 = dihiggs->ditau1();
-    result.ditau1_mass_     = ditau1->getMass();
-    result.ditau1_massErr_  = ditau1->getMassErr();
-    result.ditau1_pt_       = ditau1->getPt();
-    result.ditau1_ptErr_    = ditau1->getPtErr();
-    result.ditau1_eta_      = ditau1->getEta();
-    result.ditau1_etaErr_   = ditau1->getEtaErr();
-    result.ditau1_phi_      = ditau1->getPhi();
-    result.ditau1_phiErr_   = ditau1->getPhiErr();	    
-    result.ditau2_visMass_  = (measuredTau1Higgs2P4 + measuredTau2Higgs2P4).mass();
-    classic_svFit::HistogramAdapterDiTau* ditau2 = dihiggs->ditau2();
-    result.ditau2_mass_     = ditau2->getMass();
-    result.ditau2_massErr_  = ditau2->getMassErr();
-    result.ditau2_pt_       = ditau2->getPt();
-    result.ditau2_ptErr_    = ditau2->getPtErr();
-    result.ditau2_eta_      = ditau2->getEta();
-    result.ditau2_etaErr_   = ditau2->getEtaErr();
-    result.ditau2_phi_      = ditau2->getPhi();
-    result.ditau2_phiErr_   = ditau2->getPhiErr();
-    result.probMax_         = svFitAlgo.getProbMax();
-    result.isValidSolution_ = true;
+    result.dihiggs_visMass_  = (measuredTau1Higgs1P4 + measuredTau2Higgs1P4 + measuredTau1Higgs2P4 + measuredTau2Higgs2P4).mass();
+    result.dihiggs_mass_     = svFitAlgo.getMass();
+    result.dihiggs_massErr_  = svFitAlgo.getMassErr();
+    if ( intAlgo == ClassicSVfit4tau::kAlgoMarkovChain ) {
+      classic_svFit::HistogramAdapterDiHiggs* dihiggs = static_cast<classic_svFit::HistogramAdapterDiHiggs*>(svFitAlgo.getHistogramAdapter());
+      assert(dihiggs);
+      result.dihiggs_pt_     = dihiggs->getPt();
+      result.dihiggs_ptErr_  = dihiggs->getPtErr();
+      result.dihiggs_eta_    = dihiggs->getEta();
+      result.dihiggs_etaErr_ = dihiggs->getEtaErr();
+      result.dihiggs_phi_    = dihiggs->getPhi();
+      result.dihiggs_phiErr_ = dihiggs->getPhiErr();
+      result.ditau1_visMass_ = (measuredTau1Higgs1P4 + measuredTau2Higgs1P4).mass();
+      classic_svFit::HistogramAdapterDiTau* ditau1 = dihiggs->ditau1();
+      assert(ditau1);
+      result.ditau1_mass_    = ditau1->getMass();
+      result.ditau1_massErr_ = ditau1->getMassErr();
+      result.ditau1_pt_      = ditau1->getPt();
+      result.ditau1_ptErr_   = ditau1->getPtErr();
+      result.ditau1_eta_     = ditau1->getEta();
+      result.ditau1_etaErr_  = ditau1->getEtaErr();
+      result.ditau1_phi_     = ditau1->getPhi();
+      result.ditau1_phiErr_  = ditau1->getPhiErr();	   
+      result.ditau2_visMass_ = (measuredTau1Higgs2P4 + measuredTau2Higgs2P4).mass();
+      classic_svFit::HistogramAdapterDiTau* ditau2 = dihiggs->ditau2();
+      assert(ditau2);
+      result.ditau2_mass_    = ditau2->getMass();
+      result.ditau2_massErr_ = ditau2->getMassErr();
+      result.ditau2_pt_      = ditau2->getPt();
+      result.ditau2_ptErr_   = ditau2->getPtErr();
+      result.ditau2_eta_     = ditau2->getEta();
+      result.ditau2_etaErr_  = ditau2->getEtaErr();
+      result.ditau2_phi_     = ditau2->getPhi();
+      result.ditau2_phiErr_  = ditau2->getPhiErr();
+      result.probMax_        = svFitAlgo.getProbMax();
+    }
+    result.Lmax_             = svFitAlgo.getLmax();
+    result.isValidSolution_  = true;
   } else {
-    result.isValidSolution_ = false;
+    result.isValidSolution_  = false;
   }
   return result;
 }

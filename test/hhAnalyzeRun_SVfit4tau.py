@@ -51,7 +51,7 @@ else:
 for sample_name, sample_info in samples.items():
   if not isinstance(sample_info, OD):
     continue
-  if sample_info["process_name_specific"] in [ "x_to_hh_300", "x_to_hh_500", "x_to_hh_800" ]:
+  if sample_info["process_name_specific"] in [ "x_to_hh_270", "x_to_hh_300", "x_to_hh_350", "x_to_hh_400", "x_to_hh_450", "x_to_hh_500", "x_to_hh_600", "x_to_hh_700", "x_to_hh_800" ]:
     sample_info["use_it"] = True
   else:
     sample_info["use_it"] = False
@@ -77,8 +77,12 @@ if __name__ == '__main__':
     lepton_selection                = "Tight",
     lep_mva_wp                      = lep_mva_wp,
     hadTau_selection                = "Tight|dR03mvaMedium",
-    SVfit4tau_logM_wMassConstraint  = [ 0., 2., 4., 6., 10., 15. ],
-    SVfit4tau_logM_woMassConstraint = [ 0., 2., 4., 6., 10., 15. ],
+    #SVfit4tau_logM_wMassConstraint_MarkovChain  = [ 0., 2., 4., 6., 10., 15. ],
+    #SVfit4tau_logM_woMassConstraint_MarkovChain = [ 0., 2., 4., 6., 10., 15. ],
+    #SVfit4tau_logM_wMassConstraint_VAMP         = [ 0., 2., 4., 6., 10., 15. ],
+    SVfit4tau_logM_wMassConstraint_MarkovChain  = [ 0. ],
+    SVfit4tau_logM_woMassConstraint_MarkovChain = [ 0. ],
+    SVfit4tau_logM_wMassConstraint_VAMP         = [ 0. ],
     modes                           = [ "rec", "gen", "gen_smeared" ],
     central_or_shifts               = central_or_shift,
     max_files_per_job               = max_files_per_job,
