@@ -78,7 +78,6 @@
 #include "tthAnalysis/HiggsToTauTau/interface/cutFlowTable.h" // cutFlowTableType
 #include "tthAnalysis/HiggsToTauTau/interface/NtupleFillerBDT.h" // NtupleFillerBDT
 #include "tthAnalysis/HiggsToTauTau/interface/TTreeWrapper.h" // TTreeWrapper
-#include "tthAnalysis/HiggsToTauTau/interface/SyncNtupleManager.h" // SyncNtupleManager
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
 
@@ -230,12 +229,6 @@ int main(int argc, char* argv[])
   const bool useNonNominal = cfg_analyze.getParameter<bool>("useNonNominal");
   const bool useNonNominal_jetmet = useNonNominal || ! isMC;
 
-  const edm::ParameterSet syncNtuple_cfg = cfg_analyze.getParameter<edm::ParameterSet>("syncNtuple");
-  const std::string syncNtuple_tree = syncNtuple_cfg.getParameter<std::string>("tree");
-  const std::string syncNtuple_output = syncNtuple_cfg.getParameter<std::string>("output");
-  const bool sync_requireGenMatching = syncNtuple_cfg.getParameter<bool>("requireGenMatching");
-  const bool do_sync = ! syncNtuple_tree.empty() && ! syncNtuple_output.empty();
-
   const edm::ParameterSet additionalEvtWeight = cfg_analyze.getParameter<edm::ParameterSet>("evtWeight");
   const bool applyAdditionalEvtWeight = additionalEvtWeight.getParameter<bool>("apply");
   EvtWeightManager * eventWeightManager = nullptr;
@@ -334,18 +327,6 @@ int main(int argc, char* argv[])
   TTreeWrapper * inputTree = new TTreeWrapper(treeName.data(), inputFiles.files(), maxEvents);
 
   std::cout << "Loaded " << inputTree -> getFileCount() << " file(s).\n";
-
-//--- prepare sync Ntuple
-  SyncNtupleManager * snm = nullptr;
-  if(do_sync)
-  {
-    snm = new SyncNtupleManager(syncNtuple_output, syncNtuple_tree);
-    snm->initializeBranches();
-    snm->initializeHLTBranches({
-      triggers_1e, triggers_1mu, triggers_2e, triggers_1e1mu, triggers_2mu,
-      triggers_3e, triggers_2e1mu, triggers_1e2mu, triggers_3mu
-    });
-  }
 
 //--- declare event-level variables
   EventInfo eventInfo(isSignal, isMC, isMC_tH);
@@ -1679,10 +1660,6 @@ int main(int argc, char* argv[])
       (*selEventsFile) << eventInfo.run << ':' << eventInfo.lumi << ':' << eventInfo.event << '\n';
     }
 
-    const bool isGenMatched = isMC &&
-      ((apply_leptonGenMatching && selLepton_genMatch.numGenMatchedJets_ == 0) || ! apply_leptonGenMatching)
-    ;
-
     if ( bdt_filler ) {
       double lep1_genLepPt = ( selLepton_lead->genLepton()    ) ? selLepton_lead->genLepton()->pt()    : 0.;
       double lep2_genLepPt = ( selLepton_sublead->genLepton() ) ? selLepton_sublead->genLepton()->pt() : 0.;
@@ -1766,138 +1743,9 @@ int main(int argc, char* argv[])
       ;
     }
 
-    if(snm)
-    {
-      const double mT_lep1           = comp_MT_met_lep1(selLepton_lead->p4(), met.pt(), met.phi());
-      const double mT_lep2           = comp_MT_met_lep2(selLepton_sublead->p4(), met.pt(), met.phi());
-      const double mT_lep3           = comp_MT_met_lep3(selLepton_third->p4(), met.pt(), met.phi());
-      const double max_dr_jet        = comp_max_dr_jet(selJets);
-      const double mbb               = selBJets_medium.size() > 1 ? (selBJets_medium[0]->p4() + selBJets_medium[1]->p4()).mass() : -1.;
-      const double mbb_loose         = selBJets_loose.size() > 1 ? (selBJets_loose[0]->p4() + selBJets_loose[1]->p4()).mass() : -1.;
-      const double min_dr_lep_jet    = std::min({ mindr_lep1_jet, mindr_lep2_jet, mindr_lep3_jet });
-      const double dr_leps           = deltaR(selLepton_lead->p4(), selLepton_sublead->p4());
-      const double max_lep_eta       = std::max({ selLepton_lead->absEta(), selLepton_sublead->absEta(), selLepton_third->absEta() });
-
-      snm->read(eventInfo);
-      snm->read(selLeptons);
-      snm->read(preselMuons,     fakeableMuons,     tightMuons);
-      snm->read(preselElectrons, fakeableElectrons, tightElectrons);
-      snm->read(selJets);
-
-      snm->read({
-        triggers_1e, triggers_1mu, triggers_2e, triggers_1e1mu, triggers_2mu,
-        triggers_3e, triggers_2e1mu, triggers_1e2mu, triggers_3mu
-      });
-      snm->read(isGenMatched, selBJets_medium.size(), selBJets_loose.size());
-
-      snm->read(met.pt(),                               FloatVariableType::PFMET);
-      snm->read(met.phi(),                              FloatVariableType::PFMETphi);
-      snm->read(mht_p4.pt(),                            FloatVariableType::MHT);
-      snm->read(met_LD,                                 FloatVariableType::metLD);
-
-      snm->read(mindr_lep1_jet,                         FloatVariableType::mindr_lep1_jet);
-      snm->read(mindr_lep2_jet,                         FloatVariableType::mindr_lep2_jet);
-      snm->read(mindr_lep3_jet,                         FloatVariableType::mindr_lep3_jet);
-      // mindr_lep4_jet not filled
-
-      // mindr_tau1_jet not filled
-      // mindr_tau2_jet not filled
-
-      snm->read(avg_dr_jet,                             FloatVariableType::avg_dr_jet);
-      // avr_dr_lep_tau not filled
-      snm->read(max_dr_jet,                             FloatVariableType::max_dr_jet);
-      // max_dr_lep_tau not filled
-      // min_dr_tau_jet not filled
-      // min_dr_lep_tau not filled
-      snm->read(min_dr_lep_jet,                         FloatVariableType::min_dr_lep_jet);
-
-      snm->read(dr_leps,                                FloatVariableType::dr_leps);
-      // dr_taus not filled
-
-      // dr_lep_tau_ss not filled
-      // dr_lep1_tau1 not filled
-      // dr_lep1_tau2 not filled
-      // dr_lep2_tau1 not filled
-      // dr_lep3_tau1 not filled
-      // dr_lep2_tau2 not filled
-
-      snm->read(max_lep_eta,                            FloatVariableType::max_lep_eta);
-
-      snm->read(mT_lep1,                                FloatVariableType::mT_met_lep1);
-      snm->read(mT_lep2,                                FloatVariableType::mT_met_lep2);
-      snm->read(mT_lep3,                                FloatVariableType::mT_met_lep3);
-      // mT_met_lep4 not filled
-
-      // mTauTauVis not filled
-      // mvis_l1tau not filled
-      // mvis_l2tau not filled
-
-      snm->read(mbb,                                    FloatVariableType::mbb);
-      snm->read(mbb_loose,                              FloatVariableType::mbb_loose);
-
-      // cosThetaS_hadTau not filled
-      // HTT not filled
-      // HadTop_pt not filled
-      // Hj_tagger not filled
-
-      // mvaOutput_plainKin_ttV not filled
-      // mvaOutput_plainKin_tt not filled
-      // mvaOutput_plainKin_1B_VT not filled
-      // mvaOutput_HTT_SUM_VT not filled
-
-      // mvaOutput_plainKin_SUM_VT not filled
-
-      // mvaOutput_2lss_ttV not filled
-      // mvaOutput_2lss_tt not filled
-      // mvaOutput_2lss_1tau_plainKin_tt not filled
-      // mvaOutput_2lss_1tau_plainKin_ttV not filled
-      // mvaOutput_2lss_1tau_plainKin_1B_M not filled
-      // mvaOutput_2lss_1tau_plainKin_SUM_M not filled
-      // mvaOutput_2lss_1tau_HTT_SUM_M not filled
-      // mvaOutput_2lss_1tau_HTTMEM_SUM_M not filled
-
-      snm->read(mvaOutput_3l_ttV,                       FloatVariableType::mvaOutput_3l_ttV);
-      snm->read(mvaOutput_3l_ttbar,                     FloatVariableType::mvaOutput_3l_ttbar);
-      // mvaOutput_plainKin_SUM_M not filled
-      // mvaOutput_plainKin_1B_M not filled
-
-      snm->read(weight_fakeRate,                        FloatVariableType::FR_weight);
-      snm->read(triggerWeight,                          FloatVariableType::triggerSF_weight);
-      snm->read(leptonSF_weight,                        FloatVariableType::leptonSF_weight);
-      // tauSF_weight not filled
-      snm->read(btagWeight,                             FloatVariableType::bTagSF_weight);
-      snm->read(eventInfo.pileupWeight,                 FloatVariableType::PU_weight);
-      snm->read(boost::math::sign(eventInfo.genWeight), FloatVariableType::MC_weight);
-
-      // mvaOutput_2lss_ttV not filled
-      // mvaOutput_2lss_tt not filled
-      // mvaOutput_2lss_1tau_plainKin_tt not filled
-      // mvaOutput_2lss_1tau_plainKin_ttV not filled
-      // mvaOutput_2lss_1tau_plainKin_1B_M not filled
-      // mvaOutput_2lss_1tau_plainKin_SUM_M not filled
-      // mvaOutput_2lss_1tau_HTT_SUM_M not filled
-      // mvaOutput_2lss_1tau_HTTMEM_SUM_M not filled
-
-      snm->read(eventInfo.genWeight,                    FloatVariableType::genWeight);
-
-      if((sync_requireGenMatching && isGenMatched) || ! sync_requireGenMatching)
-      {
-        snm->fill();
-      }
-      else
-      {
-        snm->reset();
-      }
-    }
-
     ++selectedEntries;
     selectedEntries_weighted += evtWeight;
     histogram_selectedEntries->Fill(0.);
-  }
-
-  if(snm)
-  {
-    snm->write();
   }
 
   std::cout << "max num. Entries = " << inputTree -> getCumulativeMaxEventCount()
@@ -1957,7 +1805,6 @@ int main(int argc, char* argv[])
   hltPaths_delete(triggers_1e1mu);
 
   delete inputTree;
-  delete snm;
 
   clock.Show("analyze_hh_3l");
 
