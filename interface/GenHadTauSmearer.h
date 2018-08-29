@@ -1,5 +1,5 @@
-#ifndef hhAnalysis_wwww_GenHadTauSmearer_h
-#define hhAnalysis_wwww_GenHadTauSmearer_h
+#ifndef hhAnalysis_multilepton_GenHadTauSmearer_h
+#define hhAnalysis_multilepton_GenHadTauSmearer_h
 
 /** \class GenHadTauSmearer
  * Produce collection of GenJet objects corresponding to hadronic tau decays
