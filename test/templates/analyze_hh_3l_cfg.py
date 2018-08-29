@@ -25,20 +25,34 @@ process.analyze_hh_3l = cms.PSet(
 
     triggers_1e = cms.vstring(),
     use_triggers_1e = cms.bool(True),
-    triggers_2e = cms.vstring(),
-    use_triggers_2e = cms.bool(True),
     triggers_1mu = cms.vstring(),
     use_triggers_1mu = cms.bool(True),
-    triggers_2mu = cms.vstring(),
-    use_triggers_2mu = cms.bool(True),
+
+    triggers_2e = cms.vstring(),
+    use_triggers_2e = cms.bool(True),
     triggers_1e1mu = cms.vstring(),
     use_triggers_1e1mu = cms.bool(True),
+    triggers_2mu = cms.vstring(),
+    use_triggers_2mu = cms.bool(True),
+
+    triggers_3e = cms.vstring(),
+    use_triggers_3e = cms.bool(False),
+    triggers_2e1mu = cms.vstring(),
+    use_triggers_2e1mu = cms.bool(False),
+    triggers_1e2mu = cms.vstring(),
+    use_triggers_1e2mu = cms.bool(False),
+    triggers_3mu = cms.vstring(),
+    use_triggers_3mu = cms.bool(False),
 
     apply_offline_e_trigger_cuts_1e = cms.bool(True),
-    apply_offline_e_trigger_cuts_2e = cms.bool(True),
     apply_offline_e_trigger_cuts_1mu = cms.bool(True),
-    apply_offline_e_trigger_cuts_2mu = cms.bool(True),
+    apply_offline_e_trigger_cuts_2e = cms.bool(True),
     apply_offline_e_trigger_cuts_1e1mu = cms.bool(True),
+    apply_offline_e_trigger_cuts_2mu = cms.bool(True),
+    apply_offline_e_trigger_cuts_3e = cms.bool(True),
+    apply_offline_e_trigger_cuts_2e1mu = cms.bool(True),
+    apply_offline_e_trigger_cuts_1e2mu = cms.bool(True),
+    apply_offline_e_trigger_cuts_3mu = cms.bool(True),
 
     electronSelection = cms.string(''),
     muonSelection = cms.string(''),
@@ -59,23 +73,6 @@ process.analyze_hh_3l = cms.PSet(
         histogramName_e = cms.string(""),
         histogramName_mu = cms.string("")
     ),
-    hadTauFakeRateWeight = cms.PSet(
-        inputFileName = cms.string(""),
-        lead = cms.PSet(
-            absEtaBins = cms.vdouble(-1., 1.479, 9.9),
-            graphName = cms.string("jetToTauFakeRate/$hadTauSelection/$etaBin/jetToTauFakeRate_mc_hadTaus_pt"),
-            applyGraph = cms.bool(True),
-            fitFunctionName = cms.string("jetToTauFakeRate/$hadTauSelection/$etaBin/fitFunction_data_div_mc_hadTaus_pt"),
-            applyFitFunction = cms.bool(True)
-        ),
-        sublead = cms.PSet(
-            absEtaBins = cms.vdouble(-1., 1.479, 9.9),
-            graphName = cms.string("jetToTauFakeRate/$hadTauSelection/$etaBin/jetToTauFakeRate_mc_hadTaus_pt"),
-            applyGraph = cms.bool(True),
-            fitFunctionName = cms.string("jetToTauFakeRate/$hadTauSelection/$etaBin/fitFunction_data_div_mc_hadTaus_pt"),
-            applyFitFunction = cms.bool(True)
-        )
-    ),
 
     isMC = cms.bool(True),
     central_or_shift = cms.string(''),
@@ -94,7 +91,6 @@ process.analyze_hh_3l = cms.PSet(
     branchName_hadTaus = cms.string('Tau'),
     branchName_jets = cms.string('Jet'),
     branchName_met = cms.string('MET'),
-    branchName_memOutput = cms.string(''),
 
     branchName_genLeptons = cms.string('GenLep'),
     branchName_genHadTaus = cms.string('GenVisTau'),

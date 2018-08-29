@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os, logging, sys, getpass
-from hhAnalysis.multilepton.configs.analyzeConfig_3l import analyzeConfig_3l
+from hhAnalysis.multilepton.configs.analyzeConfig_hh_3l import analyzeConfig_hh_3l
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics, get_lumi
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
@@ -94,13 +94,12 @@ if __name__ == '__main__':
   if sample_filter:
     samples = filter_samples(samples, sample_filter)
 
-  analysis = analyzeConfig_3l(
-    configDir = os.path.join("/home",       getpass.getuser(), "ttHAnalysis", era, version),
-    outputDir = os.path.join("/hdfs/local", getpass.getuser(), "ttHAnalysis", era, version),
+  analysis = analyzeConfig_hh_3l(
+    configDir = os.path.join("/home",       getpass.getuser(), "hhAnalysis", era, version),
+    outputDir = os.path.join("/hdfs/local", getpass.getuser(), "hhAnalysis", era, version),
     executable_analyze                    = "analyze_hh_3l",
     cfgFile_analyze                       = "analyze_hh_3l_cfg.py",
     samples                               = samples,
-    #MEMbranch                             = None, # CV: MEM not implemented for 3l channel yet
     hadTauVeto_selection                  = hadTauVeto_selection, # veto events containing taus that pass tau ID WP applied in 3l+1tau channel,
     applyFakeRateWeights                  = "3lepton",
     chargeSumSelections                   = chargeSumSelections,
