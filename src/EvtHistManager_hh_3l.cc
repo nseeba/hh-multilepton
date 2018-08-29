@@ -1,4 +1,4 @@
-#include "hhAnalysis/wwww/interface/EvtHistManager_hh_3l.h"
+#include "hhAnalysis/multilepton/interface/EvtHistManager_hh_3l.h"
 
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow(), getLogWeight()
 #include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // get_era(), kEra_*

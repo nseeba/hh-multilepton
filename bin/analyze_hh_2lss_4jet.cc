@@ -81,9 +81,9 @@
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
 
-#include "hhAnalysis/wwww/interface/EvtHistManager_hh_2lss_4jet.h" // EvtHistManager_hh_2lss_4jet
-//#include "hhAnalysis/wwww/interface/SVfit4tauHistManager.h" // SVfit4tauHistManager
-//#include "hhAnalysis/wwww/interface/mySVfit4tauAuxFunctions.h" // getMeasuredTauLeptonType, getHadTauDecayMode
+#include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2lss_4jet.h" // EvtHistManager_hh_2lss_4jet
+//#include "hhAnalysis/multilepton/interface/SVfit4tauHistManager.h" // SVfit4tauHistManager
+//#include "hhAnalysis/multilepton/interface/mySVfit4tauAuxFunctions.h" // getMeasuredTauLeptonType, getHadTauDecayMode
 
 //#include "TauAnalysis/ClassicSVfit4tau/interface/svFitHistogramAdapter4tau.h" // HistogramAdapterDiHiggs, HistogramAdapterHiggs
 

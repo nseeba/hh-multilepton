@@ -1,4 +1,4 @@
-<bin file="analyze_hh_2lss_4jet.cc" name="analyze_hh_2lss_4jet">
+<bin file="analyze_hh_0l_4tau.cc" name="analyze_hh_0l_4tau">
   <use   name="FWCore/FWLite"/>
   <use   name="FWCore/ParameterSet"/>
   <use   name="FWCore/PythonParameterSet"/>
@@ -8,11 +8,12 @@
   <use   name="PhysicsTools/FWLite"/>
   <use   name="tthAnalysis/HiggsToTauTau"/>
   <use   name="hhAnalysis/multilepton"/>
+  <use   name="TauAnalysis/ClassicSVfit4tau"/>
   <use   name="root"/>
   <use   name="roottmva"/>
   <use   name="boost"/>
 </bin>
-<bin file="analyze_hh_3l.cc" name="analyze_hh_3l">
+<bin file="analyze_hh_1l_3tau.cc" name="analyze_hh_1l_3tau">
   <use   name="FWCore/FWLite"/>
   <use   name="FWCore/ParameterSet"/>
   <use   name="FWCore/PythonParameterSet"/>
@@ -22,6 +23,7 @@
   <use   name="PhysicsTools/FWLite"/>
   <use   name="tthAnalysis/HiggsToTauTau"/>
   <use   name="hhAnalysis/multilepton"/>
+  <use   name="TauAnalysis/ClassicSVfit4tau"/>
   <use   name="root"/>
   <use   name="roottmva"/>
   <use   name="boost"/>
@@ -98,4 +100,32 @@
   <use   name="hhAnalysis/multilepton"/>
   <use   name="root"/>
   <use   name="roottmva"/>
+</bin>
+<bin file="analyze_hh_2lss_4jet.cc" name="analyze_hh_2lss_4jet">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/FWLite"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="tthAnalysis/HiggsToTauTau"/>
+  <use   name="hhAnalysis/multilepton"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+  <use   name="boost"/>
+</bin>
+<bin file="analyze_hh_3l.cc" name="analyze_hh_3l">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/FWLite"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="tthAnalysis/HiggsToTauTau"/>
+  <use   name="hhAnalysis/multilepton"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+  <use   name="boost"/>
 </bin>

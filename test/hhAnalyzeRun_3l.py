@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 import os, logging, sys, getpass
-from hhAnalysis.wwww.configs.analyzeConfig_3l import analyzeConfig_3l
+from hhAnalysis.multilepton.configs.analyzeConfig_3l import analyzeConfig_3l
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics, get_lumi
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
 
 # E.g.: ./hhAnalyzeRun_3l.py -v 2017Dec13 -m default -e 2017
- 
+
 mode_choices     = [ 'default', 'forBDTtraining', 'sync', 'sync_wMEM' ]
 sys_choices      = [ 'full' ] + systematics.an_extended_opts
 systematics.full = systematics.an_extended
@@ -52,14 +52,14 @@ do_sync = mode.startswith('sync')
 lumi = get_lumi(era)
 
 chargeSumSelections = [ "OS", "SS" ]
- 
+
 if mode == "default":
   if era == "2016":
-    from hhAnalysis.wwww.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
+    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
   elif era == "2017":
-    from hhAnalysis.wwww.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
+    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
   elif era == "2018":
-    from hhAnalysis.wwww.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
+    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
   else:
     raise ValueError("Invalid era: %s" % era)
 else:

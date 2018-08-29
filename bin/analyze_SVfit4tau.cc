@@ -63,15 +63,15 @@
 #include "tthAnalysis/HiggsToTauTau/interface/TTreeWrapper.h" // TTreeWrapper
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
 
-#include "hhAnalysis/tttt/interface/EvtHistManager_SVfit4tau.h" // EvtHistManager_SVfit4tau
-#include "hhAnalysis/tttt/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
-#include "hhAnalysis/tttt/interface/SVfit4tauResolutionHistManager_MarkovChain.h" // SVfit4tauResolutionHistManager_MarkovChain
-#include "hhAnalysis/tttt/interface/SVfit4tauHistManager_VAMP.h" // SVfit4tauHistManager_VAMP
-#include "hhAnalysis/tttt/interface/SVfit4tauResolutionHistManager_VAMP.h" // SVfit4tauResolutionHistManager_VAMP
-#include "hhAnalysis/tttt/interface/SVfit4tauDisambiguationHistManager.h" // SVfit4tauDisambiguationHistManager
-#include "hhAnalysis/tttt/interface/GenHadTauSmearer.h" // GenHadTauSmearer
-#include "hhAnalysis/tttt/interface/GenMEtSmearer.h" // GenMEtSmearer
-#include "hhAnalysis/tttt/interface/mySVfit4tauAuxFunctions.h" // SVfit4tauResult, getMeasuredTauLeptonType, getHadTauDecayMode
+#include "hhAnalysis/multilepton/interface/EvtHistManager_SVfit4tau.h" // EvtHistManager_SVfit4tau
+#include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
+#include "hhAnalysis/multilepton/interface/SVfit4tauResolutionHistManager_MarkovChain.h" // SVfit4tauResolutionHistManager_MarkovChain
+#include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_VAMP.h" // SVfit4tauHistManager_VAMP
+#include "hhAnalysis/multilepton/interface/SVfit4tauResolutionHistManager_VAMP.h" // SVfit4tauResolutionHistManager_VAMP
+#include "hhAnalysis/multilepton/interface/SVfit4tauDisambiguationHistManager.h" // SVfit4tauDisambiguationHistManager
+#include "hhAnalysis/multilepton/interface/GenHadTauSmearer.h" // GenHadTauSmearer
+#include "hhAnalysis/multilepton/interface/GenMEtSmearer.h" // GenMEtSmearer
+#include "hhAnalysis/multilepton/interface/mySVfit4tauAuxFunctions.h" // SVfit4tauResult, getMeasuredTauLeptonType, getHadTauDecayMode
 
 #include "TauAnalysis/ClassicSVfit4tau/interface/ClassicSVfit4tau.h" // ClassicSVfit4tau
 #include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h" // classic_svFit::MeasuredTauLepton

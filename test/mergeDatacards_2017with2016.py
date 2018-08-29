@@ -50,7 +50,7 @@ channels = {
 ##         'filename_hadd_stage2_2017'     : "",
 ##         'directory_datacards'           : "/home/veelken/hhAnalysis/2017/2018Jul12/datacards/hh_4l/",
 ##         'histograms_to_fit'             : [ "EventCounter", "numJets", "dihiggsVisMass", "dihiggsMass", "HT", "STMET" ],
-##         'directory_cfgs_2017'           : "/home/veelken/hhAnalysis/2017/2018Jul12/cfgs/hh_4l/",       
+##         'directory_cfgs_2017'           : "/home/veelken/hhAnalysis/2017/2018Jul12/cfgs/hh_4l/",
 ##         'filename_prepareDatacards_cfg' : "prepareDatacards_cfg.py"
 ##     },
 }
@@ -72,9 +72,9 @@ for channel_name in channels:
       channels[channel_name]['filename_hadd_stage2_2017'])
     filename_hadd_output = os.path.join(channels[channel_name]['directory_histograms_2017'],
       channels[channel_name]['filename_hadd_stage2_2017'].replace(".root", "_with2016.root"))
-    command_rm = '%s -f %s' % (executable_rm, os.path.basename(filename_hadd_output))                             
-    lines_shell_script.append(command_rm)       
-    command_hadd = '%s %s %s %s' % (executable_hadd, os.path.basename(filename_hadd_output), filename_hadd_input1, filename_hadd_input2)                                            
+    command_rm = '%s -f %s' % (executable_rm, os.path.basename(filename_hadd_output))
+    lines_shell_script.append(command_rm)
+    command_hadd = '%s %s %s %s' % (executable_hadd, os.path.basename(filename_hadd_output), filename_hadd_input1, filename_hadd_input2)
     lines_shell_script.append(command_hadd)
     command_cp = '%s %s %s' % (executable_cp, os.path.basename(filename_hadd_output), filename_hadd_output)
     lines_shell_script.append(command_cp)
@@ -85,7 +85,7 @@ for channel_name in channels:
 # CV: skip 'hadd' step
 lines_shell_script = []
 
-from hhAnalysis.tttt.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
+from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
 from collections import OrderedDict as OD
 signals = []
 for sample_name, sample_info in samples.items():

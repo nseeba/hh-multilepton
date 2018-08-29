@@ -20,7 +20,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/cmsException.h" // cmsException()  
 #include "tthAnalysis/HiggsToTauTau/interface/fitAuxFunctions.h" // EigenVector_and_Value, compEigenVectors_and_Values, fitFunction_and_legendEntry, makeControlPlot_fit  
 
-#include "hhAnalysis/tttt/interface/TailFitAuxFunctions.h" // Fit functions
+#include "hhAnalysis/multilepton/interface/TailFitAuxFunctions.h" // Fit functions
 
 
 

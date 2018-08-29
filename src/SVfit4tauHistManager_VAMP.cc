@@ -1,4 +1,4 @@
-#include "hhAnalysis/tttt/interface/SVfit4tauHistManager_VAMP.h"
+#include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_VAMP.h"
 
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow(), fillWithOverFlow2d()
 

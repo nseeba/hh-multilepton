@@ -1,4 +1,4 @@
-#include "hhAnalysis/tttt/interface/EvtHistManager_hh_2l_2tau.h"
+#include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2l_2tau.h"
 
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow(), fillWithOverFlow2d()
 

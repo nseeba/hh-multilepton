@@ -1,4 +1,4 @@
-#include "hhAnalysis/tttt/interface/GenHadTauSmearer.h"
+#include "hhAnalysis/multilepton/interface/GenHadTauSmearer.h"
 
 #include "FWCore/Utilities/interface/Exception.h"
 #include "FWCore/ParameterSet/interface/FileInPath.h"

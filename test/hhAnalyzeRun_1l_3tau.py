@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os, logging, sys, getpass, numpy as np
 from collections import OrderedDict as OD
-from hhAnalysis.tttt.configs.analyzeConfig_hh_1l_3tau import analyzeConfig_hh_1l_3tau
+from hhAnalysis.multilepton.configs.analyzeConfig_hh_1l_3tau import analyzeConfig_hh_1l_3tau
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
@@ -60,11 +60,11 @@ chargeSumSelections = [ "OS", "SS" ]
 
 if mode == "default":
   if era == "2016":
-    from hhAnalysis.tttt.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
+    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
   elif era == "2017":
-    from hhAnalysis.tttt.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
+    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
   elif era == "2018":
-    from hhAnalysis.tttt.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
+    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
   else:
     raise ValueError("Invalid era: %s" % era)
 

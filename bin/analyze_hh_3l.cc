@@ -82,7 +82,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
 
-#include "hhAnalysis/wwww/interface/EvtHistManager_hh_3l.h" // EvtHistManager_hh_3l
+#include "hhAnalysis/multilepton/interface/EvtHistManager_hh_3l.h" // EvtHistManager_hh_3l
 
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
 

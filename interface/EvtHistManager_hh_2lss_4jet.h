@@ -12,7 +12,7 @@
 
 #include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h" // HistManagerBase
 
-//#include "hhAnalysis/wwww/interface/mySVfit4tauAuxFunctions.h" // SVfit4tauResult
+//#include "hhAnalysis/multilepton/interface/mySVfit4tauAuxFunctions.h" // SVfit4tauResult
 
 class EvtHistManager_hh_2lss_4jet
   : public HistManagerBase
