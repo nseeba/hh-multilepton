@@ -1,5 +1,5 @@
-#ifndef hhAnalysis_tttt_SVfit4tauResolutionHistManager_MarkovChain_h
-#define hhAnalysis_tttt_SVfit4tauResolutionHistManager_MarkovChain_h
+#ifndef hhAnalysis_multilepton_SVfit4tauResolutionHistManager_MarkovChain_h
+#define hhAnalysis_multilepton_SVfit4tauResolutionHistManager_MarkovChain_h
 
 /** \class SVfit4tauResolutionHistManager_MarkovChain
  *

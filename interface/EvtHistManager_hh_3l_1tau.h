@@ -1,5 +1,5 @@
-#ifndef hhAnalysis_tttt_EvtHistManager_hh_3l_1tau_h
-#define hhAnalysis_tttt_EvtHistManager_hh_3l_1tau_h
+#ifndef hhAnalysis_multilepton_EvtHistManager_hh_3l_1tau_h
+#define hhAnalysis_multilepton_EvtHistManager_hh_3l_1tau_h
 
 /** \class EvtHistManager_hh_3l_1tau
  *

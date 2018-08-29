@@ -90,7 +90,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
       dry_run            = dry_run,
       isDebug            = isDebug,
       use_home           = use_home,
-      template_dir       = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'tttt', 'test', 'templates')
+      template_dir       = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'multilepton', 'test', 'templates')
     )
 
     self.samples = samples

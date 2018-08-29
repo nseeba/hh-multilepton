@@ -1,5 +1,5 @@
-#ifndef hhAnalysis_tttt_mySVfit4tauAuxFunctions_h
-#define hhAnalysis_tttt_mySVfit4tauAuxFunctions_h
+#ifndef hhAnalysis_multilepton_mySVfit4tauAuxFunctions_h
+#define hhAnalysis_multilepton_mySVfit4tauAuxFunctions_h
 
 #include "tthAnalysis/HiggsToTauTau/interface/GenParticle.h" // GenParticle
 #include "tthAnalysis/HiggsToTauTau/interface/RecoMEt.h" // RecoMEt

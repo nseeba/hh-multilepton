@@ -1,5 +1,5 @@
-#ifndef hhAnalysis_tttt_SVfit4tauResolutionHistManager_VAMP_h
-#define hhAnalysis_tttt_SVfit4tauResolutionHistManager_VAMP_h
+#ifndef hhAnalysis_multilepton_SVfit4tauResolutionHistManager_VAMP_h
+#define hhAnalysis_multilepton_SVfit4tauResolutionHistManager_VAMP_h
 
 /** \class SVfit4tauResolutionHistManager_VAMP
  *
