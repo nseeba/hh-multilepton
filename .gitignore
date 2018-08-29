@@ -1,2 +1,8 @@
 *.pyc
 *~
+*.config
+*.creator
+*.creator.user
+*.files
+*.includes
+
