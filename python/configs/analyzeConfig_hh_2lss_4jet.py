@@ -94,7 +94,7 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
       dry_run            = dry_run,
       isDebug            = isDebug,
       use_home           = use_home,
-      template_dir       = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'multilepton', 'test', 'templates')
+      template_dir       = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'multilepton', 'test', 'templates'),
     )
 
     self.samples = samples
