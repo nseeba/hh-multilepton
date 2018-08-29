@@ -215,8 +215,7 @@ int main(int argc, char* argv[])
   else throw cms::Exception("analyze_hh_3l")
     << "Invalid Configuration parameter 'chargeSumSelection' = " << chargeSumSelection_string << " !!\n";
 
-  int minNumJets = cfg_analyze.getParameter<int>("minNumJets");
-  std::cout << "minNumJets = " << minNumJets << std::endl;
+  const int minNumJets = 2;
 
   bool isMC = cfg_analyze.getParameter<bool>("isMC");
   bool isMC_tH = ( process_string == "tHq" || process_string == "tHW" ) ? true : false;
