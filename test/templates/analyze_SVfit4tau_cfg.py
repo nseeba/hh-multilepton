@@ -60,9 +60,9 @@ process.analyze_SVfit4tau = cms.PSet(
 
     branchName_genTaus = cms.string('GenTau'),
     branchName_genHiggsBosons = cms.string('GenHiggs'),
-    
+
     genHadTauSmearing = cms.PSet(
-        inputFileName = cms.string("hhAnalysis/tttt/data/hadTauSmearingCDF_toyMC.root"),
+        inputFileName = cms.string("hhAnalysis/multilepton/data/hadTauSmearingCDF_toyMC.root"),
         graphName = cms.string("rCDF")
     ),
     genMEtSmearing = cms.PSet(

@@ -50,13 +50,13 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
 
     self.lepton_selection = lepton_selection
     self.hadTau_selection = hadTau_selection
-    
+
     self.SVfit4tau_logM_wMassConstraint_MarkovChain = SVfit4tau_logM_wMassConstraint_MarkovChain
     self.SVfit4tau_logM_woMassConstraint_MarkovChain = SVfit4tau_logM_woMassConstraint_MarkovChain
     self.SVfit4tau_logM_wMassConstraint_VAMP = SVfit4tau_logM_wMassConstraint_VAMP
-      
+
     self.modes = modes
-    
+
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
 
   def createCfg_analyze(self, jobOptions):
@@ -68,7 +68,7 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
       process: hh->4tau signal MC sample
       is_mc: flag indicating whether job runs on MC (True) or data (False)
       lumi_scale: event weight (= xsection * luminosity / number of events)
-      central_or_shift: either 'central' or one of the systematic uncertainties defined in $CMSSW_BASE/src/hhAnalysis/4tau/bin/analyze_SVfit4tau.cc
+      central_or_shift: either 'central' or one of the systematic uncertainties defined in $CMSSW_BASE/src/hhAnalysis/multilepton/bin/analyze_SVfit4tau.cc
     """
     lines = []
     ##lines.append("process.fwliteInput.fileNames = cms.vstring(%s)" % [ os.path.basename(inputFile) for inputFile in jobOptions['ntupleFiles'] ])
