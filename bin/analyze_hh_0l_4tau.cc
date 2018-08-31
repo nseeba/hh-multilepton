@@ -804,8 +804,8 @@ int main(int argc, char* argv[])
     std::vector<const RecoHadTau*> fakeableHadTausFull = fakeableHadTauSelector(preselHadTausFull, isHigherPt);
     std::vector<const RecoHadTau*> tightHadTausFull = tightHadTauSelector(fakeableHadTausFull, isHigherPt);
 
-    std::vector<const RecoHadTau*> preselHadTaus = pickFirstNobjects(preselHadTausFull, 3);
-    std::vector<const RecoHadTau*> fakeableHadTaus = pickFirstNobjects(fakeableHadTausFull, 3);
+    std::vector<const RecoHadTau*> preselHadTaus = pickFirstNobjects(preselHadTausFull, 4);
+    std::vector<const RecoHadTau*> fakeableHadTaus = pickFirstNobjects(fakeableHadTausFull, 4);
     std::vector<const RecoHadTau*> tightHadTaus = getIntersection(fakeableHadTaus, tightHadTausFull, isHigherPt);
     std::vector<const RecoHadTau*> selHadTaus = selectObjects(hadTauSelection, preselHadTaus, fakeableHadTaus, tightHadTaus);
     if(isDEBUG || run_lumi_eventSelector)
