@@ -6,7 +6,7 @@ from collections import OrderedDict as OD
 samples_2017 = OD()
 samples_2017["/HHTo4T_madgraph_pythia8_CP5_M400/private/USER"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_400"),
+  ("sample_category",                 "signal_radion_400_tttt"),
   ("process_name_specific",           "signal_hh_4t_400"),
   ("nof_files",                       1),
   ("nof_db_files",                    193),
@@ -52,7 +52,7 @@ samples_2017["/HHTo4T_madgraph_pythia8_CP5_M400/private/USER"] = OD([
 
 samples_2017["/HHTo4T_madgraph_pythia8_CP5_M700/private/USER"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_700"),
+  ("sample_category",                 "signal_radion_700_tttt"),
   ("process_name_specific",           "signal_hh_4t_700"),
   ("nof_files",                       1),
   ("nof_db_files",                    160),
@@ -98,7 +98,7 @@ samples_2017["/HHTo4T_madgraph_pythia8_CP5_M700/private/USER"] = OD([
 
 samples_2017["/HHTo2T2V_madgraph_pythia8_CP5_M400/private/USER"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_400"),
+  ("sample_category",                 "signal_radion_400_wwtt"),
   ("process_name_specific",           "signal_hh_2t2v_400"),
   ("nof_files",                       1),
   ("nof_db_files",                    130),
@@ -144,7 +144,7 @@ samples_2017["/HHTo2T2V_madgraph_pythia8_CP5_M400/private/USER"] = OD([
 
 samples_2017["/HHTo2T2V_madgraph_pythia8_CP5_M700/private/USER"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_700"),
+  ("sample_category",                 "signal_radion_700_wwtt"),
   ("process_name_specific",           "signal_hh_2t2v_700"),
   ("nof_files",                       1),
   ("nof_db_files",                    152),
@@ -190,7 +190,7 @@ samples_2017["/HHTo2T2V_madgraph_pythia8_CP5_M700/private/USER"] = OD([
 
 samples_2017["/HHTo4V_madgraph_pythia8_CP5_M400/private/USER"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_400"),
+  ("sample_category",                 "signal_radion_400_wwww"),
   ("process_name_specific",           "signal_hh_4v_400"),
   ("nof_files",                       1),
   ("nof_db_files",                    133),
@@ -236,7 +236,7 @@ samples_2017["/HHTo4V_madgraph_pythia8_CP5_M400/private/USER"] = OD([
 
 samples_2017["/HHTo4V_madgraph_pythia8_CP5_M700/private/USER"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_700"),
+  ("sample_category",                 "signal_radion_700_wwww"),
   ("process_name_specific",           "signal_hh_4v_700"),
   ("nof_files",                       1),
   ("nof_db_files",                    118),
