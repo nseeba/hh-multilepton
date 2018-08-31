@@ -1022,7 +1022,13 @@ int main(int argc, char* argv[])
     RecoMEt met = metReader->read();
     Particle::LorentzVector mht_p4 = compMHT(fakeableLeptons, {}, selJets);
     double met_LD = compMEt_LD(met.p4(), mht_p4);
-    double mTauTauVis_presel = 0;
+    const RecoJet* selJat_1 = selJets[0];
+    const RecoJet* selJat_2 = selJets[1];
+    const RecoJet* selJat_3 = selJets[2];
+    const RecoJet* selJat_4 = selJets[3];
+    double dihiggsVisMass_presel =  -1;
+    dihiggsVisMass_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
+    //    double mTauTauVis_presel = 0;
     //s    double mTauTauVis_presel = (preselHadTau_lead->p4() + preselHadTau_sublead->p4()).mass();
 
     double leptonPairCharge_presel = preselLepton_lead->charge() + preselLepton_sublead->charge();
@@ -1053,7 +1059,7 @@ int main(int argc, char* argv[])
       numSelJetsPtGt40,
       selBJets_loose.size(),
       selBJets_medium.size(),
-      mTauTauVis_presel,
+      dihiggsVisMass_presel,
       leptonPairCharge_presel,
       hadTauPairCharge_presel,
       HT, 
@@ -1405,10 +1411,6 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms("signal region veto", evtWeight);
 
     double dihiggsVisMass_sel =  -1;
-    const RecoJet* selJat_1 = selJets[0];
-    const RecoJet* selJat_2 = selJets[1];
-    const RecoJet* selJat_3 = selJets[2];
-    const RecoJet* selJat_4 = selJets[3];
     dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
 
     std::cout<<"dihiggsVisMass_sel = "<<dihiggsVisMass_sel<<"\n";
