@@ -8,13 +8,13 @@ meta_dictionary = OD()
 
 ### event sums
 
-sum_events = { 
+sum_events = {
 }
 
 
 meta_dictionary["/HHTo4T_madgraph_pythia8_CP5_M400/private/USER"] =  OD([
   ("crab_string",           "NanoProduction_v2_2018Aug03_HHTo4T_madgraph_pythia8_CP5_M400__private"),
-  ("sample_category",       "signal"),
+  ("sample_category",       "signal_radion_400"),
   ("process_name_specific", "signal_hh_4t_400"),
   ("nof_db_events",         384000),
   ("nof_db_files",          193),
@@ -27,7 +27,7 @@ meta_dictionary["/HHTo4T_madgraph_pythia8_CP5_M400/private/USER"] =  OD([
 
 meta_dictionary["/HHTo4T_madgraph_pythia8_CP5_M700/private/USER"] =  OD([
   ("crab_string",           "NanoProduction_v2_2018Aug03_HHTo4T_madgraph_pythia8_CP5_M700__private"),
-  ("sample_category",       "signal"),
+  ("sample_category",       "signal_radion_700"),
   ("process_name_specific", "signal_hh_4t_700"),
   ("nof_db_events",         311998),
   ("nof_db_files",          160),
@@ -40,7 +40,7 @@ meta_dictionary["/HHTo4T_madgraph_pythia8_CP5_M700/private/USER"] =  OD([
 
 meta_dictionary["/HHTo2T2V_madgraph_pythia8_CP5_M400/private/USER"] =  OD([
   ("crab_string",           "NanoProduction_v2_2018Aug03_HHTo2T2V_madgraph_pythia8_CP5_M400__private"),
-  ("sample_category",       "signal"),
+  ("sample_category",       "signal_radion_400"),
   ("process_name_specific", "signal_hh_2t2v_400"),
   ("nof_db_events",         257207),
   ("nof_db_files",          130),
@@ -53,7 +53,7 @@ meta_dictionary["/HHTo2T2V_madgraph_pythia8_CP5_M400/private/USER"] =  OD([
 
 meta_dictionary["/HHTo2T2V_madgraph_pythia8_CP5_M700/private/USER"] =  OD([
   ("crab_string",           "NanoProduction_v2_2018Aug03_HHTo2T2V_madgraph_pythia8_CP5_M700__private"),
-  ("sample_category",       "signal"),
+  ("sample_category",       "signal_radion_700"),
   ("process_name_specific", "signal_hh_2t2v_700"),
   ("nof_db_events",         301884),
   ("nof_db_files",          152),
@@ -66,7 +66,7 @@ meta_dictionary["/HHTo2T2V_madgraph_pythia8_CP5_M700/private/USER"] =  OD([
 
 meta_dictionary["/HHTo4V_madgraph_pythia8_CP5_M400/private/USER"] =  OD([
   ("crab_string",           "NanoProduction_v2_2018Aug03_HHTo4V_madgraph_pythia8_CP5_M400__private"),
-  ("sample_category",       "signal"),
+  ("sample_category",       "signal_radion_400"),
   ("process_name_specific", "signal_hh_4v_400"),
   ("nof_db_events",         262996),
   ("nof_db_files",          133),
@@ -79,7 +79,7 @@ meta_dictionary["/HHTo4V_madgraph_pythia8_CP5_M400/private/USER"] =  OD([
 
 meta_dictionary["/HHTo4V_madgraph_pythia8_CP5_M700/private/USER"] =  OD([
   ("crab_string",           "NanoProduction_v2_2018Aug03_HHTo4V_madgraph_pythia8_CP5_M700__private"),
-  ("sample_category",       "signal"),
+  ("sample_category",       "signal_radion_700"),
   ("process_name_specific", "signal_hh_4v_700"),
   ("nof_db_events",         230116),
   ("nof_db_files",          118),
