@@ -6,7 +6,7 @@ from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
 
-# E.g.: ./tthAnalyzeRun_hh_2lss_4jet.py -v 2017Dec13 -m default -e 2017
+# E.g.: ./hhAnalyzeRun_2lss_4jet.py -v 2017Dec13 -m default -e 2017
 
 mode_choices     = [ 'default' ]
 sys_choices      = [ 'full' ] + systematics.an_extended_opts
@@ -75,7 +75,7 @@ if mode == "default":
   else:
     raise ValueError("Invalid era: %s" % era)
 
-  applyFakeRateWeights = "4L"
+  applyFakeRateWeights = "2lepton"
 else:
   raise ValueError("Internal logic error")
 
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     executable_analyze                    = "analyze_hh_2lss_4jet",
     cfgFile_analyze                       = "analyze_hh_2lss_4jet_cfg.py",
     samples                               = samples,
-    lepton_charge_selections              = [ "disabled" ],
+    lepton_charge_selections              = [ "SS" ],
     lep_mva_wp                            = lep_mva_wp,
     hadTau_selection                      = hadTau_selection,
     hadTau_charge_selections              = [ "disabled" ],
@@ -134,7 +134,7 @@ if __name__ == '__main__':
     histograms_to_fit                     = {
       "EventCounter"                      : {},
       "numJets"                           : {},
-      "mTauTauVis"                        : {},
+      "dihiggsVisMass"                    : {},
       "HT"                                : {},
       "STMET"                             : {}
     },

@@ -33,7 +33,7 @@ public:
 		 int numJetsPtGt40,
                  int numBJets_loose,
                  int numBJets_medium,
-		 double mTauTauVis,
+		 double dihiggsVisMass,
 		 double leptonPairCharge,
                  double hadTauPairCharge,
 		 double HT,
@@ -52,7 +52,7 @@ public:
   TH1 * histogram_numBJets_loose_;
   TH1 * histogram_numBJets_medium_;
 
-  TH1 * histogram_mTauTauVis_;
+  TH1 * histogram_dihiggsVisMass_;
 
   TH1 * histogram_leptonPairCharge_;
   TH1 * histogram_hadTauPairCharge_;
