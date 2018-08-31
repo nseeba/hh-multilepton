@@ -6,7 +6,7 @@ from collections import OrderedDict as OD
 samples_2016 = OD()
 samples_2016["/GluGluToRadionToHHTo4Tau_M-250_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_250"),
+  ("sample_category",                 "signal_radion_250_tttt"),
   ("process_name_specific",           "x_to_hh_250"),
   ("nof_files",                       1),
   ("nof_db_files",                    14),
@@ -52,7 +52,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-250_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-260_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_260"),
+  ("sample_category",                 "signal_radion_260_tttt"),
   ("process_name_specific",           "x_to_hh_260"),
   ("nof_files",                       1),
   ("nof_db_files",                    16),
@@ -98,7 +98,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-260_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-270_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_270"),
+  ("sample_category",                 "signal_radion_270_tttt"),
   ("process_name_specific",           "x_to_hh_270"),
   ("nof_files",                       1),
   ("nof_db_files",                    15),
@@ -144,7 +144,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-270_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-280_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_280"),
+  ("sample_category",                 "signal_radion_280_tttt"),
   ("process_name_specific",           "x_to_hh_280"),
   ("nof_files",                       1),
   ("nof_db_files",                    21),
@@ -190,7 +190,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-280_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-300_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_300"),
+  ("sample_category",                 "signal_radion_300_tttt"),
   ("process_name_specific",           "x_to_hh_300"),
   ("nof_files",                       1),
   ("nof_db_files",                    18),
@@ -236,7 +236,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-300_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-320_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_320"),
+  ("sample_category",                 "signal_radion_320_tttt"),
   ("process_name_specific",           "x_to_hh_320"),
   ("nof_files",                       1),
   ("nof_db_files",                    12),
@@ -282,7 +282,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-320_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-340_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_340"),
+  ("sample_category",                 "signal_radion_340_tttt"),
   ("process_name_specific",           "x_to_hh_340"),
   ("nof_files",                       1),
   ("nof_db_files",                    14),
@@ -328,7 +328,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-340_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-350_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_350"),
+  ("sample_category",                 "signal_radion_350_tttt"),
   ("process_name_specific",           "x_to_hh_350"),
   ("nof_files",                       1),
   ("nof_db_files",                    22),
@@ -374,7 +374,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-350_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-400_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_400"),
+  ("sample_category",                 "signal_radion_400_tttt"),
   ("process_name_specific",           "x_to_hh_400"),
   ("nof_files",                       1),
   ("nof_db_files",                    19),
@@ -420,7 +420,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-400_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-450_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_450"),
+  ("sample_category",                 "signal_radion_450_tttt"),
   ("process_name_specific",           "x_to_hh_450"),
   ("nof_files",                       1),
   ("nof_db_files",                    21),
@@ -466,7 +466,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-450_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-500_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_500"),
+  ("sample_category",                 "signal_radion_500_tttt"),
   ("process_name_specific",           "x_to_hh_500"),
   ("nof_files",                       1),
   ("nof_db_files",                    15),
@@ -512,7 +512,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-500_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-550_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_550"),
+  ("sample_category",                 "signal_radion_550_tttt"),
   ("process_name_specific",           "x_to_hh_550"),
   ("nof_files",                       1),
   ("nof_db_files",                    5),
@@ -558,7 +558,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-550_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-600_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_600"),
+  ("sample_category",                 "signal_radion_600_tttt"),
   ("process_name_specific",           "x_to_hh_600"),
   ("nof_files",                       1),
   ("nof_db_files",                    12),
@@ -604,7 +604,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-600_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-650_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_650"),
+  ("sample_category",                 "signal_radion_650_tttt"),
   ("process_name_specific",           "x_to_hh_650"),
   ("nof_files",                       1),
   ("nof_db_files",                    20),
@@ -650,7 +650,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-650_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-700_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_700"),
+  ("sample_category",                 "signal_radion_700_tttt"),
   ("process_name_specific",           "x_to_hh_700"),
   ("nof_files",                       1),
   ("nof_db_files",                    11),
@@ -696,7 +696,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-700_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-750_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_750"),
+  ("sample_category",                 "signal_radion_750_tttt"),
   ("process_name_specific",           "x_to_hh_750"),
   ("nof_files",                       1),
   ("nof_db_files",                    11),
@@ -742,7 +742,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-750_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-800_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_800"),
+  ("sample_category",                 "signal_radion_800_tttt"),
   ("process_name_specific",           "x_to_hh_800"),
   ("nof_files",                       1),
   ("nof_db_files",                    8),
@@ -788,7 +788,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-800_narrow_13TeV-madgraph/RunIISummer1
 
 samples_2016["/GluGluToRadionToHHTo4Tau_M-900_narrow_13TeV-madgraph/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_900"),
+  ("sample_category",                 "signal_radion_900_tttt"),
   ("process_name_specific",           "x_to_hh_900"),
   ("nof_files",                       1),
   ("nof_db_files",                    18),
