@@ -178,7 +178,7 @@ int main(int argc, char* argv[])
   bool apply_offline_e_trigger_cuts_1mu = cfg_analyze.getParameter<bool>("apply_offline_e_trigger_cuts_1mu");
   bool apply_offline_e_trigger_cuts_2mu = cfg_analyze.getParameter<bool>("apply_offline_e_trigger_cuts_2mu");
   bool apply_offline_e_trigger_cuts_1e1mu = cfg_analyze.getParameter<bool>("apply_offline_e_trigger_cuts_1e1mu");
-
+  /*
   enum { kOS, kSS, kDisabled };
   std::string leptonChargeSelection_string = cfg_analyze.getParameter<std::string>("leptonChargeSelection");
   int leptonChargeSelection = -1;
@@ -187,7 +187,7 @@ int main(int argc, char* argv[])
   else if ( leptonChargeSelection_string == "disabled" ) leptonChargeSelection = kDisabled;
   else throw cms::Exception("analyze_hh_2lss_4jet")
     << "Invalid Configuration parameter 'leptonChargeSelection' = " << leptonChargeSelection_string << " !!\n";
-
+  */
   const std::string electronSelection_string = cfg_analyze.getParameter<std::string>("electronSelection");
   const std::string muonSelection_string     = cfg_analyze.getParameter<std::string>("muonSelection");
   std::cout << "electronSelection_string = " << electronSelection_string << "\n"
@@ -649,7 +649,7 @@ int main(int argc, char* argv[])
     "HLT filter matching",
     "m(ll) > 12 GeV",
     "lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV",
-    "sel lepton-pair OS/SS charge",
+    "sel lepton-pair SS charge",
     "Z-boson mass veto",
     "H->ZZ*->4l veto",
     "met LD",
@@ -1022,7 +1022,13 @@ int main(int argc, char* argv[])
     RecoMEt met = metReader->read();
     Particle::LorentzVector mht_p4 = compMHT(fakeableLeptons, {}, selJets);
     double met_LD = compMEt_LD(met.p4(), mht_p4);
-    double mTauTauVis_presel = 0;
+    const RecoJet* selJat_1 = selJets[0];
+    const RecoJet* selJat_2 = selJets[1];
+    const RecoJet* selJat_3 = selJets[2];
+    const RecoJet* selJat_4 = selJets[3];
+    double dihiggsVisMass_presel =  -1;
+    dihiggsVisMass_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
+    //    double mTauTauVis_presel = 0;
     //s    double mTauTauVis_presel = (preselHadTau_lead->p4() + preselHadTau_sublead->p4()).mass();
 
     double leptonPairCharge_presel = preselLepton_lead->charge() + preselLepton_sublead->charge();
@@ -1053,7 +1059,7 @@ int main(int argc, char* argv[])
       numSelJetsPtGt40,
       selBJets_loose.size(),
       selBJets_medium.size(),
-      mTauTauVis_presel,
+      dihiggsVisMass_presel,
       leptonPairCharge_presel,
       hadTauPairCharge_presel,
       HT, 
@@ -1290,8 +1296,7 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms("lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV", evtWeight);
 
     bool isLeptonCharge_SS = selLepton_lead->charge()*selLepton_sublead->charge() > 0;
-    bool isLeptonCharge_OS = selLepton_lead->charge()*selLepton_sublead->charge() < 0;
-    if ( leptonChargeSelection == kOS && isLeptonCharge_SS ) {
+    if ( !(isLeptonCharge_SS) ) {
       if ( run_lumi_eventSelector ) {
     std::cout << "event " << eventInfo.str() << " FAILS lepton charge selection." << std::endl;
 	std::cout << " (leading selLepton charge = " << selLepton_lead->charge()
@@ -1299,18 +1304,8 @@ int main(int argc, char* argv[])
       }
       continue;
     }
-    if ( leptonChargeSelection == kSS && isLeptonCharge_OS ) {
-      if ( run_lumi_eventSelector ) {
-    std::cout << "event " << eventInfo.str() << " FAILS lepton charge selection." << std::endl;
-	std::cout << " (leading selLepton charge = " << selLepton_lead->charge()
-		  << ", subleading selLepton charge = " << selLepton_sublead->charge() << ", leptonChargeSelection = SS)" << std::endl;
-      }
-      continue;
-    }
-    if ( leptonChargeSelection != kDisabled ) {
-      cutFlowTable.update(Form("sel lepton-pair %s charge", leptonChargeSelection_string.data()), evtWeight);
-    }
-    cutFlowHistManager->fillHistograms("sel lepton-pair OS/SS charge", evtWeight);
+    cutFlowTable.update("sel lepton-pair SS charge", evtWeight);
+    cutFlowHistManager->fillHistograms("sel lepton-pair SS charge", evtWeight);
 
     bool isSameFlavor_OS = false;
     double massSameFlavor_OS = -1.;
@@ -1364,7 +1359,7 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update("H->ZZ*->4l veto", evtWeight);
     cutFlowHistManager->fillHistograms("H->ZZ*->4l veto", evtWeight);
-
+    /*
     double met_LD_cut = 0.;
     if      ( selJets.size() >= 4 ) met_LD_cut = -1.; // MET LD cut not applied 
     else if ( isSameFlavor_OS     ) met_LD_cut = 45.;
@@ -1375,7 +1370,11 @@ int main(int argc, char* argv[])
 	std::cout << " (met_LD = " << met_LD << ", met_LD_cut = " << met_LD_cut << ")" << std::endl;
       }
       continue;
-    }
+    }*/
+    if(met.p4().pt()<20)
+      {
+	continue;
+      }
     cutFlowTable.update("met LD", evtWeight);
     cutFlowHistManager->fillHistograms("met LD", evtWeight);
 	
@@ -1411,7 +1410,11 @@ int main(int argc, char* argv[])
     cutFlowTable.update("signal region veto", evtWeight);
     cutFlowHistManager->fillHistograms("signal region veto", evtWeight);
 
-    double mTauTauVis_sel = -1;
+    double dihiggsVisMass_sel =  -1;
+    dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
+
+    std::cout<<"dihiggsVisMass_sel = "<<dihiggsVisMass_sel<<"\n";
+    //    double mTauTauVis_sel = -1;
     //s    double mTauTauVis_sel = (selHadTau_lead->p4() + selHadTau_sublead->p4()).mass();
             
     double leptonPairCharge_sel = selLepton_lead->charge() + selLepton_sublead->charge();
@@ -1451,7 +1454,7 @@ int main(int argc, char* argv[])
       numSelJetsPtGt40,
       selBJets_loose.size(),
       selBJets_medium.size(),
-      mTauTauVis_sel,
+      dihiggsVisMass_sel,
       leptonPairCharge_sel,
       hadTauPairCharge_sel,
       HT, 

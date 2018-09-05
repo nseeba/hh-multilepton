@@ -23,7 +23,7 @@ EvtHistManager_hh_2lss_4jet::bookHistograms(TFileDirectory & dir)
   histogram_numBJets_loose_   = book1D(dir, "numBJets_loose",   "numBJets_loose",   10, -0.5,  +9.5);
   histogram_numBJets_medium_  = book1D(dir, "numBJets_medium",  "numBJets_medium",  10, -0.5,  +9.5);
 
-  histogram_mTauTauVis_       = book1D(dir, "mTauTauVis",       "mTauTauVis",       40,  0.,  200.);
+  histogram_dihiggsVisMass_   = book1D(dir, "dihiggsVisMass",   "dihiggsVisMass",   150,  0.,  1500.);
 
   histogram_leptonPairCharge_ = book1D(dir, "leptonPairCharge", "leptonPairCharge",  5, -2.5, +2.5);
   histogram_hadTauPairCharge_ = book1D(dir, "hadTauPairCharge", "hadTauPairCharge",  5, -2.5, +2.5);
@@ -42,7 +42,7 @@ EvtHistManager_hh_2lss_4jet::fillHistograms(int numElectrons,
 					  int numJetsPtGt40,
 					  int numBJets_loose,
 					  int numBJets_medium,
-					  double mTauTauVis,
+					  double dihiggsVisMass,
 					  double leptonPairCharge,
 					  double hadTauPairCharge,
 					  double HT,
@@ -59,7 +59,7 @@ EvtHistManager_hh_2lss_4jet::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_numBJets_loose_,   numBJets_loose,   evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_numBJets_medium_,  numBJets_medium,  evtWeight, evtWeightErr);
 
-  fillWithOverFlow(histogram_mTauTauVis_,       mTauTauVis,       evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_dihiggsVisMass_,   dihiggsVisMass,   evtWeight, evtWeightErr);
 
   fillWithOverFlow(histogram_leptonPairCharge_, leptonPairCharge, evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_hadTauPairCharge_, hadTauPairCharge, evtWeight, evtWeightErr);

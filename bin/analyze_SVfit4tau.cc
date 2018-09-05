@@ -532,26 +532,30 @@ int main(int argc, char* argv[])
 	  logM != logM_wMassConstraint_MarkovChain.end(); ++logM ) {
       std::string logM_string = TString(Form("logM%1.1f", *logM)).ReplaceAll(".", "p").Data();
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_correctAssoc_chosen_[*logM] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tau_wMassContraint_MarkovChain_%s_MarkovChain_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tau_wMassContraint_%s_MarkovChain_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_correctAssoc_chosen_[*logM]->bookHistograms(fs);
+      selHistManager->svFit4tau_wMassConstraint_MarkovChain_correctAssoc_chosen_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_correctAssoc_chosen_[*logM] = new SVfit4tauResolutionHistManager_MarkovChain(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tauResolution_wMassContraint_%s_MarkovChain_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_correctAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_correctAssoc_discarded_[*logM] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tau_wMassContraint_%s_MarkovChain_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_correctAssoc_discarded_[*logM]->bookHistograms(fs);
+      selHistManager->svFit4tau_wMassConstraint_MarkovChain_correctAssoc_discarded_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_correctAssoc_discarded_[*logM] = new SVfit4tauResolutionHistManager_MarkovChain(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tauResolution_wMassContraint_%s_MarkovChain_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_correctAssoc_discarded_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_incorrectAssoc_chosen_[*logM] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tau_wMassContraint_%s_MarkovChain_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_incorrectAssoc_chosen_[*logM]->bookHistograms(fs);
+      selHistManager->svFit4tau_wMassConstraint_MarkovChain_incorrectAssoc_chosen_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_incorrectAssoc_chosen_[*logM] = new SVfit4tauResolutionHistManager_MarkovChain(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tauResolution_wMassContraint_%s_MarkovChain_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_incorrectAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_incorrectAssoc_discarded_[*logM] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tau_wMassContraint_%s_MarkovChain_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_incorrectAssoc_discarded_[*logM]->bookHistograms(fs);
+      selHistManager->svFit4tau_wMassConstraint_MarkovChain_incorrectAssoc_discarded_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_incorrectAssoc_discarded_[*logM] = new SVfit4tauResolutionHistManager_MarkovChain(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tauResolution_wMassContraint_%s_MarkovChain_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_incorrectAssoc_discarded_[*logM]->bookHistograms(fs);
@@ -563,7 +567,7 @@ int main(int argc, char* argv[])
 	  logM != logM_woMassConstraint_MarkovChain.end(); ++logM ) {
       std::string logM_string = TString(Form("logM%1.1f", *logM)).ReplaceAll(".", "p").Data();
       selHistManager->svFit4tau_woMassConstraint_MarkovChain_correctAssoc_chosen_[*logM] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tau_woMassContraint_MarkovChain_%s_MarkovChain_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tau_woMassContraint_%s_MarkovChain_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tau_woMassConstraint_MarkovChain_correctAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tauResolution_woMassConstraint_MarkovChain_correctAssoc_chosen_[*logM] = new SVfit4tauResolutionHistManager_MarkovChain(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tauResolution_woMassContraint_%s_MarkovChain_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
@@ -591,26 +595,30 @@ int main(int argc, char* argv[])
 	  logM != logM_wMassConstraint_VAMP.end(); ++logM ) {
       std::string logM_string = TString(Form("logM%1.1f", *logM)).ReplaceAll(".", "p").Data();
       selHistManager->svFit4tau_wMassConstraint_VAMP_correctAssoc_chosen_[*logM] = new SVfit4tauHistManager_VAMP(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tau_wMassContraint_VAMP_%s_VAMP_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tau_wMassContraint_%s_VAMP_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_VAMP_correctAssoc_chosen_[*logM]->bookHistograms(fs);
+      selHistManager->svFit4tau_wMassConstraint_VAMP_correctAssoc_chosen_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_correctAssoc_chosen_[*logM] = new SVfit4tauResolutionHistManager_VAMP(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tauResolution_wMassContraint_%s_VAMP_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_correctAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_VAMP_correctAssoc_discarded_[*logM] = new SVfit4tauHistManager_VAMP(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tau_wMassContraint_%s_VAMP_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_VAMP_correctAssoc_discarded_[*logM]->bookHistograms(fs);
+      selHistManager->svFit4tau_wMassConstraint_VAMP_correctAssoc_discarded_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_correctAssoc_discarded_[*logM] = new SVfit4tauResolutionHistManager_VAMP(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tauResolution_wMassContraint_%s_VAMP_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_correctAssoc_discarded_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_VAMP_incorrectAssoc_chosen_[*logM] = new SVfit4tauHistManager_VAMP(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tau_wMassContraint_%s_VAMP_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_VAMP_incorrectAssoc_chosen_[*logM]->bookHistograms(fs);
+      selHistManager->svFit4tau_wMassConstraint_VAMP_incorrectAssoc_chosen_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_incorrectAssoc_chosen_[*logM] = new SVfit4tauResolutionHistManager_VAMP(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tauResolution_wMassContraint_%s_VAMP_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_incorrectAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_VAMP_incorrectAssoc_discarded_[*logM] = new SVfit4tauHistManager_VAMP(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tau_wMassContraint_%s_VAMP_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_VAMP_incorrectAssoc_discarded_[*logM]->bookHistograms(fs);
+      selHistManager->svFit4tau_wMassConstraint_VAMP_incorrectAssoc_discarded_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_incorrectAssoc_discarded_[*logM] = new SVfit4tauResolutionHistManager_VAMP(makeHistManager_cfg(process_string,
         Form("%s/%s/svFit4tauResolution_wMassContraint_%s_VAMP_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_incorrectAssoc_discarded_[*logM]->bookHistograms(fs);
@@ -1198,7 +1206,23 @@ int main(int argc, char* argv[])
       for ( vdouble::const_iterator logM = logM_wMassConstraint_MarkovChain.begin();
 	    logM != logM_wMassConstraint_MarkovChain.end(); ++logM ) {
 	vSVfit4tauResult_wPtrs& results = results_wMassConstraint_MarkovChain[*logM];
-	std::sort(results.begin(), results.end(), isHigherProbMax);
+/*
+	//-----------------------------------------------------------------------
+	// CV: sort results obtained with Markov-Chain integration by decreasing "disambiguation score" (Lmax) computed with VAMP integration
+	if ( results_wMassConstraint_VAMP.find(*logM) != results_wMassConstraint_VAMP.end() ) {;
+	  std::cout << "sorting Markov-Chain integration results for logM = " << (*logM) << " by decreasing 'disambiguation score' (Lmax) computed with VAMP integration" << std::endl;
+	  vSVfit4tauResult_wPtrs& results_VAMP = results_wMassConstraint_VAMP[*logM];
+	  for ( size_t idxResult = 0; idxResult < results.size(); ++idxResult ) {
+	    SVfit4tauResult_wPtrs& result_MarkovChain = results[idxResult]; // results computed by Markov-Chain and by VAMP integration are "parallel"
+	    const SVfit4tauResult_wPtrs& result_VAMP = results_VAMP[idxResult];
+	    if ( result_VAMP.isValidSolution_ ) {
+	      result_MarkovChain.Lmax_ = result_VAMP.Lmax_;
+	    } 
+	  }
+	}
+	//-----------------------------------------------------------------------
+ */
+	std::sort(results.begin(), results.end(), isHigherLmax);	
 	for ( size_t idxResult = 0; idxResult < results.size(); ++idxResult ) {
 	  const SVfit4tauResult_wPtrs& result = results[idxResult];
 	  //std::cout << "logM = " << (*logM) << " (wMassConstraint), result #" << idxResult << ":" 
@@ -1262,12 +1286,12 @@ int main(int argc, char* argv[])
       for ( vdouble::const_iterator logM = logM_woMassConstraint_MarkovChain.begin();
 	    logM != logM_woMassConstraint_MarkovChain.end(); ++logM ) {
 	vSVfit4tauResult_wPtrs& results = results_woMassConstraint_MarkovChain[*logM];
-	std::sort(results.begin(), results.end(), isHigherProbMax);
+	std::sort(results.begin(), results.end(), isHigherLmax);
 	for ( size_t idxResult = 0; idxResult < results.size(); ++idxResult ) {
 	  const SVfit4tauResult_wPtrs& result = results[idxResult];
 	  //std::cout << "logM = " << (*logM) << " (woMassConstraint), result #" << idxResult << ":" 
 	  //	      << " mass = " << result.dihiggs_mass_ << " +/- " << result.dihiggs_massErr_
-	  //	      << " (isValidSolution = " << result.isValidSolution_ << ", probMax = " << result.probMax_ << ", isCorrectAssoc = " << result.isCorrectAssoc_ << ")" << std::endl;
+	  //	      << " (isValidSolution = " << result.isValidSolution_ << ", Lmax = " << result.Lmax_ << ", isCorrectAssoc = " << result.isCorrectAssoc_ << ")" << std::endl;
 	  SVfit4tauHistManager_MarkovChain* histograms_svFit4tau = nullptr;
 	  SVfit4tauResolutionHistManager_MarkovChain* histograms_svFit4tauResolution = nullptr;
 	  if ( result.isCorrectAssoc_ ) {
@@ -1309,7 +1333,7 @@ int main(int argc, char* argv[])
 	  const SVfit4tauResult_wPtrs& result = results[idxResult];
 	  //std::cout << "logM = " << (*logM) << " (wMassConstraint), result #" << idxResult << ":" 
 	  //	      << " mass = " << result.dihiggs_mass_ << " +/- " << result.dihiggs_massErr_
-	  //          << " (isValidSolution = " << result.isValidSolution_ << ", probMax = " << result.probMax_ << ", isCorrectAssoc = " << result.isCorrectAssoc_ << ")" << std::endl;
+	  //          << " (isValidSolution = " << result.isValidSolution_ << ", Lmax = " << result.Lmax_ << ", isCorrectAssoc = " << result.isCorrectAssoc_ << ")" << std::endl;
 	  SVfit4tauHistManager_VAMP* histograms_svFit4tau = nullptr;
 	  SVfit4tauResolutionHistManager_VAMP* histograms_svFit4tauResolution = nullptr;
 	  if ( result.isCorrectAssoc_ ) {

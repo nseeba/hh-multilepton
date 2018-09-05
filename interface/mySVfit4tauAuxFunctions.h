@@ -47,7 +47,6 @@ struct SVfit4tauResult
     , ditau2_etaErr_(-1.)
     , ditau2_phi_(-1.)
     , ditau2_phiErr_(-1.)
-    , probMax_(-1.)
     , Lmax_(-1.)
     , isValidSolution_(false)
   {}
@@ -79,7 +78,6 @@ struct SVfit4tauResult
     , ditau2_etaErr_(result.ditau2_etaErr_)
     , ditau2_phi_(result.ditau2_phi_)
     , ditau2_phiErr_(result.ditau2_phiErr_)
-    , probMax_(result.probMax_)
     , Lmax_(result.Lmax_)
     , isValidSolution_(result.isValidSolution_)
   {}
@@ -111,14 +109,9 @@ struct SVfit4tauResult
   double ditau2_etaErr_;
   double ditau2_phi_;
   double ditau2_phiErr_;
-  double probMax_;
   double Lmax_;
   bool isValidSolution_;
 };
-
-bool
-isHigherProbMax(const SVfit4tauResult& result1,
-		const SVfit4tauResult& result2);
 
 bool
 isHigherLmax(const SVfit4tauResult& result1,

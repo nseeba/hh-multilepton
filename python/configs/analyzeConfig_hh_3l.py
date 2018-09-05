@@ -611,7 +611,7 @@ class analyzeConfig_hh_3l(analyzeConfig):
     for chargeSumSelection in self.chargeSumSelections:
       key_addFakes_job = getKey("fakes_data", chargeSumSelection)
       key_hadd_stage1_5 = getKey(get_lepton_selection_and_frWeight("Fakeable", "enabled"), chargeSumSelection)
-      category_sideband = "hh_3l_%s_Fakeable" % chargeSumSelection
+      category_sideband = "hh_3l_%s_Fakeable_wFakeRateWeights" % chargeSumSelection
       self.jobOptions_addFakes[key_addFakes_job] = {
         'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5],
         'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgroundLeptonFakes_%s_%s_cfg.py" % \

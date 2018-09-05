@@ -55,15 +55,6 @@ bool getHadTauDecayMode(const GenParticle& measuredTau)
 }
 
 bool
-isHigherProbMax(const SVfit4tauResult& result1,
-		const SVfit4tauResult& result2)
-{
-  if ( result1.isValidSolution_ && !result2.isValidSolution_ ) return true;
-  if ( result2.isValidSolution_ && !result1.isValidSolution_ ) return false;
-  return result1.probMax_ > result2.probMax_;
-}
-
-bool
 isHigherLmax(const SVfit4tauResult& result1,
 	     const SVfit4tauResult& result2)
 {
@@ -185,7 +176,7 @@ std::vector<SVfit4tauResult> compSVfit4tau(const GenParticle& measuredTau1,
   }
 
   // sort SVfit4tau solutions by decreasing probMax, the maximum of integrand within the integration domain
-  std::sort(results.begin(), results.end(), isHigherProbMax);
+  std::sort(results.begin(), results.end(), isHigherLmax);
 
   return results;
 }
@@ -272,7 +263,6 @@ compSVfit4tau(const Particle::LorentzVector& measuredTau1Higgs1P4, int measuredT
       result.ditau2_etaErr_  = ditau2->getEtaErr();
       result.ditau2_phi_     = ditau2->getPhi();
       result.ditau2_phiErr_  = ditau2->getPhiErr();
-      result.probMax_        = svFitAlgo.getProbMax();
     }
     result.Lmax_             = svFitAlgo.getLmax();
     result.isValidSolution_  = true;

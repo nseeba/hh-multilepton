@@ -737,13 +737,22 @@ int main(int argc, char* argv[])
     if ( era == kEra_2017 && isMC ) { 
       std::vector<TrigObj> trigObjs = trigObjReader.read();
       int numTrigObjs = countTrigObjs_passingL1(trigObjs, 15, 32.);
-      std::cout << "numTrigObjs = " << numTrigObjs << std::endl;
+      if(run_lumi_eventSelector)
+      {
+        std::cout << "numTrigObjs = " << numTrigObjs << std::endl;
+      }
       isTriggered_2tau_L1 = (numTrigObjs >= 2); 
     } 
-    std::cout << "isTriggered_2tau_L1 = " << isTriggered_2tau_L1 << std::endl;
+    if(run_lumi_eventSelector)
+    {
+      std::cout << "isTriggered_2tau_L1 = " << isTriggered_2tau_L1 << std::endl;
+    }
 
     bool isTriggered_2tau = hltPaths_isTriggered(triggers_2tau, isDEBUG) && isTriggered_2tau_L1;
-    std::cout << "isTriggered_2tau = " << isTriggered_2tau << std::endl;
+    if(run_lumi_eventSelector)
+    {
+      std::cout << "isTriggered_2tau = " << isTriggered_2tau << std::endl;
+    }
 
     bool selTrigger_2tau = use_triggers_2tau && isTriggered_2tau;
     if ( !selTrigger_2tau ) {
@@ -795,8 +804,8 @@ int main(int argc, char* argv[])
     std::vector<const RecoHadTau*> fakeableHadTausFull = fakeableHadTauSelector(preselHadTausFull, isHigherPt);
     std::vector<const RecoHadTau*> tightHadTausFull = tightHadTauSelector(fakeableHadTausFull, isHigherPt);
 
-    std::vector<const RecoHadTau*> preselHadTaus = pickFirstNobjects(preselHadTausFull, 3);
-    std::vector<const RecoHadTau*> fakeableHadTaus = pickFirstNobjects(fakeableHadTausFull, 3);
+    std::vector<const RecoHadTau*> preselHadTaus = pickFirstNobjects(preselHadTausFull, 4);
+    std::vector<const RecoHadTau*> fakeableHadTaus = pickFirstNobjects(fakeableHadTausFull, 4);
     std::vector<const RecoHadTau*> tightHadTaus = getIntersection(fakeableHadTaus, tightHadTausFull, isHigherPt);
     std::vector<const RecoHadTau*> selHadTaus = selectObjects(hadTauSelection, preselHadTaus, fakeableHadTaus, tightHadTaus);
     if(isDEBUG || run_lumi_eventSelector)
