@@ -866,6 +866,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
     self.addToMakefile_analyze(lines_makefile)
     self.addToMakefile_hadd_stage1(lines_makefile)
     self.addToMakefile_backgrounds_from_data(lines_makefile)
+    self.addToMakefile_addTailFits(lines_makefile) ## MY LINE
     self.addToMakefile_hadd_stage2(lines_makefile)
     self.addToMakefile_prep_dcard(lines_makefile)
     self.addToMakefile_add_syst_fakerate(lines_makefile)
