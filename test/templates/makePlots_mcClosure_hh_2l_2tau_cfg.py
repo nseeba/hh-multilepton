@@ -98,7 +98,7 @@ process.makePlots.distributions.extend([
         yAxisTitle = cms.string('dN/dS_{T}^{MET} [1/GeV]')
     ),
     cms.PSet(
-        histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsVisMass'),
+        histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsVisMass1'), ## changed to dihiggsVisMass1 from dihiggsVisMass
         xAxisTitle = cms.string('m_{HH}^{vis} [GeV]'),
         yAxisTitle = cms.string('dN/dm_{HH}^{vis} [1/GeV]')
     ),

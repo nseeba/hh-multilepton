@@ -1,6 +1,7 @@
 #ifndef hhAnalysis_multilepton_TailFitAuxFunctions_h
 #define hhAnalysis_multilepton_TailFitAuxFunctions_h
 
+
 #include <TFile.h>
 #include <TH1.h>
 #include <TF1.h>
@@ -30,6 +31,10 @@ typedef std::vector<double> vdouble;
 TF1* Exp(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label);
 
 TF1* Poly3(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label);
+
+TF1* Poly2(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label);
+
+TF1* Poly1(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label);
 
 TF1* ExpErf(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label);
 
