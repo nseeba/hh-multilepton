@@ -723,7 +723,8 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
               }
             self.createCfg_addTailFits(self.jobOptions_addTailFits[key_addTailFits_job])
             key_hadd_stage2 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
-            self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addFakes[key_addFakes_job]['outputFile'])
+            self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addTailFits[key_addTailFits_job]['outputFile'])
+
 
     logging.info("Creating configuration files to run 'prepareDatacards'")
     for lepton_charge_selection in self.lepton_charge_selections:
