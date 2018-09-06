@@ -102,6 +102,8 @@ namespace
 	Fitfunc_ = Voigt(FitParameters_, FitRange_, Histo_to_fit_, Label_);
       }else if(FitFunctionName_ == "DoubleGaussianVoigt"){ 
 	Fitfunc_ = Gaus2Voigt(FitParameters_, FitRange_, Histo_to_fit_, Label_);
+      }else if(FitFunctionName_ == "ATLASFitFunc"){ 
+	Fitfunc_ = ATLASFitFunc(FitParameters_, FitRange_, Histo_to_fit_, Label_);
       }else {
 	std::cerr<< " Wrong Function name !!! " << std::endl;
       }

@@ -58,4 +58,6 @@ TF1* Gaus2Voigt(const vdouble& FitParameters, const vdouble& FitRange, const TH1
 
 TF1* CrystalBall(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label);
 
+TF1* ATLASFitFunc(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label);
+
 #endif

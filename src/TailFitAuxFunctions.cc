@@ -482,3 +482,29 @@ TF1* CrystalBall(const vdouble& FitParameters, const vdouble& FitRange, const TH
   return CB; 
 }
 
+
+TF1* ATLASFitFunc(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label)
+{ // Taken from page 19 of the ATLAS hh->4b search paper --> https://arxiv.org/pdf/1804.06174.pdf
+  assert((FitParameters.size() == 3) && (FitRange.size() == 2));
+  
+
+  TH1* Histo = const_cast<TH1*>(histo);
+  Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
+  double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
+  std::string funcName = Form("ATLASFitFunc_%s", Label.data());
+  double COM_energy = 13000.; // COM energy in GeV
+
+  std::string Expression = Form("(([0]*[0])/TMath::Power(((x - %f)/%f), 2.0)) * TMath::Power( (1.0 - ((x - %f)/%f)), (([1]*[1]) - ([2]*[2])*( TMath::Log((x - %f)/%f))) )", mean, COM_energy, mean, COM_energy, mean, COM_energy);
+  
+
+  TFormula* g1 = new TFormula("g1", Expression.data());
+  TF1* atlas_fit_func = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+
+  atlas_fit_func->SetParameter(0, FitParameters[0]); 
+  atlas_fit_func->SetParameter(1, FitParameters[1]); 
+  atlas_fit_func->SetParameter(2, FitParameters[2]); 
+  atlas_fit_func->SetParNames("Par0" ,"Par1", "Par2");
+  
+  return atlas_fit_func;
+}

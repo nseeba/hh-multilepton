@@ -47,6 +47,11 @@ process.addBackgrounds_TailFit = cms.PSet(
 #            FitParameters = cms.vdouble(2.2, 0.001, 0.0001, 0.0001), # par0, par1, par2, par3                                                                                             
 #            ),
 #        cms.PSet(
+#            FitfuncName   = cms.string("ATLASFitFunc"), ## FIT SUCCEEDS BUT GIVES "Error in <GSLError>: Error 21 in qags.c at 553 : bad integrand behavior found in the integration interval"
+#            FitRange      = cms.vdouble(500., 1500.), # xmin, xmax  
+#            FitParameters = cms.vdouble(2.2, 0.1, 0.06), # par0, par1, par2                                                                                             
+#            ),
+#        cms.PSet(
 #            FitfuncName   = cms.string("CrystalBall"), 
 #            FitRange      = cms.vdouble(500., 1500.), # xmin, xmax                                                                                    
 #            FitParameters = cms.vdouble(2.2, 0.7, 5.0, 300.0, 1.0), # norm, alpha, n, mu, sigma                                                                                           
