@@ -665,6 +665,9 @@ int main(int argc, char* argv[])
 
   TH1* histo = getHistogram(inputDir, ProcessName, HistogramName, "", true, false);
   //  TArrayD histo_Orig_Binning = getBinning(histo); // Storing original binning scheme of the histogram
+  TH1* histo_orig = dynamic_cast<TH1*>(histo->Clone());
+  histo_orig->SetName(HistogramName.c_str());
+
   TH1* histo_to_fit = 0;
 
   // ------ (Optional) Re-binning of the histogram -------
