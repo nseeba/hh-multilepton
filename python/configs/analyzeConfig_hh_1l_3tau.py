@@ -163,7 +163,8 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
       if sample_category.startswith("signal"):
         self.prep_dcard_signals.append(sample_category)
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
-    self.make_plots_signal = "signal_nonresonant"
+    self.mass_point = 400
+    self.make_plots_signal = "signal_hh_%d" % self.mass_point
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.histogramDir_prep_dcard = "hh_1l_3tau_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_1l_3tau_SS_Tight"
@@ -234,26 +235,6 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
       lines = self.set_triggerSF_2tau(lines)
 
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
-
-  def createCfg_makePlots_mcClosure(self, jobOptions): #TODO
-    """Fills the template of python configuration file for making control plots
-
-    Args:
-      histogramFile: name of the input ROOT file
-    """
-    lines = []
-    lines.append("process.fwliteInput.fileNames = cms.vstring('%s')" % jobOptions['inputFile'])
-    lines.append("process.makePlots.outputFileName = cms.string('%s')" % jobOptions['outputFile'])
-    lines.append("process.makePlots.processesBackground = cms.vstring(%s)" % self.make_plots_backgrounds)
-    lines.append("process.makePlots.processSignal = cms.string('%s')" % self.make_plots_signal)
-    lines.append("process.makePlots.categories = cms.VPSet(")
-    lines.append("  cms.PSet(")
-    lines.append("    signal = cms.string('%s')," % self.histogramDir_prep_dcard)
-    lines.append("    sideband = cms.string('%s')," % self.histogramDir_prep_dcard.replace("Tight", "Fakeable_mcClosure_wFakeRateWeights"))
-    lines.append("    label = cms.string('%s')" % self.channel)
-    lines.append("  )")
-    lines.append(")")
-    create_cfg(self.cfgFile_make_plots_mcClosure, jobOptions['cfgFile_modified'], lines)
 
   def addToMakefile_backgrounds_from_data(self, lines_makefile):
     self.addToMakefile_addBackgrounds(lines_makefile, "sbatch_addBackgrounds", self.sbatchFile_addBackgrounds, self.jobOptions_addBackgrounds)
@@ -614,7 +595,9 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
         'datacardFile' : os.path.join(self.dirs[DKEY_DCRD], "prepareDatacards_%s_%s.root" % (self.channel, histogramToFit)),
         'histogramDir' : self.histogramDir_prep_dcard,
         'histogramToFit' : histogramToFit,
-        'label' : None
+        'label' : '1l+3#tau_{h}',
+        'massPoint' : self.mass_point,
+        'skipChannel' : True,
       }
       self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
       if "SS" in self.chargeSumSelections:
@@ -626,7 +609,9 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
           'datacardFile' : os.path.join(self.dirs[DKEY_DCRD], "prepareDatacards_%s_SS_%s.root" % (self.channel, histogramToFit)),
           'histogramDir' : self.histogramDir_prep_dcard_SS,
           'histogramToFit' : histogramToFit,
-          'label' : 'SS'
+          'label' : '1l+3#tau_{h} SS',
+        'massPoint' : self.mass_point,
+        'skipChannel' : True,
         }
         self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
@@ -681,7 +666,9 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
       'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "makePlots_%s_cfg.py" % self.channel),
       'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s.png" % self.channel),
       'histogramDir' : self.histogramDir_prep_dcard,
-      'label' : None,
+      'label' : '1l+3#tau_{h}',
+      'massPoint'  : self.mass_point,
+      'skipChannel': True,
       'make_plots_backgrounds' : self.make_plots_backgrounds
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
@@ -694,7 +681,9 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
         'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "makePlots_%s_SS_cfg.py" % self.channel),
         'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s_SS.png" % self.channel),
         'histogramDir' : self.histogramDir_prep_dcard_SS,
-        'label' : "SS",
+        'label' : "1l+3#tau_{h} SS",
+        'massPoint' : self.mass_point,
+        'skipChannel' : True,
         'make_plots_backgrounds' : self.make_plots_backgrounds
       }
       self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])

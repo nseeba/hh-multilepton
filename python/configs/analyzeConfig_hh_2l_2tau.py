@@ -173,7 +173,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
     self.executable_addBackgrounds = executable_addBackgrounds
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
     self.executable_addTailFits = executable_addBackgrounds_TailFit ## MY LINE
- 
+
     self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
@@ -188,8 +188,8 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
     self.histogramDir_prep_dcard = "hh_2l_2tau_sumOS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_2l_2tau_sumSS_Tight"
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
-#    self.make_plots_signal = "signal_nonresonant"
-    self.make_plots_signal = "signal"
+    self.mass_point = 400
+    self.make_plots_signal = "signal_hh_%d" % self.mass_point
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2l_2tau_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2l_2tau_cfg.py")
 
@@ -249,26 +249,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
     lines = super(analyzeConfig_hh_2l_2tau, self).createCfg_analyze(jobOptions, sample_info)
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
 
-  def createCfg_makePlots_mcClosure(self, jobOptions): #TODO
-    """Fills the template of python configuration file for making control plots
-
-       Args:
-         histogramFile: name of the input ROOT file
-    """
-    lines = []
-    lines.append("process.fwliteInput.fileNames = cms.vstring('%s')" % jobOptions['inputFile'])
-    lines.append("process.makePlots.outputFileName = cms.string('%s')" % jobOptions['outputFile'])
-    lines.append("process.makePlots.processesBackground = cms.vstring(%s)" % self.make_plots_backgrounds)
-    lines.append("process.makePlots.processSignal = cms.string('%s')" % self.make_plots_signal)
-    lines.append("process.makePlots.categories = cms.VPSet(")
-    lines.append("  cms.PSet(")
-    lines.append("    signal = cms.string('%s')," % self.histogramDir_prep_dcard)
-    lines.append("    sideband = cms.string('%s')," % self.histogramDir_prep_dcard.replace("Tight", "Fakeable_mcClosure_wFakeRateWeights"))
-    lines.append("    label = cms.string('%s')" % self.channel)
-    lines.append("  )")
-    lines.append(")")
-    create_cfg(self.cfgFile_make_plots_mcClosure, jobOptions['cfgFile_modified'], lines)
-
   def addToMakefile_backgrounds_from_data(self, lines_makefile):
     self.addToMakefile_addBackgrounds(lines_makefile, "sbatch_addBackgrounds", self.sbatchFile_addBackgrounds, self.jobOptions_addBackgrounds)
     self.addToMakefile_addBackgrounds(lines_makefile, "sbatch_addBackgrounds_sum", self.sbatchFile_addBackgrounds_sum, self.jobOptions_addBackgrounds_sum)
@@ -276,7 +256,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
     self.addToMakefile_addFakes(lines_makefile)
 
   def createScript_sbatch_addTailFits(self, executable, sbatchFile, jobOptions):
-   """Creates the python script necessary to submit the analysis jobs to the batch system                                                                                                                                                         
+   """Creates the python script necessary to submit the analysis jobs to the batch system
    """
    self.num_jobs['addTailFits'] += self.createScript_sbatch(executable, sbatchFile, jobOptions)
 
@@ -293,7 +273,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
         lines_makefile.append("")
       elif self.is_sbatch:
         lines_makefile.append("%s: %s" % (jobOptions['outputFile'], "sbatch_addTailFits"))
-        lines_makefile.append("\t%s" % ":") # CV: null command                                                                                                                                                                                 
+        lines_makefile.append("\t%s" % ":") # CV: null command
         lines_makefile.append("")
     self.filesToClean.append(jobOptions['outputFile'])
 
@@ -688,22 +668,22 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
               fitrange_nom  = [500., 1500.]
               fitparam_nom  = [2.68, -0.0001]
               fitrange_alt0 = [500., 1500.]
-              fitparam_alt0 = [2.2, 0.001, 0.0001, 0.001] 
+              fitparam_alt0 = [2.2, 0.001, 0.0001, 0.001]
             if histogramToFit == "dihiggsVisMass":
               fitrange_nom  = [300., 1500.]
               fitparam_nom  = [0.8, -0.001]
               fitrange_alt0 = [300., 1500.]
-              fitparam_alt0 = [0.01, -0.01] 
+              fitparam_alt0 = [0.01, -0.01]
             if histogramToFit == "STMET":
               fitrange_nom  = [350., 1500.]
               fitparam_nom  = [0.002, -0.01]
               fitrange_alt0 = [350., 1500.]
-              fitparam_alt0 = [0.1, 0.01] 
+              fitparam_alt0 = [0.1, 0.01]
             if histogramToFit == "HT":
               fitrange_nom  = [300., 1500.]
               fitparam_nom  = [0.7, -0.0001]
               fitrange_alt0 = [300., 1500.]
-              fitparam_alt0 = [0.05, 0.01] 
+              fitparam_alt0 = [0.05, 0.01]
             key_addTailFits_job = getKey(lepton_charge_selection, hadTau_charge_selection, chargeSumSelection, histogramToFit)
             key_addFakes_job = getKey(lepton_charge_selection, hadTau_charge_selection, "fakes_data", chargeSumSelection)
             self.jobOptions_addTailFits[key_addTailFits_job] = {
@@ -744,7 +724,9 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
             'datacardFile' : os.path.join(self.dirs[DKEY_DCRD], "prepareDatacards_%s%s_%s.root" % (self.channel, lepton_and_hadTau_charge_selection, histogramToFit)),
             'histogramDir' : getHistogramDir("Tight", "Tight", "disabled", lepton_charge_selection, hadTau_charge_selection, "OS"),
             'histogramToFit' : histogramToFit,
-            'label' : None
+            'label' : '2l+2tau_{h}',
+            'massPoint' : self.mass_point,
+            'skipChannel' : True,
           }
           self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
@@ -757,7 +739,9 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
           'datacardFile' : os.path.join(self.dirs[DKEY_DCRD], "prepareDatacards_%s%s_sumSS_%s.root" % (self.channel, lepton_and_hadTau_charge_selection, histogramToFit)),
           'histogramDir' : getHistogramDir("Tight", "Tight", "disabled", lepton_charge_selection, hadTau_charge_selection, "SS"),
           'histogramToFit' : histogramToFit,
-          'label' : 'SS'
+          'label' : '2l+2tau_{h} SS',
+          'massPoint' : self.mass_point,
+          'skipChannel' : True,
         }
         self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
@@ -816,7 +800,9 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
           'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "makePlots_%s%s_cfg.py" % (self.channel, lepton_and_hadTau_charge_selection)),
           'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s%s.png" % (self.channel, lepton_and_hadTau_charge_selection)),
           'histogramDir' : getHistogramDir("Tight", "Tight", "disabled", lepton_charge_selection, hadTau_charge_selection, "OS"),
-          'label' : None,
+          'label' : '2l+2tau_{h}',
+          'massPoint' : self.mass_point,
+          'skipChannel' : True,
           'make_plots_backgrounds' : self.make_plots_backgrounds
         }
         self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
@@ -829,7 +815,9 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
             'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "makePlots_%s%s_sumSS_cfg.py" % (self.channel, lepton_and_hadTau_charge_selection)),
             'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s%s_sumSS.png" % (self.channel, lepton_and_hadTau_charge_selection)),
             'histogramDir' : getHistogramDir("Tight", "Tight", "disabled", lepton_charge_selection, hadTau_charge_selection, "SS"),
-            'label' : "SS",
+            'label' : "2l+2tau_{h} SS",
+            'massPoint' : self.mass_point,
+            'skipChannel' : True,
             'make_plots_backgrounds' : self.make_plots_backgrounds
           }
           self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
