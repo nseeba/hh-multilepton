@@ -387,13 +387,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
                     # sum non-fake contributions for each MC sample separately
                     # input processes: TT1l0g0j&2t0e0m0j, TT1l0g0j&1t1e0m0j, TT1l0g0j&1t0e1m0j, TT1l0g0j&0t2e0m0j, TT1l0g0j&0t1e1m0j, TT1l0g0j&0t0e2m0j; ...
                     # output processes: TT; ...
-                    if sample_category.startswith("signal"):
-                      hadTau_genMatches = []
-                      hadTau_genMatches.extend(self.hadTau_genMatches_nonfakes)
-                      hadTau_genMatches.extend(self.hadTau_genMatches_fakes)
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in hadTau_genMatches ]
-                    else:
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_nonfakes ]
+                    processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_nonfakes ]
                     process_output = sample_category
                     key_addBackgrounds_job = getKey(process_name, sample_category, hadTau_selection_and_frWeight, hadTau_charge_selection)
                     cfgFile_modified = os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_%s_%s_%s_%s_cfg.py" % \
@@ -404,18 +398,14 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
                     # sum fake background contributions for each MC sample separately
                     # input processes: TT1l0g0j&1t0e0m1j, TT1l0g0j&0t1e0m1j, TT1l0g0j&0t0e1m1j, TT1l0g0j&0t0e0m2j; ...
                     # output processes: TT_fake; ...
-                    if sample_category.startswith("signal"):
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_fakes ]
-                    else:
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_fakes ]
+                    processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_fakes ]
                     process_output = "%s_fake" % sample_category
                     key_addBackgrounds_job = getKey(process_name, "%s_fake" % sample_category, hadTau_selection_and_frWeight, hadTau_charge_selection)
                     cfgFile_modified = os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_%s_fakes_%s_%s_%s_cfg.py" % \
                       (self.channel, process_name, sample_category, hadTau_selection_and_frWeight, hadTau_charge_selection))
                     outputFile = os.path.join(self.dirs[DKEY_HIST], "addBackgrounds_%s_%s_fakes_%s_%s_%s.root" % \
                       (self.channel, process_name, sample_category, hadTau_selection_and_frWeight, hadTau_charge_selection))
-                  # TODO add tttt, wwtt, wwww samples together here (per mass point)
-
+                  
                   if processes_input:
                     logging.info(" ...for genMatch option = '%s'" % genMatch_category)
                     self.jobOptions_addBackgrounds[key_addBackgrounds_job] = {
@@ -471,7 +461,43 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
           }
           self.createCfg_addBackgrounds(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_fakes])
 
-          #TODO add tttt, wwtt, wwww samples together here (per mass point)
+          # sum signal contributions from HH->4tau ("tttt"), HH->2W2tau ("wwtt"), and HH->4W ("wwww"),
+          # separately for "nonfake" and "fake" contributions
+          genMatch_categories = [ "nonfake", "fake" ]
+          for genMatch_category in genMatch_categories:
+            for sample_name, sample_info in self.samples.items():
+              if not sample_info["use_it"] or sample_info["sample_category"] in [ "additional_signal_overlap", "background_data_estimate" ]:
+                continue
+              sample_category = sample_info["sample_category"]
+              sample_category_base = sample_category[0:sample_category.rfind("_")]
+              is_signal = (sample_category_base.startswith("signal"))
+              if not is_signal:
+                continue
+              key_addBackgrounds_job_signal = getKey(hadTau_selection_and_frWeight, hadTau_charge_selection, sample_category_base)
+              key_hadd_stage1_5 = getKey(hadTau_selection_and_frWeight, hadTau_charge_selection)
+              processes_input = []
+              for decay_mode in [ "tttt", "wwtt", "wwww" ]:
+                processes_input.append(sample_category_base + "_" + decay_mode)
+              process_output = sample_category_base
+              if genMatch_category == "fake":
+                key_addBackgrounds_job_signal = key_addBackgrounds_job_signal + "_fake"
+                processes_input = [ process_input + "_fake" for process_input in processes_input ]
+                process_output = process_output + "_fake"
+              if key_addBackgrounds_job_signal in self.jobOptions_addBackgrounds_sum.keys():
+                continue             
+              self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal] = {
+                'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5],
+                'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_%s_%s_%s_cfg.py" % \
+                  (self.channel, sample_category_base, hadTau_selection_and_frWeight, hadTau_charge_selection)),
+                'outputFile' : os.path.join(self.dirs[DKEY_HIST], "addBackgrounds_%s_%s_%s_%s.root" % \
+                  (self.channel, sample_category_base, hadTau_selection_and_frWeight, hadTau_charge_selection)),
+                'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgrounds_%s_%s_%s_%s.log" % \
+                  (self.channel, sample_category_base, hadTau_selection_and_frWeight, hadTau_charge_selection)),
+                'categories' : [ getHistogramDir(hadTau_selection, hadTau_frWeight, hadTau_charge_selection) ],
+                'processes_input' : processes_input,
+                'process_output' : process_output
+              }
+              self.createCfg_addBackgrounds(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal])
 
           # initialize input and output file names for hadd_stage2
           key_hadd_stage2 = getKey(hadTau_selection_and_frWeight, hadTau_charge_selection)
