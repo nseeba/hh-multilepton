@@ -733,14 +733,14 @@ int main(int argc, char* argv[])
       for ( size_t idxComponent = 0; idxComponent < dimension; ++idxComponent ) {
 	fitFunctionParUp->SetParameter(idxComponent, fitFunction_nom->GetParameter(idxComponent) + TMath::Sqrt(eigenVector_and_Value->eigenValue_)*eigenVector_and_Value->eigenVector_(idxComponent));
       }
-      fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionParUp, Form("EigenVecUp_%i", idxPar)));
+      fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionParUp, Form("EigenVec_%iUp", idxPar)));
       std::string fitFunctionParDownName = Form("%s_par%iDown", (nom_fit_func->GetFitFuncName()).data(), idxPar);
       FitFuncEntryType* fit_func_par_down = new FitFuncEntryType(nominal_fit_func_PSet, histo_to_fit, fitFunctionParDownName);
       TF1* fitFunctionParDown = fit_func_par_down->GetFitFunction();
       for ( size_t idxComponent = 0; idxComponent < dimension; ++idxComponent ) {
 	fitFunctionParDown->SetParameter(idxComponent, fitFunction_nom->GetParameter(idxComponent) - TMath::Sqrt(eigenVector_and_Value->eigenValue_)*eigenVector_and_Value->eigenVector_(idxComponent));
       }
-      fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionParDown, Form("EigenVecDown_%i", idxPar)));
+      fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionParDown, Form("EigenVec_%iDown", idxPar)));
       ++idxPar;
     } // loop over e-vectors and e-values ends
   } else {
