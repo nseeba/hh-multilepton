@@ -142,7 +142,8 @@ class analyzeConfig_hh_4l(analyzeConfig):
     self.histogramDir_prep_dcard = "hh_4l_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_4l_SS_Tight"
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
-    self.make_plots_signal = "signal_nonresonant"
+    self.mass_point = 400
+    self.make_plots_signal = "signal_hh_%d" % self.mass_point
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_4l_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_4l_cfg.py")
 
@@ -174,26 +175,6 @@ class analyzeConfig_hh_4l(analyzeConfig):
 
     lines = super(analyzeConfig_hh_4l, self).createCfg_analyze(jobOptions, sample_info)
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
-
-  def createCfg_makePlots_mcClosure(self, jobOptions): #TODO
-    """Fills the template of python configuration file for making control plots
-
-    Args:
-      histogramFile: name of the input ROOT file
-    """
-    lines = []
-    lines.append("process.fwliteInput.fileNames = cms.vstring('%s')" % jobOptions['inputFile'])
-    lines.append("process.makePlots.outputFileName = cms.string('%s')" % jobOptions['outputFile'])
-    lines.append("process.makePlots.processesBackground = cms.vstring(%s)" % self.make_plots_backgrounds)
-    lines.append("process.makePlots.processSignal = cms.string('%s')" % self.make_plots_signal)
-    lines.append("process.makePlots.categories = cms.VPSet(")
-    lines.append("  cms.PSet(")
-    lines.append("    signal = cms.string('%s')," % self.histogramDir_prep_dcard)
-    lines.append("    sideband = cms.string('%s')," % self.histogramDir_prep_dcard.replace("Tight", "Fakeable_mcClosure_wFakeRateWeights"))
-    lines.append("    label = cms.string('%s')" % self.channel)
-    lines.append("  )")
-    lines.append(")")
-    create_cfg(self.cfgFile_make_plots_mcClosure, jobOptions['cfgFile_modified'], lines)
 
   def create(self):
     """Creates all necessary config files and runs the complete analysis workfow -- either locally or on the batch system
@@ -520,7 +501,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
         'datacardFile' : os.path.join(self.dirs[DKEY_DCRD], "prepareDatacards_%s_%s.root" % (self.channel, histogramToFit)),
         'histogramDir' : self.histogramDir_prep_dcard,
         'histogramToFit' : histogramToFit,
-        'label' : None
+        'label' : '4l',
       }
       self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
@@ -533,7 +514,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
           'datacardFile' : os.path.join(self.dirs[DKEY_DCRD], "prepareDatacards_%s_SS_%s.root" % (self.channel, histogramToFit)),
           'histogramDir' : self.histogramDir_prep_dcard_SS,
           'histogramToFit' : histogramToFit,
-          'label' : 'SS'
+          'label' : '4l SS',
         }
         self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
@@ -586,8 +567,10 @@ class analyzeConfig_hh_4l(analyzeConfig):
       'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "makePlots_%s_cfg.py" % self.channel),
       'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s.png" % self.channel),
       'histogramDir' : self.histogramDir_prep_dcard,
-      'label' : None,
-      'make_plots_backgrounds' : self.make_plots_backgrounds
+      'label' : '4l',
+      'make_plots_backgrounds' : self.make_plots_backgrounds,
+      'massPoint' : self.mass_point,
+      'skipChannel' : True,
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "SS" in self.chargeSumSelections:
@@ -599,8 +582,10 @@ class analyzeConfig_hh_4l(analyzeConfig):
         'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "makePlots_%s_SS_cfg.py" % self.channel),
         'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s_SS.png" % self.channel),
         'histogramDir' : self.histogramDir_prep_dcard_SS,
-        'label' : "SS",
-        'make_plots_backgrounds' : self.make_plots_backgrounds
+        'label' : "4l SS",
+        'make_plots_backgrounds' : self.make_plots_backgrounds,
+        'massPoint' : self.mass_point,
+        'skipChannel' : True,
       }
       self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "Fakeable_mcClosure" in self.lepton_selections: #TODO
