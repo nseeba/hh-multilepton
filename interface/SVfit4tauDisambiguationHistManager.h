@@ -44,6 +44,7 @@ public:
   TH2 * histogram_dihiggsMassErr_;
   TH2 * histogram_dihiggsPt_; // CV: only filled if Markov-Chain integration is used
   TH2 * histogram_logLmax_;
+  TH2 * histogram_logProbMax_; // CV: only filled if Markov-Chain integration is used
 
   TH2 * histogram_avDeltaPhi_;
   TH2 * histogram_avDeltaEta_;

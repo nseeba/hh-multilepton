@@ -14,6 +14,7 @@ TF1* Exp(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo
   TH1* Histo = const_cast<TH1*>(histo);
   Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
   double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
   std::string funcName = Form("Exponential_%s", Label.data());
 
   // std::string offset;
@@ -25,7 +26,6 @@ TF1* Exp(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo
 
   TFormula* g1 = new TFormula("g1", Expression.data());
   TF1* exp = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
-
   exp->SetParameter(0, FitParameters[0]); // norm
   exp->SetParameter(1, FitParameters[1]);   // exponent
   exp->SetParNames("Norm", "Exponent");
@@ -33,6 +33,57 @@ TF1* Exp(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo
   return exp;
 }
 
+TF1* Poly1(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label)
+{
+  assert((FitParameters.size() == 2) && (FitRange.size() == 2));
+
+  TH1* Histo = const_cast<TH1*>(histo);
+  Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
+  double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
+  std::string funcName = Form("LegendrePolynomial1_%s", Label.data());
+
+  // std::string offset;
+  // std::ostringstream convert;
+  // convert << FitParameters[0]; // first element of FitParameters is the offset which won't be treated as a fit parameter    
+  // std::string Expression = Form("([0] + ([1]*(x - %s))", offset.data(), offset.data());
+
+  std::string Expression = Form("[0] + ([1]*(x - %f))", mean);
+
+  TFormula* g1 = new TFormula("g1", Expression.data());
+  TF1* pol1 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  pol1->SetParameter(0, FitParameters[0]); // par0
+  pol1->SetParameter(1, FitParameters[1]); // par1
+  pol1->SetParNames("Par0", "Par1");
+  return pol1;
+}
+
+
+TF1* Poly2(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label)
+{
+  assert((FitParameters.size() == 3) && (FitRange.size() == 2));
+
+  TH1* Histo = const_cast<TH1*>(histo);
+  Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
+  double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
+  std::string funcName = Form("LegendrePolynomial2_%s", Label.data());
+
+  // std::string offset;
+  // std::ostringstream convert;
+  // convert << FitParameters[0]; // first element of FitParameters is the offset which won't be treated as a fit parameter    
+  // std::string Expression = Form("([0] + ([1]*(x - %s)) + (0.5*[2]*((3.0*TMath::Power((x - %s), 2.0)) - 1.0))", offset.data(), offset.data(), offset.data());
+
+  std::string Expression = Form("[0] + ([1]*(x - %f)) + (0.5*[2]*((3.0*TMath::Power((x - %f), 2.0)) - 1.0))", mean, mean);
+
+  TFormula* g1 = new TFormula("g1", Expression.data());
+  TF1* pol2 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  pol2->SetParameter(0, FitParameters[0]); // par0
+  pol2->SetParameter(1, FitParameters[1]); // par1
+  pol2->SetParameter(2, FitParameters[2]); // par2
+  pol2->SetParNames("Par0", "Par1", "Par2");
+  return pol2;
+}
 
 TF1* Poly3(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label)
 {
@@ -41,6 +92,7 @@ TF1* Poly3(const vdouble& FitParameters, const vdouble& FitRange, const TH1* his
   TH1* Histo = const_cast<TH1*>(histo);
   Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
   double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
   std::string funcName = Form("LegendrePolynomial3_%s", Label.data());
 
   // std::string offset;
@@ -70,6 +122,7 @@ TF1* ExpErf(const vdouble& FitParameters, const vdouble& FitRange, const TH1* hi
   TH1* Histo = const_cast<TH1*>(histo);
   Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
   double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
   std::string funcName = Form("ExponentialErf_%s", Label.data());
 
   // std::string offset;
@@ -99,6 +152,7 @@ TF1* Gauss(const vdouble& FitParameters, const vdouble& FitRange, const TH1* his
   TH1* Histo = const_cast<TH1*>(histo);
   Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
   double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
   std::string funcName = Form("Gaussian_%s", Label.data());
 
   // std::string offset;
@@ -126,6 +180,7 @@ TF1* Gauss2(const vdouble& FitParameters, const vdouble& FitRange, const TH1* hi
   TH1* Histo = const_cast<TH1*>(histo);
   Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
   double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
   std::string funcName = Form("DoubleGaussian_%s", Label.data());
 
   // std::string offset;
@@ -155,6 +210,7 @@ TF1* Gauss3(const vdouble& FitParameters, const vdouble& FitRange, const TH1* hi
   TH1* Histo = const_cast<TH1*>(histo);
   Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
   double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
   std::string funcName = Form("TripleGaussian_%s", Label.data());
 
   // std::string offset;
@@ -187,6 +243,7 @@ TF1* ExpGaus(const vdouble& FitParameters, const vdouble& FitRange, const TH1* h
   TH1* Histo = const_cast<TH1*>(histo);
   Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
   double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
   std::string funcName = Form("ExponentialGaussian_%s", Label.data());
 
   // std::string offset;
@@ -216,6 +273,7 @@ TF1* ExpGaus2(const vdouble& FitParameters, const vdouble& FitRange, const TH1* 
   TH1* Histo = const_cast<TH1*>(histo);
   Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
   double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
   std::string funcName = Form("DoubleExponentialGaussian_%s", Label.data());
 
   // std::string offset;
@@ -248,6 +306,7 @@ TF1* ErfExpGaus(const vdouble& FitParameters, const vdouble& FitRange, const TH1
   TH1* Histo = const_cast<TH1*>(histo);
   Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
   double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
   std::string funcName = Form("ErfExponentialGaussian_%s", Label.data());
 
   // std::string offset;
@@ -279,6 +338,7 @@ TF1* ErfExpGaus2(const vdouble& FitParameters, const vdouble& FitRange, const TH
   TH1* Histo = const_cast<TH1*>(histo);
   Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
   double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
   std::string funcName = Form("DoubleErfExponentialGaussian_%s", Label.data());
 
   // std::string offset;
@@ -316,6 +376,7 @@ TF1* Voigt(const vdouble& FitParameters, const vdouble& FitRange, const TH1* his
   TH1* Histo = const_cast<TH1*>(histo);
   Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
   double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
   std::string funcName = Form("Voigt_%s", Label.data());
 
   // std::string offset;
@@ -344,6 +405,7 @@ TF1* Gaus2Voigt(const vdouble& FitParameters, const vdouble& FitRange, const TH1
   TH1* Histo = const_cast<TH1*>(histo);
   Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
   double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
   std::string funcName = Form("DoubleGaussianVoigt_%s", Label.data());
 
 
@@ -404,6 +466,7 @@ TF1* CrystalBall(const vdouble& FitParameters, const vdouble& FitRange, const TH
   TH1* Histo = const_cast<TH1*>(histo);
   Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
   double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
   std::string funcName = Form("CrystalBall_%s", Label.data());
 
   TF1* CB = new TF1(funcName.data(), CrystalBallFunc, FitRange[0], FitRange[1], 6);
@@ -419,3 +482,29 @@ TF1* CrystalBall(const vdouble& FitParameters, const vdouble& FitRange, const TH
   return CB; 
 }
 
+
+TF1* ATLASFitFunc(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label)
+{ // Taken from page 19 of the ATLAS hh->4b search paper --> https://arxiv.org/pdf/1804.06174.pdf
+  assert((FitParameters.size() == 3) && (FitRange.size() == 2));
+  
+
+  TH1* Histo = const_cast<TH1*>(histo);
+  Histo->GetXaxis()->SetRangeUser(FitRange[0], FitRange[1]);
+  double mean = Histo->GetMean();
+  std::cout<< "Function will be centered at " << mean << std::endl;
+  std::string funcName = Form("ATLASFitFunc_%s", Label.data());
+  double COM_energy = 13000.; // COM energy in GeV
+
+  std::string Expression = Form("(([0]*[0])/TMath::Power(((x - %f)/%f), 2.0)) * TMath::Power( (1.0 - ((x - %f)/%f)), (([1]*[1]) - ([2]*[2])*( TMath::Log((x - %f)/%f))) )", mean, COM_energy, mean, COM_energy, mean, COM_energy);
+  
+
+  TFormula* g1 = new TFormula("g1", Expression.data());
+  TF1* atlas_fit_func = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+
+  atlas_fit_func->SetParameter(0, FitParameters[0]); 
+  atlas_fit_func->SetParameter(1, FitParameters[1]); 
+  atlas_fit_func->SetParameter(2, FitParameters[2]); 
+  atlas_fit_func->SetParNames("Par0" ,"Par1", "Par2");
+  
+  return atlas_fit_func;
+}

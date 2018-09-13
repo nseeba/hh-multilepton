@@ -55,17 +55,8 @@ bool getHadTauDecayMode(const GenParticle& measuredTau)
 }
 
 bool
-isHigherProbMax(const SVfit4tauResult& result1,
-		const SVfit4tauResult& result2)
-{
-  if ( result1.isValidSolution_ && !result2.isValidSolution_ ) return true;
-  if ( result2.isValidSolution_ && !result1.isValidSolution_ ) return false;
-  return result1.probMax_ > result2.probMax_;
-}
-
-bool
 isHigherLmax(const SVfit4tauResult& result1,
-	     const SVfit4tauResult& result2)
+             const SVfit4tauResult& result2)
 {
   if ( result1.isValidSolution_ && !result2.isValidSolution_ ) return true;
   if ( result2.isValidSolution_ && !result1.isValidSolution_ ) return false;
@@ -74,7 +65,7 @@ isHigherLmax(const SVfit4tauResult& result1,
 
 bool
 isLowerMassErr(const SVfit4tauResult& result1,
-	       const SVfit4tauResult& result2)
+               const SVfit4tauResult& result2)
 {
   if ( result1.isValidSolution_ && !result2.isValidSolution_ ) return true;
   if ( result2.isValidSolution_ && !result1.isValidSolution_ ) return false;
@@ -82,15 +73,15 @@ isLowerMassErr(const SVfit4tauResult& result1,
 }
 
 std::vector<SVfit4tauResult> compSVfit4tau(const GenParticle& measuredTau1, 
-					   const GenParticle& measuredTau2, 
-					   const GenParticle& measuredTau3, 
-					   const GenParticle& measuredTau4, 
-					   const RecoMEt& met,
-					   const std::string& chargeSumSelection_string, TRandom& rnd,
-					   int intAlgo,
-					   double massConstraint,
-					   double logM,
-					   int verbosity)
+                                           const GenParticle& measuredTau2,
+                                           const GenParticle& measuredTau3,
+                                           const GenParticle& measuredTau4,
+                                           const RecoMEt& met,
+                                           const std::string& chargeSumSelection_string, TRandom& rnd,
+                                           double massConstraint,
+                                           double logM,
+                                           int intAlgo,
+                                           int verbosity)
 {
   //if ( verbosity >= 1 ) {
   //  std::cout << "<compSVfit4tau>:" << std::endl;
@@ -120,86 +111,86 @@ std::vector<SVfit4tauResult> compSVfit4tau(const GenParticle& measuredTau1,
     for ( size_t idxMeasuredTau2 = idxMeasuredTau1 + 1; idxMeasuredTau2 < numMeasuredTaus; ++idxMeasuredTau2 ) { // tau1 has higher pT than tau2
       const GenParticle* measuredTau2 = measuredTaus[idxMeasuredTau2];
       for ( size_t idxMeasuredTau3 = 0; idxMeasuredTau3 < numMeasuredTaus; ++idxMeasuredTau3 ) {
-	const GenParticle* measuredTau3 = measuredTaus[idxMeasuredTau3];
-	for ( size_t idxMeasuredTau4 = idxMeasuredTau3 + 1; idxMeasuredTau4 < numMeasuredTaus; ++idxMeasuredTau4 ) { // tau3 has higher pT than tau4
-	  const GenParticle* measuredTau4 = measuredTaus[idxMeasuredTau4];
-	  
-	  if ( chargeSumSelection == kOS ) {
-	    // require decay products of 1st Higgs boson to have opposite charge
-	    if ( (measuredTau1->charge() + measuredTau2->charge()) != 0 ) continue;
-	    // require decay products of 2nd Higgs boson to have opposite charge
-	    if ( (measuredTau3->charge() + measuredTau4->charge()) != 0 ) continue;
-	  } else {
-	    if ( u < 1./3 ) {
-	      if ( idxMeasuredTau1 == 1 && idxMeasuredTau2 == 2 && idxMeasuredTau3 == 3 && idxMeasuredTau4 == 4 ) continue;
-	    } else if ( u < 2./3 ) {
-	      if ( idxMeasuredTau1 == 1 && idxMeasuredTau2 == 3 && idxMeasuredTau3 == 2 && idxMeasuredTau4 == 4 ) continue;
-	    } else {
-	      if ( idxMeasuredTau1 == 1 && idxMeasuredTau2 == 4 && idxMeasuredTau3 == 2 && idxMeasuredTau4 == 3 ) continue;
-	    }
-	  }
-	  
-	  // require that all taus are different
-	  if ( measuredTau3 == measuredTau1 || measuredTau3 == measuredTau2 ) continue;
-	  if ( measuredTau4 == measuredTau1 || measuredTau4 == measuredTau2 ) continue;
-	  
-	  // require that tau1 has higher pT than tau3,
-	  // in order prevent that SVfit mass is computed for both combinations (tau1,..,tau3,..) and (tau3,..,tau1,..)
-	  if ( !(measuredTau1->pt() > measuredTau3->pt()) ) continue;
-	  
-	  Particle::LorentzVector measuredTau1P4 = measuredTau1->p4();
-	  int  measuredTau1Type = getMeasuredTauLeptonType(*measuredTau1);
-	  int measuredHadTau1DecayMode = getHadTauDecayMode(*measuredTau1);
-	  Particle::LorentzVector measuredTau2P4 = measuredTau2->p4();
-	  int measuredTau2Type = getMeasuredTauLeptonType(*measuredTau2);
-	  int measuredHadTau2DecayMode = getHadTauDecayMode(*measuredTau2);
-	  Particle::LorentzVector measuredTau3P4 = measuredTau3->p4();
-	  int measuredTau3Type = getMeasuredTauLeptonType(*measuredTau3);
-	  int measuredHadTau3DecayMode = getHadTauDecayMode(*measuredTau3);
-	  Particle::LorentzVector measuredTau4P4 = measuredTau4->p4();
-	  int measuredTau4Type = getMeasuredTauLeptonType(*measuredTau4);
-	  int measuredHadTau4DecayMode = getHadTauDecayMode(*measuredTau4);
-	  double metPx = met.pt()*TMath::Cos(met.phi());
-	  double metPy = met.pt()*TMath::Sin(met.phi());
-	  TMatrixD metCov(2,2);
-	  metCov[0][0] = met.covXX();
-	  metCov[1][0] = met.covXY();
-	  metCov[0][1] = met.covXY();
-	  metCov[1][1] = met.covYY();
-	  
-	  // CV: run ClassicSVfit4tau algorithm
-	  SVfit4tauResult result = compSVfit4tau(
+        const GenParticle* measuredTau3 = measuredTaus[idxMeasuredTau3];
+        for ( size_t idxMeasuredTau4 = idxMeasuredTau3 + 1; idxMeasuredTau4 < numMeasuredTaus; ++idxMeasuredTau4 ) { // tau3 has higher pT than tau4
+          const GenParticle* measuredTau4 = measuredTaus[idxMeasuredTau4];
+
+          if ( chargeSumSelection == kOS ) {
+            // require decay products of 1st Higgs boson to have opposite charge
+            if ( (measuredTau1->charge() + measuredTau2->charge()) != 0 ) continue;
+            // require decay products of 2nd Higgs boson to have opposite charge
+            if ( (measuredTau3->charge() + measuredTau4->charge()) != 0 ) continue;
+          } else {
+            if ( u < 1./3 ) {
+              if ( idxMeasuredTau1 == 1 && idxMeasuredTau2 == 2 && idxMeasuredTau3 == 3 && idxMeasuredTau4 == 4 ) continue;
+            } else if ( u < 2./3 ) {
+              if ( idxMeasuredTau1 == 1 && idxMeasuredTau2 == 3 && idxMeasuredTau3 == 2 && idxMeasuredTau4 == 4 ) continue;
+            } else {
+              if ( idxMeasuredTau1 == 1 && idxMeasuredTau2 == 4 && idxMeasuredTau3 == 2 && idxMeasuredTau4 == 3 ) continue;
+            }
+          }
+
+          // require that all taus are different
+          if ( measuredTau3 == measuredTau1 || measuredTau3 == measuredTau2 ) continue;
+          if ( measuredTau4 == measuredTau1 || measuredTau4 == measuredTau2 ) continue;
+
+          // require that tau1 has higher pT than tau3,
+          // in order prevent that SVfit mass is computed for both combinations (tau1,..,tau3,..) and (tau3,..,tau1,..)
+          if ( !(measuredTau1->pt() > measuredTau3->pt()) ) continue;
+
+          Particle::LorentzVector measuredTau1P4 = measuredTau1->p4();
+          int  measuredTau1Type = getMeasuredTauLeptonType(*measuredTau1);
+          int measuredHadTau1DecayMode = getHadTauDecayMode(*measuredTau1);
+          Particle::LorentzVector measuredTau2P4 = measuredTau2->p4();
+          int measuredTau2Type = getMeasuredTauLeptonType(*measuredTau2);
+          int measuredHadTau2DecayMode = getHadTauDecayMode(*measuredTau2);
+          Particle::LorentzVector measuredTau3P4 = measuredTau3->p4();
+          int measuredTau3Type = getMeasuredTauLeptonType(*measuredTau3);
+          int measuredHadTau3DecayMode = getHadTauDecayMode(*measuredTau3);
+          Particle::LorentzVector measuredTau4P4 = measuredTau4->p4();
+          int measuredTau4Type = getMeasuredTauLeptonType(*measuredTau4);
+          int measuredHadTau4DecayMode = getHadTauDecayMode(*measuredTau4);
+          double metPx = met.pt()*TMath::Cos(met.phi());
+          double metPy = met.pt()*TMath::Sin(met.phi());
+          TMatrixD metCov(2,2);
+          metCov[0][0] = met.covXX();
+          metCov[1][0] = met.covXY();
+          metCov[0][1] = met.covXY();
+          metCov[1][1] = met.covYY();
+
+          // CV: run ClassicSVfit4tau algorithm
+          SVfit4tauResult result = compSVfit4tau(
             measuredTau1P4, measuredTau1Type, measuredHadTau1DecayMode,
-	    measuredTau2P4, measuredTau2Type, measuredHadTau2DecayMode,
-	    measuredTau3P4, measuredTau3Type, measuredHadTau3DecayMode,
-	    measuredTau4P4, measuredTau4Type, measuredHadTau4DecayMode,
-	    metPx, metPy, metCov,
-	    intAlgo,
-	    massConstraint,
-	    logM,
-	    verbosity);
-	  results.push_back(result);
-	}
+            measuredTau2P4, measuredTau2Type, measuredHadTau2DecayMode,
+            measuredTau3P4, measuredTau3Type, measuredHadTau3DecayMode,
+            measuredTau4P4, measuredTau4Type, measuredHadTau4DecayMode,
+            metPx, metPy, metCov,
+            massConstraint,
+            logM,
+            intAlgo,
+            verbosity);
+          results.push_back(result);
+        }
       }
     }
   }
 
   // sort SVfit4tau solutions by decreasing probMax, the maximum of integrand within the integration domain
-  std::sort(results.begin(), results.end(), isHigherProbMax);
+  std::sort(results.begin(), results.end(), isHigherLmax);
 
   return results;
 }
 
 SVfit4tauResult
 compSVfit4tau(const Particle::LorentzVector& measuredTau1Higgs1P4, int measuredTau1Higgs1Type, int measuredHadTau1Higgs1DecayMode,
-	      const Particle::LorentzVector& measuredTau2Higgs1P4, int measuredTau2Higgs1Type, int measuredHadTau2Higgs1DecayMode,
-	      const Particle::LorentzVector& measuredTau1Higgs2P4, int measuredTau1Higgs2Type, int measuredHadTau1Higgs2DecayMode,
-	      const Particle::LorentzVector& measuredTau2Higgs2P4, int measuredTau2Higgs2Type, int measuredHadTau2Higgs2DecayMode,
-	      double metPx, double metPy, const TMatrixD& metCov,
-	      int intAlgo,
-	      double massConstraint,
-	      double logM,
-	      int verbosity)
+              const Particle::LorentzVector& measuredTau2Higgs1P4, int measuredTau2Higgs1Type, int measuredHadTau2Higgs1DecayMode,
+              const Particle::LorentzVector& measuredTau1Higgs2P4, int measuredTau1Higgs2Type, int measuredHadTau1Higgs2DecayMode,
+              const Particle::LorentzVector& measuredTau2Higgs2P4, int measuredTau2Higgs2Type, int measuredHadTau2Higgs2DecayMode,
+              double metPx, double metPy, const TMatrixD& metCov,
+              double massConstraint,
+              double logM,
+              int intAlgo,
+              int verbosity)
 {
   if ( verbosity >= 1 ) {
     std::cout << "<compSVfit4tau>:" << std::endl;
@@ -212,8 +203,8 @@ compSVfit4tau(const Particle::LorentzVector& measuredTau1Higgs1P4, int measuredT
        (massConstraint > 0. && (measuredTau1Higgs2P4 + measuredTau2Higgs2P4).mass() > massConstraint) ) {
     if ( verbosity >= 1 ) {
       std::cout << "skipping event, because either" 
-		<< " ditau1VisMass = " << (measuredTau1Higgs1P4 + measuredTau2Higgs1P4).mass() << " or"
-		<< " ditau2VisMass = " << (measuredTau1Higgs2P4 + measuredTau2Higgs2P4).mass() << " exceeds massConstraint !!" << std::endl;
+                << " ditau1VisMass = " << (measuredTau1Higgs1P4 + measuredTau2Higgs1P4).mass() << " or"
+                << " ditau2VisMass = " << (measuredTau1Higgs2P4 + measuredTau2Higgs2P4).mass() << " exceeds massConstraint !!" << std::endl;
     }
     SVfit4tauResult result;
     result.isValidSolution_ = false;
@@ -260,7 +251,7 @@ compSVfit4tau(const Particle::LorentzVector& measuredTau1Higgs1P4, int measuredT
       result.ditau1_eta_     = ditau1->getEta();
       result.ditau1_etaErr_  = ditau1->getEtaErr();
       result.ditau1_phi_     = ditau1->getPhi();
-      result.ditau1_phiErr_  = ditau1->getPhiErr();	   
+      result.ditau1_phiErr_  = ditau1->getPhiErr();
       result.ditau2_visMass_ = (measuredTau1Higgs2P4 + measuredTau2Higgs2P4).mass();
       classic_svFit::HistogramAdapterDiTau* ditau2 = dihiggs->ditau2();
       assert(ditau2);
@@ -272,7 +263,6 @@ compSVfit4tau(const Particle::LorentzVector& measuredTau1Higgs1P4, int measuredT
       result.ditau2_etaErr_  = ditau2->getEtaErr();
       result.ditau2_phi_     = ditau2->getPhi();
       result.ditau2_phiErr_  = ditau2->getPhiErr();
-      result.probMax_        = svFitAlgo.getProbMax();
     }
     result.Lmax_             = svFitAlgo.getLmax();
     result.isValidSolution_  = true;

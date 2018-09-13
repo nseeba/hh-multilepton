@@ -1,6 +1,7 @@
 #ifndef hhAnalysis_multilepton_TailFitAuxFunctions_h
 #define hhAnalysis_multilepton_TailFitAuxFunctions_h
 
+
 #include <TFile.h>
 #include <TH1.h>
 #include <TF1.h>
@@ -31,6 +32,10 @@ TF1* Exp(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo
 
 TF1* Poly3(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label);
 
+TF1* Poly2(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label);
+
+TF1* Poly1(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label);
+
 TF1* ExpErf(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label);
 
 TF1* Gauss(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label);
@@ -52,5 +57,7 @@ TF1* Voigt(const vdouble& FitParameters, const vdouble& FitRange, const TH1* his
 TF1* Gaus2Voigt(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label);
 
 TF1* CrystalBall(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label);
+
+TF1* ATLASFitFunc(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo, const std::string Label);
 
 #endif

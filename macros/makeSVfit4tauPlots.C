@@ -196,7 +196,7 @@ void makeSVfit4tauPlots()
   samples[500] = "X(500 GeV) #rightarrow HH #rightarrow #tau#tau#tau#tau #rightarrow ll#tau_{h}#tau_{h}";
   samples[800] = "X(800 GeV) #rightarrow HH #rightarrow #tau#tau#tau#tau #rightarrow ll#tau_{h}#tau_{h}";
   
-  std::string inputFilePath = "/hdfs/local/veelken/hhAnalysis/2016/2018Aug10_SVfit4tau/histograms/SVfit4tau/gen_smeared/";
+  std::string inputFilePath = "/hdfs/local/veelken/hhAnalysis/2016/2018Aug24v3_SVfit4tau/histograms/SVfit4tau/gen_smeared/";
   std::map<int, std::string> inputFileNames; // key = massPoint
   inputFileNames[300] = "x_to_hh_300/x_to_hh_300_gen_smeared_central_1.root";
   inputFileNames[500] = "x_to_hh_500/x_to_hh_500_gen_smeared_central_1.root";
@@ -208,13 +208,13 @@ void makeSVfit4tauPlots()
   outputFileNames[500] = "makeSVfit4tauPlots_x_to_hh_500_log.pdf";
   outputFileNames[800] = "makeSVfit4tauPlots_x_to_hh_800_log.pdf";
 
-  std::string directory_correctAssoc_chosen          = "SVfit4tau_2lepton_2tau/gen_smeared/svFit4tauResolution_wMassContraint_logM0p0_correctAssoc_chosen";
+  std::string directory_correctAssoc_chosen          = "SVfit4tau_2lepton_2tau/gen_smeared/svFit4tauResolution_wMassContraint_logM0p0_VAMP_correctAssoc_chosen";
   std::string histogramName_correctAssoc_chosen      = "dihiggsRatioMass1";
-  std::string directory_correctAssoc_discarded       = "SVfit4tau_2lepton_2tau/gen_smeared/svFit4tauResolution_wMassContraint_logM0p0_correctAssoc_discarded";
+  std::string directory_correctAssoc_discarded       = "SVfit4tau_2lepton_2tau/gen_smeared/svFit4tauResolution_wMassContraint_logM0p0_VAMP_correctAssoc_discarded";
   std::string histogramName_correctAssoc_discarded   = "dihiggsRatioMass1";
-  std::string directory_incorrectAssoc_chosen        = "SVfit4tau_2lepton_2tau/gen_smeared/svFit4tauResolution_wMassContraint_logM0p0_incorrectAssoc_chosen";
+  std::string directory_incorrectAssoc_chosen        = "SVfit4tau_2lepton_2tau/gen_smeared/svFit4tauResolution_wMassContraint_logM0p0_VAMP_incorrectAssoc_chosen";
   std::string histogramName_incorrectAssoc_chosen    = "dihiggsRatioMass1";
-  std::string directory_incorrectAssoc_discarded     = "SVfit4tau_2lepton_2tau/gen_smeared/svFit4tauResolution_wMassContraint_logM0p0_incorrectAssoc_discarded";
+  std::string directory_incorrectAssoc_discarded     = "SVfit4tau_2lepton_2tau/gen_smeared/svFit4tauResolution_wMassContraint_logM0p0_VAMP_incorrectAssoc_discarded";
   std::string histogramName_incorrectAssoc_discarded = "dihiggsRatioMass1";
   std::string directory_EventCounter                 = "SVfit4tau_2lepton_2tau/gen_smeared/evt";
   std::string histogramName_EventCounter             = "EventCounter";

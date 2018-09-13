@@ -145,7 +145,8 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
       if sample_category.startswith("signal"):
         self.prep_dcard_signals.append(sample_category)
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "fakes_data" ]
-    self.make_plots_signal = "signal_nonresonant"
+    self.mass_point = 400
+    self.make_plots_signal = "signal_hh_%d" % self.mass_point
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.histogramDir_prep_dcard = "hh_0l_4tau_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_0l_4tau_SS_Tight"
@@ -217,26 +218,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
       lines = self.set_triggerSF_2tau(lines)
 
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
-
-  def createCfg_makePlots_mcClosure(self, jobOptions): #TODO
-    """Fills the template of python configuration file for making control plots
-
-    Args:
-      histogramFile: name of the input ROOT file
-    """
-    lines = []
-    lines.append("process.fwliteInput.fileNames = cms.vstring('%s')" % jobOptions['inputFile'])
-    lines.append("process.makePlots.outputFileName = cms.string('%s')" % jobOptions['outputFile'])
-    lines.append("process.makePlots.processesBackground = cms.vstring(%s)" % self.make_plots_backgrounds)
-    lines.append("process.makePlots.processSignal = cms.string('%s')" % self.make_plots_signal)
-    lines.append("process.makePlots.categories = cms.VPSet(")
-    lines.append("  cms.PSet(")
-    lines.append("    signal = cms.string('%s')," % self.histogramDir_prep_dcard)
-    lines.append("    sideband = cms.string('%s')," % self.histogramDir_prep_dcard.replace("Tight", "Fakeable_mcClosure_wFakeRateWeights"))
-    lines.append("    label = cms.string('%s')" % self.channel)
-    lines.append("  )")
-    lines.append(")")
-    create_cfg(self.cfgFile_make_plots_mcClosure, jobOptions['cfgFile_modified'], lines)
 
   def addToMakefile_backgrounds_from_data(self, lines_makefile):
     self.addToMakefile_addBackgrounds(lines_makefile, "sbatch_addBackgrounds", self.sbatchFile_addBackgrounds, self.jobOptions_addBackgrounds)
@@ -406,13 +387,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
                     # sum non-fake contributions for each MC sample separately
                     # input processes: TT1l0g0j&2t0e0m0j, TT1l0g0j&1t1e0m0j, TT1l0g0j&1t0e1m0j, TT1l0g0j&0t2e0m0j, TT1l0g0j&0t1e1m0j, TT1l0g0j&0t0e2m0j; ...
                     # output processes: TT; ...
-                    if sample_category.startswith("signal"):
-                      hadTau_genMatches = []
-                      hadTau_genMatches.extend(self.hadTau_genMatches_nonfakes)
-                      hadTau_genMatches.extend(self.hadTau_genMatches_fakes)
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in hadTau_genMatches ]
-                    else:
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_nonfakes ]
+                    processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_nonfakes ]
                     process_output = sample_category
                     key_addBackgrounds_job = getKey(process_name, sample_category, hadTau_selection_and_frWeight, hadTau_charge_selection)
                     cfgFile_modified = os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_%s_%s_%s_%s_cfg.py" % \
@@ -423,16 +398,14 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
                     # sum fake background contributions for each MC sample separately
                     # input processes: TT1l0g0j&1t0e0m1j, TT1l0g0j&0t1e0m1j, TT1l0g0j&0t0e1m1j, TT1l0g0j&0t0e0m2j; ...
                     # output processes: TT_fake; ...
-                    if sample_category.startswith("signal"):
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_fakes ]
-                    else:
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_fakes ]
+                    processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_fakes ]
                     process_output = "%s_fake" % sample_category
                     key_addBackgrounds_job = getKey(process_name, "%s_fake" % sample_category, hadTau_selection_and_frWeight, hadTau_charge_selection)
                     cfgFile_modified = os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_%s_fakes_%s_%s_%s_cfg.py" % \
                       (self.channel, process_name, sample_category, hadTau_selection_and_frWeight, hadTau_charge_selection))
                     outputFile = os.path.join(self.dirs[DKEY_HIST], "addBackgrounds_%s_%s_fakes_%s_%s_%s.root" % \
                       (self.channel, process_name, sample_category, hadTau_selection_and_frWeight, hadTau_charge_selection))
+                  
                   if processes_input:
                     logging.info(" ...for genMatch option = '%s'" % genMatch_category)
                     self.jobOptions_addBackgrounds[key_addBackgrounds_job] = {
@@ -488,6 +461,44 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
           }
           self.createCfg_addBackgrounds(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_fakes])
 
+          # sum signal contributions from HH->4tau ("tttt"), HH->2W2tau ("wwtt"), and HH->4W ("wwww"),
+          # separately for "nonfake" and "fake" contributions
+          genMatch_categories = [ "nonfake", "fake" ]
+          for genMatch_category in genMatch_categories:
+            for sample_name, sample_info in self.samples.items():
+              if not sample_info["use_it"] or sample_info["sample_category"] in [ "additional_signal_overlap", "background_data_estimate" ]:
+                continue
+              sample_category = sample_info["sample_category"]
+              sample_category_base = sample_category[0:sample_category.rfind("_")]
+              is_signal = (sample_category_base.startswith("signal"))
+              if not is_signal:
+                continue
+              key_addBackgrounds_job_signal = getKey(hadTau_selection_and_frWeight, hadTau_charge_selection, sample_category_base)
+              key_hadd_stage1_5 = getKey(hadTau_selection_and_frWeight, hadTau_charge_selection)
+              processes_input = []
+              for decay_mode in [ "tttt", "wwtt", "wwww" ]:
+                processes_input.append(sample_category_base + "_" + decay_mode)
+              process_output = sample_category_base
+              if genMatch_category == "fake":
+                key_addBackgrounds_job_signal = key_addBackgrounds_job_signal + "_fake"
+                processes_input = [ process_input + "_fake" for process_input in processes_input ]
+                process_output = process_output + "_fake"
+              if key_addBackgrounds_job_signal in self.jobOptions_addBackgrounds_sum.keys():
+                continue             
+              self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal] = {
+                'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5],
+                'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_%s_%s_%s_cfg.py" % \
+                  (self.channel, sample_category_base, hadTau_selection_and_frWeight, hadTau_charge_selection)),
+                'outputFile' : os.path.join(self.dirs[DKEY_HIST], "addBackgrounds_%s_%s_%s_%s.root" % \
+                  (self.channel, sample_category_base, hadTau_selection_and_frWeight, hadTau_charge_selection)),
+                'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgrounds_%s_%s_%s_%s.log" % \
+                  (self.channel, sample_category_base, hadTau_selection_and_frWeight, hadTau_charge_selection)),
+                'categories' : [ getHistogramDir(hadTau_selection, hadTau_frWeight, hadTau_charge_selection) ],
+                'processes_input' : processes_input,
+                'process_output' : process_output
+              }
+              self.createCfg_addBackgrounds(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal])
+
           # initialize input and output file names for hadd_stage2
           key_hadd_stage2 = getKey(hadTau_selection_and_frWeight, hadTau_charge_selection)
           if not key_hadd_stage2 in self.inputFiles_hadd_stage2:
@@ -533,7 +544,9 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
         'datacardFile' : os.path.join(self.dirs[DKEY_DCRD], "prepareDatacards_%s_%s.root" % (self.channel, histogramToFit)),
         'histogramDir' : self.histogramDir_prep_dcard,
         'histogramToFit' : histogramToFit,
-        'label' : None
+        'label' : '4#tau_{h}',
+        'massPoint' : self.mass_point,
+        'skipChannel' : True,
       }
       self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
       if "SS" in self.hadTau_charge_selections:
@@ -545,7 +558,9 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
           'datacardFile' : os.path.join(self.dirs[DKEY_DCRD], "prepareDatacards_%s_SS_%s.root" % (self.channel, histogramToFit)),
           'histogramDir' : self.histogramDir_prep_dcard_SS,
           'histogramToFit' : histogramToFit,
-          'label' : 'SS'
+          'label' : '4#tau_{h} SS',
+          'massPoint' : self.mass_point,
+          'skipChannel' : True,
         }
         self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
@@ -596,8 +611,10 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
       'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "makePlots_%s_cfg.py" % self.channel),
       'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s.png" % self.channel),
       'histogramDir' : self.histogramDir_prep_dcard,
-      'label' : None,
-      'make_plots_backgrounds' : self.make_plots_backgrounds
+      'label' : '4#tau_{h}',
+      'make_plots_backgrounds' : self.make_plots_backgrounds,
+      'massPoint' : self.mass_point,
+      'skipChannel' : True,
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "SS" in self.hadTau_charge_selections:
@@ -609,8 +626,10 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
         'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "makePlots_%s_SS_cfg.py" % self.channel),
         'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s_SS.png" % self.channel),
         'histogramDir' : self.histogramDir_prep_dcard_SS,
-        'label' : "SS",
-        'make_plots_backgrounds' : self.make_plots_backgrounds
+        'label' : "4#tau_{h} SS",
+        'make_plots_backgrounds' : self.make_plots_backgrounds,
+        'massPoint' : self.mass_point,
+        'skipChannel' : True,
       }
       self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "Fakeable_mcClosure" in self.hadTau_selections: #TODO

@@ -78,6 +78,10 @@ namespace
 	Fitfunc_ = Exp(FitParameters_, FitRange_, Histo_to_fit_, Label_);
       }else if(FitFunctionName_ == "LegendrePolynomial3"){ 
 	Fitfunc_ = Poly3(FitParameters_, FitRange_, Histo_to_fit_, Label_);
+      }else if(FitFunctionName_ == "LegendrePolynomial2"){ 
+	Fitfunc_ = Poly2(FitParameters_, FitRange_, Histo_to_fit_, Label_);
+      }else if(FitFunctionName_ == "LegendrePolynomial1"){ 
+	Fitfunc_ = Poly1(FitParameters_, FitRange_, Histo_to_fit_, Label_);
       }else if(FitFunctionName_ == "ExponentialErf"){ 
 	Fitfunc_ = ExpErf(FitParameters_, FitRange_, Histo_to_fit_, Label_);
       }else if(FitFunctionName_ == "Gaussian"){ 
@@ -98,6 +102,8 @@ namespace
 	Fitfunc_ = Voigt(FitParameters_, FitRange_, Histo_to_fit_, Label_);
       }else if(FitFunctionName_ == "DoubleGaussianVoigt"){ 
 	Fitfunc_ = Gaus2Voigt(FitParameters_, FitRange_, Histo_to_fit_, Label_);
+      }else if(FitFunctionName_ == "ATLASFitFunc"){ 
+	Fitfunc_ = ATLASFitFunc(FitParameters_, FitRange_, Histo_to_fit_, Label_);
       }else {
 	std::cerr<< " Wrong Function name !!! " << std::endl;
       }
@@ -523,6 +529,59 @@ void SetCentralHistoBinError(TH1* central_histo, std::vector<TH1*> alt_histos, c
   }
 }
 
+std::vector<TH1*> FitSystUpDownHisto(TH1* central_histo, std::vector<TH1*> alt_histos, const double& fitRange_min, const std::string& label){
+
+  std::vector<TH1*> vect_hist;
+  std::string labelUp   = label + "_FitSystUp";
+  std::string labelDown = label + "_FitSystDown";
+
+  const TAxis* const xAxis = central_histo->GetXaxis();
+  const int numBins = xAxis->GetNbins();  
+  int starting_bin  = 0; 
+  for(int iBin = 0; iBin < numBins; iBin++){
+    if((fitRange_min >= xAxis->GetBinLowEdge(iBin)) && (fitRange_min < xAxis->GetBinUpEdge(iBin)) ){
+      starting_bin = iBin;
+      break;
+    }else{
+      continue;
+    }
+  } // 1st Loop over bins ends
+
+  std::vector<double> vect_BinContentsUp(numBins);
+  std::vector<double> vect_BinContentsDown(numBins);
+  for(int iBin = starting_bin; iBin < numBins; iBin++){
+    double diff = 0.;
+   for(std::vector<TH1*>::const_iterator alt_histo_iter = alt_histos.begin(); 
+      alt_histo_iter != alt_histos.end(); alt_histo_iter++){
+	double bin_content_alt =  (*alt_histo_iter)->GetBinContent(iBin);
+	double bin_content_central =  central_histo->GetBinContent(iBin);
+        diff += std::abs(bin_content_alt - bin_content_central);
+   } // Loop over histos
+   vect_BinContentsUp.at(iBin)   = central_histo->GetBinContent(iBin) + diff;
+   vect_BinContentsDown.at(iBin) = central_histo->GetBinContent(iBin) - diff;
+  } // Loop over bins
+
+  TH1* hist_up = dynamic_cast<TH1*>(central_histo->Clone());
+  // hist_up->Reset();
+  hist_up->SetName(labelUp.c_str());
+  TH1* hist_down = dynamic_cast<TH1*>(central_histo->Clone());
+  // hist_down->Reset();
+  hist_down->SetName(labelDown.c_str());
+
+  for(int iBin = starting_bin; iBin < numBins; iBin++){
+    hist_up->SetBinContent(iBin, vect_BinContentsUp[iBin]);
+    hist_up->SetBinError(iBin, 0.);
+    hist_down->SetBinContent(iBin, vect_BinContentsDown[iBin]);
+    hist_down->SetBinError(iBin, 0.);
+  }
+
+  vect_hist.push_back(hist_up);
+  vect_hist.push_back(hist_down);
+
+  return vect_hist;
+
+}
+
 void Plot(TH1* histo_to_fit, FitFuncEntryType* nom_fit_func){
   // ----- Plotting ---------
   TCanvas* A = new TCanvas("A","FIT CANVAS",600,600);
@@ -568,7 +627,8 @@ int main(int argc, char* argv[])
 
   edm::ParameterSet cfgaddBackgrounds_TailFit = cfg.getParameter<edm::ParameterSet>("addBackgrounds_TailFit");
   
-  std::string InputDirPath = cfgaddBackgrounds_TailFit.getParameter<std::string>("InputDirPath");
+  std::string InputDir = cfgaddBackgrounds_TailFit.getParameter<std::string>("InputDir");
+  std::string InputDirPath = Form("%s/sel/evt/", InputDir.data());
   std::string ProcessName = cfgaddBackgrounds_TailFit.getParameter<std::string>("processName");
   std::string HistogramName = cfgaddBackgrounds_TailFit.getParameter<std::string>("histogramName");
 
@@ -605,6 +665,9 @@ int main(int argc, char* argv[])
 
   TH1* histo = getHistogram(inputDir, ProcessName, HistogramName, "", true, false);
   //  TArrayD histo_Orig_Binning = getBinning(histo); // Storing original binning scheme of the histogram
+  TH1* histo_orig = dynamic_cast<TH1*>(histo->Clone());
+  histo_orig->SetName(HistogramName.c_str());
+
   TH1* histo_to_fit = 0;
 
   // ------ (Optional) Re-binning of the histogram -------
@@ -670,14 +733,14 @@ int main(int argc, char* argv[])
       for ( size_t idxComponent = 0; idxComponent < dimension; ++idxComponent ) {
 	fitFunctionParUp->SetParameter(idxComponent, fitFunction_nom->GetParameter(idxComponent) + TMath::Sqrt(eigenVector_and_Value->eigenValue_)*eigenVector_and_Value->eigenVector_(idxComponent));
       }
-      fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionParUp, Form("EigenVecUp_%i", idxPar)));
+      fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionParUp, Form("EigenVec_%iUp", idxPar)));
       std::string fitFunctionParDownName = Form("%s_par%iDown", (nom_fit_func->GetFitFuncName()).data(), idxPar);
       FitFuncEntryType* fit_func_par_down = new FitFuncEntryType(nominal_fit_func_PSet, histo_to_fit, fitFunctionParDownName);
       TF1* fitFunctionParDown = fit_func_par_down->GetFitFunction();
       for ( size_t idxComponent = 0; idxComponent < dimension; ++idxComponent ) {
 	fitFunctionParDown->SetParameter(idxComponent, fitFunction_nom->GetParameter(idxComponent) - TMath::Sqrt(eigenVector_and_Value->eigenValue_)*eigenVector_and_Value->eigenVector_(idxComponent));
       }
-      fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionParDown, Form("EigenVecDown_%i", idxPar)));
+      fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionParDown, Form("EigenVec_%iDown", idxPar)));
       ++idxPar;
     } // loop over e-vectors and e-values ends
   } else {
@@ -727,13 +790,15 @@ int main(int argc, char* argv[])
   std::string histo_name4 = Form("%s_fit_bias_Syst", HistogramName.data());
   fit_bias_Syst_histo->SetName(histo_name4.c_str());
 
+  // ---- Bin-By-Bin ------
   SetCentralHistoBinError(fit_bias_Syst_histo, vect_alt_fit_histos, nom_fit_func->GetXmin());
+
+  // ---- Up and Down ----
+  std::vector<TH1*> vect_hist;
+  vect_hist = FitSystUpDownHisto(fit_bias_Syst_histo, vect_alt_fit_histos, nom_fit_func->GetXmin(), HistogramName);
 
   // ---- Plotting ----
   // Plot(histo_to_fit, nom_fit_func);
-
-
-
 
 
 
