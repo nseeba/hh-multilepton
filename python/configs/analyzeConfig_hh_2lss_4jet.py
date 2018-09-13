@@ -421,22 +421,12 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
                     # sum non-fake contributions for each MC sample separately
                     # input processes: TT3l0g0j,...
                     # output processes: TT; ...
-                    if sample_category in [ "signal" ]:
+                    if sample_category.startswith("signal"):
                       lepton_genMatches = []
                       lepton_genMatches.extend(self.lepton_genMatches_nonfakes)
                       lepton_genMatches.extend(self.lepton_genMatches_conversions)
                       lepton_genMatches.extend(self.lepton_genMatches_fakes)
                       processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in lepton_genMatches ]
-                    elif sample_category in [ "ttH" ]:
-                      lepton_genMatches = []
-                      lepton_genMatches.extend(self.lepton_genMatches_nonfakes)
-                      lepton_genMatches.extend(self.lepton_genMatches_conversions)
-                      processes_input = []
-                      processes_input.extend([ "%s%s" % ("ttH_htt", genMatch) for genMatch in lepton_genMatches ])
-                      processes_input.extend([ "%s%s" % ("ttH_hww", genMatch) for genMatch in lepton_genMatches ])
-                      processes_input.extend([ "%s%s" % ("ttH_hzz", genMatch) for genMatch in lepton_genMatches ])
-                      processes_input.extend([ "%s%s" % ("ttH_hzg", genMatch) for genMatch in lepton_genMatches ])
-                      processes_input.extend([ "%s%s" % ("ttH_hmm", genMatch) for genMatch in lepton_genMatches ])
                     else:
                       processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_nonfakes ]
                     process_output = sample_category
@@ -449,19 +439,12 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
                     # sum fake contributions for each MC sample separately
                     # input processes: TT2l1g0j, TT1l2g0j, TT0l3g0j; ...
                     # output processes: TT_conversion; ...
-                    if sample_category in [ "signal" ]:
+                    if sample_category.startswith("signal"):
                       processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_conversions ]
-                    elif sample_category in [ "ttH" ]:
-                      processes_input = []
-                      processes_input.extend([ "%s%s" % ("ttH_htt", genMatch) for genMatch in self.lepton_genMatches_conversions ])
-                      processes_input.extend([ "%s%s" % ("ttH_hww", genMatch) for genMatch in self.lepton_genMatches_conversions ])
-                      processes_input.extend([ "%s%s" % ("ttH_hzz", genMatch) for genMatch in self.lepton_genMatches_conversions ])
-                      processes_input.extend([ "%s%s" % ("ttH_hzg", genMatch) for genMatch in self.lepton_genMatches_conversions ])
-                      processes_input.extend([ "%s%s" % ("ttH_hmm", genMatch) for genMatch in self.lepton_genMatches_conversions ])
                     else:
                       processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_conversions ]
                     process_output = "%s_conversion" % sample_category
-                    key_addBackgrounds_job = getKey(process_name, "%s_fake" % sample_category, lepton_selection_and_frWeight, chargeSumSelection)
+                    key_addBackgrounds_job = getKey(process_name, "%s_conversion" % sample_category, lepton_selection_and_frWeight, chargeSumSelection)
                     cfgFile_modified = os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_conversions_%s_%s_%s_%s_cfg.py" % \
                       (self.channel, process_name, sample_category, lepton_selection_and_frWeight, chargeSumSelection))
                     outputFile = os.path.join(self.dirs[DKEY_HIST], "addBackgrounds_%s_conversions_%s_%s_%s_%s.root" % \
@@ -472,13 +455,6 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
                     # output processes: TT_fake; ...
                     if sample_category in [ "signal" ]:
                       processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_fakes ]
-                    elif sample_category in [ "ttH" ]:
-                      processes_input = []
-                      processes_input.extend([ "%s%s" % ("ttH_htt", genMatch) for genMatch in self.lepton_genMatches_fakes ])
-                      processes_input.extend([ "%s%s" % ("ttH_hww", genMatch) for genMatch in self.lepton_genMatches_fakes ])
-                      processes_input.extend([ "%s%s" % ("ttH_hzz", genMatch) for genMatch in self.lepton_genMatches_fakes ])
-                      processes_input.extend([ "%s%s" % ("ttH_hzg", genMatch) for genMatch in self.lepton_genMatches_fakes ])
-                      processes_input.extend([ "%s%s" % ("ttH_hmm", genMatch) for genMatch in self.lepton_genMatches_fakes ])
                     else:
                       processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_fakes ]
                     process_output = "%s_fake" % sample_category
