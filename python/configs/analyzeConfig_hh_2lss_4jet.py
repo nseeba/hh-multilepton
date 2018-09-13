@@ -198,30 +198,6 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
     lines = super(analyzeConfig_hh_2lss_4jet, self).createCfg_analyze(jobOptions, sample_info)
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
 
-<<<<<<< HEAD
-  def createCfg_makePlots_mcClosure(self, jobOptions): #TODO
-    """Fills the template of python configuration file for making control plots
-
-    Args:
-      histogramFile: name of the input ROOT file
-    """
-    lines = []
-    lines.append("process.fwliteInput.fileNames = cms.vstring('%s')" % jobOptions['inputFile'])
-    lines.append("process.makePlots.outputFileName = cms.string('%s')" % jobOptions['outputFile'])
-    lines.append("process.makePlots.processesBackground = cms.vstring(%s)" % self.make_plots_backgrounds)
-    lines.append("process.makePlots.processSignal = cms.string('%s')" % self.make_plots_signal)
-    lines.append("process.makePlots.categories = cms.VPSet(")
-    lines.append("  cms.PSet(")
-    lines.append("    signal = cms.string('%s')," % self.histogramDir_prep_dcard)
-    lines.append("    sideband = cms.string('%s')," % self.histogramDir_prep_dcard.replace("Tight", "Fakeable_mcClosure_wFakeRateWeights"))
-    lines.append("    label = cms.string('%s')" % self.channel)
-    lines.append("  )")
-    lines.append(")")
-    lines.append("process.makePlots.intLumiData = cms.double(%.1f)" % self.lumi)
-    create_cfg(self.cfgFile_make_plots_mcClosure, jobOptions['cfgFile_modified'], lines)
-
-=======
->>>>>>> ec8df093065fc0a02ebaf6e7a3abb2165c96eaed
   def addToMakefile_backgrounds_from_data(self, lines_makefile):
     self.addToMakefile_addBackgrounds(lines_makefile, "sbatch_addBackgrounds", self.sbatchFile_addBackgrounds, self.jobOptions_addBackgrounds)
     self.addToMakefile_addBackgrounds(lines_makefile, "sbatch_addBackgrounds_sum", self.sbatchFile_addBackgrounds_sum, self.jobOptions_addBackgrounds_sum)
@@ -720,7 +696,7 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
         self.createCfg_add_syst_fakerate(self.jobOptions_add_syst_fakerate[key_add_syst_fakerate_job])
 
     logging.info("Creating configuration files to run 'makePlots'")
-<<<<<<< HEAD
+
     key_makePlots_job = getKey("OS")
     key_hadd_stage2 = getKey(get_lepton_selection_and_frWeight("Tight", "disabled"), "OS")
     self.jobOptions_make_plots[key_makePlots_job] = {
@@ -730,7 +706,9 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
       'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s.png" % self.channel),
       'histogramDir' : self.histogramDir_prep_dcard,
       'label' : "hh_2lss_4jet",
-      'make_plots_backgrounds' : self.make_plots_backgrounds
+      'make_plots_backgrounds' : self.make_plots_backgrounds,
+      'massPoint' : self.mass_point,
+      'skipChannel' : True,
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "SS" in self.chargeSumSelections:
@@ -743,7 +721,9 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
         'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s_SS.png" % self.channel),
         'histogramDir' : self.histogramDir_prep_dcard_SS,
         'label' : "HH 2l SS",
-        'make_plots_backgrounds' : self.make_plots_backgrounds
+        'make_plots_backgrounds' : self.make_plots_backgrounds,
+        'massPoint'  : self.mass_point,
+        'skipChannel': True,
       }
       self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "Fakeable_mcClosure" in self.lepton_selections: #TODO
@@ -753,58 +733,9 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
         'executable' : self.executable_make_plots_mcClosure,
         'inputFile' : self.outputFile_hadd_stage2[key_hadd_stage2],
         'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "makePlots_mcClosure_%s_cfg.py" % self.channel),
-        'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_mcClosure_%s.png" % self.channel)
+        'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_mcClosure_%s.png" % self.channel),
       }
       self.createCfg_makePlots_mcClosure(self.jobOptions_make_plots[key_makePlots_job])
-=======
-    for lepton_charge_selection in self.lepton_charge_selections:
-      for hadTau_charge_selection in self.hadTau_charge_selections:
-        lepton_and_hadTau_charge_selection = ""
-        if lepton_charge_selection != "disabled":
-          lepton_and_hadTau_charge_selection += "_lep%s" % lepton_charge_selection
-        if hadTau_charge_selection != "disabled":
-          lepton_and_hadTau_charge_selection += "_hadTau%s" % hadTau_charge_selection
-
-        key_makePlots_job = getKey(lepton_charge_selection, hadTau_charge_selection, "OS")
-        key_hadd_stage2 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
-        self.jobOptions_make_plots[key_makePlots_job] = {
-          'executable' : self.executable_make_plots,
-          'inputFile' : self.outputFile_hadd_stage2[key_hadd_stage2],
-          'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "makePlots_%s%s_cfg.py" % (self.channel, lepton_and_hadTau_charge_selection)),
-          'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s%s.png" % (self.channel, lepton_and_hadTau_charge_selection)),
-          'histogramDir' : getHistogramDir("Tight", "Tight", "disabled", lepton_charge_selection, hadTau_charge_selection, "OS"),
-          'label' : None,
-          'make_plots_backgrounds' : self.make_plots_backgrounds,
-          'massPoint' : self.mass_point,
-          'skipChannel' : True,
-        }
-        self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
-        if "SS" in self.chargeSumSelections:
-          key_makePlots_job = getKey(lepton_charge_selection, hadTau_charge_selection, "SS")
-          key_hadd_stage2 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "SS")
-          self.jobOptions_make_plots[key_makePlots_job] = {
-            'executable' : self.executable_make_plots,
-            'inputFile' : self.outputFile_hadd_stage2[key_hadd_stage2],
-            'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "makePlots_%s%s_sumSS_cfg.py" % (self.channel, lepton_and_hadTau_charge_selection)),
-            'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s%s_sumSS.png" % (self.channel, lepton_and_hadTau_charge_selection)),
-            'histogramDir' : getHistogramDir("Tight", "Tight", "disabled", lepton_charge_selection, hadTau_charge_selection, "SS"),
-            'label' : "SS",
-            'make_plots_backgrounds' : self.make_plots_backgrounds,
-            'massPoint' : self.mass_point,
-            'skipChannel' : True,
-          }
-          self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
-        if "Fakeable_mcClosure" in self.lepton_and_hadTau_selections: #TODO
-          key_makePlots_job = getKey(lepton_charge_selection, hadTau_charge_selection, "OS")
-          key_hadd_stage2 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
-          self.jobOptions_make_plots[key_makePlots_job] = {
-            'executable' : self.executable_make_plots_mcClosure,
-            'inputFile' : self.outputFile_hadd_stage2[key_hadd_stage2],
-            'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "makePlots_mcClosure_%s%s_cfg.py" % (self.channel, lepton_and_hadTau_charge_selection)),
-            'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_mcClosure_%s%s.png" % (self.channel, lepton_and_hadTau_charge_selection))
-          }
-          self.createCfg_makePlots_mcClosure(self.jobOptions_make_plots[key_makePlots_job])
->>>>>>> ec8df093065fc0a02ebaf6e7a3abb2165c96eaed
 
     if self.is_sbatch:
       logging.info("Creating script for submitting '%s' jobs to batch system" % self.executable_analyze)
