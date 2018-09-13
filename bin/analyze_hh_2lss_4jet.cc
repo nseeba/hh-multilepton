@@ -641,7 +641,7 @@ int main(int argc, char* argv[])
     "b-jet veto (1)",
     "tau veto (1)",
     ">= 2 sel leptons",
-    ">= 2 tight leptons",
+    "<= 2 tight leptons",
     ">= 3 jets (2)",
     "b-jet veto (2)",
     "tau veto (2)",
@@ -1011,7 +1011,7 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms("b-jet veto (1)", lumiScale);
 
     //    if ( !(preselHadTausFull.size() >= 2) ) continue;
-    if ( (preselHadTausFull.size() >= 2) ) 
+    if ( (tightHadTausFull.size() >= 2) ) 
       {
 	continue;
       }
@@ -1110,15 +1110,15 @@ int main(int argc, char* argv[])
     }
 
     // require exactly two leptons passing tight selection criteria, to avoid overlap with other channels
-    if ( !(tightLeptonsFull.size() >= 2) ) {
+    if ( !(tightLeptonsFull.size() <= 2) ) {
       if ( run_lumi_eventSelector ) {
         std::cout << "event " << eventInfo.str() << " FAILS tightLeptons selection." << std::endl;
         printCollection("tightLeptonsFull", tightLeptonsFull);
       }
       continue;
     }
-    cutFlowTable.update(">= 2 tight leptons", evtWeight);
-    cutFlowHistManager->fillHistograms(">= 2 tight leptons", evtWeight);
+    cutFlowTable.update("<= 2 tight leptons", evtWeight);
+    cutFlowHistManager->fillHistograms("<= 2 tight leptons", evtWeight);
 
     // apply requirement on jets (incl. b-tagged jets) and hadronic taus on level of final event selection 
     if ( !((int)selJets.size() >= minNumJets) ) {
@@ -1142,7 +1142,7 @@ int main(int argc, char* argv[])
     cutFlowTable.update("b-jet veto (2)", evtWeight);
     cutFlowHistManager->fillHistograms("b-jet veto (2)", evtWeight);
 
-    if ( (selHadTaus.size() >= 1) ) 
+    if ( (tightHadTaus.size() >= 2) ) 
       {
 	continue;
       }
@@ -1359,22 +1359,15 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update("H->ZZ*->4l veto", evtWeight);
     cutFlowHistManager->fillHistograms("H->ZZ*->4l veto", evtWeight);
-    /*
-    double met_LD_cut = 0.;
-    if      ( selJets.size() >= 4 ) met_LD_cut = -1.; // MET LD cut not applied 
-    else if ( isSameFlavor_OS     ) met_LD_cut = 45.;
-    else                            met_LD_cut = 30.;
-    if ( met_LD_cut > 0 && met_LD < met_LD_cut ) {
+
+    if ( !(selLepton_lead->is_muon() || selLepton_sublead->is_muon() || met_LD >= 30.) ) {
       if ( run_lumi_eventSelector ) {
-	std::cout << "event " << eventInfo.str() << " FAILS MET LD selection." << std::endl;
-	std::cout << " (met_LD = " << met_LD << ", met_LD_cut = " << met_LD_cut << ")" << std::endl;
+	std::cout << "event " << eventInfo.str() << " FAILS MET LD selection.\n"
+	  " (LD = " << met_LD << ")\n"
+	  ;
       }
       continue;
-    }*/
-    if(met.p4().pt()<20)
-      {
-	continue;
-      }
+    }
     cutFlowTable.update("met LD", evtWeight);
     cutFlowHistManager->fillHistograms("met LD", evtWeight);
 	
@@ -1413,7 +1406,7 @@ int main(int argc, char* argv[])
     double dihiggsVisMass_sel =  -1;
     dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
 
-    std::cout<<"dihiggsVisMass_sel = "<<dihiggsVisMass_sel<<"\n";
+    //std::cout<<"dihiggsVisMass_sel = "<<dihiggsVisMass_sel<<"\n";
     //    double mTauTauVis_sel = -1;
     //s    double mTauTauVis_sel = (selHadTau_lead->p4() + selHadTau_sublead->p4()).mass();
             
