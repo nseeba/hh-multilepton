@@ -1,7 +1,7 @@
-#ifndef hhAnalysis_multilepton_EvtHistManager_hh_2lss_4jet_h
-#define hhAnalysis_multilepton_EvtHistManager_hh_2lss_4jet_h
+#ifndef hhAnalysis_multilepton_EvtHistManager_hh_2lss_h
+#define hhAnalysis_multilepton_EvtHistManager_hh_2lss_h
 
-/** \class EvtHistManager_hh_2lss_4jet
+/** \class EvtHistManager_hh_2lss
  *
  * Book and fill histograms for event-level quantities in the 2l+2tau_h category 
  * of the HH->wwww, WWtt, and WWWW analysis 
@@ -14,12 +14,12 @@
 
 //#include "hhAnalysis/multilepton/interface/mySVfit4tauAuxFunctions.h" // SVfit4tauResult
 
-class EvtHistManager_hh_2lss_4jet
+class EvtHistManager_hh_2lss
   : public HistManagerBase
 {
 public:
-  EvtHistManager_hh_2lss_4jet(const edm::ParameterSet & cfg);
-  ~EvtHistManager_hh_2lss_4jet() {}
+  EvtHistManager_hh_2lss(const edm::ParameterSet & cfg);
+  ~EvtHistManager_hh_2lss() {}
 
   /// book and fill histograms
   void

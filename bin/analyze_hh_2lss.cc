@@ -80,7 +80,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
 
-#include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2lss_4jet.h" // EvtHistManager_hh_2lss_4jet
+#include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2lss.h" // EvtHistManager_hh_2lss
 //#include "hhAnalysis/multilepton/interface/SVfit4tauHistManager.h" // SVfit4tauHistManager
 //#include "hhAnalysis/multilepton/interface/mySVfit4tauAuxFunctions.h" // getMeasuredTauLeptonType, getHadTauDecayMode
 
@@ -115,7 +115,7 @@ struct HadTauHistManagerWrapper_eta
 };
 
 /**
- * @brief Produce datacard and control plots for 2lss_4jet category of HH analysis.
+ * @brief Produce datacard and control plots for 2lss category of HH analysis.
  */
 int main(int argc, char* argv[])
 {
@@ -128,20 +128,20 @@ int main(int argc, char* argv[])
     return EXIT_FAILURE;
   }
 
-  std::cout << "<analyze_hh_2lss_4jet>:" << std::endl;
+  std::cout << "<analyze_hh_2lss>:" << std::endl;
 
 //--- keep track of time it takes the macro to execute
   TBenchmark clock;
-  clock.Start("analyze_hh_2lss_4jet");
+  clock.Start("analyze_hh_2lss");
 
 //--- read python configuration parameters
   if ( !edm::readPSetsFrom(argv[1])->existsAs<edm::ParameterSet>("process") )
-    throw cms::Exception("analyze_hh_2lss_4jet")
+    throw cms::Exception("analyze_hh_2lss")
       << "No ParameterSet 'process' found in configuration file = " << argv[1] << " !!\n";
 
   edm::ParameterSet cfg = edm::readPSetsFrom(argv[1])->getParameter<edm::ParameterSet>("process");
 
-  edm::ParameterSet cfg_analyze = cfg.getParameter<edm::ParameterSet>("analyze_hh_2lss_4jet");
+  edm::ParameterSet cfg_analyze = cfg.getParameter<edm::ParameterSet>("analyze_hh_2lss");
 
   std::string treeName = cfg_analyze.getParameter<std::string>("treeName");
 
@@ -183,7 +183,7 @@ int main(int argc, char* argv[])
   if      ( leptonChargeSelection_string == "OS"       ) leptonChargeSelection = kOS;
   else if ( leptonChargeSelection_string == "SS"       ) leptonChargeSelection = kSS;
   else if ( leptonChargeSelection_string == "disabled" ) leptonChargeSelection = kDisabled;
-  else throw cms::Exception("analyze_hh_2lss_4jet")
+  else throw cms::Exception("analyze_hh_2lss")
     << "Invalid Configuration parameter 'leptonChargeSelection' = " << leptonChargeSelection_string << " !!\n";
 
   const std::string electronSelection_string = cfg_analyze.getParameter<std::string>("electronSelection");
@@ -273,14 +273,14 @@ int main(int argc, char* argv[])
     case kEra_2016: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2016(cfg_dataToMCcorrectionInterface); break;
     case kEra_2017: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2017(cfg_dataToMCcorrectionInterface); break;
     case kEra_2018: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2018(cfg_dataToMCcorrectionInterface); break;
-    default: throw cmsException("analyze_hh_2lss_4jet", __LINE__) << "Invalid era = " << era;
+    default: throw cmsException("analyze_hh_2lss", __LINE__) << "Invalid era = " << era;
   }
 
   std::string applyFakeRateWeights_string = cfg_analyze.getParameter<std::string>("applyFakeRateWeights");
   int applyFakeRateWeights = -1;
   if      ( applyFakeRateWeights_string == "disabled" ) applyFakeRateWeights = kFR_disabled;
   else if ( applyFakeRateWeights_string == "2lepton"  ) applyFakeRateWeights = kFR_2lepton;
-  else throw cms::Exception("analyze_hh_2lss_4jet")
+  else throw cms::Exception("analyze_hh_2lss")
     << "Invalid Configuration parameter 'applyFakeRateWeights' = " << applyFakeRateWeights_string << " !!\n";
 
   LeptonFakeRateInterface* leptonFakeRateInterface = 0;
@@ -444,7 +444,7 @@ int main(int argc, char* argv[])
     JetHistManager* jets_;
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
-    EvtHistManager_hh_2lss_4jet* evt_;
+    EvtHistManager_hh_2lss* evt_;
     EvtYieldHistManager* evtYield_;
   };
   std::map<int, preselHistManagerType*> preselHistManagers;
@@ -461,7 +461,7 @@ int main(int argc, char* argv[])
     JetHistManager* subleadJet_;
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
-    EvtHistManager_hh_2lss_4jet* evt_;
+    EvtHistManager_hh_2lss* evt_;
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
@@ -487,7 +487,7 @@ int main(int argc, char* argv[])
     preselHistManager->metFilters_ = new MEtFilterHistManager(makeHistManager_cfg(process_and_genMatch,
         Form("%s/presel/metFilters", histogramDir.data()), central_or_shift));
     preselHistManager->metFilters_->bookHistograms(fs);
-    preselHistManager->evt_ = new EvtHistManager_hh_2lss_4jet(makeHistManager_cfg(process_and_genMatch,
+    preselHistManager->evt_ = new EvtHistManager_hh_2lss(makeHistManager_cfg(process_and_genMatch,
         Form("%s/presel/evt", histogramDir.data()), era_string, central_or_shift));
     preselHistManager->evt_->bookHistograms(fs);
     edm::ParameterSet cfg_EvtYieldHistManager_presel = makeHistManager_cfg(process_and_genMatch, 
@@ -533,7 +533,7 @@ int main(int argc, char* argv[])
     selHistManager->metFilters_ = new MEtFilterHistManager(makeHistManager_cfg(process_and_genMatch,
         Form("%s/sel/metFilters", histogramDir.data()), central_or_shift));
     selHistManager->metFilters_->bookHistograms(fs);
-    selHistManager->evt_ = new EvtHistManager_hh_2lss_4jet(makeHistManager_cfg(process_and_genMatch,
+    selHistManager->evt_ = new EvtHistManager_hh_2lss(makeHistManager_cfg(process_and_genMatch,
 	Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
     selHistManager->evt_->bookHistograms(fs);
 
@@ -1466,7 +1466,7 @@ int main(int argc, char* argv[])
 
   delete inputTree;
 
-  clock.Show("analyze_hh_2lss_4jet");
+  clock.Show("analyze_hh_2lss");
 
   return EXIT_SUCCESS;
 }
