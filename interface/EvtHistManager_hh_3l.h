@@ -26,13 +26,15 @@ class EvtHistManager_hh_3l
   void
   fillHistograms(int numElectrons,
                  int numMuons,
-                 int numHadTaus,
                  int numJets,
+								 int numJetsPtGt40,
                  int numBJets_loose,
                  int numBJets_medium,
-                 double mvaOutput_3l_ttV,
-                 double mvaOutput_3l_ttbar,
-                 double mvaDiscr_3l,
+								 double dihiggsVisMass,
+								 double dihiggsMass,
+								 double WTojjMass,
+								 double HT,
+								 double STMET,
                  double evtWeight);
 
   const TH1 *
@@ -41,6 +43,7 @@ class EvtHistManager_hh_3l
  private:
   int era_;
 
+	/*
   TH1 * histogram_numElectrons_;
   TH1 * histogram_numMuons_;
   TH1 * histogram_numHadTaus_;
@@ -55,7 +58,21 @@ class EvtHistManager_hh_3l
 
   TH1 * histogram_mvaOutput_3l_ttV_;
   TH1 * histogram_mvaOutput_3l_ttbar_;
-  TH1 * histogram_mvaDiscr_3l_;
+  TH1 * histogram_mvaDiscr_3l_; */
+
+  TH1 * histogram_numElectrons_;
+  TH1 * histogram_numMuons_;
+  TH1 * histogram_numJets_;
+  TH1 * histogram_numJetsPtGt40_;
+  TH1 * histogram_numBJets_loose_;
+  TH1 * histogram_numBJets_medium_;	
+
+  TH1 * histogram_dihiggsVisMass_;
+  TH1 * histogram_dihiggsMass_;
+	TH1 * histogram_WTojjMass_;
+
+  TH1 * histogram_HT_;
+  TH1 * histogram_STMET_;	
 
   TH1 * histogram_EventCounter_;
 };

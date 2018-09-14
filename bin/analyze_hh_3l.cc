@@ -424,7 +424,7 @@ int main(int argc, char* argv[])
     inputTree -> registerReader(lheInfoReader);
   }
 
-	
+	/*
 //--- initialize BDTs used to discriminate ttH vs. ttV and ttH vs. ttbar
 //    in 3l category of ttH multilepton analysis
   std::string mvaFileName_3l_ttV = "tthAnalysis/HiggsToTauTau/data/3l_ttV_BDTG.weights.xml";
@@ -453,7 +453,7 @@ int main(int argc, char* argv[])
   std::map<std::string, double> mvaInputs_3l;
 
   bool selectBDT = ( cfg_analyze.exists("selectBDT") ) ? cfg_analyze.getParameter<bool>("selectBDT") : false;
-	
+	*/
 	
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
   std::ostream* selEventsFile = ( selEventsFileName_output != "" ) ? new std::ofstream(selEventsFileName_output.data(), std::ios::out) : 0;
@@ -490,7 +490,7 @@ int main(int argc, char* argv[])
     JetHistManager* BJets_medium_;
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
-    MVAInputVarHistManager* mvaInputVariables_3l_;
+    //MVAInputVarHistManager* mvaInputVariables_3l_;
     EvtHistManager_hh_3l* evt_;
     std::map<std::string, EvtHistManager_hh_3l*> evt_in_categories_;
     std::map<std::string, EvtHistManager_hh_3l*> evt_in_decayModes_;
@@ -600,9 +600,9 @@ int main(int argc, char* argv[])
     selHistManager->metFilters_ = new MEtFilterHistManager(makeHistManager_cfg(process_and_genMatch,
       Form("%s/sel/metFilters", histogramDir.data()), central_or_shift));
     selHistManager->metFilters_->bookHistograms(fs);
-    selHistManager->mvaInputVariables_3l_ = new MVAInputVarHistManager(makeHistManager_cfg(process_and_genMatch,
-      Form("%s/sel/mvaInputs_3l", histogramDir.data()), central_or_shift));
-    selHistManager->mvaInputVariables_3l_->bookHistograms(fs, mvaInputVariables_3l);
+    //selHistManager->mvaInputVariables_3l_ = new MVAInputVarHistManager(makeHistManager_cfg(process_and_genMatch,
+		//Form("%s/sel/mvaInputs_3l", histogramDir.data()), central_or_shift));
+    //selHistManager->mvaInputVariables_3l_->bookHistograms(fs, mvaInputVariables_3l);
     selHistManager->evt_ = new EvtHistManager_hh_3l(makeHistManager_cfg(process_and_genMatch,
       Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
     selHistManager->evt_->bookHistograms(fs);
@@ -677,7 +677,7 @@ int main(int argc, char* argv[])
     }
   }
 
-	
+	/*
   NtupleFillerBDT<float, int> * bdt_filler = nullptr;
   typedef std::remove_pointer<decltype(bdt_filler)>::type::float_type float_type;
   typedef std::remove_pointer<decltype(bdt_filler)>::type::int_type   int_type;
@@ -702,7 +702,7 @@ int main(int argc, char* argv[])
       "nJet", "nBJetLoose", "nBJetMedium", "lep1_isTight", "lep2_isTight", "lep3_isTight"
     );
     bdt_filler -> bookTree(fs);
-		} 
+		} */
 
   int analyzedEntries = 0;
   int selectedEntries = 0;
@@ -1025,6 +1025,7 @@ int main(int argc, char* argv[])
     std::vector<const RecoJet*> selJets = jetSelector(cleanedJets, isHigherPt);
     std::vector<const RecoJet*> selBJets_loose = jetSelectorBtagLoose(cleanedJets, isHigherPt);
     std::vector<const RecoJet*> selBJets_medium = jetSelectorBtagMedium(cleanedJets, isHigherPt);
+		int numSelJetsPtGt40 = countHighPtObjects(selJets, 40.);
     if(isDEBUG || run_lumi_eventSelector)
     {
       printCollection("uncleanedJets", jet_ptrs);
@@ -1125,6 +1126,7 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update(Form(">= %i jets (1)", minNumJets));
     cutFlowHistManager->fillHistograms(">= N jets (1)", lumiScale);
+		/*
     if ( !(selBJets_loose.size() >= 2 || selBJets_medium.size() >= 1) ) {
       if ( run_lumi_eventSelector ) {
     std::cout << "event " << eventInfo.str() << " FAILS selBJets selection." << std::endl;
@@ -1136,11 +1138,39 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update(">= 2 loose b-jets || 1 medium b-jet (1)");
     cutFlowHistManager->fillHistograms(">= 2 loose b-jets || 1 medium b-jet (1)", lumiScale);
+		*/
 
+    if ( (selBJets_loose.size() >= 2 || selBJets_medium.size() >= 1) ) {
+      if ( run_lumi_eventSelector ) {
+    std::cout << "event " << eventInfo.str() << " FAILS selBJets selection." << std::endl;
+	printCollection("selJets", selJets);
+	printCollection("selBJets_loose", selBJets_loose);
+	printCollection("selBJets_medium", selBJets_medium);
+      }
+      continue;
+    }
+    cutFlowTable.update("b-jet veto (1)");
+    cutFlowHistManager->fillHistograms("b-jet veto (1)", lumiScale);
+		
 //--- compute MHT and linear MET discriminant (met_LD)
     RecoMEt met = metReader->read();
     Particle::LorentzVector mht_p4 = compMHT(fakeableLeptons, {}, selJets);
     double met_LD = compMEt_LD(met.p4(), mht_p4);
+
+		// SS: Yet to modify for hh->wwww  (add jet1+jet2 from W)
+		double dihiggsVisMass_presel;
+		double WTojjMass_presel;
+		if ((int)selJets.size() >= 2) {
+			dihiggsVisMass_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + preselLepton_third->p4() + selJets[0]->p4() + selJets[1]->p4()).mass();
+			WTojjMass_presel      = (selJets[0]->p4() + selJets[1]->p4()).mass();
+    } else {
+			dihiggsVisMass_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + preselLepton_third->p4() + selJets[0]->p4()).mass();
+			WTojjMass_presel      = (selJets[0]->p4()).mass();
+    }
+			
+    double HT = compHT(fakeableLeptons, {}, selJets);
+    double STMET = compSTMEt(fakeableLeptons, {}, selJets, met.p4());
+		
 
 //--- fill histograms with events passing preselection
     preselHistManagerType* preselHistManager = preselHistManagers[idxPreselLepton_genMatch];
@@ -1154,10 +1184,19 @@ int main(int argc, char* argv[])
     preselHistManager->met_->fillHistograms(met, mht_p4, met_LD, 1.);
     preselHistManager->metFilters_->fillHistograms(metFilters, 1.);
     preselHistManager->evt_->fillHistograms(
-      preselElectrons.size(), preselMuons.size(), selHadTaus.size(),
-      selJets.size(), selBJets_loose.size(), selBJets_medium.size(),
-      -1., -1., -1., 
-      1.);
+      preselElectrons.size(),
+      preselMuons.size(),
+      selJets.size(),
+      numSelJetsPtGt40,
+      selBJets_loose.size(),
+      selBJets_medium.size(),
+      dihiggsVisMass_presel,
+      -1.,
+			WTojjMass_presel,
+      HT, 
+      STMET,
+      1.
+    );
     preselHistManager->evtYield_->fillHistograms(eventInfo, 1.);
 
 //--- apply final event selection
@@ -1244,7 +1283,7 @@ int main(int argc, char* argv[])
     }
 
     double weight_fakeRate = 1.;
-    if ( !selectBDT ) {
+    //if ( !selectBDT ) {
       if ( applyFakeRateWeights == kFR_3lepton ) {
 	double prob_fake_lepton_lead = 1.;
 	if      ( std::abs(selLepton_lead->pdgId()) == 11 ) prob_fake_lepton_lead = leptonFakeRateInterface->getWeight_e(selLepton_lead->cone_pt(), selLepton_lead->absEta());
@@ -1270,7 +1309,7 @@ int main(int argc, char* argv[])
 	}
 	evtWeight *= weight_fakeRate;
       }
-    }
+			//}
     if ( isDEBUG ) {
       std::cout << "evtWeight = " << evtWeight << std::endl;
     }
@@ -1344,7 +1383,8 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update(Form(">= %i jets (2)", minNumJets), evtWeight);
     cutFlowHistManager->fillHistograms(">= N jets (2)", evtWeight);
-    if ( !(selBJets_loose.size() >= 2 || selBJets_medium.size() >= 1)) {
+		/*
+		if ( !(selBJets_loose.size() >= 2 || selBJets_medium.size() >= 1)) {
       if ( run_lumi_eventSelector ) {
     std::cout << "event " << eventInfo.str() << " FAILS selBJets selection." << std::endl;
 	printCollection("selJets", selJets);
@@ -1355,7 +1395,21 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update(">= 2 loose b-jets || 1 medium b-jet (2)", evtWeight);
     cutFlowHistManager->fillHistograms(">= 2 loose b-jets || 1 medium b-jet (2)", evtWeight);
+		*/
 
+    if ( (selBJets_loose.size() >= 2 || selBJets_medium.size() >= 1)) {
+      if ( run_lumi_eventSelector ) {
+    std::cout << "event " << eventInfo.str() << " FAILS selBJets selection." << std::endl;
+	printCollection("selJets", selJets);
+	printCollection("selBJets_loose", selBJets_loose);
+	printCollection("selBJets_medium", selBJets_medium);
+      }
+      continue;
+    }
+    cutFlowTable.update("b-jet veto (2)", evtWeight);
+    cutFlowHistManager->fillHistograms("b-jet veto (2)", evtWeight);
+
+		/*
     if ( selHadTaus.size() > 0 ) {
       if ( run_lumi_eventSelector ) {
     std::cout << "event " << eventInfo.str() << " FAILS selHadTaus veto." << std::endl;
@@ -1364,7 +1418,7 @@ int main(int argc, char* argv[])
       continue;
     }
     cutFlowTable.update("sel tau veto");
-    cutFlowHistManager->fillHistograms("sel tau veto", lumiScale);
+    cutFlowHistManager->fillHistograms("sel tau veto", lumiScale); */
 
     bool failsLowMassVeto = false;
     for ( std::vector<const RecoLepton*>::const_iterator lepton1 = preselLeptonsFull.begin();
@@ -1527,6 +1581,21 @@ int main(int argc, char* argv[])
     cutFlowTable.update("signal region veto", evtWeight);
     cutFlowHistManager->fillHistograms("signal region veto", evtWeight);
 
+		// SS: Yet to implement this for hh->wwww
+    double dihiggsVisMass_sel, dihiggsMass;
+		double WTojjMass;
+		if ((int)selJets.size() >= 2) {
+			dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selLepton_third->p4() + selJets[0]->p4() + selJets[1]->p4()).mass();
+			dihiggsMass        = (selLepton_lead->p4() + selLepton_sublead->p4() + selLepton_third->p4() + selJets[0]->p4() + selJets[1]->p4() + met.p4()).mass();
+			WTojjMass = (selJets[0]->p4() + selJets[1]->p4()).mass();
+		} else {
+			dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selLepton_third->p4() + selJets[0]->p4()).mass();
+			dihiggsMass        = (selLepton_lead->p4() + selLepton_sublead->p4() + selLepton_third->p4() + selJets[0]->p4() + met.p4()).mass();
+			WTojjMass = (selJets[0]->p4()).mass();
+		}
+
+		
+		/*
 //--- compute output of BDTs used to discriminate ttH vs. ttV and ttH vs. ttbar
 //    in 3l category of ttH multilepton analysis
     const double lep1_conePt = comp_lep1_conePt(*selLepton_lead);
@@ -1563,7 +1632,8 @@ int main(int argc, char* argv[])
       else if ( mvaOutput_3l_ttbar > -0.30 && mvaOutput_3l_ttV <= +0.25 ) mvaDiscr_3l = 2.;
       else                                                                mvaDiscr_3l = 1.;
     } else assert(0);
-
+		*/
+		
 //--- fill histograms with events passing final selection
     std::string category;
     if ( selBJets_medium.size() >= 2 ) category += "_bt";
@@ -1592,19 +1662,35 @@ int main(int argc, char* argv[])
     selHistManager->BJets_medium_->fillHistograms(selBJets_medium, evtWeight);
     selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
     selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
-    selHistManager->mvaInputVariables_3l_->fillHistograms(mvaInputs_3l, evtWeight);
+    //selHistManager->mvaInputVariables_3l_->fillHistograms(mvaInputs_3l, evtWeight);
     selHistManager->evt_->fillHistograms(
-      selElectrons.size(), selMuons.size(), selHadTaus.size(),
-      selJets.size(), selBJets_loose.size(), selBJets_medium.size(),
-      mvaOutput_3l_ttV, mvaOutput_3l_ttbar, mvaDiscr_3l,
+      selElectrons.size(),
+      selMuons.size(),
+      selJets.size(),
+      numSelJetsPtGt40,
+      selBJets_loose.size(),
+      selBJets_medium.size(),
+      dihiggsVisMass_sel,
+      dihiggsMass,
+			WTojjMass,
+      HT, 
+      STMET,
       evtWeight);
     EvtHistManager_hh_3l* selHistManager_evt_category = selHistManager->evt_in_categories_[category];
     if ( selHistManager_evt_category ) { // CV: pointer is zero when running on OS control region to estimate "charge_flip" background
       selHistManager_evt_category->fillHistograms(
-      selElectrons.size(), selMuons.size(), selHadTaus.size(),
-      selJets.size(), selBJets_loose.size(), selBJets_medium.size(),
-      mvaOutput_3l_ttV, mvaOutput_3l_ttbar, mvaDiscr_3l, 
-      evtWeight);
+          selElectrons.size(),
+          selMuons.size(),
+          selJets.size(),
+          numSelJetsPtGt40,
+          selBJets_loose.size(),
+          selBJets_medium.size(),
+          dihiggsVisMass_sel,
+          dihiggsMass,
+					WTojjMass,
+          HT, 
+          STMET,
+          evtWeight);
     }
     if(isSignal)
     {
@@ -1612,31 +1698,33 @@ int main(int argc, char* argv[])
       if(! decayModeStr.empty())
       {
         selHistManager -> evt_in_decayModes_[decayModeStr] -> fillHistograms(
-          selElectrons.size(),
-          selMuons.size(),
-          selHadTaus.size(),
-          selJets.size(),
-          selBJets_loose.size(),
-          selBJets_medium.size(),
-          mvaOutput_3l_ttV,
-          mvaOutput_3l_ttbar,
-          mvaDiscr_3l,
-          evtWeight
-        );
+           selElectrons.size(),
+           selMuons.size(),
+           selJets.size(),
+           numSelJetsPtGt40,
+           selBJets_loose.size(),
+           selBJets_medium.size(),
+           dihiggsVisMass_sel,
+           dihiggsMass,
+					 WTojjMass,
+           HT, 
+           STMET,
+           evtWeight);
 	EvtHistManager_hh_3l* selHistManager_evt_category = selHistManager->evt_in_categories_and_decayModes_[category][decayModeStr];
 	if ( selHistManager_evt_category ) { // CV: pointer is zero when running on OS control region to estimate "charge_flip" background
           selHistManager_evt_category->fillHistograms(
-	    selElectrons.size(),
-            selMuons.size(),
-	    selHadTaus.size(),
-	    selJets.size(),
-	    selBJets_loose.size(),
-	    selBJets_medium.size(),
-	    mvaOutput_3l_ttV,
-	    mvaOutput_3l_ttbar,
-	    mvaDiscr_3l,
-	    evtWeight
-	  );
+           selElectrons.size(),
+           selMuons.size(),
+           selJets.size(),
+           numSelJetsPtGt40,
+           selBJets_loose.size(),
+           selBJets_medium.size(),
+           dihiggsVisMass_sel,
+           dihiggsMass,
+					 WTojjMass,
+           HT, 
+           STMET,
+           evtWeight);
 	}					      
       }
     }
@@ -1660,6 +1748,7 @@ int main(int argc, char* argv[])
       (*selEventsFile) << eventInfo.run << ':' << eventInfo.lumi << ':' << eventInfo.event << '\n';
     }
 
+		/*
     if ( bdt_filler ) {
       double lep1_genLepPt = ( selLepton_lead->genLepton()    ) ? selLepton_lead->genLepton()->pt()    : 0.;
       double lep2_genLepPt = ( selLepton_sublead->genLepton() ) ? selLepton_sublead->genLepton()->pt() : 0.;
@@ -1742,7 +1831,8 @@ int main(int argc, char* argv[])
         .fill()
       ;
     }
-
+		*/
+			
     ++selectedEntries;
     selectedEntries_weighted += evtWeight;
     histogram_selectedEntries->Fill(0.);
