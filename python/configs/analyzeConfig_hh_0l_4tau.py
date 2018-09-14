@@ -387,13 +387,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
                     # sum non-fake contributions for each MC sample separately
                     # input processes: TT1l0g0j&2t0e0m0j, TT1l0g0j&1t1e0m0j, TT1l0g0j&1t0e1m0j, TT1l0g0j&0t2e0m0j, TT1l0g0j&0t1e1m0j, TT1l0g0j&0t0e2m0j; ...
                     # output processes: TT; ...
-                    if sample_category.startswith("signal"):
-                      hadTau_genMatches_nonfakes = []
-                      hadTau_genMatches_nonfakes.extend(self.lepton_genMatches_nonfakes)
-                      hadTau_genMatches_nonfakes.extend(self.lepton_genMatches_conversions)
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in hadTau_genMatches_nonfakes ]
-                    else:
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_nonfakes ]
+                    processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_nonfakes ]
                     process_output = sample_category
                     key_addBackgrounds_job = getKey(process_name, sample_category, hadTau_selection_and_frWeight, hadTau_charge_selection)
                     cfgFile_modified = os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_%s_%s_%s_%s_cfg.py" % \
