@@ -108,11 +108,16 @@ process.makePlots = cms.PSet(
         normalization = cms.PSet(
             TTH = cms.string("1.0 +/- 0.20"),
             TH = cms.string("1.0 +/- 0.20"),
+            TT = cms.string("1.0 +/- 0.20"),
+            TTW = cms.string("1.0 +/- 0.20"),
+            TTWW = cms.string("1.0 +/- 0.20"),
+            TTZ = cms.string("1.0 +/- 0.20"),
             Other = cms.string("1.0 +/- 0.20"),
             VH = cms.string("1.0 +/- 0.20"),
             WW = cms.string("1.0 +/- 0.20"),
             ZZ = cms.string("1.0 +/- 0.20"),
             WZ = cms.string("1.0 +/- 0.20"),
+            fakes_data = cms.string("1.0 +/- 0.20"),
         ),
         shape = cms.PSet(
             CMS_ttHl_btag_HF = cms.string("0.00 +/- 1.00"),

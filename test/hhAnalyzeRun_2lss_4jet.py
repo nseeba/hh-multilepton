@@ -118,7 +118,7 @@ if __name__ == '__main__':
     lepton_charge_selections              = [ "SS" ],
     lep_mva_wp                            = lep_mva_wp,
     hadTau_selection                      = hadTau_selection,
-    hadTau_charge_selections              = [ "disabled" ],
+#    hadTau_charge_selections              = [ "disabled" ],
     applyFakeRateWeights                  = applyFakeRateWeights,
     chargeSumSelections                   = chargeSumSelections,
     central_or_shifts                     = central_or_shifts,

@@ -196,6 +196,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
     self.select_rle_output = select_rle_output
     self.use_nonnominal = use_nonnominal
     self.hlt_filter = hlt_filter
+    # self.central_or_shifts = ["EigenVec_1Up",  "EigenVec_1Down", "EigenVec_2Up", "EigenVec_2Down", "fit_bias_Syst", "FitSystUp", "FitSystDown"]
 
   def createCfg_analyze(self, jobOptions, sample_info, lepton_and_hadTau_selection):
     """Create python configuration file for the analyze_hh_2l_2tau executable (analysis code)
@@ -658,7 +659,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
       for hadTau_charge_selection in self.hadTau_charge_selections:
         for chargeSumSelection in self.chargeSumSelections:
           for histogramToFit in self.histograms_to_fit:
-            if histogramToFit not in ["dihiggsMass", "dihiggsVisMass", "STMET", "HT"]:
+            if histogramToFit not in ["mTauTauVis", "dihiggsMass", "dihiggsVisMass", "STMET", "HT"]:
               continue
             fitrange_nom  = None
             fitrange_alt0 = None
@@ -684,6 +685,11 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
               fitparam_nom  = [0.7, -0.0001]
               fitrange_alt0 = [300., 1500.]
               fitparam_alt0 = [0.05, 0.01]
+            if histogramToFit == "mTauTauVis":
+              fitrange_nom  = [90., 200.]
+              fitparam_nom  = [1.0, -0.01]
+              fitrange_alt0 = [90., 200.]
+              fitparam_alt0 = [1.0, 0.1, 0.01, 0.001]
             key_addTailFits_job = getKey(lepton_charge_selection, hadTau_charge_selection, chargeSumSelection, histogramToFit)
             key_addFakes_job = getKey(lepton_charge_selection, hadTau_charge_selection, "fakes_data", chargeSumSelection)
             self.jobOptions_addTailFits[key_addTailFits_job] = {
@@ -707,6 +713,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
 
 
     logging.info("Creating configuration files to run 'prepareDatacards'")
+    self.central_or_shifts.extend(["EigenVec_1Up",  "EigenVec_1Down", "EigenVec_2Up", "EigenVec_2Down", "fit_bias_Syst", "FitSystUp", "FitSystDown"])
     for lepton_charge_selection in self.lepton_charge_selections:
       for hadTau_charge_selection in self.hadTau_charge_selections:
         lepton_and_hadTau_charge_selection = ""

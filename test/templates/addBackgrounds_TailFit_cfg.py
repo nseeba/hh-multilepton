@@ -18,34 +18,33 @@ process.fwliteOutput = cms.PSet(
 process.addBackgrounds_TailFit = cms.PSet(
     InputDir  = cms.string("hh_2l_2tau_sumOS_Tight"),
     processName = cms.string("fakes_data"),
-    histogramName = cms.string("dihiggsMass"),
+    # histogramName = cms.string("dihiggsMass"),
+    histogramName = cms.string("mTauTauVis"),
 
     apply_automatic_rebinning = cms.bool(True),
     minEvents_automatic_rebinning = cms.double(0.5),
     explicit_binning = cms.vdouble(),
-
     nominal_fit_func = cms.PSet(
         FitfuncName   = cms.string("Exponential"), 
-        FitRange      = cms.vdouble(500., 1500.), # xmin, xmax                                                                                                                                       
-        FitParameters = cms.vdouble(2.68, -0.0001), # norm, exponent, offset                                                                                                                   
+        FitRange      = cms.vdouble(90., 200.), # xmin, xmax                                                                                                                                       
+        FitParameters = cms.vdouble(1.0, -0.01), # norm, exponent, offset                                                                                                                 
         ),
-
     alternate_fit_funcs = cms.VPSet(
-        cms.PSet(
-            FitfuncName   = cms.string("LegendrePolynomial1"), 
-            FitRange      = cms.vdouble(500., 1500.), # xmin, xmax 
-            FitParameters = cms.vdouble(2.2, 0.01), # par0, par1                                                                                             
-            ),
+#        cms.PSet(
+#            FitfuncName   = cms.string("LegendrePolynomial1"), 
+#            FitRange      = cms.vdouble(500., 1500.), # xmin, xmax 
+#            FitParameters = cms.vdouble(2.2, 0.01), # par0, par1                                                                                             
+#            ),
 #        cms.PSet(
 #            FitfuncName   = cms.string("LegendrePolynomial2"), 
 #            FitRange      = cms.vdouble(500., 1500.), # xmin, xmax  
 #            FitParameters = cms.vdouble(2.2, 0.01, 0.0001), # par0, par1, par2                                                                                             
 #            ),
-#        cms.PSet(
-#            FitfuncName   = cms.string("LegendrePolynomial3"), 
-#            FitRange      = cms.vdouble(500., 1500.), # xmin, xmax    
-#            FitParameters = cms.vdouble(2.2, 0.001, 0.0001, 0.0001), # par0, par1, par2, par3                                                                                             
-#            ),
+        cms.PSet(
+             FitfuncName   = cms.string("LegendrePolynomial3"), 
+             FitRange      = cms.vdouble(90., 200.), # xmin, xmax    
+             FitParameters = cms.vdouble(1.0, 0.1, 0.01, 0.001), # par0, par1, par2, par3                                                                                             
+            ),
 #        cms.PSet(
 #            FitfuncName   = cms.string("ATLASFitFunc"), ## FIT SUCCEEDS BUT GIVES "Error in <GSLError>: Error 21 in qags.c at 553 : bad integrand behavior found in the integration interval"
 #            FitRange      = cms.vdouble(500., 1500.), # xmin, xmax  
@@ -53,8 +52,8 @@ process.addBackgrounds_TailFit = cms.PSet(
 #            ),
 #        cms.PSet(
 #            FitfuncName   = cms.string("CrystalBall"), 
-#            FitRange      = cms.vdouble(500., 1500.), # xmin, xmax                                                                                    
-#            FitParameters = cms.vdouble(2.2, 0.7, 5.0, 300.0, 1.0), # norm, alpha, n, mu, sigma                                                                                           
+#            FitRange      = cms.vdouble(90., 200.), # xmin, xmax                                                                                    
+#            FitParameters = cms.vdouble(1.0, 0.7, 5.0, 170.0, 20.0), # norm, alpha, n, mu, sigma                                                                                           
 #            ),
 #        cms.PSet(
 #            FitfuncName   = cms.string("ExponentialErf"), 
@@ -97,7 +96,6 @@ process.addBackgrounds_TailFit = cms.PSet(
 #            FitParameters = cms.vdouble(10., 6.0, -0.0001, 500.0, 50.0, 750.0, 100.0, 900.0, 150.0), # norm0, norm1, exponent, mean0, sigma0, mean1, sigma1, mean2, sigma2
 #            ),
 #        cms.PSet(
-        
 #            FitfuncName   = cms.string("Voigt"), 
 #            FitRange      = cms.vdouble(500., 1500.), # xmin, xmax
 #            FitParameters = cms.vdouble(10., 500.0, 100.0), # norm, sigma, gamma       
