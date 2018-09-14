@@ -425,7 +425,6 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
                       lepton_genMatches = []
                       lepton_genMatches.extend(self.lepton_genMatches_nonfakes)
                       lepton_genMatches.extend(self.lepton_genMatches_conversions)
-                      lepton_genMatches.extend(self.lepton_genMatches_fakes)
                       processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in lepton_genMatches ]
                     else:
                       processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_nonfakes ]
@@ -439,10 +438,7 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
                     # sum fake contributions for each MC sample separately
                     # input processes: TT2l1g0j, TT1l2g0j, TT0l3g0j; ...
                     # output processes: TT_conversion; ...
-                    if sample_category.startswith("signal"):
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_conversions ]
-                    else:
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_conversions ]
+                    processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_conversions ]
                     process_output = "%s_conversion" % sample_category
                     key_addBackgrounds_job = getKey(process_name, "%s_conversion" % sample_category, lepton_selection_and_frWeight, chargeSumSelection)
                     cfgFile_modified = os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_conversions_%s_%s_%s_%s_cfg.py" % \
@@ -453,10 +449,7 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
                     # sum fake contributions for each MC sample separately
                     # input processes: TT2l0g1j, TT1l1g1j, TT1l0g2j, TT0l2g1j, TT0l1g2j, TT0l0g3j; ...
                     # output processes: TT_fake; ...
-                    if sample_category in [ "signal" ]:
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_fakes ]
-                    else:
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_fakes ]
+                    processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_fakes ]
                     process_output = "%s_fake" % sample_category
                     key_addBackgrounds_job = getKey(process_name, "%s_fake" % sample_category, lepton_selection_and_frWeight, chargeSumSelection)
                     cfgFile_modified = os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_fakes_%s_%s_%s_%s_cfg.py" % \
@@ -614,7 +607,7 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
         'datacardFile' : os.path.join(self.dirs[DKEY_DCRD], "prepareDatacards_%s_%s.root" % (self.channel, histogramToFit)),
         'histogramDir' : self.histogramDir_prep_dcard,
         'histogramToFit' : histogramToFit,
-        'label' : None
+        'label' : "2lOS+4j"
       }
       self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
@@ -627,7 +620,7 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
           'datacardFile' : os.path.join(self.dirs[DKEY_DCRD], "prepareDatacards_%s_SS_%s.root" % (self.channel, histogramToFit)),
           'histogramDir' : self.histogramDir_prep_dcard_SS,
           'histogramToFit' : histogramToFit,
-          'label' : 'SS'
+          'label' : "2lSS+4j",
         }
         self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
@@ -681,7 +674,7 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
       'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "makePlots_%s_cfg.py" % self.channel),
       'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s.png" % self.channel),
       'histogramDir' : self.histogramDir_prep_dcard,
-      'label' : "hh_2lss_4jet",
+      'label' : "2lOS+4j",
       'make_plots_backgrounds' : self.make_plots_backgrounds,
       'massPoint' : self.mass_point,
       'skipChannel' : True,
@@ -696,7 +689,7 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
         'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "makePlots_%s_SS_cfg.py" % self.channel),
         'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s_SS.png" % self.channel),
         'histogramDir' : self.histogramDir_prep_dcard_SS,
-        'label' : "HH 2l SS",
+        'label' : "2lSS+4j",
         'make_plots_backgrounds' : self.make_plots_backgrounds,
         'massPoint'  : self.mass_point,
         'skipChannel': True,

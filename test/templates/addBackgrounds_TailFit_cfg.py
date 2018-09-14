@@ -18,16 +18,16 @@ process.fwliteOutput = cms.PSet(
 process.addBackgrounds_TailFit = cms.PSet(
     InputDir  = cms.string("hh_2l_2tau_sumOS_Tight"),
     processName = cms.string("fakes_data"),
-    # histogramName = cms.string("dihiggsMass"),
-    histogramName = cms.string("mTauTauVis"),
+    histogramName = cms.string("dihiggsMass"),
+
 
     apply_automatic_rebinning = cms.bool(True),
     minEvents_automatic_rebinning = cms.double(0.5),
     explicit_binning = cms.vdouble(),
     nominal_fit_func = cms.PSet(
         FitfuncName   = cms.string("Exponential"), 
-        FitRange      = cms.vdouble(90., 200.), # xmin, xmax                                                                                                                                       
-        FitParameters = cms.vdouble(1.0, -0.01), # norm, exponent, offset                                                                                                                 
+        FitRange      = cms.vdouble(500., 1500.), # xmin, xmax                                                                                                                                       
+        FitParameters = cms.vdouble(2.68, -0.0001), # norm, exponent                                                                                                                 
         ),
     alternate_fit_funcs = cms.VPSet(
 #        cms.PSet(
@@ -42,8 +42,8 @@ process.addBackgrounds_TailFit = cms.PSet(
 #            ),
         cms.PSet(
              FitfuncName   = cms.string("LegendrePolynomial3"), 
-             FitRange      = cms.vdouble(90., 200.), # xmin, xmax    
-             FitParameters = cms.vdouble(1.0, 0.1, 0.01, 0.001), # par0, par1, par2, par3                                                                                             
+             FitRange      = cms.vdouble(500., 1500.), # xmin, xmax    
+             FitParameters = cms.vdouble(2.2, 0.0001, 0.0001, 0.0001), # par0, par1, par2, par3                                                                                             
             ),
 #        cms.PSet(
 #            FitfuncName   = cms.string("ATLASFitFunc"), ## FIT SUCCEEDS BUT GIVES "Error in <GSLError>: Error 21 in qags.c at 553 : bad integrand behavior found in the integration interval"
