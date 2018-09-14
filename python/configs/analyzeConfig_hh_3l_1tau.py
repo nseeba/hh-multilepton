@@ -414,7 +414,6 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
                       lepton_and_hadTau_genMatches = []
                       lepton_and_hadTau_genMatches.extend(self.lepton_and_hadTau_genMatches_nonfakes)
                       lepton_and_hadTau_genMatches.extend(self.lepton_and_hadTau_genMatches_conversions)
-                      lepton_and_hadTau_genMatches.extend(self.lepton_and_hadTau_genMatches_fakes)
                       processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in lepton_and_hadTau_genMatches ]
                     else:
                       processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_and_hadTau_genMatches_nonfakes ]
@@ -428,10 +427,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
                     # sum conversion background contributions for each MC sample separately
                     # input processes: TT2l1g0j,...
                     # output processes: TT_conversions; ...
-                    if sample_category.startswith("signal"):
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_and_hadTau_genMatches_conversions ]
-                    else:
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_and_hadTau_genMatches_conversions ]
+                    processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_and_hadTau_genMatches_conversions ]
                     process_output = "%s_conversion" % sample_category
                     key_addBackgrounds_job = getKey(process_name, "%s_conversion" % sample_category, lepton_and_hadTau_selection_and_frWeight, chargeSumSelection)
                     cfgFile_modified = os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_%s_conversions_%s_%s_%s_cfg.py" % \
@@ -442,10 +438,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
                     # sum fake background contributions for each MC sample separately
                     # input processes: TT2l1j, TT1l2j, TT0l3j; ...
                     # output processes: TT_fake; ...
-                    if sample_category in [ "signal" ]:
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_and_hadTau_genMatches_fakes ]
-                    else:
-                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_and_hadTau_genMatches_fakes ]
+                    processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_and_hadTau_genMatches_fakes ]
                     process_output = "%s_fake" % sample_category
                     key_addBackgrounds_job = getKey(process_name, "%s_fake" % sample_category, lepton_and_hadTau_selection_and_frWeight, chargeSumSelection)
                     cfgFile_modified = os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_%s_fakes_%s_%s_%s_cfg.py" % \

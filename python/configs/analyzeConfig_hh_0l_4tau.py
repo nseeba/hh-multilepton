@@ -387,7 +387,13 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
                     # sum non-fake contributions for each MC sample separately
                     # input processes: TT1l0g0j&2t0e0m0j, TT1l0g0j&1t1e0m0j, TT1l0g0j&1t0e1m0j, TT1l0g0j&0t2e0m0j, TT1l0g0j&0t1e1m0j, TT1l0g0j&0t0e2m0j; ...
                     # output processes: TT; ...
-                    processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_nonfakes ]
+                    if sample_category.startswith("signal"):
+                      hadTau_genMatches_nonfakes = []
+                      hadTau_genMatches_nonfakes.extend(self.lepton_genMatches_nonfakes)
+                      hadTau_genMatches_nonfakes.extend(self.lepton_genMatches_conversions)
+                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in hadTau_genMatches_nonfakes ]
+                    else:
+                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_nonfakes ]
                     process_output = sample_category
                     key_addBackgrounds_job = getKey(process_name, sample_category, hadTau_selection_and_frWeight, hadTau_charge_selection)
                     cfgFile_modified = os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_%s_%s_%s_%s_cfg.py" % \
@@ -405,7 +411,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
                       (self.channel, process_name, sample_category, hadTau_selection_and_frWeight, hadTau_charge_selection))
                     outputFile = os.path.join(self.dirs[DKEY_HIST], "addBackgrounds_%s_%s_fakes_%s_%s_%s.root" % \
                       (self.channel, process_name, sample_category, hadTau_selection_and_frWeight, hadTau_charge_selection))
-                  
+
                   if processes_input:
                     logging.info(" ...for genMatch option = '%s'" % genMatch_category)
                     self.jobOptions_addBackgrounds[key_addBackgrounds_job] = {
@@ -484,7 +490,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
                 processes_input = [ process_input + "_fake" for process_input in processes_input ]
                 process_output = process_output + "_fake"
               if key_addBackgrounds_job_signal in self.jobOptions_addBackgrounds_sum.keys():
-                continue             
+                continue
               self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal] = {
                 'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5],
                 'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_%s_%s_%s_cfg.py" % \

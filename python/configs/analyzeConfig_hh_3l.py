@@ -401,7 +401,13 @@ class analyzeConfig_hh_3l(analyzeConfig):
                     # sum non-fake contributions for each MC sample separately
                     # input processes: TT3l0g0j,...
                     # output processes: TT; ...
-                    processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_nonfakes ]
+                    if sample_category.startswith("signal"):
+                      lepton_genMatches = []
+                      lepton_genMatches.extend(self.lepton_genMatches_nonfakes)
+                      lepton_genMatches.extend(self.lepton_genMatches_conversions)
+                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in lepton_genMatches ]
+                    else:
+                      processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_nonfakes ]
                     process_output = sample_category
                     key_addBackgrounds_job = getKey(process_name, sample_category, lepton_selection_and_frWeight, chargeSumSelection)
                     cfgFile_modified = os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_%s_%s_%s_%s_cfg.py" % \
