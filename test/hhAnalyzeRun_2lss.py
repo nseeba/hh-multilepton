@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 import os, logging, sys, getpass
 from collections import OrderedDict as OD
-from hhAnalysis.multilepton.configs.analyzeConfig_hh_2lss_4jet import analyzeConfig_hh_2lss_4jet
+from hhAnalysis.multilepton.configs.analyzeConfig_hh_2lss import analyzeConfig_hh_2lss
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
 
-# E.g.: ./hhAnalyzeRun_2lss_4jet.py -v 2017Dec13 -m default -e 2017
+# E.g.: ./hhAnalyzeRun_2lss.py -v 2017Dec13 -m default -e 2017
 
 mode_choices     = [ 'default' ]
 sys_choices      = [ 'full' ] + systematics.an_extended_opts
@@ -109,11 +109,11 @@ if __name__ == '__main__':
     logging.info("Changing tau ID working point: %s -> %s" % (hadTau_selection, args.tau_id_wp))
     hadTau_selection = args.tau_id_wp
 
-  analysis = analyzeConfig_hh_2lss_4jet(
+  analysis = analyzeConfig_hh_2lss(
     configDir = os.path.join("/home",       getpass.getuser(), "hhAnalysis", era, version),
     outputDir = os.path.join("/hdfs/local", getpass.getuser(), "hhAnalysis", era, version),
-    executable_analyze                    = "analyze_hh_2lss_4jet",
-    cfgFile_analyze                       = "analyze_hh_2lss_4jet_cfg.py",
+    executable_analyze                    = "analyze_hh_2lss",
+    cfgFile_analyze                       = "analyze_hh_2lss_cfg.py",
     samples                               = samples,
     lepton_charge_selections              = [ "SS" ],
     lep_mva_wp                            = lep_mva_wp,

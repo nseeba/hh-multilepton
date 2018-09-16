@@ -15,7 +15,7 @@ def get_lepton_selection_and_frWeight(lepton_selection, lepton_frWeight):
   return lepton_selection_and_frWeight
 
 def getHistogramDir(lepton_selection, lepton_frWeight, chargeSumSelection):
-  histogramDir = "hh_2lss_4jet_%s_%s" % (chargeSumSelection, lepton_selection)
+  histogramDir = "hh_2lss_%s_%s" % (chargeSumSelection, lepton_selection)
   if lepton_selection.find("Fakeable") != -1:
     if lepton_frWeight == "enabled":
       histogramDir += "_wFakeRateWeights"
@@ -23,12 +23,12 @@ def getHistogramDir(lepton_selection, lepton_frWeight, chargeSumSelection):
       histogramDir += "_woFakeRateWeights"
   return histogramDir
 
-class analyzeConfig_hh_2lss_4jet(analyzeConfig):
+class analyzeConfig_hh_2lss(analyzeConfig):
   """Configuration metadata needed to run analysis in a single go.
 
   Sets up a folder structure by defining full path names; no directory creation is delegated here.
 
-  Args specific to analyzeConfig_hh_2lss_4jet:
+  Args specific to analyzeConfig_hh_2lss:
     lepton_selection: either `Tight`, `Loose` or `Fakeable`
 
   See $CMSSW_BASE/src/tthAnalysis/HiggsToTauTau/python/analyzeConfig.py
@@ -74,7 +74,7 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
       configDir                 = configDir,
       outputDir                 = outputDir,
       executable_analyze        = executable_analyze,
-      channel                   = "hh_2lss_4jet",
+      channel                   = "hh_2lss",
       samples                   = samples,
       central_or_shifts         = central_or_shifts,
       max_files_per_job         = max_files_per_job,
@@ -149,14 +149,14 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
       sample_category = sample_info["sample_category"]
       if sample_category.startswith("signal"):
         self.prep_dcard_signals.append(sample_category)
-    self.histogramDir_prep_dcard = "hh_2lss_4jet_OS_Tight"
-    self.histogramDir_prep_dcard_SS = "hh_2lss_4jet_SS_Tight"
+    self.histogramDir_prep_dcard = "hh_2lss_OS_Tight"
+    self.histogramDir_prep_dcard_SS = "hh_2lss_SS_Tight"
     #self.make_plots_backgrounds = [ "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW" ] + [ "conversions", "fakes_data" ]
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
     self.mass_point = 400
     self.make_plots_signal = "signal_hh_%d" % self.mass_point
-    self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2lss_4jet_cfg.py")
-    self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2lss_4jet_cfg.py") #TODO
+    self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2lss_cfg.py")
+    self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2lss_cfg.py") #TODO
 
     self.select_rle_output = select_rle_output
     self.select_root_output = select_root_output
@@ -175,7 +175,7 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
     #self.isBDTtraining     = True
 
   def createCfg_analyze(self, jobOptions, sample_info, lepton_selection):
-    """Create python configuration file for the analyze_hh_2lss_4jet executable (analysis code)
+    """Create python configuration file for the analyze_hh_2lss executable (analysis code)
 
     Args:
       inputFiles: list of input files (Ntuples)
@@ -183,7 +183,7 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
       process: either `TT`, `TTW`, `TTZ`, `EWK`, `Rares`, `data_obs`, `ttH_hww`, 'ttH_hzg', 'ttH_hmm', `ttH_hzz` or `ttH_htt`
       is_mc: flag indicating whether job runs on MC (True) or data (False)
       lumi_scale: event weight (= xsection * luminosity / number of events)
-      central_or_shift: either 'central' or one of the systematic uncertainties defined in $CMSSW_BASE/src/hhAnalysis/multilepton/bin/analyze_hh_2lss_4jet.cc
+      central_or_shift: either 'central' or one of the systematic uncertainties defined in $CMSSW_BASE/src/hhAnalysis/multilepton/bin/analyze_hh_2lss.cc
     """
     lepton_frWeight = "disabled" if jobOptions['applyFakeRateWeights'] == "disabled" else "enabled"
     jobOptions['histogramDir'] = getHistogramDir(lepton_selection, lepton_frWeight, jobOptions['chargeSumSelection'])
@@ -195,7 +195,7 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
     jobOptions['leptonFakeRateWeight.histogramName_e'] = self.leptonFakeRateWeight_histogramName_e
     jobOptions['leptonFakeRateWeight.histogramName_mu'] = self.leptonFakeRateWeight_histogramName_mu
 
-    lines = super(analyzeConfig_hh_2lss_4jet, self).createCfg_analyze(jobOptions, sample_info)
+    lines = super(analyzeConfig_hh_2lss, self).createCfg_analyze(jobOptions, sample_info)
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
 
   def addToMakefile_backgrounds_from_data(self, lines_makefile):
@@ -581,7 +581,7 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
     for chargeSumSelection in self.chargeSumSelections:
       key_addFakes_job = getKey("fakes_data", chargeSumSelection)
       key_hadd_stage1_5 = getKey(get_lepton_selection_and_frWeight("Fakeable", "enabled"), chargeSumSelection)
-      category_sideband = "hh_2lss_4jet_%s_Fakeable_wFakeRateWeights" % chargeSumSelection
+      category_sideband = "hh_2lss_%s_Fakeable_wFakeRateWeights" % chargeSumSelection
       self.jobOptions_addFakes[key_addFakes_job] = {
         'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5],
         'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgroundLeptonFakes_%s_%s_cfg.py" % \
@@ -590,7 +590,7 @@ class analyzeConfig_hh_2lss_4jet(analyzeConfig):
           (self.channel, chargeSumSelection)),
         'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgroundLeptonFakes_%s_%s.log" % \
           (self.channel, chargeSumSelection)),
-        'category_signal' : "hh_2lss_4jet_%s_Tight" % chargeSumSelection,
+        'category_signal' : "hh_2lss_%s_Tight" % chargeSumSelection,
         'category_sideband' : category_sideband
       }
       self.createCfg_addFakes(self.jobOptions_addFakes[key_addFakes_job])
