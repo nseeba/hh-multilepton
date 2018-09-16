@@ -108,7 +108,7 @@
   <use   name="roottmva"/>
   <Flags CXXFLAGS="-g"/>
 </bin>
-<bin file="analyze_hh_2lss_4jet.cc" name="analyze_hh_2lss_4jet">
+<bin file="analyze_hh_2lss.cc" name="analyze_hh_2lss">
   <use   name="FWCore/FWLite"/>
   <use   name="FWCore/ParameterSet"/>
   <use   name="FWCore/PythonParameterSet"/>
