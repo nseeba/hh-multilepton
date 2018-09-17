@@ -212,7 +212,8 @@ int main(int argc, char* argv[])
   std::cout << "hadTauGenMatch_definitions:" << std::endl;
   std::cout << hadTauGenMatch_definitions;
 
-  const int minNumJets = 4;
+  const int minNumJets = cfg_analyze.getParameter<int>("minNumJets");
+  std::cout << "minNumJets = " << minNumJets << '\n';
 
   bool isMC = cfg_analyze.getParameter<bool>("isMC");
   bool isMC_tH = ( process_string == "tHq" || process_string == "tHW" ) ? true : false;
