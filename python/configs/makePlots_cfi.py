@@ -30,6 +30,11 @@ process.makePlots = cms.PSet(
             yAxisTitle = cms.string("Events")
         ),
         cms.PSet(
+            histogramName = cms.string("sel/evt/$PROCESS/numJetsPtGt40"),
+            xAxisTitle = cms.string("jet w/ pT > 40 GeV Multiplicity"),
+            yAxisTitle = cms.string("Events")
+        ),
+        cms.PSet(
             histogramName = cms.string("sel/evt/$PROCESS/numBJets_loose"),
             xAxisTitle = cms.string("loose b-jet Multiplicity"),
             yAxisTitle = cms.string("Events")
@@ -63,6 +68,16 @@ process.makePlots = cms.PSet(
             histogramName = cms.string('sel/evt/$PROCESS/STMET'),
             xAxisTitle = cms.string('S_{T}^{MET} [GeV]'),
             yAxisTitle = cms.string('dN/dS_{T}^{MET} [1/GeV]')
+        ),
+        cms.PSet(
+            histogramName = cms.string('sel/evt/$PROCESS/dihiggsMass'),
+            xAxisTitle = cms.string('m_{HH} [GeV]'),
+            yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
+        ),
+        cms.PSet(
+            histogramName = cms.string('sel/evt/$PROCESS/dihiggsVisMass'),
+            xAxisTitle = cms.string('m_{HH} [GeV]'),
+            yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
         ),
         cms.PSet(
             histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsVisMass2'),
