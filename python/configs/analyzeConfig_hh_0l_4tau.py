@@ -485,14 +485,12 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
                 process_output = process_output + "_fake"
               if key_addBackgrounds_job_signal in self.jobOptions_addBackgrounds_sum.keys():
                 continue
+              cfg_key = getKey(self.channel, sample_category_base, genMatch_category, hadTau_selection_and_frWeight, hadTau_charge_selection)
               self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal] = {
                 'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5],
-                'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_%s_%s_%s_%s_cfg.py" % \
-                  (self.channel, sample_category_base, genMatch_category, hadTau_selection_and_frWeight, hadTau_charge_selection)),
-                'outputFile' : os.path.join(self.dirs[DKEY_HIST], "addBackgrounds_%s_%s_%s_%s_%s.root" % \
-                  (self.channel, sample_category_base, genMatch_category, hadTau_selection_and_frWeight, hadTau_charge_selection)),
-                'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgrounds_%s_%s_%s_%s_%s.log" % \
-                  (self.channel, sample_category_base, genMatch_category, hadTau_selection_and_frWeight, hadTau_charge_selection)),
+                'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_cfg.py" % cfg_key),
+                'outputFile' : os.path.join(self.dirs[DKEY_HIST], "addBackgrounds_%s.root" % cfg_key),
+                'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgrounds_%s.log" % cfg_key),
                 'categories' : [ getHistogramDir(hadTau_selection, hadTau_frWeight, hadTau_charge_selection) ],
                 'processes_input' : processes_input,
                 'process_output' : process_output
