@@ -713,7 +713,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
 
 
     logging.info("Creating configuration files to run 'prepareDatacards'")
-    self.central_or_shifts.extend(["EigenVec_1Up",  "EigenVec_1Down", "EigenVec_2Up", "EigenVec_2Down", "fit_bias_Syst", "FitSystUp", "FitSystDown"])
+    self.central_or_shifts.extend(["EigenVec_1Up",  "EigenVec_1Down", "EigenVec_2Up", "EigenVec_2Down", "fit_bias_Syst", "FitSystUp", "FitSystDown", "original"])
     for lepton_charge_selection in self.lepton_charge_selections:
       for hadTau_charge_selection in self.hadTau_charge_selections:
         lepton_and_hadTau_charge_selection = ""

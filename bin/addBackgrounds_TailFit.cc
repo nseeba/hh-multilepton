@@ -668,7 +668,8 @@ int main(int argc, char* argv[])
   TH1* histo = getHistogram(inputDir, ProcessName, HistogramName, "", true, false);
   //  TArrayD histo_Orig_Binning = getBinning(histo); // Storing original binning scheme of the histogram
   TH1* histo_orig = dynamic_cast<TH1*>(histo->Clone());
-  histo_orig->SetName(HistogramName.c_str());
+  std::string histo_orig_name = Form("original_%s", HistogramName.data());
+  histo_orig->SetName(histo_orig_name.c_str());
 
   TH1* histo_to_fit = 0;
 
@@ -758,8 +759,8 @@ int main(int argc, char* argv[])
   std::cout<< " Computing the central tail-fitted histogram " << std::endl;
   TH1* central_fit_histo = GetHistofromFunc(histo, fitFunction_nom, nom_fit_func->GetXmin()); // Using the original binned histogram
   // std::string histo_name1 = Form("%s_central_fit", HistogramName.data());
-  std::string histo_name1 = Form("central_fit_%s", HistogramName.data());
-  central_fit_histo->SetName(histo_name1.c_str());
+  // std::string histo_name1 = Form("central_fit_%s", HistogramName.data());
+  central_fit_histo->SetName(HistogramName.c_str());
 
   // ------ Computing the fit systematic tail-fitted histograms -----
   std::cout<< " Computing the fit systematic tail-fitted histogram " << std::endl;
