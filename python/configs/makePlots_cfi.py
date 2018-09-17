@@ -6,6 +6,8 @@ process.fwliteInput = cms.PSet(
     fileNames = cms.vstring(),
 )
 
+scaleSignal = 50
+
 process.makePlots = cms.PSet(
     pluginType = cms.string("Plotter_HH"),
 
@@ -18,8 +20,8 @@ process.makePlots = cms.PSet(
     processData = cms.string("data_obs"),
     processesBackground = cms.vstring(),
     processSignal = cms.string(""),
-    scaleSignal = cms.double(50.),
-    legendEntrySignal = cms.string("X(masspoint)#rightarrow HH, HH#rightarrow 4W,2W2#tau,4#tau"),
+    scaleSignal = cms.double(scaleSignal),
+    legendEntrySignal = cms.string("%dx X(masspoint)#rightarrow HH#rightarrow 4W,2W2#tau,4#tau" % scaleSignal),
     categories = cms.VPSet(),
     distributions = cms.VPSet(
         cms.PSet(
@@ -53,14 +55,9 @@ process.makePlots = cms.PSet(
             yAxisTitle = cms.string("Events / 1 fb^{-1}")
         ),
         cms.PSet(
-            histogramName = cms.string('sel/evt/$PROCESS/mTauTauVis'),
-            xAxisTitle = cms.string('m_{#tau#tau}^{vis} [GeV]'),
-            yAxisTitle = cms.string('dN/dm_{#tau#tau}^{vis} [1/GeV]')
-        ),
-        cms.PSet(
             histogramName = cms.string('sel/evt/$PROCESS/HT'),
             xAxisTitle = cms.string('H_{T} [GeV]'),
-            yAxisTitle = cms.string('dN/d}H_{T} [1/GeV]')
+            yAxisTitle = cms.string('dN/dH_{T} [1/GeV]')
         ),
         cms.PSet(
             histogramName = cms.string('sel/evt/$PROCESS/STMET'),
@@ -68,7 +65,7 @@ process.makePlots = cms.PSet(
             yAxisTitle = cms.string('dN/dS_{T}^{MET} [1/GeV]')
         ),
         cms.PSet(
-            histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsVisMass'),
+            histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsVisMass2'),
             xAxisTitle = cms.string('m_{HH}^{vis} [GeV]'),
             yAxisTitle = cms.string('dN/dm_{HH}^{vis} [1/GeV]')
         ),
@@ -133,7 +130,9 @@ process.makePlots = cms.PSet(
     ),
     showUncertainty = cms.bool(False),
 
-    labelOnTop = cms.string("CMS Preliminary; X(masspoint)#rightarrow HH, HH#rightarrow 4W,2W2#tau,4#tau; %1.1f fb^{-1} at #sqrt{s} = 13 TeV"),
+    labelOnTop = cms.string(
+        ("CMS Preliminary; %dx X(masspoint)#rightarrow HH#rightarrow " % scaleSignal) +
+        "4W,2W2#tau,4#tau; %1.1f fb^{-1} at #sqrt{s} = 13 TeV"),
     intLumiData = cms.double(0.), # in units of fb^-1
 
     outputFileName = cms.string("")
