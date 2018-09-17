@@ -42,7 +42,7 @@ class analyzeConfig_hh_2lss(analyzeConfig):
         cfgFile_analyze,
         samples,
         lep_mva_wp,
-        hadTau_selection,
+        hadTauVeto_selection,
         applyFakeRateWeights,
         central_or_shifts,
         max_files_per_job,
@@ -56,8 +56,6 @@ class analyzeConfig_hh_2lss(analyzeConfig):
         executable_addBackgroundJetToTauFakes,
         histograms_to_fit,
         select_rle_output         = False,
-        #executable_prep_dcard     = "prepareDatacards",
-        #executable_add_syst_dcard = "addSystDatacards",
         select_root_output        = False,
         #do_sync                   = False,
         verbose                   = False,
@@ -98,7 +96,7 @@ class analyzeConfig_hh_2lss(analyzeConfig):
 
     self.lepton_selections = [ "Tight", "Fakeable" ]
     self.lepton_frWeights = [ "enabled", "disabled" ]
-    self.hadTau_selection_part2 = hadTau_selection
+    self.hadTauVeto_selection_part2 = hadTauVeto_selection
     self.applyFakeRateWeights = applyFakeRateWeights
     run_mcClosure = 'central' not in self.central_or_shifts or len(central_or_shifts) > 1 or self.do_sync
     if self.era != '2017':
@@ -302,8 +300,8 @@ class analyzeConfig_hh_2lss(analyzeConfig):
       electron_selection = lepton_selection
       muon_selection = lepton_selection
 
-      hadTau_selection = "Tight"
-      hadTau_selection = "|".join([ hadTau_selection, self.hadTau_selection_part2 ])
+      hadTauVeto_selection = "Tight"
+      hadTauVeto_selection = "|".join([ hadTauVeto_selection, self.hadTauVeto_selection_part2 ])
 
       if lepton_selection == "forBDTtraining":
         electron_selection = "Loose"
@@ -425,8 +423,8 @@ class analyzeConfig_hh_2lss(analyzeConfig):
                   'electronSelection'        : electron_selection,
                   'muonSelection'            : muon_selection,
                   'apply_leptonGenMatching'  : self.apply_leptonGenMatching,
-                  'hadTauSelection'          : hadTau_selection,
-                  'leptonChargeSelection'       : leptonChargeSelection,
+                  'hadTauSelection'          : hadTauVeto_selection,
+                  'leptonChargeSelection'    : leptonChargeSelection,
                   'applyFakeRateWeights'     : self.applyFakeRateWeights if not lepton_selection == "Tight" else "disabled",
                   'central_or_shift'         : central_or_shift,
                   #'selectBDT'                : self.isBDTtraining,
