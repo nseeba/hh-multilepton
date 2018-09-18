@@ -422,6 +422,7 @@ class analyzeConfig_hh_2lss(analyzeConfig):
                   'selEventsTFileName'       : rootOutputFile,
                   'electronSelection'        : electron_selection,
                   'muonSelection'            : muon_selection,
+                  'lep_mva_cut'              : self.lep_mva_cut,
                   'apply_leptonGenMatching'  : self.apply_leptonGenMatching,
                   'hadTauSelection'          : hadTauVeto_selection,
                   'leptonChargeSelection'    : leptonChargeSelection,
