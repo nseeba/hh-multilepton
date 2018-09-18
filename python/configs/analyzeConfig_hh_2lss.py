@@ -453,8 +453,6 @@ class analyzeConfig_hh_2lss(analyzeConfig):
               logging.info("Creating configuration files to run 'addBackgrounds' for sample %s" % process_name)
 
               sample_categories = [ sample_category ]
-              if is_signal:
-                sample_categories = [ "signal", "ttH", "ttH_htt", "ttH_hww", "ttH_hzz", "ttH_hmm", "ttH_hzg" ]
               for sample_category in sample_categories:
                 # sum non-fake and fake contributions for each MC sample separately
                 genMatch_categories = [ "nonfake", "conversions", "fake" ]
@@ -547,7 +545,8 @@ class analyzeConfig_hh_2lss(analyzeConfig):
           key_hadd_stage1_5 = getKey(lepton_selection_and_frWeight, leptonChargeSelection)
           sample_categories = []
           sample_categories.extend(self.nonfake_backgrounds)
-          sample_categories.extend([ "signal" ])
+          if "signal_nonresonant" in self.prep_dcard_signals:
+            sample_categories.extend([ "signal_nonresonant" ])
           processes_input = []
           for sample_category in sample_categories:
             processes_input.append("%s_fake" % sample_category)
@@ -571,7 +570,8 @@ class analyzeConfig_hh_2lss(analyzeConfig):
           key_addBackgrounds_job_conversions = getKey(lepton_selection_and_frWeight, leptonChargeSelection, "conversions")
           sample_categories = []
           sample_categories.extend(self.nonfake_backgrounds)
-          sample_categories.extend([ "signal" ])
+          if "signal_nonresonant" in self.prep_dcard_signals:
+            sample_categories.extend([ "signal_nonresonant" ])
           processes_input = []
           for sample_category in sample_categories:
             processes_input.append("%s_conversion" % sample_category)
