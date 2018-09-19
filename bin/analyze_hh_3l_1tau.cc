@@ -111,7 +111,7 @@ const int hadTauSelection_antiElectron = -1; // not applied
 const int hadTauSelection_antiMuon = -1; // not applied
 
 /**
- * @brief Produce datacard and control plots for 3l_1tau categories.
+ * @brief Produce datacard and control plots for 3l_1tau category of HH "multilepton" (HH->WWWW,WWtt,tttt) analysis.
  */
 int main(int argc, char* argv[])
 {

@@ -118,7 +118,7 @@ struct HadTauHistManagerWrapper_eta
 };
 
 /**
- * @brief Produce datacard and control plots for 1l_3tau category of HH analysis.
+ * @brief Produce datacard and control plots for 1l_3tau category of HH "multilepton" (HH->WWWW,WWtt,tttt) analysis.
  */
 int main(int argc, char* argv[])
 {
