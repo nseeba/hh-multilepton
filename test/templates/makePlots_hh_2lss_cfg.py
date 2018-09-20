@@ -2,7 +2,37 @@ import FWCore.ParameterSet.Config as cms
 
 from hhAnalysis.multilepton.configs.makePlots_cfi import process
 
-process.makePlots.distributions.extend([
+process.makePlots.distributions = cms.VPSet(
+    cms.PSet(
+        histogramName = cms.string("sel/evt/$PROCESS/numJets"),
+        xAxisTitle = cms.string("jet Multiplicity"),
+        yAxisTitle = cms.string("Events")
+    ),
+    cms.PSet(
+        histogramName = cms.string("sel/evt/$PROCESS/numJetsPtGt40"),
+        xAxisTitle = cms.string("jet w/ pT > 40 GeV Multiplicity"),
+        yAxisTitle = cms.string("Events")
+    ),
+    cms.PSet(
+        histogramName = cms.string("sel/evtYield/$PROCESS/evtYield"),
+        xAxisTitle = cms.string("Run Period"),
+        yAxisTitle = cms.string("Events / 1 fb^{-1}")
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/evt/$PROCESS/HT'),
+        xAxisTitle = cms.string('H_{T} [GeV]'),
+        yAxisTitle = cms.string('dN/dH_{T} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/evt/$PROCESS/STMET'),
+        xAxisTitle = cms.string('S_{T}^{MET} [GeV]'),
+        yAxisTitle = cms.string('dN/dS_{T}^{MET} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/evt/$PROCESS/dihiggsVisMass'),
+        xAxisTitle = cms.string('m_{HH} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
+    ),
     cms.PSet(
         histogramName = cms.string('sel/electrons/$PROCESS/pt'),
         xMin = cms.double(20.),
@@ -126,8 +156,4 @@ process.makePlots.distributions.extend([
         xAxisTitle = cms.string('m_{jjjj} [GeV]'),
         yAxisTitle = cms.string('dN/dm_{jjjj} [1/GeV]')
     ),
-])
-
-
-process.makePlots.nuisanceParameters.normalization.conversions = cms.string('1.0 +/- 0.20')
-process.makePlots.nuisanceParameters.normalization.signal_radion_400 = cms.string('1.0 +/- 0.20')
+)
