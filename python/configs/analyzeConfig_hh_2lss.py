@@ -706,8 +706,8 @@ class analyzeConfig_hh_2lss(analyzeConfig):
       'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgroundLeptonFlips_%s_cfg.py" % self.channel),
       'outputFile' : os.path.join(self.dirs[DKEY_HIST], "addBackgroundLeptonFlips_%s.root" % self.channel),
       'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgroundLeptonFlips_%s.log" % self.channel),
-      'category_signal' : "2lss_SS_Tight",
-      'category_sideband' : "2lss_OS_Tight"
+      'category_signal' : "hh_2lss_SS_Tight",
+      'category_sideband' : "hh_2lss_OS_Tight"
     }
     self.createCfg_addFlips(self.jobOptions_addFlips[key_addFlips_job])
     key_hadd_stage2 = getKey(get_lepton_selection_and_frWeight("Tight", "disabled"), "SS")
