@@ -146,7 +146,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
         self.prep_dcard_signals.append(sample_category)
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "fakes_data" ]
     self.mass_point = 400
-    self.make_plots_signal = "signal_hh_%d" % self.mass_point
+    self.make_plots_signal = "signal_radion_%d" % self.mass_point
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.histogramDir_prep_dcard = "hh_0l_4tau_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_0l_4tau_SS_Tight"
@@ -470,7 +470,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
                 continue
               sample_category = sample_info["sample_category"]
               sample_category_base = sample_category[0:sample_category.rfind("_")]
-              is_signal = (sample_category_base.startswith("signal"))
+              is_signal = sample_category_base.startswith("signal")
               if not is_signal:
                 continue
               key_addBackgrounds_job_signal = getKey(hadTau_selection_and_frWeight, hadTau_charge_selection, sample_category_base)
@@ -485,19 +485,22 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
                 process_output = process_output + "_fake"
               if key_addBackgrounds_job_signal in self.jobOptions_addBackgrounds_sum.keys():
                 continue
+              cfg_key = getKey(self.channel, sample_category_base, genMatch_category, hadTau_selection_and_frWeight, hadTau_charge_selection)
               self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal] = {
                 'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5],
-                'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_%s_%s_%s_cfg.py" % \
-                  (self.channel, sample_category_base, hadTau_selection_and_frWeight, hadTau_charge_selection)),
-                'outputFile' : os.path.join(self.dirs[DKEY_HIST], "addBackgrounds_%s_%s_%s_%s.root" % \
-                  (self.channel, sample_category_base, hadTau_selection_and_frWeight, hadTau_charge_selection)),
-                'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgrounds_%s_%s_%s_%s.log" % \
-                  (self.channel, sample_category_base, hadTau_selection_and_frWeight, hadTau_charge_selection)),
+                'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_cfg.py" % cfg_key),
+                'outputFile' : os.path.join(self.dirs[DKEY_HIST], "addBackgrounds_%s.root" % cfg_key),
+                'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgrounds_%s.log" % cfg_key),
                 'categories' : [ getHistogramDir(hadTau_selection, hadTau_frWeight, hadTau_charge_selection) ],
                 'processes_input' : processes_input,
                 'process_output' : process_output
               }
               self.createCfg_addBackgrounds(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal])
+              key_hadd_stage2 = getKey(hadTau_selection_and_frWeight, hadTau_charge_selection)
+              if not key_hadd_stage2 in self.inputFiles_hadd_stage2:
+                self.inputFiles_hadd_stage2[key_hadd_stage2] = []
+              if hadTau_selection == "Tight":
+                self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal]['outputFile'])
 
           # initialize input and output file names for hadd_stage2
           key_hadd_stage2 = getKey(hadTau_selection_and_frWeight, hadTau_charge_selection)
