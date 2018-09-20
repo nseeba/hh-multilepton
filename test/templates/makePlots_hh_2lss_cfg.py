@@ -4,27 +4,111 @@ from hhAnalysis.multilepton.configs.makePlots_cfi import process
 
 process.makePlots.distributions.extend([
     cms.PSet(
-        histogramName = cms.string('sel/leadHadTau/$PROCESS/pt'),
+        histogramName = cms.string('sel/electrons/$PROCESS/pt'),
         xMin = cms.double(20.),
         xMax = cms.double(200.),
-        xAxisTitle = cms.string('leading #tau_{h} p_{T} [GeV]'),
+        xAxisTitle = cms.string('leading e_{h} p_{T} [GeV]'),
         yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
     ),
     cms.PSet(
-        histogramName = cms.string('sel/leadHadTau/$PROCESS/eta'),
-        xAxisTitle = cms.string('leading #tau_{h} #eta'),
+        histogramName = cms.string('sel/electrons/$PROCESS/eta'),
+        xAxisTitle = cms.string('leading e_{h} #eta'),
         yAxisTitle = cms.string('dN/d#eta')
     ),
     cms.PSet(
-        histogramName = cms.string('sel/subleadHadTau/$PROCESS/pt'),
+        histogramName = cms.string('sel/leadElectron/$PROCESS/pt'),
         xMin = cms.double(20.),
         xMax = cms.double(200.),
-        xAxisTitle = cms.string('subleading #tau_{h} p_{T} [GeV]'),
+        xAxisTitle = cms.string('leading e_{h} p_{T} [GeV]'),
         yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
     ),
     cms.PSet(
-        histogramName = cms.string('sel/subleadHadTau/$PROCESS/eta'),
-        xAxisTitle = cms.string('subleading #tau_{h} #eta'),
+        histogramName = cms.string('sel/leadElectron/$PROCESS/eta'),
+        xAxisTitle = cms.string('leading e_{h} #eta'),
+        yAxisTitle = cms.string('dN/d#eta')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/subleadElectron/$PROCESS/pt'),
+        xMin = cms.double(20.),
+        xMax = cms.double(200.),
+        xAxisTitle = cms.string('subleading e_{h} p_{T} [GeV]'),
+        yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/subleadElectron/$PROCESS/eta'),
+        xAxisTitle = cms.string('subleading e_{h} #eta'),
+        yAxisTitle = cms.string('dN/d#eta')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/muons/$PROCESS/pt'),
+        xMin = cms.double(20.),
+        xMax = cms.double(200.),
+        xAxisTitle = cms.string('leading #mu_{h} p_{T} [GeV]'),
+        yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/muons/$PROCESS/eta'),
+        xAxisTitle = cms.string('leading #mu_{h} #eta'),
+        yAxisTitle = cms.string('dN/d#eta')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/leadMuon/$PROCESS/pt'),
+        xMin = cms.double(20.),
+        xMax = cms.double(200.),
+        xAxisTitle = cms.string('leading #mu_{h} p_{T} [GeV]'),
+        yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/leadMuon/$PROCESS/eta'),
+        xAxisTitle = cms.string('leading #mu_{h} #eta'),
+        yAxisTitle = cms.string('dN/d#eta')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/subleadMuon/$PROCESS/pt'),
+        xMin = cms.double(20.),
+        xMax = cms.double(200.),
+        xAxisTitle = cms.string('subleading #mu_{h} p_{T} [GeV]'),
+        yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/subleadMuon/$PROCESS/eta'),
+        xAxisTitle = cms.string('subleading #mu_{h} #eta'),
+        yAxisTitle = cms.string('dN/d#eta')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/jets/$PROCESS/pt'),
+        xMin = cms.double(20.),
+        xMax = cms.double(200.),
+        xAxisTitle = cms.string('leading jet_{h} p_{T} [GeV]'),
+        yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/jets/$PROCESS/eta'),
+        xAxisTitle = cms.string('leading jet_{h} #eta'),
+        yAxisTitle = cms.string('dN/d#eta')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/leadJet/$PROCESS/pt'),
+        xMin = cms.double(20.),
+        xMax = cms.double(200.),
+        xAxisTitle = cms.string('leading jet_{h} p_{T} [GeV]'),
+        yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/leadJet/$PROCESS/eta'),
+        xAxisTitle = cms.string('leading jet_{h} #eta'),
+        yAxisTitle = cms.string('dN/d#eta')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/subleadJet/$PROCESS/pt'),
+        xMin = cms.double(20.),
+        xMax = cms.double(200.),
+        xAxisTitle = cms.string('subleading jet_{h} p_{T} [GeV]'),
+        yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/subleadJet/$PROCESS/eta'),
+        xAxisTitle = cms.string('subleading jet_{h} #eta'),
         yAxisTitle = cms.string('dN/d#eta')
     ),
     cms.PSet(
@@ -33,8 +117,17 @@ process.makePlots.distributions.extend([
         yAxisTitle = cms.string('N')
     ),
     cms.PSet(
-        histogramName = cms.string('sel/evt/$PROCESS/hadTauPairCharge'),
-        xAxisTitle = cms.string('#tau_{h} charge sum'),
-        yAxisTitle = cms.string('N')
+        histogramName = cms.string('sel/evt/$PROCESS/dihiggsMass_wMet'),
+        xAxisTitle = cms.string('m_{HH} with Met [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/evt/$PROCESS/jetMass'),
+        xAxisTitle = cms.string('m_{jjjj} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{jjjj} [1/GeV]')
     ),
 ])
+
+
+process.makePlots.nuisanceParameters.normalization.conversions = cms.string('1.0 +/- 0.20')
+process.makePlots.nuisanceParameters.normalization.signal_radion_400 = cms.string('1.0 +/- 0.20')
