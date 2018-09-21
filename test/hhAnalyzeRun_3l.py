@@ -114,9 +114,13 @@ if __name__ == '__main__':
     executable_addBackgrounds             = "addBackgrounds",
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
     histograms_to_fit                     = {
-      "EventCounter" : {},
-      "numJets"      : {},
-      #"mvaDiscr_3l"  : {},
+      "EventCounter"                      : {},
+      "numJets"                           : {},
+      "mTauTauVis"                        : {},
+      "dihiggsVisMass"                    : {},
+      "dihiggsMass"                       : {},
+      "HT"                                : {},
+      "STMET"                             : {}
     },
     select_rle_output                     = True,
     select_root_output                    = False,
