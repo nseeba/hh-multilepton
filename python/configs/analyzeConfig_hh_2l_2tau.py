@@ -178,7 +178,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
-    self.prep_dcard_signals = []
+    self.prep_dcard_signals = ["signal_radion_400_tttt", "signal_radion_400_wwtt", "signal_radion_400_wwww", "signal_radion_700_tttt", "signal_radion_700_wwtt", "signal_radion_700_wwww"]
     for sample_name, sample_info in self.samples.items():
       if not sample_info["use_it"]:
         continue
