@@ -132,14 +132,16 @@ class analyzeConfig_hh_3l(analyzeConfig):
     self.executable_addBackgrounds = executable_addBackgrounds
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
 
-    self.nonfake_backgrounds = [ "TT", "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW", "VH" ]
+    self.nonfake_backgrounds = [ "TTH", "TTZ", "TTW", "TTWW", "TT", "DY", "W", "WW", "WZ", "ZZ", "VH", "TH"]
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
     self.histogramDir_prep_dcard = "hh_3l_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_3l_SS_Tight"
     self.mass_point = 400
-    self.make_plots_signal = "signal_radion_%d" % self.mass_point
+    # self.make_plots_signal = "signal_radion_%d" % self.mass_point
+    self.make_plots_signal = ["signal_radion_400_tttt", "signal_radion_400_wwtt", "signal_radion_400_wwww", "signal_radion_700_tttt", "signal_radion_700_wwtt", "signal_radion_700_wwww"]
+
     self.make_plots_backgrounds = [ "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW" ] + [ "conversions", "fakes_data" ]
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_3l_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_3l_cfg.py") #TODO
@@ -385,11 +387,11 @@ class analyzeConfig_hh_3l(analyzeConfig):
 
               sample_categories = [ sample_category ]
               if is_signal:
-                sample_categories = [ "signal", "ttH", "ttH_htt", "ttH_hww", "ttH_hzz", "ttH_hmm", "ttH_hzg" ]
+                # sample_categories = [ "signal", "ttH", "ttH_htt", "ttH_hww", "ttH_hzz", "ttH_hmm", "ttH_hzg" ]
+                sample_categories = [ "signal_radion_400_tttt", "signal_radion_400_wwtt", "signal_radion_400_wwww", "signal_radion_700_tttt", "signal_radion_700_wwtt", "signal_radion_700_wwww"]
               for sample_category in sample_categories:
                 # sum non-fake and fake contributions for each MC sample separately
                 genMatch_categories = [ "nonfake", "conversions", "fake" ]
-
                 for genMatch_category in genMatch_categories:
                   key_hadd_stage1 = getKey(process_name, lepton_selection_and_frWeight, chargeSumSelection)
                   key_addBackgrounds_job = None
@@ -478,7 +480,8 @@ class analyzeConfig_hh_3l(analyzeConfig):
           key_hadd_stage1_5 = getKey(lepton_selection_and_frWeight, chargeSumSelection)
           sample_categories = []
           sample_categories.extend(self.nonfake_backgrounds)
-          sample_categories.extend([ "signal" ])
+          # sample_categories.extend([ "signal" ])
+          sample_categories.extend([ "signal_radion_400_tttt", "signal_radion_400_wwtt", "signal_radion_400_wwww", "signal_radion_700_tttt", "signal_radion_700_wwtt", "signal_radion_700_wwww"])
           processes_input = []
           for sample_category in sample_categories:
             processes_input.append("%s_fake" % sample_category)
@@ -502,7 +505,8 @@ class analyzeConfig_hh_3l(analyzeConfig):
           key_addBackgrounds_job_conversions = getKey(lepton_selection_and_frWeight, chargeSumSelection, "conversions")
           sample_categories = []
           sample_categories.extend(self.nonfake_backgrounds)
-          sample_categories.extend([ "signal" ])
+          # sample_categories.extend([ "signal" ])
+          sample_categories.extend([ "signal_radion_400_tttt", "signal_radion_400_wwtt", "signal_radion_400_wwww", "signal_radion_700_tttt", "signal_radion_700_wwtt", "signal_radion_700_wwww"])
           processes_input = []
           for sample_category in sample_categories:
             processes_input.append("%s_conversion" % sample_category)
