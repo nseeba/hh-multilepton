@@ -21,7 +21,7 @@ process.makePlots = cms.PSet(
     processesBackground = cms.vstring(),
     processSignal = cms.string("signal_ggf_spin0_400_hh"),
     scaleSignal = cms.double(scaleSignal),
-    legendEntrySignal = cms.string("%dx X(masspoint)#rightarrow HH#rightarrow 4W,2W2#tau,4#tau" % scaleSignal),
+    legendEntrySignal = cms.string("%dx GGF#rightarrow X(400;spin0)#rightarrow HH#rightarrow 4W,2W2#tau,4#tau" % scaleSignal),
     categories = cms.VPSet(),
     distributions = cms.VPSet(
         cms.PSet(
@@ -148,7 +148,7 @@ process.makePlots = cms.PSet(
     showUncertainty = cms.bool(False),
 
     labelOnTop = cms.string(
-        ("CMS Preliminary; %dx GGF#rightarrow X(spin0;400)#rightarrow HH#rightarrow " % scaleSignal) +
+        ("CMS Preliminary; %dx GGF#rightarrow X(400;spin0)#rightarrow HH#rightarrow " % scaleSignal) +
         "4W,2W2#tau,4#tau; %1.1f fb^{-1} at #sqrt{s} = 13 TeV"),
     intLumiData = cms.double(0.), # in units of fb^-1
 
