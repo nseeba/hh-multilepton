@@ -766,6 +766,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
             'histogramToFit' : histogramToFit,
             'label' : '2l+2tau_{h}',
             'skipChannel' : True,
+            'skipSignal' : True,
           }
           self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
@@ -780,6 +781,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
           'histogramToFit' : histogramToFit,
           'label' : '2l+2tau_{h} SS',
           'skipChannel' : True,
+          'skipSignal' : True,
         }
         self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
@@ -840,6 +842,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
           'histogramDir' : getHistogramDir("Tight", "Tight", "disabled", lepton_charge_selection, hadTau_charge_selection, "OS"),
           'label' : '2l+2tau_{h}',
           'skipChannel' : True,
+          'skipSignal' : True,
           'make_plots_backgrounds' : self.make_plots_backgrounds
         }
         self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
@@ -854,6 +857,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
             'histogramDir' : getHistogramDir("Tight", "Tight", "disabled", lepton_charge_selection, hadTau_charge_selection, "SS"),
             'label' : "2l+2tau_{h} SS",
             'skipChannel' : True,
+            'skipSignal' : True,
             'make_plots_backgrounds' : self.make_plots_backgrounds
           }
           self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])

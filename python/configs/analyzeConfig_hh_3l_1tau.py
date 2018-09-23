@@ -685,6 +685,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
       'label' : '3l+1#tau_{h}',
       'make_plots_backgrounds' : self.make_plots_backgrounds,
       'skipChannel' : True,
+      'skipSignal' : True,
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "SS" in self.chargeSumSelections:
@@ -699,6 +700,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
         'label' : "3l+1#tau_{h} SS",
         'make_plots_backgrounds' : self.make_plots_backgrounds,
         'skipChannel' : True,
+        'skipSignal' : True,
       }
       self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "Fakeable_mcClosure" in self.lepton_and_hadTau_selections: #TODO

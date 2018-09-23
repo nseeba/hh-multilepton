@@ -699,6 +699,7 @@ class analyzeConfig_hh_3l(analyzeConfig):
       'label' : "hh_3l",
       'make_plots_backgrounds' : self.make_plots_backgrounds,
       'skipChannel' : True,
+      'skipSignal' : True,
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "SS" in self.chargeSumSelections:
@@ -713,6 +714,7 @@ class analyzeConfig_hh_3l(analyzeConfig):
         'label' : "HH 3l SS",
         'make_plots_backgrounds' : self.make_plots_backgrounds,
         'skipChannel' : True,
+        'skipSignal' : True,
       }
       self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "Fakeable_mcClosure" in self.lepton_selections: #TODO

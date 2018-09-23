@@ -602,6 +602,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
       'label' : '4l',
       'make_plots_backgrounds' : self.make_plots_backgrounds,
       'skipChannel' : True,
+      'skipSignal' : True,
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "SS" in self.chargeSumSelections:
@@ -616,6 +617,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
         'label' : "4l SS",
         'make_plots_backgrounds' : self.make_plots_backgrounds,
         'skipChannel' : True,
+        'skipSignal' : True,
       }
       self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "Fakeable_mcClosure" in self.lepton_selections: #TODO

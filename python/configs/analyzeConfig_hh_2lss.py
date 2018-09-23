@@ -791,6 +791,7 @@ class analyzeConfig_hh_2lss(analyzeConfig):
       'label' : "2lSS",
       'make_plots_backgrounds' : self.make_plots_backgrounds,
       'skipChannel' : True,
+      'skipSignal' : True,
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "OS" in self.leptonChargeSelections:
@@ -804,7 +805,8 @@ class analyzeConfig_hh_2lss(analyzeConfig):
         'histogramDir' : self.histogramDir_prep_dcard_OS,
         'label' : "2lOS",
         'make_plots_backgrounds' : self.make_plots_backgrounds,
-        'skipChannel': True,
+        'skipChannel' : True,
+        'skipSignal' : True,
       }
       self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "Fakeable_mcClosure" in self.lepton_selections: #TODO

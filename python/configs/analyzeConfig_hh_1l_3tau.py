@@ -629,6 +629,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
         'histogramToFit' : histogramToFit,
         'label' : '1l+3#tau_{h}',
         'skipChannel' : True,
+        'skipSignal' : True,
       }
       self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
       if "SS" in self.chargeSumSelections:
@@ -641,7 +642,8 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
           'histogramDir' : self.histogramDir_prep_dcard_SS,
           'histogramToFit' : histogramToFit,
           'label' : '1l+3#tau_{h} SS',
-        'skipChannel' : True,
+          'skipChannel' : True,
+          'skipSignal' : True,
         }
         self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
@@ -697,7 +699,8 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
       'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s.png" % self.channel),
       'histogramDir' : self.histogramDir_prep_dcard,
       'label' : '1l+3#tau_{h}',
-      'skipChannel': True,
+      'skipChannel' : True,
+      'skipSignal' : True,
       'make_plots_backgrounds' : self.make_plots_backgrounds
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
@@ -712,6 +715,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
         'histogramDir' : self.histogramDir_prep_dcard_SS,
         'label' : "1l+3#tau_{h} SS",
         'skipChannel' : True,
+        'skipSignal' : True,
         'make_plots_backgrounds' : self.make_plots_backgrounds
       }
       self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])

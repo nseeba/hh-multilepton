@@ -547,6 +547,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
         'histogramToFit' : histogramToFit,
         'label' : '4#tau_{h}',
         'skipChannel' : True,
+        'skipSignal' : True,
       }
       self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
       if "SS" in self.hadTau_charge_selections:
@@ -560,6 +561,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
           'histogramToFit' : histogramToFit,
           'label' : '4#tau_{h} SS',
           'skipChannel' : True,
+          'skipSignal' : True,
         }
         self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
@@ -613,6 +615,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
       'label' : '4#tau_{h}',
       'make_plots_backgrounds' : self.make_plots_backgrounds,
       'skipChannel' : True,
+      'skipSignal' : True,
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "SS" in self.hadTau_charge_selections:
@@ -627,6 +630,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
         'label' : "4#tau_{h} SS",
         'make_plots_backgrounds' : self.make_plots_backgrounds,
         'skipChannel' : True,
+        'skipSignal' : True,
       }
       self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "Fakeable_mcClosure" in self.hadTau_selections: #TODO
