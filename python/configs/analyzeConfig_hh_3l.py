@@ -138,8 +138,6 @@ class analyzeConfig_hh_3l(analyzeConfig):
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
     self.histogramDir_prep_dcard = "hh_3l_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_3l_SS_Tight"
-    self.mass_point = 400
-    # self.make_plots_signal = "signal_radion_%d" % self.mass_point
     self.make_plots_signal = ["signal_radion_400_tttt", "signal_radion_400_wwtt", "signal_radion_400_wwww", "signal_radion_700_tttt", "signal_radion_700_wwtt", "signal_radion_700_wwww"]
 
     self.make_plots_backgrounds = [ "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW" ] + [ "conversions", "fakes_data" ]
@@ -700,7 +698,6 @@ class analyzeConfig_hh_3l(analyzeConfig):
       'histogramDir' : self.histogramDir_prep_dcard,
       'label' : "hh_3l",
       'make_plots_backgrounds' : self.make_plots_backgrounds,
-      'massPoint' : self.mass_point,
       'skipChannel' : True,
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
@@ -715,7 +712,6 @@ class analyzeConfig_hh_3l(analyzeConfig):
         'histogramDir' : self.histogramDir_prep_dcard_SS,
         'label' : "HH 3l SS",
         'make_plots_backgrounds' : self.make_plots_backgrounds,
-        'massPoint' : self.mass_point,
         'skipChannel' : True,
       }
       self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])

@@ -163,8 +163,6 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
       if sample_category.startswith("signal"):
         self.prep_dcard_signals.append(sample_category)
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
-    self.mass_point = 400
-    self.make_plots_signal = "signal_radion_%d" % self.mass_point
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.histogramDir_prep_dcard = "hh_1l_3tau_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_1l_3tau_SS_Tight"
@@ -630,7 +628,6 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
         'histogramDir' : self.histogramDir_prep_dcard,
         'histogramToFit' : histogramToFit,
         'label' : '1l+3#tau_{h}',
-        'massPoint' : self.mass_point,
         'skipChannel' : True,
       }
       self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
@@ -644,7 +641,6 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
           'histogramDir' : self.histogramDir_prep_dcard_SS,
           'histogramToFit' : histogramToFit,
           'label' : '1l+3#tau_{h} SS',
-        'massPoint' : self.mass_point,
         'skipChannel' : True,
         }
         self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
@@ -701,7 +697,6 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
       'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s.png" % self.channel),
       'histogramDir' : self.histogramDir_prep_dcard,
       'label' : '1l+3#tau_{h}',
-      'massPoint'  : self.mass_point,
       'skipChannel': True,
       'make_plots_backgrounds' : self.make_plots_backgrounds
     }
@@ -716,7 +711,6 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
         'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s_SS.png" % self.channel),
         'histogramDir' : self.histogramDir_prep_dcard_SS,
         'label' : "1l+3#tau_{h} SS",
-        'massPoint' : self.mass_point,
         'skipChannel' : True,
         'make_plots_backgrounds' : self.make_plots_backgrounds
       }

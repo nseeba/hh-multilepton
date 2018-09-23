@@ -181,8 +181,6 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_3l_1tau_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_3l_1tau_cfg.py") #TODO
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
-    self.mass_point = 400
-    self.make_plots_signal = "signal_radion_%d" % self.mass_point
     self.select_rle_output = select_rle_output
     self.use_nonnominal = use_nonnominal
     self.hlt_filter = hlt_filter
@@ -686,7 +684,6 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
       'histogramDir' : self.histogramDir_prep_dcard,
       'label' : '3l+1#tau_{h}',
       'make_plots_backgrounds' : self.make_plots_backgrounds,
-      'massPoint' : self.mass_point,
       'skipChannel' : True,
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
@@ -701,7 +698,6 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig):
         'histogramDir' : self.histogramDir_prep_dcard_SS,
         'label' : "3l+1#tau_{h} SS",
         'make_plots_backgrounds' : self.make_plots_backgrounds,
-        'massPoint' : self.mass_point,
         'skipChannel' : True,
       }
       self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])

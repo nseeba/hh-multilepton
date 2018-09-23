@@ -131,6 +131,7 @@ process.makePlots = cms.PSet(
             WZ = cms.string("1.0 +/- 0.20"),
             fakes_data = cms.string("1.0 +/- 0.20"),
             conversions = cms.string("1.0 +/- 0.20"),
+            signal_ggf_spin0_400_hh = cms.string("1.0 +/- 0.20"),
         ),
         shape = cms.PSet(
             CMS_ttHl_btag_HF = cms.string("0.00 +/- 1.00"),
@@ -147,7 +148,7 @@ process.makePlots = cms.PSet(
     showUncertainty = cms.bool(False),
 
     labelOnTop = cms.string(
-        ("CMS Preliminary; %dx X(masspoint)#rightarrow HH#rightarrow " % scaleSignal) +
+        ("CMS Preliminary; %dx GGF#rightarrow X(spin0;400)#rightarrow HH#rightarrow " % scaleSignal) +
         "4W,2W2#tau,4#tau; %1.1f fb^{-1} at #sqrt{s} = 13 TeV"),
     intLumiData = cms.double(0.), # in units of fb^-1
 

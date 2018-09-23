@@ -188,8 +188,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
     self.histogramDir_prep_dcard = "hh_2l_2tau_sumOS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_2l_2tau_sumSS_Tight"
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
-    self.mass_point = 400
-    self.make_plots_signal = "signal_radion_%d" % self.mass_point
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2l_2tau_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2l_2tau_cfg.py")
 
@@ -767,7 +765,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
             'histogramDir' : getHistogramDir("Tight", "Tight", "disabled", lepton_charge_selection, hadTau_charge_selection, "OS"),
             'histogramToFit' : histogramToFit,
             'label' : '2l+2tau_{h}',
-            'massPoint' : self.mass_point,
             'skipChannel' : True,
           }
           self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
@@ -782,7 +779,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
           'histogramDir' : getHistogramDir("Tight", "Tight", "disabled", lepton_charge_selection, hadTau_charge_selection, "SS"),
           'histogramToFit' : histogramToFit,
           'label' : '2l+2tau_{h} SS',
-          'massPoint' : self.mass_point,
           'skipChannel' : True,
         }
         self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
@@ -843,7 +839,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
           'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s%s.png" % (self.channel, lepton_and_hadTau_charge_selection)),
           'histogramDir' : getHistogramDir("Tight", "Tight", "disabled", lepton_charge_selection, hadTau_charge_selection, "OS"),
           'label' : '2l+2tau_{h}',
-          'massPoint' : self.mass_point,
           'skipChannel' : True,
           'make_plots_backgrounds' : self.make_plots_backgrounds
         }
@@ -858,7 +853,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig):
             'outputFile' : os.path.join(self.dirs[DKEY_PLOT], "makePlots_%s%s_sumSS.png" % (self.channel, lepton_and_hadTau_charge_selection)),
             'histogramDir' : getHistogramDir("Tight", "Tight", "disabled", lepton_charge_selection, hadTau_charge_selection, "SS"),
             'label' : "2l+2tau_{h} SS",
-            'massPoint' : self.mass_point,
             'skipChannel' : True,
             'make_plots_backgrounds' : self.make_plots_backgrounds
           }

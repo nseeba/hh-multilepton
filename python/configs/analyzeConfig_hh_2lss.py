@@ -152,8 +152,6 @@ class analyzeConfig_hh_2lss(analyzeConfig):
     self.histogramDir_prep_dcard = "hh_2lss_SS_Tight"
     self.histogramDir_prep_dcard_OS = "hh_2lss_OS_Tight"
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
-    self.mass_point = 400
-    self.make_plots_signal = "signal_radion_%d" % self.mass_point
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2lss_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2lss_cfg.py") #TODO
 
@@ -792,7 +790,6 @@ class analyzeConfig_hh_2lss(analyzeConfig):
       'histogramDir' : self.histogramDir_prep_dcard,
       'label' : "2lSS",
       'make_plots_backgrounds' : self.make_plots_backgrounds,
-      'massPoint' : self.mass_point,
       'skipChannel' : True,
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
@@ -807,7 +804,6 @@ class analyzeConfig_hh_2lss(analyzeConfig):
         'histogramDir' : self.histogramDir_prep_dcard_OS,
         'label' : "2lOS",
         'make_plots_backgrounds' : self.make_plots_backgrounds,
-        'massPoint'  : self.mass_point,
         'skipChannel': True,
       }
       self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
