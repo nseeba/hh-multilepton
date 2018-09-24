@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 import os, logging, sys, getpass
-from collections import OrderedDict as OD
-from hhAnalysis.multilepton.configs.analyzeConfig_hh_2lss_4jet import analyzeConfig_hh_2lss_4jet
+from hhAnalysis.multilepton.configs.analyzeConfig_hh_2lss import analyzeConfig_hh_2lss
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
 
-# E.g.: ./hhAnalyzeRun_2lss_4jet.py -v 2017Dec13 -m default -e 2017
+# E.g.: ./hhAnalyzeRun_2lss.py -v 2017Dec13 -m default -e 2017
 
 mode_choices     = [ 'default' ]
 sys_choices      = [ 'full' ] + systematics.an_extended_opts
@@ -15,9 +14,7 @@ systematics.full = systematics.an_extended
 parser = tthAnalyzeParser()
 parser.add_modes(mode_choices)
 parser.add_sys(sys_choices)
-parser.add_preselect()
 parser.add_nonnominal()
-parser.add_tau_id_wp()
 parser.add_hlt_filter()
 parser.add_files_per_job()
 parser.add_use_home()
@@ -39,7 +36,6 @@ running_method     = args.running_method
 # Additional arguments
 mode              = args.mode
 systematics_label = args.systematics
-use_preselected   = args.use_preselected
 use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
 files_per_job     = args.files_per_job
@@ -53,9 +49,6 @@ for systematic_label in systematics_label:
     if central_or_shift not in central_or_shifts:
       central_or_shifts.append(central_or_shift)
 
-chargeSumSelections      = [ "OS", "SS" ]
-hadTau_selection_relaxed = ""
-
 if mode == "default":
   if era == "2016":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
@@ -67,9 +60,9 @@ if mode == "default":
     raise ValueError("Invalid era: %s" % era)
 
   if era == "2016":
-    hadTau_selection = "dR03mvaTight"
+    hadTau_veto = "dR03mvaTight"
   elif era == "2017":
-    hadTau_selection = "dR03mvaMedium"
+    hadTau_veto = "dR03mvaMedium"
   elif era == "2018":
     raise ValueError("Implement me!")
   else:
@@ -99,28 +92,19 @@ if __name__ == '__main__':
     "Running the jobs with the following systematic uncertainties enabled: %s" % \
     ', '.join(central_or_shifts)
   )
-  if not use_preselected:
-    logging.warning('Running the analysis on fully inclusive samples!')
 
   if sample_filter:
     samples = filter_samples(samples, sample_filter)
 
-  if args.tau_id_wp:
-    logging.info("Changing tau ID working point: %s -> %s" % (hadTau_selection, args.tau_id_wp))
-    hadTau_selection = args.tau_id_wp
-
-  analysis = analyzeConfig_hh_2lss_4jet(
+  analysis = analyzeConfig_hh_2lss(
     configDir = os.path.join("/home",       getpass.getuser(), "hhAnalysis", era, version),
     outputDir = os.path.join("/hdfs/local", getpass.getuser(), "hhAnalysis", era, version),
-    executable_analyze                    = "analyze_hh_2lss_4jet",
-    cfgFile_analyze                       = "analyze_hh_2lss_4jet_cfg.py",
+    executable_analyze                    = "analyze_hh_2lss",
+    cfgFile_analyze                       = "analyze_hh_2lss_cfg.py",
     samples                               = samples,
-    lepton_charge_selections              = [ "SS" ],
     lep_mva_wp                            = lep_mva_wp,
-    hadTau_selection                      = hadTau_selection,
-#    hadTau_charge_selections              = [ "disabled" ],
+    hadTauVeto_selection                  = hadTau_veto,
     applyFakeRateWeights                  = applyFakeRateWeights,
-    chargeSumSelections                   = chargeSumSelections,
     central_or_shifts                     = central_or_shifts,
     max_files_per_job                     = files_per_job,
     era                                   = era,

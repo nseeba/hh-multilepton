@@ -532,8 +532,10 @@ void SetCentralHistoBinError(TH1* central_histo, std::vector<TH1*> alt_histos, c
 std::vector<TH1*> FitSystUpDownHisto(TH1* central_histo, std::vector<TH1*> alt_histos, const double& fitRange_min, const std::string& label){
 
   std::vector<TH1*> vect_hist;
-  std::string labelUp   = label + "_FitSystUp";
-  std::string labelDown = label + "_FitSystDown";
+  // std::string labelUp   = label + "_FitSystUp";
+  // std::string labelDown = label + "_FitSystDown";
+  std::string labelUp   = "FitSystUp_" + label;
+  std::string labelDown = "FitSystDown_" + label;
 
   const TAxis* const xAxis = central_histo->GetXaxis();
   const int numBins = xAxis->GetNbins();  
@@ -666,7 +668,8 @@ int main(int argc, char* argv[])
   TH1* histo = getHistogram(inputDir, ProcessName, HistogramName, "", true, false);
   //  TArrayD histo_Orig_Binning = getBinning(histo); // Storing original binning scheme of the histogram
   TH1* histo_orig = dynamic_cast<TH1*>(histo->Clone());
-  histo_orig->SetName(HistogramName.c_str());
+  std::string histo_orig_name = Form("original_%s", HistogramName.data());
+  histo_orig->SetName(histo_orig_name.c_str());
 
   TH1* histo_to_fit = 0;
 
@@ -674,9 +677,13 @@ int main(int argc, char* argv[])
   if(apply_automatic_rebinning && explicitBinning.empty()){
     TArrayD histoAutoBins = getRebinnedBinning(histo, minEvents_automatic_rebinning);
     histo_to_fit = getRebinnedHistogram1d(histo, 4, histoAutoBins, false);
+    std::string name = Form("rebinned_%s", HistogramName.data());
+    histo_to_fit->SetName(name.c_str());
   }else if(! explicitBinning.empty() && ! apply_automatic_rebinning){
     TArrayD histogramExplicitBinning = getTArraDfromVector(explicitBinning);
     histo_to_fit = getRebinnedHistogram1d(histo, 4, histogramExplicitBinning);
+    std::string name = Form("rebinned_%s", HistogramName.data());
+    histo_to_fit->SetName(name.c_str());
   }else{
     histo_to_fit = histo;
   }
@@ -751,8 +758,9 @@ int main(int argc, char* argv[])
   // ------ Computing the central tail-fitted histogram -----
   std::cout<< " Computing the central tail-fitted histogram " << std::endl;
   TH1* central_fit_histo = GetHistofromFunc(histo, fitFunction_nom, nom_fit_func->GetXmin()); // Using the original binned histogram
-  std::string histo_name1 = Form("%s_central_fit", HistogramName.data());
-  central_fit_histo->SetName(histo_name1.c_str());
+  // std::string histo_name1 = Form("%s_central_fit", HistogramName.data());
+  // std::string histo_name1 = Form("central_fit_%s", HistogramName.data());
+  central_fit_histo->SetName(HistogramName.c_str());
 
   // ------ Computing the fit systematic tail-fitted histograms -----
   std::cout<< " Computing the fit systematic tail-fitted histogram " << std::endl;
@@ -760,7 +768,8 @@ int main(int argc, char* argv[])
   for ( std::vector<fitFunction_and_legendEntry>::const_iterator fitFunction_sysShift = fitFunctions_sysShifts.begin();
 	fitFunction_sysShift != fitFunctions_sysShifts.end(); ++fitFunction_sysShift ) {
         TH1* fit_sysShifts_histogram = GetHistofromFunc(histo, (fitFunction_sysShift->fitFunction_), nom_fit_func->GetXmin()); // Using the original binned histogram
-	std::string histo_name2 = Form("%s_%s", HistogramName.data(), (fitFunction_sysShift->legendEntry_).data());
+	// std::string histo_name2 = Form("%s_%s", HistogramName.data(), (fitFunction_sysShift->legendEntry_).data());
+	std::string histo_name2 = Form("%s_%s", (fitFunction_sysShift->legendEntry_).data(), HistogramName.data());
         fit_sysShifts_histogram->SetName(histo_name2.c_str());
         fit_sysShifts_histos.push_back(fit_sysShifts_histogram);
   }
@@ -777,7 +786,8 @@ int main(int argc, char* argv[])
     if(fitResult->IsValid()){
       fitResult_vect.push_back(fitResult);
       TH1* alt_fit_histo = GetHistofromFunc(histo, (*func_iter)->GetFitFunction(), (*func_iter)->GetXmin()); // Using the original binned histogram
-      std::string histo_name3 = Form("%s_alt_fitFunc_%i", HistogramName.data(), counter);
+      // std::string histo_name3 = Form("%s_alt_fitFunc_%i", HistogramName.data(), counter);
+      std::string histo_name3 = Form("alt_fitFunc_%i_%s", counter, HistogramName.data());
       alt_fit_histo->SetName(histo_name3.c_str());
       vect_alt_fit_histos.push_back(alt_fit_histo);
     }
@@ -787,7 +797,8 @@ int main(int argc, char* argv[])
   // ----- Fit Bias Systematic -------
   std::cout<< " Computing the Fit Bias Systematic " << std::endl;
   TH1* fit_bias_Syst_histo = dynamic_cast<TH1*>(central_fit_histo->Clone());
-  std::string histo_name4 = Form("%s_fit_bias_Syst", HistogramName.data());
+  // std::string histo_name4 = Form("%s_fit_bias_Syst", HistogramName.data());
+  std::string histo_name4 = Form("fit_bias_Syst_%s", HistogramName.data());
   fit_bias_Syst_histo->SetName(histo_name4.c_str());
 
   // ---- Bin-By-Bin ------

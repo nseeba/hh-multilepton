@@ -744,18 +744,23 @@ int main(int argc, char* argv[])
   }
 
   GenEvtHistManager* genEvtHistManager_beforeCuts = 0;
+  LHEInfoHistManager* lheInfoHistManager_beforeCuts = 0;
   GenEvtHistManager* genEvtHistManager_afterCuts = 0;
-  LHEInfoHistManager* lheInfoHistManager = 0;
+  LHEInfoHistManager* lheInfoHistManager_afterCuts = 0;
+
   if ( isMC ) {
     genEvtHistManager_beforeCuts = new GenEvtHistManager(makeHistManager_cfg(process_string,
       Form("%s/unbiased/genEvt", histogramDir.data()), central_or_shift));
     genEvtHistManager_beforeCuts->bookHistograms(fs);
+    lheInfoHistManager_beforeCuts = new LHEInfoHistManager(makeHistManager_cfg(process_string,
+      Form("%s/unbiased/lheInfo", histogramDir.data()), central_or_shift));
+    lheInfoHistManager_beforeCuts->bookHistograms(fs);
     genEvtHistManager_afterCuts = new GenEvtHistManager(makeHistManager_cfg(process_string,
       Form("%s/sel/genEvt", histogramDir.data()), central_or_shift));
     genEvtHistManager_afterCuts->bookHistograms(fs);
-    lheInfoHistManager = new LHEInfoHistManager(makeHistManager_cfg(process_string,
+    lheInfoHistManager_afterCuts = new LHEInfoHistManager(makeHistManager_cfg(process_string,
       Form("%s/sel/lheInfo", histogramDir.data()), central_or_shift));
-    lheInfoHistManager->bookHistograms(fs);
+    lheInfoHistManager_afterCuts->bookHistograms(fs);
   }
 
   int analyzedEntries = 0;
@@ -864,6 +869,7 @@ int main(int argc, char* argv[])
       evtWeight_inclusive *= eventInfo.pileupWeight;
       evtWeight_inclusive *= lumiScale;
       genEvtHistManager_beforeCuts->fillHistograms(genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeight_inclusive);
+      lheInfoHistManager_beforeCuts->fillHistograms(*lheInfoReader, evtWeight_inclusive);
     }
 
     bool isTriggered_1e = hltPaths_isTriggered(triggers_1e);
@@ -1732,7 +1738,7 @@ int main(int argc, char* argv[])
 
     if ( isMC ) {
       genEvtHistManager_afterCuts->fillHistograms(genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeight_inclusive);
-      lheInfoHistManager->fillHistograms(*lheInfoReader, evtWeight);
+      lheInfoHistManager_afterCuts->fillHistograms(*lheInfoReader, evtWeight);
     }
 
     if ( selEventsFile ) {
@@ -1796,8 +1802,9 @@ int main(int argc, char* argv[])
   delete lheInfoReader;
 
   delete genEvtHistManager_beforeCuts;
+  delete lheInfoHistManager_beforeCuts;
   delete genEvtHistManager_afterCuts;
-  delete lheInfoHistManager;
+  delete lheInfoHistManager_afterCuts;
   delete cutFlowHistManager;
   delete eventWeightManager;
 

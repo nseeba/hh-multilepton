@@ -16,7 +16,7 @@ process.fwliteOutput = cms.PSet(
     fileName = cms.string('')
 )
 
-process.analyze_hh_2lss_4jet = cms.PSet(
+process.analyze_hh_2lss = cms.PSet(
     treeName = cms.string('Events'),
 
     process = cms.string(''),
@@ -108,6 +108,7 @@ process.analyze_hh_2lss_4jet = cms.PSet(
     useNonNominal = cms.bool(False),
     isDEBUG = cms.bool(False),
     hasLHE = cms.bool(True),
+    minNumJets = cms.int32(3),
 
     evtWeight = cms.PSet(
         apply = cms.bool(False),

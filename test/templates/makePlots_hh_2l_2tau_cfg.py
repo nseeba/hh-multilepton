@@ -4,6 +4,11 @@ from hhAnalysis.multilepton.configs.makePlots_cfi import process
 
 process.makePlots.distributions.extend([
     cms.PSet(
+        histogramName = cms.string('sel/evt/$PROCESS/mTauTauVis'),
+        xAxisTitle = cms.string('m_{#tau#tau}^{vis} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{#tau#tau}^{vis} [1/GeV]')
+    ),
+    cms.PSet(
         histogramName = cms.string('sel/leadHadTau/$PROCESS/pt'),
         xMin = cms.double(20.),
         xMax = cms.double(200.),

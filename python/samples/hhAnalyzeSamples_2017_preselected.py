@@ -1,6 +1,6 @@
-from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017 import samples_2017 as samples_2017_general
-from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_hh_private import samples_2017 as samples_2017_hh_private
-from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_hh import samples_2017 as samples_2017_hh
+from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017_preselected_hh import samples_2017 as samples_2017_general
+from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_hh_private_preselected import samples_2017 as samples_2017_hh_private
+from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_hh_preselected import samples_2017 as samples_2017_hh
 
 import collections
 import itertools

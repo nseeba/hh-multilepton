@@ -79,21 +79,21 @@ void dumpEventYields()
   //channels.push_back("hh_3l_1tau");
   //channels.push_back("hh_4l");
 
-  std::string inputFilePath = "/hdfs/local/veelken/hhAnalysis/2017/";
+  std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2017/2018Sep6/histograms/hh_2l_2tau/";
 
   std::map<std::string, std::string> inputFileNames; // key = channel
-  inputFileNames["hh_0l_4tau"] = "hh_0l_4tau/histograms_harvested_stage2_hh_0l_4tau_Tight_OS.root";
-  inputFileNames["hh_1l_3tau"] = "hh_1l_3tau/histograms_harvested_stage2_hh_1l_3tau_Tight_OS.root";
-  inputFileNames["hh_2l_2tau"] = "2018Aug01v1/histograms/hh_2l_2tau/histograms_harvested_stage2_hh_2l_2tau_disabled_disabled_Tight_OS_with2016.root";
-  inputFileNames["hh_3l_1tau"] = "hh_3l_1tau/histograms_harvested_stage2_hh_3l_1tau_Tight_OS.root";
-  inputFileNames["hh_4l"]      = "";
+  // inputFileNames["hh_0l_4tau"] = "hh_0l_4tau/histograms_harvested_stage2_hh_0l_4tau_Tight_OS.root";
+  // inputFileNames["hh_1l_3tau"] = "hh_1l_3tau/histograms_harvested_stage2_hh_1l_3tau_Tight_OS.root";
+  inputFileNames["hh_2l_2tau"] = "histograms_harvested_stage2_hh_2l_2tau_disabled_disabled_Tight_OS.root";
+  // inputFileNames["hh_3l_1tau"] = "hh_3l_1tau/histograms_harvested_stage2_hh_3l_1tau_Tight_OS.root";
+  // inputFileNames["hh_4l"]      = "";
 
   std::map<std::string, std::string> directories; // key = channel
-  directories["hh_0l_4tau"] = "hh_0l_4tau_OS_Tight/sel/evt";
-  directories["hh_1l_3tau"] = "hh_1l_3tau_OS_Tight/sel/evt";
+  // directories["hh_0l_4tau"] = "hh_0l_4tau_OS_Tight/sel/evt";
+  // directories["hh_1l_3tau"] = "hh_1l_3tau_OS_Tight/sel/evt";
   directories["hh_2l_2tau"] = "hh_2l_2tau_sumOS_Tight/sel/evt";
-  directories["hh_3l_1tau"] = "hh_3l_1tau_OS_lepTight_tauTight/sel/evt";
-  directories["hh_4l"]      = "";
+  // directories["hh_3l_1tau"] = "hh_3l_1tau_OS_lepTight_tauTight/sel/evt";
+  // directories["hh_4l"]      = "";
 
   std::map<std::string, vstring> signal_processes; // key = channel
 
@@ -107,22 +107,23 @@ void dumpEventYields()
   background_processes["hh_2l_2tau"].push_back("TTW");
   background_processes["hh_2l_2tau"].push_back("TTWW");
   background_processes["hh_2l_2tau"].push_back("TTZ");
-  background_processes["hh_2l_2tau"].push_back("tHW");
-  background_processes["hh_2l_2tau"].push_back("tHq");
+  // background_processes["hh_2l_2tau"].push_back("tHW");
+  // background_processes["hh_2l_2tau"].push_back("tHq");
+  background_processes["hh_2l_2tau"].push_back("TH");
   background_processes["hh_2l_2tau"].push_back("WZ");
   background_processes["hh_2l_2tau"].push_back("ZZ");
   background_processes["hh_2l_2tau"].push_back("DY");
   background_processes["hh_2l_2tau"].push_back("W");
-  background_processes["hh_2l_2tau"].push_back("EWK");
-  background_processes["hh_2l_2tau"].push_back("Rares");
+  // background_processes["hh_2l_2tau"].push_back("EWK");
+  // background_processes["hh_2l_2tau"].push_back("Rares");
   background_processes["hh_2l_2tau"].push_back("conversions");
   background_processes["hh_2l_2tau"].push_back("fakes_data");
   background_processes["hh_2l_2tau"].push_back("fakes_mc");
   background_processes["hh_2l_2tau"].push_back("VH");
-  background_processes["hh_0l_4tau"] = background_processes["hh_2l_2tau"];
-  background_processes["hh_1l_3tau"] = background_processes["hh_2l_2tau"];
-  background_processes["hh_3l_1tau"] = background_processes["hh_2l_2tau"];
-  background_processes["hh_4l"]      = background_processes["hh_2l_2tau"];
+  // background_processes["hh_0l_4tau"] = background_processes["hh_2l_2tau"];
+  // background_processes["hh_1l_3tau"] = background_processes["hh_2l_2tau"];
+  // background_processes["hh_3l_1tau"] = background_processes["hh_2l_2tau"];
+  // background_processes["hh_4l"]      = background_processes["hh_2l_2tau"];
   
   std::vector<std::string> background_process_parts;
   background_process_parts.push_back("");
