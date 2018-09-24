@@ -546,8 +546,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
         'histogramDir' : self.histogramDir_prep_dcard,
         'histogramToFit' : histogramToFit,
         'label' : '4#tau_{h}',
-        'skipChannel' : True,
-        'skipSignal' : True,
       }
       self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
       if "SS" in self.hadTau_charge_selections:
@@ -560,8 +558,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
           'histogramDir' : self.histogramDir_prep_dcard_SS,
           'histogramToFit' : histogramToFit,
           'label' : '4#tau_{h} SS',
-          'skipChannel' : True,
-          'skipSignal' : True,
         }
         self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 

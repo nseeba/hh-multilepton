@@ -628,8 +628,6 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
         'histogramDir' : self.histogramDir_prep_dcard,
         'histogramToFit' : histogramToFit,
         'label' : '1l+3#tau_{h}',
-        'skipChannel' : True,
-        'skipSignal' : True,
       }
       self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
       if "SS" in self.chargeSumSelections:
@@ -642,8 +640,6 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig):
           'histogramDir' : self.histogramDir_prep_dcard_SS,
           'histogramToFit' : histogramToFit,
           'label' : '1l+3#tau_{h} SS',
-          'skipChannel' : True,
-          'skipSignal' : True,
         }
         self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
