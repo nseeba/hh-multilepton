@@ -262,7 +262,9 @@ class analyzeConfig_hh_4l(analyzeConfig):
                   if not is_mc and not isFR_shape_shift:
                     continue
 
-                if central_or_shift in systematics.LHE().ttH and not sample_category.startswith("signal"):
+                if central_or_shift in systematics.LHE().hh and not sample_category.startswith("signal"):
+                  continue
+                if central_or_shift in systematics.LHE().ttH and sample_category != "TTH":
                   continue
                 if central_or_shift in systematics.LHE().ttW and sample_category != "TTW":
                   continue
@@ -294,6 +296,7 @@ class analyzeConfig_hh_4l(analyzeConfig):
                   'electronSelection'        : electron_selection,
                   'muonSelection'            : muon_selection,
                   'apply_leptonGenMatching'  : self.apply_leptonGenMatching,
+                  'lep_mva_cut'              : self.lep_mva_cut,
                   'chargeSumSelection'       : chargeSumSelection,
                   'applyFakeRateWeights'     : self.applyFakeRateWeights if not lepton_selection == "Tight" else "disabled",
                   'central_or_shift'         : central_or_shift,

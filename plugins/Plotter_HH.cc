@@ -62,6 +62,10 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
   }
   
   std::vector<TH1*> histogramsBackground_density;
+  TH1* histogramDY = 0;
+  TH1* histogramDY_density = 0;
+  TH1* histogramW = 0;
+  TH1* histogramW_density = 0;
   TH1* histogramZZ = 0;
   TH1* histogramZZ_density = 0;
   TH1* histogramWZ = 0;
@@ -70,6 +74,8 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
   TH1* histogramWW_density = 0;
   TH1* histogramFakes = 0;
   TH1* histogramFakes_density = 0;
+  TH1* histogramFlips = 0;
+  TH1* histogramFlips_density = 0;
   TH1* histogramTT = 0;
   TH1* histogramTT_density = 0;
   TH1* histogramTTW = 0;
@@ -142,6 +148,15 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     } else if ( process.find("WW") != std::string::npos ) {
       histogramWW = histogramBackground;
       histogramWW_density = histogramBackground_density;
+    }else if ( process.find("DY") != std::string::npos ) {
+      histogramDY = histogramBackground;
+      histogramDY_density = histogramBackground_density;
+    }else if ( process.find("W") != std::string::npos ) {
+      histogramW = histogramBackground;
+      histogramW_density = histogramBackground_density;
+    }else if ( process.find("Flips") != std::string::npos ) {
+      histogramFlips = histogramBackground;
+      histogramFlips_density = histogramBackground_density;
     }
     histogramsBackground_density.push_back(histogramBackground_density);
   }
@@ -291,25 +306,49 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     histogramData_blinded_density->Draw("ep");
   }
   
-  const int color_ZZ          = 822; // light green
+  const int color_DY          = 434; // kCyan+2
+  const int color_ZZ          = 630; // kRed-2
+  const int color_W           = 403; // kYellow+3
   const int color_Fakes       =   1; // black
+  const int color_ttZ         = 617; // kMagenta+1
+  const int color_Conversions = 419; // kGreen+3 
+  const int color_VH          = 802; // kOrange+2
+  const int color_Other       = 598; // kBlue-2
+  const int color_Flips       = 400; // kYellow
+  /*
+  const int color_ZZ          = 822; // light green  
+  const int color_Fakes       =   1; // black  
   const int color_ttZ         = 610; // purple
-  const int color_Conversions = 800; // yellow/orange
+  const int color_Conversions = 800; // yellow/orange 
   const int color_Other       = 851; // light blue
-  const int color_VH          = 628; // red
-  
+  const int color_VH          = 628; // red 
+*/
+
+  const std::string legendEntry_DY          = "DY";
   const std::string legendEntry_ZZ          = "ZZ";
+  const std::string legendEntry_W           = "W + jets";
   const std::string legendEntry_Fakes       = "Fakes";
   const std::string legendEntry_ttZ         = "t#bar{t}Z + t#bar{t}WW";
   const std::string legendEntry_Conversions = "Conversions";
-  const std::string legendEntry_Other       = "Other";
   const std::string legendEntry_VH          = "SM Higgs bosons";
+  const std::string legendEntry_Other       = "Other";
+  const std::string legendEntry_Flips       = "Flips";
   
   std::vector<TH1*> histogramsForStack_density;
+  if ( histogramDY_density ) {
+    histogramDY_density->SetFillColor(color_DY);
+    histogramsForStack_density.push_back(histogramDY_density);
+    legend->AddEntry(histogramDY_density, legendEntry_DY.data(), "f");
+  }
   if ( histogramZZ_density ) {
     histogramZZ_density->SetFillColor(color_ZZ);
     histogramsForStack_density.push_back(histogramZZ_density);
     legend->AddEntry(histogramZZ_density, legendEntry_ZZ.data(), "f");
+  }
+  if ( histogramW_density ) {
+    histogramW_density->SetFillColor(color_W);
+    histogramsForStack_density.push_back(histogramW_density);
+    legend->AddEntry(histogramW_density, legendEntry_W.data(), "f");
   }
   if ( histogramFakes_density ) {
     histogramFakes_density->SetFillColor(color_Fakes);
@@ -327,17 +366,21 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     histogramsForStack_density.push_back(histogramConversions_density);
     legend->AddEntry(histogramConversions_density, legendEntry_Conversions.data(), "f");
   }
-  if ( histogramOther_density ) {
-    histogramOther_density->SetFillColor(color_Other);
-    histogramsForStack_density.push_back(histogramOther_density);
-    legend->AddEntry(histogramOther_density, legendEntry_Other.data(), "f");
-  }
   if ( histogramVH_density ) {
     histogramVH_density->SetFillColor(color_VH);
     histogramsForStack_density.push_back(histogramVH_density);
     legend->AddEntry(histogramVH_density, legendEntry_VH.data(), "f");
   }
-  
+  if ( histogramOther_density ) {
+    histogramOther_density->SetFillColor(color_Other);
+    histogramsForStack_density.push_back(histogramOther_density);
+    legend->AddEntry(histogramOther_density, legendEntry_Other.data(), "f");
+  }
+  if ( histogramFlips_density ) {
+    histogramFlips_density->SetFillColor(color_Flips);
+    histogramsForStack_density.push_back(histogramFlips_density);
+    legend->AddEntry(histogramFlips_density, legendEntry_Flips.data(), "f");
+  }
   // CV: add histograms to THStack in "reverse" order, so that ZZ background is drawn on top
   THStack* histogramStack_density = new THStack("stack", "");
   for ( std::vector<TH1*>::reverse_iterator histogram_density = histogramsForStack_density.rbegin(); 
@@ -351,12 +394,15 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
   int numBins_top = histogramBkg_bins->GetNbinsX();
   for ( int iBin = 1; iBin <= numBins_top; ++iBin ) {
     double sumBinContents = 0.;
+    if ( histogramDY_density          ) sumBinContents += histogramDY_density->GetBinContent(iBin);
     if ( histogramZZ_density          ) sumBinContents += histogramZZ_density->GetBinContent(iBin);
+    if ( histogramW_density           ) sumBinContents += histogramW_density->GetBinContent(iBin);
     if ( histogramFakes_density       ) sumBinContents += histogramFakes_density->GetBinContent(iBin);
     if ( histogramTTZ_density         ) sumBinContents += histogramTTZ_density->GetBinContent(iBin);
     if ( histogramConversions_density ) sumBinContents += histogramConversions_density->GetBinContent(iBin);
-    if ( histogramOther_density       ) sumBinContents += histogramOther_density->GetBinContent(iBin);
     if ( histogramVH_density          ) sumBinContents += histogramVH_density->GetBinContent(iBin);
+    if ( histogramOther_density       ) sumBinContents += histogramOther_density->GetBinContent(iBin);
+    if ( histogramFlips_density       ) sumBinContents += histogramFlips_density->GetBinContent(iBin);
     if ( histogramUncertainty_density ) histogramUncertainty_density->SetBinContent(iBin, sumBinContents);
     histogramBkg_bins->SetBinContent(iBin, sumBinContents);
   }
@@ -451,12 +497,15 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     histogramSum = (TH1*)histogramData->Clone("histogramSum");
     histogramSum->Reset();
     if ( !histogramSum->GetSumw2N() ) histogramSum->Sumw2();
+    if ( histogramDY          ) histogramSum->Add(histogramDY);
     if ( histogramZZ          ) histogramSum->Add(histogramZZ);
+    if ( histogramW           ) histogramSum->Add(histogramW);
     if ( histogramFakes       ) histogramSum->Add(histogramFakes);
     if ( histogramTTZ         ) histogramSum->Add(histogramTTZ);
     if ( histogramConversions ) histogramSum->Add(histogramConversions);
-    if ( histogramOther       ) histogramSum->Add(histogramOther);
     if ( histogramVH          ) histogramSum->Add(histogramVH);
+    if ( histogramOther       ) histogramSum->Add(histogramOther);
+    if ( histogramFlips       ) histogramSum->Add(histogramFlips);
     histogramRatio = (TH1*)histogramData->Clone("histogramRatio");
     histogramRatio->Reset();
     if ( !histogramRatio->GetSumw2N() ) histogramRatio->Sumw2();
@@ -543,8 +592,12 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
   delete histogramData_density;
   delete histogramData_blinded_density;
   delete histogramSignal_density;
+  delete histogramDY;
+  delete histogramDY_density;
   delete histogramZZ;
   delete histogramZZ_density;
+  delete histogramW;
+  delete histogramW_density;
   delete histogramWZ;
   delete histogramWZ_density;
   delete histogramWW;
@@ -569,6 +622,8 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
   delete histogramTTH_density;
   delete histogramTH;
   delete histogramTH_density;
+  delete histogramFlips;
+  delete histogramFlips_density;
   delete histogramSum_density;
   delete histogramUncertainty_density;
   delete legend;
