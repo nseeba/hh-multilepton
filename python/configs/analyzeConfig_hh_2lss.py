@@ -53,7 +53,8 @@ class analyzeConfig_hh_2lss(analyzeConfig):
         running_method,
         num_parallel_jobs,
         executable_addBackgrounds,
-        executable_addBackgroundJetToTauFakes,
+        executable_addFakes,
+        executable_addFlips,
         histograms_to_fit,
         select_rle_output         = False,
         select_root_output        = False,
@@ -131,13 +132,14 @@ class analyzeConfig_hh_2lss(analyzeConfig):
     self.leptonChargeSelections = [ "SS", "OS" ]
 
     self.executable_addBackgrounds = executable_addBackgrounds
-    self.executable_addFakes = executable_addBackgroundJetToTauFakes
+    self.executable_addFakes = executable_addFakes 
     self.executable_addFlips = "addBackgroundLeptonFlips"
 
     self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
-    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
+    #self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
+    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc", "flips_data" ]
     self.inputFiles_hadd_stage1_6 = []
     self.outputFile_hadd_stage1_6 = None
     self.cfgFile_addFlips = os.path.join(self.template_dir, "addBackgroundLeptonFlips_cfg.py")
@@ -151,7 +153,8 @@ class analyzeConfig_hh_2lss(analyzeConfig):
         self.prep_dcard_signals.append(sample_category)
     self.histogramDir_prep_dcard = "hh_2lss_SS_Tight"
     self.histogramDir_prep_dcard_OS = "hh_2lss_OS_Tight"
-    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
+    #self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
+    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data", "flips_data" ]
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2lss_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2lss_cfg.py") #TODO
 

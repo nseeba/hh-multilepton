@@ -1336,6 +1336,24 @@ int main(int argc, char* argv[])
     cutFlowTable.update("MEt filters", evtWeight);
     cutFlowHistManager->fillHistograms("MEt filters", evtWeight);
 
+
+    if (isMC) {
+      if((selLepton_lead->genLepton() && selLepton_lead->charge() != selLepton_lead->genLepton()->charge()) ||
+	 (selLepton_sublead->genLepton() && selLepton_sublead->charge() != selLepton_sublead->genLepton()->charge())){
+	if(run_lumi_eventSelector)
+	  {
+	    std::cout << "event " << eventInfo.str() << " FAILS lepton charge matching\n"
+	      "(leading lepton charge = " << selLepton_lead->charge() << " genlepton charge = " << selLepton_lead->genLepton()->charge()<< "; "
+	      "subleading lepton charge = " << selLepton_sublead->charge() << " genlepton charge = " << selLepton_sublead->genLepton()->charge()<< "\n"
+	      ;
+	  }
+        continue;
+      }
+    }
+    cutFlowTable.update("lepton charge not mis-identified in MC", evtWeight);
+    cutFlowHistManager->fillHistograms("lepton charge not mis-identified in MC", evtWeight);
+
+
     bool failsSignalRegionVeto = false;
     if ( isMCClosure_e || isMCClosure_m ) {
       bool applySignalRegionVeto_lepton = (isMCClosure_e && countFakeElectrons(selLeptons) >= 1) || (isMCClosure_m && countFakeMuons(selLeptons) >= 1);

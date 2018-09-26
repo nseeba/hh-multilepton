@@ -4,45 +4,15 @@ from hhAnalysis.multilepton.configs.makePlots_cfi import process
 
 process.makePlots.distributions = cms.VPSet(
     cms.PSet(
-        histogramName = cms.string("sel/evt/$PROCESS/numJets"),
-        xAxisTitle = cms.string("jet Multiplicity"),
-        yAxisTitle = cms.string("Events")
-    ),
-    cms.PSet(
-        histogramName = cms.string("sel/evt/$PROCESS/numJetsPtGt40"),
-        xAxisTitle = cms.string("jet w/ pT > 40 GeV Multiplicity"),
-        yAxisTitle = cms.string("Events")
-    ),
-    cms.PSet(
-        histogramName = cms.string("sel/evtYield/$PROCESS/evtYield"),
-        xAxisTitle = cms.string("Run Period"),
-        yAxisTitle = cms.string("Events / 1 fb^{-1}")
-    ),
-    cms.PSet(
-        histogramName = cms.string('sel/evt/$PROCESS/HT'),
-        xAxisTitle = cms.string('H_{T} [GeV]'),
-        yAxisTitle = cms.string('dN/dH_{T} [1/GeV]')
-    ),
-    cms.PSet(
-        histogramName = cms.string('sel/evt/$PROCESS/STMET'),
-        xAxisTitle = cms.string('S_{T}^{MET} [GeV]'),
-        yAxisTitle = cms.string('dN/dS_{T}^{MET} [1/GeV]')
-    ),
-    cms.PSet(
-        histogramName = cms.string('sel/evt/$PROCESS/dihiggsVisMass'),
-        xAxisTitle = cms.string('m_{HH} [GeV]'),
-        yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
-    ),
-    cms.PSet(
         histogramName = cms.string('sel/electrons/$PROCESS/pt'),
         xMin = cms.double(20.),
         xMax = cms.double(200.),
-        xAxisTitle = cms.string('leading e_{h} p_{T} [GeV]'),
+        xAxisTitle = cms.string('e_{h} p_{T} [GeV]'),
         yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
     ),
     cms.PSet(
         histogramName = cms.string('sel/electrons/$PROCESS/eta'),
-        xAxisTitle = cms.string('leading e_{h} #eta'),
+        xAxisTitle = cms.string('e_{h} #eta'),
         yAxisTitle = cms.string('dN/d#eta')
     ),
     cms.PSet(
@@ -73,12 +43,12 @@ process.makePlots.distributions = cms.VPSet(
         histogramName = cms.string('sel/muons/$PROCESS/pt'),
         xMin = cms.double(20.),
         xMax = cms.double(200.),
-        xAxisTitle = cms.string('leading #mu_{h} p_{T} [GeV]'),
+        xAxisTitle = cms.string('#mu_{h} p_{T} [GeV]'),
         yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
     ),
     cms.PSet(
         histogramName = cms.string('sel/muons/$PROCESS/eta'),
-        xAxisTitle = cms.string('leading #mu_{h} #eta'),
+        xAxisTitle = cms.string('#mu_{h} #eta'),
         yAxisTitle = cms.string('dN/d#eta')
     ),
     cms.PSet(
@@ -109,12 +79,12 @@ process.makePlots.distributions = cms.VPSet(
         histogramName = cms.string('sel/jets/$PROCESS/pt'),
         xMin = cms.double(20.),
         xMax = cms.double(200.),
-        xAxisTitle = cms.string('leading jet_{h} p_{T} [GeV]'),
+        xAxisTitle = cms.string('jet_{h} p_{T} [GeV]'),
         yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
     ),
     cms.PSet(
         histogramName = cms.string('sel/jets/$PROCESS/eta'),
-        xAxisTitle = cms.string('leading jet_{h} #eta'),
+        xAxisTitle = cms.string('jet_{h} #eta'),
         yAxisTitle = cms.string('dN/d#eta')
     ),
     cms.PSet(
@@ -145,6 +115,11 @@ process.makePlots.distributions = cms.VPSet(
         histogramName = cms.string('sel/evt/$PROCESS/leptonPairCharge'),
         xAxisTitle = cms.string('lepton charge sum'),
         yAxisTitle = cms.string('N')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/evt/$PROCESS/dihiggsVisMass'),
+        xAxisTitle = cms.string('m_{HH} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
     ),
     cms.PSet(
         histogramName = cms.string('sel/evt/$PROCESS/dihiggsMass_wMet'),
