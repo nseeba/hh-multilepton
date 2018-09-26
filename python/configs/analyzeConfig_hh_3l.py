@@ -138,9 +138,11 @@ class analyzeConfig_hh_3l(analyzeConfig):
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
     self.histogramDir_prep_dcard = "hh_3l_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_3l_SS_Tight"
-    self.make_plots_signal = ["signal_radion_400_tttt", "signal_radion_400_wwtt", "signal_radion_400_wwww", "signal_radion_700_tttt", "signal_radion_700_wwtt", "signal_radion_700_wwww"]
+    # self.make_plots_signal = ["signal_radion_400_tttt", "signal_radion_400_wwtt", "signal_radion_400_wwww", "signal_radion_700_tttt", "signal_radion_700_wwtt", "signal_radion_700_wwww"]
+    self.make_plots_signal = ["signal_radion_400_wwww"]
 
-    self.make_plots_backgrounds = [ "TTW", "TTZ", "TTWW", "EWK", "Rares", "tHq", "tHW" ] + [ "conversions", "fakes_data" ]
+    self.make_plots_backgrounds = [ "TTH", "TTZ", "TTW", "TTWW", "TT", "DY", "W", "WW", "WZ", "ZZ", "VH", "TH"] + [ "conversions", "fakes_data"]
+
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_3l_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_3l_cfg.py") #TODO
 
