@@ -114,7 +114,7 @@ if __name__ == '__main__':
     running_method                        = running_method,
     num_parallel_jobs                     = num_parallel_jobs,
     executable_addBackgrounds             = "addBackgrounds",
-    executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
+    executable_addFakes                   = "addBackgroundLeptonFakes",
     histograms_to_fit                     = {
       "EventCounter"                      : {},
       "numJets"                           : {},
