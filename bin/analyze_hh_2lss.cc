@@ -589,11 +589,13 @@ int main(int argc, char* argv[])
     "HLT filter matching",
     "m(ll) > 12 GeV",
     "lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV",
+    "tight lepton charge",
     "sel lepton-pair SS/OS charge",
     "Z-boson mass veto",
     "H->ZZ*->4l veto",
     "met LD",
     "MEt filters",
+    "sel lepton-pair gen=rec charge match",
     "signal region veto",
   };
   CutFlowTableHistManager * cutFlowHistManager = new CutFlowTableHistManager(cutFlowTableCfg, cuts);
@@ -970,6 +972,9 @@ int main(int argc, char* argv[])
       dihiggsMass_wMet_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + met.p4()).mass();
       jetMass_presel = (selJat_1->p4() + selJat_2->p4() + selJat_3->p4()).mass();
     }
+    double leptonPairMass_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4()).mass();
+    double electronPairMass_presel = ( preselLepton_lead->is_electron() && preselLepton_sublead->is_electron() ) ? leptonPairMass_presel : -1.;
+    double muonPairMass_presel = ( preselLepton_lead->is_muon() && preselLepton_sublead->is_muon() ) ? leptonPairMass_presel : -1.;
     double leptonPairCharge_presel = preselLepton_lead->charge() + preselLepton_sublead->charge();
     double HT = compHT(fakeableLeptons, {}, selJets);
     double STMET = compSTMEt(fakeableLeptons, {}, selJets, met.p4());
@@ -991,6 +996,9 @@ int main(int argc, char* argv[])
       dihiggsVisMass_presel,
       dihiggsMass_wMet_presel,
       jetMass_presel,
+      leptonPairMass_presel,
+      electronPairMass_presel,
+      muonPairMass_presel,
       leptonPairCharge_presel,
       HT, 
       STMET,
@@ -1218,6 +1226,38 @@ int main(int argc, char* argv[])
     cutFlowTable.update("lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV", evtWeight);
     cutFlowHistManager->fillHistograms("lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV", evtWeight);
 
+    bool failsTightChargeCut = false;
+    for ( std::vector<const RecoLepton*>::const_iterator lepton = fakeableLeptons.begin();
+          lepton != fakeableLeptons.end(); ++lepton ) {
+      if ( (*lepton)->is_electron() ) {
+        const RecoElectron* electron = dynamic_cast<const RecoElectron*>(*lepton);
+        assert(electron);
+        if ( electron->tightCharge() < 2 )
+	  {
+	    failsTightChargeCut = true;
+	    break;
+	  }
+      }
+      else if ( (*lepton)->is_muon() ) {
+        const RecoMuon* muon = dynamic_cast<const RecoMuon*>(*lepton);
+        assert(muon);
+	if ( muon->tightCharge() < 2 )
+	  {
+	    failsTightChargeCut = true;
+	    break;
+	  }
+      }
+    }
+    if ( failsTightChargeCut ) {
+      if ( run_lumi_eventSelector ) {
+	std::cout << "event " << eventInfo.str() << " FAILS tight lepton charge requirement." << std::endl;
+      }
+      //if (!selectBDT)                                                                                                                                                                                                                                                         
+      continue;
+    }
+    cutFlowTable.update("tight lepton charge", evtWeight);
+    cutFlowHistManager->fillHistograms("tight lepton charge", evtWeight);
+
     bool isLeptonCharge_SS = selLepton_lead->charge()*selLepton_sublead->charge() > 0;
     bool isLeptonCharge_OS = selLepton_lead->charge()*selLepton_sublead->charge() < 0;
     if ( leptonChargeSelection == kOS && isLeptonCharge_SS ) {
@@ -1267,6 +1307,13 @@ int main(int argc, char* argv[])
     lepton1 != preselLeptonsFull.end(); ++lepton1 ) {
       for ( std::vector<const RecoLepton*>::const_iterator lepton2 = lepton1 + 1;
       lepton2 != preselLeptonsFull.end(); ++lepton2 ) {
+	//---
+        // SB: add comment here
+        if ( ((*lepton1) == selLepton_lead    && (*lepton2) == selLepton_sublead) ||
+             ((*lepton1) == selLepton_sublead && (*lepton2) == selLepton_lead   ) ) {
+          continue;
+	} 
+        //---
 	if ( (*lepton1)->pdgId() == -(*lepton2)->pdgId() ) { // pair of same flavor leptons of opposite charge
 	  isSameFlavor_OS = true;
 	  double mass = ((*lepton1)->p4() + (*lepton2)->p4()).mass();
@@ -1342,7 +1389,7 @@ int main(int argc, char* argv[])
 	 (selLepton_sublead->genLepton() && selLepton_sublead->charge() != selLepton_sublead->genLepton()->charge())){
 	if(run_lumi_eventSelector)
 	  {
-	    std::cout << "event " << eventInfo.str() << " FAILS lepton charge matching\n"
+	    std::cout << "event " << eventInfo.str() << " FAILS lepton-par gen=rec charge matching\n"
 	      "(leading lepton charge = " << selLepton_lead->charge() << " genlepton charge = " << selLepton_lead->genLepton()->charge()<< "; "
 	      "subleading lepton charge = " << selLepton_sublead->charge() << " genlepton charge = " << selLepton_sublead->genLepton()->charge()<< "\n"
 	      ;
@@ -1350,8 +1397,8 @@ int main(int argc, char* argv[])
         continue;
       }
     }
-    cutFlowTable.update("lepton charge not mis-identified in MC", evtWeight);
-    cutFlowHistManager->fillHistograms("lepton charge not mis-identified in MC", evtWeight);
+    cutFlowTable.update("sel lepton-pair gen=rec charge match", evtWeight);
+    cutFlowHistManager->fillHistograms("sel lepton-pair gen=rec charge match", evtWeight);
 
 
     bool failsSignalRegionVeto = false;
@@ -1386,6 +1433,7 @@ int main(int argc, char* argv[])
       dihiggsMass_wMet_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + met.p4()).mass();
       jetMass_sel = (selJat_1->p4() + selJat_2->p4() + selJat_3->p4() ).mass();
     }
+    double leptonPairMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4()).mass();
     double leptonPairCharge_sel = selLepton_lead->charge() + selLepton_sublead->charge();
 
 //--- fill histograms with events passing final selection
@@ -1418,6 +1466,9 @@ int main(int argc, char* argv[])
       dihiggsVisMass_sel,
       dihiggsMass_wMet_sel,
       jetMass_sel,
+      leptonPairMass_sel,
+      ( tightElectrons.size() == 2 ) ? leptonPairMass_sel : -1.,
+      ( tightMuons.size() == 2 ) ? leptonPairMass_sel : -1.,
       leptonPairCharge_sel,
       HT, 
       STMET,
