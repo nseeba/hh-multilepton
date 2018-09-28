@@ -61,6 +61,21 @@ double square(double x)
 
 namespace
 {
+
+  // ---- NEW ---
+  struct categoryEntryType
+  {
+    categoryEntryType(const edm::ParameterSet& cfg)
+    {
+      signal_ = cfg.getParameter<std::string>("outputDir");
+      sideband_ = cfg.getParameter<std::string>("inputDir");
+    }
+    ~categoryEntryType() {}
+    std::string signal_;
+    std::string sideband_;
+  };
+  
+  // ---- OLD ---
   struct FitFuncEntryType
   {
     FitFuncEntryType(const edm::ParameterSet& cfg, const TH1* histo, const std::string label)
@@ -139,9 +154,26 @@ namespace
 	Fitfunc_->SetParameter(i, FitParameters_[i]);
       }
     }
-
-
   };
+
+  /*
+  // ---- NEW ---
+ struct TailFitHisogramEntryType
+ {
+   TailFitHisogramEntryType(const edm::ParameterSet& cfg, const TH1* histo, const std::string label)
+   {
+     FitRange_           = cfg.getParameter<vdouble>("FitRange");
+     FitParameters_      = cfg.getParameter<vdouble>("FitParameters");
+     FitFunctionName_    = cfg.getParameter<std::string>("FitfuncName");
+     Histo_to_fit_       = histo;
+     Label_              = label;
+     Fitfunc_ = 0;
+
+
+   };
+  */
+
+
 }
 
 
@@ -628,19 +660,57 @@ int main(int argc, char* argv[])
   edm::ParameterSet cfg = edm::readPSetsFrom(argv[1])->getParameter<edm::ParameterSet>("process");
 
   edm::ParameterSet cfgaddBackgrounds_TailFit = cfg.getParameter<edm::ParameterSet>("addBackgrounds_TailFit");
-  
-  std::string InputDir = cfgaddBackgrounds_TailFit.getParameter<std::string>("InputDir");
-  std::string InputDirPath = Form("%s/sel/evt/", InputDir.data());
-  std::string ProcessName = cfgaddBackgrounds_TailFit.getParameter<std::string>("processName");
-  std::string HistogramName = cfgaddBackgrounds_TailFit.getParameter<std::string>("histogramName");
+
+  // ---- NEW -----
+  std::vector<categoryEntryType*> categories;
+  edm::VParameterSet cfgCategories = cfgaddBackgrounds_TailFit.getParameter<edm::VParameterSet>("categories");
+  for ( edm::VParameterSet::const_iterator cfgCategory = cfgCategories.begin(); cfgCategory != cfgCategories.end(); ++cfgCategory ) {
+    categoryEntryType* category = new categoryEntryType(*cfgCategory);
+    categories.push_back(category);
+  }
+  std::string processData = cfgaddBackgrounds_TailFit.getParameter<std::string>("processData");
+  std::string processLeptonFakes = cfgaddBackgrounds_TailFit.getParameter<std::string>("processToTailFit");
+  vstring processesToSubtract = cfgaddBackgrounds_TailFit.getParameter<vstring>("processesToSubtract");
+
+  vstring central_or_shifts = cfgaddBackgrounds_TailFit.getParameter<vstring>("sysShifts");
+  bool contains_central_value = false;
+  for ( vstring::const_iterator central_or_shift = central_or_shifts.begin();
+        central_or_shift != central_or_shifts.end(); ++central_or_shift ) {
+    if ( (*central_or_shift) == "" || (*central_or_shift) == "central" ) contains_central_value = true;
+  }
+  if ( !contains_central_value ) central_or_shifts.push_back(""); // CV: add central value     
+
 
   bool apply_automatic_rebinning = cfgaddBackgrounds_TailFit.getParameter<bool>("apply_automatic_rebinning");
   double minEvents_automatic_rebinning = cfgaddBackgrounds_TailFit.getParameter<double>("minEvents_automatic_rebinning");
- 
   const vdouble explicitBinning = cfgaddBackgrounds_TailFit.getParameter<vdouble>("explicit_binning");
 
-  edm::ParameterSet nominal_fit_func_PSet = cfgaddBackgrounds_TailFit.getParameter<edm::ParameterSet>("nominal_fit_func");
-  edm::VParameterSet vec_alt_fit_funcs_PSets = cfgaddBackgrounds_TailFit.getParameter<edm::VParameterSet>("alternate_fit_funcs");
+  edm::VParameterSet HistogramsToTailFit = cfgaddBackgrounds_TailFit.getParameter<edm::VParameterSet>("HistogramsToTailFit");
+
+  /*
+  // ----- Initialize Nominal Fit function ----                                                                                                                                                     
+  std::cout<< " Initialize Nominal Fit function " << std::endl;                                                                                                                                      
+  FitFuncEntryType* nom_fit_func = new FitFuncEntryType(nominal_fit_func_PSet, histo_to_fit, "nom");                                                                                                  
+                                                                                                                                                                                                       
+
+       
+                                                                                                                                                                                                   
+// ----- Initialize Alternate Fit functions (for fit bias estimation studies) ----                                                                                                                  
+  std::cout<< " Initialize Alternate Fit functions (for fit bias estimation studies) " << std::endl;                                                                                                 
+  std::vector<FitFuncEntryType*> vec_alt_fit_funcs;                                                                                                                                                  
+  unsigned int counter = 0;                          
+
+
+  for ( edm::VParameterSet::const_iterator HistogramsToTailFit_iter = HistogramsToTailFit.begin();
+        HistogramsToTailFit_iter != HistogramsToTailFit.end(); HistogramsToTailFit_iter++ ) {
+    std::string label = Form("alt_%i", counter);
+    FitFuncEntryType* fit_func = new FitFuncEntryType(*alt_fit_func_PSet_iter, histo_to_fit, label);
+    vec_alt_fit_funcs.push_back(fit_func);
+    counter++;
+  }
+  */
+
+
 
   // ----- Input File ------
   fwlite::InputSource inputFiles(cfg); 
@@ -656,216 +726,262 @@ int main(int argc, char* argv[])
   fwlite::OutputFiles outputFile(cfg);
   fwlite::TFileService fs = fwlite::TFileService(outputFile.file().data());
 
-  const TDirectory* inputDir = getDirectory(inputFile, InputDirPath, true);
-  assert(inputDir);
-
-
-  TDirectory* subsubdir_output = createSubdirectory_recursively(fs, Form("%s/%s", InputDirPath.data(), ProcessName.data()) );
-  subsubdir_output->cd();
-
-
-
-  TH1* histo = getHistogram(inputDir, ProcessName, HistogramName, "", true, false);
-  //  TArrayD histo_Orig_Binning = getBinning(histo); // Storing original binning scheme of the histogram
-  TH1* histo_orig = dynamic_cast<TH1*>(histo->Clone());
-  std::string histo_orig_name = Form("original_%s", HistogramName.data());
-  histo_orig->SetName(histo_orig_name.c_str());
-
-  TH1* histo_to_fit = 0;
-
-  // ------ (Optional) Re-binning of the histogram -------
-  if(apply_automatic_rebinning && explicitBinning.empty()){
-    TArrayD histoAutoBins = getRebinnedBinning(histo, minEvents_automatic_rebinning);
-    histo_to_fit = getRebinnedHistogram1d(histo, 4, histoAutoBins, false);
-    std::string name = Form("rebinned_%s", HistogramName.data());
-    histo_to_fit->SetName(name.c_str());
-  }else if(! explicitBinning.empty() && ! apply_automatic_rebinning){
-    TArrayD histogramExplicitBinning = getTArraDfromVector(explicitBinning);
-    histo_to_fit = getRebinnedHistogram1d(histo, 4, histogramExplicitBinning);
-    std::string name = Form("rebinned_%s", HistogramName.data());
-    histo_to_fit->SetName(name.c_str());
-  }else{
-    histo_to_fit = histo;
-  }
-
-
-  std::cout<< "histo_to_fit->Integral() " << histo_to_fit->Integral() << std::endl;
-
-  // ---- Divide by bin width (to make fit binnning scheme indepndent) ------ 
-  divideByBinWidth(histo_to_fit);
-
-  // ----- Initialize Nominal Fit function ----
-  std::cout<< " Initialize Nominal Fit function " << std::endl;
-  FitFuncEntryType* nom_fit_func = new FitFuncEntryType(nominal_fit_func_PSet, histo_to_fit, "nom");
-
-
-  // ----- Initialize Alternate Fit functions (for fit bias estimation studies) ----
-  std::cout<< " Initialize Alternate Fit functions (for fit bias estimation studies) " << std::endl;
-  std::vector<FitFuncEntryType*> vec_alt_fit_funcs;
-  unsigned int counter = 0;
-  for ( edm::VParameterSet::const_iterator alt_fit_func_PSet_iter = vec_alt_fit_funcs_PSets.begin();
-        alt_fit_func_PSet_iter != vec_alt_fit_funcs_PSets.end(); alt_fit_func_PSet_iter++ ) {
-    std::string label = Form("alt_%i", counter);
-    FitFuncEntryType* fit_func = new FitFuncEntryType(*alt_fit_func_PSet_iter, histo_to_fit, label);
-    vec_alt_fit_funcs.push_back(fit_func);
-    counter++;
-  }
-
-
-  // ---- Fitting (nominal function) ------
-  std::cout<< " Fitting Nominal function " << std::endl;
-  TFitResultPtr fitResult = histo_to_fit->Fit(nom_fit_func->GetFitFunction(), "EOSR");
-
-  // ----- Accessing covariance matrix, eigen-values and eigen-vectors --- 
-  std::cout << " Accessing covariance matrix, eigen-values and eigen-vectors " << std::endl;
-  std::vector<fitFunction_and_legendEntry> fitFunctions_sysShifts;
-  TF1* fitFunction_nom = nom_fit_func->GetFitFunction();
-
-  if ( fitResult->IsValid() ) {
-    TMatrixDSym covMatrix = fitResult->GetCovarianceMatrix();
-    std::vector<EigenVector_and_Value> eigenVectors_and_Values = compEigenVectors_and_Values(covMatrix);
-    size_t dimension = fitFunction_nom->GetNpar();  
-    assert(eigenVectors_and_Values.size() == dimension);
-    int idxPar = 1;
-    for ( std::vector<EigenVector_and_Value>::const_iterator eigenVector_and_Value = eigenVectors_and_Values.begin();
-	  eigenVector_and_Value != eigenVectors_and_Values.end(); ++eigenVector_and_Value ) {
-      assert(eigenVector_and_Value->eigenVector_.GetNrows() == (int)dimension);
-      std::cout << "EigenVector #" << idxPar << ":" << std::endl;
-      eigenVector_and_Value->eigenVector_.Print();
-      std::cout << "EigenValue #" << idxPar << " = " << eigenVector_and_Value->eigenValue_ << std::endl;
-      assert(eigenVector_and_Value->eigenValue_ >= 0.);
-      std::string fitFunctionParUpName = Form("%s_par%iUp", (nom_fit_func->GetFitFuncName()).data(), idxPar);
-      FitFuncEntryType* fit_func_par_up = new FitFuncEntryType(nominal_fit_func_PSet, histo_to_fit, fitFunctionParUpName);
-      TF1* fitFunctionParUp = fit_func_par_up->GetFitFunction();
-      for ( size_t idxComponent = 0; idxComponent < dimension; ++idxComponent ) {
-	fitFunctionParUp->SetParameter(idxComponent, fitFunction_nom->GetParameter(idxComponent) + TMath::Sqrt(eigenVector_and_Value->eigenValue_)*eigenVector_and_Value->eigenVector_(idxComponent));
-      }
-      fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionParUp, Form("EigenVec_%iUp", idxPar)));
-      std::string fitFunctionParDownName = Form("%s_par%iDown", (nom_fit_func->GetFitFuncName()).data(), idxPar);
-      FitFuncEntryType* fit_func_par_down = new FitFuncEntryType(nominal_fit_func_PSet, histo_to_fit, fitFunctionParDownName);
-      TF1* fitFunctionParDown = fit_func_par_down->GetFitFunction();
-      for ( size_t idxComponent = 0; idxComponent < dimension; ++idxComponent ) {
-	fitFunctionParDown->SetParameter(idxComponent, fitFunction_nom->GetParameter(idxComponent) - TMath::Sqrt(eigenVector_and_Value->eigenValue_)*eigenVector_and_Value->eigenVector_(idxComponent));
-      }
-      fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionParDown, Form("EigenVec_%iDown", idxPar)));
-      ++idxPar;
-    } // loop over e-vectors and e-values ends
-  } else {
-    std::cerr << "Warning: Fit failed to converge !!" << std::endl;
-  }
-
-
-  // ------ Computing the central tail-fitted histogram -----
-  std::cout<< " Computing the central tail-fitted histogram " << std::endl;
-  TH1* central_fit_histo = GetHistofromFunc(histo, fitFunction_nom, nom_fit_func->GetXmin()); // Using the original binned histogram
-  // std::string histo_name1 = Form("%s_central_fit", HistogramName.data());
-  // std::string histo_name1 = Form("central_fit_%s", HistogramName.data());
-  central_fit_histo->SetName(HistogramName.c_str());
-
-  // ------ Computing the fit systematic tail-fitted histograms -----
-  std::cout<< " Computing the fit systematic tail-fitted histogram " << std::endl;
-  std::vector<TH1*> fit_sysShifts_histos;
-  for ( std::vector<fitFunction_and_legendEntry>::const_iterator fitFunction_sysShift = fitFunctions_sysShifts.begin();
-	fitFunction_sysShift != fitFunctions_sysShifts.end(); ++fitFunction_sysShift ) {
-        TH1* fit_sysShifts_histogram = GetHistofromFunc(histo, (fitFunction_sysShift->fitFunction_), nom_fit_func->GetXmin()); // Using the original binned histogram
-	// std::string histo_name2 = Form("%s_%s", HistogramName.data(), (fitFunction_sysShift->legendEntry_).data());
-	std::string histo_name2 = Form("%s_%s", (fitFunction_sysShift->legendEntry_).data(), HistogramName.data());
-        fit_sysShifts_histogram->SetName(histo_name2.c_str());
-        fit_sysShifts_histos.push_back(fit_sysShifts_histogram);
-  }
-
-    
-  // ---- Fitting (alternate functions) ------
-  std::cout<< " Fitting alternate functions " << std::endl;
-  std::vector<TFitResultPtr> fitResult_vect;
-  std::vector<TH1*> vect_alt_fit_histos;
-  int count = 0;
-  for(std::vector<FitFuncEntryType*>::const_iterator func_iter =  vec_alt_fit_funcs.begin(); 
-      func_iter != vec_alt_fit_funcs.end(); func_iter++){
-    TFitResultPtr fitResult = histo_to_fit->Fit((*func_iter)->GetFitFunction(), "EOSR");
-    if(fitResult->IsValid()){
-      fitResult_vect.push_back(fitResult);
-      TH1* alt_fit_histo = GetHistofromFunc(histo, (*func_iter)->GetFitFunction(), (*func_iter)->GetXmin()); // Using the original binned histogram
-      // std::string histo_name3 = Form("%s_alt_fitFunc_%i", HistogramName.data(), counter);
-      std::string histo_name3 = Form("alt_fitFunc_%i_%s", counter, HistogramName.data());
-      alt_fit_histo->SetName(histo_name3.c_str());
-      vect_alt_fit_histos.push_back(alt_fit_histo);
-    }
-    count++;
-  }
-
-  // ----- Fit Bias Systematic -------
-  std::cout<< " Computing the Fit Bias Systematic " << std::endl;
-  TH1* fit_bias_Syst_histo = dynamic_cast<TH1*>(central_fit_histo->Clone());
-  // std::string histo_name4 = Form("%s_fit_bias_Syst", HistogramName.data());
-  std::string histo_name4 = Form("fit_bias_Syst_%s", HistogramName.data());
-  fit_bias_Syst_histo->SetName(histo_name4.c_str());
-
-  // ---- Bin-By-Bin ------
-  SetCentralHistoBinError(fit_bias_Syst_histo, vect_alt_fit_histos, nom_fit_func->GetXmin());
-
-  // ---- Up and Down ----
-  std::vector<TH1*> vect_hist;
-  vect_hist = FitSystUpDownHisto(fit_bias_Syst_histo, vect_alt_fit_histos, nom_fit_func->GetXmin(), HistogramName);
-
-  // ---- Plotting ----
-  // Plot(histo_to_fit, nom_fit_func);
-
-
-
-  /*
-  std::vector<categoryEntryType*> categories;
-  edm::VParameterSet cfgCategories = cfgaddBackgrounds_TailFit.getParameter<edm::VParameterSet>("categories");
-  for ( edm::VParameterSet::const_iterator cfgCategory = cfgCategories.begin();
-	cfgCategory != cfgCategories.end(); ++cfgCategory ) {
-    categoryEntryType* category = new categoryEntryType(*cfgCategory);
-    categories.push_back(category);
-  }
-
-  std::string processData = cfgaddBackgrounds_TailFit.getParameter<std::string>("processData");
-  std::string processLeptonFakes = cfgaddBackgrounds_TailFit.getParameter<std::string>("processLeptonFakes");
-  vstring processesToSubtract = cfgaddBackgrounds_TailFit.getParameter<vstring>("processesToSubtract");
-
-  vstring central_or_shifts = cfgaddBackgrounds_TailFit.getParameter<vstring>("sysShifts");
-  bool contains_central_value = false;
-  for ( vstring::const_iterator central_or_shift = central_or_shifts.begin();
-	central_or_shift != central_or_shifts.end(); ++central_or_shift ) {
-    if ( (*central_or_shift) == "" || (*central_or_shift) == "central" ) contains_central_value = true;
-  }
-  if ( !contains_central_value ) central_or_shifts.push_back(""); // CV: add central value
-
-  fwlite::InputSource inputFiles(cfg); 
-  if ( !(inputFiles.files().size() == 1) )
-    throw cms::Exception("addBackgrounds_TailFit") 
-      << "Exactly one input file expected !!\n";
-  TFile* inputFile = new TFile(inputFiles.files().front().data());
-  if ( !inputFile ) 
-    throw cms::Exception("addBackgrounds_TailFit") 
-      << "Failed to open input file = '" << inputFiles.files().front() << "' !!\n";
-  
-  fwlite::OutputFiles outputFile(cfg);
-  fwlite::TFileService fs = fwlite::TFileService(outputFile.file().data());
-
   for ( std::vector<categoryEntryType*>::const_iterator category = categories.begin();
-	category != categories.end(); ++category ) {                                                                  
-    std::cout << "processing category: numerator = " << (*category)->numerator_ << ", denominator = " << (*category)->denominator_ << std::endl;
+        category != categories.end(); ++category ) {
+    // std::cout << "processing category: outputDir = " << (*category)->signal_ << ", inputDir = " << (*category)->sideband_ << std::endl;
+    const TDirectory* dir_sideband = getDirectory(inputFile, (*category)->sideband_, true);
+    assert(dir_sideband);
+    std::vector<const TDirectory*> subdirs_sideband_level1 = getSubdirectories(dir_sideband);
+    for ( std::vector<const TDirectory*>::iterator subdir_sideband_level1 = subdirs_sideband_level1.begin();
+          subdir_sideband_level1 != subdirs_sideband_level1.end(); ++subdir_sideband_level1 ) {
+      std::string L1dirName = Form("%s", (*subdir_sideband_level1)->GetName());
+      bool islevel1_dir_sel = false;
+      if(L1dirName == "sel"){
+	// std::cout<< "Level 1 directory is " << Form("%s", (*subdir_sideband_level1)->GetName()) << std::endl; 
+        islevel1_dir_sel = true;
+	// std::cout<< "islevel1_dir_sel " << islevel1_dir_sel << std::endl; 
+      }
+      std::vector<const TDirectory*> subdirs_sideband_level2 = getSubdirectories(*subdir_sideband_level1);
+      for ( std::vector<const TDirectory*>::iterator subdir_sideband_level2 = subdirs_sideband_level2.begin();
+            subdir_sideband_level2 != subdirs_sideband_level2.end(); ++subdir_sideband_level2 ) {
+	// std::cout << " processing directory = " << Form("%s/%s", (*subdir_sideband_level1)->GetName(), (*subdir_sideband_level2)->GetName()) << std::endl;
+	std::string L2dirName = Form("%s", (*subdir_sideband_level2)->GetName());
+	bool islevel2_dir_evt = false;
+	if(L2dirName == "evt"){
+	  // std::cout<< "Level 2 directory is " << Form("%s", (*subdir_sideband_level2)->GetName()) << std::endl; 
+	  islevel2_dir_evt = true;
+	  // std::cout<< "islevel2_dir_evt " << islevel2_dir_evt << std::endl; 
+	}
 
-    TDirectory* dir_denominator = getDirectory(inputFile, (*category)->denominator_, true); 
-    assert(dir_denominator);                                                                                                                                                                      
-    TDirectory* dir_numerator = getDirectory(inputFile, (*category)->numerator_, true); 
-    assert(dir_numerator);  
+ 
+        const TDirectory* dirFakesData = dynamic_cast<TDirectory*>((const_cast<TDirectory*>(*subdir_sideband_level2))->Get(processData.data()));
+        if ( !dirFakesData ) {
+	  std::cout << "Failed to find subdirectory = " << processData << " within directory = " << (*subdir_sideband_level2)->GetName() << " --> skipping !!\n";
+          continue;
+        }
 
-    processDirectory(
-      inputFile, 
-      dir_denominator, dir_numerator, 
-      processData, processLeptonFakes, processesToSubtract, 
-      central_or_shifts, fs, (*category)->numerator_, (*category)->denominator_);
-  }
+	std::set<std::string> histograms;
+        TList* list = dirFakesData->GetListOfKeys();
+        TIter next(list);
+        TKey* key = 0;
+        while ( (key = dynamic_cast<TKey*>(next())) ) {
+          TObject* object = key->ReadObj();
+          TH1* histogram = dynamic_cast<TH1*>(object);
+          if ( !histogram ) continue;
+          TString histogramName = TString(histogram->GetName()).ReplaceAll(Form("%s_", processData.data()), "");
+          for ( vstring::const_iterator central_or_shift = central_or_shifts.begin();
+                central_or_shift != central_or_shifts.end(); ++central_or_shift ) {
+            if ( !((*central_or_shift) == "" || (*central_or_shift) == "central") ) {
+              histogramName = histogramName.ReplaceAll(Form("%s_", central_or_shift->data()), "");
+            }
+          }
+          if ( histogramName.Contains("CMS_") ) continue;
+          if ( histogramName.Contains("cutFlow") ) continue;
+          if ( histograms.find(histogramName.Data()) == histograms.end() ) {
+	    // std::cout << "adding histogram = " << histogramName.Data() << std::endl;
+            histograms.insert(histogramName.Data());
+          }
+        }
 
-  delete inputFile;
-  */
+	for ( std::set<std::string>::const_iterator histogram = histograms.begin(); histogram != histograms.end(); ++histogram ) {
+          for ( vstring::const_iterator central_or_shift = central_or_shifts.begin(); central_or_shift != central_or_shifts.end(); ++central_or_shift ) {
+	    int verbosity = ( histogram->find("EventCounter") != std::string::npos && ((*central_or_shift) == "" || (*central_or_shift) == "central") ) ? 1 : 0;
+	    TH1* histogramFakesData = getHistogram(*subdir_sideband_level2, processData, *histogram, *central_or_shift, false);
+            if ( !histogramFakesData ) {
+              histogramFakesData = getHistogram(*subdir_sideband_level2, processData, *histogram, "central", true);
+            }
+            // if ( verbosity ) {
+	    //   std::cout << " integral(fakes_data) = " << histogramFakesData->Integral() << std::endl;
+            // }
+	    
+	    std::vector<TH1*> histogramsToSubtract;
+            for ( vstring::const_iterator processToSubtract = processesToSubtract.begin();
+                  processToSubtract != processesToSubtract.end(); ++processToSubtract ) {
+              TH1* histogramToSubtract = getHistogram(*subdir_sideband_level2, *processToSubtract, *histogram, *central_or_shift, false);
+              if ( !histogramToSubtract ) histogramToSubtract = getHistogram(*subdir_sideband_level2, *processToSubtract, *histogram, "central", true);
+              // if ( verbosity ) {
+	      //std::cout << " integral(" << (*processToSubtract) << ") = " << histogramToSubtract->Integral() << std::endl;
+              // }
+              histogramsToSubtract.push_back(histogramToSubtract);
+            }
+
+	    std::string subdirName_output = Form("%s/%s/%s/%s", (*category)->signal_.data(), (*subdir_sideband_level1)->GetName(), (*subdir_sideband_level2)->GetName(), processLeptonFakes.data());
+            TDirectory* subdir_output = createSubdirectory_recursively(fs, subdirName_output);
+            subdir_output->cd();
+
+	    std::string histogramNameLeptonFakes;
+            if ( !((*central_or_shift) == "" || (*central_or_shift) == "central") ) histogramNameLeptonFakes.append(*central_or_shift);
+            if ( histogramNameLeptonFakes.length() > 0 ) histogramNameLeptonFakes.append("_");
+            histogramNameLeptonFakes.append(*histogram);
+            TH1* histogramLeptonFakes = subtractHistograms(histogramNameLeptonFakes, histogramFakesData, histogramsToSubtract, verbosity); // Just copies the histogram as there is no background to subtract
+            // if ( verbosity ) {
+	    //  std::cout << " integral(Fakes) = " << histogramLeptonFakes->Integral() << std::endl;
+            // }
 
 
+
+	    if(islevel1_dir_sel && islevel2_dir_evt){
+	      // std::cout << " sel/evt integral(fakes_data) = " << histogramLeptonFakes->Integral() << std::endl;
+              for ( edm::VParameterSet::const_iterator HistogramsToTailFit_iter = HistogramsToTailFit.begin();
+		    HistogramsToTailFit_iter != HistogramsToTailFit.end(); HistogramsToTailFit_iter++ ) {
+		std::string histo_name = (*HistogramsToTailFit_iter).getParameter<std::string>("name");
+		if(histogramLeptonFakes->GetName() != histo_name){
+		  continue;
+		}else{
+		  std::cout << "********* Running TailFit for " << histogramLeptonFakes->GetName() << " **********" << std::endl; 
+		  // TH1* histo_orig = dynamic_cast<TH1*>(histogramLeptonFakes->Clone());
+		  std::string histo_orig_name = Form("original_%s", histo_name.data());
+		  // histo_orig->SetName(histo_orig_name.c_str());
+                  histogramLeptonFakes->SetName(histo_orig_name.c_str());
+
+		  TH1* histo_to_fit = 0;
+		  // ------ (Optional) Re-binning of the histogram -------
+		  if(apply_automatic_rebinning && explicitBinning.empty()){
+		    TArrayD histoAutoBins = getRebinnedBinning(histogramLeptonFakes, minEvents_automatic_rebinning);
+		    histo_to_fit = getRebinnedHistogram1d(histogramLeptonFakes, 4, histoAutoBins, false);
+		    std::string autoRebin_histo_name = Form("rebinned_%s", histo_name.data());
+		    histo_to_fit->SetName(autoRebin_histo_name.c_str());
+		  }else if(! explicitBinning.empty() && ! apply_automatic_rebinning){
+		    TArrayD histogramExplicitBinning = getTArraDfromVector(explicitBinning);
+		    histo_to_fit = getRebinnedHistogram1d(histogramLeptonFakes, 4, histogramExplicitBinning);
+		    std::string rebinned_histo_name = Form("rebinned_%s", histo_name.data());
+		    histo_to_fit->SetName(rebinned_histo_name.c_str());
+		  }else{
+		    histo_to_fit = histogramLeptonFakes;
+		  }
+		  
+		  std::cout<< "histo_to_fit->Integral() " << histo_to_fit->Integral() << std::endl;
+
+		  // ---- Divide by bin width (to make fit binnning scheme indepndent) ------ 
+		  divideByBinWidth(histo_to_fit);
+
+		  // ----- Initialize Nominal Fit function ----
+		  edm::ParameterSet nominal_fit_func_PSet = (*HistogramsToTailFit_iter).getParameter<edm::ParameterSet>("nominal_fit_func");
+		  std::cout<< " Initialize Nominal Fit function " << std::endl;
+		  FitFuncEntryType* nom_fit_func = new FitFuncEntryType(nominal_fit_func_PSet, histo_to_fit, "nom");
+
+
+		  // ----- Initialize Alternate Fit functions (for fit bias estimation studies) ----
+		  edm::VParameterSet vec_alt_fit_funcs_PSets = (*HistogramsToTailFit_iter).getParameter<edm::VParameterSet>("alternate_fit_funcs");
+		  std::cout<< " Initialize Alternate Fit functions (for fit bias estimation studies) " << std::endl;
+		  std::vector<FitFuncEntryType*> vec_alt_fit_funcs;
+		  unsigned int counter = 0;
+		  for ( edm::VParameterSet::const_iterator alt_fit_func_PSet_iter = vec_alt_fit_funcs_PSets.begin();
+			alt_fit_func_PSet_iter != vec_alt_fit_funcs_PSets.end(); alt_fit_func_PSet_iter++ ) {
+		    std::string label = Form("alt_%i", counter);
+		    FitFuncEntryType* fit_func = new FitFuncEntryType(*alt_fit_func_PSet_iter, histo_to_fit, label);
+		    vec_alt_fit_funcs.push_back(fit_func);
+		    counter++;
+		  }
+
+		  // ---- Fitting (nominal function) ------
+		  std::cout<< " Fitting Nominal function " << std::endl;
+		  TFitResultPtr fitResult = histo_to_fit->Fit(nom_fit_func->GetFitFunction(), "EOSR");
+		  
+		  // ----- Accessing covariance matrix, eigen-values and eigen-vectors --- 
+		  std::cout << " Accessing covariance matrix, eigen-values and eigen-vectors " << std::endl;
+		  std::vector<fitFunction_and_legendEntry> fitFunctions_sysShifts;
+		  TF1* fitFunction_nom = nom_fit_func->GetFitFunction();
+		  
+		  if ( fitResult->IsValid() ) {
+		    TMatrixDSym covMatrix = fitResult->GetCovarianceMatrix();
+		    std::vector<EigenVector_and_Value> eigenVectors_and_Values = compEigenVectors_and_Values(covMatrix);
+		    size_t dimension = fitFunction_nom->GetNpar();  
+		    assert(eigenVectors_and_Values.size() == dimension);
+		    int idxPar = 1;
+		    for ( std::vector<EigenVector_and_Value>::const_iterator eigenVector_and_Value = eigenVectors_and_Values.begin();
+			  eigenVector_and_Value != eigenVectors_and_Values.end(); ++eigenVector_and_Value ) {
+		      assert(eigenVector_and_Value->eigenVector_.GetNrows() == (int)dimension);
+		      std::cout << "EigenVector #" << idxPar << ":" << std::endl;
+		      eigenVector_and_Value->eigenVector_.Print();
+		      std::cout << "EigenValue #" << idxPar << " = " << eigenVector_and_Value->eigenValue_ << std::endl;
+		      assert(eigenVector_and_Value->eigenValue_ >= 0.);
+		      std::string fitFunctionParUpName = Form("%s_par%iUp", (nom_fit_func->GetFitFuncName()).data(), idxPar);
+		      FitFuncEntryType* fit_func_par_up = new FitFuncEntryType(nominal_fit_func_PSet, histo_to_fit, fitFunctionParUpName);
+		      TF1* fitFunctionParUp = fit_func_par_up->GetFitFunction();
+		      for ( size_t idxComponent = 0; idxComponent < dimension; ++idxComponent ) {
+			fitFunctionParUp->SetParameter(idxComponent, fitFunction_nom->GetParameter(idxComponent) + 
+						       TMath::Sqrt(eigenVector_and_Value->eigenValue_)*eigenVector_and_Value->eigenVector_(idxComponent));
+		      }
+		      fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionParUp, Form("EigenVec_%iUp", idxPar)));
+		      std::string fitFunctionParDownName = Form("%s_par%iDown", (nom_fit_func->GetFitFuncName()).data(), idxPar);
+		      FitFuncEntryType* fit_func_par_down = new FitFuncEntryType(nominal_fit_func_PSet, histo_to_fit, fitFunctionParDownName);
+		      TF1* fitFunctionParDown = fit_func_par_down->GetFitFunction();
+		      for ( size_t idxComponent = 0; idxComponent < dimension; ++idxComponent ) {
+			fitFunctionParDown->SetParameter(idxComponent, fitFunction_nom->GetParameter(idxComponent) - 
+							 TMath::Sqrt(eigenVector_and_Value->eigenValue_)*eigenVector_and_Value->eigenVector_(idxComponent));
+		      }
+		      fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionParDown, Form("EigenVec_%iDown", idxPar)));
+		      ++idxPar;
+		    } // loop over e-vectors and e-values ends
+		  } else {
+		    std::cerr << "Warning: Fit failed to converge !!" << std::endl;
+		  }
+
+		  // ------ Computing the central tail-fitted histogram -----
+		  std::cout<< " Computing the central tail-fitted histogram " << std::endl;
+		  TH1* central_fit_histo = GetHistofromFunc(histogramLeptonFakes, fitFunction_nom, nom_fit_func->GetXmin()); // Using the original binned histogram
+		  // std::string histo_name1 = Form("%s_central_fit", histo_name.data());
+		  // std::string histo_name1 = Form("central_fit_%s", histo_name.data());
+		  central_fit_histo->SetName(histo_name.c_str());
+		  
+		  // ------ Computing the fit systematic tail-fitted histograms -----
+		  std::cout<< " Computing the fit systematic tail-fitted histogram " << std::endl;
+		  std::vector<TH1*> fit_sysShifts_histos;
+		  for ( std::vector<fitFunction_and_legendEntry>::const_iterator fitFunction_sysShift = fitFunctions_sysShifts.begin();
+			fitFunction_sysShift != fitFunctions_sysShifts.end(); ++fitFunction_sysShift ) {
+		    TH1* fit_sysShifts_histogram = GetHistofromFunc(histogramLeptonFakes, (fitFunction_sysShift->fitFunction_), nom_fit_func->GetXmin()); // Using the original binned histogram
+		    // std::string histo_name2 = Form("%s_%s", histo_name.data(), (fitFunction_sysShift->legendEntry_).data());
+		    std::string histo_name2 = Form("%s_%s", (fitFunction_sysShift->legendEntry_).data(), histo_name.data());
+		    fit_sysShifts_histogram->SetName(histo_name2.c_str());
+		    fit_sysShifts_histos.push_back(fit_sysShifts_histogram);
+		  }
+
+		  // ---- Fitting (alternate functions) ------
+		  std::cout<< " Fitting alternate functions " << std::endl;
+		  std::vector<TFitResultPtr> fitResult_vect;
+		  std::vector<TH1*> vect_alt_fit_histos;
+		  int count = 0;
+		  for(std::vector<FitFuncEntryType*>::const_iterator func_iter =  vec_alt_fit_funcs.begin(); 
+		      func_iter != vec_alt_fit_funcs.end(); func_iter++){
+		    TFitResultPtr fitResult = histo_to_fit->Fit((*func_iter)->GetFitFunction(), "EOSR");
+		    if(fitResult->IsValid()){
+		      fitResult_vect.push_back(fitResult);
+		      TH1* alt_fit_histo = GetHistofromFunc(histogramLeptonFakes, (*func_iter)->GetFitFunction(), (*func_iter)->GetXmin()); // Using the original binned histogram
+		      // std::string histo_name3 = Form("%s_alt_fitFunc_%i", histo_name.data(), counter);
+		      std::string histo_name3 = Form("alt_fitFunc_%i_%s", counter, histo_name.data());
+		      alt_fit_histo->SetName(histo_name3.c_str());
+		      vect_alt_fit_histos.push_back(alt_fit_histo);
+		    }
+		    count++;
+		  }
+
+		  // ----- Fit Bias Systematic -------
+		  std::cout<< " Computing the Fit Bias Systematic " << std::endl;
+		  TH1* fit_bias_Syst_histo = dynamic_cast<TH1*>(central_fit_histo->Clone());
+		  // std::string histo_name4 = Form("%s_fit_bias_Syst", histo_name.data());
+		  std::string histo_name4 = Form("fit_bias_Syst_%s", histo_name.data());
+		  fit_bias_Syst_histo->SetName(histo_name4.c_str());
+		  
+		  // ---- Bin-By-Bin ------
+		  SetCentralHistoBinError(fit_bias_Syst_histo, vect_alt_fit_histos, nom_fit_func->GetXmin());
+		  
+		  // ---- Up and Down ----
+		  std::vector<TH1*> vect_hist;
+		  vect_hist = FitSystUpDownHisto(fit_bias_Syst_histo, vect_alt_fit_histos, nom_fit_func->GetXmin(), histo_name);
+		  
+		  // ---- Plotting ----
+		  // Plot(histo_to_fit, nom_fit_func);
+
+
+		} // TailFit part ends  
+	      } // Loop over histograms to TailFit
+	    } // is sel/evt
+	  } // Loop over systematics
+	} // Loop over histograms
+      } // Loop over level2 dir.s (objects and evt level dir.s)
+    } // Loop over level1 dir.s   (presel and sel dir.s)
+  } // Loop over catgeories ()
 
   clock.Show("addBackgrounds_TailFit");
 
