@@ -9,8 +9,8 @@ from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
 # E.g.: ./tthAnalyzeRun_hh_2l_2tau.py -v 2017Dec13 -m default -e 2017
 
 mode_choices     = [ 'default' ]
-sys_choices      = [ 'full' ] + systematics.an_extended_opts
-systematics.full = systematics.an_extended
+sys_choices      = [ 'full' ] + systematics.an_extended_opts_hh
+systematics.full = systematics.an_extended_hh
 
 parser = tthAnalyzeParser()
 parser.add_modes(mode_choices)
@@ -57,14 +57,24 @@ chargeSumSelections      = [ "OS", "SS" ]
 hadTau_selection_relaxed = ""
 
 if mode == "default":
-  if era == "2016":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
-  elif era == "2017":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
-  elif era == "2018":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
+  if use_preselected:
+    if era == "2016":
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016_preselected import samples_2016 as samples
+    elif era == "2017":
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_preselected import samples_2017 as samples
+    elif era == "2018":
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018_preselected import samples_2018 as samples
+    else:
+      raise ValueError("Invalid era: %s" % era)
   else:
-    raise ValueError("Invalid era: %s" % era)
+    if era == "2016":
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
+    elif era == "2017":
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
+    elif era == "2018":
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
+    else:
+      raise ValueError("Invalid era: %s" % era)
 
   if era == "2016":
     hadTau_selection = "dR03mvaTight"

@@ -1,6 +1,6 @@
 import logging, re
 
-from tthAnalysis.HiggsToTauTau.configs.analyzeConfig import *
+from hhAnalysis.multilepton.configs.analyzeConfig_hh import *
 from tthAnalysis.HiggsToTauTau.jobTools import create_if_not_exists
 from tthAnalysis.HiggsToTauTau.analysisTools import initDict, getKey, create_cfg, createFile, generateInputFileList
 
@@ -23,7 +23,7 @@ def getHistogramDir(lepton_selection, lepton_frWeight, leptonChargeSelection):
       histogramDir += "_woFakeRateWeights"
   return histogramDir
 
-class analyzeConfig_hh_2lss(analyzeConfig):
+class analyzeConfig_hh_2lss(analyzeConfig_hh):
   """Configuration metadata needed to run analysis in a single go.
 
   Sets up a folder structure by defining full path names; no directory creation is delegated here.
@@ -53,7 +53,8 @@ class analyzeConfig_hh_2lss(analyzeConfig):
         running_method,
         num_parallel_jobs,
         executable_addBackgrounds,
-        executable_addBackgroundJetToTauFakes,
+        executable_addFakes,
+        executable_addFlips,
         histograms_to_fit,
         select_rle_output         = False,
         select_root_output        = False,
@@ -66,7 +67,7 @@ class analyzeConfig_hh_2lss(analyzeConfig):
         hlt_filter                = False,
         use_home                  = True,
       ):
-    analyzeConfig.__init__(self,
+    analyzeConfig_hh.__init__(self,
       configDir                 = configDir,
       outputDir                 = outputDir,
       executable_analyze        = executable_analyze,
@@ -131,13 +132,14 @@ class analyzeConfig_hh_2lss(analyzeConfig):
     self.leptonChargeSelections = [ "SS", "OS" ]
 
     self.executable_addBackgrounds = executable_addBackgrounds
-    self.executable_addFakes = executable_addBackgroundJetToTauFakes
+    self.executable_addFakes = executable_addFakes
     self.executable_addFlips = "addBackgroundLeptonFlips"
 
     self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
-    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
+    #self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
+    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc", "flips_data" ]
     self.inputFiles_hadd_stage1_6 = []
     self.outputFile_hadd_stage1_6 = None
     self.cfgFile_addFlips = os.path.join(self.template_dir, "addBackgroundLeptonFlips_cfg.py")
@@ -151,9 +153,8 @@ class analyzeConfig_hh_2lss(analyzeConfig):
         self.prep_dcard_signals.append(sample_category)
     self.histogramDir_prep_dcard = "hh_2lss_SS_Tight"
     self.histogramDir_prep_dcard_OS = "hh_2lss_OS_Tight"
-    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
-    self.mass_point = 400
-    self.make_plots_signal = "signal_radion_%d" % self.mass_point
+    #self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
+    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data", "flips_data" ]
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2lss_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2lss_cfg.py") #TODO
 
@@ -214,7 +215,7 @@ class analyzeConfig_hh_2lss(analyzeConfig):
     lines.append("    )")
     lines.append(")")
     processesToSubtract = [ "fakes_data" ]
-    processesToSubtract.extend([ nonfake_background for nonfake_background in self.nonfake_backgrounds if nonfake_background != "TT" ])
+    #processesToSubtract.extend([ nonfake_background for nonfake_background in self.nonfake_backgrounds if nonfake_background != "TT" ])
     processesToSubtract.extend([ "%s_conversion" % nonfake_background for nonfake_background in self.nonfake_backgrounds ])
     lines.append("process.addBackgroundLeptonFlips.processesToSubtract = cms.vstring(%s)" % processesToSubtract)
     lines.append("process.addBackgroundLeptonFlips.sysShifts = cms.vstring(%s)" % self.central_or_shifts)
@@ -347,7 +348,9 @@ class analyzeConfig_hh_2lss(analyzeConfig):
                   if not is_mc and not isFR_shape_shift:
                     continue
 
-                if central_or_shift in systematics.LHE().ttH and sample_category != "signal":
+                if central_or_shift in systematics.LHE().hh and not sample_category.startswith("signal"):
+                  continue
+                if central_or_shift in systematics.LHE().ttH and sample_category != "TTH":
                   continue
                 if central_or_shift in systematics.LHE().ttW and sample_category != "TTW":
                   continue
@@ -546,8 +549,6 @@ class analyzeConfig_hh_2lss(analyzeConfig):
           key_hadd_stage1_5 = getKey(lepton_selection_and_frWeight, leptonChargeSelection)
           sample_categories = []
           sample_categories.extend(self.nonfake_backgrounds)
-          if "signal_nonresonant" in self.prep_dcard_signals:
-            sample_categories.extend([ "signal_nonresonant" ])
           processes_input = []
           for sample_category in sample_categories:
             processes_input.append("%s_fake" % sample_category)
@@ -571,8 +572,6 @@ class analyzeConfig_hh_2lss(analyzeConfig):
           key_addBackgrounds_job_conversions = getKey(lepton_selection_and_frWeight, leptonChargeSelection, "conversions")
           sample_categories = []
           sample_categories.extend(self.nonfake_backgrounds)
-          if "signal_nonresonant" in self.prep_dcard_signals:
-            sample_categories.extend([ "signal_nonresonant" ])
           processes_input = []
           for sample_category in sample_categories:
             processes_input.append("%s_conversion" % sample_category)
@@ -594,27 +593,17 @@ class analyzeConfig_hh_2lss(analyzeConfig):
           # separately for "nonfake" and "fake" contributions
           genMatch_categories = [ "nonfake", "fake" ]
           for genMatch_category in genMatch_categories:
-            for sample_name, sample_info in self.samples.items():
-              if not sample_info["use_it"] or sample_info["sample_category"] in [ "additional_signal_overlap", "background_data_estimate" ]:
-                continue
-              sample_category = sample_info["sample_category"]
-              sample_category_base = sample_category[0:sample_category.rfind("_")]
-              is_signal = sample_category_base.startswith("signal")
-              if not is_signal:
-                continue
-              key_addBackgrounds_job_signal = getKey(lepton_selection_and_frWeight, leptonChargeSelection, sample_category_base)
-              key_hadd_stage1_5 = getKey(lepton_selection_and_frWeight, leptonChargeSelection)
-              processes_input = []
-              for decay_mode in [ "tttt", "wwtt", "wwww" ]:
-                processes_input.append(sample_category_base + "_" + decay_mode)
-              process_output = sample_category_base
+            for signal_base, signal_input in self.signal_io.items():
+              key_addBackgrounds_job_signal = getKey(lepton_selection_and_frWeight, leptonChargeSelection, signal_base)
+              processes_input = signal_input
+              process_output = signal_base
               if genMatch_category == "fake":
                 key_addBackgrounds_job_signal = key_addBackgrounds_job_signal + "_fake"
                 processes_input = [ process_input + "_fake" for process_input in processes_input ]
-                process_output = process_output + "_fake"
+                process_output += "_fake"
               if key_addBackgrounds_job_signal in self.jobOptions_addBackgrounds_sum.keys():
                 continue
-              cfg_key = getKey(self.channel, sample_category_base, genMatch_category, lepton_selection_and_frWeight, leptonChargeSelection)
+              cfg_key = getKey(self.channel, signal_base, genMatch_category, lepton_selection_and_frWeight, leptonChargeSelection)
               self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal] = {
                 'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5],
                 'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_cfg.py" % cfg_key),
@@ -792,8 +781,6 @@ class analyzeConfig_hh_2lss(analyzeConfig):
       'histogramDir' : self.histogramDir_prep_dcard,
       'label' : "2lSS",
       'make_plots_backgrounds' : self.make_plots_backgrounds,
-      'massPoint' : self.mass_point,
-      'skipChannel' : True,
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "OS" in self.leptonChargeSelections:
@@ -807,8 +794,6 @@ class analyzeConfig_hh_2lss(analyzeConfig):
         'histogramDir' : self.histogramDir_prep_dcard_OS,
         'label' : "2lOS",
         'make_plots_backgrounds' : self.make_plots_backgrounds,
-        'massPoint'  : self.mass_point,
-        'skipChannel': True,
       }
       self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "Fakeable_mcClosure" in self.lepton_selections: #TODO

@@ -47,4 +47,59 @@ process.makePlots.distributions.extend([
         xAxisTitle = cms.string('m_{HH}^{vis} [GeV]'),
         yAxisTitle = cms.string('dN/dm_{HH}^{vis} [1/GeV]')
     ),
+    cms.PSet(
+        histogramName = cms.string("sel/evt/$PROCESS/numBJets_loose"),
+        xAxisTitle = cms.string("loose b-jet Multiplicity"),
+        yAxisTitle = cms.string("Events")
+    ),
+    cms.PSet(
+        histogramName = cms.string("sel/evt/$PROCESS/numBJets_medium"),
+        xAxisTitle = cms.string("medium b-jet Multiplicity"),
+        yAxisTitle = cms.string("Events")
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/evt/$PROCESS/dihiggsMass'),
+        xAxisTitle = cms.string('m_{HH} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/evt/$PROCESS/dihiggsVisMass'),
+        xAxisTitle = cms.string('m_{HH} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsVisMass2'),
+        xAxisTitle = cms.string('m_{HH}^{vis} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{HH}^{vis} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsMass1'),
+        xAxisTitle = cms.string('m_{HH} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/svFit4tau_woMassConstraint/$PROCESS/ditau1Mass1'),
+        xAxisTitle = cms.string('m_{H}^{(1)} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{H}^{(1)} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/svFit4tau_woMassConstraint/$PROCESS/ditau1Mass2'),
+        xAxisTitle = cms.string('m_{H}^{(1)} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{H}^{(1)} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsMass2'),
+        xAxisTitle = cms.string('m_{HH} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/svFit4tau_woMassConstraint/$PROCESS/ditau2Mass1'),
+        xAxisTitle = cms.string('m_{H}^{(2)} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{H}^{(2)} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/svFit4tau_woMassConstraint/$PROCESS/ditau2Mass2'),
+        xAxisTitle = cms.string('m_{H}^{(2)} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{H}^{(2)} [1/GeV]')
+    ),
 ])

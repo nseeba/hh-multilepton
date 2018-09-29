@@ -1,5 +1,5 @@
-from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017 import samples_2017 as samples_2017_general
-from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_hh_private import samples_2017 as samples_2017_hh_private
+from hhAnalysis.multilepton.samples.tthAnalyzeSamples_2017_preselected import samples_2017 as samples_2017_general
+from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_hh_private_preselected import samples_2017 as samples_2017_hh_private
 
 import collections
 import itertools
@@ -25,9 +25,9 @@ for sample_name, sample_info in samples_2017.items():
     sample_info["sample_category"] = "WZ"
   elif sample_name.startswith('/WW'):
     sample_info["sample_category"] = "WW"
-  elif sample_name.startswith('/DY') and sample_name.find('JetsToLL') != -1 and sample_name.find('JetsToLL') < 10:
+  elif sample_name.startswith('/DY') and sample_name.find('JetsToLL') < 10:
     sample_info["sample_category"] = "DY"
-  elif sample_name.startswith('/W') and sample_name.find('JetsToLNu') != -1 and sample_name.find('JetsToLNu') < 10:
+  elif sample_name.startswith('/W') and sample_name.find('JetsToLNu') < 10:
     sample_info["sample_category"] = "W"
   elif sample_name.startswith('/ttH'):
     sample_info["sample_category"] = "TTH"

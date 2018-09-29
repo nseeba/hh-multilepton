@@ -9,8 +9,8 @@ from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
 # E.g.: ./hhAnalyzeRun_0l_4tau.py -v 2017Dec13 -m default -e 2017
 
 mode_choices     = [ 'default' ]
-sys_choices      = [ 'full' ] + systematics.an_extended_opts
-systematics.full = systematics.an_extended
+sys_choices      = [ 'full' ] + systematics.an_extended_opts_hh
+systematics.full = systematics.an_extended_hh
 
 parser = tthAnalyzeParser()
 parser.add_modes(mode_choices)
@@ -40,6 +40,7 @@ running_method     = args.running_method
 # Additional arguments
 mode              = args.mode
 systematics_label = args.systematics
+use_preselected   = args.use_preselected
 rle_select        = os.path.expanduser(args.rle_select)
 use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
@@ -58,14 +59,24 @@ do_sync = mode.startswith('sync')
 hadTau_charge_selections = [ "OS", "SS" ]
 
 if mode == "default":
-  if era == "2016":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
-  elif era == "2017":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
-  elif era == "2018":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
+  if use_preselected:
+    if era == "2016":
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016_preselected import samples_2016 as samples
+    elif era == "2017":
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_preselected import samples_2017 as samples
+    elif era == "2018":
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018_preselected import samples_2018 as samples
+    else:
+      raise ValueError("Invalid era: %s" % era)
   else:
-    raise ValueError("Invalid era: %s" % era)
+    if era == "2016":
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
+    elif era == "2017":
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
+    elif era == "2018":
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
+    else:
+      raise ValueError("Invalid era: %s" % era)
 
   if era == "2016":
     hadTau_selection = "dR03mvaMedium"
@@ -110,7 +121,8 @@ if __name__ == '__main__':
     "Running the jobs with the following systematic uncertainties enabled: %s" % \
     ', '.join(central_or_shifts)
   )
-  logging.warning('Running the analysis on fully inclusive samples!')
+  if not use_preselected:
+    logging.warning('Running the analysis on fully inclusive samples!')
 
   if sample_filter:
     samples = filter_samples(samples, sample_filter)

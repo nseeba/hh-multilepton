@@ -1,13 +1,13 @@
 from collections import OrderedDict as OD
 
-# file generated at 2018-08-04 19:43:43 with the following command:
+# file generated at 2018-09-19 08:57:06 with the following command:
 # create_dictionary.py -m python/samples/metaDict_2017_private_hh.py -p /hdfs/cms/store/user/kaehatah/NanoProduction_v2_2018Aug03 -Z zeroes.txt -z zombies.txt -N samples_2017 -E 2017 -g hhAnalyzeSamples_2017_nanoAOD_hh_private.py -o python/samples -M
 
 samples_2017 = OD()
 samples_2017["/HHTo4T_madgraph_pythia8_CP5_M400/private/USER"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_400_tttt"),
-  ("process_name_specific",           "signal_hh_4t_400"),
+  ("sample_category",                 "signal_ggf_spin0_400_hh_tttt"),
+  ("process_name_specific",           "signal_ggf_spin0_400_hh_4t"),
   ("nof_files",                       193),
   ("nof_db_files",                    193),
   ("nof_events",                      {
@@ -43,8 +43,8 @@ samples_2017["/HHTo4T_madgraph_pythia8_CP5_M400/private/USER"] = OD([
 
 samples_2017["/HHTo4T_madgraph_pythia8_CP5_M700/private/USER"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_700_tttt"),
-  ("process_name_specific",           "signal_hh_4t_700"),
+  ("sample_category",                 "signal_ggf_spin0_700_hh_tttt"),
+  ("process_name_specific",           "signal_ggf_spin0_700_hh_4t"),
   ("nof_files",                       160),
   ("nof_db_files",                    160),
   ("nof_events",                      {
@@ -80,8 +80,8 @@ samples_2017["/HHTo4T_madgraph_pythia8_CP5_M700/private/USER"] = OD([
 
 samples_2017["/HHTo2T2V_madgraph_pythia8_CP5_M400/private/USER"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_400_wwtt"),
-  ("process_name_specific",           "signal_hh_2t2v_400"),
+  ("sample_category",                 "signal_ggf_spin0_400_hh_wwtt"),
+  ("process_name_specific",           "signal_ggf_spin0_400_hh_2v2t"),
   ("nof_files",                       130),
   ("nof_db_files",                    130),
   ("nof_events",                      {
@@ -117,8 +117,8 @@ samples_2017["/HHTo2T2V_madgraph_pythia8_CP5_M400/private/USER"] = OD([
 
 samples_2017["/HHTo2T2V_madgraph_pythia8_CP5_M700/private/USER"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_700_wwtt"),
-  ("process_name_specific",           "signal_hh_2t2v_700"),
+  ("sample_category",                 "signal_ggf_spin0_700_hh_wwtt"),
+  ("process_name_specific",           "signal_ggf_spin0_700_hh_2v2t"),
   ("nof_files",                       152),
   ("nof_db_files",                    152),
   ("nof_events",                      {
@@ -154,8 +154,8 @@ samples_2017["/HHTo2T2V_madgraph_pythia8_CP5_M700/private/USER"] = OD([
 
 samples_2017["/HHTo4V_madgraph_pythia8_CP5_M400/private/USER"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_400_wwww"),
-  ("process_name_specific",           "signal_hh_4v_400"),
+  ("sample_category",                 "signal_ggf_spin0_400_hh_wwww"),
+  ("process_name_specific",           "signal_ggf_spin0_400_hh_4v"),
   ("nof_files",                       133),
   ("nof_db_files",                    133),
   ("nof_events",                      {
@@ -191,8 +191,8 @@ samples_2017["/HHTo4V_madgraph_pythia8_CP5_M400/private/USER"] = OD([
 
 samples_2017["/HHTo4V_madgraph_pythia8_CP5_M700/private/USER"] = OD([
   ("type",                            "mc"),
-  ("sample_category",                 "signal_radion_700_wwww"),
-  ("process_name_specific",           "signal_hh_4v_700"),
+  ("sample_category",                 "signal_ggf_spin0_700_hh_wwww"),
+  ("process_name_specific",           "signal_ggf_spin0_700_hh_4v"),
   ("nof_files",                       118),
   ("nof_db_files",                    118),
   ("nof_events",                      {

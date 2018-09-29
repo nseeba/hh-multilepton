@@ -1,7 +1,7 @@
 import logging
 import re
 
-from tthAnalysis.HiggsToTauTau.configs.analyzeConfig import *
+from hhAnalysis.multilepton.configs.analyzeConfig_hh import *
 from tthAnalysis.HiggsToTauTau.jobTools import create_if_not_exists
 from tthAnalysis.HiggsToTauTau.analysisTools import initDict, getKey, create_cfg, createFile, generateInputFileList
 
@@ -28,7 +28,7 @@ def getHistogramDir(hadTau_selection, hadTau_frWeight, hadTau_charge_selection):
       histogramDir += "_woFakeRateWeights"
   return histogramDir
 
-class analyzeConfig_hh_0l_4tau(analyzeConfig):
+class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
   """Configuration metadata needed to run analysis in a single go.
 
   Sets up a folder structure by defining full path names; no directory creation is delegated here.
@@ -69,7 +69,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
         hlt_filter        = False,
         use_home          = True
       ):
-    analyzeConfig.__init__(self,
+    analyzeConfig_hh.__init__(self,
       configDir          = configDir,
       outputDir          = outputDir,
       executable_analyze = executable_analyze,
@@ -145,8 +145,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
       if sample_category.startswith("signal"):
         self.prep_dcard_signals.append(sample_category)
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "fakes_data" ]
-    self.mass_point = 400
-    self.make_plots_signal = "signal_radion_%d" % self.mass_point
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.histogramDir_prep_dcard = "hh_0l_4tau_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_0l_4tau_SS_Tight"
@@ -303,7 +301,9 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
                   if not is_mc and not isFR_shape_shift:
                     continue
 
-                if central_or_shift in systematics.LHE().ttH and not sample_category.startswith("signal"):
+                if central_or_shift in systematics.LHE().hh and not sample_category.startswith("signal"):
+                  continue
+                if central_or_shift in systematics.LHE().ttH and sample_category != "TTH":
                   continue
                 if central_or_shift in systematics.LHE().ttW and sample_category != "TTW":
                   continue
@@ -442,8 +442,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
           key_hadd_stage1_5 = getKey(hadTau_selection_and_frWeight, hadTau_charge_selection)
           sample_categories = []
           sample_categories.extend(self.nonfake_backgrounds)
-          if "signal_nonresonant" in self.prep_dcard_signals:
-            sample_categories.extend([ "signal_nonresonant" ])
           processes_input = []
           for sample_category in sample_categories:
             processes_input.append("%s_fake" % sample_category)
@@ -465,27 +463,17 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
           # separately for "nonfake" and "fake" contributions
           genMatch_categories = [ "nonfake", "fake" ]
           for genMatch_category in genMatch_categories:
-            for sample_name, sample_info in self.samples.items():
-              if not sample_info["use_it"] or sample_info["sample_category"] in [ "additional_signal_overlap", "background_data_estimate" ]:
-                continue
-              sample_category = sample_info["sample_category"]
-              sample_category_base = sample_category[0:sample_category.rfind("_")]
-              is_signal = sample_category_base.startswith("signal")
-              if not is_signal:
-                continue
-              key_addBackgrounds_job_signal = getKey(hadTau_selection_and_frWeight, hadTau_charge_selection, sample_category_base)
-              key_hadd_stage1_5 = getKey(hadTau_selection_and_frWeight, hadTau_charge_selection)
-              processes_input = []
-              for decay_mode in [ "tttt", "wwtt", "wwww" ]:
-                processes_input.append(sample_category_base + "_" + decay_mode)
-              process_output = sample_category_base
+            for signal_base, signal_input in self.signal_io.items():
+              key_addBackgrounds_job_signal = getKey(hadTau_selection_and_frWeight, hadTau_charge_selection, signal_base)
+              processes_input = signal_input
+              process_output = signal_base
               if genMatch_category == "fake":
                 key_addBackgrounds_job_signal = key_addBackgrounds_job_signal + "_fake"
                 processes_input = [ process_input + "_fake" for process_input in processes_input ]
-                process_output = process_output + "_fake"
+                process_output += "_fake"
               if key_addBackgrounds_job_signal in self.jobOptions_addBackgrounds_sum.keys():
                 continue
-              cfg_key = getKey(self.channel, sample_category_base, genMatch_category, hadTau_selection_and_frWeight, hadTau_charge_selection)
+              cfg_key = getKey(self.channel, signal_base, genMatch_category, hadTau_selection_and_frWeight, hadTau_charge_selection)
               self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal] = {
                 'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5],
                 'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_cfg.py" % cfg_key),
@@ -548,8 +536,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
         'histogramDir' : self.histogramDir_prep_dcard,
         'histogramToFit' : histogramToFit,
         'label' : '4#tau_{h}',
-        'massPoint' : self.mass_point,
-        'skipChannel' : True,
       }
       self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
       if "SS" in self.hadTau_charge_selections:
@@ -562,8 +548,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
           'histogramDir' : self.histogramDir_prep_dcard_SS,
           'histogramToFit' : histogramToFit,
           'label' : '4#tau_{h} SS',
-          'massPoint' : self.mass_point,
-          'skipChannel' : True,
         }
         self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
@@ -616,8 +600,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
       'histogramDir' : self.histogramDir_prep_dcard,
       'label' : '4#tau_{h}',
       'make_plots_backgrounds' : self.make_plots_backgrounds,
-      'massPoint' : self.mass_point,
-      'skipChannel' : True,
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "SS" in self.hadTau_charge_selections:
@@ -631,8 +613,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig):
         'histogramDir' : self.histogramDir_prep_dcard_SS,
         'label' : "4#tau_{h} SS",
         'make_plots_backgrounds' : self.make_plots_backgrounds,
-        'massPoint' : self.mass_point,
-        'skipChannel' : True,
       }
       self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "Fakeable_mcClosure" in self.hadTau_selections: #TODO

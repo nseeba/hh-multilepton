@@ -15,31 +15,37 @@ EvtHistManager_hh_2lss::getHistogram_EventCounter() const
 void
 EvtHistManager_hh_2lss::bookHistograms(TFileDirectory & dir)
 {
-  histogram_numElectrons_     = book1D(dir, "numElectrons",     "numElectrons",      5, -0.5,  +4.5);
-  histogram_numMuons_         = book1D(dir, "numMuons",         "numMuons",          5, -0.5,  +4.5);
-  histogram_numJets_          = book1D(dir, "numJets",          "numJets",          20, -0.5, +19.5);
-  histogram_numJetsPtGt40_    = book1D(dir, "numJetsPtGt40",    "numJetsPtGt40",    20, -0.5, +19.5);
-  histogram_dihiggsVisMass_   = book1D(dir, "dihiggsVisMass",   "dihiggsVisMass",   150,  0.,  1500.);
-  histogram_dihiggsMass_wMet_ = book1D(dir, "dihiggsMass_wMet", "dihiggsMass_wMet", 150,  0.,  1500.);
-  histogram_jetMass_          = book1D(dir, "jetMass",          "jetMass",          150,  0.,  1500.);
-  histogram_leptonPairCharge_ = book1D(dir, "leptonPairCharge", "leptonPairCharge",  5, -2.5, +2.5);
-  histogram_HT_               = book1D(dir, "HT",               "HT",              150,  0., 1500.);
-  histogram_STMET_            = book1D(dir, "STMET",            "STMET",           150,  0., 1500.);
-  histogram_EventCounter_     = book1D(dir, "EventCounter",     "EventCounter",      1, -0.5,  +0.5);
+  histogram_numElectrons_     = book1D(dir, "numElectrons",     "numElectrons",       5, -0.5,  +4.5);
+  histogram_numMuons_         = book1D(dir, "numMuons",         "numMuons",           5, -0.5,  +4.5);
+  histogram_numJets_          = book1D(dir, "numJets",          "numJets",           20, -0.5, +19.5);
+  histogram_numJetsPtGt40_    = book1D(dir, "numJetsPtGt40",    "numJetsPtGt40",     20, -0.5, +19.5);
+  histogram_dihiggsVisMass_   = book1D(dir, "dihiggsVisMass",   "dihiggsVisMass",   150,  0., 1500.);
+  histogram_dihiggsMass_wMet_ = book1D(dir, "dihiggsMass_wMet", "dihiggsMass_wMet", 150,  0., 1500.);
+  histogram_jetMass_          = book1D(dir, "jetMass",          "jetMass",          150,  0., 1500.);
+  histogram_leptonPairMass_   = book1D(dir, "leptonPairMass",   "leptonPairMass",    40,  0.,  200.);
+  histogram_electronPairMass_ = book1D(dir, "electronPairMass", "electronPairMass",  40,  0.,  200.);
+  histogram_muonPairMass_     = book1D(dir, "muonPairMass",     "muonPairMass",      40,  0.,  200.);
+  histogram_leptonPairCharge_ = book1D(dir, "leptonPairCharge", "leptonPairCharge",   5, -2.5,  +2.5);
+  histogram_HT_               = book1D(dir, "HT",               "HT",               150,  0., 1500.);
+  histogram_STMET_            = book1D(dir, "STMET",            "STMET",            150,  0., 1500.);
+  histogram_EventCounter_     = book1D(dir, "EventCounter",     "EventCounter",       1, -0.5,  +0.5);
 }
 
 void
 EvtHistManager_hh_2lss::fillHistograms(int numElectrons,
-					  int numMuons,
-					  int numJets,
-					  int numJetsPtGt40,
-					  double dihiggsVisMass,
-					  double dihiggsMass_wMet,
-					  double jetMass,
-					  double leptonPairCharge,
-					  double HT,
-					  double STMET,
-					  double evtWeight)
+				       int numMuons,
+				       int numJets,
+				       int numJetsPtGt40,
+				       double dihiggsVisMass,
+				       double dihiggsMass_wMet,
+				       double jetMass,
+				       double leptonPairMass,
+				       double electronPairMass,
+				       double muonPairMass,
+				       double leptonPairCharge,
+				       double HT,
+				       double STMET,
+				       double evtWeight)
 {
   const double evtWeightErr = 0.;
   fillWithOverFlow(histogram_numElectrons_,     numElectrons,     evtWeight, evtWeightErr);
@@ -49,6 +55,13 @@ EvtHistManager_hh_2lss::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_dihiggsVisMass_,   dihiggsVisMass,   evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_dihiggsMass_wMet_, dihiggsMass_wMet, evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_jetMass_,          jetMass,          evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_leptonPairMass_,   leptonPairMass,   evtWeight, evtWeightErr);
+  if ( electronPairMass > 0. ) {
+    fillWithOverFlow(histogram_electronPairMass_, electronPairMass, evtWeight, evtWeightErr);
+  }
+  if ( muonPairMass > 0. ) {
+    fillWithOverFlow(histogram_muonPairMass_,     muonPairMass,     evtWeight, evtWeightErr);
+  }
   fillWithOverFlow(histogram_leptonPairCharge_, leptonPairCharge, evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_HT_,               HT,               evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_STMET_,            STMET,            evtWeight, evtWeightErr);
