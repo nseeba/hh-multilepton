@@ -261,22 +261,36 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
   legend->SetFillColor(10);
   legend->SetTextSize(legendTextSize);
 
+  printf("Plotter_HH:: Before  yMin: %f,  yMax: %f\n",yMin,yMax);
   if ( !(yMin >= 0. && yMax > yMin) ) {
     if ( useLogScale ) {
       const double numOrdersOfMagnitude = 4.5;
       if ( histogramData_density ) yMax = compYmaxForClearance(histogramData_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude);
       else yMax = 1.;
+      printf("LogScale: ");
+      std::cout << "histogramData_density: " << histogramData_density;
+      printf(",  compYmaxForClearance: %f\n",
+	     compYmaxForClearance(histogramData_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude));
       yMax = TMath::Max(yMax, compYmaxForClearance(histogramSum_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude));
+      printf("here2: yMax: %f \n",yMax);
       if ( histogramSignal_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude));
       yMin = TMath::Power(10., -numOrdersOfMagnitude)*TMath::Max(1., yMax);
+      printf("here3: yMax: %f,  yMin: %f \n",yMax, yMin);
     } else {
       if ( histogramData_density ) yMax = compYmaxForClearance(histogramData_density, legendPosX, legendPosY, labelPosY, false, -1.);
       else yMax = 1.;
+      printf("LinearScale: ");
+      std::cout << "histogramData_density: " << histogramData_density;
+      printf(",  compYmaxForClearance: %f\n",
+             compYmaxForClearance(histogramData_density, legendPosX, legendPosY, labelPosY, false, -1.));
+      printf("here2: yMax: %f \n",yMax);
       yMax = TMath::Max(yMax, compYmaxForClearance(histogramSum_density, legendPosX, legendPosY, labelPosY, false, -1.));
       if ( histogramSignal_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal_density, legendPosX, legendPosY, labelPosY, false, -1.));
       yMin = 0.;
+      printf("here3: yMax: %f,  yMin: %f \n",yMax, yMin);
     }
   }
+  printf("Plotter_HH:: After  yMin: %f,  yMax: %f\n",yMin,yMax);
   
   if ( histogramData_blinded_density ) {
     histogramData_blinded_density->SetTitle("");
