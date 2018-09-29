@@ -12,7 +12,8 @@ process.makePlots = cms.PSet(
     pluginType = cms.string("Plotter_HH"),
 
     applyRebinning = cms.bool(True),
-    apply_fixed_rebinning = cms.int32(2),
+    #apply_fixed_rebinning = cms.int32(2),
+    apply_fixed_rebinning = cms.int32(8),
     apply_automatic_rebinning = cms.bool(True),
     minEvents_automatic_rebinning = cms.double(0.5),
     applyAutoBlinding = cms.bool(True),
@@ -79,41 +80,13 @@ process.makePlots = cms.PSet(
             xAxisTitle = cms.string('m_{HH} [GeV]'),
             yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
         ),
-       cms.PSet(
-           histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsVisMass2'),
-           xAxisTitle = cms.string('m_{HH}^{vis} [GeV]'),
-           yAxisTitle = cms.string('dN/dm_{HH}^{vis} [1/GeV]')
-       ),
-       cms.PSet(
-           histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsMass1'),
-           xAxisTitle = cms.string('m_{HH} [GeV]'),
-           yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
-       ),
-       cms.PSet(
-           histogramName = cms.string('sel/svFit4tau_woMassConstraint/$PROCESS/ditau1Mass1'),
-           xAxisTitle = cms.string('m_{H}^{(1)} [GeV]'),
-           yAxisTitle = cms.string('dN/dm_{H}^{(1)} [1/GeV]')
-       ),
-       cms.PSet(
-           histogramName = cms.string('sel/svFit4tau_woMassConstraint/$PROCESS/ditau1Mass2'),
-           xAxisTitle = cms.string('m_{H}^{(1)} [GeV]'),
-           yAxisTitle = cms.string('dN/dm_{H}^{(1)} [1/GeV]')
-       ),
-       cms.PSet(
-           histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsMass2'),
-           xAxisTitle = cms.string('m_{HH} [GeV]'),
-           yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
-       ),
-       cms.PSet(
-           histogramName = cms.string('sel/svFit4tau_woMassConstraint/$PROCESS/ditau2Mass1'),
-           xAxisTitle = cms.string('m_{H}^{(2)} [GeV]'),
-           yAxisTitle = cms.string('dN/dm_{H}^{(2)} [1/GeV]')
-       ),
-       cms.PSet(
-           histogramName = cms.string('sel/svFit4tau_woMassConstraint/$PROCESS/ditau2Mass2'),
-           xAxisTitle = cms.string('m_{H}^{(2)} [GeV]'),
-           yAxisTitle = cms.string('dN/dm_{H}^{(2)} [1/GeV]')
-       ),
+        cms.PSet(
+            histogramName = cms.string('sel/evt/$PROCESS/WTojjMass'),
+            xAxisTitle = cms.string('m_{jj} [GeV]'),
+            yAxisTitle = cms.string('dN/dm_{jj} [1/GeV]'),
+            #yMin = cms.double(0.0001),
+            #yMax = cms.double(1000)
+        ),
     ),
 
     nuisanceParameters = cms.PSet(
