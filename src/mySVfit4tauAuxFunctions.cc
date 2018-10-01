@@ -72,10 +72,10 @@ isLowerMassErr(const SVfit4tauResult& result1,
   return result1.dihiggs_massErr_ < result2.dihiggs_massErr_;
 }
 
-std::vector<SVfit4tauResult> compSVfit4tau(const GenParticle& measuredTau1, 
-                                           const GenParticle& measuredTau2,
-                                           const GenParticle& measuredTau3,
-                                           const GenParticle& measuredTau4,
+std::vector<SVfit4tauResult> compSVfit4tau(const GenParticle& measuredTau1_,
+                                           const GenParticle& measuredTau2_,
+                                           const GenParticle& measuredTau3_,
+                                           const GenParticle& measuredTau4_,
                                            const RecoMEt& met,
                                            const std::string& chargeSumSelection_string, TRandom& rnd,
                                            double massConstraint,
@@ -99,10 +99,10 @@ std::vector<SVfit4tauResult> compSVfit4tau(const GenParticle& measuredTau1,
   std::vector<SVfit4tauResult> results;
 
   std::vector<const GenParticle*> measuredTaus;
-  measuredTaus.push_back(&measuredTau1);
-  measuredTaus.push_back(&measuredTau2);
-  measuredTaus.push_back(&measuredTau3);
-  measuredTaus.push_back(&measuredTau4);
+  measuredTaus.push_back(&measuredTau1_);
+  measuredTaus.push_back(&measuredTau2_);
+  measuredTaus.push_back(&measuredTau3_);
+  measuredTaus.push_back(&measuredTau4_);
   std::sort(measuredTaus.begin(), measuredTaus.end(), isHigherPt);
   size_t numMeasuredTaus = measuredTaus.size();
   assert(numMeasuredTaus == 4);
