@@ -785,7 +785,8 @@ int main(int argc, char* argv[])
       "dr_leps", "dr_taus", "avg_dr_jet",
       "met", "mht", "met_LD", "HT", "STMET",
       "Smin_llMEt", "m_ll", "pT_ll", "pT_llMEt", "Smin_lltautau",
-      "mTauTauVis", "ptTauTauVis_sel", "diHiggsVisMass", "diHiggsMass"
+      "mTauTauVis", "ptTauTauVis", "diHiggsVisMass", "diHiggsMass",
+      "logTopness_publishedChi2", "logTopness_fixedChi2"
     );
     bdt_filler->register_variable<int_type>(
       "nJet", "nBJet_loose", "nBJet_medium",
@@ -1807,7 +1808,7 @@ int main(int argc, char* argv[])
       met.p4().px(),        met.p4().py()
     );
     const double logTopness_publishedChi2 =
-      topness_publishedChi2.isValidSolution() ? topness_publishedChi2.logTopness() : -1.
+      topness_publishedChi2.isValidSolution() ? topness_publishedChi2.logTopness() : -99.
     ;
     Topness topness_fixedChi2(Topness::kFixedChi2);
     topness_fixedChi2.fit(
@@ -1816,7 +1817,7 @@ int main(int argc, char* argv[])
       met.p4().px(),        met.p4().py()
     );
     const double logTopness_fixedChi2 =
-      topness_fixedChi2.isValidSolution() ? topness_fixedChi2.logTopness() : -1.
+      topness_fixedChi2.isValidSolution() ? topness_fixedChi2.logTopness() : -99.
     ;
 
     if(bdt_filler)
@@ -1851,7 +1852,7 @@ int main(int argc, char* argv[])
           ("HT",                       HT)
           ("STMET",                    STMET)
           ("m_ll",                     ll_p4.mass())
-          ("pt_ll",                    ll_p4.pt())
+          ("pT_ll",                    ll_p4.pt())
           ("pT_llMEt",                 (ll_p4 + met.p4()).pt())
           ("Smin_llMEt",               Smin_llMEt)
           ("Smin_lltautau",            Smin_lltautau)
