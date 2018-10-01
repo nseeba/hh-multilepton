@@ -15,5 +15,7 @@ for sample_name, sample_info in samples_2017.items():
         "TTToHadronic_PSweights",
       ]:
     sample_info["use_it"] = True
+  elif sample_info["process_name_specific"].startswith("DY"):
+    sample_info["use_it"] = True
   else:
     sample_info["use_it"] = False
