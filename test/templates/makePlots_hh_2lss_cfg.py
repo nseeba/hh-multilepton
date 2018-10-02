@@ -2,7 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 from hhAnalysis.multilepton.configs.makePlots_cfi import process
 
-process.makePlots.distributions = cms.VPSet(
+process.makePlots.distributions.extend([
     cms.PSet(
         histogramName = cms.string('sel/electrons/$PROCESS/pt'),
         xMin = cms.double(20.),
@@ -112,6 +112,21 @@ process.makePlots.distributions = cms.VPSet(
         yAxisTitle = cms.string('dN/d#eta')
     ),
     cms.PSet(
+        histogramName = cms.string('sel/evt/$PROCESS/leptonPairMass'),
+        xAxisTitle = cms.string('m_{ll} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{ll} [1/GeV]')
+    ),
+   cms.PSet(
+        histogramName = cms.string('sel/evt/$PROCESS/electronPairMass'),
+        xAxisTitle = cms.string('m_{ee} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{ee} [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/evt/$PROCESS/muonPairMass'),
+        xAxisTitle = cms.string('m_{#mu#mu} [GeV]'),
+        yAxisTitle = cms.string('dN/dm_{#mu#mu} [1/GeV]')
+    ),
+    cms.PSet(
         histogramName = cms.string('sel/evt/$PROCESS/leptonPairCharge'),
         xAxisTitle = cms.string('lepton charge sum'),
         yAxisTitle = cms.string('N')
@@ -130,5 +145,5 @@ process.makePlots.distributions = cms.VPSet(
         histogramName = cms.string('sel/evt/$PROCESS/jetMass'),
         xAxisTitle = cms.string('m_{jjjj} [GeV]'),
         yAxisTitle = cms.string('dN/dm_{jjjj} [1/GeV]')
-    ),
-)
+    )
+])

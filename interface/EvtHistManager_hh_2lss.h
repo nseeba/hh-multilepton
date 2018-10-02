@@ -33,6 +33,9 @@ public:
 		 double dihiggsVisMass,
 		 double dihiggsMass_wMet,
 		 double jetMass,
+		 double leptonPairMass,
+		 double electronPairMass,
+		 double muonPairMass,
 		 double leptonPairCharge,
 		 double HT,
 		 double STMET,
@@ -49,6 +52,9 @@ public:
   TH1 * histogram_dihiggsVisMass_;
   TH1 * histogram_dihiggsMass_wMet_;
   TH1 * histogram_jetMass_;
+  TH1 * histogram_leptonPairMass_;
+  TH1 * histogram_electronPairMass_;
+  TH1 * histogram_muonPairMass_;
   TH1 * histogram_leptonPairCharge_;
   TH1 * histogram_HT_;
   TH1 * histogram_STMET_;

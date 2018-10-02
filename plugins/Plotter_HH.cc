@@ -154,7 +154,7 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     }else if ( process.find("W") != std::string::npos ) {
       histogramW = histogramBackground;
       histogramW_density = histogramBackground_density;
-    }else if ( process.find("Flips") != std::string::npos ) {
+    }else if ( process.find("Flips") != std::string::npos || process.find("flips") != std::string::npos ) {
       histogramFlips = histogramBackground;
       histogramFlips_density = histogramBackground_density;
     }
