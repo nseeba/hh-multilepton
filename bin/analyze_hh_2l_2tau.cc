@@ -1875,6 +1875,8 @@ int main(int argc, char* argv[])
           ("lep2_charge",              selLepton_sublead->charge())
           ("logTopness_publishedChi2", logTopness_publishedChi2)
           ("logTopness_fixedChi2",     logTopness_fixedChi2)
+          ("genWeight",                eventInfo.genWeight)
+          ("evtWeight",                evtWeight)
         .fill()
       ;
     }
