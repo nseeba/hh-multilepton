@@ -470,6 +470,9 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
                     self.outputFile_hadd_stage1[key_hadd_stage1] = os.path.join(self.dirs[DKEY_HIST], "histograms_harvested_stage1_%s_%s_%s_%s_%s_%s.root" % \
                       (self.channel, process_name, lepton_charge_selection, hadTau_charge_selection, lepton_and_hadTau_selection_and_frWeight, chargeSumSelection))
 
+                    if self.isBDTtraining:
+                      self.targets.append(self.outputFile_hadd_stage1[key_hadd_stage1])
+
                 if self.isBDTtraining:
                   continue
 
@@ -717,18 +720,18 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
           fitparam_nom_dihiggsMass  = [2.68, -0.0001]
           fitrange_alt0_dihiggsMass = [500., 1500.]
           fitparam_alt0_dihiggsMass = [2.2, 0.001, 0.0001, 0.001]
-          fitrange_nom_dihiggsVisMass  = [300., 1500.]                                                                                                                                                                                                        
+          fitrange_nom_dihiggsVisMass  = [300., 1500.]
           fitparam_nom_dihiggsVisMass  = [0.8, -0.001]
-          fitrange_alt0_dihiggsVisMass = [300., 1500.]                                                                                                                                                                                                       
-          fitparam_alt0_dihiggsVisMass = [0.01, -0.01]      
-          fitrange_nom_STMET  = [350., 1500.]                                                                                                                                                                                                        
-          fitparam_nom_STMET  = [0.002, -0.01]                                                                                                                                                                                                       
-          fitrange_alt0_STMET = [350., 1500.]                                                                                                                                                                                                        
-          fitparam_alt0_STMET = [0.1, 0.01]   
-          fitrange_nom_HT  = [300., 1500.]                                                                                                                                                                                               
-          fitparam_nom_HT  = [0.7, -0.0001]                                                                                                                                                                                              
-          fitrange_alt0_HT = [300., 1500.]                                                                                                                                                                                               
-          fitparam_alt0_HT = [0.05, 0.01]         
+          fitrange_alt0_dihiggsVisMass = [300., 1500.]
+          fitparam_alt0_dihiggsVisMass = [0.01, -0.01]
+          fitrange_nom_STMET  = [350., 1500.]
+          fitparam_nom_STMET  = [0.002, -0.01]
+          fitrange_alt0_STMET = [350., 1500.]
+          fitparam_alt0_STMET = [0.1, 0.01]
+          fitrange_nom_HT  = [300., 1500.]
+          fitparam_nom_HT  = [0.7, -0.0001]
+          fitrange_alt0_HT = [300., 1500.]
+          fitparam_alt0_HT = [0.05, 0.01]
           fitrange_nom_mTauTauVis  = [90., 200.]
           fitparam_nom_mTauTauVis  = [1.0, -0.01]
           fitrange_alt0_mTauTauVis = [90., 200.]
@@ -768,8 +771,8 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
           self.createCfg_addTailFits(self.jobOptions_addTailFits[key_addTailFits_job])
           key_hadd_stage2 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
           self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addTailFits[key_addTailFits_job]['outputFile'])
-          
-          
+
+
     logging.info("Creating configuration files to run 'prepareDatacards'")
     self.central_or_shifts.extend(["EigenVec_1Up",  "EigenVec_1Down", "EigenVec_2Up", "EigenVec_2Down", "fit_bias_Syst", "FitSystUp", "FitSystDown", "original"])
     for lepton_charge_selection in self.lepton_charge_selections:
