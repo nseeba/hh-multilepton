@@ -569,6 +569,9 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
                     self.outputFile_hadd_stage1[key_hadd_stage1] = os.path.join(self.dirs[DKEY_HIST], "histograms_harvested_stage1_%s_%s_%s_%s_%s_%s.root" % \
                       (self.channel, process_name, lepton_charge_selection, hadTau_charge_selection, lepton_and_hadTau_selection_and_frWeight, chargeSumSelection))
 
+                    if self.isBDTtraining:
+                      self.targets.append(self.outputFile_hadd_stage1[key_hadd_stage1])
+
                 if self.isBDTtraining:
                   continue
 
@@ -867,8 +870,8 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
           self.createCfg_addTailFits(self.jobOptions_addTailFits[key_addTailFits_job])
           key_hadd_stage2 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
           self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addTailFits[key_addTailFits_job]['outputFile'])
-          
-          
+
+
     logging.info("Creating configuration files to run 'prepareDatacards'")
     self.central_or_shifts.extend(["EigenVec_1Up",  "EigenVec_1Down", "EigenVec_2Up", "EigenVec_2Down", "fit_bias_Syst", "FitSystUp", "FitSystDown", "original"])
     for lepton_charge_selection in self.lepton_charge_selections:
