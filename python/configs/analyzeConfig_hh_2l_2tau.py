@@ -679,60 +679,63 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     for lepton_charge_selection in self.lepton_charge_selections:
       for hadTau_charge_selection in self.hadTau_charge_selections:
         for chargeSumSelection in self.chargeSumSelections:
-          for histogramToFit in self.histograms_to_fit:
-            if histogramToFit not in ["mTauTauVis", "dihiggsMass", "dihiggsVisMass", "STMET", "HT"]:
-              continue
-            fitrange_nom  = None
-            fitrange_alt0 = None
-            fitparam_nom  = None
-            fitparam_alt0 = None
-            if histogramToFit == "dihiggsMass":
-              fitrange_nom  = [500., 1500.]
-              fitparam_nom  = [2.68, -0.0001]
-              fitrange_alt0 = [500., 1500.]
-              fitparam_alt0 = [2.2, 0.001, 0.0001, 0.001]
-            if histogramToFit == "dihiggsVisMass":
-              fitrange_nom  = [300., 1500.]
-              fitparam_nom  = [0.8, -0.001]
-              fitrange_alt0 = [300., 1500.]
-              fitparam_alt0 = [0.01, -0.01]
-            if histogramToFit == "STMET":
-              fitrange_nom  = [350., 1500.]
-              fitparam_nom  = [0.002, -0.01]
-              fitrange_alt0 = [350., 1500.]
-              fitparam_alt0 = [0.1, 0.01]
-            if histogramToFit == "HT":
-              fitrange_nom  = [300., 1500.]
-              fitparam_nom  = [0.7, -0.0001]
-              fitrange_alt0 = [300., 1500.]
-              fitparam_alt0 = [0.05, 0.01]
-            if histogramToFit == "mTauTauVis":
-              fitrange_nom  = [90., 200.]
-              fitparam_nom  = [1.0, -0.01]
-              fitrange_alt0 = [90., 200.]
-              fitparam_alt0 = [1.0, 0.1, 0.01, 0.001]
-            key_addTailFits_job = getKey(lepton_charge_selection, hadTau_charge_selection, chargeSumSelection, histogramToFit)
-            key_addFakes_job = getKey(lepton_charge_selection, hadTau_charge_selection, "fakes_data", chargeSumSelection)
-            self.jobOptions_addTailFits[key_addTailFits_job] = {
-              'inputFile' : self.jobOptions_addFakes[key_addFakes_job]['outputFile'],
-              'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_TailFit_%s_%s_%s_%s_%s_cfg.py" % \
-                                                  (self.channel, lepton_charge_selection, hadTau_charge_selection, chargeSumSelection, histogramToFit)),
-              'outputFile' : os.path.join(self.dirs[DKEY_HIST], "addBackgrounds_TailFit_%s_%s_%s_%s_%s.root" % \
-                                            (self.channel, lepton_charge_selection, hadTau_charge_selection, chargeSumSelection, histogramToFit)),
-              'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgrounds_TailFit_%s_%s_%s_%s_%s.log" % \
-                                         (self.channel, lepton_charge_selection, hadTau_charge_selection, chargeSumSelection, histogramToFit)),
-              'inputDir' : getHistogramDir("Tight", "Tight", "disabled", lepton_charge_selection, hadTau_charge_selection, chargeSumSelection),
-              'histogramName' : histogramToFit,
-              'fitrange_nom'  : fitrange_nom,
-              'fitparam_nom'  : fitparam_nom,
-              'fitrange_alt0' : fitrange_alt0,
-              'fitparam_alt0' : fitparam_alt0,
-              }
-            self.createCfg_addTailFits(self.jobOptions_addTailFits[key_addTailFits_job])
-            key_hadd_stage2 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
-            self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addTailFits[key_addTailFits_job]['outputFile'])
-
-
+          fitrange_nom_dihiggsMass  = [500., 1500.]
+          fitparam_nom_dihiggsMass  = [2.68, -0.0001]
+          fitrange_alt0_dihiggsMass = [500., 1500.]
+          fitparam_alt0_dihiggsMass = [2.2, 0.001, 0.0001, 0.001]
+          fitrange_nom_dihiggsVisMass  = [300., 1500.]                                                                                                                                                                                                        
+          fitparam_nom_dihiggsVisMass  = [0.8, -0.001]
+          fitrange_alt0_dihiggsVisMass = [300., 1500.]                                                                                                                                                                                                       
+          fitparam_alt0_dihiggsVisMass = [0.01, -0.01]      
+          fitrange_nom_STMET  = [350., 1500.]                                                                                                                                                                                                        
+          fitparam_nom_STMET  = [0.002, -0.01]                                                                                                                                                                                                       
+          fitrange_alt0_STMET = [350., 1500.]                                                                                                                                                                                                        
+          fitparam_alt0_STMET = [0.1, 0.01]   
+          fitrange_nom_HT  = [300., 1500.]                                                                                                                                                                                               
+          fitparam_nom_HT  = [0.7, -0.0001]                                                                                                                                                                                              
+          fitrange_alt0_HT = [300., 1500.]                                                                                                                                                                                               
+          fitparam_alt0_HT = [0.05, 0.01]         
+          fitrange_nom_mTauTauVis  = [90., 200.]
+          fitparam_nom_mTauTauVis  = [1.0, -0.01]
+          fitrange_alt0_mTauTauVis = [90., 200.]
+          fitparam_alt0_mTauTauVis = [1.0, 0.1, 0.01, 0.001]
+          key_addTailFits_job = getKey(lepton_charge_selection, hadTau_charge_selection, chargeSumSelection)
+          key_addFakes_job = getKey(lepton_charge_selection, hadTau_charge_selection, "fakes_data", chargeSumSelection)
+          self.jobOptions_addTailFits[key_addTailFits_job] = {
+            'inputFile' : self.jobOptions_addFakes[key_addFakes_job]['outputFile'],
+            'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_TailFit_%s_%s_%s_%s_cfg.py" % \
+                                                (self.channel, lepton_charge_selection, hadTau_charge_selection, chargeSumSelection)),
+            'outputFile' : os.path.join(self.dirs[DKEY_HIST], "addBackgrounds_TailFit_%s_%s_%s_%s.root" % \
+                                          (self.channel, lepton_charge_selection, hadTau_charge_selection, chargeSumSelection)),
+            'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgrounds_TailFit_%s_%s_%s_%s.log" % \
+                                       (self.channel, lepton_charge_selection, hadTau_charge_selection, chargeSumSelection)),
+            'inputDir' : getHistogramDir("Tight", "Tight", "disabled", lepton_charge_selection, hadTau_charge_selection, chargeSumSelection),
+            'fitrange_nom_dihiggsMass'  : fitrange_nom_dihiggsMass,
+            'fitparam_nom_dihiggsMass'  : fitparam_nom_dihiggsMass,
+            'fitrange_alt0_dihiggsMass' : fitrange_alt0_dihiggsMass,
+            'fitparam_alt0_dihiggsMass' : fitparam_alt0_dihiggsMass,
+            'fitrange_nom_dihiggsVisMass'  : fitrange_nom_dihiggsVisMass,
+            'fitparam_nom_dihiggsVisMass'  : fitparam_nom_dihiggsVisMass,
+            'fitrange_alt0_dihiggsVisMass' : fitrange_alt0_dihiggsVisMass,
+            'fitparam_alt0_dihiggsVisMass' : fitparam_alt0_dihiggsVisMass,
+            'fitrange_nom_STMET'  : fitrange_nom_STMET,
+            'fitparam_nom_STMET'  : fitparam_nom_STMET,
+            'fitrange_alt0_STMET' : fitrange_alt0_STMET,
+            'fitparam_alt0_STMET' : fitparam_alt0_STMET,
+            'fitrange_nom_HT'  : fitrange_nom_HT,
+            'fitparam_nom_HT'  : fitparam_nom_HT,
+            'fitrange_alt0_HT' : fitrange_alt0_HT,
+            'fitparam_alt0_HT' : fitparam_alt0_HT,
+            'fitrange_nom_mTauTauVis'  : fitrange_nom_mTauTauVis,
+            'fitparam_nom_mTauTauVis'  : fitparam_nom_mTauTauVis,
+            'fitrange_alt0_mTauTauVis' : fitrange_alt0_mTauTauVis,
+            'fitparam_alt0_mTauTauVis' : fitparam_alt0_mTauTauVis
+            }
+          self.createCfg_addTailFits(self.jobOptions_addTailFits[key_addTailFits_job])
+          key_hadd_stage2 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
+          self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addTailFits[key_addTailFits_job]['outputFile'])
+          
+          
     logging.info("Creating configuration files to run 'prepareDatacards'")
     self.central_or_shifts.extend(["EigenVec_1Up",  "EigenVec_1Down", "EigenVec_2Up", "EigenVec_2Down", "fit_bias_Syst", "FitSystUp", "FitSystDown", "original"])
     for lepton_charge_selection in self.lepton_charge_selections:
