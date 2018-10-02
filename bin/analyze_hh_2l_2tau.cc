@@ -786,11 +786,13 @@ int main(int argc, char* argv[])
       "met", "mht", "met_LD", "HT", "STMET",
       "Smin_llMEt", "m_ll", "pT_ll", "pT_llMEt", "Smin_lltautau",
       "mTauTauVis", "ptTauTauVis", "diHiggsVisMass", "diHiggsMass",
-      "logTopness_publishedChi2", "logTopness_fixedChi2"
+      "logTopness_publishedChi2", "logTopness_fixedChi2",
+      "genWeight", "evtWeight",
     );
     bdt_filler->register_variable<int_type>(
       "nJet", "nBJet_loose", "nBJet_medium",
-      "lep1_isElectron", "lep1_charge", "lep2_isElectron", "lep2_charge"
+      "lep1_isElectron", "lep1_charge", "lep2_isElectron", "lep2_charge",
+      "nElectron", "nMuon"
     );
     bdt_filler->bookTree(fs);
   }
@@ -1877,6 +1879,8 @@ int main(int argc, char* argv[])
           ("logTopness_fixedChi2",     logTopness_fixedChi2)
           ("genWeight",                eventInfo.genWeight)
           ("evtWeight",                evtWeight)
+          ("nElectron",                selElectrons.size())
+          ("nMuon",                    selMuons.size())
         .fill()
       ;
     }
