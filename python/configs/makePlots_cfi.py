@@ -74,7 +74,6 @@ process.makePlots = cms.PSet(
             fakes_data = cms.string("1.0 +/- 0.20"),
             flips_data = cms.string("1.0 +/- 0.20"),
             conversions = cms.string("1.0 +/- 0.20"),
-#            signal_ggf_spin0_400_hh = cms.string("1.0 +/- 0.20"),
             signal_spin0_400_hh = cms.string("1.0 +/- 0.20"),
         ),
         shape = cms.PSet(

@@ -944,9 +944,9 @@ int main(int argc, char* argv[])
 		  int count = 0;
 		  for(std::vector<FitFuncEntryType*>::const_iterator func_iter =  vec_alt_fit_funcs.begin(); 
 		      func_iter != vec_alt_fit_funcs.end(); func_iter++){
-		    TFitResultPtr fitResult = histo_to_fit->Fit((*func_iter)->GetFitFunction(), "EOSR");
-		    if(fitResult->IsValid()){
-		      fitResult_vect.push_back(fitResult);
+        TFitResultPtr fitResult_alt = histo_to_fit->Fit((*func_iter)->GetFitFunction(), "EOSR");
+        if(fitResult_alt->IsValid()){
+          fitResult_vect.push_back(fitResult_alt);
 		      TH1* alt_fit_histo = GetHistofromFunc(histogramLeptonFakes, (*func_iter)->GetFitFunction(), (*func_iter)->GetXmin()); // Using the original binned histogram
 		      // std::string histo_name3 = Form("%s_alt_fitFunc_%i", histo_name.data(), counter);
 		      std::string histo_name3 = Form("alt_fitFunc_%i_%s", counter, histo_name.data());

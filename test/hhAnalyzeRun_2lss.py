@@ -115,6 +115,7 @@ if __name__ == '__main__':
     num_parallel_jobs                     = num_parallel_jobs,
     executable_addBackgrounds             = "addBackgrounds",
     executable_addFakes                   = "addBackgroundLeptonFakes",
+    executable_addFlips                   = "addBackgroundLeptonFlips",
     histograms_to_fit                     = {
       "EventCounter"                      : {},
       "numJets"                           : {},
