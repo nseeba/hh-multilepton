@@ -1802,20 +1802,26 @@ int main(int argc, char* argv[])
     const RecoJet * selBJet_sublead = selJets_btag.size() > 1 ? selJets_btag.at(1) : nullptr;
 
     Topness topness_publishedChi2(Topness::kPublishedChi2);
-    topness_publishedChi2.fit(
-      selLepton_lead->p4(), selLepton_sublead->p4(),
-      selBJet_lead->p4(),   selBJet_sublead->p4(),
-      met.p4().px(),        met.p4().py()
-    );
+    if(selBJet_lead && selBJet_sublead)
+    {
+      topness_publishedChi2.fit(
+        selLepton_lead->p4(), selLepton_sublead->p4(),
+        selBJet_lead->p4(),   selBJet_sublead->p4(),
+        met.p4().px(),        met.p4().py()
+      );
+    }
     const double logTopness_publishedChi2 =
       topness_publishedChi2.isValidSolution() ? topness_publishedChi2.logTopness() : -99.
     ;
     Topness topness_fixedChi2(Topness::kFixedChi2);
-    topness_fixedChi2.fit(
-      selLepton_lead->p4(), selLepton_sublead->p4(),
-      selBJet_lead->p4(),   selBJet_sublead->p4(),
-      met.p4().px(),        met.p4().py()
-    );
+    if(selBJet_lead && selBJet_sublead)
+    {
+      topness_fixedChi2.fit(
+        selLepton_lead->p4(), selLepton_sublead->p4(),
+        selBJet_lead->p4(),   selBJet_sublead->p4(),
+        met.p4().px(),        met.p4().py()
+      );
+    }
     const double logTopness_fixedChi2 =
       topness_fixedChi2.isValidSolution() ? topness_fixedChi2.logTopness() : -99.
     ;
