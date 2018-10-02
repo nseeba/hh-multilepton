@@ -100,7 +100,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     )
 
     self.samples = samples
-
     self.lepton_and_hadTau_selections = [ "Tight", "Fakeable" ]
     self.lepton_and_hadTau_frWeights = [ "enabled", "disabled" ]
     self.hadTau_selection_part2 = hadTau_selection
@@ -194,6 +193,10 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     self.select_rle_output = select_rle_output
     self.use_nonnominal = use_nonnominal
     self.hlt_filter = hlt_filter
+    self.cfgFile_addTailFits = os.path.join(self.template_dir, "addBackgrounds_TailFit_cfg.py")             
+    self.jobOptions_addTailFits = {} 
+    self.num_jobs['addTailFits'] = 0
+
 
   def set_BDT_training(self, hadTau_selection_relaxed):
     """Run analysis with loose selection criteria for leptons and hadronic taus,
@@ -254,6 +257,102 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
 
     lines = super(analyzeConfig_hh_2l_2tau, self).createCfg_analyze(jobOptions, sample_info)
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
+
+
+  def createCfg_addTailFits(self, jobOptions):
+      """Create python configuration file for the addBackgrounds_TailFit executable (Tail Fitting of histograms)                                                                                                                                
+      Args:                                                                                                                                                                                                                                          
+      inputFiles: input file (the ROOT file produced by hadd_stage1)                                                                                                                                                                                 
+      outputFile: output file of the job                                                                                                                                                                                                               
+      """
+      lines = []
+      lines.append("process.fwliteInput.fileNames = cms.vstring('%s')" % jobOptions['inputFile'])
+      lines.append("process.fwliteOutput.fileName = cms.string('%s')" % os.path.basename(jobOptions['outputFile']))
+      lines.append("process.addBackgrounds_TailFit.categories = cms.VPSet(")
+      lines.append("     cms.PSet(")
+      lines.append("         inputDir = cms.string('%s')," % os.path.basename(jobOptions['inputDir']))
+      lines.append("         outputDir = cms.string('%s')," % os.path.basename(jobOptions['inputDir']))
+      lines.append("         ),")
+      lines.append(")")
+      lines.append("process.addBackgrounds_TailFit.HistogramsToTailFit = cms.VPSet(")
+      lines.append("     cms.PSet(")
+      lines.append("         name = cms.string('%s')," % "dihiggsMass")
+      lines.append("         nominal_fit_func = cms.PSet(")
+      lines.append("            FitfuncName   = cms.string('%s')," % "Exponential")
+      lines.append("            FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_nom_dihiggsMass'])
+      lines.append("            FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_nom_dihiggsMass'])
+      lines.append("            ),")
+      lines.append("         alternate_fit_funcs = cms.VPSet(")
+      lines.append("            cms.PSet(")
+      lines.append("                FitfuncName   = cms.string('%s')," % "LegendrePolynomial3")
+      lines.append("                FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_alt0_dihiggsMass'])
+      lines.append("                FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_alt0_dihiggsMass'])
+      lines.append("                ),")
+      lines.append("         )")
+      lines.append("     ),")
+      lines.append("     cms.PSet(")
+      lines.append("         name = cms.string('%s')," % "dihiggsVisMass")
+      lines.append("         nominal_fit_func = cms.PSet(")
+      lines.append("            FitfuncName   = cms.string('%s')," % "Exponential")
+      lines.append("            FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_nom_dihiggsVisMass'])
+      lines.append("            FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_nom_dihiggsVisMass'])
+      lines.append("            ),")
+      lines.append("         alternate_fit_funcs = cms.VPSet(")
+      lines.append("            cms.PSet(")
+      lines.append("                FitfuncName   = cms.string('%s')," % "LegendrePolynomial1")
+      lines.append("                FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_alt0_dihiggsVisMass'])
+      lines.append("                FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_alt0_dihiggsVisMass'])
+      lines.append("                ),")
+      lines.append("         )")
+      lines.append("     ),")         
+      lines.append("     cms.PSet(")
+      lines.append("         name = cms.string('%s')," % "STMET")
+      lines.append("         nominal_fit_func = cms.PSet(")
+      lines.append("            FitfuncName   = cms.string('%s')," % "Exponential")
+      lines.append("            FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_nom_STMET'])
+      lines.append("            FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_nom_STMET'])
+      lines.append("            ),")
+      lines.append("         alternate_fit_funcs = cms.VPSet(")
+      lines.append("            cms.PSet(")
+      lines.append("                FitfuncName   = cms.string('%s')," % "LegendrePolynomial1")
+      lines.append("                FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_alt0_STMET'])
+      lines.append("                FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_alt0_STMET'])
+      lines.append("                ),")
+      lines.append("         )")
+      lines.append("     ),")
+      lines.append("     cms.PSet(")
+      lines.append("         name = cms.string('%s')," % "HT")
+      lines.append("         nominal_fit_func = cms.PSet(")
+      lines.append("            FitfuncName   = cms.string('%s')," % "Exponential")
+      lines.append("            FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_nom_HT'])
+      lines.append("            FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_nom_HT'])
+      lines.append("            ),")
+      lines.append("         alternate_fit_funcs = cms.VPSet(")
+      lines.append("            cms.PSet(")
+      lines.append("                FitfuncName   = cms.string('%s')," % "LegendrePolynomial1")
+      lines.append("                FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_alt0_HT'])
+      lines.append("                FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_alt0_HT'])
+      lines.append("                ),")
+      lines.append("         )")
+      lines.append("     ),")
+      lines.append("     cms.PSet(")
+      lines.append("         name = cms.string('%s')," % "mTauTauVis")
+      lines.append("         nominal_fit_func = cms.PSet(")
+      lines.append("            FitfuncName   = cms.string('%s')," % "Exponential")
+      lines.append("            FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_nom_mTauTauVis'])
+      lines.append("            FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_nom_mTauTauVis'])
+      lines.append("            ),")
+      lines.append("         alternate_fit_funcs = cms.VPSet(")
+      lines.append("            cms.PSet(")
+      lines.append("                FitfuncName   = cms.string('%s')," % "LegendrePolynomial3")
+      lines.append("                FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_alt0_mTauTauVis'])
+      lines.append("                FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_alt0_mTauTauVis'])
+      lines.append("                ),")
+      lines.append("         )")
+      lines.append("     ),")
+      lines.append(")")
+      create_cfg(self.cfgFile_addTailFits, jobOptions['cfgFile_modified'], lines)
+
 
   def addToMakefile_backgrounds_from_data(self, lines_makefile):
     self.addToMakefile_addBackgrounds(lines_makefile, "sbatch_addBackgrounds", self.sbatchFile_addBackgrounds, self.jobOptions_addBackgrounds)
@@ -713,13 +812,13 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     for lepton_charge_selection in self.lepton_charge_selections:
       for hadTau_charge_selection in self.hadTau_charge_selections:
         for chargeSumSelection in self.chargeSumSelections:
-          fitrange_nom_dihiggsMass  = [500., 1500.]
-          fitparam_nom_dihiggsMass  = [2.68, -0.0001]
-          fitrange_alt0_dihiggsMass = [500., 1500.]
-          fitparam_alt0_dihiggsMass = [2.2, 0.001, 0.0001, 0.001]
-          fitrange_nom_dihiggsVisMass  = [300., 1500.]                                                                                                                                                                                                        
+          fitrange_nom_dihiggsMass  = [350., 1500.]
+          fitparam_nom_dihiggsMass  = [1.0, -0.1]
+          fitrange_alt0_dihiggsMass = [350., 1500.]
+          fitparam_alt0_dihiggsMass = [1.0, 0.001, 0.0001, 0.001]
+          fitrange_nom_dihiggsVisMass  = [300., 1500.]                                                                                                                                                                                         
           fitparam_nom_dihiggsVisMass  = [0.8, -0.001]
-          fitrange_alt0_dihiggsVisMass = [300., 1500.]                                                                                                                                                                                                       
+          fitrange_alt0_dihiggsVisMass = [300., 1500.]                                                                                                                                                                                          
           fitparam_alt0_dihiggsVisMass = [0.01, -0.01]      
           fitrange_nom_STMET  = [350., 1500.]                                                                                                                                                                                                        
           fitparam_nom_STMET  = [0.002, -0.01]                                                                                                                                                                                                       
