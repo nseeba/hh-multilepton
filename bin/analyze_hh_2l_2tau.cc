@@ -787,7 +787,7 @@ int main(int argc, char* argv[])
       "Smin_llMEt", "m_ll", "pT_ll", "pT_llMEt", "Smin_lltautau",
       "mTauTauVis", "ptTauTauVis", "diHiggsVisMass", "diHiggsMass",
       "logTopness_publishedChi2", "logTopness_fixedChi2",
-      "genWeight", "evtWeight",
+      "genWeight", "evtWeight"
     );
     bdt_filler->register_variable<int_type>(
       "nJet", "nBJet_loose", "nBJet_medium",
