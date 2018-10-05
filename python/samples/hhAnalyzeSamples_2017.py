@@ -1,4 +1,4 @@
-from tthAnalysis.HiggsToTauTau.samples.tthAnalyzeSamples_2017 import samples_2017 as samples_2017_general
+from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_bkg import samples_2017 as samples_2017_general
 from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_hh_private import samples_2017 as samples_2017_hh_private
 
 import collections
@@ -16,7 +16,7 @@ for sample_name, sample_info in samples_2017.items():
   if not isinstance(sample_info, OD):
     continue
 
-  if sample_name.startswith('/HHTo'):
+  if sample_info["process_name_specific"].startswith('signal') and 'hh' in sample_info["process_name_specific"]:
     sample_info["use_it"] = True
 
   if sample_name.startswith('/ZZ'):

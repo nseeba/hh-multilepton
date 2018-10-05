@@ -450,8 +450,8 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
                 self.outputFile_hadd_stage1[key_hadd_stage1] = os.path.join(self.dirs[DKEY_HIST], "histograms_harvested_stage1_%s_%s_%s_%s.root" % \
                   (self.channel, process_name, lepton_selection_and_frWeight, leptonChargeSelection))
 
-            if self.isBDTtraining or self.do_sync:
-              continue
+            # if self.isBDTtraining or self.do_sync:
+            #   continue
 
             if is_mc:
               logging.info("Creating configuration files to run 'addBackgrounds' for sample %s" % process_name)
