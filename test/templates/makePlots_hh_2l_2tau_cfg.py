@@ -44,7 +44,7 @@ process.makePlots.distributions.extend([
     ),
     cms.PSet(
         histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsVisMass1'), ## set to dihiggsVisMass1 from dihiggsVisMass
-        xAxisTitle = cms.string('m_{HH}^{vis} [GeV]'),
+        xAxisTitle = cms.string('m_{HH}^{Vis1} [GeV]'),
         yAxisTitle = cms.string('dN/dm_{HH}^{vis} [1/GeV]')
     ),
     cms.PSet(
@@ -64,17 +64,17 @@ process.makePlots.distributions.extend([
     ),
     cms.PSet(
         histogramName = cms.string('sel/evt/$PROCESS/dihiggsVisMass'),
-        xAxisTitle = cms.string('m_{HH} [GeV]'),
+        xAxisTitle = cms.string('m_{HH}^{Vis} [GeV]'),
         yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
     ),
     cms.PSet(
         histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsVisMass2'),
-        xAxisTitle = cms.string('m_{HH}^{vis} [GeV]'),
+        xAxisTitle = cms.string('m_{HH}^{Vis2} [GeV]'),
         yAxisTitle = cms.string('dN/dm_{HH}^{vis} [1/GeV]')
     ),
     cms.PSet(
         histogramName = cms.string('sel/svFit4tau_wMassConstraint/$PROCESS/dihiggsMass1'),
-        xAxisTitle = cms.string('m_{HH} [GeV]'),
+        xAxisTitle = cms.string('m_{HH}^({1)} [GeV]'),
         yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
     ),
     cms.PSet(
@@ -102,4 +102,29 @@ process.makePlots.distributions.extend([
         xAxisTitle = cms.string('m_{H}^{(2)} [GeV]'),
         yAxisTitle = cms.string('dN/dm_{H}^{(2)} [1/GeV]')
     ),
+    cms.PSet(
+        histogramName = cms.string('sel/met/$PROCESS/met_LD'),
+        xAxisTitle = cms.string('MET_LD [GeV]'),
+        yAxisTitle = cms.string('dN/dMET_LD [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/met/$PROCESS/met_pt'),
+        xAxisTitle = cms.string('MET [GeV]'),
+        yAxisTitle = cms.string('dN/dMET [1/GeV]')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/met/$PROCESS/mht_pt'),
+        xAxisTitle = cms.string('MHT [GeV]'),
+        yAxisTitle = cms.string('dN/dMHT [1/GeV]')
+    ),
+#    cms.PSet(
+#        histogramName = cms.string('sel/met/$PROCESS/mht_phi'),
+#        xAxisTitle = cms.string('#phi_{MHT} [rad]'),
+#        yAxisTitle = cms.string('dN/d#phi_{MHT} [1/rad]')
+#    ),
+#    cms.PSet(
+#        histogramName = cms.string('sel/met/$PROCESS/met_phi'),
+#        xAxisTitle = cms.string('#phi_{MET} [rad]'),
+#        yAxisTitle = cms.string('dN/d#phi_{MET} [1/rad]')
+#    ),
 ])

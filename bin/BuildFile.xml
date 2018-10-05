@@ -12,7 +12,7 @@
   <use   name="root"/>
   <use   name="roottmva"/>
   <use   name="boost"/>
-  <Flags CXXFLAGS="-g"/>
+  <Flags CXXFLAGS="-g -Wshadow -Werror"/>
 </bin>
 <bin file="analyze_hh_1l_3tau.cc" name="analyze_hh_1l_3tau">
   <use   name="FWCore/FWLite"/>
@@ -28,7 +28,7 @@
   <use   name="root"/>
   <use   name="roottmva"/>
   <use   name="boost"/>
-  <Flags CXXFLAGS="-g"/>
+  <Flags CXXFLAGS="-g -Wshadow -Werror"/>
 </bin>
 <bin file="analyze_hh_2l_2tau.cc" name="analyze_hh_2l_2tau">
   <use   name="FWCore/FWLite"/>
@@ -44,7 +44,7 @@
   <use   name="root"/>
   <use   name="roottmva"/>
   <use   name="boost"/>
-  <Flags CXXFLAGS="-g"/>
+  <Flags CXXFLAGS="-g -Wshadow -Werror"/>
 </bin>
 <bin file="analyze_hh_3l_1tau.cc" name="analyze_hh_3l_1tau">
   <use   name="FWCore/FWLite"/>
@@ -60,7 +60,7 @@
   <use   name="root"/>
   <use   name="roottmva"/>
   <use   name="boost"/>
-  <Flags CXXFLAGS="-g"/>
+  <Flags CXXFLAGS="-g -Wshadow -Werror"/>
 </bin>
 <bin file="analyze_hh_4l.cc" name="analyze_hh_4l">
   <use   name="FWCore/FWLite"/>
@@ -76,7 +76,7 @@
   <use   name="root"/>
   <use   name="roottmva"/>
   <use   name="boost"/>
-  <Flags CXXFLAGS="-g"/>
+  <Flags CXXFLAGS="-g -Wshadow -Werror"/>
 </bin>
 <bin file="analyze_SVfit4tau.cc" name="analyze_SVfit4tau">
   <use   name="FWCore/FWLite"/>
@@ -92,7 +92,7 @@
   <use   name="root"/>
   <use   name="roottmva"/>
   <use   name="boost"/>
-  <Flags CXXFLAGS="-g"/>
+  <Flags CXXFLAGS="-g -Wshadow -Werror"/>
 </bin>
 <bin file="addBackgrounds_TailFit.cc" name="addBackgrounds_TailFit">
   <use   name="FWCore/FWLite"/>
@@ -106,7 +106,7 @@
   <use   name="hhAnalysis/multilepton"/>
   <use   name="root"/>
   <use   name="roottmva"/>
-  <Flags CXXFLAGS="-g"/>
+  <Flags CXXFLAGS="-g -Wshadow -Werror -Wno-unused-function"/>
 </bin>
 <bin file="analyze_hh_2lss.cc" name="analyze_hh_2lss">
   <use   name="FWCore/FWLite"/>
@@ -121,7 +121,7 @@
   <use   name="root"/>
   <use   name="roottmva"/>
   <use   name="boost"/>
-  <Flags CXXFLAGS="-g"/>
+  <Flags CXXFLAGS="-g -Wshadow -Werror"/>
 </bin>
 <bin file="analyze_hh_3l.cc" name="analyze_hh_3l">
   <use   name="FWCore/FWLite"/>
@@ -136,5 +136,5 @@
   <use   name="root"/>
   <use   name="roottmva"/>
   <use   name="boost"/>
-  <Flags CXXFLAGS="-g"/>
+  <Flags CXXFLAGS="-g -Wshadow -Werror"/>
 </bin>

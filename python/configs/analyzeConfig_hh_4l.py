@@ -388,8 +388,8 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                     self.outputFile_hadd_stage1_5[key_hadd_stage1_5] = os.path.join(self.dirs[DKEY_HIST], "histograms_harvested_stage1_5_%s_%s_%s.root" % \
                      (self.channel, lepton_selection_and_frWeight, chargeSumSelection))
 
-            if self.isBDTtraining or self.do_sync:
-              continue
+            # if self.isBDTtraining or self.do_sync:
+            #   continue
 
             # add output files of hadd_stage1 for data to list of input files for hadd_stage1_5
             if not is_mc:
@@ -399,8 +399,8 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                 self.inputFiles_hadd_stage1_5[key_hadd_stage1_5] = []
               self.inputFiles_hadd_stage1_5[key_hadd_stage1_5].append(self.outputFile_hadd_stage1[key_hadd_stage1])
 
-          if self.isBDTtraining or self.do_sync:
-            continue
+          # if self.isBDTtraining or self.do_sync:
+          #   continue
 
           # sum fake background contributions for the total of all MC sample
           # input processes: TT3l0g1j, TT2l1g1j, TT1l2g1j, TT0l3g1j, TT0l2g2j,...
