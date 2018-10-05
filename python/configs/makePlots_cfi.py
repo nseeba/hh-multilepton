@@ -55,23 +55,6 @@ process.makePlots = cms.PSet(
             xAxisTitle = cms.string('S_{T}^{MET} [GeV]'),
             yAxisTitle = cms.string('dN/dS_{T}^{MET} [1/GeV]')
         ),
-       cms.PSet(
-           histogramName = cms.string('sel/evt/$PROCESS/dihiggsMass'),
-           xAxisTitle = cms.string('m_{HH} [GeV]'),
-           yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
-       ),
-        cms.PSet(
-            histogramName = cms.string('sel/evt/$PROCESS/dihiggsVisMass'),
-            xAxisTitle = cms.string('m_{HH} [GeV]'),
-            yAxisTitle = cms.string('dN/dm_{HH} [1/GeV]')
-        ),
-        cms.PSet(
-            histogramName = cms.string('sel/evt/$PROCESS/WTojjMass'),
-            xAxisTitle = cms.string('m_{jj} [GeV]'),
-            yAxisTitle = cms.string('dN/dm_{jj} [1/GeV]'),
-            #yMin = cms.double(0.0001),
-            #yMax = cms.double(1000)
-        ),
     ),
 
     nuisanceParameters = cms.PSet(
