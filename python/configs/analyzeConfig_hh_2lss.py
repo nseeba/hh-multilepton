@@ -183,15 +183,13 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
       "hh_GE_4j",   "hh_GE_6j_vbf",   "hh_GE_4j_nonvbf" ]
     self.category_inclusive = "hh_2lss"
 
-    #self.isBDTtraining = False
-
-  #def set_BDT_training(self):
-    """Run analysis with loose selection criteria for leptons,
-       for the purpose of preparing event list files for BDT training.
+  def set_BDT_training(self):
+    """Run analysis for the purpose of preparing event list files for BDT training.
     """
-    #self.lepton_selections = [ "forBDTtraining" ]
-    #self.lepton_frWeights  = [ "disabled" ]
-    #self.isBDTtraining     = True
+    self.lepton_selections = [ "Tight" ]
+    self.lepton_frWeights = [ "disabled" ]
+    self.lepton_charge_selections = [ "SS" ]
+    self.isBDTtraining = True
 
   def createCfg_analyze(self, jobOptions, sample_info, lepton_selection):
     """Create python configuration file for the analyze_hh_2lss executable (analysis code)
@@ -450,7 +448,7 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
                   'leptonChargeSelection'    : leptonChargeSelection,
                   'applyFakeRateWeights'     : self.applyFakeRateWeights if not lepton_selection == "Tight" else "disabled",
                   'central_or_shift'         : central_or_shift,
-                  #'selectBDT'                : self.isBDTtraining,
+                  'selectBDT'                : self.isBDTtraining,
                   #'syncOutput'               : syncOutput,
                   #'syncTree'                 : syncTree,
                   #'syncRLE'                  : syncRLE,
@@ -469,8 +467,11 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
                 self.outputFile_hadd_stage1[key_hadd_stage1] = os.path.join(self.dirs[DKEY_HIST], "histograms_harvested_stage1_%s_%s_%s_%s.root" % \
                   (self.channel, process_name, lepton_selection_and_frWeight, leptonChargeSelection))
 
-            # if self.isBDTtraining or self.do_sync:
-            #   continue
+                if self.isBDTtraining:
+                  self.targets.append(self.outputFile_hadd_stage1[key_hadd_stage1])
+
+            if self.isBDTtraining or self.do_sync:
+              continue
 
             if is_mc:
               logging.info("Creating configuration files to run 'addBackgrounds' for sample %s" % process_name)
@@ -547,8 +548,8 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
                     self.outputFile_hadd_stage1_5[key_hadd_stage1_5] = os.path.join(self.dirs[DKEY_HIST], "histograms_harvested_stage1_5_%s_%s_%s.root" % \
                      (self.channel, lepton_selection_and_frWeight, leptonChargeSelection))
 
-            #if self.isBDTtraining or self.do_sync:
-              #continue
+            if self.isBDTtraining or self.do_sync:
+              continue
 
             # add output files of hadd_stage1 for data to list of input files for hadd_stage1_5
             if not is_mc:
@@ -558,8 +559,8 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
                 self.inputFiles_hadd_stage1_5[key_hadd_stage1_5] = []
               self.inputFiles_hadd_stage1_5[key_hadd_stage1_5].append(self.outputFile_hadd_stage1[key_hadd_stage1])
 
-          #if self.isBDTtraining or self.do_sync:
-            #continue
+          if self.isBDTtraining or self.do_sync:
+            continue
 
           # sum fake background contributions for the total of all MC sample
           # input processes: TT2l0g1j, TT1l1g1j, TT1l0g2j, TT0l3j, TT0l3j, TT0l3j, TT0l3j; ...
@@ -651,30 +652,30 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
           self.outputFile_hadd_stage2[key_hadd_stage2] = os.path.join(self.dirs[DKEY_HIST], "histograms_harvested_stage2_%s_%s_%s.root" % \
             (self.channel, lepton_selection_and_frWeight, leptonChargeSelection))
 
-    #if self.isBDTtraining or self.do_sync:
-      #if self.is_sbatch:
-        #logging.info("Creating script for submitting '%s' jobs to batch system" % self.executable_analyze)
-        #self.sbatchFile_analyze = os.path.join(self.dirs[DKEY_SCRIPTS], "sbatch_analyze_%s.py" % self.channel)
-        #if self.isBDTtraining:
-          #self.createScript_sbatch_analyze(self.executable_analyze, self.sbatchFile_analyze, self.jobOptions_analyze)
-        #elif self.do_sync:
-          #self.createScript_sbatch_syncNtuple(self.executable_analyze, self.sbatchFile_analyze, self.jobOptions_analyze)
-      #logging.info("Creating Makefile")
-      #lines_makefile = []
-      #if self.isBDTtraining:
-        #self.addToMakefile_analyze(lines_makefile)
-        #self.addToMakefile_hadd_stage1(lines_makefile)
-      #elif self.do_sync:
-        #self.addToMakefile_syncNtuple(lines_makefile)
-        #outputFile_sync_path = os.path.join(self.outputDir, DKEY_SYNC, '%s.root' % self.channel)
-        #self.outputFile_sync['sync'] = outputFile_sync_path
-        #self.targets.append(outputFile_sync_path)
-        #self.addToMakefile_hadd_sync(lines_makefile)
-      #else:
-        #raise ValueError("Internal logic error")
-      #self.createMakefile(lines_makefile)
-      #logging.info("Done")
-      #return self.num_jobs
+    if self.isBDTtraining or self.do_sync:
+      if self.is_sbatch:
+        logging.info("Creating script for submitting '%s' jobs to batch system" % self.executable_analyze)
+        self.sbatchFile_analyze = os.path.join(self.dirs[DKEY_SCRIPTS], "sbatch_analyze_%s.py" % self.channel)
+        if self.isBDTtraining:
+          self.createScript_sbatch_analyze(self.executable_analyze, self.sbatchFile_analyze, self.jobOptions_analyze)
+        elif self.do_sync:
+          self.createScript_sbatch_syncNtuple(self.executable_analyze, self.sbatchFile_analyze, self.jobOptions_analyze)
+      logging.info("Creating Makefile")
+      lines_makefile = []
+      if self.isBDTtraining:
+        self.addToMakefile_analyze(lines_makefile)
+        self.addToMakefile_hadd_stage1(lines_makefile)
+      elif self.do_sync:
+        self.addToMakefile_syncNtuple(lines_makefile)
+        outputFile_sync_path = os.path.join(self.outputDir, DKEY_SYNC, '%s.root' % self.channel)
+        self.outputFile_sync['sync'] = outputFile_sync_path
+        self.targets.append(outputFile_sync_path)
+        self.addToMakefile_hadd_sync(lines_makefile)
+      else:
+        raise ValueError("Internal logic error")
+      self.createMakefile(lines_makefile)
+      logging.info("Done")
+      return self.num_jobs
 
     logging.info("Creating configuration files to run 'addBackgroundFakes'")
     for category in self.categories:
