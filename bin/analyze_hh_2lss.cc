@@ -390,6 +390,9 @@ int main(int argc, char* argv[])
   RecoJetCollectionGenMatcher jetGenMatcher;
   RecoJetCollectionCleaner jetCleaner(0.4, isDEBUG);
   RecoJetCollectionSelector jetSelector(era, -1, isDEBUG);
+  RecoJetCollectionSelector jetSelectorVBF(era, -1, isDEBUG);
+  //jetSelectorVBF.getSelector().set_min_pt(30.);
+  jetSelectorVBF.getSelector().set_max_absEta(4.7);
   RecoJetCollectionSelectorBtagLoose jetSelectorBtagLoose(era, -1, isDEBUG);
   RecoJetCollectionSelectorBtagMedium jetSelectorBtagMedium(era, -1, isDEBUG);
 
@@ -462,6 +465,7 @@ int main(int argc, char* argv[])
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
     EvtHistManager_hh_2lss* evt_;
+    std::map<std::string, EvtHistManager_hh_2lss*> evt_in_categories_;
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
@@ -536,7 +540,19 @@ int main(int argc, char* argv[])
     selHistManager->evt_ = new EvtHistManager_hh_2lss(makeHistManager_cfg(process_and_genMatch,
 	Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
     selHistManager->evt_->bookHistograms(fs);
-
+    vstring categories_evt = {
+      "E_3j", "GE_3j", "GE_4j",
+      "E_3j_nonvbf", "GE_3j_nonvbf", "GE_4j_nonvbf",
+      "E_5j_vbf", "GE_5j_vbf", "GE_6j_vbf"
+    };
+    for ( vstring::const_iterator category = categories_evt.begin();
+	  category != categories_evt.end(); ++category ) {
+      TString histogramDir_category = histogramDir.data();
+      histogramDir_category.ReplaceAll("2lss", category->data());
+      selHistManager->evt_in_categories_[*category] = new EvtHistManager_hh_2lss(makeHistManager_cfg(process_and_genMatch,
+	     Form("%s/sel/evt", histogramDir_category.Data()), central_or_shift));
+      selHistManager->evt_in_categories_[*category]->bookHistograms(fs);
+    }
     edm::ParameterSet cfg_EvtYieldHistManager_sel = makeHistManager_cfg(process_and_genMatch, 
         Form("%s/sel/evtYield", histogramDir.data()), central_or_shift);
     cfg_EvtYieldHistManager_sel.addParameter<edm::ParameterSet>("runPeriods", cfg_EvtYieldHistManager);
@@ -837,6 +853,10 @@ int main(int argc, char* argv[])
     std::vector<const RecoJet*> selBJets_loose = jetSelectorBtagLoose(cleanedJets, isHigherPt);
     std::vector<const RecoJet*> selBJets_medium = jetSelectorBtagMedium(cleanedJets, isHigherPt);
     int numSelJetsPtGt40 = countHighPtObjects(selJets, 40.);
+
+    std::vector<const RecoJet*> cleanedJetsVBF = jetCleaner(jet_ptrs, fakeableLeptons);
+    std::vector<const RecoJet*> selJetsVBF = jetSelectorVBF(cleanedJetsVBF, isHigherPt);
+
     if(isDEBUG || run_lumi_eventSelector)
     {
       printCollection("uncleanedJets", jet_ptrs);
@@ -883,6 +903,10 @@ int main(int argc, char* argv[])
       jetGenMatcher.addGenLeptonMatch(selJets, genLeptons, 0.2);
       jetGenMatcher.addGenHadTauMatch(selJets, genHadTaus, 0.2);
       jetGenMatcher.addGenJetMatch(selJets, genJets, 0.2);
+
+      jetGenMatcher.addGenLeptonMatch(cleanedJetsVBF, genLeptons, 0.2);
+      jetGenMatcher.addGenHadTauMatch(cleanedJetsVBF, genHadTaus, 0.2);
+      jetGenMatcher.addGenJetMatch(cleanedJetsVBF, genJets, 0.2);
     }
 
 //--- apply preselection
@@ -962,15 +986,14 @@ int main(int argc, char* argv[])
     double dihiggsVisMass_presel =  0;
     double dihiggsMass_wMet_presel =  0;
     double jetMass_presel =  0;
-    if (minNumJets >= 4){
-      dihiggsVisMass_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
-      dihiggsMass_wMet_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4() + met.p4()).mass();
-      jetMass_presel = (selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
-    }
-    else if (minNumJets == 3){
+    if ((int)selJets.size() == 3){
       dihiggsVisMass_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4()).mass();
       dihiggsMass_wMet_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + met.p4()).mass();
       jetMass_presel = (selJat_1->p4() + selJat_2->p4() + selJat_3->p4()).mass();
+    } else {
+      dihiggsVisMass_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
+      dihiggsMass_wMet_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4() + met.p4()).mass();
+      jetMass_presel = (selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
     }
     double leptonPairMass_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4()).mass();
     double electronPairMass_presel = ( preselLepton_lead->is_electron() && preselLepton_sublead->is_electron() ) ? leptonPairMass_presel : -1.;
@@ -1420,18 +1443,18 @@ int main(int argc, char* argv[])
     cutFlowTable.update("signal region veto", evtWeight);
     cutFlowHistManager->fillHistograms("signal region veto", evtWeight);
 
+    // compute signal extraction observables
     double dihiggsVisMass_sel =  -1;
     double dihiggsMass_wMet_sel =  0;
     double jetMass_sel =  0;
-    if (minNumJets >= 4){
-      dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
-      dihiggsMass_wMet_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4() + met.p4()).mass();
-      jetMass_sel = (selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
-    }
-    else if (minNumJets == 3){
+    if ((int)selJets.size() == 3){
       dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4()).mass();
       dihiggsMass_wMet_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + met.p4()).mass();
       jetMass_sel = (selJat_1->p4() + selJat_2->p4() + selJat_3->p4() ).mass();
+    } else {
+      dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
+      dihiggsMass_wMet_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4() + met.p4()).mass();
+      jetMass_sel = (selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
     }
     double leptonPairMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4()).mass();
     double leptonPairCharge_sel = selLepton_lead->charge() + selLepton_sublead->charge();
@@ -1480,6 +1503,74 @@ int main(int argc, char* argv[])
     selHistManager->weights_->fillHistograms("triggerWeight", triggerWeight);
     selHistManager->weights_->fillHistograms("data_to_MC_correction", weight_data_to_MC_correction);
     selHistManager->weights_->fillHistograms("fakeRate", weight_fakeRate);
+
+    double vbf_dEta_jj = -1.;
+    double vbf_m_jj = -1.;
+    bool isVBF = false;
+    for ( std::vector<const RecoJet*>::const_iterator selJetVBF1 = selJetsVBF.begin();
+	  selJetVBF1 != selJetsVBF.end(); ++selJetVBF1 ) {
+      for ( std::vector<const RecoJet*>::const_iterator selJetVBF2 = selJetVBF1 + 1;
+	    selJetVBF2 != selJetsVBF.end(); ++selJetVBF2 ) {
+	double dEta_jj = TMath::Abs((*selJetVBF1)->eta() - (*selJetVBF2)->eta());
+	double m_jj = ((*selJetVBF1)->p4() + (*selJetVBF2)->p4()).mass();
+	if ( dEta_jj > 4. && m_jj > 500. ) {
+	  if ( dEta_jj > vbf_dEta_jj ) vbf_dEta_jj = dEta_jj;
+	  if ( m_jj    > vbf_m_jj    ) vbf_m_jj    = m_jj;
+	  isVBF = true;
+	  //std::cout << "NJets = " << selJetsVBF.size() << " Jet Eta = " << TMath::Abs((*selJetVBF1)->eta()) << " m_jj = " << m_jj << " dEta_jj " << dEta_jj << std::endl;
+	}
+      }
+    }
+
+    std::vector<std::string> categories;
+    if ((int)selJetsVBF.size() == 3 ) {
+      categories.push_back("E_3j");
+      if ( !isVBF ) {
+	categories.push_back("E_3j_nonvbf");
+      } 
+    }
+    if ((int)selJetsVBF.size() >= 3 ) {
+      categories.push_back("GE_3j");
+      if ( !isVBF ) {
+        categories.push_back("GE_3j_nonvbf");
+      }
+    }
+    if ((int)selJetsVBF.size() >= 4 ) {
+      categories.push_back("GE_4j");
+      if ( !isVBF ) {
+        categories.push_back("GE_4j_nonvbf");
+      }
+    }
+    if ( isVBF ) {
+      if ((int)selJetsVBF.size() == 5 ) {
+        categories.push_back("E_5j_vbf");
+      }
+      if ((int)selJetsVBF.size() >= 5 ) {
+	categories.push_back("GE_5j_vbf");
+      }
+      if ((int)selJetsVBF.size() >= 6 ) {
+	categories.push_back("GE_6j_vbf");
+      }
+    } 
+    
+    for ( std::vector<std::string>::const_iterator category = categories.begin();
+	  category != categories.end(); ++category ) {
+      selHistManager->evt_in_categories_[*category]->fillHistograms(
+	    selElectrons.size(),
+	    selMuons.size(),
+	    selJets.size(),
+	    numSelJetsPtGt40,
+	    dihiggsVisMass_sel,
+	    dihiggsMass_wMet_sel,
+	    jetMass_sel,
+	    leptonPairMass_sel,
+	    ( tightElectrons.size() == 2 ) ? leptonPairMass_sel : -1.,
+	    ( tightMuons.size() == 2 ) ? leptonPairMass_sel : -1.,
+	    leptonPairCharge_sel,
+	    HT, 
+	    STMET,
+	    evtWeight);
+    }
 
     if ( isMC ) {
       genEvtHistManager_afterCuts->fillHistograms(genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeight_inclusive);

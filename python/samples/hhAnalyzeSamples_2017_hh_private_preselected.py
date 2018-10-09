@@ -1,7 +1,7 @@
 from collections import OrderedDict as OD
 
-# file generated at 2018-09-24 12:03:30 with the following command:
-# create_dictionary.py -m python/samples/metaDict_2017_private_hh.py -p /hdfs/local/karl/ttHNtupleProduction/2017/2018Sep24_wPresel_nom_hh/ntuples -Z zeroes.txt -z zombies.txt -N samples_2017 -E 2017 -o python/samples -g hhAnalyzeSamples_2017_hh_private_preselected.py -M
+# file generated at 2018-10-09 11:58:50 with the following command:
+# create_dictionary.py -m python/samples/metaDict_2017_private_hh.py -p /hdfs/local/karl/ttHNtupleProduction/2017/2018Oct04_wPresel_nom_hh/ntuples -Z zeroes.txt -z zombies.txt -N samples_2017 -E 2017 -o python/samples -g hhAnalyzeSamples_2017_hh_private_preselected.py -M
 
 samples_2017 = OD()
 samples_2017["/HHTo4T_madgraph_pythia8_CP5_M400/private/USER"] = OD([
@@ -23,7 +23,7 @@ samples_2017["/HHTo4T_madgraph_pythia8_CP5_M400/private/USER"] = OD([
   }),
   ("nof_tree_events",                 22739),
   ("nof_db_events",                   384000),
-  ("fsize_local",                     64107958), # 64.11MB, avg file size 64.11MB
+  ("fsize_local",                     66727856), # 66.73MB, avg file size 66.73MB
   ("fsize_db",                        22408025117), # 22.41GB, avg file size 116.10MB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -33,7 +33,7 @@ samples_2017["/HHTo4T_madgraph_pythia8_CP5_M400/private/USER"] = OD([
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2018Sep24_wPresel_nom_hh/ntuples/signal_ggf_spin0_400_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2018Oct04_wPresel_nom_hh/ntuples/signal_ggf_spin0_400_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -69,7 +69,7 @@ samples_2017["/HHTo4T_madgraph_pythia8_CP5_M700/private/USER"] = OD([
   }),
   ("nof_tree_events",                 32753),
   ("nof_db_events",                   311998),
-  ("fsize_local",                     106420294), # 106.42MB, avg file size 106.42MB
+  ("fsize_local",                     110084163), # 110.08MB, avg file size 110.08MB
   ("fsize_db",                        19502577906), # 19.50GB, avg file size 121.89MB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -79,7 +79,7 @@ samples_2017["/HHTo4T_madgraph_pythia8_CP5_M700/private/USER"] = OD([
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2018Sep24_wPresel_nom_hh/ntuples/signal_ggf_spin0_700_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2018Oct04_wPresel_nom_hh/ntuples/signal_ggf_spin0_700_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -115,7 +115,7 @@ samples_2017["/HHTo2T2V_madgraph_pythia8_CP5_M400/private/USER"] = OD([
   }),
   ("nof_tree_events",                 4148),
   ("nof_db_events",                   257207),
-  ("fsize_local",                     12657631), # 12.66MB, avg file size 12.66MB
+  ("fsize_local",                     13067677), # 13.07MB, avg file size 13.07MB
   ("fsize_db",                        15401525854), # 15.40GB, avg file size 118.47MB
   ("use_it",                          True),
   ("xsection",                        0.030092),
@@ -125,7 +125,7 @@ samples_2017["/HHTo2T2V_madgraph_pythia8_CP5_M400/private/USER"] = OD([
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2018Sep24_wPresel_nom_hh/ntuples/signal_ggf_spin0_400_hh_2v2t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2018Oct04_wPresel_nom_hh/ntuples/signal_ggf_spin0_400_hh_2v2t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -161,7 +161,7 @@ samples_2017["/HHTo2T2V_madgraph_pythia8_CP5_M700/private/USER"] = OD([
   }),
   ("nof_tree_events",                 6654),
   ("nof_db_events",                   301884),
-  ("fsize_local",                     22981372), # 22.98MB, avg file size 22.98MB
+  ("fsize_local",                     23677451), # 23.68MB, avg file size 23.68MB
   ("fsize_db",                        19508012725), # 19.51GB, avg file size 128.34MB
   ("use_it",                          True),
   ("xsection",                        0.030092),
@@ -171,7 +171,7 @@ samples_2017["/HHTo2T2V_madgraph_pythia8_CP5_M700/private/USER"] = OD([
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2018Sep24_wPresel_nom_hh/ntuples/signal_ggf_spin0_700_hh_2v2t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2018Oct04_wPresel_nom_hh/ntuples/signal_ggf_spin0_700_hh_2v2t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -207,7 +207,7 @@ samples_2017["/HHTo4V_madgraph_pythia8_CP5_M400/private/USER"] = OD([
   }),
   ("nof_tree_events",                 1244),
   ("nof_db_events",                   262996),
-  ("fsize_local",                     3961784), # 3.96MB, avg file size 3.96MB
+  ("fsize_local",                     4089781), # 4.09MB, avg file size 4.09MB
   ("fsize_db",                        16090082982), # 16.09GB, avg file size 120.98MB
   ("use_it",                          True),
   ("xsection",                        0.057547),
@@ -217,7 +217,7 @@ samples_2017["/HHTo4V_madgraph_pythia8_CP5_M400/private/USER"] = OD([
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2018Sep24_wPresel_nom_hh/ntuples/signal_ggf_spin0_400_hh_4v"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2018Oct04_wPresel_nom_hh/ntuples/signal_ggf_spin0_400_hh_4v"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -253,7 +253,7 @@ samples_2017["/HHTo4V_madgraph_pythia8_CP5_M700/private/USER"] = OD([
   }),
   ("nof_tree_events",                 1229),
   ("nof_db_events",                   230116),
-  ("fsize_local",                     4439460), # 4.44MB, avg file size 4.44MB
+  ("fsize_local",                     4574673), # 4.57MB, avg file size 4.57MB
   ("fsize_db",                        15395786053), # 15.40GB, avg file size 130.47MB
   ("use_it",                          True),
   ("xsection",                        0.057547),
@@ -263,7 +263,7 @@ samples_2017["/HHTo4V_madgraph_pythia8_CP5_M700/private/USER"] = OD([
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2018Sep24_wPresel_nom_hh/ntuples/signal_ggf_spin0_700_hh_4v"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2018Oct04_wPresel_nom_hh/ntuples/signal_ggf_spin0_700_hh_4v"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
