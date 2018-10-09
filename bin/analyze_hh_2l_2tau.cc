@@ -1957,6 +1957,24 @@ int main(int argc, char* argv[])
   delete genJetReader;
   delete lheInfoReader;
 
+  delete genEvtHistManager_beforeCuts;
+  delete lheInfoHistManager_beforeCuts;
+  for ( std::map<int, int_to_selHistManagerMap>::const_iterator it1 = selHistManagers.begin();
+	it1 != selHistManagers.end(); ++it1 ) {
+    for ( int_to_selHistManagerMap::const_iterator it2 = it1->second.begin();
+	  it2 != it1->second.end(); ++it2 ) {
+      delete it2->second->genEvtHistManager_afterCuts_;
+      for ( std::map<std::string, GenEvtHistManager*>::const_iterator it3 = it2->second->genEvtHistManager_afterCuts_in_categories_.begin();
+	    it3 != it2->second->genEvtHistManager_afterCuts_in_categories_.end(); ++it3 ) {
+	delete it3->second;
+      }
+      delete it2->second->lheInfoHistManager_afterCuts_;
+      for ( std::map<std::string, LHEInfoHistManager*>::const_iterator it3 = it2->second->lheInfoHistManager_afterCuts_in_categories_.begin();
+	    it3 != it2->second->lheInfoHistManager_afterCuts_in_categories_.end(); ++it3 ) {
+	delete it3->second;
+      }
+    }
+  }
   delete cutFlowHistManager;
   delete eventWeightManager;
 
