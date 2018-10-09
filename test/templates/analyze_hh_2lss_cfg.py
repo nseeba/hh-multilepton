@@ -104,6 +104,7 @@ process.analyze_hh_2lss = cms.PSet(
 
     selEventsFileName_input = cms.string(''),
     selEventsFileName_output = cms.string(''),
+    selectBDT = cms.bool(False),
 
     useNonNominal = cms.bool(False),
     isDEBUG = cms.bool(False),
