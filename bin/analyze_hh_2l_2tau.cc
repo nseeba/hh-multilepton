@@ -467,6 +467,17 @@ int main(int argc, char* argv[])
   std::cout << "selEventsFileName_output = " << selEventsFileName_output << std::endl;
 
 //--- declare histograms
+  GenEvtHistManager* genEvtHistManager_beforeCuts = nullptr;
+  LHEInfoHistManager* lheInfoHistManager_beforeCuts = nullptr;
+  if ( isMC ) {
+    genEvtHistManager_beforeCuts = new GenEvtHistManager(makeHistManager_cfg(process_string,
+      Form("%s/unbiased/genEvt", histogramDir.data()), central_or_shift));
+    genEvtHistManager_beforeCuts->bookHistograms(fs);
+    lheInfoHistManager_beforeCuts = new LHEInfoHistManager(makeHistManager_cfg(process_string,
+      Form("%s/unbiased/lheInfo", histogramDir.data()), central_or_shift));
+    lheInfoHistManager_beforeCuts->bookHistograms(fs);
+  }
+
   struct preselHistManagerType
   {
     ElectronHistManager* electrons_;
@@ -520,6 +531,10 @@ int main(int argc, char* argv[])
     std::map<std::string, EvtHistManager_hh_2l_2tau*> evt_in_categories_;
     std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_woMassConstraint_in_categories_;
     std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_wMassConstraint_in_categories_;
+    GenEvtHistManager* genEvtHistManager_afterCuts_;
+    std::map<std::string, GenEvtHistManager*>  genEvtHistManager_afterCuts_in_categories_;
+    LHEInfoHistManager* lheInfoHistManager_afterCuts_;
+    std::map<std::string, LHEInfoHistManager*> lheInfoHistManager_afterCuts_in_categories_;
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
@@ -693,6 +708,16 @@ int main(int argc, char* argv[])
       selHistManager->svFit4tau_wMassConstraint_ = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
         Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_->bookHistograms(fs);
+      selHistManager->genEvtHistManager_afterCuts_ = nullptr;
+      selHistManager->lheInfoHistManager_afterCuts_ = nullptr;
+      if ( isMC ) {
+        selHistManager->genEvtHistManager_afterCuts_ = new GenEvtHistManager(makeHistManager_cfg(process_and_genMatch,
+          Form("%s/sel/genEvt", histogramDir.data()), central_or_shift));
+        selHistManager->genEvtHistManager_afterCuts_->bookHistograms(fs);
+        selHistManager->lheInfoHistManager_afterCuts_ = new LHEInfoHistManager(makeHistManager_cfg(process_and_genMatch,
+          Form("%s/sel/lheInfo", histogramDir.data()), central_or_shift));
+        selHistManager->lheInfoHistManager_afterCuts_->bookHistograms(fs);
+      }
 /*
       const vstring decayModes_evt = eventInfo.getDecayModes();
       if(isSignal)
@@ -715,7 +740,7 @@ int main(int argc, char* argv[])
           selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayMode_evt]->bookHistograms(fs);
         }
       }
- */
+ */      
       vstring categories_evt = {
         "2lSS_2tau", "2lOS_2tau", 
         "2e_2tau", "1e1mu_2tau", "2mu_2tau",
@@ -734,6 +759,14 @@ int main(int argc, char* argv[])
         selHistManager->svFit4tau_wMassConstraint_in_categories_[*category] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/svFit4tau_wMassConstraint", histogramDir_category.Data()), central_or_shift));
         selHistManager->svFit4tau_wMassConstraint_in_categories_[*category]->bookHistograms(fs);
+        if ( isMC ) {
+	  selHistManager->genEvtHistManager_afterCuts_in_categories_[*category] = new GenEvtHistManager(makeHistManager_cfg(process_and_genMatch,
+            Form("%s/sel/genEvt", histogramDir_category.Data()), central_or_shift));
+          selHistManager->genEvtHistManager_afterCuts_in_categories_[*category]->bookHistograms(fs);
+	  selHistManager->lheInfoHistManager_afterCuts_in_categories_[*category] = new LHEInfoHistManager(makeHistManager_cfg(process_and_genMatch,
+            Form("%s/sel/lheInfo", histogramDir_category.Data()), central_or_shift));
+          selHistManager->lheInfoHistManager_afterCuts_in_categories_[*category]->bookHistograms(fs);
+	}
       }
       edm::ParameterSet cfg_EvtYieldHistManager_sel = makeHistManager_cfg(process_and_genMatch, 
         Form("%s/sel/evtYield", histogramDir.data()), central_or_shift);
@@ -746,26 +779,6 @@ int main(int argc, char* argv[])
       selHistManager->weights_->bookHistograms(fs, { "genWeight", "pileupWeight", "triggerWeight", "data_to_MC_correction", "fakeRate" });
       selHistManagers[idxLepton][idxHadTau] = selHistManager;
     }
-  }
-
-  GenEvtHistManager* genEvtHistManager_beforeCuts = 0;
-  LHEInfoHistManager* lheInfoHistManager_beforeCuts = 0;
-  GenEvtHistManager* genEvtHistManager_afterCuts = 0;
-  LHEInfoHistManager* lheInfoHistManager_afterCuts = 0;
-
-  if ( isMC ) {
-    genEvtHistManager_beforeCuts = new GenEvtHistManager(makeHistManager_cfg(process_string,
-      Form("%s/unbiased/genEvt", histogramDir.data()), central_or_shift));
-    genEvtHistManager_beforeCuts->bookHistograms(fs);
-    lheInfoHistManager_beforeCuts = new LHEInfoHistManager(makeHistManager_cfg(process_string,
-      Form("%s/unbiased/lheInfo", histogramDir.data()), central_or_shift));
-    lheInfoHistManager_beforeCuts->bookHistograms(fs);
-    genEvtHistManager_afterCuts = new GenEvtHistManager(makeHistManager_cfg(process_string,
-      Form("%s/sel/genEvt", histogramDir.data()), central_or_shift));
-    genEvtHistManager_afterCuts->bookHistograms(fs);
-    lheInfoHistManager_afterCuts = new LHEInfoHistManager(makeHistManager_cfg(process_string,
-      Form("%s/sel/lheInfo", histogramDir.data()), central_or_shift));
-    lheInfoHistManager_afterCuts->bookHistograms(fs);
   }
 
   NtupleFillerBDT<float, int>* bdt_filler = nullptr;
@@ -1671,6 +1684,10 @@ int main(int argc, char* argv[])
       evtWeight);
     selHistManager->svFit4tau_woMassConstraint_->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
     selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
+    if ( isMC ) {
+      selHistManager->genEvtHistManager_afterCuts_->fillHistograms(genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeight_inclusive);
+      selHistManager->lheInfoHistManager_afterCuts_->fillHistograms(*lheInfoReader, evtWeight);
+    }
 /*
     if ( isSignal ) {
       const std::string decayModeStr = eventInfo.getDecayModeString();
@@ -1769,11 +1786,10 @@ int main(int argc, char* argv[])
         evtWeight);
       selHistManager->svFit4tau_woMassConstraint_in_categories_[*category]->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
       selHistManager->svFit4tau_wMassConstraint_in_categories_[*category]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
-    }
-
-    if ( isMC ) {
-      genEvtHistManager_afterCuts->fillHistograms(genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeight_inclusive);
-      lheInfoHistManager_afterCuts->fillHistograms(*lheInfoReader, evtWeight);
+      if ( isMC ) {
+	selHistManager->genEvtHistManager_afterCuts_in_categories_[*category]->fillHistograms(genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeight_inclusive);
+	selHistManager->lheInfoHistManager_afterCuts_in_categories_[*category]->fillHistograms(*lheInfoReader, evtWeight);
+      }
     }
 
     if ( selEventsFile ) {
@@ -1941,10 +1957,6 @@ int main(int argc, char* argv[])
   delete genJetReader;
   delete lheInfoReader;
 
-  delete genEvtHistManager_beforeCuts;
-  delete lheInfoHistManager_beforeCuts;
-  delete genEvtHistManager_afterCuts;
-  delete lheInfoHistManager_afterCuts;
   delete cutFlowHistManager;
   delete eventWeightManager;
 
