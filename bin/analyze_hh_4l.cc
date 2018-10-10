@@ -1460,12 +1460,6 @@ int main(int argc, char* argv[])
   delete genJetReader;
   delete lheInfoReader;
 
-  delete genEvtHistManager_beforeCuts;
-  delete genEvtHistManager_afterCuts;
-  delete lheInfoHistManager;
-  delete cutFlowHistManager;
-  delete eventWeightManager;
-
   hltPaths_delete(triggers_1e);
   hltPaths_delete(triggers_2e);
   hltPaths_delete(triggers_1mu);
