@@ -68,6 +68,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/leptonGenMatchingAuxFunctions.h" // getLeptonGenMatch_definitions_3lepton, getLeptonGenMatch_string, getLeptonGenMatch_int
 #include "tthAnalysis/HiggsToTauTau/interface/hadTauGenMatchingAuxFunctions.h" // getHadTauGenMatch_definitions_3tau, getHadTauGenMatch_string, getHadTauGenMatch_int
 #include "tthAnalysis/HiggsToTauTau/interface/fakeBackgroundAuxFunctions.h"
+#include "tthAnalysis/HiggsToTauTau/interface/mvaInputVariables.h" // comp_lep1_conePt, comp_lep2_conePt
 #include "tthAnalysis/HiggsToTauTau/interface/backgroundEstimation.h" // prob_chargeMisId
 #include "tthAnalysis/HiggsToTauTau/interface/hltPath.h" // hltPath, create_hltPaths, hltPaths_isTriggered, hltPaths_delete
 #include "tthAnalysis/HiggsToTauTau/interface/hltPathReader.h" // hltPathReader
@@ -303,6 +304,8 @@ int main(int argc, char* argv[])
   std::string branchName_genPhotons = cfg_analyze.getParameter<std::string>("branchName_genPhotons");
   std::string branchName_genJets = cfg_analyze.getParameter<std::string>("branchName_genJets");
   bool redoGenMatching = cfg_analyze.getParameter<bool>("redoGenMatching");
+
+  const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
 
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
   std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
@@ -578,6 +581,33 @@ int main(int argc, char* argv[])
     lheInfoHistManager = new LHEInfoHistManager(makeHistManager_cfg(process_string,
       Form("%s/sel/lheInfo", histogramDir.data()), central_or_shift));
     lheInfoHistManager->bookHistograms(fs);
+  }
+
+  std::cout << "Book BDT filling" << std::endl;
+  NtupleFillerBDT<float, int>* bdt_filler = nullptr;
+  typedef std::remove_pointer<decltype(bdt_filler)>::type::float_type float_type;
+  typedef std::remove_pointer<decltype(bdt_filler)>::type::int_type int_type;
+
+  if ( selectBDT ) {
+    bdt_filler = new std::remove_pointer<decltype(bdt_filler)>::type(
+     makeHistManager_cfg(process_string, Form("%s/sel/evtntuple", histogramDir.data()), central_or_shift)
+    );
+    bdt_filler->register_variable<float_type>(
+      "dihiggsVisMass_sel", "dihiggsMass_wMet_sel", "jetMass_sel", "leptonPairMass_sel", "leptonPairCharge_sel",
+      "met", "mht", "met_LD",
+      "HT", "STMET",
+      "evtWeight",
+      "lep1_pt", "lep1_conePt", "lep1_eta", "mindr_lep1_jet", "mT_lep1",
+      "lep2_pt", "lep2_conePt", "lep2_eta", "mindr_lep2_jet", "mT_lep2",
+      "dR_ll", "pT_ll", "max_lep_eta", 
+      "pT_llMEt", "Smin_llMEt",
+      "vbf_m_jj", "vbf_dEta_jj",
+      "genWeight"
+    );
+    bdt_filler->register_variable<int_type>(
+      "nJet", "nJet_vbf", "isVBF", "nLep" 
+    );
+    bdt_filler->bookTree(fs);
   }
 
   int analyzedEntries = 0;
@@ -975,8 +1005,9 @@ int main(int argc, char* argv[])
 
 //--- compute MHT and linear MET discriminant (met_LD)
     RecoMEt met = metReader->read();
-    Particle::LorentzVector mht_p4 = compMHT(fakeableLeptons, {}, selJets);
-    double met_LD = compMEt_LD(met.p4(), mht_p4);
+    const Particle::LorentzVector& metP4 = met.p4();
+    Particle::LorentzVector mhtP4 = compMHT(fakeableLeptons, {}, selJets);
+    double met_LD = compMEt_LD(metP4, mhtP4);
 
     const RecoJet* selJat_1 = selJets[0];
     const RecoJet* selJat_2 = selJets[1];
@@ -1009,7 +1040,7 @@ int main(int argc, char* argv[])
     preselHistManager->electrons_->fillHistograms(preselElectrons, 1.);
     preselHistManager->muons_->fillHistograms(preselMuons, 1.);
     preselHistManager->jets_->fillHistograms(selJets, 1.);
-    preselHistManager->met_->fillHistograms(met, mht_p4, met_LD, 1.);
+    preselHistManager->met_->fillHistograms(met, mhtP4, met_LD, 1.);
     preselHistManager->metFilters_->fillHistograms(metFilters, 1.);
     preselHistManager->evt_->fillHistograms(
       preselElectrons.size(),
@@ -1042,8 +1073,10 @@ int main(int argc, char* argv[])
     cutFlowTable.update(">= 2 sel leptons", 1.);
     cutFlowHistManager->fillHistograms(">= 2 sel leptons", 1.);
     const RecoLepton* selLepton_lead = selLeptons[0];
+    const Particle::LorentzVector& selLeptonP4_lead = selLepton_lead->p4();
     int selLepton_lead_type = getLeptonType(selLepton_lead->pdgId());
     const RecoLepton* selLepton_sublead = selLeptons[1];
+    const Particle::LorentzVector& selLeptonP4_sublead = selLepton_sublead->p4();
     int selLepton_sublead_type = getLeptonType(selLepton_sublead->pdgId());
     const leptonGenMatchEntry& selLepton_genMatch = getLeptonGenMatch(leptonGenMatch_definitions, selLepton_lead, selLepton_sublead);
     int idxSelLepton_genMatch = selLepton_genMatch.idx_;
@@ -1459,6 +1492,17 @@ int main(int argc, char* argv[])
     double leptonPairMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4()).mass();
     double leptonPairCharge_sel = selLepton_lead->charge() + selLepton_sublead->charge();
 
+    //--- compute variables BDTs used to discriminate . . .
+    const double mindr_lep1_jet  = comp_mindr_lep1_jet(*selLepton_lead, selJets);
+    const double mindr_lep2_jet  = comp_mindr_lep2_jet(*selLepton_sublead, selJets);
+    Particle::LorentzVector llP4 = selLeptonP4_lead + selLeptonP4_sublead;
+    double m_ll  = llP4.mass();
+    double dR_ll = deltaR(selLeptonP4_lead, selLeptonP4_sublead);
+    double pT_ll = llP4.pt();
+    double pT_llMEt = (llP4 + metP4).pt();
+    double Smin_llMEt = comp_Smin(llP4, metP4.px(), metP4.py());
+
+
 //--- fill histograms with events passing final selection
     selHistManagerType* selHistManager = selHistManagers[idxSelLepton_genMatch];
     assert(selHistManager != 0);
@@ -1479,7 +1523,7 @@ int main(int argc, char* argv[])
     selHistManager->jets_->fillHistograms(selJets, evtWeight);
     selHistManager->leadJet_->fillHistograms(selJets, evtWeight);
     selHistManager->subleadJet_->fillHistograms(selJets, evtWeight);
-    selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
+    selHistManager->met_->fillHistograms(met, mhtP4, met_LD, evtWeight);
     selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
     selHistManager->evt_->fillHistograms(
       selElectrons.size(),
@@ -1580,6 +1624,48 @@ int main(int argc, char* argv[])
     if ( selEventsFile ) {
       (*selEventsFile) << eventInfo.run << ':' << eventInfo.lumi << ':' << eventInfo.event << '\n';
     }
+
+
+    if ( bdt_filler ) {
+      bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
+	("dihiggsVisMass_sel",             dihiggsVisMass_sel)
+	("dihiggsMass_wMet_sel",           dihiggsMass_wMet_sel)
+	("jetMass_sel",                    jetMass_sel)
+	("leptonPairMass_sel",             leptonPairMass_sel)
+	("leptonPairCharge_sel",           leptonPairCharge_sel)
+	("met",                            metP4.pt())
+        ("mht",                            mhtP4.pt())
+        ("met_LD",                         met_LD)
+        ("HT",                             HT)
+        ("STMET",                          STMET)
+	("evtWeight",                      evtWeight)
+	("lep1_pt",                        selLepton_lead->pt())
+	("lep1_conePt",                    comp_lep1_conePt(*selLepton_lead))
+	("lep1_eta",                       selLepton_lead->eta())
+	("mindr_lep1_jet",                 std::min(10., mindr_lep1_jet) )
+	("mT_lep1",                        comp_MT_met_lep1(*selLepton_lead, met.pt(), met.phi()))
+	("lep2_pt",                        selLepton_sublead->pt())
+	("lep2_conePt",                    comp_lep2_conePt(*selLepton_sublead))
+	("lep2_eta",                       selLepton_sublead->eta())
+	("mindr_lep2_jet",                 std::min(10., mindr_lep2_jet) )
+	("mT_lep2",                        comp_MT_met_lep1(*selLepton_sublead, met.pt(), met.phi()))
+	("dR_ll",                          dR_ll)
+	("pT_ll",                          pT_ll)
+	("max_lep_eta",                    TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta())))
+	("pT_llMEt",                       pT_llMEt)
+	("Smin_llMEt",                     Smin_llMEt)
+	("vbf_dEta_jj",                    vbf_dEta_jj)
+	("vbf_m_jj",                       vbf_m_jj)
+	("genWeight",                      eventInfo.genWeight)
+	("nJet",                           comp_n_jet25_recl(selJets))
+	("nJet_vbf",                       selJetsVBF.size())
+	("isVBF",                          isVBF)
+	("nLep",                           selLeptons.size())                    
+        .fill()
+	;
+    }
+
+
 
     ++selectedEntries;
     selectedEntries_weighted += evtWeight;
