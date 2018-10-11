@@ -532,7 +532,6 @@ int main(int argc, char* argv[])
     std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_woMassConstraint_in_categories_;
     std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_wMassConstraint_in_categories_;
     GenEvtHistManager* genEvtHistManager_afterCuts_;
-    std::map<std::string, GenEvtHistManager*>  genEvtHistManager_afterCuts_in_categories_;
     LHEInfoHistManager* lheInfoHistManager_afterCuts_;
     std::map<std::string, LHEInfoHistManager*> lheInfoHistManager_afterCuts_in_categories_;
     EvtYieldHistManager* evtYield_;
@@ -760,9 +759,6 @@ int main(int argc, char* argv[])
           Form("%s/sel/svFit4tau_wMassConstraint", histogramDir_category.Data()), central_or_shift));
         selHistManager->svFit4tau_wMassConstraint_in_categories_[*category]->bookHistograms(fs);
         if ( isMC ) {
-	  selHistManager->genEvtHistManager_afterCuts_in_categories_[*category] = new GenEvtHistManager(makeHistManager_cfg(process_and_genMatch,
-            Form("%s/sel/genEvt", histogramDir_category.Data()), central_or_shift));
-          selHistManager->genEvtHistManager_afterCuts_in_categories_[*category]->bookHistograms(fs);
 	  selHistManager->lheInfoHistManager_afterCuts_in_categories_[*category] = new LHEInfoHistManager(makeHistManager_cfg(process_and_genMatch,
             Form("%s/sel/lheInfo", histogramDir_category.Data()), central_or_shift));
           selHistManager->lheInfoHistManager_afterCuts_in_categories_[*category]->bookHistograms(fs);
