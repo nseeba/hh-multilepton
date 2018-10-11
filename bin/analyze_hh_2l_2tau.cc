@@ -1783,7 +1783,6 @@ int main(int argc, char* argv[])
       selHistManager->svFit4tau_woMassConstraint_in_categories_[*category]->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
       selHistManager->svFit4tau_wMassConstraint_in_categories_[*category]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
       if ( isMC ) {
-	selHistManager->genEvtHistManager_afterCuts_in_categories_[*category]->fillHistograms(genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeight_inclusive);
 	selHistManager->lheInfoHistManager_afterCuts_in_categories_[*category]->fillHistograms(*lheInfoReader, evtWeight);
       }
     }
