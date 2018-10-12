@@ -1,4 +1,4 @@
-from hhAnalysis.multilepton.samples.tthAnalyzeSamples_2017_preselected import samples_2017 as samples_2017_general
+from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_bkg_preselected import samples_2017 as samples_2017_general
 from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_hh_private_preselected import samples_2017 as samples_2017_hh_private
 
 import collections
