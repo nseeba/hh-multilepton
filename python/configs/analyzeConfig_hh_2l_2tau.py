@@ -817,9 +817,8 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
               'category_sideband' : category_sideband
               }
             self.createCfg_addFakes(self.jobOptions_addFakes[key_addFakes_job])
-            if category != self.category_inclusive:
-              key_hadd_stage2 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
-              self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addFakes[key_addFakes_job]['outputFile'])
+            key_hadd_stage2 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
+            self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addFakes[key_addFakes_job]['outputFile'])
 
     logging.info("Creating configuration files to run 'addBackgrounds_TailFit'")
     for lepton_charge_selection in self.lepton_charge_selections:
