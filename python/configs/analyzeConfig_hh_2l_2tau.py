@@ -5,7 +5,6 @@ from hhAnalysis.multilepton.configs.analyzeConfig_hh import *
 from tthAnalysis.HiggsToTauTau.jobTools import create_if_not_exists
 from tthAnalysis.HiggsToTauTau.analysisTools import initDict, getKey, create_cfg, createFile, generateInputFileList
 
-
 def get_lepton_and_hadTau_selection_and_frWeight(lepton_and_hadTau_selection, lepton_and_hadTau_frWeight):
   lepton_and_hadTau_selection_and_frWeight = lepton_and_hadTau_selection
   if lepton_and_hadTau_selection.startswith("Fakeable"):
@@ -204,10 +203,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     self.cfgFile_addTailFits = os.path.join(self.template_dir, "addBackgrounds_TailFit_cfg.py")             
     self.jobOptions_addTailFits = {} 
     self.num_jobs['addTailFits'] = 0
-
-
-
-
 
   def set_BDT_training(self, hadTau_selection_relaxed):
     """Run analysis with loose selection criteria for leptons and hadronic taus,
@@ -826,8 +821,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
               key_hadd_stage2 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
               self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addFakes[key_addFakes_job]['outputFile'])
 
-
-
     logging.info("Creating configuration files to run 'addBackgrounds_TailFit'")
     for lepton_charge_selection in self.lepton_charge_selections:
       for hadTau_charge_selection in self.hadTau_charge_selections:
@@ -887,7 +880,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
           self.createCfg_addTailFits(self.jobOptions_addTailFits[key_addTailFits_job])
           key_hadd_stage2 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
           self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addTailFits[key_addTailFits_job]['outputFile'])
-
 
     logging.info("Creating configuration files to run 'prepareDatacards'")
     for category in self.categories:
@@ -1026,8 +1018,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       logging.info("Creating script for submitting '%s' jobs to batch system" % self.executable_addTailFits)
       self.sbatchFile_addTailFits = os.path.join(self.dirs[DKEY_SCRIPTS], "sbatch_addTailFits_%s.py" % self.channel)
       self.createScript_sbatch_addTailFits(self.executable_addTailFits, self.sbatchFile_addTailFits, self.jobOptions_addTailFits)
-
-
 
     logging.info("Creating Makefile")
     lines_makefile = []
