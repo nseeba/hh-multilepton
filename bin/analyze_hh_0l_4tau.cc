@@ -118,7 +118,7 @@ struct HadTauHistManagerWrapper_eta
 };
 
 /**
- * @brief Produce datacard and control plots for 0l_4tau category of HH analysis.
+ * @brief Produce datacard and control plots for 0l_4tau category of HH "multilepton" (HH->WWWW,WWtt,tttt) analysis.
  */
 int main(int argc, char* argv[])
 {
@@ -1354,12 +1354,6 @@ int main(int argc, char* argv[])
   delete genPhotonReader;
   delete genJetReader;
   delete lheInfoReader;
-
-  delete genEvtHistManager_beforeCuts;
-  delete genEvtHistManager_afterCuts;
-  delete lheInfoHistManager;
-  delete cutFlowHistManager;
-  delete eventWeightManager;
 
   hltPaths_delete(triggers_2tau);
   

@@ -351,6 +351,8 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
                   continue
                 if central_or_shift in systematics.LHE().ttZ and sample_category != "TTZ":
                   continue
+                if central_or_shift in systematics.DYMCReweighting and not ('DYMCReweighting' in sample_info.keys() and sample_info["DYMCReweighting"]):
+                  continue
 
                 logging.info(" ... for '%s' and systematic uncertainty option '%s'" % (lepton_and_hadTau_selection_and_frWeight, central_or_shift))
 

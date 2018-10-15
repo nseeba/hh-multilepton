@@ -1,4 +1,4 @@
-<library   file="*.cc" name="hhAnalysisttttPlugins">
+<library   file="*.cc" name="hhAnalysismultileptonPlugins">
    <flags   EDM_PLUGIN="1"/>
    <use   name="FWCore/ParameterSet"/>
    <use   name="FWCore/PluginManager"/>
