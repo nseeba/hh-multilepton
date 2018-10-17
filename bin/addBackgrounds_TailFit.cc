@@ -261,13 +261,10 @@ void processHistogram(
   for ( std::set<std::string>::const_iterator histogram = histograms.begin();
 	histogram != histograms.end(); ++histogram ) {                                                                      
     std::cout << "processing histogram = " << (*histogram) << std::endl; 
-    
     for ( vstring::const_iterator central_or_shift = central_or_shifts.begin();
 	  central_or_shift != central_or_shifts.end(); ++central_or_shift ) {     
-      
-      //int verbosity = ( histogram->find("EventCounter") != std::string::npos && ((*central_or_shift) == "" || (*central_or_shift) == "central") ) ? 1 : 0;
+      // int verbosity = ( histogram->find("EventCounter") != std::string::npos && ((*central_or_shift) == "" || (*central_or_shift) == "central") ) ? 1 : 0;
       int verbosity = 0;
-      
       TH1* histogramData_den = getHistogram(dir_den, processData, *histogram, *central_or_shift, false);  
       bool histogramData_den_isSubstitute = false;
       if ( !histogramData_den ) {
@@ -694,8 +691,7 @@ int main(int argc, char* argv[])
                                                                                                                                                                                                        
 
        
-                                                                                                                                                                                                   
-// ----- Initialize Alternate Fit functions (for fit bias estimation studies) ----                                                                                                                  
+  // ----- Initialize Alternate Fit functions (for fit bias estimation studies) ----                                                                                                                  
   std::cout<< " Initialize Alternate Fit functions (for fit bias estimation studies) " << std::endl;                                                                                                 
   std::vector<FitFuncEntryType*> vec_alt_fit_funcs;                                                                                                                                                  
   unsigned int counter = 0;                          
@@ -790,9 +786,9 @@ int main(int argc, char* argv[])
             if ( !histogramFakesData ) {
               histogramFakesData = getHistogram(*subdir_sideband_level2, processData, *histogram, "central", true);
             }
-            // if ( verbosity ) {
+            //if ( verbosity ) {
 	    //   std::cout << " integral(fakes_data) = " << histogramFakesData->Integral() << std::endl;
-            // }
+            //}
 	    
 	    std::vector<TH1*> histogramsToSubtract;
             for ( vstring::const_iterator processToSubtract = processesToSubtract.begin();
