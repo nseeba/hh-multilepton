@@ -285,31 +285,26 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
 
   printf("Plotter_HH:: Before  yMin: %f,  yMax: %f\n",yMin,yMax);
   if ( !(yMin >= 0. && yMax > yMin) ) {
-    if ( useLogScale ) {
-      const double numOrdersOfMagnitude = 4.5;
-      if ( histogramData_density ) yMax = compYmaxForClearance(histogramData_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude);
-      else yMax = 1.;
-      printf("LogScale: ");
-      std::cout << "histogramData_density: " << histogramData_density;
-      printf(",  compYmaxForClearance: %f\n",
-	     compYmaxForClearance(histogramData_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude));
-      yMax = TMath::Max(yMax, compYmaxForClearance(histogramSum_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude));
-      printf("here2: yMax: %f \n",yMax);
-      if ( histogramSignal_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude));
-      yMin = TMath::Power(10., -numOrdersOfMagnitude)*TMath::Max(1., yMax);
-      printf("here3: yMax: %f,  yMin: %f \n",yMax, yMin);
-    } else {
-      if ( histogramData_density ) yMax = compYmaxForClearance(histogramData_density, legendPosX, legendPosY, labelPosY, false, -1.);
-      else yMax = 1.;
-      printf("LinearScale: ");
-      std::cout << "histogramData_density: " << histogramData_density;
-      printf(",  compYmaxForClearance: %f\n",
-             compYmaxForClearance(histogramData_density, legendPosX, legendPosY, labelPosY, false, -1.));
-      printf("here2: yMax: %f \n",yMax);
-      yMax = TMath::Max(yMax, compYmaxForClearance(histogramSum_density, legendPosX, legendPosY, labelPosY, false, -1.));
-      if ( histogramSignal_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal_density, legendPosX, legendPosY, labelPosY, false, -1.));
-      yMin = 0.;
-      printf("here3: yMax: %f,  yMin: %f \n",yMax, yMin);
+    for ( int i = 0; i < 3; ++i ) {
+      TH1* histogram_i = nullptr;
+      if      ( i == 0 ) histogram_i = histogramData_density;
+      else if ( i == 1 ) histogram_i = histogramSum_density;
+      else if ( i == 2 ) histogram_i = histogramSignal_density;
+      else assert(0);
+      double numOrdersOfMagnitude;
+      if ( useLogScale ) numOrdersOfMagnitude = 4.5;
+      else numOrdersOfMagnitude = -1.;
+      if ( histogram_i ) {
+	std::pair<double, double> yMin_and_yMax = compYmin_and_YmaxForClearance(histogram_i, legendPosX, legendPosY, labelPosY, useLogScale, numOrdersOfMagnitude);
+	if ( yMin_and_yMax.second > yMax || i == 0 ) {
+	  yMin = yMin_and_yMax.first;
+	  yMax = yMin_and_yMax.second;
+	}
+      } else if ( i == 0 ) {
+	if ( useLogScale ) yMin = TMath::Power(10., -numOrdersOfMagnitude);
+	else yMin = 0.;
+	yMax = 1.;
+      }
     }
   }
   printf("Plotter_HH:: After  yMin: %f,  yMax: %f\n",yMin,yMax);

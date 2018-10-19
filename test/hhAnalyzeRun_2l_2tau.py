@@ -45,6 +45,8 @@ hlt_filter        = args.hlt_filter
 files_per_job     = args.files_per_job
 use_home          = args.use_home
 lep_mva_wp        = args.lep_mva_wp
+tau_id_wp         = args.tau_id_wp
+
 
 # Use the arguments
 central_or_shifts = []

@@ -239,9 +239,11 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
 
     jobOptions['hadTauFakeRateWeight.inputFileName'] = self.hadTauFakeRateWeight_inputFile
     graphName = 'jetToTauFakeRate/%s/$etaBin/jetToTauFakeRate_mc_hadTaus_pt' % self.hadTau_selection_part2
+    # graphName = 'jetToTauFakeRate/%s/$etaBin/jetToTauFakeRate_mc_hadTaus_pt' % "dR03mvaMedium"
     jobOptions['hadTauFakeRateWeight.lead.graphName'] = graphName
     jobOptions['hadTauFakeRateWeight.sublead.graphName'] = graphName
     fitFunctionName = 'jetToTauFakeRate/%s/$etaBin/fitFunction_data_div_mc_hadTaus_pt' % self.hadTau_selection_part2
+    # fitFunctionName = 'jetToTauFakeRate/%s/$etaBin/fitFunction_data_div_mc_hadTaus_pt' % "dR03mvaMedium"
     jobOptions['hadTauFakeRateWeight.lead.fitFunctionName'] = fitFunctionName
     jobOptions['hadTauFakeRateWeight.sublead.fitFunctionName'] = fitFunctionName
     if "mcClosure" in lepton_and_hadTau_selection:
@@ -290,7 +292,10 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       lines.append("            ),")
       lines.append("         alternate_fit_funcs = cms.VPSet(")
       lines.append("            cms.PSet(")
-      lines.append("                FitfuncName   = cms.string('%s')," % "LegendrePolynomial3")
+      if self.hadTau_selection_part2 == "dR05mvaTight":
+        lines.append("              FitfuncName   = cms.string('%s')," % "LegendrePolynomial1")
+      else:
+        lines.append("              FitfuncName   = cms.string('%s')," % "LegendrePolynomial3")
       lines.append("                FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_alt0_dihiggsMass'])
       lines.append("                FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_alt0_dihiggsMass'])
       lines.append("                ),")
@@ -350,7 +355,10 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       lines.append("            ),")
       lines.append("         alternate_fit_funcs = cms.VPSet(")
       lines.append("            cms.PSet(")
-      lines.append("                FitfuncName   = cms.string('%s')," % "LegendrePolynomial3")
+      if self.hadTau_selection_part2 == "dR05mvaTight":
+        lines.append("              FitfuncName   = cms.string('%s')," % "LegendrePolynomial1")
+      else:
+        lines.append("              FitfuncName   = cms.string('%s')," % "LegendrePolynomial3")
       lines.append("                FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_alt0_mTauTauVis'])
       lines.append("                FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_alt0_mTauTauVis'])
       lines.append("                ),")
@@ -844,6 +852,48 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
           fitparam_nom_mTauTauVis  = [1.0, -0.01]
           fitrange_alt0_mTauTauVis = [90., 200.]
           fitparam_alt0_mTauTauVis = [1.0, 0.1, 0.01, 0.001]
+          if self.hadTau_selection_part2 == "dR05mvaTight" and chargeSumSelection == "OS": 
+            fitrange_nom_dihiggsMass  = [450., 1500.]
+            fitparam_nom_dihiggsMass  = [0.1, -0.01]
+            fitrange_alt0_dihiggsMass = [450., 1500.] 
+            fitparam_alt0_dihiggsMass = [0.1, -0.01]  ## LegendrePoly3 was giving fit failure so switched to LegPolyn1 (LegPolyn2 is symmetric hence useless here)
+            fitrange_nom_dihiggsVisMass  = [250., 1500.]                                                                                                                                                                                         
+            fitparam_nom_dihiggsVisMass  = [0.15, -0.01]
+            fitrange_alt0_dihiggsVisMass = [250., 1500.]                                                                                                                                                                                          
+            fitparam_alt0_dihiggsVisMass = [0.2, -0.1] 
+            fitrange_nom_STMET  = [300., 1500.]                                                                                                                                                                                                        
+            fitparam_nom_STMET  = [0.15, -0.01]                                                                                                                                                                                                       
+            fitrange_alt0_STMET = [300., 1500.]                                                                                                                                                                                                        
+            fitparam_alt0_STMET = [0.15, 0.01]   
+            fitrange_nom_HT  = [200., 1500.]                                                                                                                                                                                               
+            fitparam_nom_HT  = [0.1, -0.01]                                                                                                                                                                                              
+            fitrange_alt0_HT = [200., 1500.]                                                                                                                                                                                               
+            fitparam_alt0_HT = [0.05, 0.01]      
+            fitrange_nom_mTauTauVis  = [55., 200.]
+            fitparam_nom_mTauTauVis  = [1.0, -0.1]
+            fitrange_alt0_mTauTauVis = [55., 200.]  
+            fitparam_alt0_mTauTauVis = [1.0, 0.1]   ## LegendrePoly3 was giving fit failure so switched to LegPolyn1 (LegPolyn2 is symmetric hence useless here)
+          if self.hadTau_selection_part2 == "dR05mvaTight" and chargeSumSelection == "SS": 
+            fitrange_nom_dihiggsMass  = [350., 1500.]
+            fitparam_nom_dihiggsMass  = [1.0, -0.1]
+            fitrange_alt0_dihiggsMass = [350., 1500.]
+            fitparam_alt0_dihiggsMass = [1.0, -0.01]  ## LegendrePoly3 was giving fit failure so switched to LegPolyn1 (LegPolyn2 is symmetric hence useless here) 
+            fitrange_nom_dihiggsVisMass  = [300., 1500.]                                                                                                                                                                                         
+            fitparam_nom_dihiggsVisMass  = [0.8, -0.001]
+            fitrange_alt0_dihiggsVisMass = [300., 1500.]                                                                                                                                                                                          
+            fitparam_alt0_dihiggsVisMass = [0.01, -0.01] 
+            fitrange_nom_STMET  = [350., 1500.]                                                                                                                                                                                                        
+            fitparam_nom_STMET  = [0.002, -0.01]                                                                                                                                                                                                       
+            fitrange_alt0_STMET = [350., 1500.]                                                                                                                                                                                                        
+            fitparam_alt0_STMET = [0.1, 0.01]   
+            fitrange_nom_HT  = [300., 1500.]                                                                                                                                                                                               
+            fitparam_nom_HT  = [0.7, -0.0001]                                                                                                                                                                                              
+            fitrange_alt0_HT = [300., 1500.]                                                                                                                                                                                               
+            fitparam_alt0_HT = [0.05, 0.01]     
+            fitrange_nom_mTauTauVis  = [55., 200.]
+            fitparam_nom_mTauTauVis  = [1.0, -0.1]
+            fitrange_alt0_mTauTauVis = [55., 200.]
+            fitparam_alt0_mTauTauVis = [1.0, 0.1] ## LegendrePoly3 was giving fit failure so switched to LegPolyn1 (LegPolyn2 is symmetric hence useless here)  
           key_addTailFits_job = getKey(self.category_inclusive, lepton_charge_selection, hadTau_charge_selection, chargeSumSelection)            ## This will run only on the inclusive category
           key_addFakes_job = getKey(self.category_inclusive, lepton_charge_selection, hadTau_charge_selection, "fakes_data", chargeSumSelection) ## This will run only on the inclusive category
           self.jobOptions_addTailFits[key_addTailFits_job] = {
