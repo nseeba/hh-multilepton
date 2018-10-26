@@ -38,8 +38,83 @@
 #include <assert.h>
 #include <fstream> // std::ofstream
 
+TH1* compRatioHistogram(const std::string& ratioHistogramName, const TH1* numerator, const TH1* denominator)
+{
+  TH1* histogramRatio = 0;
+
+  if ( numerator->GetDimension() == denominator->GetDimension() &&
+       numerator->GetNbinsX() == denominator->GetNbinsX() ) {
+    histogramRatio = (TH1*)numerator->Clone(ratioHistogramName.data());
+    histogramRatio->Divide(denominator);
+    histogramRatio->SetLineColor(numerator->GetLineColor());
+    histogramRatio->SetLineWidth(numerator->GetLineWidth());
+    histogramRatio->SetMarkerColor(numerator->GetMarkerColor());
+    histogramRatio->SetMarkerStyle(numerator->GetMarkerStyle());
+    histogramRatio->SetMarkerSize(numerator->GetMarkerSize());
+  }
+
+  return histogramRatio;
+}
 
 
+
+void computePDFUnc_NNPDF_Run1(TH1* histo_sub_category, TH1* histo_inclusive){ // Used in Run-1 SM HTauTau analysis (HIG-13-004): AN2013_262_V8.pdf
+  checkCompatibleBinning(histo_sub_category, histo_inclusive);
+  double a_plus  = 0.;
+  double a_minus = 0.;
+  int plus_counter = 0;  
+  int minus_counter = 0;  
+  std::vector<double> PDFAcceptance;
+  TH1* PDFaccept_histo = compRatioHistogram("PDFacceptance", histo_sub_category, histo_inclusive);
+  
+  double PDFacceptCentral = PDFaccept_histo->GetBinContent(1);
+  PDFAcceptance.push_back(PDFacceptCentral);
+  int nBins = PDFaccept_histo->GetNbinsX();
+  for ( int iBin = 2; iBin <= nBins; ++iBin ){
+    double PDFacceptVar = PDFaccept_histo->GetBinContent(iBin);
+    if(PDFacceptVar >= PDFacceptCentral){
+      a_plus += TMath::Power((PDFacceptVar - PDFacceptCentral), 2.0);
+      plus_counter += 1;
+    }else{
+      a_minus += TMath::Power((PDFacceptCentral - PDFacceptVar), 2.0);
+      minus_counter += 1;
+    }
+    // PDFaccept_histo->SetBinContent(iBin, binContent - 1.);
+  }
+
+  double delta_PDFacceptVar_plus = TMath::Sqrt( (a_plus/((double)plus_counter)) );
+  double delta_PDFacceptVar_minus = TMath::Sqrt( (a_minus/((double)minus_counter)) );
+  std::cout << "PDF acceptance: " << PDFacceptCentral << " + " << delta_PDFacceptVar_plus << " - " << delta_PDFacceptVar_minus << std::endl; 
+  PDFAcceptance.push_back(delta_PDFacceptVar_plus);
+  PDFAcceptance.push_back(delta_PDFacceptVar_minus);
+  for(unsigned int i = 0; i < PDFAcceptance.size(); i++){
+    std::cout<< "Value stored " << i << " " << PDFAcceptance[i] << std::endl;
+  }
+  // return PDFAcceptance;
+}
+
+void computeScaleUnc_Run1(TH1* EventCounter_sel, TH1* EventCounter_incl, TH1* histo_sub_cat, TH1* histo_incl){ // Used in Run-1 SM HTauTau analysis (HIG-13-004): AN2013_262_V8.pdf
+
+  double yield_sel      = EventCounter_sel->Integral();
+  double yield_incl     = EventCounter_incl->Integral();
+  double ScaleAcceptDefault  = (yield_sel/yield_incl); // Scale acceptance for default case (mu_R = mu_F = 1.0) 
+  TH1* histo_ScaleAcceptVar = compRatioHistogram("histo_ScaleAcceptVar", histo_sub_cat, histo_incl);
+  std::vector<double> ScaleVarVector;
+  int nBins = histo_ScaleAcceptVar->GetNbinsX();
+  for ( int iBin = 1; iBin <= nBins; ++iBin ){
+    ScaleVarVector.push_back(histo_ScaleAcceptVar->GetBinContent(iBin));
+  }
+
+  double MaxScaleVar = *max_element(ScaleVarVector.begin(), ScaleVarVector.end());
+  double MinScaleVar = *min_element(ScaleVarVector.begin(), ScaleVarVector.end());
+  std::cout<< "Max. Scale Acceptance: " << MaxScaleVar << std::endl;
+  std::cout<< "Min. Scale Acceptance: " << MinScaleVar << std::endl;
+
+  double Scale_Unc = (MaxScaleVar - MinScaleVar)/(2 * ScaleAcceptDefault);
+  
+  std::cout<< "Scale Unc. " << ScaleAcceptDefault << " +/- " << Scale_Unc << std::endl;
+
+}
 
 typedef std::vector<std::string> vstring;
 
@@ -103,10 +178,13 @@ int main(int argc, char* argv[])
     TH1* den_pdfWeights = 0;
     TH1* num_scaleWeights = 0;
     TH1* den_scaleWeights = 0;
+    TH1* num_EventCounter = 0;
+    TH1* den_EventCounter = 0;
 
     TDirectory* numerator_dir = getDirectory(inputFile, numerator_dir_path, true);
     assert(numerator_dir);
     std::cout << "processing numerator directory = " << numerator_dir_path << std::endl;
+    num_EventCounter   = getHistogram(dynamic_cast<const TDirectory*>(numerator_dir), ProcessName, "EventCounter", "", true, false);
     num_pdfWeights   = getHistogram(dynamic_cast<const TDirectory*>(numerator_dir), ProcessName, "pdfWeights", "", true, false);
     num_scaleWeights = getHistogram(dynamic_cast<const TDirectory*>(numerator_dir), ProcessName, "scaleWeights", "", true, false);
 
@@ -117,12 +195,19 @@ int main(int argc, char* argv[])
     TDirectory* denominator_dir = getDirectory(inputFile, denominator_dir_path, true);
     assert(denominator_dir);
     std::cout << "processing denominator directory = " << denominator_dir_path << std::endl;
+    den_EventCounter   = getHistogram(dynamic_cast<const TDirectory*>(denominator_dir), ProcessName, "EventCounter", "", true, false);
     den_pdfWeights   = getHistogram(dynamic_cast<const TDirectory*>(denominator_dir), ProcessName, "pdfWeights", "", true, false);
     den_scaleWeights = getHistogram(dynamic_cast<const TDirectory*>(denominator_dir), ProcessName, "scaleWeights", "", true, false);
 
     std::cout<< "den_pdfWeights->GetNbinsX() " << den_pdfWeights->GetNbinsX() << std::endl; 
     std::cout<< "den_scaleWeights->GetNbinsX() " << den_scaleWeights->GetNbinsX() << std::endl; 
 
+    computePDFUnc_NNPDF_Run1(num_pdfWeights, den_pdfWeights);
+
+    computeScaleUnc_Run1(num_EventCounter, den_EventCounter, num_scaleWeights, den_scaleWeights);
+
+    delete num_EventCounter;
+    delete den_EventCounter;
     delete num_pdfWeights;
     delete den_pdfWeights;
     delete num_scaleWeights;
