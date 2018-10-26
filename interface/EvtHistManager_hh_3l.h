@@ -37,6 +37,7 @@ class EvtHistManager_hh_3l
 								 double WTojjMass,
 								 double mTMetLepton1,
 								 double mTMetLepton2,
+								 double vbf_m_jj, double vbf_dEta_jj, int numSelJets_nonVBF,                
 								 double HT,
 								 double STMET,
                  double evtWeight);
@@ -78,6 +79,10 @@ class EvtHistManager_hh_3l
 	TH1 * histogram_WTojjMass_;
 	TH1 * histogram_mTMetLepton1_;
 	TH1 * histogram_mTMetLepton2_;
+
+	TH1 * histogram_vbf_m_jj_;
+  TH1 * histogram_vbf_dEta_jj_;
+	TH1 * histogram_numJets_nonVBF_;
 	
   TH1 * histogram_HT_;
   TH1 * histogram_STMET_;	

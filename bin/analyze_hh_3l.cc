@@ -386,6 +386,9 @@ int main(int argc, char* argv[])
   RecoJetCollectionGenMatcher jetGenMatcher;
   RecoJetCollectionCleaner jetCleaner(0.4, isDEBUG);
   RecoJetCollectionSelector jetSelector(era, -1, isDEBUG);
+	RecoJetCollectionSelector jetSelectorVBF(era, -1, isDEBUG);
+  //jetSelectorVBF.getSelector().set_min_pt(30.);
+  jetSelectorVBF.getSelector().set_max_absEta(4.7);
   RecoJetCollectionSelectorBtagLoose jetSelectorBtagLoose(era, -1, isDEBUG);
   RecoJetCollectionSelectorBtagMedium jetSelectorBtagMedium(era, -1, isDEBUG);
 
@@ -451,11 +454,12 @@ int main(int argc, char* argv[])
   mvaInputVariables_3l_ttbar.push_back("mindr_lep2_jet");
   TMVAInterface mva_3l_ttbar(mvaFileName_3l_ttbar, mvaInputVariables_3l_ttbar, { "iF_Recl[0]", "iF_Recl[1]", "iF_Recl[2]" });
 
-  std::vector<std::string> mvaInputVariables_3l = get_mvaInputVariables(mvaInputVariables_3l_ttV, mvaInputVariables_3l_ttbar);
+  std::vector<std::string> mvaInputVariables_3l = get_mvaInputVariables(mvaInputVariables_3l_ttV, mvaInputVariables_3l_ttbar); 
   std::map<std::string, double> mvaInputs_3l;
-
-  bool selectBDT = ( cfg_analyze.exists("selectBDT") ) ? cfg_analyze.getParameter<bool>("selectBDT") : false;
 	*/
+
+	bool selectBDT = ( cfg_analyze.exists("selectBDT") ) ? cfg_analyze.getParameter<bool>("selectBDT") : false;
+	
 	
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
   std::ostream* selEventsFile = ( selEventsFileName_output != "" ) ? new std::ofstream(selEventsFileName_output.data(), std::ios::out) : 0;
@@ -473,11 +477,10 @@ int main(int argc, char* argv[])
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
     EvtHistManager_hh_3l* evt_;
-		EvtHistManager_hh_3l* evt_Min2Jets_;
-		EvtHistManager_hh_3l* evt_Exact1Jet_;		
     EvtYieldHistManager* evtYield_;
   };
   std::map<int, preselHistManagerType*> preselHistManagers;
+	
   struct selHistManagerType
   {
     ElectronHistManager* electrons_;
@@ -496,24 +499,18 @@ int main(int argc, char* argv[])
     MEtFilterHistManager* metFilters_;
     //MVAInputVarHistManager* mvaInputVariables_3l_;
     EvtHistManager_hh_3l* evt_;
-		EvtHistManager_hh_3l* evt_Min2Jets_;
-		EvtHistManager_hh_3l* evt_Exact1Jet_;
     std::map<std::string, EvtHistManager_hh_3l*> evt_in_categories_;
-		std::map<std::string, EvtHistManager_hh_3l*> evt_in_categories_Min2Jets_;
-		std::map<std::string, EvtHistManager_hh_3l*> evt_in_categories_Exact1Jet_;		
-    std::map<std::string, EvtHistManager_hh_3l*> evt_in_decayModes_;
-		std::map<std::string, EvtHistManager_hh_3l*> evt_in_decayModes_Min2Jets_;
-		std::map<std::string, EvtHistManager_hh_3l*> evt_in_decayModes_Exact1Jet_;
+		std::map<std::string, EvtHistManager_hh_3l*> evt_in_decayModes_;
     std::map<std::string, std::map<std::string, EvtHistManager_hh_3l*>> evt_in_categories_and_decayModes_; // key = category, decayMode
-		std::map<std::string, std::map<std::string, EvtHistManager_hh_3l*>> evt_in_categories_and_decayModes_Min2Jets_; // key = category, decayMode
-		std::map<std::string, std::map<std::string, EvtHistManager_hh_3l*>> evt_in_categories_and_decayModes_Exact1Jet_; // key = category, decayMode
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
   std::map<int, selHistManagerType*> selHistManagers;
 
   vstring categories = { 
-    "bl_neg", "bl_pos", "bt_neg", "bt_pos"
+    "hh_3lneg", "hh_3lpos",
+		"hh_3l_Geq1j", "hh_3l_Only1j", "hh_3l_Geq2j",
+		"hh_3l_nonVBF", "hh_3l_VBF"		 
   };
   for ( std::vector<leptonGenMatchEntry>::const_iterator leptonGenMatch_definition = leptonGenMatch_definitions.begin();
 	leptonGenMatch_definition != leptonGenMatch_definitions.end(); ++leptonGenMatch_definition ) {
@@ -550,13 +547,7 @@ int main(int argc, char* argv[])
     preselHistManager->metFilters_->bookHistograms(fs);
     preselHistManager->evt_ = new EvtHistManager_hh_3l(makeHistManager_cfg(process_and_genMatch,
       Form("%s/presel/evt", histogramDir.data()), era_string, central_or_shift));
-    preselHistManager->evt_->bookHistograms(fs);		
-    preselHistManager->evt_Min2Jets_ = new EvtHistManager_hh_3l(makeHistManager_cfg(process_and_genMatch,
-      Form("%s/presel/evt_Min2Jets_", histogramDir.data()), era_string, central_or_shift));		
-		preselHistManager->evt_Min2Jets_->bookHistograms(fs);		
-    preselHistManager->evt_Exact1Jet_ = new EvtHistManager_hh_3l(makeHistManager_cfg(process_and_genMatch,
-      Form("%s/presel/evt_Exact1Jet_", histogramDir.data()), era_string, central_or_shift));		
-		preselHistManager->evt_Exact1Jet_->bookHistograms(fs);
+    preselHistManager->evt_->bookHistograms(fs);				
     edm::ParameterSet cfg_EvtYieldHistManager_presel = makeHistManager_cfg(process_and_genMatch, 
       Form("%s/presel/evtYield", histogramDir.data()), central_or_shift);
     cfg_EvtYieldHistManager_presel.addParameter<edm::ParameterSet>("runPeriods", cfg_EvtYieldHistManager);
@@ -572,7 +563,8 @@ int main(int argc, char* argv[])
     for ( vstring::const_iterator category = categories.begin();
 	  category != categories.end(); ++category ) {
       TString histogramDir_category = histogramDir.data();
-      histogramDir_category.ReplaceAll("3l", Form("3l_%s", category->data()));
+      //histogramDir_category.ReplaceAll("3l", Form("%s", category->data()));
+			histogramDir_category.ReplaceAll("hh_3l_Geq1j", Form("%s", category->data()));
       selHistManager->electrons_in_categories_[*category] = new ElectronHistManager(makeHistManager_cfg(process_and_genMatch, 
         Form("%s/sel/electrons", histogramDir_category.Data()), central_or_shift));	
       selHistManager->electrons_in_categories_[*category]->bookHistograms(fs);
@@ -583,7 +575,8 @@ int main(int argc, char* argv[])
     for ( vstring::const_iterator category = categories.begin();
 	  category != categories.end(); ++category ) {
       TString histogramDir_category = histogramDir.data();
-      histogramDir_category.ReplaceAll("3l", Form("3l_%s", category->data()));
+      //histogramDir_category.ReplaceAll("3l", Form("%s", category->data()));
+			histogramDir_category.ReplaceAll("hh_3l_Geq1j", Form("%s", category->data()));
       selHistManager->muons_in_categories_[*category] = new MuonHistManager(makeHistManager_cfg(process_and_genMatch, 
         Form("%s/sel/muons", histogramDir_category.Data()), central_or_shift));	
       selHistManager->muons_in_categories_[*category]->bookHistograms(fs);
@@ -622,14 +615,13 @@ int main(int argc, char* argv[])
 		//Form("%s/sel/mvaInputs_3l", histogramDir.data()), central_or_shift));
     //selHistManager->mvaInputVariables_3l_->bookHistograms(fs, mvaInputVariables_3l);
 
-		// >= 1 jets events
     selHistManager->evt_ = new EvtHistManager_hh_3l(makeHistManager_cfg(process_and_genMatch,
       Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
     selHistManager->evt_->bookHistograms(fs);
     for ( vstring::const_iterator category = categories.begin();
 	  category != categories.end(); ++category ) {
       TString histogramDir_category = histogramDir.data();
-      histogramDir_category.ReplaceAll("3l", Form("3l_%s", category->data()));
+      histogramDir_category.ReplaceAll("hh_3l_Geq1j", Form("%s", category->data()));
       selHistManager->evt_in_categories_[*category] = new EvtHistManager_hh_3l(makeHistManager_cfg(process_and_genMatch, 
         Form("%s/sel/evt", histogramDir_category.Data()), era_string, central_or_shift));
       selHistManager->evt_in_categories_[*category]->bookHistograms(fs);
@@ -653,7 +645,7 @@ int main(int argc, char* argv[])
 	for ( vstring::const_iterator category = categories.begin();
 	      category != categories.end(); ++category ) {
 	  TString histogramDir_category = histogramDir.data();
-	  histogramDir_category.ReplaceAll("3l", Form("3l_%s", category->data()));
+	  histogramDir_category.ReplaceAll("3l", Form("%s", category->data()));
 	  selHistManager -> evt_in_categories_and_decayModes_[*category][decayMode_evt] = new EvtHistManager_hh_3l(makeHistManager_cfg(
             decayMode_and_genMatch,
 	    Form("%s/sel/evt", histogramDir_category.Data()),
@@ -664,94 +656,6 @@ int main(int argc, char* argv[])
 	}
       }
     }
-
-
-		// >= 2 jets events
-    selHistManager->evt_Min2Jets_ = new EvtHistManager_hh_3l(makeHistManager_cfg(process_and_genMatch,
-      Form("%s/sel/evt_Min2Jets", histogramDir.data()), era_string, central_or_shift));
-    selHistManager->evt_Min2Jets_->bookHistograms(fs);
-    for ( vstring::const_iterator category = categories.begin();
-	  category != categories.end(); ++category ) {
-      TString histogramDir_category = histogramDir.data();
-      histogramDir_category.ReplaceAll("3l", Form("3l_%s", category->data()));
-      selHistManager->evt_in_categories_Min2Jets_[*category] = new EvtHistManager_hh_3l(makeHistManager_cfg(process_and_genMatch, 
-        Form("%s/sel/evt_Min2Jets", histogramDir_category.Data()), era_string, central_or_shift));
-      selHistManager->evt_in_categories_Min2Jets_[*category]->bookHistograms(fs);
-    }
-    //const vstring decayModes_evt = eventInfo.getDecayModes();
-    if(isSignal)
-    {
-      for(const std::string & decayMode_evt: decayModes_evt)
-      {
-	std::string decayMode_and_genMatch = decayMode_evt;
-	if ( apply_leptonGenMatching ) decayMode_and_genMatch += leptonGenMatch_definition -> name_;
-        
-	selHistManager -> evt_in_decayModes_Min2Jets_[decayMode_evt] = new EvtHistManager_hh_3l(makeHistManager_cfg(
-          decayMode_and_genMatch,
-	  Form("%s/sel/evt_Min2Jets", histogramDir.data()),
-	  era_string,
-	  central_or_shift
-        ));
-	selHistManager -> evt_in_decayModes_Min2Jets_[decayMode_evt] -> bookHistograms(fs);
-
-	for ( vstring::const_iterator category = categories.begin();
-	      category != categories.end(); ++category ) {
-	  TString histogramDir_category = histogramDir.data();
-	  histogramDir_category.ReplaceAll("3l", Form("3l_%s", category->data()));
-	  selHistManager -> evt_in_categories_and_decayModes_Min2Jets_[*category][decayMode_evt] = new EvtHistManager_hh_3l(makeHistManager_cfg(
-            decayMode_and_genMatch,
-	    Form("%s/sel/evt_Min2Jets", histogramDir_category.Data()),
-	    era_string,
-	    central_or_shift
-          ));
-	  selHistManager -> evt_in_categories_and_decayModes_Min2Jets_[*category][decayMode_evt] -> bookHistograms(fs);
-	}
-      }
-    }
-
-
-		// Exactly 1 jets events
-    selHistManager->evt_Exact1Jet_ = new EvtHistManager_hh_3l(makeHistManager_cfg(process_and_genMatch,
-      Form("%s/sel/evt_Exact1Jet", histogramDir.data()), era_string, central_or_shift));
-    selHistManager->evt_Exact1Jet_->bookHistograms(fs);
-    for ( vstring::const_iterator category = categories.begin();
-	  category != categories.end(); ++category ) {
-      TString histogramDir_category = histogramDir.data();
-      histogramDir_category.ReplaceAll("3l", Form("3l_%s", category->data()));
-      selHistManager->evt_in_categories_Exact1Jet_[*category] = new EvtHistManager_hh_3l(makeHistManager_cfg(process_and_genMatch, 
-        Form("%s/sel/evt_Exact1Jet", histogramDir_category.Data()), era_string, central_or_shift));
-      selHistManager->evt_in_categories_Exact1Jet_[*category]->bookHistograms(fs);
-    }
-    //const vstring decayModes_evt = eventInfo.getDecayModes();
-    if(isSignal)
-    {
-      for(const std::string & decayMode_evt: decayModes_evt)
-      {
-	std::string decayMode_and_genMatch = decayMode_evt;
-	if ( apply_leptonGenMatching ) decayMode_and_genMatch += leptonGenMatch_definition -> name_;
-        
-	selHistManager -> evt_in_decayModes_Exact1Jet_[decayMode_evt] = new EvtHistManager_hh_3l(makeHistManager_cfg(
-          decayMode_and_genMatch,
-	  Form("%s/sel/evt_Exact1Jet", histogramDir.data()),
-	  era_string,
-	  central_or_shift
-        ));
-	selHistManager -> evt_in_decayModes_Exact1Jet_[decayMode_evt] -> bookHistograms(fs);
-
-	for ( vstring::const_iterator category = categories.begin();
-	      category != categories.end(); ++category ) {
-	  TString histogramDir_category = histogramDir.data();
-	  histogramDir_category.ReplaceAll("3l", Form("3l_%s", category->data()));
-	  selHistManager -> evt_in_categories_and_decayModes_Exact1Jet_[*category][decayMode_evt] = new EvtHistManager_hh_3l(makeHistManager_cfg(
-            decayMode_and_genMatch,
-	    Form("%s/sel/evt_Exact1Jet", histogramDir_category.Data()),
-	    era_string,
-	    central_or_shift
-          ));
-	  selHistManager -> evt_in_categories_and_decayModes_Exact1Jet_[*category][decayMode_evt] -> bookHistograms(fs);
-	}
-      }
-    }		
 
 		
     edm::ParameterSet cfg_EvtYieldHistManager_sel = makeHistManager_cfg(process_and_genMatch, 
@@ -786,8 +690,7 @@ int main(int argc, char* argv[])
       genEvtHistManager_afterCuts->bookHistograms(fs, eventWeightManager);
     }
   }
-
-	/*
+	
   NtupleFillerBDT<float, int> * bdt_filler = nullptr;
   typedef std::remove_pointer<decltype(bdt_filler)>::type::float_type float_type;
   typedef std::remove_pointer<decltype(bdt_filler)>::type::int_type   int_type;
@@ -804,15 +707,22 @@ int main(int argc, char* argv[])
       "lep1_genLepPt", "lep2_genLepPt", "lep3_genLepPt",
       "lep1_fake_prob", "lep2_fake_prob", "lep3_fake_prob",
       "lep1_frWeight", "lep2_frWeight", "lep3_frWeight",  
-      "mvaOutput_3l_ttV", "mvaOutput_3l_ttbar", "mvaDiscr_3l",
+      //"mvaOutput_3l_ttV", "mvaOutput_3l_ttbar", "mvaDiscr_3l",
       "mbb_loose", "mbb_medium",
-      "dr_lss", "dr_los1", "dr_los2"
+      "dr_lss", "dr_los1", "dr_los2",
+			"met", "mht", "met_LD", "HT", "STMET",
+			"m_jj", "diHiggsVisMass", "diHiggsMass",
+			"mTMetLepton1", "mTMetLepton2",
+			"vbf_m_jj", "vbf_dEta_jj", "numSelJets_nonVBF"			
     );
     bdt_filler -> register_variable<int_type>(
-      "nJet", "nBJetLoose", "nBJetMedium", "lep1_isTight", "lep2_isTight", "lep3_isTight"
+      "nJet", "nBJetLoose", "nBJetMedium", "nElectron", "nMuon",
+			"lep1_isTight", "lep2_isTight", "lep3_isTight",
+			"sumLeptonCharge", "numSameFlavor_OS", "isVBF"
     );
     bdt_filler -> bookTree(fs);
-		} */
+	}
+	
 
   int analyzedEntries = 0;
   int selectedEntries = 0;
@@ -1307,49 +1217,13 @@ int main(int argc, char* argv[])
 			WTojjMass_presel,
 			-1.,
 			-1.,
+			-1.,
+			-1.,
+			-1.,
       HT, 
       STMET,
       1.
     );
-		if ((int)selJets.size() >= 2) {			// --- >= 2 jet events
-			preselHistManager->evt_Min2Jets_->fillHistograms(
-				preselElectrons.size(),
-				preselMuons.size(),
-				selJets.size(),
-				numSelJetsPtGt40,
-				selBJets_loose.size(),
-				selBJets_medium.size(),
-				-1,
-				0,				
-				dihiggsVisMass_presel,
-				-1.,
-				WTojjMass_presel,
-				-1.,
-				-1.,
-				HT, 
-				STMET,
-				1.
-				);
-		} else if ((int)selJets.size() == 1) {  	// --- Exactly 1 jet events
-			preselHistManager->evt_Exact1Jet_->fillHistograms(
-				preselElectrons.size(),
-				preselMuons.size(),
-				selJets.size(),
-				numSelJetsPtGt40,
-				selBJets_loose.size(),
-				selBJets_medium.size(),
-				-1,
-				0,				
-				dihiggsVisMass_presel,
-				-1.,
-				WTojjMass_presel,
-				-1.,
-				-1.,
-				HT, 
-				STMET,
-				1.
-				);
-		}
 		preselHistManager->evtYield_->fillHistograms(eventInfo, 1.);
 		
 //--- apply final event selection
@@ -1776,9 +1650,56 @@ int main(int argc, char* argv[])
 			}
 		}
 
+		// 		VBF, nonVBF categorization -----
+		std::vector<const RecoJetBase*> selJets_Wjj;
+		if ( selJets.size() >= 1) {
+			selJets_Wjj.push_back(selJets[0]);
+		}
+		if ( selJets.size() >= 2) {
+			selJets_Wjj.push_back(selJets[1]);
+		}
+
+
+		std::vector<const RecoJet*> cleanedJetsVBF = jetCleaner(cleanedJets, selJets_Wjj);
+		std::vector<const RecoJet*> selJetsVBF = jetSelectorVBF(cleanedJetsVBF, isHigherPt);
+		
+    double vbf_dEta_jj = -1.;
+    double vbf_m_jj = -1.;
+    bool isVBF = false;
+    const RecoJet* selJet_vbf_lead = nullptr;
+    const RecoJet* selJet_vbf_sublead = nullptr;		
+    for ( std::vector<const RecoJet*>::const_iterator selJetVBF1 = selJetsVBF.begin();
+	  selJetVBF1 != selJetsVBF.end(); ++selJetVBF1 ) {
+      for ( std::vector<const RecoJet*>::const_iterator selJetVBF2 = selJetVBF1 + 1;
+	    selJetVBF2 != selJetsVBF.end(); ++selJetVBF2 ) {
+	double dEta_jj = TMath::Abs((*selJetVBF1)->eta() - (*selJetVBF2)->eta());
+	double m_jj = ((*selJetVBF1)->p4() + (*selJetVBF2)->p4()).mass();
+	if ( dEta_jj > 4. && m_jj > 500. ) {
+	  //if ( dEta_jj > vbf_dEta_jj ) vbf_dEta_jj = dEta_jj;
+	  //if ( m_jj    > vbf_m_jj    ) vbf_m_jj    = m_jj;
+		if ( m_jj    > vbf_m_jj    ) { // CV: in case of ambiguity, take the jet pair of highest mass
+			vbf_m_jj    = m_jj;
+			vbf_dEta_jj = dEta_jj;
+			selJet_vbf_lead = (*selJetVBF1);
+			selJet_vbf_sublead = (*selJetVBF2);
+			isVBF = true;			
+	  //std::cout << "NJets = " << selJetsVBF.size() << " Jet Eta = " << TMath::Abs((*selJetVBF1)->eta()) << " m_jj = " << m_jj << " dEta_jj " << dEta_jj << std::endl;
+		}
+	}
+      }
+    }
+
+		std::vector<const RecoJet*> selJets_nonVBF;
+		if ( selJet_vbf_lead && selJet_vbf_sublead ) {
+      std::vector<const RecoJet*> overlaps = { selJet_vbf_lead, selJet_vbf_sublead };
+      std::vector<const RecoJet*> cleanedJets_wrtVBF = jetCleaner(cleanedJets, overlaps);
+      selJets_nonVBF = jetSelector(cleanedJets_wrtVBF, isHigherPt);      
+    } 
+
+		int numSelJets_nonVBF = ( selJets_nonVBF.size() >= 1 ) ? selJets_nonVBF.size() : selJets.size();
+		//printf("isVBF %i, numSelJets_nonVBF %i, vbf_m_jj %f, vbf_dEta_jj %f\n",isVBF,numSelJets_nonVBF, vbf_m_jj,vbf_dEta_jj);
 		
 		
-		/*
 //--- compute output of BDTs used to discriminate ttH vs. ttV and ttH vs. ttbar
 //    in 3l category of ttH multilepton analysis
     const double lep1_conePt = comp_lep1_conePt(*selLepton_lead);
@@ -1789,7 +1710,7 @@ int main(int argc, char* argv[])
     const double mindr_lep3_jet = comp_mindr_lep3_jet(*selLepton_third, selJets);
     const double avg_dr_jet = comp_avg_dr_jet(selJets);
     const double max_lep12_eta = std::max(selLepton_lead->absEta(), selLepton_sublead->absEta());
-    mvaInputs_3l["max(abs(LepGood_eta[iF_Recl[0]]),abs(LepGood_eta[iF_Recl[1]]))"] = max_lep12_eta;
+    /*mvaInputs_3l["max(abs(LepGood_eta[iF_Recl[0]]),abs(LepGood_eta[iF_Recl[1]]))"] = max_lep12_eta;
     mvaInputs_3l["MT_met_lep1"]                = comp_MT_met_lep1(selLepton_lead->cone_p4(), met.pt(), met.phi());
     mvaInputs_3l["nJet25_Recl"]                = comp_n_jet25_recl(selJets);
     mvaInputs_3l["mindr_lep1_jet"]             = mindr_lep1_jet;
@@ -1818,23 +1739,20 @@ int main(int argc, char* argv[])
 		*/
 		
 //--- fill histograms with events passing final selection
-    std::string category;
-    if ( selBJets_medium.size() >= 2 ) category += "_bt";
-    else category += "_bl";
-    if      ( sumLeptonCharge < 0 ) category += "_neg";
-    else if ( sumLeptonCharge > 0 ) category += "_pos";
+		std::vector<std::string> evtCategories;		
+    if      ( sumLeptonCharge < 0 ) evtCategories.push_back("hh_3lneg");
+    else if ( sumLeptonCharge > 0 ) evtCategories.push_back("hh_3lpos");
+		evtCategories.push_back("hh_3l_Geq1j");
+		if ((int)selJets.size() >= 2) evtCategories.push_back("hh_3l_Geq2j");
+		else if ((int)selJets.size() == 1)  evtCategories.push_back("hh_3l_Only1j");
+		if (isVBF) evtCategories.push_back("hh_3l_VBF");	 
+		else       evtCategories.push_back("hh_3l_nonVBF");
+
+		
     selHistManagerType* selHistManager = selHistManagers[idxSelLepton_genMatch];
     assert(selHistManager != 0);
     selHistManager->electrons_->fillHistograms(selElectrons, evtWeight);
-    ElectronHistManager* selHistManager_electrons_category = selHistManager->electrons_in_categories_[category];
-    if ( selHistManager_electrons_category ) {
-      selHistManager_electrons_category->fillHistograms(selElectrons, evtWeight);
-    }
     selHistManager->muons_->fillHistograms(selMuons, evtWeight);
-    MuonHistManager* selHistManager_muons_category = selHistManager->muons_in_categories_[category];
-    if ( selHistManager_muons_category ) {
-      selHistManager_muons_category->fillHistograms(selMuons, evtWeight);
-    }
     selHistManager->hadTaus_->fillHistograms(selHadTaus, evtWeight);
     selHistManager->jets_->fillHistograms(selJets, evtWeight);
     selHistManager->leadJet_->fillHistograms(selJets, evtWeight);
@@ -1847,7 +1765,6 @@ int main(int argc, char* argv[])
     selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
     //selHistManager->mvaInputVariables_3l_->fillHistograms(mvaInputs_3l, evtWeight);
 
-		// --- >= 1 jet events
     selHistManager->evt_->fillHistograms(
       selElectrons.size(),
       selMuons.size(),
@@ -1862,29 +1779,13 @@ int main(int argc, char* argv[])
 			WTojjMass,
 			mTMetLepton1,
 			mTMetLepton2,
+			vbf_m_jj,
+			vbf_dEta_jj,
+			numSelJets_nonVBF,
       HT, 
       STMET,
       evtWeight);
-    EvtHistManager_hh_3l* selHistManager_evt_category = selHistManager->evt_in_categories_[category];
-    if ( selHistManager_evt_category ) { // CV: pointer is zero when running on OS control region to estimate "charge_flip" background
-      selHistManager_evt_category->fillHistograms(
-          selElectrons.size(),
-          selMuons.size(),
-          selJets.size(),
-          numSelJetsPtGt40,
-          selBJets_loose.size(),
-          selBJets_medium.size(),
-					sumLeptonCharge,
-					numSameFlavor_OS,
-          dihiggsVisMass_sel,
-          dihiggsMass,
-					WTojjMass,
-					mTMetLepton1,
-					mTMetLepton2,
-          HT, 
-          STMET,
-          evtWeight);
-    }
+
     if(isSignal)
     {
       const std::string decayModeStr = eventInfo.getDecayModeString();
@@ -1904,53 +1805,32 @@ int main(int argc, char* argv[])
 					 WTojjMass,
 					 mTMetLepton1,
 					 mTMetLepton2,
-           HT, 
+					 vbf_m_jj,
+					 vbf_dEta_jj,
+					 numSelJets_nonVBF,
+					 HT, 
            STMET,
            evtWeight);
-  EvtHistManager_hh_3l* selHistManager_evt_category_decMode = selHistManager->evt_in_categories_and_decayModes_[category][decayModeStr];
-  if ( selHistManager_evt_category_decMode ) { // CV: pointer is zero when running on OS control region to estimate "charge_flip" background
-          selHistManager_evt_category_decMode->fillHistograms(
-           selElectrons.size(),
-           selMuons.size(),
-           selJets.size(),
-           numSelJetsPtGt40,
-           selBJets_loose.size(),
-           selBJets_medium.size(),
-					 sumLeptonCharge,
-					 numSameFlavor_OS,					 
-           dihiggsVisMass_sel,
-           dihiggsMass,
-					 WTojjMass,
-					 mTMetLepton1,
-					 mTMetLepton2,
-           HT, 
-           STMET,
-           evtWeight);
-	}					      
+				      
       }
     }
 
-		if ((int)selJets.size() >= 2) {			// --- >= 2 jet events
-			selHistManager->evt_Min2Jets_->fillHistograms(
-				selElectrons.size(),
-				selMuons.size(),
-				selJets.size(),
-				numSelJetsPtGt40,
-				selBJets_loose.size(),
-				selBJets_medium.size(),
-				sumLeptonCharge,
-				numSameFlavor_OS,
-				dihiggsVisMass_sel,
-				dihiggsMass,
-				WTojjMass,
-				mTMetLepton1,
-				mTMetLepton2,
-				HT, 
-				STMET,
-				evtWeight);
-			EvtHistManager_hh_3l* selHistManager_evt_category_Min2Jets_ = selHistManager->evt_in_categories_Min2Jets_[category];
-			if ( selHistManager_evt_category_Min2Jets_ ) { // CV: pointer is zero when running on OS control region to estimate "charge_flip" background
-				selHistManager_evt_category_Min2Jets_->fillHistograms(
+
+		for ( std::vector<std::string>::const_iterator category1 = evtCategories.begin();
+					category1 != evtCategories.end(); ++category1 ) {
+			std::string category = *category1;
+			ElectronHistManager* selHistManager_electrons_category = selHistManager->electrons_in_categories_[category];
+			if ( selHistManager_electrons_category ) {
+				selHistManager_electrons_category->fillHistograms(selElectrons, evtWeight);
+			}
+			MuonHistManager* selHistManager_muons_category = selHistManager->muons_in_categories_[category];
+			if ( selHistManager_muons_category ) {
+				selHistManager_muons_category->fillHistograms(selMuons, evtWeight);
+				}
+			
+			EvtHistManager_hh_3l* selHistManager_evt_category = selHistManager->evt_in_categories_[category];
+			if ( selHistManager_evt_category ) { // CV: pointer is zero when running on OS control region to estimate "charge_flip" background
+				selHistManager_evt_category->fillHistograms(
           selElectrons.size(),
           selMuons.size(),
           selJets.size(),
@@ -1964,35 +1844,22 @@ int main(int argc, char* argv[])
 					WTojjMass,
 					mTMetLepton1,
 					mTMetLepton2,
-          HT, 
+					vbf_m_jj,
+					vbf_dEta_jj,
+					numSelJets_nonVBF,
+					HT, 
           STMET,
           evtWeight);
 			}
-			if(isSignal)
-			{
+			
+			
+			if(isSignal) {
 				const std::string decayModeStr = eventInfo.getDecayModeString();
-				if(! decayModeStr.empty())
-				{
-					selHistManager -> evt_in_decayModes_Min2Jets_[decayModeStr] -> fillHistograms(
-						selElectrons.size(),
-						selMuons.size(),
-						selJets.size(),
-						numSelJetsPtGt40,
-						selBJets_loose.size(),
-						selBJets_medium.size(),
-						sumLeptonCharge,
-						numSameFlavor_OS,
-						dihiggsVisMass_sel,
-						dihiggsMass,
-						WTojjMass,
-						mTMetLepton1,
-						mTMetLepton2,
-						HT, 
-						STMET,
-						evtWeight);
-					EvtHistManager_hh_3l* selHistManager_evt_category_decMode_Min2Jets_ = selHistManager->evt_in_categories_and_decayModes_Min2Jets_[category][decayModeStr];
-					if ( selHistManager_evt_category_decMode_Min2Jets_ ) { // CV: pointer is zero when running on OS control region to estimate "charge_flip" background
-						selHistManager_evt_category_decMode_Min2Jets_->fillHistograms(
+				if (! decayModeStr.empty()) {
+					
+					EvtHistManager_hh_3l* selHistManager_evt_category_decMode = selHistManager->evt_in_categories_and_decayModes_[category][decayModeStr];
+					if ( selHistManager_evt_category_decMode ) { // CV: pointer is zero when running on OS control region to estimate "charge_flip" background
+						selHistManager_evt_category_decMode->fillHistograms(
 							selElectrons.size(),
 							selMuons.size(),
 							selJets.size(),
@@ -2000,101 +1867,27 @@ int main(int argc, char* argv[])
 							selBJets_loose.size(),
 							selBJets_medium.size(),
 							sumLeptonCharge,
-							numSameFlavor_OS,
+							numSameFlavor_OS,					 
 							dihiggsVisMass_sel,
 							dihiggsMass,
 							WTojjMass,
 							mTMetLepton1,
 							mTMetLepton2,
+							vbf_m_jj,
+							vbf_dEta_jj,
+							numSelJets_nonVBF,
 							HT, 
 							STMET,
 							evtWeight);
-					}					      
-				}
-			}			
-		} else if ((int)selJets.size() == 1) {  	// --- Exactly 1 jet events
-			selHistManager->evt_Exact1Jet_->fillHistograms(
-				selElectrons.size(),
-				selMuons.size(),
-				selJets.size(),
-				numSelJetsPtGt40,
-				selBJets_loose.size(),
-				selBJets_medium.size(),
-				sumLeptonCharge,
-				numSameFlavor_OS,
-				dihiggsVisMass_sel,
-				dihiggsMass,
-				WTojjMass,
-				mTMetLepton1,
-				mTMetLepton2,
-				HT, 
-				STMET,
-				evtWeight);
-			EvtHistManager_hh_3l* selHistManager_evt_category_Exact1Jet_ = selHistManager->evt_in_categories_Exact1Jet_[category];
-			if ( selHistManager_evt_category_Exact1Jet_) { // CV: pointer is zero when running on OS control region to estimate "charge_flip" background
-				selHistManager_evt_category_Exact1Jet_->fillHistograms(
-          selElectrons.size(),
-          selMuons.size(),
-          selJets.size(),
-          numSelJetsPtGt40,
-          selBJets_loose.size(),
-          selBJets_medium.size(),
-					sumLeptonCharge,
-					numSameFlavor_OS,
-         dihiggsVisMass_sel,
-          dihiggsMass,
-					WTojjMass,
-					mTMetLepton1,
-					mTMetLepton2,
-          HT, 
-          STMET,
-          evtWeight);
-			}
-			if(isSignal)
-			{
-				const std::string decayModeStr = eventInfo.getDecayModeString();
-				if(! decayModeStr.empty())
-				{
-					selHistManager -> evt_in_decayModes_Exact1Jet_[decayModeStr] -> fillHistograms(
-						selElectrons.size(),
-						selMuons.size(),
-						selJets.size(),
-						numSelJetsPtGt40,
-						selBJets_loose.size(),
-						selBJets_medium.size(),
-						sumLeptonCharge,
-						numSameFlavor_OS,
-						dihiggsVisMass_sel,
-						dihiggsMass,
-						WTojjMass,
-						mTMetLepton1,
-						mTMetLepton2,
-						HT, 
-						STMET,
-						evtWeight);
-					EvtHistManager_hh_3l* selHistManager_evt_category_decMode_Exact1Jet_ = selHistManager->evt_in_categories_and_decayModes_Exact1Jet_[category][decayModeStr];
-					if ( selHistManager_evt_category_decMode_Exact1Jet_ ) { // CV: pointer is zero when running on OS control region to estimate "charge_flip" background
-						selHistManager_evt_category_decMode_Exact1Jet_->fillHistograms(
-							selElectrons.size(),
-							selMuons.size(),
-							selJets.size(),
-							numSelJetsPtGt40,
-							selBJets_loose.size(),
-							selBJets_medium.size(),
-							sumLeptonCharge,
-							numSameFlavor_OS,
-							dihiggsVisMass_sel,
-							dihiggsMass,
-							WTojjMass,
-							mTMetLepton1,
-							mTMetLepton2,
-							HT, 
-							STMET,
-							evtWeight);
-					}					      
-				}
+					}	
+				}				
 			}			
 		}
+
+
+
+
+		
 		
     selHistManager->evtYield_->fillHistograms(eventInfo, evtWeight);
     selHistManager->weights_->fillHistograms("genWeight", eventInfo.genWeight);
@@ -2116,7 +1909,7 @@ int main(int argc, char* argv[])
       (*selEventsFile) << eventInfo.run << ':' << eventInfo.lumi << ':' << eventInfo.event << '\n';
     }
 
-		/*
+		
     if ( bdt_filler ) {
       double lep1_genLepPt = ( selLepton_lead->genLepton()    ) ? selLepton_lead->genLepton()->pt()    : 0.;
       double lep2_genLepPt = ( selLepton_sublead->genLepton() ) ? selLepton_sublead->genLepton()->pt() : 0.;
@@ -2179,9 +1972,9 @@ int main(int argc, char* argv[])
           ("lep1_fake_prob",      prob_fake_lepton_lead)
           ("lep2_fake_prob",      prob_fake_lepton_sublead)
           ("lep3_fake_prob",      prob_fake_lepton_third)
-          ("mvaOutput_3l_ttV",    mvaOutput_3l_ttV)
-          ("mvaOutput_3l_ttbar",  mvaOutput_3l_ttbar)
-          ("mvaDiscr_3l",         mvaDiscr_3l)
+				//("mvaOutput_3l_ttV",    mvaOutput_3l_ttV)
+				//("mvaOutput_3l_ttbar",  mvaOutput_3l_ttbar)
+				//("mvaDiscr_3l",         mvaDiscr_3l)
           ("lumiScale",           lumiScale)
           ("genWeight",           eventInfo.genWeight)
           ("evtWeight",           evtWeight)
@@ -2196,10 +1989,28 @@ int main(int argc, char* argv[])
           ("dr_lss",              dr_lss)
           ("dr_los1",             dr_los1)
           ("dr_los2",             dr_los2)
+				  ("met",                 met.pt())
+				  ("mht",                 mht_p4.pt())
+				  ("met_LD",              met_LD)
+				  ("HT",                  HT)
+				  ("STMET",               STMET)
+				  ("m_jj",                WTojjMass)
+				  ("diHiggsVisMass",      dihiggsVisMass_sel)
+				  ("diHiggsMass",         dihiggsMass)
+				  ("nElectron",           selElectrons.size())
+				  ("nMuon",               selMuons.size())
+					("sumLeptonCharge",     sumLeptonCharge)
+					("numSameFlavor_OS",    numSameFlavor_OS)
+					("mTMetLepton1",        mTMetLepton1)
+					("mTMetLepton2",        mTMetLepton2)
+				  ("isVBF",               isVBF)
+				  ("vbf_m_jj",            vbf_m_jj)
+				  ("vbf_dEta_jj",         vbf_dEta_jj)
+				  ("numSelJets_nonVBF",   numSelJets_nonVBF)
         .fill()
       ;
     }
-		*/
+
 			
     ++selectedEntries;
     selectedEntries_weighted += evtWeight;

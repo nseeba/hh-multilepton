@@ -48,6 +48,10 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
 	histogram_WTojjMass_       = book1D(dir, "WTojjMass",       "WTojjMass",       150,  0.,  500.);
 	histogram_mTMetLepton1_    = book1D(dir, "mTMetLepton1",    "mTMetLepton1",    150,  0.,  500.);
 	histogram_mTMetLepton2_    = book1D(dir, "mTMetLepton2",    "mTMetLepton2",    150,  0.,  500.);
+
+	histogram_vbf_m_jj_        = book1D(dir, "vbf_m_jj",        "vbf_m_jj",               150,  0., 1500.);
+  histogram_vbf_dEta_jj_     = book1D(dir, "vbf_dEta_jj",     "vbf_dEta_jj",            100,  0.,   10.);
+	histogram_numJets_nonVBF_  = book1D(dir, "numJets_nonVBF",  "numJets_nonVBF",          20, -0.5, +19.5);
 	
   histogram_HT_              = book1D(dir, "HT",              "HT",              150,  0., 1500.);
   histogram_STMET_           = book1D(dir, "STMET",           "STMET",           150,  0., 1500.);	
@@ -68,7 +72,8 @@ EvtHistManager_hh_3l::fillHistograms(int numElectrons,
 				     double dihiggsMass,
 						 double WTojjMass,
 						 double mTMetLepton1,
-						 double mTMetLepton2,																		 
+						 double mTMetLepton2,
+						 double vbf_m_jj, double vbf_dEta_jj,	 int numJets_nonVBF,											 
 				     double HT,
 				     double STMET,
 				     double evtWeight)
@@ -109,9 +114,14 @@ EvtHistManager_hh_3l::fillHistograms(int numElectrons,
 		fillWithOverFlow(histogram_mTMetLepton1_,  mTMetLepton1,    evtWeight, evtWeightErr);
 	if (mTMetLepton2 > 0.)
 		fillWithOverFlow(histogram_mTMetLepton2_,  mTMetLepton2,    evtWeight, evtWeightErr);
+
+	fillWithOverFlow(histogram_vbf_m_jj_,        vbf_m_jj,        evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_vbf_dEta_jj_,     vbf_dEta_jj,     evtWeight, evtWeightErr);
+	fillWithOverFlow(histogram_numJets_nonVBF_,  numJets_nonVBF,         evtWeight, evtWeightErr);
 	
   fillWithOverFlow(histogram_HT_,              HT,              evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_STMET_,           STMET,           evtWeight, evtWeightErr);	
 
   fillWithOverFlow(histogram_EventCounter_, 0., evtWeight, evtWeightErr);
 }
+ 
