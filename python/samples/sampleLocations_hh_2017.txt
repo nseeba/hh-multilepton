@@ -1,0 +1,3 @@
+/hdfs/cms/store/user/kaehatah/NanoProduction_v2_2018Sep26
+/hdfs/cms/store/user/kaehatah/NanoProduction_v2_2018Oct26
+/hdfs/cms/store/user/kaehatah/NanoProduction_v2_2018Oct28
