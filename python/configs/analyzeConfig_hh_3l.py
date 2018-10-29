@@ -183,14 +183,14 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     self.category_inclusive = "hh_3l_Geq1j"
 
 
-
   def set_BDT_training(self):
     """Run analysis with loose selection criteria for leptons,
        for the purpose of preparing event list files for BDT training.
     """
-    self.lepton_selections = [ "forBDTtraining" ]
-    self.lepton_frWeights  = [ "disabled" ]
-    self.isBDTtraining     = True
+    self.lepton_selections   = [ "forBDTtraining" ]
+    self.lepton_frWeights    = [ "disabled" ]
+    self.chargeSumSelections = [ "OS" ]
+    self.isBDTtraining       = True
 
   def createCfg_analyze(self, jobOptions, sample_info, lepton_selection):
     """Create python configuration file for the analyze_hh_3l executable (analysis code)
