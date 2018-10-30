@@ -93,8 +93,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
       template_dir       = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'multilepton', 'test', 'templates'),
     )
 
-    self.samples = samples
-
     self.hadTau_selections = [ "Tight", "Fakeable" ]
     self.hadTau_frWeights = [ "enabled", "disabled" ]
     self.hadTau_selection_part2 = hadTau_selection
