@@ -1,7 +1,7 @@
 from collections import OrderedDict as OD
 
-# file generated at 2018-10-29 00:11:38 with the following command:
-# find_samples.py -V -i ../../tthAnalysis/NanoAOD/test/datasets_hh_multilepton_2017.txt -m python/samples/metaDict_2017_hh.py -c python/samples/sampleLocations_hh_2017.txt
+# file generated at 2018-10-30 14:26:48 with the following command:
+# find_samples.py -V -i ../../tthAnalysis/NanoAOD/test/datasets_hh_multilepton_2017.txt -m python/samples/metaDict_2017_hh.py -c python/samples/sampleLocations_hh_2017.txt -s ../../tthAnalysis/NanoAOD/test/datasets_sum_2017_hh.txt
 
 meta_dictionary = OD()
 
@@ -9,6 +9,8 @@ meta_dictionary = OD()
 ### event sums
 
 sum_events = { 
+  ("signal_ggf_spin0_400_hh_4t", "signal_ggf_spin0_400_hh_4t_private"),
+  ("signal_ggf_spin0_700_hh_4t", "signal_ggf_spin0_700_hh_4t_private"),
 }
 
 
