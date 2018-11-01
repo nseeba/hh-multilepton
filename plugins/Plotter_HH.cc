@@ -283,6 +283,7 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
   legend->SetFillColor(10);
   legend->SetTextSize(legendTextSize);
 
+  printf("Plotter_HH:: Before  yMin: %f,  yMax: %f\n",yMin,yMax);
   if ( !(yMin >= 0. && yMax > yMin) ) {
     for ( int i = 0; i < 3; ++i ) {
       TH1* histogram_i = nullptr;
@@ -306,6 +307,7 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
       }
     }
   }
+  printf("Plotter_HH:: After  yMin: %f,  yMax: %f\n",yMin,yMax);
   
   if ( histogramData_blinded_density ) {
     histogramData_blinded_density->SetTitle("");

@@ -7,7 +7,7 @@ from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
 
 # E.g.: ./hhAnalyzeRun_3l.py -v 2017Dec13 -m default -e 2017
 
-mode_choices     = [ 'default', 'forBDTtraining', 'sync', 'sync_wMEM' ]
+mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full' ] + systematics.an_extended_opts_hh
 systematics.full = systematics.an_extended_hh
 
@@ -60,6 +60,15 @@ if mode == "default":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
   elif era == "2018":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
+  else:
+    raise ValueError("Invalid era: %s" % era)
+elif mode == "forBDTtraining":
+  if era == "2016":
+    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016_BDT import samples_2016 as samples
+  elif era == "2017":
+    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT import samples_2017 as samples
+  elif era == "2018":
+    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018_BDT import samples_2018 as samples
   else:
     raise ValueError("Invalid era: %s" % era)
 else:
@@ -115,12 +124,18 @@ if __name__ == '__main__':
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
     histograms_to_fit                     = {
       "EventCounter"                      : {},
+      "numElectrons"                      : {},
+      "numMuons"                          : {},
       "numJets"                           : {},
-      "mTauTauVis"                        : {},
+      "chargedSum3l"                      : {},
+      "numSFOS2l"                         : {},
       "dihiggsVisMass"                    : {},
       "dihiggsMass"                       : {},
+      "WTojjMass"                         : {},
+      "mTMetLepton1"                      : {},
+      "mTMetLepton2"                      : {},
       "HT"                                : {},
-      "STMET"                             : {}
+      "STMET"                             : {},
     },
     select_rle_output                     = True,
     select_root_output                    = False,
@@ -132,6 +147,9 @@ if __name__ == '__main__':
     hlt_filter                            = hlt_filter,
     use_home                              = use_home,
   )
+
+  if mode == "forBDTtraining":
+    analysis.set_BDT_training()
 
   job_statistics = analysis.create()
   for job_type, num_jobs in job_statistics.items():

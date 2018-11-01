@@ -12,7 +12,8 @@ process.makePlots = cms.PSet(
     pluginType = cms.string("Plotter_HH"),
 
     applyRebinning = cms.bool(True),
-    apply_fixed_rebinning = cms.int32(2),
+    #apply_fixed_rebinning = cms.int32(2),
+    apply_fixed_rebinning = cms.int32(8),
     apply_automatic_rebinning = cms.bool(True),
     minEvents_automatic_rebinning = cms.double(0.5),
     applyAutoBlinding = cms.bool(True),

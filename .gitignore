@@ -7,3 +7,5 @@
 *.includes
 *.pyc
 __init__.py
+python/configs/makePlots_cfi_v1.py
+python/configs/makePlots_cfi_vDefault.py

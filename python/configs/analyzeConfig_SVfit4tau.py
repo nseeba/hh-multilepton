@@ -46,8 +46,6 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
       template_dir              = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'multilepton', 'test', 'templates'),
     )
 
-    self.samples = samples
-
     self.lepton_selection = lepton_selection
     self.hadTau_selection = hadTau_selection
 

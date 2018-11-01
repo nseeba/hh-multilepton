@@ -1,13 +1,21 @@
-from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_bkg import samples_2017 as samples_2017_general
-from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_hh_private import samples_2017 as samples_2017_hh_private
+from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_bkg import samples_2017 as samples_2017_bkg
+from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_hh import samples_2017 as samples_2017_hh
 
 import collections
 import itertools
+import copy
 
-del samples_2017_hh_private['sum_events']
+sum_events_hh  = copy.deepcopy(samples_2017_hh['sum_events'])
+sum_events_bkg = copy.deepcopy(samples_2017_bkg['sum_events'])
+
+del samples_2017_hh['sum_events']
+del samples_2017_bkg['sum_events']
+
 samples_2017 = collections.OrderedDict(itertools.chain(
-  samples_2017_general.items(), samples_2017_hh_private.items()
+  samples_2017_bkg.items(), samples_2017_hh.items()
 ))
+
+samples_2017['sum_events'] = set(sum_events_hh) | set(sum_events_bkg)
 
 from collections import OrderedDict as OD
 
@@ -17,7 +25,7 @@ for sample_name, sample_info in samples_2017.items():
     continue
 
   if sample_info["process_name_specific"].startswith('signal') and 'hh' in sample_info["process_name_specific"]:
-    sample_info["use_it"] = True
+    sample_info["use_it"] = 'nonresonant' not in sample_info["process_name_specific"] # temp: enable resonant samples only
 
   if sample_name.startswith('/ZZ'):
     sample_info["sample_category"] = "ZZ"
