@@ -15,7 +15,7 @@ samples_2017 = collections.OrderedDict(itertools.chain(
   samples_2017_bkg.items(), samples_2017_hh.items()
 ))
 
-samples_2017['sum_events'] = set(sum_events_hh) | set(sum_events_bkg)
+samples_2017['sum_events'] = sum_events_hh + sum_events_bkg
 
 from collections import OrderedDict as OD
 
