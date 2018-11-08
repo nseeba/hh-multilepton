@@ -180,7 +180,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
       "hh_3lneg", "hh_3lpos",
       "hh_3l_Geq1j", "hh_3l_Only1j", "hh_3l_Geq2j",
       "hh_3l_nonVBF", "hh_3l_VBF" ]
-    self.category_inclusive = "hh_3l_Geq1j"
+    self.category_inclusive = "hh_3l"
 
 
   def set_BDT_training(self):
