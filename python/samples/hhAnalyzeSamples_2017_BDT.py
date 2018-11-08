@@ -1,5 +1,7 @@
 from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017
 
+import re
+
 for sample_name, sample_info in samples_2017.items():
   if sample_name == 'sum_events':
     continue
@@ -22,6 +24,8 @@ for sample_name, sample_info in samples_2017.items():
     sample_info["use_it"] = True
   elif sample_info["process_name_specific"].startswith("signal") and \
       'hh' in sample_info["process_name_specific"]:
+    sample_info["use_it"] = True
+  elif re.match("WZTo3LNu_(0|1|2|3)Jets.*", sample_info["process_name_specific"]):
     sample_info["use_it"] = True
   else:
     sample_info["use_it"] = False
