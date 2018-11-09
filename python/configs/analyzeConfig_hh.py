@@ -29,7 +29,8 @@ def get_signal_per_masspoint(samples):
     signal_base = '_'.join(['signal', 'spin%s' % resonant_match.group(RR_SPIN), resonant_match.group(RR_MASS_POINT), 'hh'])
     if signal_base not in io_pairs:
       io_pairs[signal_base] = []
-    io_pairs[signal_base].append(process_cat)
+    if process_cat not in io_pairs[signal_base]:
+      io_pairs[signal_base].append(process_cat)
   return io_pairs
 
 class analyzeConfig_hh(analyzeConfig):
