@@ -563,8 +563,7 @@ int main(int argc, char* argv[])
     for ( vstring::const_iterator category = categories.begin();
 	  category != categories.end(); ++category ) {
       TString histogramDir_category = histogramDir.data();
-      //histogramDir_category.ReplaceAll("3l", Form("%s", category->data()));
-			histogramDir_category.ReplaceAll("hh_3l_Geq1j", Form("%s", category->data()));
+      histogramDir_category.ReplaceAll("hh_3l", category->data());
       selHistManager->electrons_in_categories_[*category] = new ElectronHistManager(makeHistManager_cfg(process_and_genMatch, 
         Form("%s/sel/electrons", histogramDir_category.Data()), central_or_shift));	
       selHistManager->electrons_in_categories_[*category]->bookHistograms(fs);
@@ -575,8 +574,7 @@ int main(int argc, char* argv[])
     for ( vstring::const_iterator category = categories.begin();
 	  category != categories.end(); ++category ) {
       TString histogramDir_category = histogramDir.data();
-      //histogramDir_category.ReplaceAll("3l", Form("%s", category->data()));
-			histogramDir_category.ReplaceAll("hh_3l_Geq1j", Form("%s", category->data()));
+      histogramDir_category.ReplaceAll("hh_3l", category->data());
       selHistManager->muons_in_categories_[*category] = new MuonHistManager(makeHistManager_cfg(process_and_genMatch, 
         Form("%s/sel/muons", histogramDir_category.Data()), central_or_shift));	
       selHistManager->muons_in_categories_[*category]->bookHistograms(fs);
@@ -621,7 +619,7 @@ int main(int argc, char* argv[])
     for ( vstring::const_iterator category = categories.begin();
 	  category != categories.end(); ++category ) {
       TString histogramDir_category = histogramDir.data();
-      histogramDir_category.ReplaceAll("hh_3l_Geq1j", Form("%s", category->data()));
+      histogramDir_category.ReplaceAll("hh_3l", category->data());
       selHistManager->evt_in_categories_[*category] = new EvtHistManager_hh_3l(makeHistManager_cfg(process_and_genMatch, 
         Form("%s/sel/evt", histogramDir_category.Data()), era_string, central_or_shift));
       selHistManager->evt_in_categories_[*category]->bookHistograms(fs);
@@ -645,7 +643,7 @@ int main(int argc, char* argv[])
 	for ( vstring::const_iterator category = categories.begin();
 	      category != categories.end(); ++category ) {
 	  TString histogramDir_category = histogramDir.data();
-	  histogramDir_category.ReplaceAll("3l", Form("%s", category->data()));
+    histogramDir_category.ReplaceAll("hh_3l", category->data());
 	  selHistManager -> evt_in_categories_and_decayModes_[*category][decayMode_evt] = new EvtHistManager_hh_3l(makeHistManager_cfg(
             decayMode_and_genMatch,
 	    Form("%s/sel/evt", histogramDir_category.Data()),
