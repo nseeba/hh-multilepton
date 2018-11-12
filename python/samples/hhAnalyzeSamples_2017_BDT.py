@@ -17,11 +17,6 @@ for sample_name, sample_info in samples_2017.items():
         "TTToHadronic_PSweights",
       ]:
     sample_info["use_it"] = True
-  elif sample_info["process_name_specific"].startswith("DY") and \
-    sample_info["process_name_specific"] not in [
-      "DYJetsToLL_M-50", "DYJetsToLL_M-50_ext1" # disable NLO samples
-    ]:
-    sample_info["use_it"] = True
   elif sample_info["process_name_specific"].startswith("signal") and 'hh' in sample_info["process_name_specific"]:
     sample_info["use_it"] = 'nonresonant' not in sample_info["process_name_specific"] # temp: enable resonant samples only
   elif re.match("WZTo3LNu_(0|1|2|3)Jets.*", sample_info["process_name_specific"]):
