@@ -348,7 +348,7 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
   const std::string legendEntry_DY          = "DY";
   const std::string legendEntry_ZZ          = "Diboson";
   const std::string legendEntry_Fakes       = "Fakes";
-  const std::string legendEntry_ttZ         = "t#bar{t}Z + t#bar{t}WW";
+  const std::string legendEntry_ttZ         = "t#bar{t} + t#bar{t}V(V)";
   const std::string legendEntry_Conversions = "Conversions";
   const std::string legendEntry_VH          = "SM Higgs bosons";
   const std::string legendEntry_Other       = "Other";
