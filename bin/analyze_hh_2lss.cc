@@ -35,7 +35,6 @@
 #include "tthAnalysis/HiggsToTauTau/interface/GenPhotonReader.h" // GenPhotonReader
 #include "tthAnalysis/HiggsToTauTau/interface/GenJetReader.h" // GenJetReader
 #include "hhAnalysis/multilepton/interface/THWeightInterface.h" // THWeightInterface
-#include "hhAnalysis/multilepton/interface/GenHiggsReader.h" // GenHiggsReader
 #include "tthAnalysis/HiggsToTauTau/interface/LHEInfoReader.h" // LHEInfoReader
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfoReader.h" // EventInfoReader
 #include "tthAnalysis/HiggsToTauTau/interface/convert_to_ptrs.h" // convert_to_ptrs
@@ -416,7 +415,7 @@ int main(int argc, char* argv[])
   GenHadTauReader* genHadTauReader = 0;
   GenPhotonReader* genPhotonReader = 0;
   GenJetReader* genJetReader = 0;
-  GenHiggsReader* genHiggsReader = 0;
+  GenParticleReader* genHiggsReader = 0;
   LHEInfoReader* lheInfoReader = 0;
   if ( isMC ) {
     if(! readGenObjects)
@@ -439,7 +438,7 @@ int main(int argc, char* argv[])
       }
     }
     if ( branchName_genHiggses != "" ) {
-      genHiggsReader = new GenHiggsReader(branchName_genHiggses);
+      genHiggsReader = new GenParticleReader(branchName_genHiggses);
       inputTree->registerReader(genHiggsReader);
     }
     lheInfoReader = new LHEInfoReader(hasLHE);
@@ -712,7 +711,7 @@ int main(int argc, char* argv[])
     std::vector<GenHadTau> genHadTaus;
     std::vector<GenPhoton> genPhotons;
     std::vector<GenJet> genJets;
-    std::vector<GenHiggs> genHiggses;
+    std::vector<GenParticle> genHiggses;
     if ( isMC && fillGenEvtHistograms ) {
       if ( genLeptonReader ) {
 	genLeptons = genLeptonReader->read();
@@ -1545,7 +1544,6 @@ int main(int argc, char* argv[])
     const double mindr_lep1_jet  = comp_mindr_lep1_jet(*selLepton_lead, selJets);
     const double mindr_lep2_jet  = comp_mindr_lep2_jet(*selLepton_sublead, selJets);
     Particle::LorentzVector llP4 = selLeptonP4_lead + selLeptonP4_sublead;
-    double m_ll  = llP4.mass();
     double dR_ll = deltaR(selLeptonP4_lead, selLeptonP4_sublead);
     double pT_ll = llP4.pt();
     double pT_llMEt = (llP4 + metP4).pt();

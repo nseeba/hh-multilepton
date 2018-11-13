@@ -191,7 +191,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
-    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc" ]
+    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc", "flips_mc" ]
     self.prep_dcard_signals = []
     for sample_name, sample_info in self.samples.items():
       if not sample_info["use_it"]:
@@ -745,6 +745,31 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
               }
               self.createCfg_addBackgrounds(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_fakes])
 
+              # sum fake background contributions for the total of all MC sample
+              # input processes: TT2l1f0g0j,TT2l2f0g0j; ...
+              # output process: flips_mc
+              key_addBackgrounds_job_flips = getKey(lepton_charge_selection, hadTau_charge_selection, lepton_and_hadTau_selection_and_frWeight, chargeSumSelection, "flips")
+              key_hadd_stage1_5 = getKey(lepton_charge_selection, hadTau_charge_selection, lepton_and_hadTau_selection_and_frWeight, chargeSumSelection)
+              sample_categories = []
+              sample_categories.extend(self.nonfake_backgrounds)
+              processes_input = []
+              for sample_category in sample_categories:
+                processes_input.append("%s_flip" % sample_category)
+              self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_flips] = {
+                'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5],
+                'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgrounds_%s_flips_mc_%s_%s_%s_%s_cfg.py" % \
+                  (self.channel, lepton_charge_selection, hadTau_charge_selection, lepton_and_hadTau_selection_and_frWeight, chargeSumSelection)),
+                'outputFile' : os.path.join(self.dirs[DKEY_HIST], "addBackgrounds_%s_flips_mc_%s_%s_%s_%s.root" % \
+                  (self.channel, lepton_charge_selection, hadTau_charge_selection, lepton_and_hadTau_selection_and_frWeight, chargeSumSelection)),
+                'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgrounds_%s_flips_mc_%s_%s_%s_%s.log" % \
+                  (self.channel, lepton_charge_selection, hadTau_charge_selection, lepton_and_hadTau_selection_and_frWeight, chargeSumSelection)),
+                'categories' : [ getHistogramDir(category, lepton_selection, hadTau_selection, lepton_and_hadTau_frWeight,
+                  lepton_charge_selection, hadTau_charge_selection, chargeSumSelection) for category in self.categories ],
+                'processes_input' : processes_input,
+                'process_output' : "flips_mc"
+              }
+              self.createCfg_addBackgrounds(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_flips])
+
               # sum conversion background contributions for the total of all MC sample
               # input processes: TT1l1g0j, TT0l2g0j; ...
               # output process: conversions
@@ -807,6 +832,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
                 self.inputFiles_hadd_stage2[key_hadd_stage2] = []
               if lepton_and_hadTau_selection == "Tight":
                 self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_fakes]['outputFile'])
+                self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_flips]['outputFile'])
                 self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_conversions]['outputFile'])
               key_hadd_stage1_5 = getKey(lepton_charge_selection, hadTau_charge_selection, lepton_and_hadTau_selection_and_frWeight, chargeSumSelection)
               self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.outputFile_hadd_stage1_5[key_hadd_stage1_5])
