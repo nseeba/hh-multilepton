@@ -9,6 +9,6 @@ git clone https://github.com/HEP-KBFI/tth-htt          $CMSSW_BASE/src/tthAnalys
 git clone https://github.com/SVfit/ClassicSVfit4tau    $CMSSW_BASE/src/TauAnalysis/ClassicSVfit4tau
 git clone https://github.com/SVfit/ClassicSVfit        $CMSSW_BASE/src/TauAnalysis/ClassicSVfit
 git clone https://github.com/SVfit/SVfitTF             $CMSSW_BASE/src/TauAnalysis/SVfitTF
-git clone https://github.com/cms-hh/HHStatAnalysis.git $CMSSW_BASE/src/HHStatAnalysis
+curl -s https://raw.githubusercontent.com/cms-hh/HHStatAnalysis/master/install_ana_models.sh | bash -s
 git clone https://github.com/cms-hh/Support.git        $CMSSW_BASE/src/Support
 ```
