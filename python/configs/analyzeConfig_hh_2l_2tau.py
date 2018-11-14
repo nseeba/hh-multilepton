@@ -113,29 +113,25 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       #self.lepton_and_hadTau_selections.extend([ "Fakeable_mcClosure_all" ]) #TODO
       pass
 
-    self.lepton_genMatches = [ "2l0g0j", "1l1g0j", "1l0g1j", "0l2g0j", "0l1g1j", "0l0g2j" ]
+    self.lepton_genMatches = [ "2l2f0g0j", "2l1f0g0j", "2l0f0g0j", "1l1f1g0j", "1l1f0g1j", "1l0f1g0j", "1l0f0g1j", "0l0f2g0j", "0l0f1g1j", "0l0f0g2j" ]
     self.hadTau_genMatches = [ "2t0e0m0j", "1t1e0m0j", "1t0e1m0j", "1t0e0m1j", "0t2e0m0j", "0t1e1m0j", "0t1e0m1j", "0t0e2m0j", "0t0e1m1j", "0t0e0m2j" ]
-    self.lepton_ChargeFlip_genMatches = [ "2l2f0g0j", "2l1f0g0j", "2l0f0g0j", "1l1f1g0j", "1l1f0g1j", "1l0f1g0j", "1l0f0g1j", "0l0f2g0j", "0l0f1g1j", "0l0f0g2j" ]
-    
+  
     self.apply_leptonGenMatching = None
     self.apply_hadTauGenMatching = None
     self.lepton_and_hadTau_genMatches_nonfakes = []
+    self.lepton_and_hadTau_genMatches_flips = []
     self.lepton_and_hadTau_genMatches_conversions = []
     self.lepton_and_hadTau_genMatches_fakes = []
-    self.lepton_and_hadTau_genMatches_flips = []
     if self.applyFakeRateWeights == "4L":
       self.apply_leptonGenMatching = True
       self.apply_hadTauGenMatching = True
-      for lepton_ChargeFlip_genMatch in self.lepton_ChargeFlip_genMatches:
-        for hadTau_genMatch in self.hadTau_genMatches:
-          lepton_and_hadTau_ChargeFlip_genMatch = "&".join([ lepton_ChargeFlip_genMatch, hadTau_genMatch ])
-          if (lepton_ChargeFlip_genMatch.startswith("2l2f") or lepton_ChargeFlip_genMatch.startswith("2l1f")) and hadTau_genMatch.endswith("0j"):
-            self.lepton_and_hadTau_genMatches_flips.append(lepton_and_hadTau_ChargeFlip_genMatch)
       for lepton_genMatch in self.lepton_genMatches:
         for hadTau_genMatch in self.hadTau_genMatches:
           lepton_and_hadTau_genMatch = "&".join([ lepton_genMatch, hadTau_genMatch ])
-          if lepton_genMatch.endswith("0g0j") and hadTau_genMatch.endswith("0j"):
+          if lepton_genMatch.endswith("0f0g0j") and hadTau_genMatch.endswith("0j"):
             self.lepton_and_hadTau_genMatches_nonfakes.append(lepton_and_hadTau_genMatch)
+          elif lepton_genMatch.endswith("0g0j") and hadTau_genMatch.endswith("0j"):
+            self.lepton_and_hadTau_genMatches_flips.append(lepton_and_hadTau_genMatch)
           elif lepton_genMatch.endswith("0j") and hadTau_genMatch.endswith("0j"):
             self.lepton_and_hadTau_genMatches_conversions.append(lepton_and_hadTau_genMatch)
           else:
@@ -145,16 +141,13 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     elif applyFakeRateWeights == "2lepton":
       self.apply_leptonGenMatching = True
       self.apply_hadTauGenMatching = True
-      for lepton_ChargeFlip_genMatch in self.lepton_ChargeFlip_genMatches:
-        for hadTau_genMatch in self.hadTau_genMatches:
-          lepton_and_hadTau_ChargeFlip_genMatch = "&".join([ lepton_ChargeFlip_genMatch, hadTau_genMatch ])
-          if (lepton_ChargeFlip_genMatch.startswith("2l2f") or lepton_ChargeFlip_genMatch.startswith("2l1f")) and hadTau_genMatch.endswith("0j"):
-            self.lepton_and_hadTau_genMatches_flips.append(lepton_and_hadTau_ChargeFlip_genMatch)
       for lepton_genMatch in self.lepton_genMatches:
         for hadTau_genMatch in self.hadTau_genMatches:
           lepton_and_hadTau_genMatch = "&".join([ lepton_genMatch, hadTau_genMatch ])
-          if lepton_genMatch.endswith("0g0j"):
+          if lepton_genMatch.endswith("0f0g0j"):
             self.lepton_and_hadTau_genMatches_nonfakes.append(lepton_and_hadTau_genMatch)
+          elif lepton_genMatch.endswith("0g0j"):
+            self.lepton_and_hadTau_genMatches_flips.append(lepton_and_hadTau_genMatch)
           elif lepton_genMatch.endswith("0j"):
             self.lepton_and_hadTau_genMatches_conversions.append(lepton_and_hadTau_genMatch)
           else:
@@ -163,16 +156,13 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
         self.lepton_and_hadTau_selections.extend([ "Fakeable_mcClosure_e", "Fakeable_mcClosure_m" ])
     elif applyFakeRateWeights == "2tau":
       self.apply_leptonGenMatching = True
-      self.apply_hadTauGenMatching = True
-      for lepton_ChargeFlip_genMatch in self.lepton_ChargeFlip_genMatches:
-        for hadTau_genMatch in self.hadTau_genMatches:
-          lepton_and_hadTau_ChargeFlip_genMatch = "&".join([ lepton_ChargeFlip_genMatch, hadTau_genMatch ])
-          if (lepton_ChargeFlip_genMatch.startswith("2l2f") or lepton_ChargeFlip_genMatch.startswith("2l1f")) and hadTau_genMatch.endswith("0j"):
-            self.lepton_and_hadTau_genMatches_flips.append(lepton_and_hadTau_ChargeFlip_genMatch)
+      self.apply_hadTauGenMatching = Tru
       for lepton_genMatch in self.lepton_genMatches:
         for hadTau_genMatch in self.hadTau_genMatches:
-          if lepton_genMatch.find("0g") != -1 and hadTau_genMatch.endswith("0j"):
+          if lepton_genMatch.find("0f0g") != -1 and hadTau_genMatch.endswith("0j"):
             self.lepton_and_hadTau_genMatches_nonfakes.append(hadTau_genMatch)
+          elif lepton_genMatch.find("0g") != -1 and hadTau_genMatch.endswith("0j"):
+            self.lepton_and_hadTau_genMatches_flips.append(hadTau_genMatch)
           elif hadTau_genMatch.endswith("0j"):
             self.lepton_and_hadTau_genMatches_conversions.append(hadTau_genMatch)
           else:
