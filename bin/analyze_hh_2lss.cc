@@ -621,9 +621,9 @@ int main(int argc, char* argv[])
 
 
   std::vector<double> NormBM;
+  int BM = -10;
   /*
   double CX = 1.0;
-  int BM = -10;
   // any point can be chosen here
   double Norm = 1.0;
   double kl = 1.0;
