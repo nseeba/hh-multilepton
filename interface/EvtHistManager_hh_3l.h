@@ -27,21 +27,22 @@ class EvtHistManager_hh_3l
   fillHistograms(int numElectrons,
                  int numMuons,
                  int numJets,
-								 int numJetsPtGt40,
+		 int numJetsPtGt40,
                  int numBJets_loose,
                  int numBJets_medium,
-								 int chargedSum3l,
-								 int numSFOS2l,
-								 double dihiggsVisMass,
-								 double dihiggsMass,
-								 double WTojjMass,
-								 double mTMetLepton1,
-								 double mTMetLepton2,
-								 double vbf_m_jj, double vbf_dEta_jj, int numSelJets_nonVBF,                
-								 double HT,
-								 double STMET,
+		 int chargedSum3l,
+		 int numSFOS2l,
+		 double dihiggsVisMass,
+		 double dihiggsMass,		 
+		 double WTojjMass,
+		 double mSFOS2l,
+		 double mTMetLepton1,
+		 double mTMetLepton2,
+		 double vbf_m_jj, double vbf_dEta_jj, int numSelJets_nonVBF,                
+		 double HT,
+		 double STMET,
                  double evtWeight);
-
+  
   const TH1 *
   getHistogram_EventCounter() const;
 
@@ -71,19 +72,20 @@ class EvtHistManager_hh_3l
   TH1 * histogram_numJetsPtGt40_;
   TH1 * histogram_numBJets_loose_;
   TH1 * histogram_numBJets_medium_;	
-	TH1 * histogram_chargedSum3l_;
-	TH1 * histogram_numSFOS2l_;
-	
+  TH1 * histogram_chargedSum3l_;
+  TH1 * histogram_numSFOS2l_;
+  
   TH1 * histogram_dihiggsVisMass_;
   TH1 * histogram_dihiggsMass_;
-	TH1 * histogram_WTojjMass_;
-	TH1 * histogram_mTMetLepton1_;
-	TH1 * histogram_mTMetLepton2_;
-
-	TH1 * histogram_vbf_m_jj_;
+  TH1 * histogram_WTojjMass_;
+  TH1 * histogram_mSFOS2l_;
+  TH1 * histogram_mTMetLepton1_;
+  TH1 * histogram_mTMetLepton2_;
+  
+  TH1 * histogram_vbf_m_jj_;
   TH1 * histogram_vbf_dEta_jj_;
-	TH1 * histogram_numJets_nonVBF_;
-	
+  TH1 * histogram_numJets_nonVBF_;
+  
   TH1 * histogram_HT_;
   TH1 * histogram_STMET_;	
 
