@@ -35,7 +35,6 @@
 #include "tthAnalysis/HiggsToTauTau/interface/GenPhotonReader.h" // GenPhotonReader
 #include "tthAnalysis/HiggsToTauTau/interface/GenJetReader.h" // GenJetReader
 #include "hhAnalysis/multilepton/interface/THWeightInterface.h" // THWeightInterface
-#include "hhAnalysis/multilepton/interface/GenHiggsReader.h" // GenHiggsReader
 #include "tthAnalysis/HiggsToTauTau/interface/LHEInfoReader.h" // LHEInfoReader
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfoReader.h" // EventInfoReader
 #include "tthAnalysis/HiggsToTauTau/interface/convert_to_ptrs.h" // convert_to_ptrs
@@ -83,6 +82,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/TTreeWrapper.h" // TTreeWrapper
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
+#include "tthAnalysis/HiggsToTauTau/interface/backgroundEstimation.h" // prob_chargeMisId
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2lss.h" // EvtHistManager_hh_2lss
 //#include "hhAnalysis/multilepton/interface/SVfit4tauHistManager.h" // SVfit4tauHistManager
@@ -200,7 +200,7 @@ int main(int argc, char* argv[])
   double lep_mva_cut = cfg_analyze.getParameter<double>("lep_mva_cut"); // CV: used for tight lepton selection only
 
   bool apply_leptonGenMatching = cfg_analyze.getParameter<bool>("apply_leptonGenMatching");
-  std::vector<leptonGenMatchEntry> leptonGenMatch_definitions = getLeptonGenMatch_definitions_2lepton(apply_leptonGenMatching);
+  std::vector<leptonChargeFlipGenMatchEntry> leptonGenMatch_definitions = getLeptonChargeFlipGenMatch_definitions_2lepton(apply_leptonGenMatching);
   std::cout << "leptonGenMatch_definitions:" << std::endl;
   std::cout << leptonGenMatch_definitions;
 
@@ -416,7 +416,7 @@ int main(int argc, char* argv[])
   GenHadTauReader* genHadTauReader = 0;
   GenPhotonReader* genPhotonReader = 0;
   GenJetReader* genJetReader = 0;
-  GenHiggsReader* genHiggsReader = 0;
+  GenParticleReader* genHiggsReader = 0;
   LHEInfoReader* lheInfoReader = 0;
   if ( isMC ) {
     if(! readGenObjects)
@@ -439,7 +439,7 @@ int main(int argc, char* argv[])
       }
     }
     if ( branchName_genHiggses != "" ) {
-      genHiggsReader = new GenHiggsReader(branchName_genHiggses);
+      genHiggsReader = new GenParticleReader(branchName_genHiggses);
       inputTree->registerReader(genHiggsReader);
     }
     lheInfoReader = new LHEInfoReader(hasLHE);
@@ -481,7 +481,7 @@ int main(int argc, char* argv[])
     WeightHistManager* weights_;
   };
   std::map<int, selHistManagerType*> selHistManagers;
-  for ( std::vector<leptonGenMatchEntry>::const_iterator leptonGenMatch_definition = leptonGenMatch_definitions.begin();
+  for ( std::vector<leptonChargeFlipGenMatchEntry>::const_iterator leptonGenMatch_definition = leptonGenMatch_definitions.begin();
 	leptonGenMatch_definition != leptonGenMatch_definitions.end(); ++leptonGenMatch_definition ) {
     std::string process_and_genMatch = process_string;
     if ( apply_leptonGenMatching ) process_and_genMatch += leptonGenMatch_definition->name_;
@@ -619,8 +619,11 @@ int main(int argc, char* argv[])
     bdt_filler->bookTree(fs);
   }
 
-  double CX = 1.0;
+
+  std::vector<double> NormBM;
   int BM = -10;
+  /*
+  double CX = 1.0;
   // any point can be chosen here
   double Norm = 1.0;
   double kl = 1.0;
@@ -628,7 +631,6 @@ int main(int argc, char* argv[])
   double c2 = 0.0;
   double cg = 0.0;
   double c2g = 0.0;
-  std::vector<double> NormBM;
   THWeightInterface THWeight_calc(CX, BM, Norm, kl, kt, c2, cg, c2g, NormBM);
   if ( BM ==0 ) std::cout << " The closest shape benchmark is: SM" << "\n";
   else std::cout << " The closest shape benchmark is: " << BM << "\n";
@@ -637,6 +639,7 @@ int main(int argc, char* argv[])
     for (unsigned int bm_list = 0; bm_list < NormBM.size(); bm_list++) std::cout <<  NormBM[bm_list] << " ";
     std::cout << '\n';
   }
+  */
 
   int analyzedEntries = 0;
   int selectedEntries = 0;
@@ -669,7 +672,7 @@ int main(int argc, char* argv[])
     "H->ZZ*->4l veto",
     "met LD",
     "MEt filters",
-    "sel lepton-pair gen=rec charge match",
+    // "sel lepton-pair gen=rec charge match",
     "signal region veto",
   };
   CutFlowTableHistManager * cutFlowHistManager = new CutFlowTableHistManager(cutFlowTableCfg, cuts);
@@ -712,7 +715,7 @@ int main(int argc, char* argv[])
     std::vector<GenHadTau> genHadTaus;
     std::vector<GenPhoton> genPhotons;
     std::vector<GenJet> genJets;
-    std::vector<GenHiggs> genHiggses;
+    std::vector<GenParticle> genHiggses;
     if ( isMC && fillGenEvtHistograms ) {
       if ( genLeptonReader ) {
 	genLeptons = genLeptonReader->read();
@@ -745,12 +748,14 @@ int main(int argc, char* argv[])
 
     double mhh_gen = 0.;
     double costS_gen = 0.;
+    double THWeight = 1.0;
+    /*
     if ( genHiggses.size() == 2 ) {
       mhh_gen = ( genHiggses[0].p4() + genHiggses[1].p4() ).mass();
       costS_gen = comp_cosThetaS( genHiggses[0].p4() , genHiggses[1].p4() );
     }
     std::vector<double> WeightBM;
-    double THWeight = 1.0;
+
     if (mhh_gen > 247.) THWeight = THWeight_calc(mhh_gen, costS_gen, kl, kt, c2, cg, c2g, Norm, WeightBM );
     if ( isDEBUG ) {
       std::cout<< " genHiggses weights " << genHiggses.size() << " " << THWeight << " " << mhh_gen << " " << costS_gen << std::endl;
@@ -758,6 +763,7 @@ int main(int argc, char* argv[])
       for (unsigned int bm_list = 0; bm_list < WeightBM.size(); bm_list++) std::cout <<  WeightBM[bm_list] << " ";
       std::cout << '\n';
     }
+    */
 
     double evtWeight_inclusive = 1.;
     if(isMC)
@@ -1001,7 +1007,7 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms(">= 2 presel leptons", lumiScale);
     const RecoLepton* preselLepton_lead = preselLeptonsFull[0];
     const RecoLepton* preselLepton_sublead = preselLeptonsFull[1];
-    const leptonGenMatchEntry& preselLepton_genMatch = getLeptonGenMatch(leptonGenMatch_definitions, preselLepton_lead, preselLepton_sublead);
+    const leptonChargeFlipGenMatchEntry& preselLepton_genMatch = getLeptonChargeFlipGenMatch(leptonGenMatch_definitions, preselLepton_lead, preselLepton_sublead);
     int idxPreselLepton_genMatch = preselLepton_genMatch.idx_;
     assert(idxPreselLepton_genMatch != kGen_LeptonUndefined2);
 
@@ -1127,7 +1133,7 @@ int main(int argc, char* argv[])
     const RecoLepton* selLepton_sublead = selLeptons[1];
     const Particle::LorentzVector& selLeptonP4_sublead = selLepton_sublead->p4();
     int selLepton_sublead_type = getLeptonType(selLepton_sublead->pdgId());
-    const leptonGenMatchEntry& selLepton_genMatch = getLeptonGenMatch(leptonGenMatch_definitions, selLepton_lead, selLepton_sublead);
+    const leptonChargeFlipGenMatchEntry& selLepton_genMatch = getLeptonChargeFlipGenMatch(leptonGenMatch_definitions, selLepton_lead, selLepton_sublead);
     int idxSelLepton_genMatch = selLepton_genMatch.idx_;
     assert(idxSelLepton_genMatch != kGen_LeptonUndefined2);
 
@@ -1488,7 +1494,8 @@ int main(int argc, char* argv[])
     cutFlowTable.update("MEt filters", evtWeight);
     cutFlowHistManager->fillHistograms("MEt filters", evtWeight);
 
-
+    /*
+    // ------- Enabling this ensures flips_mc is zero ------
     if (isMC) {
       if((selLepton_lead->genLepton() && selLepton_lead->charge() != selLepton_lead->genLepton()->charge()) ||
 	 (selLepton_sublead->genLepton() && selLepton_sublead->charge() != selLepton_sublead->genLepton()->charge())){
@@ -1504,7 +1511,7 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update("sel lepton-pair gen=rec charge match", evtWeight);
     cutFlowHistManager->fillHistograms("sel lepton-pair gen=rec charge match", evtWeight);
-
+    */
 
     bool failsSignalRegionVeto = false;
     if ( isMCClosure_e || isMCClosure_m ) {
@@ -1545,7 +1552,6 @@ int main(int argc, char* argv[])
     const double mindr_lep1_jet  = comp_mindr_lep1_jet(*selLepton_lead, selJets);
     const double mindr_lep2_jet  = comp_mindr_lep2_jet(*selLepton_sublead, selJets);
     Particle::LorentzVector llP4 = selLeptonP4_lead + selLeptonP4_sublead;
-    double m_ll  = llP4.mass();
     double dR_ll = deltaR(selLeptonP4_lead, selLeptonP4_sublead);
     double pT_ll = llP4.pt();
     double pT_llMEt = (llP4 + metP4).pt();
@@ -1732,6 +1738,20 @@ int main(int argc, char* argv[])
             << " selected = " << selectedEntries << " (weighted = " << selectedEntries_weighted << ")\n\n"
             << "cut-flow table" << std::endl;
   cutFlowTable.print(std::cout);
+  std::cout << std::endl;
+
+  std::cout << "sel. Entries by gen. matching:" << std::endl;
+  for ( std::vector<leptonChargeFlipGenMatchEntry>::const_iterator leptonGenMatch_definition = leptonGenMatch_definitions.begin();
+        leptonGenMatch_definition != leptonGenMatch_definitions.end(); ++leptonGenMatch_definition ) {
+
+      std::string process_and_genMatch = process_string;
+      if ( apply_leptonGenMatching ) process_and_genMatch += leptonGenMatch_definition->name_;
+
+      int idxLepton = leptonGenMatch_definition->idx_;
+
+      const TH1* histogram_EventCounter = selHistManagers[idxLepton]->evt_->getHistogram_EventCounter();
+      std::cout << " " << process_and_genMatch << " = " << histogram_EventCounter->GetEntries() << " (weighted = " << histogram_EventCounter->Integral() << ")" << std::endl;
+  }
   std::cout << std::endl;
 
   delete dataToMCcorrectionInterface;
