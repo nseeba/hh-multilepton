@@ -588,6 +588,7 @@ int main(int argc, char* argv[])
         "2lSS_2tau", "2lOS_2tau", 
         "2e_2tau", "1e1mu_2tau", "2mu_2tau",
         "2eSS_2tau", "2eOS_2tau", "1e1muSS_2tau", "1e1muOS_2tau", "2muSS_2tau", "2muOS_2tau"
+        ,"2lOS_2tau_wChargeFlipWeights", "2eOS_2tau_wChargeFlipWeights", "1e1muOS_2tau_wChargeFlipWeights", "2muOS_2tau_wChargeFlipWeights"
       };
       for ( vstring::const_iterator category = categories_evt.begin();
             category != categories_evt.end(); ++category ) {
@@ -663,8 +664,6 @@ int main(int argc, char* argv[])
     ">= 2 presel leptons",
     ">= 2 sel leptons", 
     "lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV", 
-    // "sel lepton-pair gen=rec charge match",
-    "sel lepton-pair OS/SS charge", 
     "<= 2 tight leptons",  
     ">= 2 sel taus",     
     "tau-pair OS/SS charge", 
@@ -706,6 +705,8 @@ int main(int argc, char* argv[])
         std::cout << "input File = " << inputTree->getCurrentFileName() << std::endl;
       }
     }
+
+    // std::cout << "processing Entry #" << " run: " << eventInfo.run << " lumi: " << eventInfo.lumi << " event: " << eventInfo.event << '\n';
 
 //--- build collections of generator level particles (before any cuts are applied, to check distributions in unbiased event samples)
     std::vector<GenLepton> genLeptons;
@@ -1056,25 +1057,6 @@ int main(int argc, char* argv[])
     cutFlowTable.update("lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV", evtWeight);
     cutFlowHistManager->fillHistograms("lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV", evtWeight);
 
-    /*
-    // ------- Enabling this ensures flips_mc is zero ------ 
-    if (isMC) {
-      if((selLepton_lead->genLepton() && selLepton_lead->charge() != selLepton_lead->genLepton()->charge()) ||
-         (selLepton_sublead->genLepton() && selLepton_sublead->charge() != selLepton_sublead->genLepton()->charge())){
-        if(run_lumi_eventSelector)
-          {
-	    std::cout << "event " << eventInfo.str() << " FAILS lepton-par gen=rec charge matching\n"
-              "(leading lepton charge = " << selLepton_lead->charge() << " genlepton charge = " << selLepton_lead->genLepton()->charge()<< "; "
-              "subleading lepton charge = " << selLepton_sublead->charge() << " genlepton charge = " << selLepton_sublead->genLepton()->charge()<< "\n";
-          }
-        continue;
-      }
-    }
-    cutFlowTable.update("sel lepton-pair gen=rec charge match", evtWeight);
-    cutFlowHistManager->fillHistograms("sel lepton-pair gen=rec charge match", evtWeight);
-    */
-
-
     bool isLeptonCharge_SS = selLepton_lead->charge()*selLepton_sublead->charge() > 0;
     bool isLeptonCharge_OS = selLepton_lead->charge()*selLepton_sublead->charge() < 0;
     if ( leptonChargeSelection == kOS && isLeptonCharge_SS ) {
@@ -1094,38 +1076,7 @@ int main(int argc, char* argv[])
       continue;
     }
 
-    if ( leptonChargeSelection == kOS ) {
-      double prob_chargeMisId_lead = prob_chargeMisId(getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta());
-      double prob_chargeMisId_sublead = prob_chargeMisId(getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
-      evtWeight *= ( prob_chargeMisId_lead + prob_chargeMisId_sublead);
-
-      // Karl: reject the event, if the applied probability of charge misidentification is 0;                                                                                                  
-      //       we assume that the event weight was not 0 before including the charge flip weights                                                                                              
-      //       Note that this can happen only if both selected leptons are muons (their misId prob is 0).                                                                                      
-      if(evtWeight == 0.)
-	{
-	  if(run_lumi_eventSelector)
-	    {
-	      std::cout << "event " << eventInfo.str() << " FAILS charge flip selection\n"
-		"(leading lepton charge (pdgId) = " << selLepton_lead->charge() << " (" << selLepton_lead->pdgId()
-			<< ") => misId prob = " << prob_chargeMisId_lead << "; "
-		"subleading lepton charge (pdgId) = " << selLepton_sublead->charge() << " (" << selLepton_sublead->pdgId()
-			<< ") => misId prob = " << prob_chargeMisId_sublead << ")\n"
-		;
-	    }
-	  continue;
-	}
-    }
-    cutFlowTable.update(Form("sel lepton-pair %s charge", leptonChargeSelection_string.data()), evtWeight);
-    cutFlowHistManager->fillHistograms("sel lepton-pair OS/SS charge", evtWeight);
-
-    /*
-    if ( leptonChargeSelection != kDisabled ) {
-      cutFlowTable.update(Form("sel lepton-pair %s charge", leptonChargeSelection_string.data()), evtWeight);
-    }
-    cutFlowHistManager->fillHistograms("sel lepton-pair OS/SS charge", evtWeight);
-    */
-
+   
     // require exactly two leptons passing tight selection criteria, to avoid overlap with other channels
     if ( !(tightLeptonsFull.size() <= 2) ) {
       if ( run_lumi_eventSelector ) {
@@ -1443,6 +1394,7 @@ int main(int argc, char* argv[])
     double leptonPairCharge_sel = selLepton_lead->charge() + selLepton_sublead->charge();
     double hadTauPairCharge_sel = selHadTau_lead->charge() + selHadTau_sublead->charge();
 
+
     std::vector<SVfit4tauResult> svFit4tauResults_woMassConstraint = compSVfit4tau(
       *selLepton_lead, *selLepton_sublead, *selHadTau_lead, *selHadTau_sublead, met, chargeSumSelection_string, rnd,  -1., 2.);
     std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4tau(
@@ -1451,6 +1403,7 @@ int main(int argc, char* argv[])
     double dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selHadTau_lead->p4() + selHadTau_sublead->p4()).mass();
     double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ? 
       svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
+
 
 //--- fill histograms with events passing final selection
     selHistManagerType* selHistManager = selHistManagers[idxSelLepton_genMatch][idxSelHadTau_genMatch];
@@ -1505,32 +1458,56 @@ int main(int argc, char* argv[])
     selHistManager->weights_->fillHistograms("data_to_MC_correction", weight_data_to_MC_correction);
     selHistManager->weights_->fillHistograms("fakeRate", weight_fakeRate);
 
+
     bool isCharge_lepton_SS = selLepton_lead->charge()*selLepton_sublead->charge() > 0;
     bool isCharge_lepton_OS = selLepton_lead->charge()*selLepton_sublead->charge() < 0;
 
     std::vector<std::string> categories;
     if      ( isCharge_lepton_SS ) categories.push_back("2lSS_2tau");
-    else if ( isCharge_lepton_OS ) categories.push_back("2lOS_2tau");
-    else assert(0);
+    else if ( isCharge_lepton_OS ){ 
+      categories.push_back("2lOS_2tau");
+      categories.push_back("2lOS_2tau_wChargeFlipWeights");
+    } else assert(0);
     if ( selMuons.size() >= 2 ) {
       categories.push_back("2mu_2tau");
       if      ( isCharge_lepton_SS ) categories.push_back("2muSS_2tau");
-      else if ( isCharge_lepton_OS ) categories.push_back("2muOS_2tau");
-      else assert(0);
+      else if ( isCharge_lepton_OS ){
+	categories.push_back("2muOS_2tau");
+	categories.push_back("2muOS_2tau_wChargeFlipWeights");
+      }else assert(0);
     } else if ( selMuons.size() >= 1 && selElectrons.size() >= 1 ) {
       categories.push_back("1e1mu_2tau");
       if      ( isCharge_lepton_SS ) categories.push_back("1e1muSS_2tau");
-      else if ( isCharge_lepton_OS ) categories.push_back("1e1muOS_2tau");
-      else assert(0);
+      else if ( isCharge_lepton_OS ){
+	categories.push_back("1e1muOS_2tau");
+	categories.push_back("1e1muOS_2tau_wChargeFlipWeights");
+      }else assert(0);
     } else if ( selElectrons.size() >= 2 ) {
       categories.push_back("2e_2tau");
       if      ( isCharge_lepton_SS ) categories.push_back("2eSS_2tau");
-      else if ( isCharge_lepton_OS ) categories.push_back("2eOS_2tau");
-      else assert(0);
+      else if ( isCharge_lepton_OS ){
+	categories.push_back("2eOS_2tau");
+	categories.push_back("2eOS_2tau_wChargeFlipWeights");
+      }else assert(0);
     } else assert(0);
+
+
+    
+
 
     for ( std::vector<std::string>::const_iterator category = categories.begin();
           category != categories.end(); ++category ) {
+      double evtWeight_category = evtWeight;
+      if ( category->find("_wChargeFlipWeights") != std::string::npos ) {
+	double prob_chargeMisId_lead = prob_chargeMisId(getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta());
+	double prob_chargeMisId_sublead = prob_chargeMisId(getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
+	// double prob_chargeMisId_tau = 0.01; // CV: not implemented yet; take "guessed" value for now
+	// evtWeight_category *= ( prob_chargeMisId_lead + prob_chargeMisId_sublead + (2*prob_chargeMisId_tau));
+	evtWeight_category *= ( prob_chargeMisId_lead + prob_chargeMisId_sublead);
+      }
+      std::cout << "Filling histograms for " << *category << std::endl; 
+      // std::cout << "# Electrons " << selElectrons.size() << " # Muons " << selMuons.size() << " # Taus " << selHadTaus.size() << std::endl;
+      if ( selHistManager->evt_in_categories_.find(*category) != selHistManager->evt_in_categories_.end() ) {
         selHistManager->evt_in_categories_[*category]->fillHistograms(
         selElectrons.size(),
         selMuons.size(),
@@ -1546,16 +1523,18 @@ int main(int argc, char* argv[])
         dihiggsMass,
         HT,
         STMET,
-        evtWeight);
-        selHistManager->svFit4tau_wMassConstraint_in_categories_[*category]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
+        evtWeight_category);
+        selHistManager->svFit4tau_wMassConstraint_in_categories_[*category]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight_category);
+      }
       if ( isMC ) {
-	selHistManager->lheInfoHistManager_afterCuts_in_categories_[*category]->fillHistograms(*lheInfoReader, evtWeight);
+	selHistManager->lheInfoHistManager_afterCuts_in_categories_[*category]->fillHistograms(*lheInfoReader, evtWeight_category);
       }
     }
 
     if ( selEventsFile ) {
       (*selEventsFile) << eventInfo.run << ':' << eventInfo.lumi << ':' << eventInfo.event << '\n';
     }
+
 
     // pre-compute BDT variables
     const double mT_lep1 = comp_MT_met_lep1(*selLepton_lead, met.pt(), met.phi());
