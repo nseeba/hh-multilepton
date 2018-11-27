@@ -65,6 +65,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
         executable_addBackgrounds,
         executable_addBackgroundJetToTauFakes,
         executable_addBackgrounds_TailFit,
+        executable_addFlips,
         histograms_to_fit,
         select_rle_output = False,
         verbose           = False,
@@ -177,11 +178,17 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     self.executable_addBackgrounds = executable_addBackgrounds
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
     self.executable_addTailFits = executable_addBackgrounds_TailFit
+    self.executable_addFlips = executable_addFlips
 
     self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
-    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc", "flips_mc" ]
+    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc", "flips_mc", "flips_data" ]
+    #self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc", "flips_mc" ]
+    self.inputFiles_hadd_stage1_6 = {}
+    self.outputFile_hadd_stage1_6 = {}
+    self.cfgFile_addFlips = os.path.join(self.template_dir, "addBackgroundLeptonFlips_cfg.py")
+    self.jobOptions_addFlips = {}
     self.prep_dcard_signals = []
     for sample_name, sample_info in self.samples.items():
       if not sample_info["use_it"]:
@@ -190,8 +197,11 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       if sample_category.startswith("signal"):
         self.prep_dcard_signals.append(sample_category)
     self.histogramDir_prep_dcard = "hh_2l_2tau_sumOS_Tight"
-    self.histogramDir_prep_dcard_SS = "hh_2l_2tau_sumSS_Tight"
-    self.make_plots_backgrounds = ["DY", "W", "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
+    # self.histogramDir_prep_dcard_SS = "hh_2l_2tau_sumSS_Tight"
+    self.make_plots_backgrounds = ["DY", "W", "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data", "flips_data" ]
+    # self.make_plots_backgrounds = ["DY", "W", "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
+    # self.make_plots_backgrounds_SS = ["DY", "W", "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data", "flips_data" ]
+    # self.make_plots_backgrounds_OS = ["DY", "W", "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data"]
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2l_2tau_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2l_2tau_cfg.py")
 
@@ -203,7 +213,8 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       "hh_2l_2tau", "hh_2lSS_2tau", "hh_2lOS_2tau", 
       "hh_2e_2tau", "hh_1e1mu_2tau", "hh_2mu_2tau",
       "hh_2eSS_2tau", "hh_2eOS_2tau", "hh_1e1muSS_2tau", 
-      "hh_1e1muOS_2tau", "hh_2muSS_2tau", "hh_2muOS_2tau"]  ## N.B.: Inclusive category in a member of this list 
+      "hh_1e1muOS_2tau", "hh_2muSS_2tau", "hh_2muOS_2tau",
+      "hh_2lOS_2tau_wChargeFlipWeights", "hh_2eOS_2tau_wChargeFlipWeights", "hh_2muOS_2tau_wChargeFlipWeights", "hh_1e1muOS_2tau_wChargeFlipWeights"]  ## N.B.: Inclusive category is a member of this list 
     self.category_inclusive = "hh_2l_2tau"
 
     self.cfgFile_addTailFits = os.path.join(self.template_dir, "addBackgrounds_TailFit_cfg.py")             
@@ -271,6 +282,28 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
 
     lines = super(analyzeConfig_hh_2l_2tau, self).createCfg_analyze(jobOptions, sample_info)
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
+
+  def createCfg_addFlips(self, jobOptions):
+      """Create python configuration file for the addBackgroundLeptonFlips executable (data-driven estimation of 'Flips' backgrounds)
+       Args:
+         inputFiles: input file (the ROOT file produced by hadd_stage1)
+         outputFile: output file of the job
+      """
+      lines = []
+      lines.append("process.fwliteInput.fileNames = cms.vstring('%s')" % jobOptions['inputFile'])
+      lines.append("process.fwliteOutput.fileName = cms.string('%s')" % os.path.basename(jobOptions['outputFile']))
+      lines.append("process.addBackgroundLeptonFlips.categories = cms.VPSet(")
+      lines.append("    cms.PSet(")
+      lines.append("        signal = cms.string('%s')," % jobOptions['category_signal'])
+      lines.append("        sideband = cms.string('%s')" % jobOptions['category_sideband'])
+      lines.append("    )")
+      lines.append(")")
+      processesToSubtract = [ "fakes_data" ]
+      processesToSubtract.extend([ "%s_conversion" % nonfake_background for nonfake_background in self.nonfake_backgrounds ])
+      lines.append("process.addBackgroundLeptonFlips.processesToSubtract = cms.vstring(%s)" % processesToSubtract)
+      lines.append("process.addBackgroundLeptonFlips.sysShifts = cms.vstring(%s)" % self.central_or_shifts)
+      create_cfg(self.cfgFile_addFlips, jobOptions['cfgFile_modified'], lines)
+
 
 
   def createCfg_addTailFits(self, jobOptions):
@@ -373,12 +406,40 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       lines.append(")")
       create_cfg(self.cfgFile_addTailFits, jobOptions['cfgFile_modified'], lines)
 
+  def addToMakefile_hadd_stage1_6(self, lines_makefile):
+      """Adds the commands to Makefile that are necessary for building the intermediate histogram file
+         that is used as input for data-driven background estimation.
+      """
+      for lepton_charge_selection in self.lepton_charge_selections:
+        for hadTau_charge_selection in self.hadTau_charge_selections:
+          for chargeSumSelection in self.chargeSumSelections:
+            key_hadd_stage1_6 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
+            self.addToMakefile_hadd(lines_makefile, { key_hadd_stage1_6 : self.inputFiles_hadd_stage1_6[key_hadd_stage1_6] },
+                                    { key_hadd_stage1_6 : self.outputFile_hadd_stage1_6[key_hadd_stage1_6] }, "stage1_6")
+
+  def addToMakefile_addFlips(self, lines_makefile):
+    if self.is_sbatch:
+      lines_makefile.append("sbatch_addFlips: %s" % " ".join([ jobOptions['inputFile'] for jobOptions in self.jobOptions_addFlips.values() ]))
+      lines_makefile.append("\t%s %s" % ("python", self.sbatchFile_addFlips))
+      lines_makefile.append("")
+    for jobOptions in self.jobOptions_addFlips.values():
+      if self.is_makefile:
+        lines_makefile.append("%s: %s" % (jobOptions['outputFile'], jobOptions['inputFile']))
+        lines_makefile.append("\t%s %s &> %s" % (self.executable_addFlips, jobOptions['cfgFile_modified'], jobOptions['logFile']))
+        lines_makefile.append("")
+      elif self.is_sbatch:
+        lines_makefile.append("%s: %s" % (jobOptions['outputFile'], "sbatch_addFlips"))
+        lines_makefile.append("\t%s" % ":") # CV: null command
+        lines_makefile.append("")
+      self.filesToClean.append(jobOptions['outputFile'])
 
   def addToMakefile_backgrounds_from_data(self, lines_makefile):
     self.addToMakefile_addBackgrounds(lines_makefile, "sbatch_addBackgrounds", self.sbatchFile_addBackgrounds, self.jobOptions_addBackgrounds)
     self.addToMakefile_addBackgrounds(lines_makefile, "sbatch_addBackgrounds_sum", self.sbatchFile_addBackgrounds_sum, self.jobOptions_addBackgrounds_sum)
     self.addToMakefile_hadd_stage1_5(lines_makefile)
     self.addToMakefile_addFakes(lines_makefile)
+    self.addToMakefile_hadd_stage1_6(lines_makefile)
+    self.addToMakefile_addFlips(lines_makefile)
 
   def createScript_sbatch_addTailFits(self, executable, sbatchFile, jobOptions):
    """Creates the python script necessary to submit the analysis jobs to the batch system
@@ -873,6 +934,49 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
             key_hadd_stage2 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
             self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addFakes[key_addFakes_job]['outputFile'])
 
+    #--------------------------------------------------------------------------
+    # CV: add histograms in OS and SS regions,
+    #     so that "fakes_data" background can be subtracted from OS control region used to estimate charge flip background
+    for lepton_charge_selection in self.lepton_charge_selections:
+      for hadTau_charge_selection in self.hadTau_charge_selections:
+        for chargeSumSelection in self.chargeSumSelections:
+          key_hadd_stage1_6 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
+          if key_hadd_stage1_6 not in self.inputFiles_hadd_stage1_6:
+            self.inputFiles_hadd_stage1_6[key_hadd_stage1_6] = []
+          for category in self.categories:      
+            key_addFakes_job = getKey(category, lepton_charge_selection, hadTau_charge_selection, "fakes_data", chargeSumSelection)
+            self.inputFiles_hadd_stage1_6[key_hadd_stage1_6].append(self.jobOptions_addFakes[key_addFakes_job]['outputFile'])
+          key_hadd_stage1_5 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
+          self.inputFiles_hadd_stage1_6[key_hadd_stage1_6].append(self.outputFile_hadd_stage1_5[key_hadd_stage1_5])
+          self.outputFile_hadd_stage1_6[key_hadd_stage1_6] = os.path.join(self.dirs[DKEY_HIST], "histograms_harvested_stage1_6_%s_Tight_%s_%s_%s.root" % (self.channel, lepton_charge_selection, hadTau_charge_selection, chargeSumSelection))
+    #--------------------------------------------------------------------------
+
+    logging.info("Creating configuration files to run 'addBackgroundFlips'")
+    for lepton_charge_selection in self.lepton_charge_selections:
+      for hadTau_charge_selection in self.hadTau_charge_selections:
+        for chargeSumSelection in self.chargeSumSelections:
+          if not chargeSumSelection in [ "SS", "disabled" ]:
+            continue
+          for category_signal in self.categories:
+            if not category_signal.find("SS_") != -1:
+              continue
+            key_addFlips_job = getKey(category_signal, lepton_charge_selection, hadTau_charge_selection, "flips_data", chargeSumSelection)
+            key_hadd_stage1_6 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
+            self.jobOptions_addFlips[key_addFlips_job] = {
+              'inputFile' : self.outputFile_hadd_stage1_6[key_hadd_stage1_6],
+              'cfgFile_modified' : os.path.join(self.dirs[DKEY_CFGS], "addBackgroundLeptonFlips_%s_%s_%s_%s_%s_cfg.py" % \
+                                                  (self.channel, category_signal, lepton_charge_selection, hadTau_charge_selection, chargeSumSelection)),
+              'outputFile' : os.path.join(self.dirs[DKEY_HIST], "addBackgroundLeptonFlips_%s_%s_%s_%s_%s.root" % \
+                                            (self.channel, category_signal, lepton_charge_selection, hadTau_charge_selection, chargeSumSelection)),
+              'logFile' : os.path.join(self.dirs[DKEY_LOGS], "addBackgroundLeptonFlips_%s_%s_%s_%s_%s.log" % \
+                                         (self.channel, category_signal, lepton_charge_selection, hadTau_charge_selection, chargeSumSelection)),
+              'category_signal' : "%s_sumSS_Tight" % category_signal,
+              'category_sideband' : "%s_sumSS_Tight" % category_signal.replace("SS_2tau", "OS_2tau_wChargeFlipWeights")
+            }
+            self.createCfg_addFlips(self.jobOptions_addFlips[key_addFlips_job])
+            key_hadd_stage2 = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
+            self.inputFiles_hadd_stage2[key_hadd_stage2].append(self.jobOptions_addFlips[key_addFlips_job]['outputFile'])
+
     logging.info("Creating configuration files to run 'addBackgrounds_TailFit'")
     for lepton_charge_selection in self.lepton_charge_selections:
       for hadTau_charge_selection in self.hadTau_charge_selections:
@@ -1109,6 +1213,9 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       logging.info("Creating script for submitting '%s' jobs to batch system" % self.executable_addFakes)
       self.sbatchFile_addFakes = os.path.join(self.dirs[DKEY_SCRIPTS], "sbatch_addFakes_%s.py" % self.channel)
       self.createScript_sbatch_addFakes(self.executable_addFakes, self.sbatchFile_addFakes, self.jobOptions_addFakes)
+      logging.info("Creating script for submitting '%s' jobs to batch system" % self.executable_addFlips)
+      self.sbatchFile_addFlips = os.path.join(self.dirs[DKEY_SCRIPTS], "sbatch_addFlips_%s.py" % self.channel)
+      self.createScript_sbatch(self.executable_addFlips, self.sbatchFile_addFlips, self.jobOptions_addFlips)
       logging.info("Creating script for submitting '%s' jobs to batch system" % self.executable_addTailFits)
       self.sbatchFile_addTailFits = os.path.join(self.dirs[DKEY_SCRIPTS], "sbatch_addTailFits_%s.py" % self.channel)
       self.createScript_sbatch_addTailFits(self.executable_addTailFits, self.sbatchFile_addTailFits, self.jobOptions_addTailFits)
@@ -1117,7 +1224,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     lines_makefile = []
     self.addToMakefile_analyze(lines_makefile)
     self.addToMakefile_hadd_stage1(lines_makefile)
-    self.addToMakefile_backgrounds_from_data(lines_makefile)
+    self.addToMakefile_backgrounds_from_data(lines_makefile) ## addFakes, addFlips done here
     self.addToMakefile_addTailFits(lines_makefile)
     self.addToMakefile_hadd_stage2(lines_makefile)
     self.addToMakefile_prep_dcard(lines_makefile)

@@ -167,10 +167,11 @@ if __name__ == '__main__':
     num_parallel_jobs                     = num_parallel_jobs,
     executable_addBackgrounds             = "addBackgrounds",
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
-    executable_addBackgrounds_TailFit     = "addBackgrounds_TailFit", ## MY LINE
+    executable_addBackgrounds_TailFit     = "addBackgrounds_TailFit", 
+    executable_addFlips                   = "addBackgroundLeptonFlips",
     histograms_to_fit                     = {
       "EventCounter"                      : {},
-      "numJets"                           : {},
+      #"numJets"                           : {},
       "mTauTauVis"                        : {},
       "dihiggsVisMass"                    : {},
       "dihiggsMass"                       : {},
