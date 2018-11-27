@@ -57,6 +57,8 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   histogram_HT_              = book1D(dir, "HT",              "HT",              150,  0., 1500.);
   histogram_STMET_           = book1D(dir, "STMET",           "STMET",           150,  0., 1500.);	
 
+  histogram_mvaOutput_xgb_hh_3l_SUMBk_HH_ = book1D(dir, "mvaOutput_xgb_hh_3l_SUMBk_HH", "BDTscore", 50,  0., 1.);
+  
   histogram_EventCounter_ = book1D(dir, "EventCounter", "EventCounter", 1, -0.5, +0.5);
 }
 
@@ -78,6 +80,7 @@ EvtHistManager_hh_3l::fillHistograms(int numElectrons,
 				     double vbf_m_jj, double vbf_dEta_jj,	 int numJets_nonVBF,		 
 				     double HT,
 				     double STMET,
+				     double mvaOutput_xgb_hh_3l_SUMBk_HH,
 				     double evtWeight)
 {
   const double evtWeightErr = 0.;
@@ -124,7 +127,9 @@ EvtHistManager_hh_3l::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_numJets_nonVBF_,  numJets_nonVBF,         evtWeight, evtWeightErr);
   
   fillWithOverFlow(histogram_HT_,              HT,              evtWeight, evtWeightErr);
-  fillWithOverFlow(histogram_STMET_,           STMET,           evtWeight, evtWeightErr);	
+  fillWithOverFlow(histogram_STMET_,           STMET,           evtWeight, evtWeightErr);
+
+  fillWithOverFlow(histogram_mvaOutput_xgb_hh_3l_SUMBk_HH_, mvaOutput_xgb_hh_3l_SUMBk_HH, evtWeight, evtWeightErr);
   
   fillWithOverFlow(histogram_EventCounter_, 0., evtWeight, evtWeightErr);
 }

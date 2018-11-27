@@ -41,6 +41,7 @@ class EvtHistManager_hh_3l
 		 double vbf_m_jj, double vbf_dEta_jj, int numSelJets_nonVBF,                
 		 double HT,
 		 double STMET,
+		 double mvaOutput_xgb_hh_3l_SUMBk_HH,
                  double evtWeight);
   
   const TH1 *
@@ -87,7 +88,9 @@ class EvtHistManager_hh_3l
   TH1 * histogram_numJets_nonVBF_;
   
   TH1 * histogram_HT_;
-  TH1 * histogram_STMET_;	
+  TH1 * histogram_STMET_;
+
+  TH1 * histogram_mvaOutput_xgb_hh_3l_SUMBk_HH_;
 
   TH1 * histogram_EventCounter_;
 };

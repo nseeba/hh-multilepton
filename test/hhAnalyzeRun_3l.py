@@ -51,7 +51,8 @@ for systematic_label in systematics_label:
 do_sync = mode.startswith('sync')
 lumi = get_lumi(era)
 
-chargeSumSelections = [ "OS", "SS" ]
+#chargeSumSelections = [ "OS", "SS" ]
+chargeSumSelections = [ "OS"]
 
 if mode == "default":
   if era == "2016":
@@ -136,6 +137,7 @@ if __name__ == '__main__':
       "mTMetLepton2"                      : {},
       "HT"                                : {},
       "STMET"                             : {},
+      "mvaOutput_xgb_hh_3l_SUMBk_HH"      : {},
     },
     select_rle_output                     = True,
     select_root_output                    = False,

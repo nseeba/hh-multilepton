@@ -22,6 +22,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/RecoMEt.h" // RecoMEt
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h" // EventInfo
 #include "tthAnalysis/HiggsToTauTau/interface/TMVAInterface.h" // TMVAInterface
+#include "tthAnalysis/HiggsToTauTau/interface/XGBInterface.h" // XGBInterface
 #include "tthAnalysis/HiggsToTauTau/interface/mvaAuxFunctions.h" // check_mvaInputs, get_mvaInputVariables
 #include "tthAnalysis/HiggsToTauTau/interface/mvaInputVariables.h" // auxiliary functions for computing input variables of the MVA used for signal extraction in the 3l category
 #include "tthAnalysis/HiggsToTauTau/interface/LeptonFakeRateInterface.h" // LeptonFakeRateInterface
@@ -458,13 +459,31 @@ int main(int argc, char* argv[])
   std::map<std::string, double> mvaInputs_3l;
 	*/
 
+
+  std::string mvaFileName_hh_3l_SUMBk_HH = "hhAnalysis/multilepton/data/3l_0tau_HH_XGB_noTopness_evtLevelSUM_HH_res_26Var.pkl";
+  std::vector<std::string> mvaInputs_hh_3l_SUMBk_HH = {
+    "lep1_conePt", "lep1_eta", "mindr_lep1_jet", "mT_lep1",
+    "lep2_conePt", "lep2_eta", "mindr_lep2_jet", "mT_lep2",
+    "lep3_conePt", "lep3_eta", "mindr_lep3_jet", "mT_lep3",
+    "avg_dr_jet", "dr_leps", "dr_lss", "dr_los1", "dr_los2",
+    "met_LD", "m_jj", "diHiggsMass", "mTMetLepton1", "mTMetLepton2",
+    "nJet", "nElectron", "sumLeptonCharge", "numSameFlavor_OS"
+  };
+  XGBInterface mva_xgb_hh_3l_SUMBk_HH(mvaFileName_hh_3l_SUMBk_HH, mvaInputs_hh_3l_SUMBk_HH);
+
+
+
+
+
+  
+
   bool selectBDT = ( cfg_analyze.exists("selectBDT") ) ? cfg_analyze.getParameter<bool>("selectBDT") : false;
 	
 	
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
   std::ostream* selEventsFile = ( selEventsFileName_output != "" ) ? new std::ofstream(selEventsFileName_output.data(), std::ios::out) : 0;
-
-
+  
+  std::cout << "process: " << process_string << std::endl;
 //--- declare histograms
   struct preselHistManagerType
   {
@@ -517,7 +536,8 @@ int main(int argc, char* argv[])
 
     std::string process_and_genMatch = process_string;
     if ( apply_leptonGenMatching ) process_and_genMatch += leptonGenMatch_definition->name_;
-
+    std::cout<<"process_and_genMatch: "<<process_and_genMatch<<std::endl;
+    
     int idxLepton = leptonGenMatch_definition->idx_;
 
     preselHistManagerType* preselHistManager = new preselHistManagerType();
@@ -563,8 +583,7 @@ int main(int argc, char* argv[])
     for ( vstring::const_iterator category = categories.begin();
 	  category != categories.end(); ++category ) {
       TString histogramDir_category = histogramDir.data();
-      //histogramDir_category.ReplaceAll("3l", Form("%s", category->data()));
-			histogramDir_category.ReplaceAll("hh_3l", Form("%s", category->data()));
+      histogramDir_category.ReplaceAll("hh_3l", Form("%s", category->data()));
       selHistManager->electrons_in_categories_[*category] = new ElectronHistManager(makeHistManager_cfg(process_and_genMatch, 
         Form("%s/sel/electrons", histogramDir_category.Data()), central_or_shift));	
       selHistManager->electrons_in_categories_[*category]->bookHistograms(fs);
@@ -575,8 +594,7 @@ int main(int argc, char* argv[])
     for ( vstring::const_iterator category = categories.begin();
 	  category != categories.end(); ++category ) {
       TString histogramDir_category = histogramDir.data();
-      //histogramDir_category.ReplaceAll("3l", Form("%s", category->data()));
-			histogramDir_category.ReplaceAll("hh_3l", Form("%s", category->data()));
+      histogramDir_category.ReplaceAll("hh_3l", Form("%s", category->data()));
       selHistManager->muons_in_categories_[*category] = new MuonHistManager(makeHistManager_cfg(process_and_genMatch, 
         Form("%s/sel/muons", histogramDir_category.Data()), central_or_shift));	
       selHistManager->muons_in_categories_[*category]->bookHistograms(fs);
@@ -1223,6 +1241,7 @@ int main(int argc, char* argv[])
       -1.,
       HT, 
       STMET,
+      -1.,
       1.
     );
     preselHistManager->evtYield_->fillHistograms(eventInfo, 1.);
@@ -1741,6 +1760,56 @@ int main(int argc, char* argv[])
       } else assert(0);
     */
     
+    
+    
+    double dr_lss  = -1.;
+    double dr_los1 = -1.;
+    double dr_los2 = -1.;
+    // it does not assume mis-charge identification
+    if (selLepton_lead->charge()*selLepton_sublead->charge() > 0){
+      dr_lss  = deltaR(selLepton_sublead -> p4(), selLepton_lead -> p4());
+      dr_los1 = deltaR(selLepton_third -> p4(), selLepton_lead -> p4());
+      dr_los2 = deltaR(selLepton_third  -> p4(), selLepton_sublead -> p4());
+    } else {
+      dr_lss  = deltaR(selLepton_third -> p4(), selLepton_lead -> p4());
+      dr_los1 = deltaR(selLepton_sublead -> p4(), selLepton_third -> p4());
+      dr_los2 = deltaR(selLepton_sublead  -> p4(), selLepton_lead -> p4());
+    }   
+    
+    
+    const std::map<std::string, double>  mvaInputVariables_hh_3l_SUMBk_HH = {
+      {"lep1_conePt",         lep1_conePt},
+      {"lep1_eta",            selLepton_lead -> eta()},
+      {"mindr_lep1_jet",      TMath::Min(10., mindr_lep1_jet)},
+      {"mT_lep1",             comp_MT_met_lep1(*selLepton_lead, met.pt(), met.phi())},
+      {"lep2_conePt",         lep2_conePt},
+      {"lep2_eta",            selLepton_sublead -> eta()},
+      {"mindr_lep2_jet",      TMath::Min(10., mindr_lep2_jet)},
+      {"mT_lep2",             comp_MT_met_lep1(*selLepton_sublead, met.pt(), met.phi())},
+      {"lep3_conePt",         lep3_conePt},
+      {"lep3_eta",            selLepton_third -> eta()},
+      {"mindr_lep3_jet",      TMath::Min(10., mindr_lep3_jet)},
+      {"mT_lep3",             comp_MT_met_lep1(*selLepton_third, met.pt(), met.phi())},
+      {"avg_dr_jet",          avg_dr_jet},
+      {"dr_leps",             deltaR(selLepton_lead -> p4(), selLepton_sublead -> p4())},
+      {"dr_lss",              dr_lss},
+      {"dr_los1",             dr_los1},
+      {"dr_los2",             dr_los2},
+      {"met_LD",              met_LD},
+      {"m_jj",                WTojjMass},
+      {"diHiggsMass",         dihiggsMass},
+      {"mTMetLepton1",        mTMetLepton1},
+      {"mTMetLepton2",        mTMetLepton2},
+      {"nJet",                selJets.size()},
+      {"nElectron",           selElectrons.size()},
+      {"sumLeptonCharge",     sumLeptonCharge},
+      {"numSameFlavor_OS",    numSameFlavor_OS}
+    };
+    const double mvaOutput_xgb_hh_3l_SUMBk_HH = mva_xgb_hh_3l_SUMBk_HH(mvaInputVariables_hh_3l_SUMBk_HH);
+    
+    //printf("mvaOutput_xgb_hh_3l_SUMBk_HH: %f\n",mvaOutput_xgb_hh_3l_SUMBk_HH);
+
+    
     //--- fill histograms with events passing final selection
     std::vector<std::string> evtCategories;		
     if      ( sumLeptonCharge < 0 ) evtCategories.push_back("hh_3lneg");
@@ -1788,6 +1857,7 @@ int main(int argc, char* argv[])
       numSelJets_nonVBF,
       HT, 
       STMET,
+      mvaOutput_xgb_hh_3l_SUMBk_HH,
       evtWeight);
     
     if(isSignal)
@@ -1815,6 +1885,7 @@ int main(int argc, char* argv[])
 	       numSelJets_nonVBF,
 	       HT, 
 	       STMET,
+	       mvaOutput_xgb_hh_3l_SUMBk_HH,
 	       evtWeight);
 	    
 	  }
@@ -1855,6 +1926,7 @@ int main(int argc, char* argv[])
 	  numSelJets_nonVBF,
 	  HT, 
           STMET,
+	  mvaOutput_xgb_hh_3l_SUMBk_HH,
           evtWeight);
       }
       
@@ -1885,6 +1957,7 @@ int main(int argc, char* argv[])
 							numSelJets_nonVBF,
 							HT, 
 							STMET,
+							mvaOutput_xgb_hh_3l_SUMBk_HH,
 							evtWeight);
 	  }	
 	}				
@@ -1998,6 +2071,7 @@ int main(int argc, char* argv[])
       if      ( std::abs(selLepton_third->pdgId()) == 11 ) prob_fake_lepton_third = leptonFakeRateInterface->getWeight_e(selLepton_third->cone_pt(), selLepton_third->absEta());
       else if ( std::abs(selLepton_third->pdgId()) == 13 ) prob_fake_lepton_third = leptonFakeRateInterface->getWeight_mu(selLepton_third->cone_pt(), selLepton_third->absEta());
 
+      /*  // used earlier
       double dr_lss  = -1.;
       double dr_los1 = -1.;
       double dr_los2 = -1.;
@@ -2010,7 +2084,7 @@ int main(int argc, char* argv[])
         dr_lss  = deltaR(selLepton_third -> p4(), selLepton_lead -> p4());
         dr_los1 = deltaR(selLepton_sublead -> p4(), selLepton_third -> p4());
         dr_los2 = deltaR(selLepton_sublead  -> p4(), selLepton_lead -> p4());
-      }
+	} */
 
       bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
 	("lep1_pt",             selLepton_lead -> pt())
