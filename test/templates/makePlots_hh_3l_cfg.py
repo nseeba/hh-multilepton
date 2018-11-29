@@ -115,4 +115,9 @@ process.makePlots.distributions.extend([
     xAxisTitle = cms.string('m_{T} (MET + Lepton2) [GeV]'),
     yAxisTitle = cms.string('dN/dm_{T} [1/GeV]')
   ),
+  cms.PSet(
+    histogramName = cms.string('sel/evt/$PROCESS/mvaOutput_xgb_hh_3l_SUMBk_HH'),
+    xAxisTitle = cms.string('BDT'),
+    yAxisTitle = cms.string('dN/dBDT')
+  ),
 ])
