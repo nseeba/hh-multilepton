@@ -182,15 +182,16 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
 
     self.categories = [
       "hh_2lss",
-      "hh_E_3j",    "hh_E_5j_vbf",    "hh_E_3j_nonvbf",
-      "hh_GE_3j",   "hh_GE_5j_vbf",   "hh_GE_3j_nonvbf",
-      "hh_GE_4j",   "hh_GE_6j_vbf",   "hh_GE_4j_nonvbf" ]
+      "hh_2ess_3j",   "hh_2ess_3j_vbf",   "hh_2ess_3j_nonvbf",   "hh_2muss_3j",   "hh_2muss_3j_vbf",   "hh_2muss_3j_nonvbf",   "hh_1e1muss_3j",   "hh_1e1muss_3j_vbf",   "hh_1e1muss_3j_nonvbf",
+      "hh_2ess_ge3j", "hh_2ess_ge3j_vbf", "hh_2ess_ge3j_nonvbf", "hh_2muss_ge3j", "hh_2muss_ge3j_vbf", "hh_2muss_ge3j_nonvbf", "hh_1e1muss_ge3j", "hh_1e1muss_ge3j_vbf", "hh_1e1muss_ge3j_nonvbf",
+      "hh_2ess_ge4j", "hh_2ess_ge4j_vbf", "hh_2ess_ge4j_nonvbf", "hh_2muss_ge4j", "hh_2muss_ge4j_vbf", "hh_2muss_ge4j_nonvbf", "hh_1e1muss_ge4j", "hh_1e1muss_ge4j_vbf", "hh_1e1muss_ge4j_nonvbf" ]
     self.category_inclusive = "hh_2lss"
 
   def set_BDT_training(self):
     """Run analysis for the purpose of preparing event list files for BDT training.
     """
-    self.lepton_selections = [ "Tight" ]
+    #self.lepton_selections = [ "Tight" ]
+    self.lepton_selections = [ "forBDTtraining" ]
     self.lepton_frWeights = [ "disabled" ]
     self.lepton_charge_selections = [ "SS" ]
     self.isBDTtraining = True
