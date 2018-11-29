@@ -54,21 +54,6 @@ if mode == "default":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
   elif era == "2017":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
-    from tthAnalysis.HiggsToTauTau.samples.stitch_2017 import samples_to_stitch_2017 as samples_to_stitch
-
-    # [*] use binned DY samples in BDT training
-    dy_samples_inclusive = []
-    dy_samples_binned = []
-    for sample_set in samples_to_stitch:
-      for sample_key, sample_value in sample_set.items():
-        if sample_key == 'inclusive':
-          dy_inclusive_samples = list(filter(lambda sample_name: sample_name.startswith('DY'), sample_value['samples']))
-          dy_samples_inclusive.extend(dy_inclusive_samples)
-        else:
-          for sample_binned_value in sample_value:
-            dy_binned_samples = list(
-              filter(lambda sample_name: sample_name.startswith('DY'), sample_binned_value['samples']))
-            dy_samples_binned.extend(dy_binned_samples)
 
     for sample_name, sample_info in samples_2017.items():
       if sample_name == 'sum_events':
@@ -77,10 +62,6 @@ if mode == "default":
         sample_info['use_it'] = False
       elif sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD', 'TTGJets' ]:
         sample_info['use_it'] = True
-      elif sample_info["process_name_specific"] in dy_samples_binned:
-        sample_info["use_it"] = False  # [*]
-      elif sample_info["process_name_specific"] in dy_samples_inclusive:
-        sample_info["use_it"] = True  # [*]
 
   elif era == "2018":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
@@ -102,22 +83,6 @@ elif mode == "forBDTtraining":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016_BDT import samples_2016 as samples
   elif era == "2017":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT import samples_2017 as samples
-    from tthAnalysis.HiggsToTauTau.samples.stitch_2017 import samples_to_stitch_2017 as samples_to_stitch
-
-    # [*] use binned DY samples in BDT training
-    dy_samples_inclusive = []
-    dy_samples_binned = []
-    for sample_set in samples_to_stitch:
-      for sample_key, sample_value in sample_set.items():
-        if sample_key == 'inclusive':
-          dy_inclusive_samples = list(filter(lambda sample_name: sample_name.startswith('DY'), sample_value['samples']))
-          dy_samples_inclusive.extend(dy_inclusive_samples)
-        else:
-          for sample_binned_value in sample_value:
-            dy_binned_samples = list(
-              filter(lambda sample_name: sample_name.startswith('DY'), sample_binned_value['samples'])
-            )
-            dy_samples_binned.extend(dy_binned_samples)
 
     for sample_name, sample_info in samples_2017.items():
       if sample_name == 'sum_events':
@@ -126,10 +91,6 @@ elif mode == "forBDTtraining":
         sample_info['use_it'] = True
       elif sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD', 'TTGJets' ]:
         sample_info['use_it'] = False
-      elif sample_info["process_name_specific"] in dy_samples_binned:
-        sample_info["use_it"] = True  # [*]
-      elif sample_info["process_name_specific"] in dy_samples_inclusive:
-        sample_info["use_it"] = False  # [*]
 
   elif era == "2018":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018_BDT import samples_2018 as samples
