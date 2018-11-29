@@ -739,6 +739,12 @@ int main(int argc, char* argv[])
      lheInfoHistManager = new LHEInfoHistManager(makeHistManager_cfg(process_string,
       Form("%s/sel/lheInfo", histogramDir.data()), central_or_shift));
     lheInfoHistManager->bookHistograms(fs);
+
+    if(eventWeightManager)
+    {
+      genEvtHistManager_beforeCuts->bookHistograms(fs, eventWeightManager);
+      genEvtHistManager_afterCuts->bookHistograms(fs, eventWeightManager);
+    }
   }
   
   int analyzedEntries = 0;
@@ -847,6 +853,10 @@ int main(int argc, char* argv[])
       evtWeight_inclusive *= eventInfo.pileupWeight;
       evtWeight_inclusive *= lumiScale;
       genEvtHistManager_beforeCuts->fillHistograms(genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeight_inclusive);
+      if(eventWeightManager)
+      {
+        genEvtHistManager_beforeCuts->fillHistograms(eventWeightManager, evtWeight_inclusive);
+      }
     }
 
     // CV: require DoubleTau trigger in 2017 MC to pass L1 tau pT > 32 GeV threshold
@@ -1684,6 +1694,10 @@ int main(int argc, char* argv[])
     if ( isMC ) {
       genEvtHistManager_afterCuts->fillHistograms(genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeight_inclusive);
       lheInfoHistManager->fillHistograms(*lheInfoReader, evtWeight);
+      if(eventWeightManager)
+      {
+        genEvtHistManager_afterCuts->fillHistograms(eventWeightManager, evtWeight_inclusive);
+      }
     }
 
     if ( selEventsFile ) {
@@ -1746,6 +1760,12 @@ int main(int argc, char* argv[])
   delete genPhotonReader;
   delete genJetReader;
   delete lheInfoReader;
+
+  delete genEvtHistManager_beforeCuts;
+  delete genEvtHistManager_afterCuts;
+  delete lheInfoHistManager;
+  delete cutFlowHistManager;
+  delete eventWeightManager;
 
   hltPaths_delete(triggers_1e);
   hltPaths_delete(triggers_1e1tau);
