@@ -729,7 +729,8 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
             if lepton_mcClosure not in self.lepton_selections:
               continue
             lepton_selection_and_frWeight = get_lepton_selection_and_frWeight(lepton_mcClosure, "enabled")
-            key_addBackgrounds_job_fakes = getKey(category, lepton_selection_and_frWeight, chargeSumSelection, "fakes") # Category added by Siddhesh
+            #key_addBackgrounds_job_fakes = getKey(category, lepton_selection_and_frWeight, chargeSumSelection, "fakes") # Category added by Siddhesh
+            key_addBackgrounds_job_fakes = getKey(lepton_selection_and_frWeight, chargeSumSelection, "fakes") 
             histogramDir_mcClosure = self.mcClosure_dir['%s_%s' % (lepton_mcClosure, chargeSumSelection)]
             self.jobOptions_add_syst_fakerate[key_add_syst_fakerate_job].update({
               'add_Clos_%s' % lepton_type : ("Fakeable_mcClosure_%s" % lepton_type) in self.lepton_selections,
