@@ -54,6 +54,15 @@ if mode == "default":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
   elif era == "2017":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
+
+    for sample_name, sample_info in samples.items():
+      if sample_name == 'sum_events':
+        continue
+      if sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD_v14-v1', 'TTGJets_ext1' ]:
+        sample_info['use_it'] = False
+      elif sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD', 'TTGJets' ]:
+        sample_info['use_it'] = True
+
   elif era == "2018":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
   else:
@@ -74,6 +83,15 @@ elif mode == "forBDTtraining":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016_BDT import samples_2016 as samples
   elif era == "2017":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT import samples_2017 as samples
+
+    for sample_name, sample_info in samples.items():
+      if sample_name == 'sum_events':
+        continue
+      if sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD_v14-v1', 'TTGJets_ext1' ]:
+        sample_info['use_it'] = True
+      elif sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD', 'TTGJets' ]:
+        sample_info['use_it'] = False
+
   elif era == "2018":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018_BDT import samples_2018 as samples
   else:

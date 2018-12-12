@@ -70,7 +70,6 @@
 #include "tthAnalysis/HiggsToTauTau/interface/hadTauGenMatchingAuxFunctions.h" // getHadTauGenMatch_definitions_3tau, getHadTauGenMatch_string, getHadTauGenMatch_int
 #include "tthAnalysis/HiggsToTauTau/interface/fakeBackgroundAuxFunctions.h"
 #include "tthAnalysis/HiggsToTauTau/interface/mvaInputVariables.h" // comp_lep1_conePt, comp_lep2_conePt
-#include "tthAnalysis/HiggsToTauTau/interface/backgroundEstimation.h" // prob_chargeMisId
 #include "tthAnalysis/HiggsToTauTau/interface/hltPath.h" // hltPath, create_hltPaths, hltPaths_isTriggered, hltPaths_delete
 #include "tthAnalysis/HiggsToTauTau/interface/hltPathReader.h" // hltPathReader
 #include "tthAnalysis/HiggsToTauTau/interface/Data_to_MC_CorrectionInterface_2016.h"
@@ -83,6 +82,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
 #include "tthAnalysis/HiggsToTauTau/interface/backgroundEstimation.h" // prob_chargeMisId
+#include "tthAnalysis/HiggsToTauTau/interface/XGBInterface.h" // XGBInterface 
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2lss.h" // EvtHistManager_hh_2lss
 //#include "hhAnalysis/multilepton/interface/SVfit4tauHistManager.h" // SVfit4tauHistManager
@@ -446,6 +446,22 @@ int main(int argc, char* argv[])
     inputTree->registerReader(lheInfoReader);
   }
 
+  //--- initialize BDTs
+  std::string BDTFileName = "hhAnalysis/multilepton/data/hh_2lss_XGB_noTopness_evtLevelSUM_HH_res_19Var.pkl";
+  std::vector<std::string> BDTInputVariables_SUM =
+    {"dihiggsMass_wMet_sel", "jetMass_sel", "leptonPairMass_sel", "leptonPairCharge_sel",
+     //"met", "mht", "STMET",
+     "HT", "met_LD",
+     "lep1_conePt", "lep1_eta", "mindr_lep1_jet", "mT_lep1",
+     "lep2_conePt", "lep2_eta", "mindr_lep2_jet", "mT_lep2",
+     "dR_ll", "pT_ll", "max_lep_eta",
+     "pT_llMEt", "Smin_llMEt",
+     ///"evtWeight"
+    };
+  XGBInterface BDT_SUM(BDTFileName, BDTInputVariables_SUM);
+  std::map<std::string, double> BDTInputs_SUM;
+
+
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
   std::ostream* selEventsFile = ( selEventsFileName_output != "" ) ? new std::ofstream(selEventsFileName_output.data(), std::ios::out) : 0;
   std::cout << "selEventsFileName_output = " << selEventsFileName_output << std::endl;
@@ -552,9 +568,9 @@ int main(int argc, char* argv[])
 	Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
     selHistManager->evt_->bookHistograms(fs);
     vstring categories_evt = {
-      "E_3j", "GE_3j", "GE_4j",
-      "E_3j_nonvbf", "GE_3j_nonvbf", "GE_4j_nonvbf",
-      "E_5j_vbf", "GE_5j_vbf", "GE_6j_vbf"
+      "2ess_3j",   "2ess_3j_vbf",   "2ess_3j_nonvbf",   "2muss_3j",   "2muss_3j_vbf",   "2muss_3j_nonvbf",   "1e1muss_3j",   "1e1muss_3j_vbf",   "1e1muss_3j_nonvbf",
+      "2ess_ge3j", "2ess_ge3j_vbf", "2ess_ge3j_nonvbf", "2muss_ge3j", "2muss_ge3j_vbf", "2muss_ge3j_nonvbf", "1e1muss_ge3j", "1e1muss_ge3j_vbf", "1e1muss_ge3j_nonvbf",
+      "2ess_ge4j", "2ess_ge4j_vbf", "2ess_ge4j_nonvbf", "2muss_ge4j", "2muss_ge4j_vbf", "2muss_ge4j_nonvbf", "1e1muss_ge4j", "1e1muss_ge4j_vbf", "1e1muss_ge4j_nonvbf",
     };
     for ( vstring::const_iterator category = categories_evt.begin();
 	  category != categories_evt.end(); ++category ) {
@@ -589,6 +605,12 @@ int main(int argc, char* argv[])
     lheInfoHistManager = new LHEInfoHistManager(makeHistManager_cfg(process_string,
       Form("%s/sel/lheInfo", histogramDir.data()), central_or_shift));
     lheInfoHistManager->bookHistograms(fs);
+
+    if(eventWeightManager)
+    {
+      genEvtHistManager_beforeCuts->bookHistograms(fs, eventWeightManager);
+      genEvtHistManager_afterCuts->bookHistograms(fs, eventWeightManager);
+    }
   }
 
   std::cout << "Book BDT filling" << std::endl;
@@ -776,6 +798,10 @@ int main(int argc, char* argv[])
       evtWeight_inclusive *= eventInfo.pileupWeight;
       evtWeight_inclusive *= lumiScale;
       genEvtHistManager_beforeCuts->fillHistograms(genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeight_inclusive);
+      if(eventWeightManager)
+      {
+        genEvtHistManager_beforeCuts->fillHistograms(eventWeightManager, evtWeight_inclusive);
+      }
     }
 
     bool isTriggered_1e = hltPaths_isTriggered(triggers_1e);
@@ -1111,6 +1137,7 @@ int main(int argc, char* argv[])
       leptonPairCharge_presel,
       HT,
       STMET,
+      1,
       1.
     );
     preselHistManager->evtYield_->fillHistograms(eventInfo, 1.);
@@ -1557,6 +1584,29 @@ int main(int argc, char* argv[])
     double pT_llMEt = (llP4 + metP4).pt();
     double Smin_llMEt = comp_Smin(llP4, metP4.px(), metP4.py());
 
+    //--- compute output of BDTs
+    BDTInputs_SUM["dihiggsMass_wMet_sel"] = dihiggsMass_wMet_sel;
+    BDTInputs_SUM["jetMass_sel"]          = jetMass_sel;
+    BDTInputs_SUM["leptonPairMass_sel"]   = leptonPairMass_sel;
+    BDTInputs_SUM["leptonPairCharge_sel"] = leptonPairCharge_sel;
+    BDTInputs_SUM["HT"]                   = HT;
+    BDTInputs_SUM["met_LD"]               = met_LD;
+    BDTInputs_SUM["lep1_conePt"]          = comp_lep1_conePt(*selLepton_lead);
+    BDTInputs_SUM["lep1_eta"]             = selLepton_lead->eta();
+    BDTInputs_SUM["mindr_lep1_jet"]       = std::min(10., mindr_lep1_jet);
+    BDTInputs_SUM["mT_lep1"]              = comp_MT_met_lep1(*selLepton_lead, met.pt(), met.phi());
+    BDTInputs_SUM["lep2_conePt"]          = comp_lep2_conePt(*selLepton_sublead);
+    BDTInputs_SUM["lep2_eta"]             = selLepton_sublead->eta();
+    BDTInputs_SUM["mindr_lep2_jet"]       = std::min(10., mindr_lep2_jet);
+    BDTInputs_SUM["mT_lep2"]              = comp_MT_met_lep1(*selLepton_sublead, met.pt(), met.phi());
+    BDTInputs_SUM["dR_ll"]                = dR_ll;
+    BDTInputs_SUM["pT_ll"]                = pT_ll;
+    BDTInputs_SUM["max_lep_eta"]          = TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
+    BDTInputs_SUM["pT_llMEt"]             = pT_llMEt;
+    BDTInputs_SUM["Smin_llMEt"]           = Smin_llMEt;
+    //BDTInputs_SUM["evtWeight"]            = evtWeight;
+
+    double BDTOutput_SUM = BDT_SUM(BDTInputs_SUM);
 
 //--- fill histograms with events passing final selection
     selHistManagerType* selHistManager = selHistManagers[idxSelLepton_genMatch];
@@ -1594,6 +1644,7 @@ int main(int argc, char* argv[])
       leptonPairCharge_sel,
       HT,
       STMET,
+      BDTOutput_SUM,
       evtWeight);
 
     selHistManager->evtYield_->fillHistograms(eventInfo, evtWeight);
@@ -1622,35 +1673,83 @@ int main(int argc, char* argv[])
     }
 
     std::vector<std::string> categories;
-    if ((int)selJetsVBF.size() == 3 ) {
-      categories.push_back("E_3j");
-      if ( !isVBF ) {
-	categories.push_back("E_3j_nonvbf");
+    if ((int)selJets.size() == 3 ) {
+      if ( selElectrons.size() == 2 ) {
+        categories.push_back("2ess_3j");
+        if ( isVBF && (int)selJetsVBF.size() == 5 ) {
+          categories.push_back("2ess_3j_vbf");
+        } else {
+          categories.push_back("2ess_3j_nonvbf");
+        }
+      }
+      if ( selMuons.size() == 2 ) {
+        categories.push_back("2muss_3j");
+        if ( isVBF && (int)selJetsVBF.size() == 5 ) {
+          categories.push_back("2muss_3j_vbf");
+        } else {
+          categories.push_back("2muss_3j_nonvbf");
+        }
+      }
+      if ( selElectrons.size() == 1 && selMuons.size() == 1 ) {
+        categories.push_back("1e1muss_3j");
+        if ( isVBF && (int)selJetsVBF.size() == 5 ) {
+          categories.push_back("1e1muss_3j_vbf");
+        } else {
+          categories.push_back("1e1muss_3j_nonvbf");
+        }
+      }
+    } else if ((int)selJets.size() >= 3) {
+      if ( selElectrons.size() == 2 ) {
+        categories.push_back("2ess_ge3j");
+        if ( isVBF && (int)selJetsVBF.size() >= 5 ) {
+          categories.push_back("2ess_ge3j_vbf");
+        } else {
+          categories.push_back("2ess_ge3j_nonvbf");
+        }
+      }
+      if ( selMuons.size() == 2 ) {
+        categories.push_back("2muss_ge3j");
+        if ( isVBF && (int)selJetsVBF.size() >= 5 ) {
+          categories.push_back("2muss_ge3j_vbf");
+        } else {
+          categories.push_back("2muss_ge3j_nonvbf");
+        }
+      }
+      if ( selElectrons.size() == 1 && selMuons.size() == 1 ) {
+        categories.push_back("1e1muss_ge3j");
+        if ( isVBF && (int)selJetsVBF.size() >= 5 ) {
+          categories.push_back("1e1muss_ge3j_vbf");
+        } else {
+          categories.push_back("1e1muss_ge3j_nonvbf");
+        }
+      }
+    } else if ((int)selJets.size() >= 4) {
+      if ( selElectrons.size() == 2 ) {
+        categories.push_back("2ess_ge4j");
+        if ( isVBF && (int)selJetsVBF.size() >= 6 ) {
+          categories.push_back("2ess_ge4j_vbf");
+        } else {
+          categories.push_back("2ess_ge4j_nonvbf");
+        }
+      }
+      if ( selMuons.size() == 2 ) {
+        categories.push_back("2muss_ge4j");
+        if ( isVBF && (int)selJetsVBF.size() >= 6 ) {
+          categories.push_back("2muss_ge4j_vbf");
+        } else {
+          categories.push_back("2muss_ge4j_nonvbf");
+        }
+      }
+      if ( selElectrons.size() == 1 && selMuons.size() == 1 ) {
+        categories.push_back("1e1muss_ge4j");
+        if ( isVBF && (int)selJetsVBF.size() >= 6 ) {
+          categories.push_back("1e1muss_ge4j_vbf");
+        } else {
+          categories.push_back("1e1muss_ge4j_nonvbf");
+        }
       }
     }
-    if ((int)selJetsVBF.size() >= 3 ) {
-      categories.push_back("GE_3j");
-      if ( !isVBF ) {
-        categories.push_back("GE_3j_nonvbf");
-      }
-    }
-    if ((int)selJetsVBF.size() >= 4 ) {
-      categories.push_back("GE_4j");
-      if ( !isVBF ) {
-        categories.push_back("GE_4j_nonvbf");
-      }
-    }
-    if ( isVBF ) {
-      if ((int)selJetsVBF.size() == 5 ) {
-        categories.push_back("E_5j_vbf");
-      }
-      if ((int)selJetsVBF.size() >= 5 ) {
-	categories.push_back("GE_5j_vbf");
-      }
-      if ((int)selJetsVBF.size() >= 6 ) {
-	categories.push_back("GE_6j_vbf");
-      }
-    }
+
 
     for ( std::vector<std::string>::const_iterator category = categories.begin();
 	  category != categories.end(); ++category ) {
@@ -1668,12 +1767,17 @@ int main(int argc, char* argv[])
 	    leptonPairCharge_sel,
 	    HT,
 	    STMET,
+	    BDTOutput_SUM,
 	    evtWeight);
     }
 
     if ( isMC ) {
       genEvtHistManager_afterCuts->fillHistograms(genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeight_inclusive);
       lheInfoHistManager->fillHistograms(*lheInfoReader, evtWeight);
+      if(eventWeightManager)
+      {
+        genEvtHistManager_afterCuts->fillHistograms(eventWeightManager, evtWeight_inclusive);
+      }
     }
 
     if ( selEventsFile ) {
@@ -1716,10 +1820,10 @@ int main(int argc, char* argv[])
 	("nJet_vbf",                       selJetsVBF.size())
 	("isVBF",                          isVBF)
 	("nLep",                           selLeptons.size())
-  ("THWeight",                       THWeight)
-  ("BM",                             BM)
-  ("mhh_gen",                         mhh_gen)
-  ("costS_gen",                       costS_gen)
+	("THWeight",                       THWeight)
+	("BM",                             BM)
+	("mhh_gen",                        mhh_gen)
+	("costS_gen",                      costS_gen)
         .fill()
 	;
     }
@@ -1789,3 +1893,4 @@ int main(int argc, char* argv[])
 
   return EXIT_SUCCESS;
 }
+
