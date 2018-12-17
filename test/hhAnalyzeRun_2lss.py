@@ -155,11 +155,12 @@ if __name__ == '__main__':
     executable_addFakes                   = "addBackgroundLeptonFakes",
     executable_addFlips                   = "addBackgroundLeptonFlips",
     histograms_to_fit                     = {
-      "EventCounter"                      : {},
-      "numJets"                           : {},
+#      "EventCounter"                      : {},
+#      "numJets"                           : {},
       "dihiggsVisMass"                    : {},
-      "HT"                                : {},
-      "STMET"                             : {}
+#      "HT"                                : {},
+#      "STMET"                             : {},
+      "BDTOutput_SUM"                     : {}
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,

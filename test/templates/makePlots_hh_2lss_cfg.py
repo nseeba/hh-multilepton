@@ -145,5 +145,10 @@ process.makePlots.distributions.extend([
         histogramName = cms.string('sel/evt/$PROCESS/jetMass'),
         xAxisTitle = cms.string('m_{jjjj} [GeV]'),
         yAxisTitle = cms.string('dN/dm_{jjjj} [1/GeV]')
-    )
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/evt/$PROCESS/BDTOutput_SUM'),
+        xAxisTitle = cms.string('BDT Output'),
+        yAxisTitle = cms.string('N')
+    ),
 ])

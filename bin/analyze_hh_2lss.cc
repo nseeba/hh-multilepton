@@ -447,16 +447,17 @@ int main(int argc, char* argv[])
   }
 
   //--- initialize BDTs
-  std::string BDTFileName = "hhAnalysis/multilepton/data/hh_2lss_XGB_noTopness_evtLevelSUM_HH_res_19Var.pkl";
+  std::string BDTFileName = "hhAnalysis/multilepton/data/hh_2lss_XGB_noTopness_evtLevelSUM_HH_res_9Var.pkl";
   std::vector<std::string> BDTInputVariables_SUM =
-    {"dihiggsMass_wMet_sel", "jetMass_sel", "leptonPairMass_sel", "leptonPairCharge_sel",
-     //"met", "mht", "STMET",
-     "HT", "met_LD",
-     "lep1_conePt", "lep1_eta", "mindr_lep1_jet", "mT_lep1",
-     "lep2_conePt", "lep2_eta", "mindr_lep2_jet", "mT_lep2",
-     "dR_ll", "pT_ll", "max_lep_eta",
-     "pT_llMEt", "Smin_llMEt",
-     ///"evtWeight"
+    {"jetMass_sel", 
+     "leptonPairMass_sel",
+     "HT",
+     "mindr_lep1_jet", 
+     "mT_lep1",
+     "mindr_lep2_jet", 
+     "mT_lep2",
+     "dR_ll",
+     "max_lep_eta",
     };
   XGBInterface BDT_SUM(BDTFileName, BDTInputVariables_SUM);
   std::map<std::string, double> BDTInputs_SUM;
@@ -1090,23 +1091,32 @@ int main(int argc, char* argv[])
     Particle::LorentzVector mhtP4 = compMHT(fakeableLeptons, {}, selJets);
     double met_LD = compMEt_LD(metP4, mhtP4);
 
-    const RecoJet* selJat_1 = selJets[0];
-    const RecoJet* selJat_2 = selJets[1];
-    const RecoJet* selJat_3 = selJets[2];
-    const RecoJet* selJat_4 = selJets[3];
-
-    double dihiggsVisMass_presel =  0;
-    double dihiggsMass_wMet_presel =  0;
-    double jetMass_presel =  0;
-    if ((int)selJets.size() == 3){
-      dihiggsVisMass_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4()).mass();
-      dihiggsMass_wMet_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + met.p4()).mass();
-      jetMass_presel = (selJat_1->p4() + selJat_2->p4() + selJat_3->p4()).mass();
-    } else {
-      dihiggsVisMass_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
-      dihiggsMass_wMet_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4() + met.p4()).mass();
-      jetMass_presel = (selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
+    Particle::LorentzVector selJetP4;
+    double mass_jj_W = 0;
+    for ( std::vector<const RecoJet*>::const_iterator selJet1_W = selJets.begin();
+          selJet1_W != selJets.end(); ++selJet1_W ) {
+      for ( std::vector<const RecoJet*>::const_iterator selJet2_W = selJet1_W + 1;
+            selJet2_W != selJets.end(); ++selJet2_W ) {
+        double mass_jj = ((*selJet1_W)->p4() + (*selJet2_W)->p4()).mass();
+	if ( std::fabs(mass_jj - w_mass) < std::fabs(mass_jj_W - w_mass) || mass_jj_W==0) {
+	  mass_jj_W = mass_jj;
+	  selJetP4 = (*selJet1_W)->p4() + (*selJet2_W)->p4();
+	  int counter = 0;
+	  for ( std::vector<const RecoJet*>::const_iterator selJet3_4 = selJets.begin();
+		selJet3_4 != selJets.end(); ++selJet3_4 ) {
+	    if ((*selJet3_4)!=(*selJet1_W) && (*selJet3_4)!=(*selJet2_W)){
+	      counter++;
+	      if (counter <= 2){
+		selJetP4 += (*selJet3_4)->p4();
+	      }
+	    }
+	  }
+	}
+      }
     }
+    double dihiggsVisMass_presel = (selJetP4 + preselLepton_lead->p4() + preselLepton_sublead->p4()).mass();
+    double dihiggsMass_wMet_presel = (selJetP4 + preselLepton_lead->p4() + preselLepton_sublead->p4() + met.p4()).mass();
+    double jetMass_presel = mass_jj_W;
     double leptonPairMass_presel = (preselLepton_lead->p4() + preselLepton_sublead->p4()).mass();
     double electronPairMass_presel = ( preselLepton_lead->is_electron() && preselLepton_sublead->is_electron() ) ? leptonPairMass_presel : -1.;
     double muonPairMass_presel = ( preselLepton_lead->is_muon() && preselLepton_sublead->is_muon() ) ? leptonPairMass_presel : -1.;
@@ -1560,18 +1570,9 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms("signal region veto", evtWeight);
 
     // compute signal extraction observables
-    double dihiggsVisMass_sel =  -1;
-    double dihiggsMass_wMet_sel =  0;
-    double jetMass_sel =  0;
-    if ((int)selJets.size() == 3){
-      dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4()).mass();
-      dihiggsMass_wMet_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + met.p4()).mass();
-      jetMass_sel = (selJat_1->p4() + selJat_2->p4() + selJat_3->p4() ).mass();
-    } else {
-      dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
-      dihiggsMass_wMet_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4() + met.p4()).mass();
-      jetMass_sel = (selJat_1->p4() + selJat_2->p4() + selJat_3->p4() + selJat_4->p4()).mass();
-    }
+    double dihiggsVisMass_sel = (selJetP4 + selLepton_lead->p4() + selLepton_sublead->p4()).mass();
+    double dihiggsMass_wMet_sel = (selJetP4 + selLepton_lead->p4() + selLepton_sublead->p4() + met.p4()).mass();
+    double jetMass_sel = mass_jj_W;
     double leptonPairMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4()).mass();
     double leptonPairCharge_sel = selLepton_lead->charge() + selLepton_sublead->charge();
 
@@ -1585,25 +1586,25 @@ int main(int argc, char* argv[])
     double Smin_llMEt = comp_Smin(llP4, metP4.px(), metP4.py());
 
     //--- compute output of BDTs
-    BDTInputs_SUM["dihiggsMass_wMet_sel"] = dihiggsMass_wMet_sel;
+    //BDTInputs_SUM["dihiggsMass_wMet_sel"] = dihiggsMass_wMet_sel;
     BDTInputs_SUM["jetMass_sel"]          = jetMass_sel;
     BDTInputs_SUM["leptonPairMass_sel"]   = leptonPairMass_sel;
-    BDTInputs_SUM["leptonPairCharge_sel"] = leptonPairCharge_sel;
+    //BDTInputs_SUM["leptonPairCharge_sel"] = leptonPairCharge_sel;
     BDTInputs_SUM["HT"]                   = HT;
-    BDTInputs_SUM["met_LD"]               = met_LD;
-    BDTInputs_SUM["lep1_conePt"]          = comp_lep1_conePt(*selLepton_lead);
-    BDTInputs_SUM["lep1_eta"]             = selLepton_lead->eta();
+    //BDTInputs_SUM["met_LD"]               = met_LD;
+    //BDTInputs_SUM["lep1_conePt"]          = comp_lep1_conePt(*selLepton_lead);
+    //BDTInputs_SUM["lep1_eta"]             = selLepton_lead->eta();
     BDTInputs_SUM["mindr_lep1_jet"]       = std::min(10., mindr_lep1_jet);
     BDTInputs_SUM["mT_lep1"]              = comp_MT_met_lep1(*selLepton_lead, met.pt(), met.phi());
-    BDTInputs_SUM["lep2_conePt"]          = comp_lep2_conePt(*selLepton_sublead);
-    BDTInputs_SUM["lep2_eta"]             = selLepton_sublead->eta();
+    //BDTInputs_SUM["lep2_conePt"]          = comp_lep2_conePt(*selLepton_sublead);
+    //BDTInputs_SUM["lep2_eta"]             = selLepton_sublead->eta();
     BDTInputs_SUM["mindr_lep2_jet"]       = std::min(10., mindr_lep2_jet);
     BDTInputs_SUM["mT_lep2"]              = comp_MT_met_lep1(*selLepton_sublead, met.pt(), met.phi());
     BDTInputs_SUM["dR_ll"]                = dR_ll;
-    BDTInputs_SUM["pT_ll"]                = pT_ll;
+    //BDTInputs_SUM["pT_ll"]                = pT_ll;
     BDTInputs_SUM["max_lep_eta"]          = TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
-    BDTInputs_SUM["pT_llMEt"]             = pT_llMEt;
-    BDTInputs_SUM["Smin_llMEt"]           = Smin_llMEt;
+    //BDTInputs_SUM["pT_llMEt"]             = pT_llMEt;
+    //BDTInputs_SUM["Smin_llMEt"]           = Smin_llMEt;
     //BDTInputs_SUM["evtWeight"]            = evtWeight;
 
     double BDTOutput_SUM = BDT_SUM(BDTInputs_SUM);
