@@ -11,6 +11,8 @@
 #include <TString.h> // TString, Form
 #include <TError.h> // gErrorAbortLevel, kError
 #include <TRandom3.h> // TRandom3
+#include <TLorentzVector.h> // TLorentzVector
+
 
 #include "tthAnalysis/HiggsToTauTau/interface/RecoLepton.h" // RecoLepton
 #include "tthAnalysis/HiggsToTauTau/interface/RecoHadTau.h" // RecoHadTau
@@ -639,17 +641,18 @@ int main(int argc, char* argv[])
       makeHistManager_cfg(process_string, Form("%s/sel/evtntuple", histogramDir.data()), central_or_shift)
     );
     bdt_filler->register_variable<float_type>(
-      "lep1_pt", "lep1_conePt", "lep1_eta", "lep1_tth_mva", "mT_lep1",
-      "lep2_pt", "lep2_conePt", "lep2_eta", "lep2_tth_mva", "mT_lep2",
-      "tau1_pt", "tau1_eta", "tau1_mva",
-      "tau2_pt", "tau2_eta", "tau2_mva",
+      "lep1_pt", "lep1_conePt", "lep1_eta", "lep1_tth_mva", "mT_lep1", "lep1_phi",
+      "lep2_pt", "lep2_conePt", "lep2_eta", "lep2_tth_mva", "mT_lep2", "lep2_phi",
+      "tau1_pt", "tau1_eta", "tau1_mva", "tau1_phi",
+      "tau2_pt", "tau2_eta", "tau2_mva", "tau2_phi",
       "dr_lep1_tau1", "dr_lep1_tau2", "dr_lep2_tau1", "dr_lep2_tau2",
       "dr_leps", "dr_taus", "avg_dr_jet",
-      "met", "mht", "met_LD", "HT", "STMET",
+      "met", "mht", "met_LD", "HT", "STMET", "met_phi",
       "Smin_llMEt", "m_ll", "pT_ll", "pT_llMEt", "Smin_lltautau",
       "mTauTauVis", "ptTauTauVis", "diHiggsVisMass", "diHiggsMass",
       "logTopness_publishedChi2", "logTopness_fixedChi2",
-      "genWeight", "evtWeight"
+      "genWeight", "evtWeight",
+      "m_lep1_tau1", "m_lep2_tau1", "m_lep1_tau2", "m_lep2_tau2", "pt_HH_recoil"
     );
     bdt_filler->register_variable<int_type>(
       "nJet", "nBJet_loose", "nBJet_medium",
@@ -1556,6 +1559,11 @@ int main(int argc, char* argv[])
 
 
     // pre-compute BDT variables
+    const double m_lep1_tau1 = (selLepton_lead->p4() + selHadTau_lead->p4()).mass();
+    const double m_lep2_tau1 = (selLepton_sublead->p4() + selHadTau_lead->p4()).mass();
+    const double m_lep1_tau2 = (selLepton_lead->p4() + selHadTau_sublead->p4()).mass();
+    const double m_lep2_tau2 = (selLepton_sublead->p4() + selHadTau_sublead->p4()).mass();
+    const double pt_HH_recoil = (selLepton_lead->p4() + selLepton_sublead->p4() + selHadTau_lead->p4() + selHadTau_sublead->p4() - met.p4()).pt();
     const double mT_lep1 = comp_MT_met_lep1(*selLepton_lead, met.pt(), met.phi());
     const double mT_lep2 = comp_MT_met_lep2(*selLepton_sublead, met.pt(), met.phi());
     const double dr_lep1_tau1 = deltaR(selLepton_lead->p4(),    selHadTau_lead->p4());
@@ -1606,30 +1614,40 @@ int main(int argc, char* argv[])
     if(bdt_filler)
     {
       bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
+	  ("pt_HH_recoil",             pt_HH_recoil)
           ("lep1_pt",                  selLepton_lead->pt())
           ("lep1_conePt",              selLepton_lead->cone_pt())
           ("lep1_eta",                 selLepton_lead->eta())
+          ("lep1_phi",                 selLepton_lead->phi())
           ("lep1_tth_mva",             selLepton_lead->mvaRawTTH())
           ("mT_lep1",                  mT_lep1)
           ("lep2_pt",                  selLepton_sublead->pt())
           ("lep2_conePt",              selLepton_sublead->cone_pt())
           ("lep2_eta",                 selLepton_sublead->eta())
+          ("lep2_phi",                 selLepton_lead->phi())
           ("lep2_tth_mva",             selLepton_sublead->mvaRawTTH())
           ("mT_lep2",                  mT_lep2)
           ("tau1_pt",                  selHadTau_lead->pt())
           ("tau1_eta",                 selHadTau_lead->eta())
+          ("tau1_phi",                 selHadTau_lead->phi())
           ("tau1_mva",                 selHadTau_lead->id_mva_dR03())
           ("tau2_pt",                  selHadTau_sublead->pt())
           ("tau2_eta",                 selHadTau_sublead->eta())
+          ("tau2_phi",                 selHadTau_lead->phi())
           ("tau2_mva",                 selHadTau_sublead->id_mva_dR03())
           ("dr_lep1_tau1",             dr_lep1_tau1)
           ("dr_lep2_tau1",             dr_lep2_tau1)
           ("dr_lep1_tau2",             dr_lep1_tau2)
           ("dr_lep2_tau2",             dr_lep2_tau2)
+	  ("m_lep1_tau1",              m_lep1_tau1)  
+	  ("m_lep2_tau1",              m_lep2_tau1)
+	  ("m_lep1_tau2",              m_lep1_tau2)
+	  ("m_lep2_tau2",              m_lep2_tau2)
           ("dr_leps",                  dr_leps)
           ("dr_taus",                  dr_taus)
           ("avg_dr_jet",               avg_dr_jet)
           ("met",                      met.pt())
+          ("met_phi",                  met.phi())
           ("mht",                      mht_p4.pt())
           ("met_LD",                   met_LD)
           ("HT",                       HT)

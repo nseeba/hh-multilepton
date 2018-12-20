@@ -94,7 +94,8 @@ elif mode == "forBDTtraining":
     if era == "2016":
       from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016_BDT import samples_2016 as samples
     elif era == "2017":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT import samples_2017 as samples
+#      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT import samples_2017 as samples
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT_2l_2tau import samples_2017 as samples
     elif era == "2018":
       from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018_BDT import samples_2018 as samples
     else:
@@ -105,7 +106,8 @@ elif mode == "forBDTtraining":
     hadTau_selection_relaxed = "dR03mvaVVLoose"
   elif era == "2017":
     hadTau_selection         = "dR03mvaMedium"
-    hadTau_selection_relaxed = "dR03mvaVLoose"
+    hadTau_selection_relaxed = "dR03mvaLoose"
+    #hadTau_selection_relaxed = "dR03mvaVLoose"
   elif era == "2018":
     raise ValueError("Implement me!")
   else:
