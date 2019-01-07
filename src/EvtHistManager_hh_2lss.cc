@@ -28,7 +28,9 @@ EvtHistManager_hh_2lss::bookHistograms(TFileDirectory & dir)
   histogram_leptonPairCharge_ = book1D(dir, "leptonPairCharge", "leptonPairCharge",   5, -2.5,  +2.5);
   histogram_HT_               = book1D(dir, "HT",               "HT",               150,  0., 1500.);
   histogram_STMET_            = book1D(dir, "STMET",            "STMET",            150,  0., 1500.);
-  histogram_BDTOutput_SUM_    = book1D(dir, "BDTOutput_SUM",    "BDTOutput_SUM",    100,  0.,    1.);
+  //histogram_BDTOutput_SUM_    = book1D(dir, "BDTOutput_SUM",    "BDTOutput_SUM",    100,  0.,    1.);
+  histogram_BDTOutput_SUM_gen_mHH_400_    = book1D(dir, "BDTOutput_SUM_gen_mHH_400",    "BDTOutput_SUM_gen_mHH_400",    100,  0.,    1.);
+  histogram_BDTOutput_SUM_gen_mHH_700_    = book1D(dir, "BDTOutput_SUM_gen_mHH_700",    "BDTOutput_SUM_gen_mHH_700",    100,  0.,    1.);
   histogram_EventCounter_     = book1D(dir, "EventCounter",     "EventCounter",       1, -0.5,  +0.5);
 }
 
@@ -46,7 +48,9 @@ EvtHistManager_hh_2lss::fillHistograms(int numElectrons,
 				       double leptonPairCharge,
 				       double HT,
 				       double STMET,
-				       double BDTOutput_SUM,
+				       //double BDTOutput_SUM,
+				       double BDTOutput_SUM_gen_mHH_400,
+				       double BDTOutput_SUM_gen_mHH_700,
 				       double evtWeight)
 {
   const double evtWeightErr = 0.;
@@ -67,6 +71,8 @@ EvtHistManager_hh_2lss::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_leptonPairCharge_, leptonPairCharge, evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_HT_,               HT,               evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_STMET_,            STMET,            evtWeight, evtWeightErr);
-  fillWithOverFlow(histogram_BDTOutput_SUM_,    BDTOutput_SUM,    evtWeight, evtWeightErr);
+  //fillWithOverFlow(histogram_BDTOutput_SUM_,    BDTOutput_SUM,    evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_BDTOutput_SUM_gen_mHH_400_,    BDTOutput_SUM_gen_mHH_400,    evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_BDTOutput_SUM_gen_mHH_700_,    BDTOutput_SUM_gen_mHH_700,    evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_EventCounter_,     0.,               evtWeight, evtWeightErr);
 }
