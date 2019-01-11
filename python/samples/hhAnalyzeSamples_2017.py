@@ -1,5 +1,6 @@
 from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_bkg import samples_2017 as samples_2017_bkg
 from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_hh import samples_2017 as samples_2017_hh
+from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_wjets import samples_2017 as samples_2017_wjets
 
 import collections
 import itertools
@@ -7,12 +8,14 @@ import copy
 
 sum_events_hh  = copy.deepcopy(samples_2017_hh['sum_events'])
 sum_events_bkg = copy.deepcopy(samples_2017_bkg['sum_events'])
+sum_events_wjets = copy.deepcopy(samples_2017_wjets['sum_events'])
 
 del samples_2017_hh['sum_events']
 del samples_2017_bkg['sum_events']
+del samples_2017_wjets['sum_events']
 
 samples_2017 = collections.OrderedDict(itertools.chain(
-  samples_2017_bkg.items(), samples_2017_hh.items()
+  samples_2017_bkg.items(), samples_2017_hh.items(), samples_2017_wjets.items()
 ))
 
 samples_2017['sum_events'] = sum_events_hh + sum_events_bkg
@@ -48,3 +51,6 @@ for sample_name, sample_info in samples_2017.items():
     sample_info["sample_category"] = "Other"
   if sample_info["sample_category"] in [ "tHq", "tHW" ]:
     sample_info["sample_category"] = "TH"
+
+  if sample_name in samples_2017_wjets:
+    sample_info["use_it"] = False

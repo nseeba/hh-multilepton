@@ -135,19 +135,19 @@ THWeightInterface::operator()( //const std::map<std::string, double>& mvaInputs
 
   // calculate and return normalization
   PyObject* func_Weight = PyObject_GetAttrString(moduleMain_, "evaluate_weight");
-  PyObject* args_Weight = PyTuple_Pack(10,
-    PyFloat_FromDouble(static_cast<double>(kl)),
-    PyFloat_FromDouble(static_cast<double>(kt)),
-    PyFloat_FromDouble(static_cast<double>(c2)),
-    PyFloat_FromDouble(static_cast<double>(cg)),
-    PyFloat_FromDouble(static_cast<double>(c2g)),
-    PyFloat_FromDouble(static_cast<double>(mhh_gen)),
-    PyFloat_FromDouble(static_cast<double>(costSgen_gen)),
-    PyFloat_FromDouble(static_cast<double>(normalization)),
-    cms_base, modeldata_
-  );
-  PyObject* Weightpy = PyObject_CallObject(func_Weight, args_Weight);
-  double THWeight   = PyFloat_AsDouble(Weightpy);
+  //PyObject* args_Weight = PyTuple_Pack(10,
+  //  PyFloat_FromDouble(static_cast<double>(kl)),
+  //  PyFloat_FromDouble(static_cast<double>(kt)),
+  //  PyFloat_FromDouble(static_cast<double>(c2)),
+  //  PyFloat_FromDouble(static_cast<double>(cg)),
+  //  PyFloat_FromDouble(static_cast<double>(c2g)),
+  //  PyFloat_FromDouble(static_cast<double>(mhh_gen)),
+  //  PyFloat_FromDouble(static_cast<double>(costSgen_gen)),
+  //  PyFloat_FromDouble(static_cast<double>(normalization)),
+  //  cms_base, modeldata_
+  //);
+  //PyObject* Weightpy = PyObject_CallObject(func_Weight, args_Weight);
+  //double THWeight   = PyFloat_AsDouble(Weightpy);
 
   for (unsigned int bm_list = 0; bm_list < 13; bm_list++){
     PyObject* args_BM_list = PyTuple_Pack(10,

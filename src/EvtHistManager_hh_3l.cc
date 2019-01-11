@@ -7,7 +7,29 @@
 EvtHistManager_hh_3l::EvtHistManager_hh_3l(const edm::ParameterSet & cfg)
   : HistManagerBase(cfg)
   , era_(get_era(cfg.getParameter<std::string>("era")))
-{}
+{
+  central_or_shiftOptions_["numElectrons"] = { "central" };
+  central_or_shiftOptions_["numMuons"] = { "central" };
+  central_or_shiftOptions_["numJets"] = { "central" };
+  central_or_shiftOptions_["numJetsPtGt40"] = { "central" };
+  central_or_shiftOptions_["numBJets_loose"] = { "central" };
+  central_or_shiftOptions_["numBJets_medium"] = { "central" };
+  central_or_shiftOptions_["chargedSum3l"] = { "central" };
+  central_or_shiftOptions_["numSFOS2l"] = { "central" };
+  central_or_shiftOptions_["dihiggsVisMass"] = { "central" };
+  central_or_shiftOptions_["dihiggsMass"] = { "central" };
+  central_or_shiftOptions_["WTojjMass"] = { "central" };
+  central_or_shiftOptions_["mSFOS2l"] = { "central" };
+  central_or_shiftOptions_["mTMetLepton1"] = { "central" };
+  central_or_shiftOptions_["mTMetLepton2"] = { "central" };
+  central_or_shiftOptions_["vbf_m_jj"] = { "central" };
+  central_or_shiftOptions_["vbf_dEta_jj"] = { "central" };
+  central_or_shiftOptions_["numJets_nonVBF"] = { "central" };
+  central_or_shiftOptions_["HT"] = { "central" };
+  central_or_shiftOptions_["STMET"] = { "central" };
+  central_or_shiftOptions_["mvaOutput_xgb_hh_3l_SUMBk_HH"] = { "*" };
+  central_or_shiftOptions_["EventCounter"] = { "*" };
+}
 
 const TH1 *
 EvtHistManager_hh_3l::getHistogram_EventCounter() const
@@ -41,7 +63,7 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   histogram_numBJets_medium_ = book1D(dir, "numBJets_medium", "numBJets_medium",  10, -0.5,  +9.5);
   
   histogram_chargedSum3l_    = book1D(dir, "chargedSum3l",    "chargedSum3l",      7, -3.5,  +3.5);
-  histogram_numSFOS2l_       = book1D(dir, "numSFOS2l",        "numSameFlavorOppositeSign2l",  9, -0.5,  +8.5);
+  histogram_numSFOS2l_       = book1D(dir, "numSFOS2l",       "numSameFlavorOppositeSign2l",  9, -0.5,  +8.5);
   
   histogram_dihiggsVisMass_  = book1D(dir, "dihiggsVisMass",  "dihiggsVisMass",  150,  0., 1500.);
   histogram_dihiggsMass_     = book1D(dir, "dihiggsMass",     "dihiggsMass",     150,  0., 1500.);

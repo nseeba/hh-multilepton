@@ -24,8 +24,9 @@ TF1* Exp(const vdouble& FitParameters, const vdouble& FitRange, const TH1* histo
 
   std::string Expression = Form("[0]*[0]*TMath::Exp(-[1]*[1]*(x - %f))", mean);
 
-  TFormula* g1 = new TFormula("g1", Expression.data());
-  TF1* exp = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  //TFormula* g1 = new TFormula("g1", Expression.data());
+  //TF1* exp = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  TF1* exp = new TF1(funcName.data(), Expression.data(), FitRange[0], FitRange[1]);
   exp->SetParameter(0, FitParameters[0]); // norm
   exp->SetParameter(1, FitParameters[1]);   // exponent
   exp->SetParNames("Norm", "Exponent");
@@ -50,8 +51,9 @@ TF1* Poly1(const vdouble& FitParameters, const vdouble& FitRange, const TH1* his
 
   std::string Expression = Form("[0] + ([1]*(x - %f))", mean);
 
-  TFormula* g1 = new TFormula("g1", Expression.data());
-  TF1* pol1 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  //TFormula* g1 = new TFormula("g1", Expression.data());
+  //TF1* pol1 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  TF1* pol1 = new TF1(funcName.data(), Expression.data(), FitRange[0], FitRange[1]);
   pol1->SetParameter(0, FitParameters[0]); // par0
   pol1->SetParameter(1, FitParameters[1]); // par1
   pol1->SetParNames("Par0", "Par1");
@@ -76,8 +78,9 @@ TF1* Poly2(const vdouble& FitParameters, const vdouble& FitRange, const TH1* his
 
   std::string Expression = Form("[0] + ([1]*(x - %f)) + (0.5*[2]*((3.0*TMath::Power((x - %f), 2.0)) - 1.0))", mean, mean);
 
-  TFormula* g1 = new TFormula("g1", Expression.data());
-  TF1* pol2 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  //TFormula* g1 = new TFormula("g1", Expression.data());
+  //TF1* pol2 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  TF1* pol2 = new TF1(funcName.data(), Expression.data(), FitRange[0], FitRange[1]);
   pol2->SetParameter(0, FitParameters[0]); // par0
   pol2->SetParameter(1, FitParameters[1]); // par1
   pol2->SetParameter(2, FitParameters[2]); // par2
@@ -102,9 +105,9 @@ TF1* Poly3(const vdouble& FitParameters, const vdouble& FitRange, const TH1* his
 
   std::string Expression = Form("[0] + ([1]*(x - %f)) + (0.5*[2]*((3.0*TMath::Power((x - %f), 2.0)) - 1.0)) + (0.5*[3]*((5.0*TMath::Power((x - %f), 3.0)) - (3.0*(x - %f))))", mean, mean, mean, mean);
 
-  TFormula* g1 = new TFormula("g1", Expression.data());
-  TF1* pol3 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
-
+  //TFormula* g1 = new TFormula("g1", Expression.data());
+  //TF1* pol3 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  TF1* pol3 = new TF1(funcName.data(), Expression.data(), FitRange[0], FitRange[1]);
   pol3->SetParameter(0, FitParameters[0]); // par0
   pol3->SetParameter(1, FitParameters[1]); // par1
   pol3->SetParameter(2, FitParameters[2]); // par2
@@ -132,9 +135,9 @@ TF1* ExpErf(const vdouble& FitParameters, const vdouble& FitRange, const TH1* hi
 
   std::string Expression = Form("[0]*[0]*TMath::Exp(-[1]*[1]*(x - %f))*0.5*(1 + TMath::Erf(((x - %f) - [2])/[3]))", mean, mean);
 
-  TFormula* g1 = new TFormula("g1", Expression.data());
-  TF1* experf = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
-
+  //TFormula* g1 = new TFormula("g1", Expression.data());
+  //TF1* experf = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  TF1* experf = new TF1(funcName.data(), Expression.data(), FitRange[0], FitRange[1]);
   experf->SetParameter(0, FitParameters[0]); // norm  
   experf->SetParameter(1, FitParameters[1]); // exponent  
   experf->SetParameter(2, FitParameters[2]); // mean 
@@ -162,9 +165,9 @@ TF1* Gauss(const vdouble& FitParameters, const vdouble& FitRange, const TH1* his
 
   std::string Expression = Form("[0]*TMath::Gaus((x - %f),[1],[2])", mean);
 
-  TFormula* g1 = new TFormula("g1", Expression.data());
-  TF1* gauss = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
-
+  //TFormula* g1 = new TFormula("g1", Expression.data());
+  //TF1* gauss = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  TF1* gauss = new TF1(funcName.data(), Expression.data(), FitRange[0], FitRange[1]);
   gauss->SetParameter(0, FitParameters[0]); // norm
   gauss->SetParameter(1, FitParameters[1]); // mean
   gauss->SetParameter(2, FitParameters[2]);  // sigma
@@ -190,9 +193,9 @@ TF1* Gauss2(const vdouble& FitParameters, const vdouble& FitRange, const TH1* hi
 
   std::string Expression = Form("([0]*TMath::Gaus((x - %f),[1],[2])) + ((1 - [0])*TMath::Gaus((x - %f),[3],[4]))", mean, mean);
 
-  TFormula* g1 = new TFormula("g1", Expression.data());
-  TF1* gauss2 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
-
+  //TFormula* g1 = new TFormula("g1", Expression.data());
+  //TF1* gauss2 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  TF1* gauss2 = new TF1(funcName.data(), Expression.data(), FitRange[0], FitRange[1]);
   gauss2->SetParameter(0, FitParameters[0]); // norm
   gauss2->SetParameter(1, FitParameters[1]); // mean0
   gauss2->SetParameter(2, FitParameters[2]); // sigma0
@@ -220,9 +223,9 @@ TF1* Gauss3(const vdouble& FitParameters, const vdouble& FitRange, const TH1* hi
 
   std::string Expression = Form("([0]*TMath::Gaus((x - %f),[1],[2])) + ([3]*TMath::Gaus((x - %f),[4],[5])) + ((1 - [3] - [0])*TMath::Gaus((x - %f),[6],[7]))", mean, mean, mean);
 
-  TFormula* g1 = new TFormula("g1", Expression.data());
-  TF1* gauss3 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
-
+  //TFormula* g1 = new TFormula("g1", Expression.data());
+  //TF1* gauss3 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  TF1* gauss3 = new TF1(funcName.data(), Expression.data(), FitRange[0], FitRange[1]);
   gauss3->SetParameter(0, FitParameters[0]); // norm0
   gauss3->SetParameter(1, FitParameters[1]);  // mean0
   gauss3->SetParameter(2, FitParameters[2]);  // sigma0
@@ -253,9 +256,9 @@ TF1* ExpGaus(const vdouble& FitParameters, const vdouble& FitRange, const TH1* h
 
   std::string Expression = Form("([0]*[0]*TMath::Exp(-[1]*[1]*(x - %f))) + ((1 - [0])*TMath::Gaus((x - %f),[2],[3]))", mean, mean);
 
-  TFormula* g1 = new TFormula("g1", Expression.data());
-  TF1* expgaus = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
-
+  //TFormula* g1 = new TFormula("g1", Expression.data());
+  //TF1* expgaus = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  TF1* expgaus = new TF1(funcName.data(), Expression.data(), FitRange[0], FitRange[1]);
   expgaus->SetParameter(0, FitParameters[0]); // norm
   expgaus->SetParameter(1, FitParameters[1]); // exponent
   expgaus->SetParameter(2, FitParameters[2]);     // mean
@@ -283,9 +286,9 @@ TF1* ExpGaus2(const vdouble& FitParameters, const vdouble& FitRange, const TH1* 
 
   std::string Expression = Form("([0]*[0]*TMath::Exp(-[2]*[2]*(x - %f))) + ([1]*TMath::Gaus((x - %f),[3],[4])) + ((1 - [1] - [0])*TMath::Gaus((x - %f),[5],[6]))", mean, mean, mean);    
                                                                     
-  TFormula* g1 = new TFormula("g1", Expression.data());
-  TF1* expgaus2 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
-
+  //TFormula* g1 = new TFormula("g1", Expression.data());
+  //TF1* expgaus2 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  TF1* expgaus2 = new TF1(funcName.data(), Expression.data(), FitRange[0], FitRange[1]);
   expgaus2->SetParameter(0, FitParameters[0]); // norm0
   expgaus2->SetParameter(1, FitParameters[1]); // norm1
   expgaus2->SetParameter(2, FitParameters[2]); // exponent
@@ -316,9 +319,9 @@ TF1* ErfExpGaus(const vdouble& FitParameters, const vdouble& FitRange, const TH1
 
   std::string Expression = Form("([0]*[0]*TMath::Exp(-[1]*[1]*(x - %f))*0.5*(1 + TMath::Erf(((x - %f) - [2])/[3]))) + ((1 - [0])*TMath::Gaus((x - %f),[4],[5]))", mean, mean, mean);
 
-  TFormula* g1 = new TFormula("g1", Expression.data());
-  TF1* erfexpgaus = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
-
+  //TFormula* g1 = new TFormula("g1", Expression.data());
+  //TF1* erfexpgaus = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  TF1* erfexpgaus = new TF1(funcName.data(), Expression.data(), FitRange[0], FitRange[1]);
   erfexpgaus->SetParameter(0, FitParameters[0]); // norm0
   erfexpgaus->SetParameter(1, FitParameters[1]); // exponent
   erfexpgaus->SetParameter(2, FitParameters[2]); // mean0
@@ -348,9 +351,9 @@ TF1* ErfExpGaus2(const vdouble& FitParameters, const vdouble& FitRange, const TH
                                                                                                                                  
   std::string Expression = Form("([0]*[0]*TMath::Exp(-[2]*[2]*(x - %f))*(1 + TMath::Erf(((x - %f) - [3])/[4]))/2.0) + ([1]*TMath::Gaus((x - %f),[5],[6])) + ((1 - [1] - [0])*TMath::Gaus((x - %f),[7],[8]))", mean, mean, mean, mean);
 
-  TFormula* g1 = new TFormula("g1", Expression.data());
-  TF1* erfexpgaus2 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
-
+  //TFormula* g1 = new TFormula("g1", Expression.data());
+  //TF1* erfexpgaus2 = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  TF1* erfexpgaus2 = new TF1(funcName.data(), Expression.data(), FitRange[0], FitRange[1]);
   erfexpgaus2->SetParameter(0, FitParameters[0]); // norm0
   erfexpgaus2->SetParameter(1, FitParameters[1]); // norm1
   erfexpgaus2->SetParameter(2, FitParameters[2]); // exponent
@@ -386,9 +389,9 @@ TF1* Voigt(const vdouble& FitParameters, const vdouble& FitRange, const TH1* his
 
   std::string Expression = Form("[0]*TMath::Voigt((x - %f),[1],[2])", mean);
 
-  TFormula* g1 = new TFormula("g1", Expression.data());
-  TF1* voigt = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
-
+  //TFormula* g1 = new TFormula("g1", Expression.data());
+  //TF1* voigt = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  TF1* voigt = new TF1(funcName.data(), Expression.data(), FitRange[0], FitRange[1]);
   voigt->SetParameter(0, FitParameters[0]); // norm
   voigt->SetParameter(1, FitParameters[1]); // sigma
   voigt->SetParameter(2, FitParameters[2]); // gamma
@@ -411,9 +414,9 @@ TF1* Gaus2Voigt(const vdouble& FitParameters, const vdouble& FitRange, const TH1
 
   std::string Expression = Form("([0]*TMath::Voigt((x - %f),[2],[3])) + ([1]*TMath::Gaus((x - %f),[4],[5])) + ((1 - [1] - [0])*TMath::Gaus((x - %f),[6],[7]))", mean, mean, mean);
 
-  TFormula* g1 = new TFormula("g1", Expression.data());
-  TF1* gaus2voigt = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
-
+  //TFormula* g1 = new TFormula("g1", Expression.data());
+  //TF1* gaus2voigt = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  TF1* gaus2voigt = new TF1(funcName.data(), Expression.data(), FitRange[0], FitRange[1]);
   gaus2voigt->SetParameter(0, FitParameters[0]); // norm0
   gaus2voigt->SetParameter(1, FitParameters[1]); // norm1
   gaus2voigt->SetParameter(2, FitParameters[2]); // sigma
@@ -498,9 +501,9 @@ TF1* ATLASFitFunc(const vdouble& FitParameters, const vdouble& FitRange, const T
   std::string Expression = Form("(([0]*[0])/TMath::Power(((x - %f)/%f), 2.0)) * TMath::Power( (1.0 - ((x - %f)/%f)), (([1]*[1]) - ([2]*[2])*( TMath::Log((x - %f)/%f))) )", mean, COM_energy, mean, COM_energy, mean, COM_energy);
   
 
-  TFormula* g1 = new TFormula("g1", Expression.data());
-  TF1* atlas_fit_func = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
-
+  //TFormula* g1 = new TFormula("g1", Expression.data());
+  //TF1* atlas_fit_func = new TF1(funcName.data(), "g1", FitRange[0], FitRange[1]);
+  TF1* atlas_fit_func = new TF1(funcName.data(), Expression.data(), FitRange[0], FitRange[1]);
   atlas_fit_func->SetParameter(0, FitParameters[0]); 
   atlas_fit_func->SetParameter(1, FitParameters[1]); 
   atlas_fit_func->SetParameter(2, FitParameters[2]); 

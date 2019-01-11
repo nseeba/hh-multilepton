@@ -54,6 +54,7 @@ if mode == "default":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
   elif era == "2017":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
+    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_wjets import samples_2017 as samples_wjets
 
     for sample_name, sample_info in samples.items():
       if sample_name == 'sum_events':
@@ -62,6 +63,15 @@ if mode == "default":
         sample_info['use_it'] = False
       elif sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD', 'TTGJets' ]:
         sample_info['use_it'] = True
+
+      # since we run the regular analysis on "part1" of W+jets samples and reserve "part2" for the BDT training,
+      # we have to make sure that we don't use the non-split W+jets samples at all
+      if ('%s/part1' % sample_name) in samples_wjets or ('%s/part2' % sample_name) in samples_wjets:
+        sample_info['use_it'] = False
+      if sample_name.endswith('/part1'):
+        sample_info['use_it'] = True
+      if sample_name.endswith('/part2'):
+        sample_info['use_it'] = False
 
   elif era == "2018":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
@@ -83,6 +93,7 @@ elif mode == "forBDTtraining":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016_BDT import samples_2016 as samples
   elif era == "2017":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT import samples_2017 as samples
+    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_wjets import samples_2017 as samples_wjets
 
     for sample_name, sample_info in samples.items():
       if sample_name == 'sum_events':
@@ -91,6 +102,15 @@ elif mode == "forBDTtraining":
         sample_info['use_it'] = True
       elif sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD', 'TTGJets' ]:
         sample_info['use_it'] = False
+
+      # since we run the regular analysis on "part1" of W+jets samples and reserve "part2" for the BDT training,
+      # we have to make sure that we don't use the non-split W+jets samples at all
+      if ('%s/part1' % sample_name) in samples_wjets or ('%s/part2' % sample_name) in samples_wjets:
+        sample_info['use_it'] = False
+      if sample_name.endswith('/part1'):
+        sample_info['use_it'] = False
+      if sample_name.endswith('/part2'):
+        sample_info['use_it'] = True
 
   elif era == "2018":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018_BDT import samples_2018 as samples
@@ -160,7 +180,9 @@ if __name__ == '__main__':
       "dihiggsVisMass"                    : {},
 #      "HT"                                : {},
 #      "STMET"                             : {},
-      "BDTOutput_SUM"                     : {}
+#      "BDTOutput_SUM"                     : {}
+      "BDTOutput_SUM_gen_mHH_400"         : {},
+      "BDTOutput_SUM_gen_mHH_700"         : {},
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,
