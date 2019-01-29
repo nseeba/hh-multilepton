@@ -93,6 +93,8 @@ process.analyze_hh_2lss = cms.PSet(
     branchName_muons = cms.string('Muon'),
     branchName_hadTaus = cms.string('Tau'),
     branchName_jets = cms.string('Jet'),
+    branchName_jets_ak8 = cms.string('FatJet'),
+    branchName_subjets_ak8 = cms.string('SubJet'),
     branchName_met = cms.string('MET'),
     branchName_memOutput = cms.string(''),
 
@@ -103,9 +105,13 @@ process.analyze_hh_2lss = cms.PSet(
     branchName_genHiggses = cms.string('GenHiggs'),
     redoGenMatching = cms.bool(True),
 
+    branchName_genWBosons = cms.string('GenVbosons'),
+    branchName_genWJets = cms.string('GenWZQuark'),
+
     selEventsFileName_input = cms.string(''),
     selEventsFileName_output = cms.string(''),
     selectBDT = cms.bool(False),
+    gen_mHH = cms.vdouble(400, 700),
 
     useNonNominal = cms.bool(False),
     isDEBUG = cms.bool(False),

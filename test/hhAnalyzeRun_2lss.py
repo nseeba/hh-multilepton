@@ -93,6 +93,7 @@ elif mode == "forBDTtraining":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016_BDT import samples_2016 as samples
   elif era == "2017":
     from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT import samples_2017 as samples
+    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_wjets import samples_2017 as samples_wjets
 
     for sample_name, sample_info in samples.items():
       if sample_name == 'sum_events':
@@ -179,7 +180,9 @@ if __name__ == '__main__':
       "dihiggsVisMass"                    : {},
 #      "HT"                                : {},
 #      "STMET"                             : {},
-      "BDTOutput_SUM"                     : {}
+#      "BDTOutput_SUM"                     : {}
+      "BDTOutput_SUM_gen_mHH_400"         : {},
+      "BDTOutput_SUM_gen_mHH_700"         : {},
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,

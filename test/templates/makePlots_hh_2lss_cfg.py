@@ -146,8 +146,18 @@ process.makePlots.distributions.extend([
         xAxisTitle = cms.string('m_{jjjj} [GeV]'),
         yAxisTitle = cms.string('dN/dm_{jjjj} [1/GeV]')
     ),
+#    cms.PSet(
+#        histogramName = cms.string('sel/evt/$PROCESS/BDTOutput_SUM'),
+#        xAxisTitle = cms.string('BDT Output'),
+#        yAxisTitle = cms.string('N')
+#    ),
     cms.PSet(
-        histogramName = cms.string('sel/evt/$PROCESS/BDTOutput_SUM'),
+        histogramName = cms.string('sel/evt/$PROCESS/BDTOutput_SUM_gen_mHH_400'),
+        xAxisTitle = cms.string('BDT Output'),
+        yAxisTitle = cms.string('N')
+    ),
+    cms.PSet(
+        histogramName = cms.string('sel/evt/$PROCESS/BDTOutput_SUM_gen_mHH_700'),
         xAxisTitle = cms.string('BDT Output'),
         yAxisTitle = cms.string('N')
     ),
