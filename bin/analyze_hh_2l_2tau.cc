@@ -649,7 +649,11 @@ int main(int argc, char* argv[])
       "mTauTauVis", "ptTauTauVis", "diHiggsVisMass", "diHiggsMass",
       "logTopness_publishedChi2", "logTopness_fixedChi2",
       "genWeight", "evtWeight",
-      "m_lep1_tau1", "m_lep2_tau1", "m_lep1_tau2", "m_lep2_tau2", "pt_HH_recoil"
+      "m_lep1_tau1", "m_lep2_tau1", "m_lep1_tau2", "m_lep2_tau2", "pt_HH_recoil",
+      "deltaEta_lep1_lep2", "deltaEta_lep1_tau1", "deltaEta_lep1_tau2", "deltaEta_lep2_tau1", "deltaEta_lep2_tau2", "deltaEta_tau1_tau2",
+      "deltaPhi_lep1_lep2", "deltaPhi_lep1_tau1", "deltaPhi_lep1_tau2", "deltaPhi_lep2_tau1", "deltaPhi_lep2_tau2", "deltaPhi_tau1_tau2",
+      "dr_lep1_tau1_tau2_min", "dr_lep1_tau1_tau2_max", "dr_lep2_tau1_tau2_min", "dr_lep2_tau1_tau2_max",
+      "dr_lep_tau_min_OS", "dr_lep_tau_min_SS"
     );
     bdt_filler->register_variable<int_type>(
       "nJet", "nBJet_loose", "nBJet_medium",
@@ -1556,6 +1560,19 @@ int main(int argc, char* argv[])
 
 
     // pre-compute BDT variables
+    const double deltaEta_lep1_lep2 = (selLepton_lead->p4() - selLepton_sublead->p4()).eta();
+    std::cout<< "deltaEta_lep1_lep2 " << deltaEta_lep1_lep2 << std::endl;
+    const double deltaEta_lep1_tau1 = (selLepton_lead->p4() - selHadTau_lead->p4()).eta();
+    const double deltaEta_lep1_tau2 = (selLepton_lead->p4() - selHadTau_sublead->p4()).eta();
+    const double deltaEta_lep2_tau1 = (selLepton_sublead->p4() - selHadTau_lead->p4()).eta();
+    const double deltaEta_lep2_tau2 = (selLepton_sublead->p4() - selHadTau_sublead->p4()).eta();
+    const double deltaEta_tau1_tau2 = (selHadTau_lead->p4() - selHadTau_sublead->p4()).eta();
+    const double deltaPhi_lep1_lep2 = (selLepton_lead->p4() - selLepton_sublead->p4()).phi();
+    const double deltaPhi_lep1_tau1 = (selLepton_lead->p4() - selHadTau_lead->p4()).phi();
+    const double deltaPhi_lep1_tau2 = (selLepton_lead->p4() - selHadTau_sublead->p4()).phi();
+    const double deltaPhi_lep2_tau1 = (selLepton_sublead->p4() - selHadTau_lead->p4()).phi();
+    const double deltaPhi_lep2_tau2 = (selLepton_sublead->p4() - selHadTau_sublead->p4()).phi();
+    const double deltaPhi_tau1_tau2 = (selHadTau_lead->p4() - selHadTau_sublead->p4()).phi();
     const double m_lep1_tau1 = (selLepton_lead->p4() + selHadTau_lead->p4()).mass();
     const double m_lep2_tau1 = (selLepton_sublead->p4() + selHadTau_lead->p4()).mass();
     const double m_lep1_tau2 = (selLepton_lead->p4() + selHadTau_sublead->p4()).mass();
@@ -1567,6 +1584,22 @@ int main(int argc, char* argv[])
     const double dr_lep2_tau1 = deltaR(selLepton_sublead->p4(), selHadTau_lead->p4());
     const double dr_lep1_tau2 = deltaR(selLepton_lead->p4(),    selHadTau_sublead->p4());
     const double dr_lep2_tau2 = deltaR(selLepton_sublead->p4(), selHadTau_sublead->p4());
+    const double dr_lep1_tau1_tau2_min = std::min(dr_lep1_tau1, dr_lep1_tau2); 
+    const double dr_lep1_tau1_tau2_max = std::max(dr_lep1_tau1, dr_lep1_tau2); 
+    const double dr_lep2_tau1_tau2_min = std::min(dr_lep2_tau1, dr_lep2_tau2); 
+    const double dr_lep2_tau1_tau2_max = std::max(dr_lep2_tau1, dr_lep2_tau2); 
+    double dr_lep_tau_min_OS = 0.;
+    if(isCharge_lepton_OS){
+      dr_lep_tau_min_OS = std::min(std::min(dr_lep1_tau1, dr_lep1_tau2), std::min(dr_lep2_tau1, dr_lep2_tau2));
+    }else{
+      dr_lep_tau_min_OS = -1.;
+    }
+    double dr_lep_tau_min_SS = 0.;
+    if(isCharge_lepton_SS){
+      dr_lep_tau_min_SS = std::min(std::min(dr_lep1_tau1, dr_lep1_tau2), std::min(dr_lep2_tau1, dr_lep2_tau2));
+    }else{
+      dr_lep_tau_min_SS = -1.;
+    }
     const double dr_leps = deltaR(selLepton_lead->p4(), selLepton_sublead->p4());
     const double dr_taus = deltaR(selHadTau_lead->p4(), selHadTau_sublead->p4());
     const double avg_dr_jet = comp_avg_dr_jet(selJets);
@@ -1611,6 +1644,24 @@ int main(int argc, char* argv[])
     if(bdt_filler)
     {
       bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
+	  ("deltaEta_lep1_lep2", deltaEta_lep1_lep2)
+	  ("deltaEta_lep1_tau1", deltaEta_lep1_tau1)
+	  ("deltaEta_lep1_tau2", deltaEta_lep1_tau2)
+	  ("deltaEta_lep2_tau1", deltaEta_lep2_tau1)
+	  ("deltaEta_lep2_tau2", deltaEta_lep2_tau2)
+	  ("deltaEta_tau1_tau2", deltaEta_tau1_tau2)
+	  ("deltaPhi_lep1_lep2", deltaPhi_lep1_lep2)
+	  ("deltaPhi_lep1_tau1", deltaPhi_lep1_tau1)
+	  ("deltaPhi_lep1_tau2", deltaPhi_lep1_tau2)
+	  ("deltaPhi_lep2_tau1", deltaPhi_lep2_tau1)
+	  ("deltaPhi_lep2_tau2", deltaPhi_lep2_tau2)
+	  ("deltaPhi_tau1_tau2", deltaPhi_tau1_tau2)
+	  ("dr_lep1_tau1_tau2_min", dr_lep1_tau1_tau2_min)
+	  ("dr_lep1_tau1_tau2_max", dr_lep1_tau1_tau2_max)
+	  ("dr_lep2_tau1_tau2_min", dr_lep2_tau1_tau2_min)
+	  ("dr_lep2_tau1_tau2_max", dr_lep2_tau1_tau2_max)
+	  ("dr_lep_tau_min_OS", dr_lep_tau_min_OS) 
+	  ("dr_lep_tau_min_SS", dr_lep_tau_min_SS) 
 	  ("pt_HH_recoil",             pt_HH_recoil)
           ("lep1_pt",                  selLepton_lead->pt())
           ("lep1_conePt",              selLepton_lead->cone_pt())
