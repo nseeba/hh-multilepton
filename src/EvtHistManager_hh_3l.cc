@@ -79,7 +79,7 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   histogram_HT_              = book1D(dir, "HT",              "HT",              150,  0., 1500.);
   histogram_STMET_           = book1D(dir, "STMET",           "STMET",           150,  0., 1500.);	
 
-  histogram_mvaOutput_xgb_hh_3l_SUMBk_HH_ = book1D(dir, "mvaOutput_xgb_hh_3l_SUMBk_HH", "BDTscore", 50,  0., 1.);
+  histogram_mvaOutput_xgb_hh_3l_SUMBk_HH_ = book1D(dir, "mvaOutput_xgb_hh_3l_SUMBk_HH", "BDTscore", 120,  0., 1.);
   
   histogram_EventCounter_ = book1D(dir, "EventCounter", "EventCounter", 1, -0.5, +0.5);
 }
