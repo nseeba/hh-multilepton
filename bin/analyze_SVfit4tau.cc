@@ -484,153 +484,153 @@ int main(int argc, char* argv[])
 
     selHistManagerType* selHistManager = new selHistManagerType();
     selHistManager->electrons_ = new ElectronHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/electrons", histogramDir_category.Data(), mode_string.data()), central_or_shift));
+      Form("%s/%s/electrons", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift));
     selHistManager->electrons_->bookHistograms(fs);
     selHistManager->leadElectron_ = new ElectronHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/leadElectron", histogramDir_category.Data(), mode_string.data()), central_or_shift, 0));
+      Form("%s/%s/leadElectron", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift, 0));
     selHistManager->leadElectron_->bookHistograms(fs);
     selHistManager->subleadElectron_ = new ElectronHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/subleadElectron", histogramDir_category.Data(), mode_string.data()), central_or_shift, 1));
+      Form("%s/%s/subleadElectron", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift, 1));
     selHistManager->subleadElectron_->bookHistograms(fs);
     selHistManager->muons_ = new MuonHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/muons", histogramDir_category.Data(), mode_string.data()), central_or_shift));
+      Form("%s/%s/muons", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift));
     selHistManager->muons_->bookHistograms(fs);
     selHistManager->leadMuon_ = new MuonHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/leadMuon", histogramDir_category.Data(), mode_string.data()), central_or_shift, 0));
+      Form("%s/%s/leadMuon", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift, 0));
     selHistManager->leadMuon_->bookHistograms(fs);
     selHistManager->subleadMuon_ = new MuonHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/subleadMuon", histogramDir_category.Data(), mode_string.data()), central_or_shift, 1));
+      Form("%s/%s/subleadMuon", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift, 1));
     selHistManager->subleadMuon_->bookHistograms(fs);
     selHistManager->hadTaus_ = new HadTauHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/hadTaus", histogramDir_category.Data(), mode_string.data()), central_or_shift));
+      Form("%s/%s/hadTaus", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift));
     selHistManager->hadTaus_->bookHistograms(fs);
     selHistManager->leadHadTau_ = new HadTauHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/leadHadTau", histogramDir_category.Data(), mode_string.data()), central_or_shift, 0));
+      Form("%s/%s/leadHadTau", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift, 0));
     selHistManager->leadHadTau_->bookHistograms(fs);
     selHistManager->subleadHadTau_ = new HadTauHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/subleadHadTau", histogramDir_category.Data(), mode_string.data()), central_or_shift, 1));
+      Form("%s/%s/subleadHadTau", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift, 1));
     selHistManager->subleadHadTau_->bookHistograms(fs);
     selHistManager->jets_ = new JetHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/jets", histogramDir_category.Data(), mode_string.data()), central_or_shift));
+      Form("%s/%s/jets", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift));
     selHistManager->jets_->bookHistograms(fs);
     selHistManager->leadJet_ = new JetHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/leadJet", histogramDir_category.Data(), mode_string.data()), central_or_shift, 0));
+      Form("%s/%s/leadJet", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift, 0));
     selHistManager->leadJet_->bookHistograms(fs);
     selHistManager->subleadJet_ = new JetHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/subleadJet", histogramDir_category.Data(), mode_string.data()), central_or_shift, 1));
+      Form("%s/%s/subleadJet", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift, 1));
     selHistManager->subleadJet_->bookHistograms(fs);
     selHistManager->BJets_loose_ = new JetHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/BJets_loose", histogramDir_category.Data(), mode_string.data()), central_or_shift));
+      Form("%s/%s/BJets_loose", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift));
     selHistManager->BJets_loose_->bookHistograms(fs);
     selHistManager->BJets_medium_ = new JetHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/BJets_medium", histogramDir_category.Data(), mode_string.data()), central_or_shift));
+      Form("%s/%s/BJets_medium", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift));
     selHistManager->BJets_medium_->bookHistograms(fs);
     selHistManager->met_ = new MEtHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/met", histogramDir_category.Data(), mode_string.data()), central_or_shift));
+      Form("%s/%s/met", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift));
     selHistManager->met_->bookHistograms(fs);
     for ( vdouble::const_iterator logM = logM_wMassConstraint_MarkovChain.begin();
           logM != logM_wMassConstraint_MarkovChain.end(); ++logM ) {
       std::string logM_string = TString(Form("logM%1.1f", *logM)).ReplaceAll(".", "p").Data();
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_correctAssoc_chosen_[*logM] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tau_wMassContraint_%s_MarkovChain_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tau_wMassContraint_%s_MarkovChain_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_correctAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_correctAssoc_chosen_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_correctAssoc_chosen_[*logM] = new SVfit4tauResolutionHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_MarkovChain_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_MarkovChain_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_correctAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_correctAssoc_discarded_[*logM] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tau_wMassContraint_%s_MarkovChain_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tau_wMassContraint_%s_MarkovChain_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_correctAssoc_discarded_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_correctAssoc_discarded_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_correctAssoc_discarded_[*logM] = new SVfit4tauResolutionHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_MarkovChain_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_MarkovChain_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_correctAssoc_discarded_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_incorrectAssoc_chosen_[*logM] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tau_wMassContraint_%s_MarkovChain_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tau_wMassContraint_%s_MarkovChain_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_incorrectAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_incorrectAssoc_chosen_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_incorrectAssoc_chosen_[*logM] = new SVfit4tauResolutionHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_MarkovChain_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_MarkovChain_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_incorrectAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_incorrectAssoc_discarded_[*logM] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tau_wMassContraint_%s_MarkovChain_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tau_wMassContraint_%s_MarkovChain_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_incorrectAssoc_discarded_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_MarkovChain_incorrectAssoc_discarded_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_incorrectAssoc_discarded_[*logM] = new SVfit4tauResolutionHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_MarkovChain_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_MarkovChain_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_MarkovChain_incorrectAssoc_discarded_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tauDisambiguation_wMassConstraint_MarkovChain_[*logM] = new SVfit4tauDisambiguationHistManager(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tauDisambiguation_wMassContraint_%s_MarkovChain", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tauDisambiguation_wMassContraint_%s_MarkovChain", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tauDisambiguation_wMassConstraint_MarkovChain_[*logM]->bookHistograms(fs);
     }
     for ( vdouble::const_iterator logM = logM_woMassConstraint_MarkovChain.begin();
           logM != logM_woMassConstraint_MarkovChain.end(); ++logM ) {
       std::string logM_string = TString(Form("logM%1.1f", *logM)).ReplaceAll(".", "p").Data();
       selHistManager->svFit4tau_woMassConstraint_MarkovChain_correctAssoc_chosen_[*logM] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tau_woMassContraint_%s_MarkovChain_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tau_woMassContraint_%s_MarkovChain_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tau_woMassConstraint_MarkovChain_correctAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tauResolution_woMassConstraint_MarkovChain_correctAssoc_chosen_[*logM] = new SVfit4tauResolutionHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tauResolution_woMassContraint_%s_MarkovChain_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tauResolution_woMassContraint_%s_MarkovChain_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tauResolution_woMassConstraint_MarkovChain_correctAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_woMassConstraint_MarkovChain_correctAssoc_discarded_[*logM] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tau_woMassContraint_%s_MarkovChain_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tau_woMassContraint_%s_MarkovChain_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tau_woMassConstraint_MarkovChain_correctAssoc_discarded_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tauResolution_woMassConstraint_MarkovChain_correctAssoc_discarded_[*logM] = new SVfit4tauResolutionHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tauResolution_woMassContraint_%s_MarkovChain_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tauResolution_woMassContraint_%s_MarkovChain_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tauResolution_woMassConstraint_MarkovChain_correctAssoc_discarded_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_woMassConstraint_MarkovChain_incorrectAssoc_chosen_[*logM] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tau_woMassContraint_%s_MarkovChain_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tau_woMassContraint_%s_MarkovChain_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tau_woMassConstraint_MarkovChain_incorrectAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tauResolution_woMassConstraint_MarkovChain_incorrectAssoc_chosen_[*logM] = new SVfit4tauResolutionHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tauResolution_woMassContraint_%s_MarkovChain_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tauResolution_woMassContraint_%s_MarkovChain_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tauResolution_woMassConstraint_MarkovChain_incorrectAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_woMassConstraint_MarkovChain_incorrectAssoc_discarded_[*logM] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tau_woMassContraint_%s_MarkovChain_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tau_woMassContraint_%s_MarkovChain_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tau_woMassConstraint_MarkovChain_incorrectAssoc_discarded_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tauResolution_woMassConstraint_MarkovChain_incorrectAssoc_discarded_[*logM] = new SVfit4tauResolutionHistManager_MarkovChain(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tauResolution_woMassContraint_%s_MarkovChain_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tauResolution_woMassContraint_%s_MarkovChain_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tauResolution_woMassConstraint_MarkovChain_incorrectAssoc_discarded_[*logM]->bookHistograms(fs);
     }
     for ( vdouble::const_iterator logM = logM_wMassConstraint_VAMP.begin();
           logM != logM_wMassConstraint_VAMP.end(); ++logM ) {
       std::string logM_string = TString(Form("logM%1.1f", *logM)).ReplaceAll(".", "p").Data();
       selHistManager->svFit4tau_wMassConstraint_VAMP_correctAssoc_chosen_[*logM] = new SVfit4tauHistManager_VAMP(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tau_wMassContraint_%s_VAMP_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tau_wMassContraint_%s_VAMP_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_VAMP_correctAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_VAMP_correctAssoc_chosen_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_correctAssoc_chosen_[*logM] = new SVfit4tauResolutionHistManager_VAMP(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_VAMP_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_VAMP_correctAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_correctAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_VAMP_correctAssoc_discarded_[*logM] = new SVfit4tauHistManager_VAMP(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tau_wMassContraint_%s_VAMP_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tau_wMassContraint_%s_VAMP_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_VAMP_correctAssoc_discarded_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_VAMP_correctAssoc_discarded_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_correctAssoc_discarded_[*logM] = new SVfit4tauResolutionHistManager_VAMP(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_VAMP_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_VAMP_correctAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_correctAssoc_discarded_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_VAMP_incorrectAssoc_chosen_[*logM] = new SVfit4tauHistManager_VAMP(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tau_wMassContraint_%s_VAMP_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tau_wMassContraint_%s_VAMP_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_VAMP_incorrectAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_VAMP_incorrectAssoc_chosen_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_incorrectAssoc_chosen_[*logM] = new SVfit4tauResolutionHistManager_VAMP(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_VAMP_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_VAMP_incorrectAssoc_chosen", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_incorrectAssoc_chosen_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_VAMP_incorrectAssoc_discarded_[*logM] = new SVfit4tauHistManager_VAMP(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tau_wMassContraint_%s_VAMP_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tau_wMassContraint_%s_VAMP_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_VAMP_incorrectAssoc_discarded_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_VAMP_incorrectAssoc_discarded_[*logM]->bookHistograms2d(fs);
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_incorrectAssoc_discarded_[*logM] = new SVfit4tauResolutionHistManager_VAMP(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_VAMP_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tauResolution_wMassContraint_%s_VAMP_incorrectAssoc_discarded", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tauResolution_wMassConstraint_VAMP_incorrectAssoc_discarded_[*logM]->bookHistograms(fs);
       selHistManager->svFit4tauDisambiguation_wMassConstraint_VAMP_[*logM] = new SVfit4tauDisambiguationHistManager(makeHistManager_cfg(process_string,
-        Form("%s/%s/svFit4tauDisambiguation_wMassContraint_%s_VAMP", histogramDir_category.Data(), mode_string.data(), logM_string.data()), central_or_shift));
+        Form("%s/%s/svFit4tauDisambiguation_wMassContraint_%s_VAMP", histogramDir_category.Data(), mode_string.data(), logM_string.data()), era_string, central_or_shift));
       selHistManager->svFit4tauDisambiguation_wMassConstraint_VAMP_[*logM]->bookHistograms(fs);
     }
     selHistManager->evt_ = new EvtHistManager_SVfit4tau(makeHistManager_cfg(process_string,
-      Form("%s/%s/evt", histogramDir_category.Data(), mode_string.data()), central_or_shift));
+      Form("%s/%s/evt", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift));
     selHistManager->evt_->bookHistograms(fs);
     selHistManager->weights_ = new WeightHistManager(makeHistManager_cfg(process_string,
-      Form("%s/%s/weights", histogramDir_category.Data(), mode_string.data()), central_or_shift));
+      Form("%s/%s/weights", histogramDir_category.Data(), mode_string.data()), era_string, central_or_shift));
     selHistManager->weights_->bookHistograms(fs, { "genWeight", "pileupWeight" });
     int idxCategory = get_idxCategory(*category);
     selHistManagers[idxCategory] = selHistManager;
@@ -640,10 +640,10 @@ int main(int argc, char* argv[])
   GenEvtHistManager* genEvtHistManager_afterCuts = 0;
   if ( isMC ) {
     genEvtHistManager_beforeCuts = new GenEvtHistManager(makeHistManager_cfg(process_string,
-      Form("%s/unbiased/genEvt", histogramDir.data()), central_or_shift));
+      Form("%s/unbiased/genEvt", histogramDir.data()), era_string, central_or_shift));
     genEvtHistManager_beforeCuts->bookHistograms(fs);
     genEvtHistManager_afterCuts = new GenEvtHistManager(makeHistManager_cfg(process_string,
-      Form("%s/sel/genEvt", histogramDir.data()), central_or_shift));
+      Form("%s/sel/genEvt", histogramDir.data()), era_string, central_or_shift));
     genEvtHistManager_afterCuts->bookHistograms(fs);
   }
 

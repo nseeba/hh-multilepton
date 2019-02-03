@@ -4,7 +4,25 @@
 
 EvtHistManager_hh_2lss::EvtHistManager_hh_2lss(const edm::ParameterSet & cfg)
   : HistManagerBase(cfg)
-{}
+{
+  central_or_shiftOptions_["numElectrons"] = { "central" };
+  central_or_shiftOptions_["numMuons"] = { "central" };
+  central_or_shiftOptions_["numJets"] = { "central" };
+  central_or_shiftOptions_["numJetsPtGt40"] = { "central" };
+  central_or_shiftOptions_["dihiggsVisMass"] = { "*" };
+  central_or_shiftOptions_["dihiggsMass_wMet"] = { "central" };
+  central_or_shiftOptions_["jetMass"] = { "central" };
+  central_or_shiftOptions_["leptonPairMass"] = { "central" };
+  central_or_shiftOptions_["electronPairMass"] = { "central" };
+  central_or_shiftOptions_["muonPairMass"] = { "central" };
+  central_or_shiftOptions_["leptonPairCharge"] = { "central" };
+  central_or_shiftOptions_["HT"] = { "central" };
+  central_or_shiftOptions_["STMET"] = { "central" };
+  central_or_shiftOptions_["BDTOutput_SUM"] = { "*" };
+  central_or_shiftOptions_["BDTOutput_SUM_gen_mHH_400"] = { "*" };
+  central_or_shiftOptions_["BDTOutput_SUM_gen_mHH_700"] = { "*" };
+  central_or_shiftOptions_["EventCounter"] = { "*" };
+}
 
 const TH1 *
 EvtHistManager_hh_2lss::getHistogram_EventCounter() const

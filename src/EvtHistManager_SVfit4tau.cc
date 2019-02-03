@@ -8,7 +8,30 @@
 
 EvtHistManager_SVfit4tau::EvtHistManager_SVfit4tau(const edm::ParameterSet& cfg)
   : HistManagerBase(cfg)
-{}
+{
+  central_or_shiftOptions_["mhh_MarkovChain"] = { "central" };
+  central_or_shiftOptions_["mhh_VAMP"] = { "central" };
+  central_or_shiftOptions_["mhh_gen"] = { "central" };
+  central_or_shiftOptions_["mh1"] = { "central" };
+  central_or_shiftOptions_["mh1_gen"] = { "central" };
+  central_or_shiftOptions_["mh2"] = { "central" };
+  central_or_shiftOptions_["mh2_gen"] = { "central" };
+  central_or_shiftOptions_["mhhVis"] = { "central" };
+  central_or_shiftOptions_["mhhVis_gen"] = { "central" };
+  central_or_shiftOptions_["mh1Vis"] = { "central" };
+  central_or_shiftOptions_["mh1Vis_gen"] = { "central" };
+  central_or_shiftOptions_["mh2Vis"] = { "central" };
+  central_or_shiftOptions_["mh2Vis_gen"] = { "central" };
+  central_or_shiftOptions_["ratiomeasuredTau1Pt"] = { "central" };
+  central_or_shiftOptions_["ratiomeasuredTau2Pt"] = { "central" };
+  central_or_shiftOptions_["ratiomeasuredTau3Pt"] = { "central" };
+  central_or_shiftOptions_["ratiomeasuredTau4Pt"] = { "central" };
+  central_or_shiftOptions_["deltametPx"] = { "central" };
+  central_or_shiftOptions_["pullmetPx"] = { "central" };
+  central_or_shiftOptions_["deltametPy"] = { "central" };
+  central_or_shiftOptions_["pullmetPy"] = { "central" };
+  central_or_shiftOptions_["EventCounter"] = { "*" };
+}
 
 const TH1 *
 EvtHistManager_SVfit4tau::getHistogram_EventCounter() const
