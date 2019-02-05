@@ -108,6 +108,7 @@ elif mode == "forBDTtraining":
     hadTau_selection         = "dR03mvaMedium"
     hadTau_selection_relaxed = "dR03mvaLoose"
     #hadTau_selection_relaxed = "dR03mvaVLoose"
+    #hadTau_selection_relaxed = "dR03mvaVVLoose"
   elif era == "2018":
     raise ValueError("Implement me!")
   else:
