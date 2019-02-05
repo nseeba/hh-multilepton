@@ -91,7 +91,15 @@
 
 #include "TauAnalysis/ClassicSVfit4tau/interface/svFitHistogramAdapter4tau.h" // HistogramAdapterDiHiggs, HistogramAdapterHiggs
 
+#include "TauAnalysis/ClassicSVfit/interface/ClassicSVfit.h" // ClassicSVfit                                                                                                                                                                                           
+#include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h" // classic_svFit::MeasuredTauLepton                                                                                                                                                                
+#include "TauAnalysis/ClassicSVfit/interface/svFitHistogramAdapter.h"
+#include "TauAnalysis/ClassicSVfit/interface/svFitAuxFunctions.h"
+
+#include <boost/range/algorithm/copy.hpp> // boost::copy()                                                                                                                                                                                                            
+#include <boost/range/adaptor/map.hpp> // boost::adaptors::map_keys                                                                                                                                                                                                     
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
+
 
 #include <iostream> // std::cerr, std::fixed
 #include <iomanip> // std::setprecision(), std::setw()
@@ -645,7 +653,7 @@ int main(int argc, char* argv[])
       "dr_lep1_tau1", "dr_lep1_tau2", "dr_lep2_tau1", "dr_lep2_tau2",
       "dr_leps", "dr_taus", "avg_dr_jet",
       "met", "mht", "met_LD", "HT", "STMET", "met_phi",
-      "Smin_llMEt", "m_ll", "pT_ll", "pT_llMEt", "Smin_lltautau",
+      "Smin_llMEt", "m_ll", "pT_ll", "pT_llMEt", "Smin_lltautau", "mTauTau",
       "mTauTauVis", "ptTauTauVis", "diHiggsVisMass", "diHiggsMass",
       "logTopness_publishedChi2", "logTopness_fixedChi2",
       "genWeight", "evtWeight",
@@ -1558,8 +1566,31 @@ int main(int argc, char* argv[])
       (*selEventsFile) << eventInfo.run << ':' << eventInfo.lumi << ':' << eventInfo.event << '\n';
     }
 
+    //--- reconstruct mass of tau-pair using SVfit algorithm                                                                                                                                                                                                       
+    //                                                                                                                                                                                                                                                             
+    //    NOTE: SVfit needs to be run after all event selection cuts are applied,                                                                                                                                                                                   
+    //          because the algorithm takes O(1 second per event) to run                                                                                                                                                                                           
+    //                                                                                                                                                                                                                                                                    
+    std::vector<classic_svFit::MeasuredTauLepton> measuredTauLeptons;
+    classic_svFit::MeasuredTauLepton::kDecayType leg1Type = classic_svFit::MeasuredTauLepton::kTauToHadDecay;
+    double leg1Mass = selHadTau_lead->mass();
+    if ( leg1Mass < classic_svFit::chargedPionMass ) leg1Mass = classic_svFit::chargedPionMass;
+    if ( leg1Mass > 1.5                            ) leg1Mass = 1.5;
+    classic_svFit::MeasuredTauLepton::kDecayType leg2Type = classic_svFit::MeasuredTauLepton::kTauToHadDecay;
+    double leg2Mass = selHadTau_sublead->mass();
+    if ( leg2Mass < classic_svFit::chargedPionMass ) leg2Mass = classic_svFit::chargedPionMass;
+    if ( leg2Mass > 1.5                            ) leg2Mass = 1.5;
+    measuredTauLeptons.push_back(classic_svFit::MeasuredTauLepton(leg1Type, selHadTau_lead->pt(), selHadTau_lead->eta(), selHadTau_lead->phi(), leg1Mass));
+    measuredTauLeptons.push_back(classic_svFit::MeasuredTauLepton(leg2Type, selHadTau_sublead->pt(), selHadTau_sublead->eta(), selHadTau_sublead->phi(), leg2Mass));
+    ClassicSVfit svFitAlgo;
+    svFitAlgo.addLogM_dynamic(false);
+    svFitAlgo.addLogM_fixed(true, 5.);
+    svFitAlgo.integrate(measuredTauLeptons, met.p4().px(), met.p4().py(), met.cov());
+
 
     // pre-compute BDT variables
+    //double mTauTau = -1.; // CV: temporarily comment-out the following line, to make code compile with "old" and "new" version of ClassicSVfit                                                                                                                           
+    const double mTauTau   = ( svFitAlgo.isValidSolution() ) ? static_cast<classic_svFit::HistogramAdapterDiTau*>(svFitAlgo.getHistogramAdapter())->getMass() : -1.;
     const double deltaEta_lep1_lep2 = (selLepton_lead->p4() - selLepton_sublead->p4()).eta();
     std::cout<< "deltaEta_lep1_lep2 " << deltaEta_lep1_lep2 << std::endl;
     const double deltaEta_lep1_tau1 = (selLepton_lead->p4() - selHadTau_lead->p4()).eta();
@@ -1706,6 +1737,7 @@ int main(int argc, char* argv[])
           ("Smin_llMEt",               Smin_llMEt)
           ("Smin_lltautau",            Smin_lltautau)
           ("mTauTauVis",               mTauTauVis_sel)
+          ("mTauTau",                  mTauTau)
           ("ptTauTauVis",              ptTauTauVis_sel)
           ("diHiggsVisMass",           dihiggsVisMass_sel)
           ("diHiggsMass",              dihiggsMass)
