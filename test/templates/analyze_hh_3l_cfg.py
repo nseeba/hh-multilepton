@@ -106,6 +106,7 @@ process.analyze_hh_3l = cms.PSet(
 
     branchName_genWBosons = cms.string('GenVbosons'),
     branchName_genWJets = cms.string('GenWZQuark'),
+    branchName_genNeutrinos = cms.string('GenNu'),
     
     selEventsFileName_input = cms.string(''),
     selEventsFileName_output = cms.string(''),
