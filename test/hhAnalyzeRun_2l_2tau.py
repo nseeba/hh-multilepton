@@ -76,6 +76,8 @@ if mode == "default":
          if sample_name == 'sum_events':
            continue
          sample_info['use_it'] = not sample_info['use_it'] ## skip samples used in bdt training in the main analysis         
+         if sample_info["process_name_specific"].startswith("signal") and 'hh' in sample_info["process_name_specific"]:
+           sample_info["use_it"] = 'nonresonant' not in sample_info["process_name_specific"]
     elif era == "2018":
       from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
     else:
