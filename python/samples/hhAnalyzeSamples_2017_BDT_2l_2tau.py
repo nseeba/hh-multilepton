@@ -35,6 +35,7 @@ for sample_name, sample_info in samples_2017.items():
         "VHToNonbb_M125",
         "VHToNonbb_M125_v14-v2",
         "TTWW",
+        "WZTo3LNu",
         "WWTo2L2Nu",
         "WWTo2L2Nu_PSweights",
         "WWToLNuQQ",
