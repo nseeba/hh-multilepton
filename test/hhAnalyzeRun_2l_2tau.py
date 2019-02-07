@@ -72,6 +72,29 @@ if mode == "default":
       from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
     elif era == "2017":
       from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
+      for sample_name, sample_info in samples.items():
+         if sample_name == 'sum_events':
+           continue
+         if sample_info['process_name_specific'] in ['ZZTo4L_ext1', 'ZZTo2L2Q']: ## since  used in bdt training
+           sample_info['use_it'] = False
+         if sample_info['process_name_specific'] in ['DYJetsToLL_M-50_LO', 'DYJetsToLL_M-50_LO_ext1', 'DY1JetsToLL_M-50', 'DY1JetsToLL_M-50_ext1', 'DY2JetsToLL_M-50', 'DY2JetsToLL_M-50_ext1']: ## since  used in bdt training
+           sample_info['use_it'] = False
+         if sample_info['process_name_specific'] in ['DY3JetsToLL_M-50', 'DY3JetsToLL_M-50_ext1', 'DY4JetsToLL_M-50', 'DYJetsToLL_M-4to50_HT-100to200', 'DYJetsToLL_M-4to50_HT-100to200_ext1']: ## since  used in bdt training
+           sample_info['use_it'] = False
+         if sample_info['process_name_specific'] in ['DYJetsToLL_M-4to50_HT-200to400', 'DYJetsToLL_M-4to50_HT-200to400_ext1', 'DYJetsToLL_M-4to50_HT-400to600', 'DYJetsToLL_M-4to50_HT-400to600_ext1']: ## since  used in bdt training
+           sample_info['use_it'] = False
+         if sample_info['process_name_specific'] in ['DYJetsToLL_M-4to50_HT-600toInf', 'DYJetsToLL_M50_HT100to200', 'DYJetsToLL_M50_HT100to200_ext1']: ## since  used in bdt training
+           sample_info['use_it'] = False
+         if sample_info['process_name_specific'] in ['DYJetsToLL_M50_HT200to400', 'DYJetsToLL_M50_HT200to400_ext1', 'DYJetsToLL_M50_HT400to600', 'DYJetsToLL_M50_HT400to600_ext1']: ## since  used in bdt training
+           sample_info['use_it'] = False
+         if sample_info['process_name_specific'] in ['DYJetsToLL_M50_HT600to800', 'DYJetsToLL_M50_HT800to1200']: ## since  used in bdt training
+           sample_info['use_it'] = False
+         if sample_info['process_name_specific'] in ['DYJetsToLL_M50_HT1200to2500', 'DYJetsToLL_M50_HT2500toInf']: ## since  used in bdt training
+           sample_info['use_it'] = False
+         if sample_info['process_name_specific'] in ['TTTo2L2Nu','TTToSemiLeptonic', 'TTTo2L2Nu_PSweights', 'TTToSemiLeptonic_PSweights', 'TTZJets']: ## since  used in bdt training
+           sample_info['use_it'] = False
+         if sample_info['process_name_specific'] in ['WZTo3LNu_1Jets_MLL-50', 'WZTo3LNu_2Jets_MLL-4to50', 'WZTo3LNu_3Jets_MLL-50', 'WZTo3LNu_2Jets_MLL-50', 'WZTo3LNu_0Jets_MLL-50', 'WZTo3LNu_1Jets_MLL-4to50']: ## since  used in bdt training
+           sample_info['use_it'] = False
     elif era == "2018":
       from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
     else:
