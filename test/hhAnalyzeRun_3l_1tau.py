@@ -8,7 +8,7 @@ from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
 
 # E.g.: ./tthAnalyzeRun_hh_3l_1tau.py -v 2017Dec13 -m default -e 2017
 
-mode_choices         = [ 'default' ]
+mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full' ] + systematics.an_extended_opts_hh
 systematics.full = systematics.an_extended_hh
 
@@ -85,6 +85,41 @@ if mode == "default":
     raise ValueError("Invalid era: %s" % era)
 
   applyFakeRateWeights = "4L"
+
+elif mode == "forBDTtraining":
+  if use_preselected:
+    raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
+  else:
+    # NB! use the same samples for the BDT training as we use in the analysis -- valid only if implement the 50-50 approach
+    if era == "2016":
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
+    elif era == "2017":
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
+
+      # Whitelist the samples that are relevant for the BDT training
+      whitelist = []
+      for sample_name, sample_info in samples.items():
+         if sample_name == 'sum_events':
+           continue
+         # uncomment the following line once we have the whitelist
+         #sample_info['use_it'] = (sample_info['process_name_specific'] in whitelist)
+    elif era == "2018":
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
+    else:
+      raise ValueError("Invalid era: %s" % era)
+
+  if era == "2016":
+    hadTau_selection = "dR03mvaMedium"
+    hadTau_selection_relaxed = "dR03mvaVVLoose"
+  elif era == "2017":
+    hadTau_selection = "dR03mvaLoose"
+    hadTau_selection_relaxed = "dR03mvaVLoose"
+  elif era == "2018":
+    raise ValueError("Implement me!")
+  else:
+    raise ValueError("Invalid era: %s" % era)
+
+  applyFakeRateWeights = "4L"
 else:
   raise ValueError("Internal logic error")
 
@@ -153,6 +188,9 @@ if __name__ == '__main__':
     hlt_filter                            = hlt_filter,
     use_home                              = use_home,
   )
+
+  if mode.find("forBDTtraining") != -1:
+    analysis.set_BDT_training(hadTau_selection_relaxed)
 
   job_statistics = analysis.create()
   for job_type, num_jobs in job_statistics.items():
