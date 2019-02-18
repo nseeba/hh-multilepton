@@ -328,6 +328,8 @@ int main(int argc, char* argv[])
   std::string branchName_genJets = cfg_analyze.getParameter<std::string>("branchName_genJets");
   const bool redoGenMatching = cfg_analyze.getParameter<bool>("redoGenMatching");
 
+  const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
+
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
   std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
   RunLumiEventSelector* run_lumi_eventSelector = 0;
@@ -585,6 +587,30 @@ int main(int argc, char* argv[])
       genEvtHistManager_beforeCuts->bookHistograms(fs, eventWeightManager);
       genEvtHistManager_afterCuts->bookHistograms(fs, eventWeightManager);
     }
+  }
+
+  NtupleFillerBDT<float, int>* bdt_filler = nullptr;
+  typedef std::remove_pointer<decltype(bdt_filler)>::type::float_type float_type;
+  typedef std::remove_pointer<decltype(bdt_filler)>::type::int_type int_type;
+  if(selectBDT)
+  {
+    bdt_filler = new std::remove_pointer<decltype(bdt_filler)>::type(
+      makeHistManager_cfg(process_string, Form("%s/sel/evtntuple", histogramDir.data()), era_string, central_or_shift)
+    );
+    bdt_filler->register_variable<float_type>(
+      "lep1_pt",
+      "lep2_pt",
+      "lep3_pt",
+      "tau1_pt",
+      "genWeight",
+      "evtWeight"
+    );
+    bdt_filler->register_variable<int_type>(
+      "nJet",
+      "lep1_isElectron", "lep1_charge", "lep2_isElectron", "lep2_charge", "lep3_isElectron", "lep3_charge",
+      "nElectron", "nMuon"
+    );
+    bdt_filler->bookTree(fs);
   }
 
   int analyzedEntries = 0;
@@ -1487,6 +1513,28 @@ int main(int argc, char* argv[])
       (*selEventsFile) << eventInfo.run << ':' << eventInfo.lumi << ':' << eventInfo.event << '\n';
     }
 
+    if(bdt_filler)
+    {
+      bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
+          ("lep1_pt",                  selLepton_lead->pt())
+          ("lep2_pt",                  selLepton_sublead->pt())
+          ("lep3_pt",                  selLepton_third->pt())
+          ("tau1_pt",                  selHadTau->pt())
+          ("nJet",                     selJets.size())
+          ("lep1_isElectron",          selLepton_lead_type == kElectron)
+          ("lep1_charge",              selLepton_lead->charge())
+          ("lep2_isElectron",          selLepton_sublead_type == kElectron)
+          ("lep2_charge",              selLepton_sublead->charge())
+          ("lep3_isElectron",          selLepton_third_type == kElectron)
+          ("lep3_charge",              selLepton_third->charge())
+          ("genWeight",                eventInfo.genWeight)
+          ("evtWeight",                evtWeight)
+          ("nElectron",                selElectrons.size())
+          ("nMuon",                    selMuons.size())
+        .fill()
+      ;
+    }
+
     ++selectedEntries;
     selectedEntries_weighted += evtWeight;
     histogram_selectedEntries->Fill(0.);
@@ -1545,6 +1593,7 @@ int main(int argc, char* argv[])
   delete genJetReader;
   delete lheInfoReader;
 
+  delete bdt_filler;
   delete genEvtHistManager_beforeCuts;
   delete genEvtHistManager_afterCuts;
   delete lheInfoHistManager;
