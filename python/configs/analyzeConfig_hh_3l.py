@@ -209,6 +209,27 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     lines = super(analyzeConfig_hh_3l, self).createCfg_analyze(jobOptions, sample_info)
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
 
+  def addToMakefile_backgrounds_from_data(self, lines_makefile, make_target = "phony_addFakes", make_dependency = "phony_copyHistograms"):
+    self.addToMakefile_addBackgrounds(lines_makefile, "phony_addBackgrounds", make_dependency, self.sbatchFile_addBackgrounds, self.jobOptions_addBackgrounds)
+    self.addToMakefile_addBackgrounds(lines_makefile, "phony_addBackgrounds_sum", "phony_addBackgrounds", self.sbatchFile_addBackgrounds_sum, self.jobOptions_addBackgrounds_sum)
+    #----------------------------------------------------------------------------
+    # CV: run hadd_stage1_5 jobs on quasar,
+    #     as the memory consumption of hadd_stage1_5 jobs exceeds the memory limit (1.8 Gb) for batch jobs
+    ##is_sbatch_bak = self.is_sbatch
+    ##self.is_sbatch = False
+    ##is_makefile_bak = self.is_makefile
+    ##self.is_makefile = True
+    ##self.addToMakefile_hadd_stage1_5(lines_makefile, "phony_hadd_stage1_5", "phony_addBackgrounds_sum", max_input_files_per_job = 2)
+    self.addToMakefile_hadd_stage1_5(lines_makefile, "phony_hadd_stage1_5", "phony_addBackgrounds_sum")
+    ##self.is_sbatch = is_sbatch_bak
+    ##self.is_makefile = is_makefile_bak
+    #----------------------------------------------------------------------------
+    self.addToMakefile_addFakes(lines_makefile, "phony_addFakes", "phony_hadd_stage1_5")
+    if make_target != "phony_addFakes":
+      lines_makefile.append("%s: %s" % (make_target, "phony_addFakes"))
+      lines_makefile.append("")
+    self.make_dependency_hadd_stage2 = make_target
+
   def create(self):
     """Creates all necessary config files and runs the complete analysis workfow -- either locally or on the batch system
     """
@@ -778,7 +799,18 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     self.addToMakefile_analyze(lines_makefile)
     self.addToMakefile_hadd_stage1(lines_makefile)
     self.addToMakefile_backgrounds_from_data(lines_makefile)
+    #self.addToMakefile_hadd_stage2(lines_makefile)
+    #----------------------------------------------------------------------------
+    # CV: run hadd_stage2 jobs on quasar,
+    #     as the memory consumption of hadd_stage2 jobs exceeds the memory limit (1.8 Gb) for batch jobs
+    is_sbatch_bak = self.is_sbatch
+    self.is_sbatch = False
+    is_makefile_bak = self.is_makefile
+    self.is_makefile = True
     self.addToMakefile_hadd_stage2(lines_makefile)
+    self.is_sbatch = is_sbatch_bak
+    self.is_makefile = is_makefile_bak
+    #----------------------------------------------------------------------------
     self.addToMakefile_prep_dcard(lines_makefile)
     self.addToMakefile_add_syst_fakerate(lines_makefile)
     self.addToMakefile_make_plots(lines_makefile)

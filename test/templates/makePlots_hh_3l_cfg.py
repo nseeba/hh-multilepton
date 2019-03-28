@@ -81,7 +81,22 @@ process.makePlots.distributions.extend([
     yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
   ),
   cms.PSet(
-    histogramName = cms.string('sel/jets/$PROCESS/pt'),
+    histogramName = cms.string('sel/jetsAK4/$PROCESS/pt'),
+    xAxisTitle = cms.string('p_{T} (jet) [GeV]'),
+    yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
+  ),
+  cms.PSet(
+    histogramName = cms.string('sel/leadJetAK4/$PROCESS/pt'),
+    xAxisTitle = cms.string('p_{T} (jet) [GeV]'),
+    yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
+  ),
+  cms.PSet(
+    histogramName = cms.string('sel/subleadJetAK4/$PROCESS/pt'),
+    xAxisTitle = cms.string('p_{T} (jet) [GeV]'),
+    yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
+  ),
+  cms.PSet(
+    histogramName = cms.string('sel/jetsAK8_Wjj/$PROCESS/pt'),
     xAxisTitle = cms.string('p_{T} (jet) [GeV]'),
     yAxisTitle = cms.string('dN/dp_{T} [1/GeV]')
   ),
