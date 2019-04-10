@@ -1,6 +1,7 @@
 #include "hhAnalysis/multilepton/interface/Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger.h"
 
-#include "tthAnalysis/TauTriggerSFs2017/interface/TauTriggerSFs2017.h"
+#include "TauAnalysisTools/TauTriggerSFs/interface/TauTriggerSFs2017.h" // TauTriggerSFs2017
+
 #include "tthAnalysis/HiggsToTauTau/interface/leptonTypes.h" // kElectron, kMuon
 #include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // kEra_2017
 #include "tthAnalysis/HiggsToTauTau/interface/cmsException.h" // cmsException()
@@ -32,40 +33,10 @@ Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::~Data_to_MC_CorrectionInterfa
 {}
 
 void
-Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::setHadTaus(double hadTau1_pt, double hadTau1_eta, double hadTau1_phi,
-                                                              double hadTau2_pt, double hadTau2_eta, double hadTau2_phi)
-{
-  throw cmsException(this, __func__, __LINE__) << "Invalid call";
-}
-
-void
 Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::setHadTaus(int hadTau1_genPdgId, double hadTau1_pt, double hadTau1_eta, int hadTau1_decayMode,
                                                               int hadTau2_genPdgId, double hadTau2_pt, double hadTau2_eta, int hadTau2_decayMode)
 {
   throw cmsException(this, __func__, __LINE__) << "Invalid call";
-}
-
-void
-Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::setHadTaus(double hadTau1_pt, double hadTau1_eta, double hadTau1_phi,
-                                                              double hadTau2_pt, double hadTau2_eta, double hadTau2_phi,
-                                                              double hadTau3_pt, double hadTau3_eta, double hadTau3_phi,
-                                                              double hadTau4_pt, double hadTau4_eta, double hadTau4_phi)
-{
-  hadTau1_pt_  = hadTau1_pt;
-  hadTau1_eta_ = hadTau1_eta;
-  hadTau1_phi_ = hadTau1_phi;
-
-  hadTau2_pt_  = hadTau2_pt;
-  hadTau2_eta_ = hadTau2_eta;
-  hadTau2_phi_ = hadTau2_phi;
-
-  hadTau3_pt_  = hadTau3_pt;
-  hadTau3_eta_ = hadTau3_eta;
-  hadTau3_phi_ = hadTau3_phi;
-
-  hadTau4_pt_  = hadTau4_pt;
-  hadTau4_eta_ = hadTau4_eta;
-  hadTau4_phi_ = hadTau4_phi;
 }
 
 void
@@ -166,26 +137,26 @@ Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::getSF_triggerEff() const
   {
     if(std::fabs(hadTau1_eta_) <= 2.1)
     {
-      eff_2tau_tauLeg1_data = effTrigger_tauLeg_->getDiTauEfficiencyData(hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, triggerSF_option_);
-      eff_2tau_tauLeg1_mc   = effTrigger_tauLeg_->getDiTauEfficiencyMC  (hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, triggerSF_option_);
+      eff_2tau_tauLeg1_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_tauLeg_, hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_, triggerSF_option_);
+      eff_2tau_tauLeg1_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_tauLeg_, hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_, triggerSF_option_);
     }
 
     if(std::fabs(hadTau2_eta_) <= 2.1)
     {
-      eff_2tau_tauLeg2_data = effTrigger_tauLeg_->getDiTauEfficiencyData(hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, triggerSF_option_);
-      eff_2tau_tauLeg2_mc   = effTrigger_tauLeg_->getDiTauEfficiencyMC  (hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, triggerSF_option_);
+      eff_2tau_tauLeg2_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_tauLeg_, hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_, triggerSF_option_);
+      eff_2tau_tauLeg2_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_tauLeg_, hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_, triggerSF_option_);
     }
 
     if(std::fabs(hadTau3_eta_) <= 2.1)
     {
-      eff_2tau_tauLeg3_data = effTrigger_tauLeg_->getDiTauEfficiencyData(hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, triggerSF_option_);
-      eff_2tau_tauLeg3_mc   = effTrigger_tauLeg_->getDiTauEfficiencyMC  (hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, triggerSF_option_);
+      eff_2tau_tauLeg3_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_tauLeg_, hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_, triggerSF_option_);
+      eff_2tau_tauLeg3_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_tauLeg_, hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_, triggerSF_option_);
     }
 
     if(std::fabs(hadTau4_eta_) <= 2.1)
     {
-      eff_2tau_tauLeg4_data = effTrigger_tauLeg_->getDiTauEfficiencyData(hadTau4_pt_, hadTau4_eta_, hadTau4_phi_, triggerSF_option_);
-      eff_2tau_tauLeg4_mc   = effTrigger_tauLeg_->getDiTauEfficiencyMC  (hadTau4_pt_, hadTau4_eta_, hadTau4_phi_, triggerSF_option_);
+      eff_2tau_tauLeg4_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_tauLeg_, hadTau4_pt_, hadTau4_eta_, hadTau4_phi_, hadTau4_decayMode_, triggerSF_option_);
+      eff_2tau_tauLeg4_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_tauLeg_, hadTau4_pt_, hadTau4_eta_, hadTau4_phi_, hadTau4_decayMode_, triggerSF_option_);
     }
   }
   else if(era_ == kEra_2018)
