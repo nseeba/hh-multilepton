@@ -133,7 +133,7 @@ Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::getSF_triggerEff() const
       eff_2tau_tauLeg4_mc   = get_from_lut(effTrigger_2tau_perLeg_mc_faketau_,   hadTau4_pt_, hadTau4_eta_, hadTau4_decayMode_, isDEBUG_);
     }
   }
-  if(era_ == kEra_2017)
+  if(era_ == kEra_2017 || era_ == kEra_2018)
   {
     if(std::fabs(hadTau1_eta_) <= 2.1)
     {
@@ -158,10 +158,6 @@ Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::getSF_triggerEff() const
       eff_2tau_tauLeg4_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_tauLeg_, hadTau4_pt_, hadTau4_eta_, hadTau4_phi_, hadTau4_decayMode_, triggerSF_option_);
       eff_2tau_tauLeg4_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_tauLeg_, hadTau4_pt_, hadTau4_eta_, hadTau4_phi_, hadTau4_decayMode_, triggerSF_option_);
     }
-  }
-  else if(era_ == kEra_2018)
-  {
-    throw cmsException(this, __func__, __LINE__) << "Implement me!";
   }
   else
   {

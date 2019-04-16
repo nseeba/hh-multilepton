@@ -69,7 +69,10 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::Data_to_MC_CorrectionInterfac
   }
   else if(era_ == kEra_2018)
   {
-    throw cmsException(this) << "Implement me!";
+    // CV: tau leg efficiency for 2018 data not available from Tau POG yet (as of 2019/04/16)
+    //const LocalFileInPath inputFileName_tauLeg("tthAnalysis/TauTriggerSFs/data/tauTriggerEfficiencies2018.root");    
+    //const std::string hadTauSelection_TauTriggerSFs2018 = aux::get_hadTauSelection_TauTriggerSFs2018(hadTauSelection_);
+    //effTrigger_2tau_tauLeg_ = new TauTriggerSFs2017(inputFileName_tauLeg.fullPath().data(), "ditau", "2018", hadTauSelection_TauTriggerSFs2018);
   }
   else
   {
@@ -86,7 +89,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::~Data_to_MC_CorrectionInterfa
     aux::clearCollection(effTrigger_2tau_perLeg_mc_gentau_);
     aux::clearCollection(effTrigger_2tau_perLeg_mc_faketau_);
   }
-  else if(era_ == kEra_2017)
+  else if(era_ == kEra_2017 || era_ == kEra_2018)
   {
     delete effTrigger_2tau_tauLeg_;
   }
@@ -266,7 +269,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
       assert(0);
     }
   }
-  else if(era_ == kEra_2017)
+  else if(era_ == kEra_2017 || era_ == kEra_2018)
   {
     if(lepton_type_ == kElectron)
     {
@@ -349,10 +352,6 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
       assert(0);
     }
   }
-  else if(era_ == kEra_2018)
-  {
-    throw cmsException(this, __func__, __LINE__) << "Implement me!";
-  }
   else
   {
     throw cmsException(this, __func__, __LINE__) << "Invalid era = " << era_;
@@ -421,7 +420,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
       eff_2tau_tauLeg3_mc   = get_from_lut(effTrigger_2tau_perLeg_mc_faketau_,   hadTau3_pt_, hadTau3_eta_, hadTau3_decayMode_, isDEBUG_);
     }
   }
-  else if(era_ == kEra_2017)
+  else if(era_ == kEra_2017 || era_ == kEra_2018)
   {
     eff_2tau_tauLeg1_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_2tau_tauLeg_, hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_, triggerSF_option_);
     eff_2tau_tauLeg1_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_2tau_tauLeg_, hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_, triggerSF_option_);
@@ -431,10 +430,6 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
 
     eff_2tau_tauLeg3_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_2tau_tauLeg_, hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_, triggerSF_option_);
     eff_2tau_tauLeg3_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_2tau_tauLeg_, hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_, triggerSF_option_);
-  }
-  else if(era_ == kEra_2018)
-  {
-    throw cmsException(this, __func__, __LINE__) << "Implement me!";
   }
   else
   {
