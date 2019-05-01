@@ -9,13 +9,19 @@
 
 #include <TRandom.h> // TRandom
 
-classic_svFit::MeasuredTauLepton makeMeasuredTauLepton(const Particle::LorentzVector& measuredTauP4, int measuredTauType, int measuredHadTauDecayMode);
+classic_svFit::MeasuredTauLepton
+makeMeasuredTauLepton(const Particle::LorentzVector & measuredTauP4,
+                      int measuredTauType,
+                      int measuredHadTauDecayMode);
 
-int getMeasuredTauLeptonType(const GenParticle& measuredTau);
+int
+getMeasuredTauLeptonType(const ChargedParticle & measuredTau);
 
-bool isGenHadTau(const GenParticle& measuredTau);
+bool
+isGenHadTau(const ChargedParticle & measuredTau);
 
-bool getHadTauDecayMode(const GenParticle& measuredTau);
+bool
+getHadTauDecayMode(const ChargedParticle & measuredTau);
 
 struct SVfit4tauResult
 {
@@ -114,21 +120,22 @@ struct SVfit4tauResult
 };
 
 bool
-isHigherLmax(const SVfit4tauResult& result1,
-             const SVfit4tauResult& result2);
+isHigherLmax(const SVfit4tauResult & result1,
+             const SVfit4tauResult & result2);
 
 bool
-isLowerMassErr(const SVfit4tauResult& result1,
-               const SVfit4tauResult& result2);
+isLowerMassErr(const SVfit4tauResult & result1,
+               const SVfit4tauResult & result2);
 
 // reconstruct di-Higgs system for each possible pairing of visible tau decay products
 std::vector<SVfit4tauResult>
-compSVfit4tau(const GenParticle& measuredTau1, 
-              const GenParticle& measuredTau2,
-              const GenParticle& measuredTau3,
-              const GenParticle& measuredTau4,
-              const RecoMEt& met,
-              const std::string& chargeSumSelection_string, TRandom& rnd,
+compSVfit4tau(const ChargedParticle & measuredTau1,
+              const ChargedParticle & measuredTau2,
+              const ChargedParticle & measuredTau3,
+              const ChargedParticle & measuredTau4,
+              const RecoMEt & met,
+              const std::string & chargeSumSelection_string,
+              TRandom & rnd,
               double massConstraint = -1.,                      // CV: default is not to apply mass constraint
               double logM = 0.,                                 // CV: default is not to apply log(M) term
               int intAlgo = ClassicSVfit4tau::kAlgoMarkovChain, // CV: default is to use Markov-Chain integration
@@ -136,11 +143,11 @@ compSVfit4tau(const GenParticle& measuredTau1,
 
 // reconstruct di-Higgs system for one particular (given) pairing of visible tau decay products
 SVfit4tauResult
-compSVfit4tau(const Particle::LorentzVector& measuredTau1Higgs1P4, int measuredTau1Higgs1Type, int measuredHadTau1Higgs1DecayMode,
-              const Particle::LorentzVector& measuredTau2Higgs1P4, int measuredTau2Higgs1Type, int measuredHadTau2Higgs1DecayMode,
-              const Particle::LorentzVector& measuredTau1Higgs2P4, int measuredTau1Higgs2Type, int measuredHadTau1Higgs2DecayMode,
-              const Particle::LorentzVector& measuredTau2Higgs2P4, int measuredTau2Higgs2Type, int measuredHadTau2Higgs2DecayMode,
-              double metPx, double metPy, const TMatrixD& metCov,
+compSVfit4tau(const Particle::LorentzVector & measuredTau1Higgs1P4, int measuredTau1Higgs1Type, int measuredHadTau1Higgs1DecayMode,
+              const Particle::LorentzVector & measuredTau2Higgs1P4, int measuredTau2Higgs1Type, int measuredHadTau2Higgs1DecayMode,
+              const Particle::LorentzVector & measuredTau1Higgs2P4, int measuredTau1Higgs2Type, int measuredHadTau1Higgs2DecayMode,
+              const Particle::LorentzVector & measuredTau2Higgs2P4, int measuredTau2Higgs2Type, int measuredHadTau2Higgs2DecayMode,
+              double metPx, double metPy, const TMatrixD & metCov,
               double massConstraint = -1.,                      // CV: default is not to apply mass constraint
               double logM = 0.,                                 // CV: default is not to apply log(M) term
               int intAlgo = ClassicSVfit4tau::kAlgoMarkovChain, // CV: default is to use Markov-Chain integration

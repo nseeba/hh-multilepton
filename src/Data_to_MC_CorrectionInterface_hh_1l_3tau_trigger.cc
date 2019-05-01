@@ -28,7 +28,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::Data_to_MC_CorrectionInterfac
   {
     const edm::ParameterSet cfg_triggerSF_2tau = cfg.getParameter<edm::ParameterSet>("triggerSF_2tau");
 
-    const std::string hadTauSelectionLabel = aux::getHadTauSelectionLabel(hadTauSelection_);
+    const std::string hadTauSelectionLabel = aux::getHadTauSelectionLabel_2016(hadTauSelection_);
     const std::vector<int> hadTauDecayModes_2tau_perLeg = { 0, 1, 2, 10 };
     for(int hadTauDecayMode: hadTauDecayModes_2tau_perLeg)
     {
@@ -63,16 +63,17 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::Data_to_MC_CorrectionInterfac
   }
   else if(era_ == kEra_2017)
   {
-    const LocalFileInPath inputFileName_tauLeg("tthAnalysis/TauTriggerSFs/data/tauTriggerEfficiencies2017.root");    
-    const std::string hadTauSelection_TauTriggerSFs2017 = aux::get_hadTauSelection_TauTriggerSFs2017(hadTauSelection_);
-    effTrigger_2tau_tauLeg_ = new TauTriggerSFs2017(inputFileName_tauLeg.fullPath().data(), "ditau", "2017", hadTauSelection_TauTriggerSFs2017);
+    const LocalFileInPath inputFileName_tauLeg("TauAnalysisTools/TauTriggerSFs/data/tauTriggerEfficiencies2017.root");
+    const std::string hadTauSelection_TauTriggerSFs2017 = aux::getHadTauSelectionLabel_2017(hadTauSelection_);
+    const std::string wpType = "MVAv2";
+    const std::string year = "2017";
+    effTrigger_2tau_tauLeg_ = new TauTriggerSFs2017(
+      inputFileName_tauLeg.fullPath(), "ditau", year, hadTauSelection_TauTriggerSFs2017, wpType
+    );
   }
   else if(era_ == kEra_2018)
   {
     // CV: tau leg efficiency for 2018 data not available from Tau POG yet (as of 2019/04/16)
-    //const LocalFileInPath inputFileName_tauLeg("tthAnalysis/TauTriggerSFs/data/tauTriggerEfficiencies2018.root");    
-    //const std::string hadTauSelection_TauTriggerSFs2018 = aux::get_hadTauSelection_TauTriggerSFs2018(hadTauSelection_);
-    //effTrigger_2tau_tauLeg_ = new TauTriggerSFs2017(inputFileName_tauLeg.fullPath().data(), "ditau", "2018", hadTauSelection_TauTriggerSFs2018);
   }
   else
   {
@@ -137,6 +138,27 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::setHadTaus(int hadTau1_genPdg
   hadTau3_genPdgId_  = hadTau3_genPdgId;
   hadTau3_pt_        = hadTau3_pt;
   hadTau3_eta_       = hadTau3_eta;
+  hadTau3_decayMode_ = hadTau3_decayMode;
+}
+
+void
+Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::setHadTaus(double hadTau1_pt, double hadTau1_eta, double hadTau1_phi, int hadTau1_decayMode,
+                                                              double hadTau2_pt, double hadTau2_eta, double hadTau2_phi, int hadTau2_decayMode,
+                                                              double hadTau3_pt, double hadTau3_eta, double hadTau3_phi, int hadTau3_decayMode)
+{
+  hadTau1_pt_        = hadTau1_pt;
+  hadTau1_eta_       = hadTau1_eta;
+  hadTau1_phi_       = hadTau1_phi;
+  hadTau1_decayMode_ = hadTau1_decayMode;
+
+  hadTau2_pt_        = hadTau2_pt;
+  hadTau2_eta_       = hadTau2_eta;
+  hadTau2_phi_       = hadTau2_phi;
+  hadTau2_decayMode_ = hadTau2_decayMode;
+
+  hadTau3_pt_        = hadTau3_pt;
+  hadTau3_eta_       = hadTau3_eta;
+  hadTau3_phi_       = hadTau3_phi;
   hadTau3_decayMode_ = hadTau3_decayMode;
 }
 
@@ -271,6 +293,11 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
   }
   else if(era_ == kEra_2017 || era_ == kEra_2018)
   {
+    const auto getTriggerEfficiencyDataFunc = aux::getTriggerFuncData(triggerSF_option_);
+    const auto getTriggerEfficiencyMCFunc   = aux::getTriggerFuncMC(triggerSF_option_);
+    assert(getTriggerEfficiencyDataFunc);
+    assert(getTriggerEfficiencyMCFunc);
+
     if(lepton_type_ == kElectron)
     {
       if(isDEBUG_)
@@ -286,24 +313,24 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
       eff_1l1tau_tauLeg1_mc   = 0.;
       if(std::fabs(hadTau1_eta_) <= 2.1)
       {
-	eff_1l1tau_tauLeg1_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_1e1tau_tauLeg_, hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_, triggerSF_option_);
-	eff_1l1tau_tauLeg1_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_1e1tau_tauLeg_, hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_, triggerSF_option_);
+        eff_1l1tau_tauLeg1_data = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
+        eff_1l1tau_tauLeg1_mc   = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
       }
 
       eff_1l1tau_tauLeg2_data = 0.;
       eff_1l1tau_tauLeg2_mc   = 0.;
       if(std::fabs(hadTau2_eta_) <= 2.1)
       {
-	eff_1l1tau_tauLeg2_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_1e1tau_tauLeg_, hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_, triggerSF_option_);
-	eff_1l1tau_tauLeg2_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_1e1tau_tauLeg_, hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_, triggerSF_option_);
+        eff_1l1tau_tauLeg2_data = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
+        eff_1l1tau_tauLeg2_mc   = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
       }
 
       eff_1l1tau_tauLeg3_data   = 0.;
       eff_1l1tau_tauLeg3_mc     = 0.;
       if(std::fabs(hadTau3_eta_) <= 2.1)
       {
-	eff_1l1tau_tauLeg3_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_1e1tau_tauLeg_, hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_, triggerSF_option_);
-	eff_1l1tau_tauLeg3_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_1e1tau_tauLeg_, hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_, triggerSF_option_);
+        eff_1l1tau_tauLeg3_data = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
+        eff_1l1tau_tauLeg3_mc   = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
       }
 
       isTriggered_1l     = isTriggered_1e_;
@@ -324,24 +351,24 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
       eff_1l1tau_tauLeg1_mc   = 0.;
       if(std::fabs(hadTau1_eta_) <= 2.1)
       {
-	eff_1l1tau_tauLeg1_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_1m1tau_tauLeg_, hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_, triggerSF_option_);
-	eff_1l1tau_tauLeg1_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_1m1tau_tauLeg_, hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_, triggerSF_option_);
+        eff_1l1tau_tauLeg1_data = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
+        eff_1l1tau_tauLeg1_mc   = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
       }
       
       eff_1l1tau_tauLeg2_data   = 0.;
       eff_1l1tau_tauLeg2_mc     = 0.;
       if(std::fabs(hadTau2_eta_) <= 2.1)
       {
-	eff_1l1tau_tauLeg2_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_1m1tau_tauLeg_, hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_, triggerSF_option_);
-	eff_1l1tau_tauLeg2_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_1m1tau_tauLeg_, hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_, triggerSF_option_);
+        eff_1l1tau_tauLeg2_data = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
+        eff_1l1tau_tauLeg2_mc   = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
       }
 
       eff_1l1tau_tauLeg3_data   = 0.;
       eff_1l1tau_tauLeg3_mc     = 0.;
       if(std::fabs(hadTau3_eta_) <= 2.1)
       {
-	eff_1l1tau_tauLeg3_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_1m1tau_tauLeg_, hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_, triggerSF_option_);
-	eff_1l1tau_tauLeg3_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_1m1tau_tauLeg_, hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_, triggerSF_option_);
+        eff_1l1tau_tauLeg3_data = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
+        eff_1l1tau_tauLeg3_mc   = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
       }
 
       isTriggered_1l     = isTriggered_1m_;
@@ -359,20 +386,20 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
 
   if(isDEBUG_)
   {
-    std::cout << "isTriggered_1l = " << isTriggered_1l << std::endl;
-    std::cout << "isTriggered_1l1tau = " << isTriggered_1l1tau << std::endl;
+    std::cout << "isTriggered_1l = " << isTriggered_1l << '\n';
+    std::cout << "isTriggered_1l1tau = " << isTriggered_1l1tau << '\n';
     
-    std::cout << "eff_1l_data = " << eff_1l_data << std::endl;
-    std::cout << "eff_1l_mc = " << eff_1l_mc << std::endl;
-    std::cout << "eff_1l1tau_lepLeg_data = " << eff_1l1tau_lepLeg_data << std::endl;
-    std::cout << "eff_1l1tau_lepLeg_mc = " << eff_1l1tau_lepLeg_mc << std::endl;
+    std::cout << "eff_1l_data = " << eff_1l_data << '\n';
+    std::cout << "eff_1l_mc = " << eff_1l_mc << '\n';
+    std::cout << "eff_1l1tau_lepLeg_data = " << eff_1l1tau_lepLeg_data << '\n';
+    std::cout << "eff_1l1tau_lepLeg_mc = " << eff_1l1tau_lepLeg_mc << '\n';
     
-    std::cout << "eff_1l1tau_tauLeg1_data = " << eff_1l1tau_tauLeg1_data << std::endl;
-    std::cout << "eff_1l1tau_tauLeg1_mc = " << eff_1l1tau_tauLeg1_mc << std::endl;
-    std::cout << "eff_1l1tau_tauLeg2_data = " << eff_1l1tau_tauLeg2_data << std::endl;
-    std::cout << "eff_1l1tau_tauLeg2_mc = " << eff_1l1tau_tauLeg2_mc << std::endl;
-    std::cout << "eff_1l1tau_tauLeg3_data = " << eff_1l1tau_tauLeg3_data << std::endl;
-    std::cout << "eff_1l1tau_tauLeg3_mc = " << eff_1l1tau_tauLeg3_mc << std::endl;
+    std::cout << "eff_1l1tau_tauLeg1_data = " << eff_1l1tau_tauLeg1_data << '\n';
+    std::cout << "eff_1l1tau_tauLeg1_mc = " << eff_1l1tau_tauLeg1_mc << '\n';
+    std::cout << "eff_1l1tau_tauLeg2_data = " << eff_1l1tau_tauLeg2_data << '\n';
+    std::cout << "eff_1l1tau_tauLeg2_mc = " << eff_1l1tau_tauLeg2_mc << '\n';
+    std::cout << "eff_1l1tau_tauLeg3_data = " << eff_1l1tau_tauLeg3_data << '\n';
+    std::cout << "eff_1l1tau_tauLeg3_mc = " << eff_1l1tau_tauLeg3_mc << '\n';
   }
   
   double eff_2tau_tauLeg1_data = 0.;
@@ -422,14 +449,19 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
   }
   else if(era_ == kEra_2017 || era_ == kEra_2018)
   {
-    eff_2tau_tauLeg1_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_2tau_tauLeg_, hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_, triggerSF_option_);
-    eff_2tau_tauLeg1_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_2tau_tauLeg_, hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_, triggerSF_option_);
+    const auto getTriggerEfficiencyDataFunc = aux::getTriggerFuncData(triggerSF_option_);
+    const auto getTriggerEfficiencyMCFunc   = aux::getTriggerFuncMC(triggerSF_option_);
+    assert(getTriggerEfficiencyDataFunc);
+    assert(getTriggerEfficiencyMCFunc);
 
-    eff_2tau_tauLeg2_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_2tau_tauLeg_, hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_, triggerSF_option_);
-    eff_2tau_tauLeg2_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_2tau_tauLeg_, hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_, triggerSF_option_);
+    eff_2tau_tauLeg1_data = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
+    eff_2tau_tauLeg1_mc   = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
 
-    eff_2tau_tauLeg3_data = aux::getTauTriggerEfficiencyData_2017(effTrigger_2tau_tauLeg_, hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_, triggerSF_option_);
-    eff_2tau_tauLeg3_mc = aux::getTauTriggerEfficiencyMC_2017(effTrigger_2tau_tauLeg_, hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_, triggerSF_option_);
+    eff_2tau_tauLeg2_data = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
+    eff_2tau_tauLeg2_mc   = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
+
+    eff_2tau_tauLeg3_data = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
+    eff_2tau_tauLeg3_mc   = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
   }
   else
   {
@@ -438,12 +470,12 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
 
   if(isDEBUG_)
   {
-    std::cout << "eff_2tau_tauLeg1_data = " << eff_2tau_tauLeg1_data << std::endl;
-    std::cout << "eff_2tau_tauLeg1_mc = " << eff_2tau_tauLeg1_mc << std::endl;
-    std::cout << "eff_2tau_tauLeg2_data = " << eff_2tau_tauLeg2_data << std::endl;
-    std::cout << "eff_2tau_tauLeg2_mc = " << eff_2tau_tauLeg2_mc << std::endl;
-    std::cout << "eff_2tau_tauLeg3_data = " << eff_2tau_tauLeg3_data << std::endl;
-    std::cout << "eff_2tau_tauLeg3_mc = " << eff_2tau_tauLeg3_mc << std::endl;
+    std::cout << "eff_2tau_tauLeg1_data = " << eff_2tau_tauLeg1_data << '\n';
+    std::cout << "eff_2tau_tauLeg1_mc = " << eff_2tau_tauLeg1_mc << '\n';
+    std::cout << "eff_2tau_tauLeg2_data = " << eff_2tau_tauLeg2_data << '\n';
+    std::cout << "eff_2tau_tauLeg2_mc = " << eff_2tau_tauLeg2_mc << '\n';
+    std::cout << "eff_2tau_tauLeg3_data = " << eff_2tau_tauLeg3_data << '\n';
+    std::cout << "eff_2tau_tauLeg3_mc = " << eff_2tau_tauLeg3_mc << '\n';
   }
 
   double prob_data = 0.;
@@ -511,7 +543,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
 
 	  std::cout << "nTrig_1l = " << nTrig_1l << "," 
 		    << " nTrig_1l1tau_lepLeg = " << nTrig_1l1tau_lepLeg << ", nTrig_1l1tau_tauLeg = " << nTrig_1l1tau_tauLeg << "," 
-		    << " nTrig_2tau_tauLeg = " << nTrig_2tau_tauLeg << std::endl;
+                    << " nTrig_2tau_tauLeg = " << nTrig_2tau_tauLeg << '\n';
 
           const bool isTrig_1l_toy     = nTrig_1l >= 1;
           const bool isTrig_1l1tau_toy = nTrig_1l1tau_lepLeg >= 1 && nTrig_1l1tau_tauLeg >= 1;
@@ -523,7 +555,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
           {
 	    std::cout << "isTrig_1l_toy = " << isTrig_1l_toy << ", isTrig_1l1tau_toy = " << isTrig_1l1tau_toy << ", isTrig_2tau_toy = " << isTrig_2tau_toy << ":"
 		      << " prob_data = " << (prob_lepton_data * prob_tau1_data * prob_tau2_data * prob_tau3_data) << ","
-		      << " prob_mc = " << (prob_lepton_mc * prob_tau1_mc * prob_tau2_mc * prob_tau3_mc) << std::endl;
+                      << " prob_mc = " << (prob_lepton_mc * prob_tau1_mc * prob_tau2_mc * prob_tau3_mc) << '\n';
             prob_data += prob_lepton_data * prob_tau1_data * prob_tau2_data * prob_tau3_data;
             prob_mc   += prob_lepton_mc   * prob_tau1_mc   * prob_tau2_mc   * prob_tau3_mc;
           }
@@ -587,7 +619,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_lepton(int lepton_sta
     case kNot1lAndNot1l1tau: prob = 1. - std::max(eff_1l, eff_1l1tau_lepLeg);    break;
     default:                 assert(0);
   }
-  std::cout << "<Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_lepton>: prob = " << prob << std::endl;
+  std::cout << "<Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_lepton>: prob = " << prob << '\n';
   return prob;
 }
  
@@ -605,6 +637,6 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_tau(int tau_status,
     case kNot1l1tauAndNot2tau: prob = 1. - std::max(eff_1l1tau_tauLeg, eff_2tau_tauLeg);    break;
     default:                   assert(0);
   }
-  std::cout << "<Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_tau>: prob = " << prob << std::endl;
+  std::cout << "<Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_tau>: prob = " << prob << '\n';
   return prob;
 }

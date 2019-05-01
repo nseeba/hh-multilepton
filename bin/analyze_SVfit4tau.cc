@@ -115,7 +115,7 @@ int get_idxCategory(int numLeptons, int numHadTaus)
   else assert(0);
 }
 
-const GenParticle* findGenTau(const GenParticle& measuredTau, const std::vector<GenParticle>& genTaus)
+const GenParticle* findGenTau(const ChargedParticle & measuredTau, const std::vector<GenParticle>& genTaus)
 {
   const GenParticle* bestMatch = nullptr;
   double dR_min = 1.e+3;
@@ -130,7 +130,7 @@ const GenParticle* findGenTau(const GenParticle& measuredTau, const std::vector<
   return bestMatch;
 }
 
-const GenParticle* getGenMeasuredTau(const GenParticle& measuredTau)
+const GenParticle* getGenMeasuredTau(const ChargedParticle& measuredTau)
 {
   const GenParticle* measuredTau_gen = nullptr;
   if ( dynamic_cast<const RecoLepton*>(&measuredTau) ) {
@@ -910,7 +910,7 @@ int main(int argc, char* argv[])
     selHistManager->weights_->fillHistograms("genWeight", eventInfo.genWeight);
     selHistManager->weights_->fillHistograms("pileupWeight", eventInfo.pileupWeight);
 
-    std::vector<const GenParticle*> measuredTaus;
+    std::vector<const ChargedParticle*> measuredTaus;
     std::vector<const RecoLepton*> selLeptons_toAdd = pickFirstNobjects(selLeptons, 4);
     measuredTaus.insert(measuredTaus.end(), selLeptons_toAdd.begin(), selLeptons_toAdd.end());
     if ( selLeptons_toAdd.size() < 4 ) {
@@ -921,15 +921,15 @@ int main(int argc, char* argv[])
       std::map<double, vSVfit4tauResult_wPtrs> results_wMassConstraint_MarkovChain;  // key = logM_wMassConstraint
       std::map<double, vSVfit4tauResult_wPtrs> results_woMassConstraint_MarkovChain; // key = logM_woMassConstraint
       std::map<double, vSVfit4tauResult_wPtrs> results_wMassConstraint_VAMP;         // key = logM_wMassConstraint
-      for ( std::vector<const GenParticle*>::const_iterator measuredTau1 = measuredTaus.begin();
+      for ( std::vector<const ChargedParticle*>::const_iterator measuredTau1 = measuredTaus.begin();
             measuredTau1 != measuredTaus.end(); ++measuredTau1 ) {
-        for ( std::vector<const GenParticle*>::const_iterator measuredTau2 = measuredTau1 + 1;
+        for ( std::vector<const ChargedParticle*>::const_iterator measuredTau2 = measuredTau1 + 1;
               measuredTau2 != measuredTaus.end(); ++measuredTau2 ) {
           // require decay products of 1st Higgs boson to have opposite charge
           if ( ((*measuredTau1)->charge() + (*measuredTau2)->charge()) != 0 ) continue;
-          for ( std::vector<const GenParticle*>::const_iterator measuredTau3 = measuredTaus.begin();
+          for ( std::vector<const ChargedParticle*>::const_iterator measuredTau3 = measuredTaus.begin();
                 measuredTau3 != measuredTaus.end(); ++measuredTau3 ) {
-            for ( std::vector<const GenParticle*>::const_iterator measuredTau4 = measuredTau3 + 1;
+            for ( std::vector<const ChargedParticle*>::const_iterator measuredTau4 = measuredTau3 + 1;
                   measuredTau4 != measuredTaus.end(); ++measuredTau4 ) {
               // require decay products of 2nd Higgs boson to have opposite charge
               if ( ((*measuredTau3)->charge() + (*measuredTau4)->charge()) != 0 ) continue;
