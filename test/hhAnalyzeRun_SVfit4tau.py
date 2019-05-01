@@ -1,10 +1,14 @@
 #!/usr/bin/env python
-import os, logging, sys, getpass
-from collections import OrderedDict as OD
+
 from hhAnalysis.multilepton.configs.analyzeConfig_SVfit4tau import analyzeConfig_SVfit4tau
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser
+from tthAnalysis.HiggsToTauTau.common import logging, load_samples_hh_multilepton as load_samples
+
+import os
+import sys
+import getpass
 
 parser = tthAnalyzeParser()
 parser.add_lep_mva_wp()
@@ -30,39 +34,18 @@ max_job_resubmission = 3;
 central_or_shift     = [ "central" ]
 max_files_per_job    = 1
 
-if era == "2016":
-  from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
-elif era == "2017":
-  from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
-elif era == "2018":
-  from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
-else:
-  raise ValueError("Invalid era: %s" % era)
-
-if era == "2016":
-  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2016 as lumi
-elif era == "2017":
-  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2017 as lumi
-elif era == "2018":
-  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2018 as lumi
-else:
-  raise ValueError("Invalid era: %s" % era)
+samples = load_samples(era)
+lumi = get_lumi(era)
 
 for sample_name, sample_info in samples.items():
   if not isinstance(sample_info, OD):
     continue
-  if sample_info["process_name_specific"] in [ "x_to_hh_270", "x_to_hh_300", "x_to_hh_350", "x_to_hh_400", "x_to_hh_450", "x_to_hh_500", "x_to_hh_600", "x_to_hh_700", "x_to_hh_800" ]:
+  if sample_info["process_name_specific"] in list(map(lambda m: 'x_to_hh_%d' % m, [ 270, 300, 350, 400, 450, 500, 600, 700, 800 ])):
     sample_info["use_it"] = True
   else:
     sample_info["use_it"] = False
 
 if __name__ == '__main__':
-  logging.basicConfig(
-    stream = sys.stdout,
-    level  = logging.INFO,
-    format = '%(asctime)s - %(levelname)s: %(message)s',
-  )
-
   logging.info(
     "Running the jobs with the following systematic uncertainties enabled: %s" % \
     ', '.join(central_or_shift)
@@ -77,9 +60,6 @@ if __name__ == '__main__':
     lepton_selection                = "Tight",
     lep_mva_wp                      = lep_mva_wp,
     hadTau_selection                = "Tight|dR03mvaMedium",
-    #SVfit4tau_logM_wMassConstraint_MarkovChain  = [ 0., 2., 4., 6., 10., 15. ],
-    #SVfit4tau_logM_woMassConstraint_MarkovChain = [ 0., 2., 4., 6., 10., 15. ],
-    #SVfit4tau_logM_wMassConstraint_VAMP         = [ 0., 2., 4., 6., 10., 15. ],
     SVfit4tau_logM_wMassConstraint_MarkovChain  = [ 0. ],
     SVfit4tau_logM_woMassConstraint_MarkovChain = [ 0. ],
     SVfit4tau_logM_wMassConstraint_VAMP         = [ 0. ],

@@ -1,12 +1,16 @@
 #!/usr/bin/env python
-import os, logging, sys, getpass
-from collections import OrderedDict as OD
+
 from hhAnalysis.multilepton.configs.analyzeConfig_hh_4l import analyzeConfig_hh_4l
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
+from tthAnalysis.HiggsToTauTau.common import logging, load_samples_hh_multilepton as load_samples
 
-# E.g.: ./hhAnalyzeRun_4l.py -v 2017Dec13 -m default -e 2017
+import os
+import sys
+import getpass
+
+# E.g.: ./test/hhAnalyzeRun_4l.py -v 2017Dec13 -m default -e 2017
 
 mode_choices     = [ 'default' ]
 sys_choices      = [ 'full' ] + systematics.an_extended_opts_hh
@@ -51,51 +55,20 @@ for systematic_label in systematics_label:
   for central_or_shift in getattr(systematics, systematic_label):
     if central_or_shift not in central_or_shifts:
       central_or_shifts.append(central_or_shift)
+lumi = get_lumi(era)
 
 lepton_charge_selections = [ "OS", "SS" ]
 
 if mode == "default":
-  if use_preselected:
-    if era == "2016":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016_preselected import samples_2016 as samples
-    elif era == "2017":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_preselected import samples_2017 as samples
-    elif era == "2018":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018_preselected import samples_2018 as samples
-    else:
-      raise ValueError("Invalid era: %s" % era)
-  else:
-    if era == "2016":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
-    elif era == "2017":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
-    elif era == "2018":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
-    else:
-      raise ValueError("Invalid era: %s" % era)
+  samples = load_samples(era, suffix = "preselected" if use_preselected else "")
 else:
   raise ValueError("Internal logic error")
-
-if era == "2016":
-  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2016 as lumi
-elif era == "2017":
-  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2017 as lumi
-elif era == "2018":
-  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2018 as lumi
-else:
-  raise ValueError("Invalid era: %s" % era)
 
 for sample_name, sample_info in samples.items():
   if sample_name.startswith('/Tau/Run'):
     sample_info["use_it"] = False
 
 if __name__ == '__main__':
-  logging.basicConfig(
-    stream = sys.stdout,
-    level  = logging.INFO,
-    format = '%(asctime)s - %(levelname)s: %(message)s',
-  )
-
   logging.info(
     "Running the jobs with the following systematic uncertainties enabled: %s" % \
     ', '.join(central_or_shifts)

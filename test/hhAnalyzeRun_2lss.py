@@ -1,11 +1,16 @@
 #!/usr/bin/env python
-import os, logging, sys, getpass
+
 from hhAnalysis.multilepton.configs.analyzeConfig_hh_2lss import analyzeConfig_hh_2lss
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
-from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
+from tthAnalysis.HiggsToTauTau.analysisSettings import systematics, get_lumi
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
+from tthAnalysis.HiggsToTauTau.common import logging, load_samples_hh_multilepton as load_samples
 
-# E.g.: ./hhAnalyzeRun_2lss.py -v 2017Dec13 -m default -e 2017
+import os
+import sys
+import getpass
+
+# E.g.: ./test/hhAnalyzeRun_2lss.py -v 2017Dec13 -m default -e 2017
 
 mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full' ] + systematics.an_extended_opts_hh
@@ -48,104 +53,61 @@ for systematic_label in systematics_label:
   for central_or_shift in getattr(systematics, systematic_label):
     if central_or_shift not in central_or_shifts:
       central_or_shifts.append(central_or_shift)
+lumi = get_lumi(era)
 
 if mode == "default":
-  if era == "2016":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
-  elif era == "2017":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_wjets import samples_2017 as samples_wjets
+  samples = load_samples(era, suffix = "preselected" if use_preselected else "")
+  samples_wjets = load_samples(era, suffix = "wjets_preselected" if use_preselected else "wjets")
 
-    for sample_name, sample_info in samples.items():
-      if sample_name == 'sum_events':
-        continue
-      if sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD_v14-v1', 'TTGJets_ext1' ]:
-        sample_info['use_it'] = False
-      elif sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD', 'TTGJets' ]:
-        sample_info['use_it'] = True
 
-      # since we run the regular analysis on "part1" of W+jets samples and reserve "part2" for the BDT training,
-      # we have to make sure that we don't use the non-split W+jets samples at all
-      if ('%s/part1' % sample_name) in samples_wjets or ('%s/part2' % sample_name) in samples_wjets:
-        sample_info['use_it'] = False
-      if sample_name.endswith('/part1'):
-        sample_info['use_it'] = True
-      if sample_name.endswith('/part2'):
-        sample_info['use_it'] = False
+  for sample_name, sample_info in samples.items():
+    if sample_name == 'sum_events':
+      continue
+    if sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD_v14-v1', 'TTGJets_ext1' ]:
+      sample_info['use_it'] = False
+    elif sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD', 'TTGJets' ]:
+      sample_info['use_it'] = True
 
-  elif era == "2018":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
-  else:
-    raise ValueError("Invalid era: %s" % era)
+    # since we run the regular analysis on "part1" of W+jets samples and reserve "part2" for the BDT training,
+    # we have to make sure that we don't use the non-split W+jets samples at all
+    if ('%s/part1' % sample_name) in samples_wjets or ('%s/part2' % sample_name) in samples_wjets:
+      sample_info['use_it'] = False
+    if sample_name.endswith('/part1'):
+      sample_info['use_it'] = True
+    if sample_name.endswith('/part2'):
+      sample_info['use_it'] = False
 
-  if era == "2016":
-    hadTau_veto = "dR03mvaTight"
-  elif era == "2017":
-    hadTau_veto = "dR03mvaMedium"
-  elif era == "2018":
-    raise ValueError("Implement me!")
-  else:
-    raise ValueError("Invalid era: %s" % era)
+  hadTau_veto = "dR03mvaMedium"
 
-  applyFakeRateWeights = "2lepton"
 elif mode == "forBDTtraining":
-  if era == "2016":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016_BDT import samples_2016 as samples
-  elif era == "2017":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT import samples_2017 as samples
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_wjets import samples_2017 as samples_wjets
 
-    for sample_name, sample_info in samples.items():
-      if sample_name == 'sum_events':
-        continue
-      if sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD_v14-v1', 'TTGJets_ext1' ]:
-        sample_info['use_it'] = True
-      elif sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD', 'TTGJets' ]:
-        sample_info['use_it'] = False
+  samples = load_samples(era, suffix = "BDT")
+  samples_wjets = load_samples(era, suffix = "wjets")
 
-      # since we run the regular analysis on "part1" of W+jets samples and reserve "part2" for the BDT training,
-      # we have to make sure that we don't use the non-split W+jets samples at all
-      if ('%s/part1' % sample_name) in samples_wjets or ('%s/part2' % sample_name) in samples_wjets:
-        sample_info['use_it'] = False
-      if sample_name.endswith('/part1'):
-        sample_info['use_it'] = False
-      if sample_name.endswith('/part2'):
-        sample_info['use_it'] = True
 
-  elif era == "2018":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018_BDT import samples_2018 as samples
-  else:
-    raise ValueError("Invalid era: %s" % era)
+  for sample_name, sample_info in samples.items():
+    if sample_name == 'sum_events':
+      continue
+    if sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD_v14-v1', 'TTGJets_ext1' ]:
+      sample_info['use_it'] = True
+    elif sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD', 'TTGJets' ]:
+      sample_info['use_it'] = False
 
-  if era == "2016":
-    hadTau_veto = "dR03mvaTight"
-  elif era == "2017":
-    hadTau_veto = "dR03mvaMedium"
-  elif era == "2018":
-    raise ValueError("Implement me!")
-  else:
-    raise ValueError("Invalid era: %s" % era)
+    # since we run the regular analysis on "part1" of W+jets samples and reserve "part2" for the BDT training,
+    # we have to make sure that we don't use the non-split W+jets samples at all
+    if ('%s/part1' % sample_name) in samples_wjets or ('%s/part2' % sample_name) in samples_wjets:
+      sample_info['use_it'] = False
+    if sample_name.endswith('/part1'):
+      sample_info['use_it'] = False
+    if sample_name.endswith('/part2'):
+      sample_info['use_it'] = True
 
-  applyFakeRateWeights = "2lepton"
+  hadTau_veto = "dR03mvaMedium"
+
 else:
   raise ValueError("Internal logic error")
 
-if era == "2016":
-  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2016 as lumi
-elif era == "2017":
-  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2017 as lumi
-elif era == "2018":
-  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2018 as lumi
-else:
-  raise ValueError("Invalid era: %s" % era)
-
 if __name__ == '__main__':
-  logging.basicConfig(
-    stream = sys.stdout,
-    level  = logging.INFO,
-    format = '%(asctime)s - %(levelname)s: %(message)s',
-  )
-
   logging.info(
     "Running the jobs with the following systematic uncertainties enabled: %s" % \
     ', '.join(central_or_shifts)
@@ -162,7 +124,7 @@ if __name__ == '__main__':
     samples                               = samples,
     lep_mva_wp                            = lep_mva_wp,
     hadTauVeto_selection                  = hadTau_veto,
-    applyFakeRateWeights                  = applyFakeRateWeights,
+    applyFakeRateWeights                  = "2lepton",
     central_or_shifts                     = central_or_shifts,
     max_files_per_job                     = files_per_job,
     era                                   = era,

@@ -1,12 +1,16 @@
 #!/usr/bin/env python
-import os, logging, sys, getpass
-from collections import OrderedDict as OD
+
 from hhAnalysis.multilepton.configs.analyzeConfig_hh_2l_2tau import analyzeConfig_hh_2l_2tau
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
-from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
+from tthAnalysis.HiggsToTauTau.analysisSettings import systematics, get_lumi
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
+from tthAnalysis.HiggsToTauTau.common import logging, load_samples_hh_multilepton as load_samples
 
-# E.g.: ./tthAnalyzeRun_hh_2l_2tau.py -v 2017Dec13 -m default -e 2017
+import os
+import sys
+import getpass
+
+# E.g.: ./test/tthAnalyzeRun_hh_2l_2tau.py -v 2017Dec13 -m default -e 2017
 
 mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full' ] + systematics.an_extended_opts_hh
@@ -54,92 +58,33 @@ for systematic_label in systematics_label:
   for central_or_shift in getattr(systematics, systematic_label):
     if central_or_shift not in central_or_shifts:
       central_or_shifts.append(central_or_shift)
+lumi = get_lumi(era)
 
 chargeSumSelections      = [ "OS", "SS" ]
 
 if mode == "default":
-  if use_preselected:
-    if era == "2016":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016_preselected import samples_2016 as samples
-    elif era == "2017":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_preselected import samples_2017 as samples
-    elif era == "2018":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018_preselected import samples_2018 as samples
-    else:
-      raise ValueError("Invalid era: %s" % era)
-  else:
-    if era == "2016":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
-    elif era == "2017":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT_2l_2tau import samples_2017 as samples
-      for sample_name, sample_info in samples.items():
-         if sample_name == 'sum_events':
-           continue
-         sample_info['use_it'] = not sample_info['use_it'] ## skip samples used in bdt training in the main analysis         
-         if sample_info["process_name_specific"].startswith("signal") and 'hh' in sample_info["process_name_specific"]:
-           sample_info["use_it"] = 'nonresonant' not in sample_info["process_name_specific"]
-    elif era == "2018":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
-    else:
-      raise ValueError("Invalid era: %s" % era)
+  samples = load_samples(era, suffix = "preselected_BDT_2l_2tau" if use_preselected else "BDT_2l_2tau")
 
-  if era == "2016":
-    hadTau_selection = "dR03mvaTight"
-  elif era == "2017":
-    hadTau_selection = "dR03mvaMedium"
-  elif era == "2018":
-    raise ValueError("Implement me!")
-  else:
-    raise ValueError("Invalid era: %s" % era)
+  for sample_name, sample_info in samples.items():
+    if sample_name == 'sum_events':
+      continue
+    sample_info['use_it'] = not sample_info['use_it']  ## skip samples used in bdt training in the main analysis
+    if sample_info["process_name_specific"].startswith("signal") and 'hh' in sample_info["process_name_specific"]:
+      sample_info["use_it"] = 'nonresonant' not in sample_info["process_name_specific"]
 
-  applyFakeRateWeights = "4L"
+  hadTau_selection = "dR03mvaMedium"
+
 elif mode == "forBDTtraining":
   if use_preselected:
     raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
-  else:
-    if era == "2016":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016_BDT import samples_2016 as samples
-    elif era == "2017":
-#      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT import samples_2017 as samples
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT_2l_2tau import samples_2017 as samples
-    elif era == "2018":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018_BDT import samples_2018 as samples
-    else:
-      raise ValueError("Invalid era: %s" % era)
 
-  if era == "2016":
-    hadTau_selection         = "dR03mvaTight"
-    hadTau_selection_relaxed = "dR03mvaVVLoose"
-  elif era == "2017":
-    hadTau_selection         = "dR03mvaMedium"
-    hadTau_selection_relaxed = "dR03mvaLoose"
-    #hadTau_selection_relaxed = "dR03mvaVLoose"
-    #hadTau_selection_relaxed = "dR03mvaVVLoose"
-  elif era == "2018":
-    raise ValueError("Implement me!")
-  else:
-    raise ValueError("Invalid era: %s" % era)
-
-  applyFakeRateWeights = "4L"
+  samples = load_samples(era, suffix = "BDT_2l_2tau")
+  hadTau_selection         = "dR03mvaMedium"
+  hadTau_selection_relaxed = "dR03mvaLoose"
 else:
   raise ValueError("Internal logic error")
 
-if era == "2016":
-  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2016 as lumi
-elif era == "2017":
-  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2017 as lumi
-elif era == "2018":
-  from tthAnalysis.HiggsToTauTau.analysisSettings import lumi_2018 as lumi
-else:
-  raise ValueError("Invalid era: %s" % era)
-
 if __name__ == '__main__':
-  logging.basicConfig(
-    stream = sys.stdout,
-    level  = logging.INFO,
-    format = '%(asctime)s - %(levelname)s: %(message)s',
-  )
-
   logging.info(
     "Running the jobs with the following systematic uncertainties enabled: %s" % \
     ', '.join(central_or_shifts)
@@ -164,7 +109,7 @@ if __name__ == '__main__':
     lep_mva_wp                            = lep_mva_wp,
     hadTau_selection                      = hadTau_selection,
     hadTau_charge_selections              = [ "disabled" ],
-    applyFakeRateWeights                  = applyFakeRateWeights,
+    applyFakeRateWeights                  = "4L",
     chargeSumSelections                   = chargeSumSelections,
     central_or_shifts                     = central_or_shifts,
     max_files_per_job                     = files_per_job,

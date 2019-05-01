@@ -1,11 +1,16 @@
 #!/usr/bin/env python
-import os, logging, sys, getpass
+
 from hhAnalysis.multilepton.configs.analyzeConfig_hh_3l import analyzeConfig_hh_3l
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics, get_lumi
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
+from tthAnalysis.HiggsToTauTau.common import logging, load_samples_hh_multilepton as load_samples
 
-# E.g.: ./hhAnalyzeRun_3l.py -v 2017Dec13 -m default -e 2017
+import os
+import sys
+import getpass
+
+# E.g.: ./test/hhAnalyzeRun_3l.py -v 2017Dec13 -m default -e 2017
 
 mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full' ] + systematics.an_extended_opts_hh
@@ -51,38 +56,14 @@ for systematic_label in systematics_label:
 do_sync = mode.startswith('sync')
 lumi = get_lumi(era)
 
-#lepton_charge_selections = [ "OS", "SS" ]
-lepton_charge_selections = [ "OS"]
+lepton_charge_selections = [ "OS", "SS" ]
 
 if mode == "default":
-  if era == "2016":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
-  elif era == "2017":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
-  elif era == "2018":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
-  else:
-    raise ValueError("Invalid era: %s" % era)
+  samples = load_samples(era)
 elif mode == "forBDTtraining":
-  if era == "2016":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016_BDT import samples_2016 as samples
-  elif era == "2017":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT import samples_2017 as samples
-  elif era == "2018":
-    from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018_BDT import samples_2018 as samples
-  else:
-    raise ValueError("Invalid era: %s" % era)
+  samples = load_samples(era, suffix = "BDT")
 else:
   raise ValueError("Invalid mode: %s" % mode)
-
-if era == "2016":
-  hadTauVeto_selection = "dR03mvaMedium"
-elif era == "2017":
-  hadTauVeto_selection = "dR03mvaLoose"
-elif era == "2018":
-  pass
-else:
-  raise ValueError("Invalid era: %s" % era)
 
 for sample_name, sample_info in samples.items():
   if sample_name == 'sum_events': continue
@@ -90,12 +71,6 @@ for sample_name, sample_info in samples.items():
     sample_info["use_it"] = False
 
 if __name__ == '__main__':
-  logging.basicConfig(
-    stream = sys.stdout,
-    level  = logging.INFO,
-    format = '%(asctime)s - %(levelname)s: %(message)s',
-  )
-
   logging.info(
     "Running the jobs with the following systematic uncertainties enabled: %s" % \
     ', '.join(central_or_shifts)
@@ -110,7 +85,7 @@ if __name__ == '__main__':
     executable_analyze                    = "analyze_hh_3l",
     cfgFile_analyze                       = "analyze_hh_3l_cfg.py",
     samples                               = samples,
-    hadTauVeto_selection                  = hadTauVeto_selection, # veto events containing taus that pass tau ID WP applied in 3l+1tau channel,
+    hadTauVeto_selection                  = "dR03mvaLoose", # veto events containing taus that pass tau ID WP applied in 3l+1tau channel,
     applyFakeRateWeights                  = "3lepton",
     lepton_charge_selections              = lepton_charge_selections,
     central_or_shifts                     = central_or_shifts,
