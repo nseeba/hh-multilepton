@@ -28,6 +28,8 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
       executable_analyze        = executable_analyze,
       channel                   = "SVfit4tau",
       samples                   = samples,
+     jet_cleaning_by_index      = False,
+     gen_matching_by_index      = False,
       lep_mva_wp                = lep_mva_wp,
       central_or_shifts         = central_or_shifts,
       max_files_per_job         = max_files_per_job,

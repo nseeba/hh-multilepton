@@ -103,7 +103,10 @@ process.analyze_hh_2lss = cms.PSet(
     branchName_genPhotons = cms.string('GenPhoton'),
     branchName_genJets = cms.string('GenJet'),
     branchName_genHiggses = cms.string('GenHiggs'),
+
     redoGenMatching = cms.bool(True),
+    genMatchingByIndex = cms.bool(False),
+    jetCleaningByIndex = cms.bool(False),
 
     branchName_genWBosons = cms.string('GenVbosons'),
     branchName_genWJets = cms.string('GenWZQuark'),
