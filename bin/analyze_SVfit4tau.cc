@@ -331,7 +331,7 @@ int main(int argc, char* argv[])
   std::cout << "Loaded " << inputTree->getFileCount() << " file(s).\n";
 
 //--- declare event-level variables
-  EventInfo eventInfo(isSignal, isMC, false);
+  EventInfo eventInfo(isSignal, isMC);
   EventInfoReader eventInfoReader(&eventInfo);
   inputTree->registerReader(&eventInfoReader);
 
