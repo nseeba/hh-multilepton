@@ -91,10 +91,10 @@
 #include "tthAnalysis/HiggsToTauTau/interface/TTreeWrapper.h" // TTreeWrapper
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
+#include "tthAnalysis/HiggsToTauTau/interface/RecoJetCollectionSelectorAK8_hh_Wjj.h" // RecoJetSelectorAK8_hh_Wjj
+#include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // findGenLepton_and_NeutrinoFromWBoson
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_3l.h" // EvtHistManager_hh_3l
-#include "hhAnalysis/bbww/interface/RecoJetCollectionSelectorAK8_bbWW_Wjj.h" // RecoJetSelectorAK8_bbWW_Wjj
-#include "hhAnalysis/bbww/interface/testMEMauxFunctions.h" // findGenLepton_and_NeutrinoFromWBoson
 
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
 
