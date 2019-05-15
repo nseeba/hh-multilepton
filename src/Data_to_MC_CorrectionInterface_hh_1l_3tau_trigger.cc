@@ -63,16 +63,15 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::Data_to_MC_CorrectionInterfac
   }
   else if(era_ == kEra_2017)
   {
-    const LocalFileInPath inputFileName_tauLeg("tthAnalysis/TauTriggerSFs/data/tauTriggerEfficiencies2017.root");    
+    const LocalFileInPath inputFileName_tauLeg("TauAnalysisTools/TauTriggerSFs/data/tauTriggerEfficiencies2017.root");    
     const std::string hadTauSelection_TauTriggerSFs2017 = aux::get_hadTauSelection_TauTriggerSFs2017(hadTauSelection_);
     effTrigger_2tau_tauLeg_ = new TauTriggerSFs2017(inputFileName_tauLeg.fullPath().data(), "ditau", "2017", hadTauSelection_TauTriggerSFs2017);
   }
   else if(era_ == kEra_2018)
   {
-    // CV: tau leg efficiency for 2018 data not available from Tau POG yet (as of 2019/04/16)
-    //const LocalFileInPath inputFileName_tauLeg("tthAnalysis/TauTriggerSFs/data/tauTriggerEfficiencies2018.root");    
-    //const std::string hadTauSelection_TauTriggerSFs2018 = aux::get_hadTauSelection_TauTriggerSFs2018(hadTauSelection_);
-    //effTrigger_2tau_tauLeg_ = new TauTriggerSFs2017(inputFileName_tauLeg.fullPath().data(), "ditau", "2018", hadTauSelection_TauTriggerSFs2018);
+    const LocalFileInPath inputFileName_tauLeg("TauAnalysisTools/TauTriggerSFs/data/tauTriggerEfficiencies2018.root");    
+    const std::string hadTauSelection_TauTriggerSFs2017 = aux::get_hadTauSelection_TauTriggerSFs2017(hadTauSelection_);
+    effTrigger_2tau_tauLeg_ = new TauTriggerSFs2017(inputFileName_tauLeg.fullPath().data(), "ditau", "2018", hadTauSelection_TauTriggerSFs2017);
   }
   else
   {
