@@ -5,9 +5,6 @@ code and python config files for hh -> 4tau and hh->wwww analyses (all lepton an
 
 ```bash
 git clone -b master102x https://github.com/HEP-KBFI/hh-multilepton        $CMSSW_BASE/src/hhAnalysis/multilepton
-git clone -b master102x https://github.com/HEP-KBFI/hh-bbww               $CMSSW_BASE/src/hhAnalysis/bbww
-git clone -b master102x https://github.com/HEP-KBFI/hh-bbww-mem.git       $CMSSW_BASE/src/hhAnalysis/bbwwMEM
-git clone               https://github.com/tahuang1991/HeavyMassEstimator $CMSSW_BASE/src/hhAnalysis/Heavymassestimator
 git clone -b master102x https://github.com/HEP-KBFI/tth-htt               $CMSSW_BASE/src/tthAnalysis/HiggsToTauTau
 git clone               https://github.com/SVfit/ClassicSVfit4tau         $CMSSW_BASE/src/TauAnalysis/ClassicSVfit4tau
 git clone               https://github.com/SVfit/ClassicSVfit             $CMSSW_BASE/src/TauAnalysis/ClassicSVfit
