@@ -91,10 +91,10 @@
 #include "tthAnalysis/HiggsToTauTau/interface/TTreeWrapper.h" // TTreeWrapper
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
+#include "tthAnalysis/HiggsToTauTau/interface/RecoJetCollectionSelectorAK8_hh_Wjj.h" // RecoJetSelectorAK8_hh_Wjj
+#include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // findGenLepton_and_NeutrinoFromWBoson
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_3l.h" // EvtHistManager_hh_3l
-#include "hhAnalysis/bbww/interface/RecoJetCollectionSelectorAK8_bbWW_Wjj.h" // RecoJetSelectorAK8_bbWW_Wjj
-#include "hhAnalysis/bbww/interface/testMEMauxFunctions.h" // findGenLepton_and_NeutrinoFromWBoson
 
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
 
@@ -133,7 +133,7 @@ void dumpGenParticles(const std::string& label, const std::vector<GenParticle>& 
   }
 }
 
-void printWjj(const std::vector<const RecoJetAK8*>& jets_ak8, const RecoJetCollectionSelectorAK8_bbWW_Wjj& jetSelectorAK8_Wjj, 
+void printWjj(const std::vector<const RecoJetAK8*>& jets_ak8, const RecoJetCollectionSelectorAK8_hh_Wjj& jetSelectorAK8_Wjj, 
 	      const std::vector<GenParticle>& genWBosons, const std::vector<GenParticle>& genWJets)
 {
   std::cout << "<printWjj>:" << std::endl;
@@ -524,7 +524,7 @@ int main(int argc, char* argv[])
   RecoJetCollectionCleanerAK8 jetCleanerAK8_dR08(0.8, isDEBUG);
   RecoJetCollectionCleanerAK8 jetCleanerAK8_dR12(1.2, isDEBUG);
   RecoJetCollectionCleanerAK8 jetCleanerAK8_dR16(1.6, isDEBUG);
-  RecoJetCollectionSelectorAK8_bbWW_Wjj jetSelectorAK8_Wjj(era, -1, isDEBUG);
+  RecoJetCollectionSelectorAK8_hh_Wjj jetSelectorAK8_Wjj(era, -1, isDEBUG);
   
   //--- declare missing transverse energy
   RecoMEtReader* metReader = new RecoMEtReader(era, isMC, branchName_met);
