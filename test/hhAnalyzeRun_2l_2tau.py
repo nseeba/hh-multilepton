@@ -71,7 +71,13 @@ if mode == "default":
     if era == "2016":
       from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
     elif era == "2017":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT_2l_2tau import samples_2017 as samples
+      for sample_name, sample_info in samples.items():
+         if sample_name == 'sum_events':
+           continue
+         sample_info['use_it'] = not sample_info['use_it'] ## skip samples used in bdt training in the main analysis         
+         if sample_info["process_name_specific"].startswith("signal") and 'hh' in sample_info["process_name_specific"]:
+           sample_info["use_it"] = 'nonresonant' not in sample_info["process_name_specific"]
     elif era == "2018":
       from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
     else:
@@ -108,6 +114,7 @@ elif mode == "forBDTtraining":
     hadTau_selection         = "dR03mvaMedium"
     hadTau_selection_relaxed = "dR03mvaLoose"
     #hadTau_selection_relaxed = "dR03mvaVLoose"
+    #hadTau_selection_relaxed = "dR03mvaVVLoose"
   elif era == "2018":
     raise ValueError("Implement me!")
   else:

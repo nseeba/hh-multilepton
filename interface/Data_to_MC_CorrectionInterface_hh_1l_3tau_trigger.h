@@ -37,17 +37,8 @@ public:
              double lepton_eta);
 
   void
-  setHadTaus(double hadTau1_pt, double hadTau1_eta, double hadTau1_phi,
-             double hadTau2_pt, double hadTau2_eta, double hadTau2_phi);// disable
-
-  void
   setHadTaus(int hadTau1_genPdgId, double hadTau1_pt, double hadTau1_eta, int hadTau1_decayMode,
              int hadTau2_genPdgId, double hadTau2_pt, double hadTau2_eta, int hadTau2_decayMode);// disable
-
-  void
-  setHadTaus(double hadTau1_pt, double hadTau1_eta, double hadTau1_phi,
-             double hadTau2_pt, double hadTau2_eta, double hadTau2_phi,
-             double hadTau3_pt, double hadTau3_eta, double hadTau3_phi);
 
   void
   setHadTaus(int hadTau1_genPdgId, double hadTau1_pt, double hadTau1_eta, int hadTau1_decayMode,
@@ -98,6 +89,8 @@ private:
   std::map<int, vLutWrapperBase> effTrigger_2tau_perLeg_data_faketau_; // key = reconstructed tau decay mode
   std::map<int, vLutWrapperBase> effTrigger_2tau_perLeg_mc_gentau_;    // key = reconstructed tau decay mode
   std::map<int, vLutWrapperBase> effTrigger_2tau_perLeg_mc_faketau_;   // key = reconstructed tau decay mode
+
+  TauTriggerSFs2017 * effTrigger_2tau_tauLeg_;
 
   bool isTriggered_2tau_;
 
