@@ -2,7 +2,9 @@
 *~
 *.config
 *.creator
-*.creator.user
+*.creator.user*
+*.cflags
+*.cxxflags
 *.files
 *.includes
 *.pyc
