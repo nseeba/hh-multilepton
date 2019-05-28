@@ -14,8 +14,8 @@ def get_lepton_selection_and_frWeight(lepton_selection, lepton_frWeight):
   lepton_selection_and_frWeight = lepton_selection_and_frWeight.replace("|", "_")
   return lepton_selection_and_frWeight
 
-def getHistogramDir(lepton_selection, lepton_frWeight, lepton_charge_selection):
-  histogramDir = "hh_4l_%s_%s" % (lepton_charge_selection, lepton_selection)
+def getHistogramDir(lepton_selection, lepton_frWeight, leptonChargeSelection):
+  histogramDir = "hh_4l_%s_%s" % (leptonChargeSelection, lepton_selection)
   if lepton_selection.find("Fakeable") != -1:
     if lepton_frWeight == "enabled":
       histogramDir += "_wFakeRateWeights"
@@ -43,7 +43,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
         samples,
         lep_mva_wp,
         applyFakeRateWeights,
-        lepton_charge_selections,
+        leptonChargeSelections,
         central_or_shifts,
         max_files_per_job,
         era,
@@ -121,7 +121,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
     else:
       raise ValueError("Invalid Configuration parameter 'applyFakeRateWeights' = %s !!" % applyFakeRateWeights)
 
-    self.lepton_charge_selections = lepton_charge_selections
+    self.leptonChargeSelections = leptonChargeSelections
 
     self.executable_addBackgrounds = executable_addBackgrounds
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
@@ -160,9 +160,9 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
     """
     lines = []
     lepton_frWeight = "disabled" if jobOptions['applyFakeRateWeights'] == "disabled" else "enabled"
-    jobOptions['histogramDir'] = getHistogramDir(lepton_selection, lepton_frWeight, jobOptions['lepton_charge_selection'])
+    jobOptions['histogramDir'] = getHistogramDir(lepton_selection, lepton_frWeight, jobOptions['leptonChargeSelection'])
     if 'mcClosure' in lepton_selection:
-      self.mcClosure_dir['%s_%s' % (lepton_selection, jobOptions['lepton_charge_selection'])] = jobOptions['histogramDir']
+      self.mcClosure_dir['%s_%s' % (lepton_selection, jobOptions['leptonChargeSelection'])] = jobOptions['histogramDir']
 
     self.set_leptonFakeRateWeightHistogramNames(jobOptions['central_or_shift'], lepton_selection)
     jobOptions['leptonFakeRateWeight.inputFileName'] = self.leptonFakeRateWeight_inputFile
@@ -185,22 +185,22 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
           if lepton_frWeight == "enabled" and not lepton_selection.startswith("Fakeable"):
             continue
           lepton_selection_and_frWeight = get_lepton_selection_and_frWeight(lepton_selection, lepton_frWeight)
-          for lepton_charge_selection in self.lepton_charge_selections:
+          for leptonChargeSelection in self.leptonChargeSelections:
             central_or_shifts_extended = [ "" ]
             central_or_shifts_extended.extend(self.central_or_shifts)
             central_or_shifts_extended.extend([ "hadd", "addBackgrounds" ])
             for central_or_shift_or_dummy in central_or_shifts_extended:
               process_name_extended = [ process_name, "hadd" ]
               for process_name_or_dummy in process_name_extended:
-                key_dir = getKey(process_name_or_dummy, lepton_selection_and_frWeight, lepton_charge_selection, central_or_shift_or_dummy)
+                key_dir = getKey(process_name_or_dummy, lepton_selection_and_frWeight, leptonChargeSelection, central_or_shift_or_dummy)
                 for dir_type in [ DKEY_CFGS, DKEY_HIST, DKEY_LOGS, DKEY_ROOT, DKEY_RLES, DKEY_SYNC ]:
                   initDict(self.dirs, [ key_dir, dir_type ])
                   if dir_type in [ DKEY_CFGS, DKEY_LOGS ]:
                     self.dirs[key_dir][dir_type] = os.path.join(self.configDir, dir_type, self.channel,
-                      "_".join([ lepton_selection_and_frWeight, lepton_charge_selection ]), process_name_or_dummy, central_or_shift_or_dummy)
+                      "_".join([ lepton_selection_and_frWeight, leptonChargeSelection ]), process_name_or_dummy, central_or_shift_or_dummy)
                   else:
                     self.dirs[key_dir][dir_type] = os.path.join(self.outputDir, dir_type, self.channel,
-                      "_".join([ lepton_selection_and_frWeight, lepton_charge_selection ]), process_name_or_dummy, central_or_shift_or_dummy)
+                      "_".join([ lepton_selection_and_frWeight, leptonChargeSelection ]), process_name_or_dummy, central_or_shift_or_dummy)
     for subdirectory in [ "addBackgrounds", "addBackgroundLeptonFakes", "prepareDatacards", "addSystFakeRates", "makePlots" ]:
       key_dir = getKey(subdirectory)
       for dir_type in [ DKEY_CFGS, DKEY_HIST, DKEY_LOGS, DKEY_ROOT, DKEY_DCRD, DKEY_PLOT ]:
@@ -264,7 +264,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
           continue
         lepton_selection_and_frWeight = get_lepton_selection_and_frWeight(lepton_selection, lepton_frWeight)
 
-        for lepton_charge_selection in self.lepton_charge_selections:
+        for leptonChargeSelection in self.leptonChargeSelections:
 
           for sample_name, sample_info in self.samples.items():
             if not sample_info["use_it"] or sample_info["sample_category"] in [ "additional_signal_overlap", "background_data_estimate" ]:
@@ -282,8 +282,8 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
               for jobId in inputFileList.keys():
                 if central_or_shift != "central":
                   isFR_shape_shift = (central_or_shift in systematics.FR_all)
-                  if not ((lepton_selection == "Fakeable" and lepton_charge_selection == "OS" and isFR_shape_shift) or
-                          (lepton_selection == "Tight"    and lepton_charge_selection == "OS")):
+                  if not ((lepton_selection == "Fakeable" and leptonChargeSelection == "OS" and isFR_shape_shift) or
+                          (lepton_selection == "Tight"    and leptonChargeSelection == "OS")):
                     continue
                   if not is_mc and not isFR_shape_shift:
                     continue
@@ -302,8 +302,8 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                 logging.info(" ... for '%s' and systematic uncertainty option '%s'" % (lepton_selection_and_frWeight, central_or_shift))
 
                 # build config files for executing analysis code
-                key_analyze_dir = getKey(process_name, lepton_selection_and_frWeight, lepton_charge_selection, central_or_shift)
-                analyze_job_tuple = (process_name, lepton_selection_and_frWeight, lepton_charge_selection, central_or_shift, jobId)
+                key_analyze_dir = getKey(process_name, lepton_selection_and_frWeight, leptonChargeSelection, central_or_shift)
+                analyze_job_tuple = (process_name, lepton_selection_and_frWeight, leptonChargeSelection, central_or_shift, jobId)
                 key_analyze_job = getKey(*analyze_job_tuple)
                 ntupleFiles = inputFileList[jobId]
                 if len(ntupleFiles) == 0:
@@ -329,7 +329,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                   'muonSelection'            : muon_selection,
                   'apply_leptonGenMatching'  : self.apply_leptonGenMatching,
                   'lep_mva_cut'              : self.lep_mva_cut,
-                  'lepton_charge_selection'  : lepton_charge_selection,
+                  'leptonChargeSelection'  : leptonChargeSelection,
                   'applyFakeRateWeights'     : applyFakeRateWeights,
                   'central_or_shift'         : central_or_shift,
                   'fillGenEvtHistograms'     : True,
@@ -338,8 +338,8 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                 self.createCfg_analyze(self.jobOptions_analyze[key_analyze_job], sample_info, lepton_selection)
 
                 # initialize input and output file names for hadd_stage1
-                key_hadd_stage1_dir = getKey(process_name, lepton_selection_and_frWeight, lepton_charge_selection)
-                hadd_stage1_job_tuple = (process_name, lepton_selection_and_frWeight, lepton_charge_selection)
+                key_hadd_stage1_dir = getKey(process_name, lepton_selection_and_frWeight, leptonChargeSelection)
+                hadd_stage1_job_tuple = (process_name, lepton_selection_and_frWeight, leptonChargeSelection)
                 key_hadd_stage1_job = getKey(*hadd_stage1_job_tuple)
                 if not key_hadd_stage1_job in self.inputFiles_hadd_stage1:
                   self.inputFiles_hadd_stage1[key_hadd_stage1_job] = []
@@ -356,8 +356,8 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                 genMatch_categories = [ "nonfake", "conversions", "fake" ]
 
                 for genMatch_category in genMatch_categories:
-                  key_hadd_stage1_job = getKey(process_name, lepton_selection_and_frWeight, lepton_charge_selection)
-                  key_addBackgrounds_dir = getKey(process_name, lepton_selection_and_frWeight, lepton_charge_selection, "addBackgrounds")
+                  key_hadd_stage1_job = getKey(process_name, lepton_selection_and_frWeight, leptonChargeSelection)
+                  key_addBackgrounds_dir = getKey(process_name, lepton_selection_and_frWeight, leptonChargeSelection, "addBackgrounds")
                   addBackgrounds_job_tuple = None
                   processes_input = None
                   process_output = None
@@ -373,21 +373,21 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                     else:
                       processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_nonfakes ]
                     process_output = sample_category
-                    addBackgrounds_job_tuple = (process_name, sample_category, lepton_selection_and_frWeight, lepton_charge_selection)
+                    addBackgrounds_job_tuple = (process_name, sample_category, lepton_selection_and_frWeight, leptonChargeSelection)
                   elif genMatch_category == "conversions":
                     # sum fake contributions for each MC sample separately
                     # input processes: TT3l1g0j, TT2l2g0j, TT1l3g0j, TT0l4g0j; ...
                     # output processes: TT_conversion; ...
                     processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_conversions ]
                     process_output = "%s_conversion" % sample_category
-                    addBackgrounds_job_tuple = (process_name, "%s_conversion" % sample_category, lepton_selection_and_frWeight, lepton_charge_selection)
+                    addBackgrounds_job_tuple = (process_name, "%s_conversion" % sample_category, lepton_selection_and_frWeight, leptonChargeSelection)
                   elif genMatch_category == "fake":
                     # sum fake contributions for each MC sample separately
                     # input processes: TT3l0g1j, TT2l1g1j, TT1l2g1j, TT0l3g1j, TT0l2g2j,...
                     # output processes: TT_fake; ...
                     processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.lepton_genMatches_fakes ]
                     process_output = "%s_fake" % sample_category
-                    addBackgrounds_job_tuple = (process_name, "%s_fake" % sample_category, lepton_selection_and_frWeight, lepton_charge_selection)
+                    addBackgrounds_job_tuple = (process_name, "%s_fake" % sample_category, lepton_selection_and_frWeight, leptonChargeSelection)
                   if processes_input:
                     logging.info(" ...for genMatch option = '%s'" % genMatch_category)
                     key_addBackgrounds_job = getKey(*addBackgrounds_job_tuple)
@@ -398,15 +398,15 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                       'cfgFile_modified' : cfgFile_modified,
                       'outputFile' : outputFile,
                       'logFile' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_LOGS], os.path.basename(cfgFile_modified).replace("_cfg.py", ".log")),
-                      'categories' : [ getHistogramDir(lepton_selection, lepton_frWeight, lepton_charge_selection) ],
+                      'categories' : [ getHistogramDir(lepton_selection, lepton_frWeight, leptonChargeSelection) ],
                       'processes_input' : processes_input,
                       'process_output' : process_output
                     }
                     self.createCfg_addBackgrounds(self.jobOptions_addBackgrounds[key_addBackgrounds_job])
 
                     # initialize input and output file names for hadd_stage1_5
-                    key_hadd_stage1_5_dir = getKey("hadd", lepton_selection_and_frWeight, lepton_charge_selection)
-                    hadd_stage1_5_job_tuple = (lepton_selection_and_frWeight, lepton_charge_selection)
+                    key_hadd_stage1_5_dir = getKey("hadd", lepton_selection_and_frWeight, leptonChargeSelection)
+                    hadd_stage1_5_job_tuple = (lepton_selection_and_frWeight, leptonChargeSelection)
                     key_hadd_stage1_5_job = getKey(*hadd_stage1_5_job_tuple)
                     if not key_hadd_stage1_5_job in self.inputFiles_hadd_stage1_5:
                       self.inputFiles_hadd_stage1_5[key_hadd_stage1_5_job] = []
@@ -419,8 +419,8 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
 
             # add output files of hadd_stage1 for data to list of input files for hadd_stage1_5
             if not is_mc:
-              key_hadd_stage1_job = getKey(process_name, lepton_selection_and_frWeight, lepton_charge_selection)
-              key_hadd_stage1_5_job = getKey(lepton_selection_and_frWeight, lepton_charge_selection)
+              key_hadd_stage1_job = getKey(process_name, lepton_selection_and_frWeight, leptonChargeSelection)
+              key_hadd_stage1_5_job = getKey(lepton_selection_and_frWeight, leptonChargeSelection)
               if not key_hadd_stage1_5_job in self.inputFiles_hadd_stage1_5:
                 self.inputFiles_hadd_stage1_5[key_hadd_stage1_5_job] = []
               self.inputFiles_hadd_stage1_5[key_hadd_stage1_5_job].append(self.outputFile_hadd_stage1[key_hadd_stage1_job])
@@ -431,9 +431,9 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
           # sum fake background contributions for the total of all MC sample
           # input processes: TT3l0g1j, TT2l1g1j, TT1l2g1j, TT0l3g1j, TT0l2g2j,...
           # output process: fakes_mc
-          key_hadd_stage1_5_job = getKey(lepton_selection_and_frWeight, lepton_charge_selection)
+          key_hadd_stage1_5_job = getKey(lepton_selection_and_frWeight, leptonChargeSelection)
           key_addBackgrounds_dir = getKey("addBackgrounds")
-          addBackgrounds_job_fakes_tuple = ("fakes_mc", lepton_selection_and_frWeight, lepton_charge_selection)
+          addBackgrounds_job_fakes_tuple = ("fakes_mc", lepton_selection_and_frWeight, leptonChargeSelection)
           key_addBackgrounds_job_fakes = getKey(*addBackgrounds_job_fakes_tuple)
           sample_categories = []
           sample_categories.extend(self.nonfake_backgrounds)
@@ -445,7 +445,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
             'cfgFile_modified' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_CFGS], "addBackgrounds_%s_%s_%s_cfg.py" % addBackgrounds_job_fakes_tuple),
             'outputFile' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_HIST], "addBackgrounds_%s_%s_%s.root" % addBackgrounds_job_fakes_tuple),
             'logFile' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_LOGS], "addBackgrounds_%s_%s_%s.log" % addBackgrounds_job_fakes_tuple),
-            'categories' : [ getHistogramDir(lepton_selection, lepton_frWeight, lepton_charge_selection) ],
+            'categories' : [ getHistogramDir(lepton_selection, lepton_frWeight, leptonChargeSelection) ],
             'processes_input' : processes_input,
             'process_output' : "fakes_mc"
           }
@@ -454,7 +454,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
           # sum conversion background contributions for the total of all MC sample
           # input processes: TT3l1g0j, TT2l2g0j, TT1l3g0j, TT0l4g0j; ...
           # output process: conversions
-          addBackgrounds_job_conversions_tuple = ("conversions", lepton_selection_and_frWeight, lepton_charge_selection)
+          addBackgrounds_job_conversions_tuple = ("conversions", lepton_selection_and_frWeight, leptonChargeSelection)
           key_addBackgrounds_job_conversions = getKey(*addBackgrounds_job_fakes_tuple)
           sample_categories = []
           sample_categories.extend(self.nonfake_backgrounds)
@@ -466,7 +466,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
             'cfgFile_modified' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_CFGS], "addBackgrounds_%s_%s_%s_cfg.py" % addBackgrounds_job_conversions_tuple),
             'outputFile' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_HIST], "addBackgrounds_%s_%s_%s.root" % addBackgrounds_job_conversions_tuple),
             'logFile' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_LOGS], "addBackgrounds_%s_%s_%s.log" % addBackgrounds_job_conversions_tuple),
-            'categories' : [ getHistogramDir(lepton_selection, lepton_frWeight, lepton_charge_selection) ],
+            'categories' : [ getHistogramDir(lepton_selection, lepton_frWeight, leptonChargeSelection) ],
             'processes_input' : processes_input,
             'process_output' : "conversions"
           }
@@ -477,7 +477,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
           genMatch_categories = [ "nonfake", "fake" ]
           for genMatch_category in genMatch_categories:
             for signal_base, signal_input in self.signal_io.items():
-              addBackgrounds_job_signal_tuple = (lepton_selection_and_frWeight, lepton_charge_selection, signal_base, genMatch_category)
+              addBackgrounds_job_signal_tuple = (lepton_selection_and_frWeight, leptonChargeSelection, signal_base, genMatch_category)
               key_addBackgrounds_job_signal = getKey(*addBackgrounds_job_signal_tuple)
               if key_addBackgrounds_job_signal in self.jobOptions_addBackgrounds_sum.keys():
                 continue
@@ -491,21 +491,21 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                 'cfgFile_modified' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_CFGS], "addBackgrounds_%s_%s_%s_%s_cfg.py" % addBackgrounds_job_signal_tuple),
                 'outputFile' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_HIST], "addBackgrounds_%s_%s_%s_%s.root" % addBackgrounds_job_signal_tuple),
                 'logFile' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_LOGS], "addBackgrounds_%s_%s_%s_%s.log" % addBackgrounds_job_signal_tuple),
-                'categories' : [ getHistogramDir(lepton_selection, lepton_frWeight, lepton_charge_selection) ],
+                'categories' : [ getHistogramDir(lepton_selection, lepton_frWeight, leptonChargeSelection) ],
                 'processes_input' : processes_input,
                 'process_output' : process_output
               }
               self.createCfg_addBackgrounds(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal])
-              key_hadd_stage2_job = getKey(lepton_selection_and_frWeight, lepton_charge_selection)
+              key_hadd_stage2_job = getKey(lepton_selection_and_frWeight, leptonChargeSelection)
               if not key_hadd_stage2_job in self.inputFiles_hadd_stage2:
                 self.inputFiles_hadd_stage2[key_hadd_stage2_job] = []
               if lepton_selection == "Tight":
                 self.inputFiles_hadd_stage2[key_hadd_stage2_job].append(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal]['outputFile'])
 
           # initialize input and output file names for hadd_stage2
-          key_hadd_stage1_5_job = getKey(lepton_selection_and_frWeight, lepton_charge_selection)
-          key_hadd_stage2_dir = getKey("hadd", lepton_selection_and_frWeight, lepton_charge_selection)
-          hadd_stage2_job_tuple = (lepton_selection_and_frWeight, lepton_charge_selection)
+          key_hadd_stage1_5_job = getKey(lepton_selection_and_frWeight, leptonChargeSelection)
+          key_hadd_stage2_dir = getKey("hadd", lepton_selection_and_frWeight, leptonChargeSelection)
+          hadd_stage2_job_tuple = (lepton_selection_and_frWeight, leptonChargeSelection)
           key_hadd_stage2_job = getKey(*hadd_stage2_job_tuple)
           if not key_hadd_stage2_job in self.inputFiles_hadd_stage2:
             self.inputFiles_hadd_stage2[key_hadd_stage2_job] = []
@@ -517,21 +517,21 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                                                                           "hadd_stage2_%s_%s.root" % hadd_stage2_job_tuple)
 
     logging.info("Creating configuration files to run 'addBackgroundFakes'")
-    for lepton_charge_selection in self.lepton_charge_selections:
-      key_hadd_stage1_5_job = getKey(get_lepton_selection_and_frWeight("Fakeable", "enabled"), lepton_charge_selection)
+    for leptonChargeSelection in self.leptonChargeSelections:
+      key_hadd_stage1_5_job = getKey(get_lepton_selection_and_frWeight("Fakeable", "enabled"), leptonChargeSelection)
       key_addFakes_dir = getKey("addBackgroundLeptonFakes")
-      key_addFakes_job = getKey("fakes_data", lepton_charge_selection)
-      category_sideband = "hh_4l_%s_Fakeable_wFakeRateWeights" % lepton_charge_selection
+      key_addFakes_job = getKey("fakes_data", leptonChargeSelection)
+      category_sideband = "hh_4l_%s_Fakeable_wFakeRateWeights" % leptonChargeSelection
       self.jobOptions_addFakes[key_addFakes_job] = {
         'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5_job],
-        'cfgFile_modified' : os.path.join(self.dirs[key_addFakes_dir][DKEY_CFGS], "addBackgroundLeptonFakes_%s_cfg.py" % lepton_charge_selection),
-        'outputFile' : os.path.join(self.dirs[key_addFakes_dir][DKEY_HIST], "addBackgroundLeptonFakes_%s.root" % lepton_charge_selection),
-        'logFile' : os.path.join(self.dirs[key_addFakes_dir][DKEY_LOGS], "addBackgroundLeptonFakes_%s.log" % lepton_charge_selection),
-        'category_signal' : "hh_4l_%s_Tight" % lepton_charge_selection,
+        'cfgFile_modified' : os.path.join(self.dirs[key_addFakes_dir][DKEY_CFGS], "addBackgroundLeptonFakes_%s_cfg.py" % leptonChargeSelection),
+        'outputFile' : os.path.join(self.dirs[key_addFakes_dir][DKEY_HIST], "addBackgroundLeptonFakes_%s.root" % leptonChargeSelection),
+        'logFile' : os.path.join(self.dirs[key_addFakes_dir][DKEY_LOGS], "addBackgroundLeptonFakes_%s.log" % leptonChargeSelection),
+        'category_signal' : "hh_4l_%s_Tight" % leptonChargeSelection,
         'category_sideband' : category_sideband
       }
       self.createCfg_addFakes(self.jobOptions_addFakes[key_addFakes_job])
-      key_hadd_stage2_job = getKey(get_lepton_selection_and_frWeight("Tight", "disabled"), lepton_charge_selection)
+      key_hadd_stage2_job = getKey(get_lepton_selection_and_frWeight("Tight", "disabled"), leptonChargeSelection)
       self.inputFiles_hadd_stage2[key_hadd_stage2_job].append(self.jobOptions_addFakes[key_addFakes_job]['outputFile'])
 
     logging.info("Creating configuration files to run 'prepareDatacards'")
@@ -550,7 +550,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
       }
       self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
-      if "SS" in self.lepton_charge_selections:
+      if "SS" in self.leptonChargeSelections:
         key_hadd_stage2_job = getKey(get_lepton_selection_and_frWeight("Tight", "disabled"), "SS")
         prep_dcard_job_tuple = (self.channel, "SS", histogramToFit)
         key_prep_dcard_job = getKey("SS", histogramToFit)
@@ -569,12 +569,12 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
       #  - 'CMS_ttHl_Clos_shape_e'
       #  - 'CMS_ttHl_Clos_norm_m'
       #  - 'CMS_ttHl_Clos_shape_m'
-      for lepton_charge_selection in self.lepton_charge_selections:
-        key_prep_dcard_job = getKey(lepton_charge_selection, histogramToFit)
-        key_hadd_stage2_job = getKey(get_lepton_selection_and_frWeight("Tight", "disabled"), lepton_charge_selection)
+      for leptonChargeSelection in self.leptonChargeSelections:
+        key_prep_dcard_job = getKey(leptonChargeSelection, histogramToFit)
+        key_hadd_stage2_job = getKey(get_lepton_selection_and_frWeight("Tight", "disabled"), leptonChargeSelection)
         key_add_syst_fakerate_dir = getKey("addSystFakeRates")
-        add_syst_fakerate_job_tuple = (self.channel, lepton_charge_selection, histogramToFit)
-        key_add_syst_fakerate_job = getKey(lepton_charge_selection, histogramToFit)        
+        add_syst_fakerate_job_tuple = (self.channel, leptonChargeSelection, histogramToFit)
+        key_add_syst_fakerate_job = getKey(leptonChargeSelection, histogramToFit)        
         self.jobOptions_add_syst_fakerate[key_add_syst_fakerate_job] = {
           'inputFile' : self.jobOptions_prep_dcard[key_prep_dcard_job]['datacardFile'],
           'cfgFile_modified' : os.path.join(self.dirs[key_add_syst_fakerate_dir][DKEY_CFGS], "addSystFakeRates_%s_%s_%s_cfg.py" % add_syst_fakerate_job_tuple),
@@ -584,19 +584,19 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
           'plots_outputFileName' : os.path.join(self.dirs[DKEY_PLOT], "addSystFakeRates.png")
         }
         histogramDir_nominal = None
-        if lepton_charge_selection == "OS":
+        if leptonChargeSelection == "OS":
           histogramDir_nominal = self.histogramDir_prep_dcard
-        elif lepton_charge_selection == "SS":
+        elif leptonChargeSelection == "SS":
           histogramDir_nominal = self.histogramDir_prep_dcard_SS
         else:
-          raise ValueError("Invalid parameter 'lepton_charge_selection' = %s !!" % lepton_charge_selection)
+          raise ValueError("Invalid parameter 'leptonChargeSelection' = %s !!" % leptonChargeSelection)
         for lepton_type in [ 'e', 'm' ]:
           lepton_mcClosure = "Fakeable_mcClosure_%s" % lepton_type
           if lepton_mcClosure not in self.lepton_selections:
             continue
           lepton_selection_and_frWeight = get_lepton_selection_and_frWeight(lepton_mcClosure, "enabled")
-          key_addBackgrounds_job_fakes = getKey("fakes_mc", lepton_selection_and_frWeight, lepton_charge_selection)
-          histogramDir_mcClosure = self.mcClosure_dir['%s_%s' % (lepton_mcClosure, lepton_charge_selection)]
+          key_addBackgrounds_job_fakes = getKey("fakes_mc", lepton_selection_and_frWeight, leptonChargeSelection)
+          histogramDir_mcClosure = self.mcClosure_dir['%s_%s' % (lepton_mcClosure, leptonChargeSelection)]
           self.jobOptions_add_syst_fakerate[key_add_syst_fakerate_job].update({
             'add_Clos_%s' % lepton_type : ("Fakeable_mcClosure_%s" % lepton_type) in self.lepton_selections,
             'inputFile_nominal_%s' % lepton_type : self.outputFile_hadd_stage2[key_hadd_stage2_job],
@@ -620,7 +620,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
       'make_plots_backgrounds' : self.make_plots_backgrounds,
     }
     self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
-    if "SS" in self.lepton_charge_selections:
+    if "SS" in self.leptonChargeSelections:
       key_hadd_stage2_job = getKey(get_lepton_selection_and_frWeight("Tight", "disabled"), "SS")                  
       key_makePlots_job = getKey("SS")
       self.jobOptions_make_plots[key_makePlots_job] = {
