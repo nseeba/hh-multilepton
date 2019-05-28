@@ -84,7 +84,8 @@
 #include "tthAnalysis/HiggsToTauTau/interface/mvaInputVariables.h" // comp_*()
 #include "tthAnalysis/HiggsToTauTau/interface/Topness.h" // Topness
 #include "tthAnalysis/HiggsToTauTau/interface/backgroundEstimation.h" // prob_chargeMisId
-
+#include "tthAnalysis/HiggsToTauTau/interface/XGBInterface.h" // XGBInterface 
+#include "tthAnalysis/HiggsToTauTau/interface/TMVAInterface_OddEven.h" // TMVAInterface 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2l_2tau.h" // EvtHistManager_hh_2l_2tau
 #include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
 #include "hhAnalysis/multilepton/interface/mySVfit4tauAuxFunctions.h" // getMeasuredTauLeptonType, getHadTauDecayMode
@@ -108,6 +109,11 @@
 #include <cstdlib> // EXIT_SUCCESS, EXIT_FAILURE
 #include <fstream> // std::ofstream
 #include <assert.h> // assert
+
+#include <sstream>
+#include <map>
+#include <iterator>
+
 
 typedef math::PtEtaPhiMLorentzVector LV;
 typedef std::vector<std::string> vstring;
@@ -345,6 +351,12 @@ int main(int argc, char* argv[])
 
   const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
 
+  std::string BDTFileName_even  = cfg_analyze.getParameter<std::string>("BDT_pkl_FileName_even");
+  std::string BDTFileName_odd   = cfg_analyze.getParameter<std::string>("BDT_pkl_FileName_odd");
+  std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
+
+
+
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
   std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
   RunLumiEventSelector* run_lumi_eventSelector = 0;
@@ -472,6 +484,42 @@ int main(int argc, char* argv[])
     lheInfoReader = new LHEInfoReader(hasLHE);
     inputTree->registerReader(lheInfoReader);
   }
+
+
+
+  //--- initialize BDTs
+  /* 
+  // Sandeep's mwthod
+  std::string BDTFileName = "";
+  if(eventInfo.event % 2){// ODD EVENT NUMBER CASE
+    BDTFileName = BDTFileName_odd;
+  }else{ // EVEN EVENT NUMBER CASE
+    BDTFileName = BDTFileName_even; 
+  }
+  */
+
+  std::vector<std::string> BDTInputVariables_SUM =
+    {
+      "diHiggsMass", 
+      "diHiggsVisMass", 
+      "tau1_pt", 
+      "nBJet_medium", 
+      "gen_mHH", 
+      "nElectron", 
+      "dr_lep_tau_min_SS", 
+      "met_LD", 
+      "tau2_pt", 
+      "dr_lep_tau_min_OS"
+    };
+
+  std::vector<std::string> BDTSpectatorVars = {};
+
+  //XGBInterface BDT_SUM(BDTFileName, BDTInputVariables_SUM); // Sandeep's method
+  TMVAInterface_OddEven BDT_SUM(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, BDTSpectatorVars); // Christian's method
+  std::map<std::string, double> BDTInputs_SUM;
+  // ------- TO DO ENDS !!! ------
+
+
 
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
   std::ostream* selEventsFile = ( selEventsFileName_output != "" ) ? new std::ofstream(selEventsFileName_output.data(), std::ios::out) : 0;
@@ -1420,6 +1468,9 @@ int main(int argc, char* argv[])
     double leptonPairCharge_sel = selLepton_lead->charge() + selLepton_sublead->charge();
     double hadTauPairCharge_sel = selHadTau_lead->charge() + selHadTau_sublead->charge();
 
+    bool isCharge_lepton_SS = selLepton_lead->charge()*selLepton_sublead->charge() > 0;
+    bool isCharge_lepton_OS = selLepton_lead->charge()*selLepton_sublead->charge() < 0;
+
 
     std::vector<SVfit4tauResult> svFit4tauResults_woMassConstraint = compSVfit4tau(
       *selLepton_lead, *selLepton_sublead, *selHadTau_lead, *selHadTau_sublead, met, chargeSumSelection_string, rnd,  -1., 2.);
@@ -1429,6 +1480,96 @@ int main(int argc, char* argv[])
     double dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selHadTau_lead->p4() + selHadTau_sublead->p4()).mass();
     double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ? 
       svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
+
+    // pre-compute BDT variables-1
+    const double deltaEta_lep1_lep2 = (selLepton_lead->p4() - selLepton_sublead->p4()).eta();
+    std::cout<< "deltaEta_lep1_lep2 " << deltaEta_lep1_lep2 << std::endl;
+    const double deltaEta_lep1_tau1 = (selLepton_lead->p4() - selHadTau_lead->p4()).eta();
+    const double deltaEta_lep1_tau2 = (selLepton_lead->p4() - selHadTau_sublead->p4()).eta();
+    const double deltaEta_lep2_tau1 = (selLepton_sublead->p4() - selHadTau_lead->p4()).eta();
+    const double deltaEta_lep2_tau2 = (selLepton_sublead->p4() - selHadTau_sublead->p4()).eta();
+    const double deltaEta_tau1_tau2 = (selHadTau_lead->p4() - selHadTau_sublead->p4()).eta();
+    const double deltaPhi_lep1_lep2 = (selLepton_lead->p4() - selLepton_sublead->p4()).phi();
+    const double deltaPhi_lep1_tau1 = (selLepton_lead->p4() - selHadTau_lead->p4()).phi();
+    const double deltaPhi_lep1_tau2 = (selLepton_lead->p4() - selHadTau_sublead->p4()).phi();
+    const double deltaPhi_lep2_tau1 = (selLepton_sublead->p4() - selHadTau_lead->p4()).phi();
+    const double deltaPhi_lep2_tau2 = (selLepton_sublead->p4() - selHadTau_sublead->p4()).phi();
+    const double deltaPhi_tau1_tau2 = (selHadTau_lead->p4() - selHadTau_sublead->p4()).phi();
+    const double m_lep1_tau1 = (selLepton_lead->p4() + selHadTau_lead->p4()).mass();
+    const double m_lep2_tau1 = (selLepton_sublead->p4() + selHadTau_lead->p4()).mass();
+    const double m_lep1_tau2 = (selLepton_lead->p4() + selHadTau_sublead->p4()).mass();
+    const double m_lep2_tau2 = (selLepton_sublead->p4() + selHadTau_sublead->p4()).mass();
+    const double pt_HH_recoil = (selLepton_lead->p4() + selLepton_sublead->p4() + selHadTau_lead->p4() + selHadTau_sublead->p4() - met.p4()).pt();
+    const double mT_lep1 = comp_MT_met_lep1(*selLepton_lead, met.pt(), met.phi());
+    const double mT_lep2 = comp_MT_met_lep2(*selLepton_sublead, met.pt(), met.phi());
+    const double dr_lep1_tau1 = deltaR(selLepton_lead->p4(),    selHadTau_lead->p4());
+    const double dr_lep2_tau1 = deltaR(selLepton_sublead->p4(), selHadTau_lead->p4());
+    const double dr_lep1_tau2 = deltaR(selLepton_lead->p4(),    selHadTau_sublead->p4());
+    const double dr_lep2_tau2 = deltaR(selLepton_sublead->p4(), selHadTau_sublead->p4());
+    const double dr_lep1_tau1_tau2_min = std::min(dr_lep1_tau1, dr_lep1_tau2); 
+    const double dr_lep1_tau1_tau2_max = std::max(dr_lep1_tau1, dr_lep1_tau2); 
+    const double dr_lep2_tau1_tau2_min = std::min(dr_lep2_tau1, dr_lep2_tau2); 
+    const double dr_lep2_tau1_tau2_max = std::max(dr_lep2_tau1, dr_lep2_tau2); 
+    double dr_lep_tau_min_OS = 0.;
+    if(isCharge_lepton_OS){
+      dr_lep_tau_min_OS = std::min(std::min(dr_lep1_tau1, dr_lep1_tau2), std::min(dr_lep2_tau1, dr_lep2_tau2));
+    }else{
+      dr_lep_tau_min_OS = -1.;
+    }
+    double dr_lep_tau_min_SS = 0.;
+    if(isCharge_lepton_SS){
+      dr_lep_tau_min_SS = std::min(std::min(dr_lep1_tau1, dr_lep1_tau2), std::min(dr_lep2_tau1, dr_lep2_tau2));
+    }else{
+      dr_lep_tau_min_SS = -1.;
+    }
+    const double dr_leps = deltaR(selLepton_lead->p4(), selLepton_sublead->p4());
+    const double dr_taus = deltaR(selHadTau_lead->p4(), selHadTau_sublead->p4());
+    const double avg_dr_jet = comp_avg_dr_jet(selJets);
+    const Particle::LorentzVector ll_p4 = selLepton_lead->p4() + selLepton_sublead->p4();
+    const double Smin_llMEt = comp_Smin(ll_p4, met.p4().px(), met.p4().py());
+    const double ptTauTauVis_sel = (selHadTau_lead->p4() + selHadTau_sublead->p4()).pt();
+    const Particle::LorentzVector lltautau_p4 = ll_p4 + tautau_p4;
+    const double Smin_lltautau = comp_Smin(lltautau_p4, met.p4().px(), met.p4().py());
+    const std::vector<const RecoJet*> cleanedJets_wrt_leptons = jetCleaner(jet_ptrs, fakeableLeptons);
+    const std::vector<const RecoJet*> selJets_btag = jetSelector(cleanedJets_wrt_leptons, isHigherCSV);
+    const std::vector<const RecoJet*> selBJets_btag_loose = jetSelectorBtagLoose(selJets_btag, isHigherPt);
+    const std::vector<const RecoJet*> selBJets_btag_medium = jetSelectorBtagMedium(selJets_btag, isHigherPt);
+    const RecoJet * selBJet_lead    = selJets_btag.size() > 0 ? selJets_btag.at(0) : nullptr;
+    const RecoJet * selBJet_sublead = selJets_btag.size() > 1 ? selJets_btag.at(1) : nullptr;
+
+    //--- compute variables BDTs used to discriminate in the .xml files (NEW)
+    BDTInputs_SUM["diHiggsMass"]          = dihiggsMass;
+    BDTInputs_SUM["diHiggsVisMass"]       = dihiggsVisMass_sel;
+    BDTInputs_SUM["tau1_pt"]              = selHadTau_lead->pt();
+    BDTInputs_SUM["nBJet_medium"]         = selBJets_btag_medium.size();
+    BDTInputs_SUM["nElectron"]            = selElectrons.size();
+    BDTInputs_SUM["dr_lep_tau_min_SS"]    = dr_lep_tau_min_SS;
+    BDTInputs_SUM["met_LD"]               = met_LD;
+    BDTInputs_SUM["dr_lep_tau_min_OS"]    = dr_lep_tau_min_OS;
+    BDTInputs_SUM["tau2_pt"]              = selHadTau_sublead->pt();
+
+    /*
+    //double BDTOutput_SUM = BDT_SUM(BDTInputs_SUM);
+    std::vector<double> BDTOutput_SUM; // vector of BDT outputs for each signal mass
+    for (size_t i=0; i<gen_mHH.size(); i++){ // Loop over signal masses
+      BDTInputs_SUM["gen_mHH"] = gen_mHH[i];
+      BDTOutput_SUM.push_back(BDT_SUM(BDTInputs_SUM, eventInfo.event)); // Event number (even/odd) dependent BDT output for a given signal mass
+    }
+    */
+
+    std::map<std::string, double> BDTOutput_SUM_Map;
+    for(unsigned int i=0; i<gen_mHH.size(); i++){ // Loop over signal masses
+      BDTInputs_SUM["gen_mHH"] = gen_mHH[i];
+      unsigned int mass_int = (int)gen_mHH[i]; // Conversion from double to unsigned int
+      std::string key = "";
+      ostringstream temp;
+      temp << mass_int;
+      key = temp.str(); // Conversion from unsigned int to string
+      std::string key_final = "signal_genmHH_" + key;
+      BDTOutput_SUM_Map.insert( std::make_pair(key_final, BDT_SUM(BDTInputs_SUM, eventInfo.event)) );
+     }
+    // ---- NEW ENDS ------
+
 
 
 //--- fill histograms with events passing final selection
@@ -1471,6 +1612,7 @@ int main(int argc, char* argv[])
       dihiggsMass,
       HT, 
       STMET,
+      BDTOutput_SUM_Map, // I AM HERE !!!
       evtWeight);
     selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
     if ( isMC ) {
@@ -1490,8 +1632,7 @@ int main(int argc, char* argv[])
     selHistManager->weights_->fillHistograms("fakeRate", weight_fakeRate);
 
 
-    bool isCharge_lepton_SS = selLepton_lead->charge()*selLepton_sublead->charge() > 0;
-    bool isCharge_lepton_OS = selLepton_lead->charge()*selLepton_sublead->charge() < 0;
+
 
     std::vector<std::string> categories;
     if      ( isCharge_lepton_SS ) categories.push_back("2lSS_2tau");
@@ -1554,6 +1695,7 @@ int main(int argc, char* argv[])
         dihiggsMass,
         HT,
         STMET,
+	BDTOutput_SUM_Map, // I AM HERE !!!
         evtWeight_category);
         selHistManager->svFit4tau_wMassConstraint_in_categories_[*category]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight_category);
       }
@@ -1588,65 +1730,10 @@ int main(int argc, char* argv[])
     svFitAlgo.integrate(measuredTauLeptons, met.p4().px(), met.p4().py(), met.cov());
 
 
-    // pre-compute BDT variables
-    //double mTauTau = -1.; // CV: temporarily comment-out the following line, to make code compile with "old" and "new" version of ClassicSVfit                                                                                                                           
+    // pre-compute BDT variables-2
+    //double mTauTau = -1.; // CV: temporarily comment-out the following line, to make code compile with "old" and "new" version of ClassicSVfit                                                                                                          
     const double mTauTau   = ( svFitAlgo.isValidSolution() ) ? static_cast<classic_svFit::HistogramAdapterDiTau*>(svFitAlgo.getHistogramAdapter())->getMass() : -1.;
-    const double deltaEta_lep1_lep2 = (selLepton_lead->p4() - selLepton_sublead->p4()).eta();
-    std::cout<< "deltaEta_lep1_lep2 " << deltaEta_lep1_lep2 << std::endl;
-    const double deltaEta_lep1_tau1 = (selLepton_lead->p4() - selHadTau_lead->p4()).eta();
-    const double deltaEta_lep1_tau2 = (selLepton_lead->p4() - selHadTau_sublead->p4()).eta();
-    const double deltaEta_lep2_tau1 = (selLepton_sublead->p4() - selHadTau_lead->p4()).eta();
-    const double deltaEta_lep2_tau2 = (selLepton_sublead->p4() - selHadTau_sublead->p4()).eta();
-    const double deltaEta_tau1_tau2 = (selHadTau_lead->p4() - selHadTau_sublead->p4()).eta();
-    const double deltaPhi_lep1_lep2 = (selLepton_lead->p4() - selLepton_sublead->p4()).phi();
-    const double deltaPhi_lep1_tau1 = (selLepton_lead->p4() - selHadTau_lead->p4()).phi();
-    const double deltaPhi_lep1_tau2 = (selLepton_lead->p4() - selHadTau_sublead->p4()).phi();
-    const double deltaPhi_lep2_tau1 = (selLepton_sublead->p4() - selHadTau_lead->p4()).phi();
-    const double deltaPhi_lep2_tau2 = (selLepton_sublead->p4() - selHadTau_sublead->p4()).phi();
-    const double deltaPhi_tau1_tau2 = (selHadTau_lead->p4() - selHadTau_sublead->p4()).phi();
-    const double m_lep1_tau1 = (selLepton_lead->p4() + selHadTau_lead->p4()).mass();
-    const double m_lep2_tau1 = (selLepton_sublead->p4() + selHadTau_lead->p4()).mass();
-    const double m_lep1_tau2 = (selLepton_lead->p4() + selHadTau_sublead->p4()).mass();
-    const double m_lep2_tau2 = (selLepton_sublead->p4() + selHadTau_sublead->p4()).mass();
-    const double pt_HH_recoil = (selLepton_lead->p4() + selLepton_sublead->p4() + selHadTau_lead->p4() + selHadTau_sublead->p4() - met.p4()).pt();
-    const double mT_lep1 = comp_MT_met_lep1(*selLepton_lead, met.pt(), met.phi());
-    const double mT_lep2 = comp_MT_met_lep2(*selLepton_sublead, met.pt(), met.phi());
-    const double dr_lep1_tau1 = deltaR(selLepton_lead->p4(),    selHadTau_lead->p4());
-    const double dr_lep2_tau1 = deltaR(selLepton_sublead->p4(), selHadTau_lead->p4());
-    const double dr_lep1_tau2 = deltaR(selLepton_lead->p4(),    selHadTau_sublead->p4());
-    const double dr_lep2_tau2 = deltaR(selLepton_sublead->p4(), selHadTau_sublead->p4());
-    const double dr_lep1_tau1_tau2_min = std::min(dr_lep1_tau1, dr_lep1_tau2); 
-    const double dr_lep1_tau1_tau2_max = std::max(dr_lep1_tau1, dr_lep1_tau2); 
-    const double dr_lep2_tau1_tau2_min = std::min(dr_lep2_tau1, dr_lep2_tau2); 
-    const double dr_lep2_tau1_tau2_max = std::max(dr_lep2_tau1, dr_lep2_tau2); 
-    double dr_lep_tau_min_OS = 0.;
-    if(isCharge_lepton_OS){
-      dr_lep_tau_min_OS = std::min(std::min(dr_lep1_tau1, dr_lep1_tau2), std::min(dr_lep2_tau1, dr_lep2_tau2));
-    }else{
-      dr_lep_tau_min_OS = -1.;
-    }
-    double dr_lep_tau_min_SS = 0.;
-    if(isCharge_lepton_SS){
-      dr_lep_tau_min_SS = std::min(std::min(dr_lep1_tau1, dr_lep1_tau2), std::min(dr_lep2_tau1, dr_lep2_tau2));
-    }else{
-      dr_lep_tau_min_SS = -1.;
-    }
-    const double dr_leps = deltaR(selLepton_lead->p4(), selLepton_sublead->p4());
-    const double dr_taus = deltaR(selHadTau_lead->p4(), selHadTau_sublead->p4());
-    const double avg_dr_jet = comp_avg_dr_jet(selJets);
-    const Particle::LorentzVector ll_p4 = selLepton_lead->p4() + selLepton_sublead->p4();
-    const double Smin_llMEt = comp_Smin(ll_p4, met.p4().px(), met.p4().py());
-    const double ptTauTauVis_sel = (selHadTau_lead->p4() + selHadTau_sublead->p4()).pt();
-    const Particle::LorentzVector lltautau_p4 = ll_p4 + tautau_p4;
-    const double Smin_lltautau = comp_Smin(lltautau_p4, met.p4().px(), met.p4().py());
-
-    const std::vector<const RecoJet*> cleanedJets_wrt_leptons = jetCleaner(jet_ptrs, fakeableLeptons);
-    const std::vector<const RecoJet*> selJets_btag = jetSelector(cleanedJets_wrt_leptons, isHigherCSV);
-    const std::vector<const RecoJet*> selBJets_btag_loose = jetSelectorBtagLoose(selJets_btag, isHigherPt);
-    const std::vector<const RecoJet*> selBJets_btag_medium = jetSelectorBtagMedium(selJets_btag, isHigherPt);
-    const RecoJet * selBJet_lead    = selJets_btag.size() > 0 ? selJets_btag.at(0) : nullptr;
-    const RecoJet * selBJet_sublead = selJets_btag.size() > 1 ? selJets_btag.at(1) : nullptr;
-
+    
     Topness topness_publishedChi2(Topness::kPublishedChi2);
     if(selBJet_lead && selBJet_sublead)
     {
@@ -1755,7 +1842,8 @@ int main(int argc, char* argv[])
           ("nElectron",                selElectrons.size())
           ("nMuon",                    selMuons.size())
         .fill()
-      ;
+	;
+
     }
 
     ++selectedEntries;
