@@ -321,12 +321,12 @@ int main(int argc, char* argv[])
   delete hadTauSelection_parts;
 
   enum { kOS, kSS };
-  std::string chargeSumSelection_string = cfg_analyze.getParameter<std::string>("chargeSumSelection");
-  int chargeSumSelection = -1;
-  if      ( chargeSumSelection_string == "OS" ) chargeSumSelection = kOS;
-  else if ( chargeSumSelection_string == "SS" ) chargeSumSelection = kSS;
+  std::string leptonChargeSelection_string = cfg_analyze.getParameter<std::string>("leptonChargeSelection");
+  int leptonChargeSelection = -1;
+  if      ( leptonChargeSelection_string == "OS" ) leptonChargeSelection = kOS;
+  else if ( leptonChargeSelection_string == "SS" ) leptonChargeSelection = kSS;
   else throw cms::Exception("analyze_hh_3l")
-    << "Invalid Configuration parameter 'chargeSumSelection' = " << chargeSumSelection_string << " !!\n";
+    << "Invalid Configuration parameter 'leptonChargeSelection' = " << leptonChargeSelection_string << " !!\n";
 
   const int minNumJets = 1;
 
@@ -1551,21 +1551,21 @@ int main(int argc, char* argv[])
     int sumLeptonCharge = selLepton_lead->charge() + selLepton_sublead->charge() + selLepton_third->charge();
     bool isCharge_SS = std::abs(sumLeptonCharge) >  1;
     bool isCharge_OS = std::abs(sumLeptonCharge) <= 1;
-    if ( chargeSumSelection == kOS && isCharge_SS ) {
+    if ( leptonChargeSelection == kOS && isCharge_SS ) {
       if ( run_lumi_eventSelector ) {
     std::cout << "event " << eventInfo.str() << " FAILS lepton charge selection." << std::endl;
 	std::cout << " (leading selLepton charge = " << selLepton_lead->charge()
 		  << ", subleading selLepton charge = " << selLepton_sublead->charge()
-		  << ", third selLepton charge = " << selLepton_third->charge() << ", chargeSumSelection = OS)" << std::endl;
+		  << ", third selLepton charge = " << selLepton_third->charge() << ", leptonChargeSelection = OS)" << std::endl;
       }
       continue;
     }
-    if ( chargeSumSelection == kSS && isCharge_OS ) {
+    if ( leptonChargeSelection == kSS && isCharge_OS ) {
       if ( run_lumi_eventSelector ) {
     std::cout << "event " << eventInfo.str() << " FAILS lepton charge selection." << std::endl;
 	std::cout << " (leading selLepton charge = " << selLepton_lead->charge()
 		  << ", subleading selLepton charge = " << selLepton_sublead->charge()
-		  << ", third selLepton charge = " << selLepton_third->charge() << ", chargeSumSelection = SS)" << std::endl;
+		  << ", third selLepton charge = " << selLepton_third->charge() << ", leptonChargeSelection = SS)" << std::endl;
       }
       continue;
     }
@@ -1653,7 +1653,6 @@ int main(int argc, char* argv[])
     double AK8JetPt_max = -1.;
     const RecoJetAK8* AK8JetLead = nullptr;
     size_t idxLepton_H_WW_ljj_1 = 9999;
-    size_t idxLepton_H_WW_ljj_2 = 9999;
     for (size_t ijet = 0; ijet < jet_ptrs_ak8_Wjj.size(); ++ijet) {
       //std::cout << "\tijet: " << ijet << ", pt: " << jet_ptrs_ak8_Wjj[ijet]->pt() << std::endl;
       if (jet_ptrs_ak8_Wjj[ijet]->pt() > AK8JetPt_max) {
@@ -1661,7 +1660,7 @@ int main(int argc, char* argv[])
 	AK8JetLead = jet_ptrs_ak8_Wjj[ijet];
       }
     }
-    if (AK8JetLead) cutFlowTable.update("TestAK8: AK8JetLead found", evtWeight);          
+    if (AK8JetLead) cutFlowTable.update("TestAK8: AK8JetLead found", evtWeight);
     if (AK8JetLead && AK8JetLead->subJet1() && AK8JetLead->subJet2()) {
       cutFlowTable.update("TestAK8: AK8JetLead + 2subjets found", evtWeight);
       if ( isMC) {
@@ -1694,7 +1693,8 @@ int main(int argc, char* argv[])
     
     // Seperate out H->WW->lNu jj lepton from H->WW->2l2Nu leptons
     // lepton pair with least dR would be from H->WW->2l2Nu, so the remained lepton would be from H->WW->lNu jj
-    // Approach - 0
+    // Approach - 0 : Not used
+    /*
     size_t idxLepton_H_WW_ljj = -1;
     double mindRLepton_H_WW_ll = 9999.;
     //size_t idxLepton1_H_WW_ll = -1, idxLepton2_H_WW_ll = -1;
@@ -1713,37 +1713,65 @@ int main(int argc, char* argv[])
       }
     }
     if ( isDEBUG ) std::cout << "idxLepton_H_WW_ljj: " << idxLepton_H_WW_ljj << std::endl;
- 
-    //const RecoLepton* selLepton_H_WW_ljj = selLeptons[idxLepton_H_WW_ljj]; // Approach - 0
-    const RecoLepton* selLepton_H_WW_ljj = selLeptons[idxLepton_H_WW_ljj_1]; // Approach - I
-    jetSelectorAK8_Wjj.getSelector().set_lepton(selLepton_H_WW_ljj);
+    */
 
-    
-    // select jets from H->bb decay
-    // Don't clean AK8 w.r.t. lepton
-    std::vector<const RecoJetAK8*> selJetsAK8_Wjj = jetSelectorAK8_Wjj(jet_ptrs_ak8_Wjj, isHigherPt);
-    std::vector<const RecoJet*> selJetsAK4_Wjj = jetSelectorAK4(cleanedJetsAK4_wrtLeptons, isHigherPt);
+    const RecoLepton* selLepton_H_WW_ljj = nullptr;
+    std::vector<const RecoJetAK8*> selJetsAK8_Wjj;
+    std::vector<const RecoJet*> selJetsAK4_Wjj;
     const RecoJetAK8* selJetAK8_Wjj = nullptr;
     const RecoJetBase* selJet1_Wjj = nullptr;
     const RecoJetBase* selJet2_Wjj = nullptr;
+    bool isAK8_Wjj = false;
+    
+    if (idxLepton_H_WW_ljj_1 < 3) { 
+      // selLepton_H_WW_ljj = selLeptons[idxLepton_H_WW_ljj]; // Approach - 0
+      selLepton_H_WW_ljj = selLeptons[idxLepton_H_WW_ljj_1]; // Approach - I
+      jetSelectorAK8_Wjj.getSelector().set_lepton(selLepton_H_WW_ljj);
 
-    if(isDEBUG || run_lumi_eventSelector)  printWjj(jet_ptrs_ak8_Wjj, jetSelectorAK8_Wjj, genWBosons, genWJets);
-
-
-    if (AK8JetLead && AK8JetLead->subJet1() && AK8JetLead->subJet2()) {
-      TString jetReturnType = "";
-      if (jetSelectorAK8_Wjj.getSelector()(*AK8JetLead, jetReturnType)) {
-	cutFlowTable.update(Form("TestAK8: AK8 jet passed AK8_Wjj selector with code %s",jetReturnType.Data()), evtWeight);
-      } else {
-	cutFlowTable.update(Form("TestAK8: AK8 jet failed AK8_Wjj selector with code %s",jetReturnType.Data()), evtWeight);
+    
+      // select jets from H->bb decay
+      // Don't clean AK8 w.r.t. lepton
+      selJetsAK8_Wjj = jetSelectorAK8_Wjj(jet_ptrs_ak8_Wjj, isHigherPt);
+      selJetsAK4_Wjj = jetSelectorAK4(cleanedJetsAK4_wrtLeptons, isHigherPt);
+      selJetAK8_Wjj = nullptr;
+      selJet1_Wjj = nullptr;
+      selJet2_Wjj = nullptr;
+      if (AK8JetLead && selJetsAK8_Wjj.size() > 0) {
+	if (abs(selJetsAK8_Wjj[0]->pt() - AK8JetLead->pt()) < 0.001)
+	  cutFlowTable.update("TestAK8: AK8JetLead == selJetsAK8_Wjj[0]", evtWeight);
+	else {
+	  cutFlowTable.update("TestAK8: AK8JetLead != selJetsAK8_Wjj[0]", evtWeight);
+	  printf("TestAK8: AK8JetLead (pt %f, eta %f, phi %f) != selJetsAK8_Wjj[0] (pt %f, eta %f, phi %f) \n",
+		 AK8JetLead->pt(),AK8JetLead->eta(),AK8JetLead->phi(),
+		 selJetsAK8_Wjj[0]->pt(),selJetsAK8_Wjj[0]->eta(),selJetsAK8_Wjj[0]->phi());
+	}
+      }
+      
+      if(isDEBUG || run_lumi_eventSelector)  printWjj(jet_ptrs_ak8_Wjj, jetSelectorAK8_Wjj, genWBosons, genWJets);
+      
+      
+      if (AK8JetLead && AK8JetLead->subJet1() && AK8JetLead->subJet2()) {
+	TString jetReturnType = "";
+	isAK8_Wjj = jetSelectorAK8_Wjj.getSelector()(*AK8JetLead, jetReturnType);
+	if (isAK8_Wjj) {
+	  cutFlowTable.update(Form("TestAK8: AK8 jet passed AK8_Wjj selector with code %s",jetReturnType.Data()), evtWeight);
+	} else {
+	  cutFlowTable.update(Form("TestAK8: AK8 jet failed AK8_Wjj selector with code %s",jetReturnType.Data()), evtWeight);
+	}
       }
     }
 
     // actual analysis from here on
-    if ( selJetsAK8_Wjj.size() >= 1 ) {
+    if (isAK8_Wjj) {
+      
       selJetAK8_Wjj = selJetsAK8_Wjj[0];
       selJet1_Wjj = selJetAK8_Wjj->subJet1();
       selJet2_Wjj = selJetAK8_Wjj->subJet2();      
+      /*
+      selJetAK8_Wjj = AK8JetLead;
+      selJet1_Wjj = AK8JetLead->subJet1();
+      selJet2_Wjj = AK8JetLead->subJet2();
+      */
       assert(selJet1_Wjj && selJet2_Wjj);
       //if (selJet1_Wjj && selJet2_Wjj) isWjjBoosted = true;
       isWjjBoosted = true;
