@@ -211,27 +211,6 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     lines = super(analyzeConfig_hh_3l, self).createCfg_analyze(jobOptions, sample_info)
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
 
-  def addToMakefile_backgrounds_from_data(self, lines_makefile, make_target = "phony_addFakes", make_dependency = "phony_copyHistograms"):
-    self.addToMakefile_addBackgrounds(lines_makefile, "phony_addBackgrounds", make_dependency, self.sbatchFile_addBackgrounds, self.jobOptions_addBackgrounds)
-    self.addToMakefile_addBackgrounds(lines_makefile, "phony_addBackgrounds_sum", "phony_addBackgrounds", self.sbatchFile_addBackgrounds_sum, self.jobOptions_addBackgrounds_sum)
-    #----------------------------------------------------------------------------
-    # CV: run hadd_stage1_5 jobs on quasar,
-    #     as the memory consumption of hadd_stage1_5 jobs exceeds the memory limit (1.8 Gb) for batch jobs
-    ##is_sbatch_bak = self.is_sbatch
-    ##self.is_sbatch = False
-    ##is_makefile_bak = self.is_makefile
-    ##self.is_makefile = True
-    ##self.addToMakefile_hadd_stage1_5(lines_makefile, "phony_hadd_stage1_5", "phony_addBackgrounds_sum", max_input_files_per_job = 2)
-    self.addToMakefile_hadd_stage1_5(lines_makefile, "phony_hadd_stage1_5", "phony_addBackgrounds_sum")
-    ##self.is_sbatch = is_sbatch_bak
-    ##self.is_makefile = is_makefile_bak
-    #----------------------------------------------------------------------------
-    self.addToMakefile_addFakes(lines_makefile, "phony_addFakes", "phony_hadd_stage1_5")
-    if make_target != "phony_addFakes":
-      lines_makefile.append("%s: %s" % (make_target, "phony_addFakes"))
-      lines_makefile.append("")
-    self.make_dependency_hadd_stage2 = make_target
-
   def create(self):
     """Creates all necessary config files and runs the complete analysis workfow -- either locally or on the batch system
     """
@@ -601,7 +580,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
                 processes_input = [ process_input + "_fake" for process_input in processes_input ]
                 process_output += "_fake"
               self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal] = {
-                'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5],
+                'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5_job],
                 'cfgFile_modified' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_CFGS], "addBackgrounds_%s_%s_%s_%s_cfg.py" % addBackgrounds_job_signal_tuple),
                 'outputFile' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_HIST], "addBackgrounds_%s_%s_%s_%s.root" % addBackgrounds_job_signal_tuple),
                 'logFile' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_LOGS], "addBackgrounds_%s_%s_%s_%s.log" % addBackgrounds_job_signal_tuple),
