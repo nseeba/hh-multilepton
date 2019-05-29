@@ -1,18 +1,27 @@
 #ifndef hhAnalysis_multilepton_EvtHistManager_hh_2l_2tau_h
 #define hhAnalysis_multilepton_EvtHistManager_hh_2l_2tau_h
 
+
+
+
 /** \class EvtHistManager_hh_2l_2tau
  *
  * Book and fill histograms for event-level quantities in the 2l+2tau_h category 
  * of the HH->tttt, WWtt, and WWWW analysis 
  *
- * \author Christian Veelken, Tallinn
+ * \author Christian Veelken, Ram Krishna Dewanjee, Tallinn
  *
  */
 
 #include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h" // HistManagerBase
 
 #include "hhAnalysis/multilepton/interface/mySVfit4tauAuxFunctions.h" // SVfit4tauResult
+
+
+#include <vector>
+#include <map>
+
+using namespace std; 
 
 class EvtHistManager_hh_2l_2tau
   : public HistManagerBase
@@ -23,7 +32,7 @@ public:
 
   /// book and fill histograms
   void
-  bookHistograms(TFileDirectory & dir) override;
+    bookHistograms(TFileDirectory & dir) override;
 
   void
   fillHistograms(int numElectrons,
@@ -40,10 +49,14 @@ public:
 		 double dihiggsMass,
 		 double HT,
 		 double STMET,
+		 //double BDTOutput_SUM_gen_mHH_400,
+		 // const std::vector<double> & BDTOutput_SUM,
+		 std::map<std::string, double>& BDTOutput_SUM_Map,
                  double evtWeight);
 
   const TH1 *
   getHistogram_EventCounter() const;
+
 
  private:
   TH1 * histogram_numElectrons_;
@@ -64,8 +77,11 @@ public:
 
   TH1 * histogram_HT_;
   TH1 * histogram_STMET_;
-      
   TH1 * histogram_EventCounter_;
+  // TH1 * histogram_BDTOutput_SUM_gen_mHH_400_;
+  std::map<std::string, TH1*> histogram_Map_BDTOutput_SUM_;   
+  std::vector<string> labels_;
+  
 };
 
 #endif

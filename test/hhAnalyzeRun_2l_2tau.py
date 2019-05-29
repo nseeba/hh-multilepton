@@ -105,7 +105,7 @@ if __name__ == '__main__':
     executable_analyze                    = "analyze_hh_2l_2tau",
     cfgFile_analyze                       = "analyze_hh_2l_2tau_cfg.py",
     samples                               = samples,
-    lepton_charge_selections              = [ "disabled" ],
+    leptonChargeSelections              = [ "disabled" ],
     lep_mva_wp                            = lep_mva_wp,
     hadTau_selection                      = hadTau_selection,
     hadTau_charge_selections              = [ "disabled" ],

@@ -57,7 +57,7 @@ for systematic_label in systematics_label:
       central_or_shifts.append(central_or_shift)
 lumi = get_lumi(era)
 
-lepton_charge_selections = [ "OS", "SS" ]
+leptonChargeSelections = [ "OS", "SS" ]
 
 if mode == "default":
   samples = load_samples(era, suffix = "preselected" if use_preselected else "")
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     samples                               = samples,
     lep_mva_wp                            = lep_mva_wp,
     applyFakeRateWeights                  = "4lepton",
-    lepton_charge_selections              = lepton_charge_selections,
+    leptonChargeSelections              = leptonChargeSelections,
     central_or_shifts                     = central_or_shifts,
     max_files_per_job                     = files_per_job,
     era                                   = era,

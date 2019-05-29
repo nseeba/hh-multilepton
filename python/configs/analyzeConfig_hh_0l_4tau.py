@@ -575,7 +575,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
       #  - 'CMS_ttHl_Clos_shape_t'
       for hadTau_charge_selection in self.hadTau_charge_selections:
         key_prep_dcard_job = getKey(hadTau_charge_selection, histogramToFit)
-        key_hadd_stage2_job = getKey(lepton_charge_selection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
+        key_hadd_stage2_job = getKey(leptonChargeSelection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
         key_add_syst_fakerate_dir = getKey("addSystFakeRates")
         add_syst_fakerate_job_tuple = (self.channel, hadTau_charge_selection, histogramToFit)
         key_add_syst_fakerate_job = getKey(hadTau_charge_selection, histogramToFit)

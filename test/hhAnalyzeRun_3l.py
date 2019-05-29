@@ -56,7 +56,7 @@ for systematic_label in systematics_label:
 do_sync = mode.startswith('sync')
 lumi = get_lumi(era)
 
-lepton_charge_selections = [ "OS", "SS" ]
+leptonChargeSelections = [ "OS"]
 
 if mode == "default":
   samples = load_samples(era)
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     samples                               = samples,
     hadTauVeto_selection                  = "dR03mvaLoose", # veto events containing taus that pass tau ID WP applied in 3l+1tau channel,
     applyFakeRateWeights                  = "3lepton",
-    lepton_charge_selections              = lepton_charge_selections,
+    leptonChargeSelections                = leptonChargeSelections,
     central_or_shifts                     = central_or_shifts,
     max_files_per_job                     = files_per_job,
     era                                   = era,

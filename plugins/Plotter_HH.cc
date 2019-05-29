@@ -12,6 +12,8 @@
 #include <TStyle.h>
 #include <TROOT.h> // gROOT (needed to (re)define colors)
 
+bool isDataBlinded = true; // added by Siddhesh
+
 Plotter_HH::Plotter_HH(const TFile* inputFile, const edm::ParameterSet& cfg)
   : Plotter(inputFile, cfg)
 {
@@ -39,6 +41,7 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
 {
   std::cout << "<Plotter_HH::makePlot>:" << std::endl;
   std::cout << " outputFileName = " << outputFileName << std::endl;
+
 
   TH1* histogramData_density = 0;
   if ( histogramData ) {
@@ -319,8 +322,10 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     histogramData_blinded_density->SetMarkerSize(markerSize);
     histogramData_blinded_density->SetMarkerColor(kBlack);
     histogramData_blinded_density->SetLineColor(kBlack);
-    legend->AddEntry(histogramData_blinded_density, "observed", "p");
-    histogramData_blinded_density->Draw("ep");
+    if ( isDataBlinded) {
+      legend->AddEntry(histogramData_blinded_density, "observed", "p");
+      histogramData_blinded_density->Draw("ep");
+    }
   }
   /*color used for tth
   const int color_ttW         = 823; // dark green 
