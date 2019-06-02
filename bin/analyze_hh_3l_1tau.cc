@@ -1099,7 +1099,7 @@ int main(int argc, char* argv[])
       if ( isDEBUG ) {
         std::cout << "lumiScale = " << lumiScale << std::endl;
         if ( apply_genWeight ) std::cout << "genWeight = " << boost::math::sign(eventInfo.genWeight) << std::endl;
-        std::cout << "genWeight_tH = " << eventInfo.genWeight_tH() << std::endl;
+        //std::cout << "genWeight_tH = " << eventInfo.genWeight_tH() << std::endl;
         std::cout << "lheWeight = " << lheWeight << std::endl;
         std::cout << "pileupWeight = " << eventInfo.pileupWeight << std::endl;
         std::cout << "btagWeight = " << btagWeight << std::endl;
