@@ -108,4 +108,5 @@ process.analyze_hh_0l_4tau = cms.PSet(
         branchTypeXaxis = cms.string(''),
         branchTypeYaxis = cms.string(''),
     ),
+    tHweights = cms.VPSet(),
 )

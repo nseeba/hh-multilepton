@@ -127,4 +127,5 @@ process.analyze_hh_2l_2tau = cms.PSet(
         branchTypeXaxis = cms.string(''),
         branchTypeYaxis = cms.string(''),
     ),
+    tHweights = cms.VPSet(),
 )
