@@ -98,6 +98,7 @@
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_3l.h" // EvtHistManager_hh_3l
 
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
+#include <boost/algorithm/string/predicate.hpp> // boost::starts_with()
 
 #include <iostream> // std::cerr, std::fixed
 #include <iomanip> // std::setprecision(), std::setw()
@@ -254,7 +255,7 @@ int main(int argc, char* argv[])
   std::string process_string = cfg_analyze.getParameter<std::string>("process");
   bool isMC_ttH = process_string == "TTH";
   bool isMC_tH = process_string == "TH";
-  bool isSignal = ( process_string == "signal" ) ? true : false;
+  bool isSignal = boost::starts_with(process_string, "signal_");
 
   std::string histogramDir = cfg_analyze.getParameter<std::string>("histogramDir");
   bool isMCClosure_e = histogramDir.find("mcClosure_e") != std::string::npos;
@@ -457,7 +458,7 @@ int main(int argc, char* argv[])
   std::cout << "Loaded " << inputTree -> getFileCount() << " file(s).\n";
 
 //--- declare event-level variables
-  EventInfo eventInfo(isSignal, isMC);
+  EventInfo eventInfo(isMC, isSignal);
   EventInfoReader eventInfoReader(&eventInfo, puSys_option);
   inputTree -> registerReader(&eventInfoReader);
 
@@ -752,7 +753,7 @@ int main(int argc, char* argv[])
         Form("%s/sel/evt", histogramDir_category.Data()), era_string, central_or_shift));
       selHistManager->evt_in_categories_[*category]->bookHistograms(fs);
     }
-    const vstring decayModes_evt = eventInfo.getDecayModes();
+    const vstring decayModes_evt = eventInfo.getDiHiggsDecayModes();
     if(isSignal)
     {
       for(const std::string & decayMode_evt: decayModes_evt)
@@ -2209,32 +2210,31 @@ int main(int argc, char* argv[])
     
     if(isSignal)
       {
-	const std::string decayModeStr = eventInfo.getDecayModeString();
+        const std::string decayModeStr = eventInfo.getDiHiggsDecayModeString();
 	if(! decayModeStr.empty())
 	  {
 	    selHistManager -> evt_in_decayModes_[decayModeStr] -> fillHistograms(
-               selElectrons.size(),
-	       selMuons.size(),
-	       selJetsAK4.size(),
-	       numSelJetsPtGt40,
-	       selBJetsAK4_loose.size(),
-	       selBJetsAK4_medium.size(),
-	       sumLeptonCharge,
-	       numSameFlavor_OS,
-	       dihiggsVisMass_sel,
-	       dihiggsMass,
-	       WTojjMass,
-	       mSFOS2l,
-	       mTMetLepton1,
-	       mTMetLepton2,
-	       vbf_m_jj,
-	       vbf_dEta_jj,
-	       numSelJets_nonVBF,
-	       HT, 
-	       STMET,
-	       mvaOutput_xgb_hh_3l_SUMBk_HH,
-	       evtWeight);
-	    
+              selElectrons.size(),
+              selMuons.size(),
+              selJetsAK4.size(),
+              numSelJetsPtGt40,
+              selBJetsAK4_loose.size(),
+              selBJetsAK4_medium.size(),
+              sumLeptonCharge,
+              numSameFlavor_OS,
+              dihiggsVisMass_sel,
+              dihiggsMass,
+              WTojjMass,
+              mSFOS2l,
+              mTMetLepton1,
+              mTMetLepton2,
+              vbf_m_jj,
+              vbf_dEta_jj,
+              numSelJets_nonVBF,
+              HT,
+              STMET,
+              mvaOutput_xgb_hh_3l_SUMBk_HH,
+              evtWeight);
 	  }
       }
     
@@ -2279,33 +2279,33 @@ int main(int argc, char* argv[])
       
       
       if(isSignal) {
-	const std::string decayModeStr = eventInfo.getDecayModeString();
-	if (! decayModeStr.empty()) {
-	  
-	  EvtHistManager_hh_3l* selHistManager_evt_category_decMode = selHistManager->evt_in_categories_and_decayModes_[category][decayModeStr];
-	  if ( selHistManager_evt_category_decMode ) { // CV: pointer is zero when running on OS control region to estimate "charge_flip" background
-	    selHistManager_evt_category_decMode->fillHistograms(
-							selElectrons.size(),
-							selMuons.size(),
-							selJetsAK4.size(),
-							numSelJetsPtGt40,
-							selBJetsAK4_loose.size(),
-							selBJetsAK4_medium.size(),
-							sumLeptonCharge,
-							numSameFlavor_OS,					 
-							dihiggsVisMass_sel,
-							dihiggsMass,
-							WTojjMass,
-							mSFOS2l,
-							mTMetLepton1,
-							mTMetLepton2,
-							vbf_m_jj,
-							vbf_dEta_jj,
-							numSelJets_nonVBF,
-							HT, 
-							STMET,
-							mvaOutput_xgb_hh_3l_SUMBk_HH,
-							evtWeight);
+        const std::string decayModeStr = eventInfo.getDiHiggsDecayModeString();
+        if (! decayModeStr.empty()) {
+
+          EvtHistManager_hh_3l* selHistManager_evt_category_decMode = selHistManager->evt_in_categories_and_decayModes_[category][decayModeStr];
+          if ( selHistManager_evt_category_decMode ) { // CV: pointer is zero when running on OS control region to estimate "charge_flip" background
+            selHistManager_evt_category_decMode->fillHistograms(
+              selElectrons.size(),
+              selMuons.size(),
+              selJetsAK4.size(),
+              numSelJetsPtGt40,
+              selBJetsAK4_loose.size(),
+              selBJetsAK4_medium.size(),
+              sumLeptonCharge,
+              numSameFlavor_OS,
+              dihiggsVisMass_sel,
+              dihiggsMass,
+              WTojjMass,
+              mSFOS2l,
+              mTMetLepton1,
+              mTMetLepton2,
+              vbf_m_jj,
+              vbf_dEta_jj,
+              numSelJets_nonVBF,
+              HT,
+              STMET,
+              mvaOutput_xgb_hh_3l_SUMBk_HH,
+              evtWeight);
 	  }	
 	}				
       }			

@@ -93,15 +93,15 @@
 
 #include "TauAnalysis/ClassicSVfit4tau/interface/svFitHistogramAdapter4tau.h" // HistogramAdapterDiHiggs, HistogramAdapterHiggs
 
-#include "TauAnalysis/ClassicSVfit/interface/ClassicSVfit.h" // ClassicSVfit                                                                                                                                                                                           
-#include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h" // classic_svFit::MeasuredTauLepton                                                                                                                                                                
+#include "TauAnalysis/ClassicSVfit/interface/ClassicSVfit.h" // ClassicSVfit
+#include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h" // classic_svFit::MeasuredTauLepton
 #include "TauAnalysis/ClassicSVfit/interface/svFitHistogramAdapter.h"
 #include "TauAnalysis/ClassicSVfit/interface/svFitAuxFunctions.h"
 
-#include <boost/range/algorithm/copy.hpp> // boost::copy()                                                                                                                                                                                                            
-#include <boost/range/adaptor/map.hpp> // boost::adaptors::map_keys                                                                                                                                                                                                     
+#include <boost/range/algorithm/copy.hpp> // boost::copy()
+#include <boost/range/adaptor/map.hpp> // boost::adaptors::map_keys
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
-
+#include <boost/algorithm/string/predicate.hpp> // boost::starts_with()
 
 #include <iostream> // std::cerr, std::fixed
 #include <iomanip> // std::setprecision(), std::setw()
@@ -168,7 +168,7 @@ int main(int argc, char* argv[])
   std::string process_string = cfg_analyze.getParameter<std::string>("process");
   bool isMC_ttH = process_string == "TTH";
   bool isMC_tH = process_string == "TH";
-  bool isSignal = ( process_string == "signal" ) ? true : false;
+  bool isSignal = boost::starts_with(process_string, "signal_");
 
   std::string histogramDir = cfg_analyze.getParameter<std::string>("histogramDir");
   bool isMCClosure_e = histogramDir.find("mcClosure_e") != std::string::npos;
@@ -389,7 +389,7 @@ int main(int argc, char* argv[])
   std::cout << "Loaded " << inputTree->getFileCount() << " file(s)." << std::endl;
 
 //--- declare event-level variables
-  EventInfo eventInfo(isSignal, isMC);
+  EventInfo eventInfo(isMC, isSignal);
   EventInfoReader eventInfoReader(&eventInfo, puSys_option);
   inputTree->registerReader(&eventInfoReader);
 

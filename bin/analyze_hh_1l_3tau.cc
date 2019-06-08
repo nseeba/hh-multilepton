@@ -89,6 +89,7 @@
 #include "TauAnalysis/ClassicSVfit4tau/interface/svFitHistogramAdapter4tau.h" // HistogramAdapterDiHiggs, HistogramAdapterHiggs
 
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
+#include <boost/algorithm/string/predicate.hpp> // boost::starts_with()
 
 #include <iostream> // std::cerr, std::fixed
 #include <iomanip> // std::setprecision(), std::setw()
@@ -152,7 +153,7 @@ int main(int argc, char* argv[])
   std::string process_string = cfg_analyze.getParameter<std::string>("process");
   bool isMC_ttH = process_string == "TTH";
   bool isMC_tH = process_string == "TH";
-  bool isSignal = ( process_string == "signal" ) ? true : false;
+  bool isSignal = boost::starts_with(process_string, "signal_");
 
   std::string histogramDir = cfg_analyze.getParameter<std::string>("histogramDir");
   bool isMCClosure_e = histogramDir.find("mcClosure_e") != std::string::npos;
@@ -367,7 +368,7 @@ int main(int argc, char* argv[])
   std::cout << "Loaded " << inputTree -> getFileCount() << " file(s).\n";
 
 //--- declare event-level variables
-  EventInfo eventInfo(isSignal, isMC);
+  EventInfo eventInfo(isMC, isSignal);
   EventInfoReader eventInfoReader(&eventInfo, puSys_option);
   inputTree -> registerReader(&eventInfoReader);
 
@@ -566,7 +567,7 @@ int main(int argc, char* argv[])
       selHistManager->svFit4tau_wMassConstraint_ = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
         Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), era_string, central_or_shift));
       selHistManager->svFit4tau_wMassConstraint_->bookHistograms(fs);
-/*
+
       const vstring decayModes_evt = eventInfo.getDiHiggsDecayModes();
       if(isSignal)
       {
@@ -588,7 +589,7 @@ int main(int argc, char* argv[])
           selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayMode_evt]->bookHistograms(fs);
         }
       }
- */
+
       vstring categories_evt = {
         "1e_3tau", "1mu_3tau"
       };
@@ -1479,7 +1480,7 @@ int main(int argc, char* argv[])
       evtWeight);
     selHistManager->svFit4tau_woMassConstraint_->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
     selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
-/*
+
     if( isSignal ) {
       const std::string decayModeStr = eventInfo.getDiHiggsDecayModeString();
       if ( !decayModeStr.empty() ) {
@@ -1488,19 +1489,19 @@ int main(int argc, char* argv[])
           selMuons.size(),
           selHadTaus.size(),
           selJets.size(),
-	  numSelJetsPtGt40,
+          numSelJetsPtGt40,
           selBJets_loose.size(),
           selBJets_medium.size(),
-	  dihiggsVisMass_sel,
-	  dihiggsMass,
-	  HT, 
-	  STMET,
+          dihiggsVisMass_sel,
+          dihiggsMass,
+          HT,
+          STMET,
           evtWeight);
 	selHistManager->svFit4tau_woMassConstraint_in_decayModes_[decayModeStr]->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
         selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayModeStr]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
       }
     }
- */
+
     selHistManager->evtYield_->fillHistograms(eventInfo, evtWeight);
     selHistManager->weights_->fillHistograms("genWeight", eventInfo.genWeight);
     selHistManager->weights_->fillHistograms("pileupWeight", eventInfo.pileupWeight);
