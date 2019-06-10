@@ -1,7 +1,7 @@
 from collections import OrderedDict as OD
 
-# file generated at 2019-06-08 23:30:45 with the following command:
-# find_samples.py -V -i /home/karl/CMSSW_10_2_10/src/tthAnalysis/NanoAOD/test/datasets/txt/datasets_hh_multilepton_mc_2017_RunIIFall17MiniAODv2.txt -m python/samples/metaDict_2017_hh.py
+# file generated at 2019-06-10 03:52:09 with the following command:
+# find_samples.py -V -i ../../tthAnalysis/NanoAOD/test/datasets/txt/datasets_hh_multilepton_mc_2017_RunIIFall17MiniAODv2.txt -m python/samples/metaDict_2017_hh.py -s ../../tthAnalysis/NanoAOD/test/datasets/txt/sum_datasets_hh_multilepton_2017_RunIIFall17MiniAODv2.txt
 
 meta_dictionary = OD()
 
@@ -9,6 +9,9 @@ meta_dictionary = OD()
 ### event sums
 
 sum_events = { 
+  ("signal_ggf_nonresonant_node_sm_hh_4v", "signal_ggf_nonresonant_node_2_hh_4v", "signal_ggf_nonresonant_node_3_hh_4v", "signal_ggf_nonresonant_node_4_hh_4v", "signal_ggf_nonresonant_node_5_hh_4v", "signal_ggf_nonresonant_node_6_hh_4v", "signal_ggf_nonresonant_node_7_hh_4v", "signal_ggf_nonresonant_node_8_hh_4v", "signal_ggf_nonresonant_node_9_hh_4v", "signal_ggf_nonresonant_node_10_hh_4v", "signal_ggf_nonresonant_node_11_hh_4v", "signal_ggf_nonresonant_node_12_hh_4v"),
+  ("signal_ggf_nonresonant_node_sm_hh_2v2t", "signal_ggf_nonresonant_node_2_hh_2v2t", "signal_ggf_nonresonant_node_3_hh_2v2t", "signal_ggf_nonresonant_node_4_hh_2v2t", "signal_ggf_nonresonant_node_5_hh_2v2t", "signal_ggf_nonresonant_node_6_hh_2v2t", "signal_ggf_nonresonant_node_7_hh_2v2t", "signal_ggf_nonresonant_node_8_hh_2v2t", "signal_ggf_nonresonant_node_9_hh_2v2t", "signal_ggf_nonresonant_node_10_hh_2v2t", "signal_ggf_nonresonant_node_11_hh_2v2t", "signal_ggf_nonresonant_node_12_hh_2v2t"),
+  ("signal_ggf_nonresonant_node_sm_hh_4t", "signal_ggf_nonresonant_node_2_hh_4t", "signal_ggf_nonresonant_node_3_hh_4t", "signal_ggf_nonresonant_node_7_hh_4t", "signal_ggf_nonresonant_node_9_hh_4t", "signal_ggf_nonresonant_node_12_hh_4t"),
 }
 
 
