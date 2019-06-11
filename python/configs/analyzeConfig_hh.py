@@ -15,6 +15,10 @@ DEPENDENCIES.extend([
   "hhAnalysis/multilepton",
   "hhAnalysis/bbww",
   "TauAnalysis/ClassicSVfit4tau",
+  "hhAnalysis/bbwwMEM",
+  "hhAnalysis/Heavymassestimator",
+  "HHStatAnalysis",
+  "Support",
 ])
 
 def get_signal_per_masspoint(samples):
