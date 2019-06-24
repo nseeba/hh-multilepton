@@ -6,7 +6,7 @@ from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
 
-# E.g.: ./tthAnalyzeRun_hh_2l_2tau.py -v 2017Dec13 -m default -e 2017
+# E.g.: ./hhAnalyzeRun_hh_2l_2tau.py -v 2019May29 -m default -e 2017
 
 mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full' ] + systematics.an_extended_opts_hh

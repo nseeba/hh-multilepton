@@ -115,6 +115,34 @@
 #include <iterator>
 
 
+edm::ParameterSet
+makeHistManager_cfg(const std::string & process,
+                    const std::string & category,
+                    const std::string & era,
+                    const std::string & central_or_shift,
+		    const std::vector<double> & gen_mHH,
+                    int idx = -1)
+{
+  edm::ParameterSet cfg = makeHistManager_cfg(process, category, era, central_or_shift, idx);
+  cfg.addParameter<std::vector<double>>("gen_mHH", gen_mHH);
+  return cfg;
+}
+
+edm::ParameterSet
+makeHistManager_cfg(const std::string & process,
+                    const std::string & category,
+                    const std::string & era,
+                    const std::string & central_or_shift,
+		    const std::vector<double> & gen_mHH,
+                    const std::string & option,
+                    int idx = -1)
+{
+  edm::ParameterSet cfg = makeHistManager_cfg(process, category, era, central_or_shift, gen_mHH, idx);
+  cfg.addParameter<std::string>("option", option);
+  return cfg;
+}
+
+
 typedef math::PtEtaPhiMLorentzVector LV;
 typedef std::vector<std::string> vstring;
 typedef std::vector<double> vdouble;
@@ -132,6 +160,8 @@ struct HadTauHistManagerWrapper_eta
   double etaMin_;
   double etaMax_;
 };
+
+
 
 /**
  * @brief Produce datacard and control plots for 2l_2tau category of HH "multilepton" (HH->WWWW,WWtt,tttt) analysis.
@@ -629,7 +659,7 @@ int main(int argc, char* argv[])
         Form("%s/sel/metFilters", histogramDir.data()), era_string, central_or_shift));
       selHistManager->metFilters_->bookHistograms(fs);
       selHistManager->evt_ = new EvtHistManager_hh_2l_2tau(makeHistManager_cfg(process_and_genMatch,
-        Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
+	Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift, gen_mHH));
       selHistManager->evt_->bookHistograms(fs);
       selHistManager->svFit4tau_wMassConstraint_ = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
         Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), era_string, central_or_shift));
@@ -660,7 +690,7 @@ int main(int argc, char* argv[])
         TString histogramDir_category = histogramDir.data();
         histogramDir_category.ReplaceAll("2l_2tau", category->data());
         selHistManager->evt_in_categories_[*category] = new EvtHistManager_hh_2l_2tau(makeHistManager_cfg(process_and_genMatch,
-          Form("%s/sel/evt", histogramDir_category.Data()), era_string, central_or_shift));
+	  Form("%s/sel/evt", histogramDir_category.Data()), era_string, central_or_shift, gen_mHH)); // Added the signal mass vector
         selHistManager->evt_in_categories_[*category]->bookHistograms(fs);
         selHistManager->svFit4tau_wMassConstraint_in_categories_[*category] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/svFit4tau_wMassConstraint", histogramDir_category.Data()), era_string, central_or_shift));
@@ -1565,7 +1595,7 @@ int main(int argc, char* argv[])
       ostringstream temp;
       temp << mass_int;
       key = temp.str(); // Conversion from unsigned int to string
-      std::string key_final = "signal_genmHH_" + key;
+      std::string key_final = "BDTOutput_" + key;
       BDTOutput_SUM_Map.insert( std::make_pair(key_final, BDT_SUM(BDTInputs_SUM, eventInfo.event)) );
      }
     // ---- NEW ENDS ------

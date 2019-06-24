@@ -27,8 +27,8 @@ EvtHistManager_hh_2l_2tau::EvtHistManager_hh_2l_2tau(const edm::ParameterSet & c
   central_or_shiftOptions_["EventCounter"] = { "*" };
   // central_or_shiftOptions_["BDTOutput_SUM_gen_mHH_400"] = { "*" };
 
-  edm::ParameterSet cfg_analyze = cfg.getParameter<edm::ParameterSet>("analyze_hh_2l_2tau");
-  std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
+  //edm::ParameterSet cfg_analyze = cfg.getParameter<edm::ParameterSet>("analyze_hh_2l_2tau");
+  std::vector<double> gen_mHH = cfg.getParameter<std::vector<double>>("gen_mHH");
 
   for(unsigned int i=0;i<gen_mHH.size();i++){
     unsigned int mass_int = (int)gen_mHH[i]; // Conversion from double to unsigned int                                                                                                                                                                                
@@ -36,7 +36,7 @@ EvtHistManager_hh_2l_2tau::EvtHistManager_hh_2l_2tau(const edm::ParameterSet & c
     ostringstream temp;
     temp << mass_int;
     key = temp.str(); // Conversion from unsigned int to string                                                                                                                                                                                                             
-    std::string key_final = "signal_genmHH_" + key;
+    std::string key_final = "BDTOutput_" + key;
     labels_.push_back(key_final);
   }
 
