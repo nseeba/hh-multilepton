@@ -110,8 +110,8 @@ process.analyze_hh_2l_2tau = cms.PSet(
     hasLHE = cms.bool(True),
 
     selectBDT = cms.bool(False), ## Set it to true for making BDT training Ntuples
-    BDT_pkl_FileName_even = cms.string("hhAnalysis/multilepton/data/2l_2tau_HH_dR03mvaVLoose_oversampling_finalVars_allMasses_Train_all_Masses_2l_2tau_diagnostics_with_reweighting_XGB_finalVars_allMasses_evtLevelSUM_HH_2l_2tau_res_10Var_even.xml"), 
-    BDT_pkl_FileName_odd = cms.string("hhAnalysis/multilepton/data/2l_2tau_HH_dR03mvaVLoose_oversampling_finalVars_allMasses_Train_all_Masses_2l_2tau_diagnostics_with_reweighting_XGB_finalVars_allMasses_evtLevelSUM_HH_2l_2tau_res_10Var_odd.xml"),
+    BDT_pkl_FileName_even = cms.string("hhAnalysis/multilepton/data/2l_2tau_HH_dR03mvaVLoose_oversampling_finalVars_allMasses_Train_all_Masses_with_reweighting_evtLevelSUM_HH_2l_2tau_res_10Var_even_XGB.xml"), 
+    BDT_pkl_FileName_odd = cms.string("hhAnalysis/multilepton/data/2l_2tau_HH_dR03mvaVLoose_oversampling_finalVars_allMasses_Train_all_Masses_with_reweighting_evtLevelSUM_HH_2l_2tau_res_10Var_odd_XGB.xml"),
     gen_mHH = cms.vdouble(250,260,270,280,300,350,400,450,500,550,600,650,700,750,800,850,900,1000), ## Set the signal mass range used in the BDT .pkl files
 
 
