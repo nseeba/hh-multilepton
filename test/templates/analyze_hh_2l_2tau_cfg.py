@@ -42,7 +42,6 @@ process.analyze_hh_2l_2tau = cms.PSet(
 
     electronSelection = cms.string(''),
     muonSelection = cms.string(''),
-    lep_mva_cut = cms.double(1.),
     apply_leptonGenMatching = cms.bool(True),
     leptonChargeSelection = cms.string(''),
 

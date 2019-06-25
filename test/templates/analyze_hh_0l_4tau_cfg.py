@@ -26,8 +26,6 @@ process.analyze_hh_0l_4tau = cms.PSet(
     triggers_2tau = cms.vstring(),
     use_triggers_2tau = cms.bool(False),
 
-    lep_mva_cut = cms.double(1.),
-
     hadTauSelection = cms.string(''),
     hadTauChargeSelection = cms.string(''),
     apply_hadTauGenMatching = cms.bool(False),

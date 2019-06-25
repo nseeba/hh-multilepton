@@ -367,7 +367,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
                   'histogramFile'            : histogramFile_path,
                   'logFile'                  : logFile_path,
                   'selEventsFileName_output' : rleOutputFile_path,
-                  'lep_mva_cut'              : self.lep_mva_cut,
                   'hadTauSelection'          : hadTauSelection,
                   'apply_hadTauGenMatching'  : self.apply_hadTauGenMatching,
                   'hadTauChargeSelection'    : hadTau_charge_selection,

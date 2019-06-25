@@ -96,7 +96,6 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
     lines.append("process.analyze_SVfit4tau.era = cms.string('%s')" % self.era)
     lines.append("process.analyze_SVfit4tau.mode = cms.string('%s')" % jobOptions['mode'])
     lines.append("process.analyze_SVfit4tau.leptonSelection = cms.string('%s')" % jobOptions['lepton_selection'])
-    lines.append("process.analyze_SVfit4tau.lep_mva_cut = cms.double(%f)" % jobOptions['lep_mva_cut'])
     lines.append("process.analyze_SVfit4tau.hadTauSelection = cms.string('%s')" % jobOptions['hadTau_selection'])
     lines.append("process.analyze_SVfit4tau.SVfit4tau.logM_wMassConstraint_MarkovChain = cms.vdouble(%s)" % jobOptions['SVfit4tau_logM_wMassConstraint_MarkovChain'])
     lines.append("process.analyze_SVfit4tau.SVfit4tau.logM_woMassConstraint_MarkovChain = cms.vdouble(%s)" % jobOptions['SVfit4tau_logM_woMassConstraint_MarkovChain'])
@@ -183,7 +182,6 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
               'sample_category' : sample_category,
               'mode' : mode,
               'lepton_selection' : self.lepton_selection,
-              'lep_mva_cut' : self.lep_mva_cut,
               'hadTau_selection' : self.hadTau_selection,
               'SVfit4tau_logM_wMassConstraint_MarkovChain' : self.SVfit4tau_logM_wMassConstraint_MarkovChain,
               'SVfit4tau_logM_woMassConstraint_MarkovChain' : self.SVfit4tau_logM_woMassConstraint_MarkovChain,

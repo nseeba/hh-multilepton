@@ -593,7 +593,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
                       'leptonChargeSelection'    : leptonChargeSelection,
                       'electronSelection'        : electron_selection,
                       'muonSelection'            : muon_selection,
-                      'lep_mva_cut'              : self.lep_mva_cut,
                       'apply_leptonGenMatching'  : self.apply_leptonGenMatching,
                       'hadTauChargeSelection'    : hadTau_charge_selection,
                       'hadTauSelection'          : hadTau_selection,

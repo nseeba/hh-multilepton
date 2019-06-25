@@ -26,7 +26,6 @@ process.analyze_SVfit4tau = cms.PSet(
     mode = cms.string("rec"), # CV: 'rec', 'gen', or 'gen_smeared'
 
     leptonSelection = cms.string('Tight'),
-    lep_mva_cut = cms.double(1.),
 
     hadTauSelection = cms.string('Tight|dR03mvaMedium'),
 

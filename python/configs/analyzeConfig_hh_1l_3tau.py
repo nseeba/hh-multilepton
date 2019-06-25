@@ -404,7 +404,6 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
                   'selEventsFileName_output' : rleOutputFile_path,
                   'electronSelection'        : electron_selection,
                   'muonSelection'            : muon_selection,
-                  'lep_mva_cut'              : self.lep_mva_cut,
                   'apply_leptonGenMatching'  : self.apply_leptonGenMatching,
                   'hadTauSelection'          : hadTau_selection,
                   'apply_hadTauGenMatching'  : self.apply_hadTauGenMatching,
