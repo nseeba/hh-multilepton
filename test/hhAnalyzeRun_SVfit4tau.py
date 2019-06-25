@@ -11,7 +11,6 @@ import sys
 import getpass
 
 parser = tthAnalyzeParser()
-parser.add_lep_mva_wp()
 args = parser.parse_args()
 
 # Common arguments
@@ -25,9 +24,6 @@ debug                = args.debug
 sample_filter        = args.filter
 num_parallel_jobs    = args.num_parallel_jobs
 running_method       = args.running_method
-
-# Additional arguments
-lep_mva_wp           = args.lep_mva_wp
 
 # Use the arguments
 max_job_resubmission = 3;
@@ -58,7 +54,6 @@ if __name__ == '__main__':
     cfgFile_analyze                 = "analyze_SVfit4tau_cfg.py",
     samples                         = samples,
     lepton_selection                = "Tight",
-    lep_mva_wp                      = lep_mva_wp,
     hadTau_selection                = "Tight|dR03mvaMedium",
     SVfit4tau_logM_wMassConstraint_MarkovChain  = [ 0. ],
     SVfit4tau_logM_woMassConstraint_MarkovChain = [ 0. ],
