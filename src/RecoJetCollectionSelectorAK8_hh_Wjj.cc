@@ -19,7 +19,6 @@ RecoJetSelectorAK8_hh_Wjj::RecoJetSelectorAK8_hh_Wjj(int era, int index, bool de
   , max_subJet1_absEta_(2.4)
   , min_subJet2_pt_(20.)
   , max_subJet2_absEta_(2.4)
-  , lepton_(nullptr)
   , debug_(debug)
 {
   switch(era)
@@ -98,9 +97,15 @@ RecoJetSelectorAK8_hh_Wjj::set_min_jetId(int min_jetId)
 }
 
 void
-RecoJetSelectorAK8_hh_Wjj::set_lepton(const RecoLepton* lepton)
+RecoJetSelectorAK8_hh_Wjj::set_lepton(const RecoLepton * lepton)
 {
-  lepton_ = lepton;
+  leptons_ = { lepton };
+}
+
+void
+RecoJetSelectorAK8_hh_Wjj::set_leptons(const std::vector<const RecoLepton *> & leptons)
+{
+  leptons_ = leptons;
 }
 
 double
@@ -174,11 +179,26 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet,
                                       std::string & returnType) const
 {
   returnType = "";
-  if(! lepton_)
+  const RecoLepton * lepton = nullptr;
+  double min_dR_lepton = 1.e+3;
+  for(const RecoLepton * lepton_: leptons_)
+  {
+    const double dR_lepton = deltaR(jet.p4(), lepton_->p4());
+    if(dR_lepton < min_dR_lepton)
+    {
+      min_dR_lepton = dR_lepton;
+      lepton = lepton_;
+    }
+  }
+  if(! lepton)
   {
     throw cmsException(this, __func__, __LINE__)
-      << "Value of 'lepton' has not been set. Did you call the 'set_lepton' function prior to calling operator() ?"
+      << "Value of 'lepton' has not been set. Did you call the 'set_leptons' function prior to calling operator() ?"
     ;
+  }
+  else if(debug_)
+  {
+    std::cout << "Closest lepton to the AK8 jet " << jet << " is " << *lepton << '\n';
   }
 
   if(jet.pt() < min_pt_)
@@ -196,7 +216,7 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet,
     {
       std::cout << "FAILS abs(eta) = " << jet.absEta() << " <= " << max_absEta_ << " cut\n";
     }
-    returnType = Form("FAILS abs(eta) <= %g cut",max_absEta_);
+    returnType = Form("FAILS abs(eta) <= %g cut", max_absEta_);
     return false;
   }
   if(jet.jetId() < min_jetId_)
@@ -205,7 +225,7 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet,
     {
       std::cout << "FAILS jet ID = " << jet.jetId() << " >= " << min_jetId_ << " cut\n";
     }
-    returnType = Form("FAILS jet ID mod 4 >= %i cut",min_jetId_);
+    returnType = Form("FAILS jet ID mod 4 >= %i cut", min_jetId_);
     return false;
   }
   if(jet.msoftdrop() < min_msoftdrop_)
@@ -214,7 +234,7 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet,
     {
       std::cout << "FAILS m(softdrop) = " << jet.msoftdrop() << " >= " << min_msoftdrop_ << " cut\n";
     }
-    returnType = Form("FAILS m(softdrop) >= %g cut",min_msoftdrop_);
+    returnType = Form("FAILS m(softdrop) >= %g cut", min_msoftdrop_);
     return false;
   }
   if(jet.msoftdrop() > max_msoftdrop_)
@@ -223,7 +243,7 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet,
     {
       std::cout << "FAILS m(softdrop) = " << jet.msoftdrop() << " <= " << max_msoftdrop_ << " cut\n";
     }
-    returnType = Form("FAILS m(softdrop) <= %g cut",max_msoftdrop_);
+    returnType = Form("FAILS m(softdrop) <= %g cut", max_msoftdrop_);
     return false;
   }
   const double tau2_div_tau1 = jet.tau2() / jet.tau1();
@@ -236,21 +256,20 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet,
     returnType = Form("FAILS N-subjettiness ratio tau2/tau1 <= %g cut",max_tau2_div_tau1_);
     return false;
   }
-  const double dR_lepton = deltaR(jet.p4(), lepton_->p4());
-  if(dR_lepton > max_dR_lepton_)
+  if(min_dR_lepton > max_dR_lepton_)
   {
     if(debug_)
     {
-      std::cout << "FAILS dR(lepton) = " << dR_lepton << " <= " << max_dR_lepton_ << " cut\n";
+      std::cout << "FAILS dR(lepton) = " << min_dR_lepton << " <= " << max_dR_lepton_ << " cut\n";
     }
-    returnType = Form("FAILS dR(lepton) <= %g cut",max_dR_lepton_);
+    returnType = Form("FAILS dR(lepton) <= %g cut", max_dR_lepton_);
     return false;
   }
   if(!(jet.subJet1() && jet.subJet2()                    &&
        // CV: make sure that lepton is not contained in either subjet
        // (neccessary, as we do not yet reconstruct AK8 jets on nanoAOD level, which are cleaned with respect to leptons)
-       deltaR(jet.subJet1()->p4(), lepton_->p4()) > 0.1  &&
-       deltaR(jet.subJet2()->p4(), lepton_->p4()) > 0.1  &&
+       deltaR(jet.subJet1()->p4(), lepton->p4()) > 0.1  &&
+       deltaR(jet.subJet2()->p4(), lepton->p4()) > 0.1  &&
        (
          (
            jet.subJet1()->pt()      >= min_subJet1_pt_     &&
@@ -272,8 +291,8 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet,
       std::cout << "FAILS subjet selection criteria\njet: " << jet;
       returnType = Form("FAILS subjet selection criteria");
 
-      if(! (deltaR(jet.subJet1()->p4(), lepton_->p4()) > 0.1  &&
-            deltaR(jet.subJet2()->p4(), lepton_->p4()) > 0.1 ))
+      if(! (deltaR(jet.subJet1()->p4(), lepton->p4()) > 0.1  &&
+            deltaR(jet.subJet2()->p4(), lepton->p4()) > 0.1 ))
       {
         returnType += Form("  dR(subjet, lep) < 0.1");
       }
