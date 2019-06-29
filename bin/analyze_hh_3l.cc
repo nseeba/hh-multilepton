@@ -90,9 +90,9 @@
 #include "tthAnalysis/HiggsToTauTau/interface/TTreeWrapper.h" // TTreeWrapper
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
-#include "tthAnalysis/HiggsToTauTau/interface/RecoJetCollectionSelectorAK8_hh_Wjj.h" // RecoJetSelectorAK8_hh_Wjj
 #include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // findGenLepton_and_NeutrinoFromWBoson
 
+#include "hhAnalysis/multilepton/interface/RecoJetCollectionSelectorAK8_hh_Wjj.h" // RecoJetSelectorAK8_hh_Wjj
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_3l.h" // EvtHistManager_hh_3l
 #include "hhAnalysis/multilepton/interface/EventInfoHH.h" // EventInfoHH
 #include "hhAnalysis/multilepton/interface/EventInfoHHReader.h" // EventInfoHHReader
@@ -1772,12 +1772,12 @@ int main(int argc, char* argv[])
       
       
       if (AK8JetLead && AK8JetLead->subJet1() && AK8JetLead->subJet2()) {
-	TString jetReturnType = "";
+        std::string jetReturnType;
 	isAK8_Wjj = jetSelectorAK8_Wjj.getSelector()(*AK8JetLead, jetReturnType);
 	if (isAK8_Wjj) {
-	  cutFlowTable.update(Form("TestAK8: AK8 jet passed AK8_Wjj selector with code %s",jetReturnType.Data()), evtWeight);
+          cutFlowTable.update(Form("TestAK8: AK8 jet passed AK8_Wjj selector with code %s",jetReturnType.data()), evtWeight);
 	} else {
-	  cutFlowTable.update(Form("TestAK8: AK8 jet failed AK8_Wjj selector with code %s",jetReturnType.Data()), evtWeight);
+          cutFlowTable.update(Form("TestAK8: AK8 jet failed AK8_Wjj selector with code %s",jetReturnType.data()), evtWeight);
 	}
       }
     }

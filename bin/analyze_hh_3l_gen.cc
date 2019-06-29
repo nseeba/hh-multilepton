@@ -90,9 +90,9 @@
 #include "tthAnalysis/HiggsToTauTau/interface/TTreeWrapper.h" // TTreeWrapper
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
-#include "tthAnalysis/HiggsToTauTau/interface/RecoJetCollectionSelectorAK8_hh_Wjj.h" // RecoJetSelectorAK8_hh_Wjj
 #include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // findGenLepton_and_NeutrinoFromWBoson
 
+#include "hhAnalysis/multilepton/interface/RecoJetCollectionSelectorAK8_hh_Wjj.h" // RecoJetSelectorAK8_hh_Wjj
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_3l.h" // EvtHistManager_hh_3l
 #include "hhAnalysis/multilepton/interface/EventInfoHH.h" // EventInfoHH
 #include "hhAnalysis/multilepton/interface/EventInfoHHReader.h" // EventInfoHHReader
@@ -2109,7 +2109,7 @@ int main(int argc, char* argv[])
 			AK8JetClosestToWBoson->subJet2()->pt() / AK8subJet2_gen->pt();		      
 		      hdRl3jFromWjj_vs_RecGenPt_AK8WjjSelector_all->Fill(drl3j, ptNormGen_jNearestL3);
 		      
-		      TString jetReturnType = "";
+                      std::string jetReturnType;
 		      if (jetSelectorAK8_Wjj.getSelector()(*AK8Jet, jetReturnType)) {
 			cutFlowTable.update(Form("AK8==genW, AK8subjets==genWjet; l3=genl3; AK8 passed AK8_Wjj selector "));
 			hdRl3WHadronic_gen_AK8WjjSelector_Selected->Fill(drl3Wjj_gen);
@@ -2118,7 +2118,7 @@ int main(int argc, char* argv[])
 			hdRl3jFromWjj_AK8WjjSelector_Selected->Fill(drl3j);
 			hdRl3jFromWjj_vs_RecGenPt_AK8WjjSelector_Selected->Fill(drl3j, ptNormGen_jNearestL3);
 		      } else {
-			cutFlowTable.update(Form("AK8==genW, AK8subjets==genWjet; l3=genl3; AK8 failed AK8_Wjj selector due to %s",jetReturnType.Data()));
+                        cutFlowTable.update(Form("AK8==genW, AK8subjets==genWjet; l3=genl3; AK8 failed AK8_Wjj selector due to %s",jetReturnType.data()));
 			hdRl3WHadronic_gen_AK8WjjSelector_Rejected->Fill(drl3Wjj_gen);
 			hdRl3jFromWjj_gen_AK8WjjSelector_Rejected->Fill(drl3j_gen);
 			hdRl3WHadronic_AK8WjjSelector_Rejected->Fill(drl3Wjj);
