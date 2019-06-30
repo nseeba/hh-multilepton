@@ -1718,8 +1718,8 @@ int main(int argc, char* argv[])
           category != categories.end(); ++category ) {
       double evtWeight_category = evtWeight;
       if ( category->find("_wChargeFlipWeights") != std::string::npos ) {
-	double prob_chargeMisId_lead = prob_chargeMisId(getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta());
-	double prob_chargeMisId_sublead = prob_chargeMisId(getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
+        double prob_chargeMisId_lead = prob_chargeMisId(era, getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta());
+        double prob_chargeMisId_sublead = prob_chargeMisId(era, getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
 	// double prob_chargeMisId_tau = 0.01; // CV: not implemented yet; take "guessed" value for now
 	// evtWeight_category *= ( prob_chargeMisId_lead + prob_chargeMisId_sublead + (2*prob_chargeMisId_tau));
 	evtWeight_category *= ( prob_chargeMisId_lead + prob_chargeMisId_sublead);
