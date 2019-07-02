@@ -46,6 +46,15 @@ for sample_name, sample_info in samples_2017.items():
     sample_info["sample_category"] = "W"
   elif sample_name.startswith('/ttH'):
     sample_info["sample_category"] = "TTH"
+  elif sample_name.startswith('/TTTo'):
+    sample_info["sample_category"] = "TT"
+  elif sample_name.startswith('/VH'):
+    sample_info["sample_category"] = "VH"
+  elif sample_name.startswith('/TTZ'):
+    sample_info["sample_category"] = "TTZ"
+  elif sample_name.startswith('/TTW'):
+    sample_info["sample_category"] = "TTW"
+
 
   if sample_info["sample_category"] == "Rares":
     sample_info["sample_category"] = "Other"

@@ -381,8 +381,8 @@ int main(int argc, char* argv[])
 
   const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
 
-  std::string BDTFileName_even  = cfg_analyze.getParameter<std::string>("BDT_pkl_FileName_even");
-  std::string BDTFileName_odd   = cfg_analyze.getParameter<std::string>("BDT_pkl_FileName_odd");
+  std::string BDTFileName_even  = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_even");
+  std::string BDTFileName_odd   = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_odd");
   std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
 
 
@@ -1643,6 +1643,7 @@ int main(int argc, char* argv[])
       HT, 
       STMET,
       BDTOutput_SUM_Map, // I AM HERE !!!
+      eventInfo.event,
       evtWeight);
     selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
     if ( isMC ) {
@@ -1726,6 +1727,7 @@ int main(int argc, char* argv[])
         HT,
         STMET,
 	BDTOutput_SUM_Map, // I AM HERE !!!
+	eventInfo.event,
         evtWeight_category);
         selHistManager->svFit4tau_wMassConstraint_in_categories_[*category]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight_category);
       }

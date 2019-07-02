@@ -180,7 +180,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     self.executable_addTailFits = executable_addBackgrounds_TailFit
     self.executable_addFlips = executable_addFlips
 
-    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
+    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTZ", "DY", "Other", "VH", "TTH", "TH" ] ## W removed since negligible 
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "conversions", "fakes_data", "fakes_mc", "flips_mc", "flips_data" ]
@@ -198,7 +198,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
         self.prep_dcard_signals.append(sample_category)
     self.histogramDir_prep_dcard = "hh_2l_2tau_sumOS_Tight"
     # self.histogramDir_prep_dcard_SS = "hh_2l_2tau_sumSS_Tight"
-    self.make_plots_backgrounds = ["DY", "W", "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data", "flips_data" ]
+    self.make_plots_backgrounds = ["DY", "ZZ", "WZ", "WW", "TT", "TTW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data", "flips_data" ] ## W removed since negligible 
     # self.make_plots_backgrounds = ["DY", "W", "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data" ]
     # self.make_plots_backgrounds_SS = ["DY", "W", "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data", "flips_data" ]
     # self.make_plots_backgrounds_OS = ["DY", "W", "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "conversions", "fakes_data"]
@@ -385,7 +385,31 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
    """
    self.num_jobs['addTailFits'] += self.createScript_sbatch(executable, sbatchFile, jobOptions)
 
-  def addToMakefile_addTailFits(self, lines_makefile):
+  #def addToMakefile_backgrounds_from_data_withFlipsAndTailFits(self, lines_makefile, make_target = "phony_addTailFits", make_dependency = "phony_hadd_stage1"):
+  def addToMakefile_backgrounds_from_data_withFlipsAndTailFits(self, lines_makefile, make_target = "phony_addFlips", make_dependency = "phony_hadd_stage1"):
+     self.addToMakefile_addBackgrounds(lines_makefile, "phony_addBackgrounds", "phony_hadd_stage1", self.sbatchFile_addBackgrounds, self.jobOptions_addBackgrounds)
+     self.addToMakefile_hadd_stage1_5(lines_makefile, "phony_hadd_stage1_5", "phony_addBackgrounds")
+     self.addToMakefile_addBackgrounds(lines_makefile, "phony_addBackgrounds_sum", "phony_hadd_stage1_5", self.sbatchFile_addBackgrounds_sum, self.jobOptions_addBackgrounds_sum)
+     self.addToMakefile_addFakes(lines_makefile, "phony_addFakes", "phony_hadd_stage1_5")
+     self.addToMakefile_addTailFits(lines_makefile, "phony_addTailFits", "phony_addFakes") ## TailFit added here
+     self.addToMakefile_hadd_stage1_6(lines_makefile, "phony_hadd_stage1_6", "phony_addFakes")
+     self.addToMakefile_addFlips(lines_makefile, "phony_addFlips", "phony_hadd_stage1_6")
+     ###self.addToMakefile_addTailFits(lines_makefile) ## TailFit added here
+     #####self.addToMakefile_hadd_stage1_7(lines_makefile, "phony_hadd_stage1_7", "phony_addTailFits")
+     if make_target != "phony_addFlips":
+       lines_makefile.append("%s: %s" % (make_target, "phony_addFlips"))
+       lines_makefile.append("")
+     #if make_target != "phony_addTailFits":
+     #  lines_makefile.append("%s: %s" % (make_target, "phony_addTailFits"))
+     #  lines_makefile.append("")
+     self.make_dependency_hadd_stage2 = " ".join([ "phony_addBackgrounds_sum", make_target ])
+  ## --------------------------###
+
+
+  def addToMakefile_addTailFits(self, lines_makefile, make_target, make_dependency): ## Added make_target, make_dependency as arguments and the next 3 lines
+    if not make_target in self.phoniesToAdd:
+      self.phoniesToAdd.append(make_target)
+    lines_makefile.append("%s: %s" % (make_target, make_dependency))
     if self.is_sbatch:
       lines_makefile.append("sbatch_addTailFits: %s" % " ".join([ jobOptions['inputFile'] for jobOptions in self.jobOptions_addTailFits.values() ]))
       lines_makefile.append("\t%s %s" % ("python", self.sbatchFile_addTailFits))
@@ -1170,8 +1194,9 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     lines_makefile = []
     self.addToMakefile_analyze(lines_makefile)
     self.addToMakefile_hadd_stage1(lines_makefile)
-    self.addToMakefile_backgrounds_from_data_withFlips(lines_makefile)
-    self.addToMakefile_addTailFits(lines_makefile)
+    #self.addToMakefile_backgrounds_from_data_withFlips(lines_makefile)
+    self.addToMakefile_backgrounds_from_data_withFlipsAndTailFits(lines_makefile)
+    #self.addToMakefile_addTailFits(lines_makefile)
     self.addToMakefile_hadd_stage2(lines_makefile)
     self.addToMakefile_prep_dcard(lines_makefile)
     self.addToMakefile_add_syst_fakerate(lines_makefile)

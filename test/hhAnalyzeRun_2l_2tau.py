@@ -6,7 +6,7 @@ from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
 
-# E.g.: ./hhAnalyzeRun_hh_2l_2tau.py -v 2019May29 -m default -e 2017
+# E.g.: ./hhAnalyzeRun_hh_2l_2tau.py -v 2019Jun24 -m default -e 2017
 
 mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full' ] + systematics.an_extended_opts_hh
@@ -71,13 +71,14 @@ if mode == "default":
     if era == "2016":
       from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016 import samples_2016 as samples
     elif era == "2017":
-      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT_2l_2tau import samples_2017 as samples
-      for sample_name, sample_info in samples.items():
-         if sample_name == 'sum_events':
-           continue
-         sample_info['use_it'] = not sample_info['use_it'] ## skip samples used in bdt training in the main analysis         
-         if sample_info["process_name_specific"].startswith("signal") and 'hh' in sample_info["process_name_specific"]:
-           sample_info["use_it"] = 'nonresonant' not in sample_info["process_name_specific"]
+      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017 import samples_2017 as samples
+      #from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT_2l_2tau import samples_2017 as samples
+      #for sample_name, sample_info in samples.items():
+      #   if sample_name == 'sum_events':
+      #     continue
+      #   sample_info['use_it'] = not sample_info['use_it'] ## skip samples used in bdt training in the main analysis (COMMENT OUT IF USING  ODD-EVEN METHOD WHICH USES FULL MC STATS)         
+      #   if sample_info["process_name_specific"].startswith("signal") and 'hh' in sample_info["process_name_specific"]:
+      #     sample_info["use_it"] = 'nonresonant' not in sample_info["process_name_specific"]
     elif era == "2018":
       from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018 as samples
     else:
@@ -100,7 +101,7 @@ elif mode == "forBDTtraining":
     if era == "2016":
       from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2016_BDT import samples_2016 as samples
     elif era == "2017":
-#      from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT import samples_2017 as samples
+      #from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT import samples_2017 as samples
       from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2017_BDT_2l_2tau import samples_2017 as samples
     elif era == "2018":
       from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018_BDT import samples_2018 as samples
@@ -112,8 +113,8 @@ elif mode == "forBDTtraining":
     hadTau_selection_relaxed = "dR03mvaVVLoose"
   elif era == "2017":
     hadTau_selection         = "dR03mvaMedium"
-    hadTau_selection_relaxed = "dR03mvaLoose"
-    #hadTau_selection_relaxed = "dR03mvaVLoose"
+    #hadTau_selection_relaxed = "dR03mvaLoose"
+    hadTau_selection_relaxed = "dR03mvaVLoose" ## this was chosen to be optimum for 2l_2tau channel
     #hadTau_selection_relaxed = "dR03mvaVVLoose"
   elif era == "2018":
     raise ValueError("Implement me!")

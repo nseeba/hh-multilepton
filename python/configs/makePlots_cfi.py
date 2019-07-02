@@ -6,7 +6,7 @@ process.fwliteInput = cms.PSet(
     fileNames = cms.vstring(),
 )
 
-scaleSignal = 50
+scaleSignal = 10
 
 process.makePlots = cms.PSet(
     pluginType = cms.string("Plotter_HH"),
