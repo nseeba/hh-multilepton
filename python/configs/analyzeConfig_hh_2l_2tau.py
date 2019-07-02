@@ -402,7 +402,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
      #if make_target != "phony_addTailFits":
      #  lines_makefile.append("%s: %s" % (make_target, "phony_addTailFits"))
      #  lines_makefile.append("")
-     self.make_dependency_hadd_stage2 = " ".join([ "phony_addBackgrounds_sum", make_target ])
+     self.make_dependency_hadd_stage2 = " ".join([ "phony_addBackgrounds_sum", make_target, "phony_addTailFits" ])
   ## --------------------------###
 
 
