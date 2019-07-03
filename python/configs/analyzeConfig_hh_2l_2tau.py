@@ -391,17 +391,12 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
      self.addToMakefile_hadd_stage1_5(lines_makefile, "phony_hadd_stage1_5", "phony_addBackgrounds")
      self.addToMakefile_addBackgrounds(lines_makefile, "phony_addBackgrounds_sum", "phony_hadd_stage1_5", self.sbatchFile_addBackgrounds_sum, self.jobOptions_addBackgrounds_sum)
      self.addToMakefile_addFakes(lines_makefile, "phony_addFakes", "phony_hadd_stage1_5")
-     self.addToMakefile_addTailFits(lines_makefile, "phony_addTailFits", "phony_addFakes") ## TailFit added here
+     self.addToMakefile_addTailFits(lines_makefile, "phony_addTailFits", "phony_addFakes")
      self.addToMakefile_hadd_stage1_6(lines_makefile, "phony_hadd_stage1_6", "phony_addFakes")
      self.addToMakefile_addFlips(lines_makefile, "phony_addFlips", "phony_hadd_stage1_6")
-     ###self.addToMakefile_addTailFits(lines_makefile) ## TailFit added here
-     #####self.addToMakefile_hadd_stage1_7(lines_makefile, "phony_hadd_stage1_7", "phony_addTailFits")
      if make_target != "phony_addFlips":
        lines_makefile.append("%s: %s" % (make_target, "phony_addFlips"))
        lines_makefile.append("")
-     #if make_target != "phony_addTailFits":
-     #  lines_makefile.append("%s: %s" % (make_target, "phony_addTailFits"))
-     #  lines_makefile.append("")
      self.make_dependency_hadd_stage2 = " ".join([ "phony_addBackgrounds_sum", make_target, "phony_addTailFits" ])
   ## --------------------------###
 
@@ -411,19 +406,10 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       self.phoniesToAdd.append(make_target)
     lines_makefile.append("%s: %s" % (make_target, make_dependency))
     if self.is_sbatch:
-      lines_makefile.append("sbatch_addTailFits: %s" % " ".join([ jobOptions['inputFile'] for jobOptions in self.jobOptions_addTailFits.values() ]))
       lines_makefile.append("\t%s %s" % ("python", self.sbatchFile_addTailFits))
       lines_makefile.append("")
     for jobOptions in self.jobOptions_addTailFits.values():
-      if self.is_makefile:
-        lines_makefile.append("%s: %s" % (jobOptions['outputFile'], jobOptions['inputFile']))
-        lines_makefile.append("\t%s %s &> %s" % (self.executable_addTailFits, jobOptions['cfgFile_modified'], jobOptions['logFile']))
-        lines_makefile.append("")
-      elif self.is_sbatch:
-        lines_makefile.append("%s: %s" % (jobOptions['outputFile'], "sbatch_addTailFits"))
-        lines_makefile.append("\t%s" % ":") # CV: null command
-        lines_makefile.append("")
-    self.filesToClean.append(jobOptions['outputFile'])
+      self.filesToClean.append(jobOptions['outputFile'])
 
   def create(self):
     """Creates all necessary config files and runs the complete analysis workfow -- either locally or on the batch system
