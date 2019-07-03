@@ -19,12 +19,6 @@ public:
              int hadTau2_genPdgId, double hadTau2_pt, double hadTau2_eta, int hadTau2_decayMode);
 
   void
-  setHadTaus(int hadTau1_genPdgId, double hadTau1_pt, double hadTau1_eta, int hadTau1_decayMode,
-             int hadTau2_genPdgId, double hadTau2_pt, double hadTau2_eta, int hadTau2_decayMode,
-             int hadTau3_genPdgId, double hadTau3_pt, double hadTau3_eta, int hadTau3_decayMode,
-             int hadTau4_genPdgId, double hadTau4_pt, double hadTau4_eta, int hadTau4_decayMode);
-
-  void
   setHadTaus(double hadTau1_pt, double hadTau1_eta, double hadTau1_phi, int hadTau1_decayMode,
              double hadTau2_pt, double hadTau2_eta, double hadTau2_phi, int hadTau2_decayMode,
              double hadTau3_pt, double hadTau3_eta, double hadTau3_phi, int hadTau3_decayMode,

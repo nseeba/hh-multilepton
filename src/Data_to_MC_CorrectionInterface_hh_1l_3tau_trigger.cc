@@ -24,82 +24,19 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::Data_to_MC_CorrectionInterfac
   , hadTau3_phi_(0.)
   , hadTau3_decayMode_(0)
 {
-  if(era_ == kEra_2016)
-  {
-    const edm::ParameterSet cfg_triggerSF_2tau = cfg.getParameter<edm::ParameterSet>("triggerSF_2tau");
-
-    const std::string hadTauSelectionLabel = aux::getHadTauSelectionLabel_2016(hadTauSelection_);
-    const std::vector<int> hadTauDecayModes_2tau_perLeg = { 0, 1, 2, 10 };
-    for(int hadTauDecayMode: hadTauDecayModes_2tau_perLeg)
-    {
-      const std::string hadTauDecayModeLabel = aux::getHadTauDecayModeLabel(hadTauDecayMode);
-      const std::string fitName_2tau_data_gentau = Form("data_genuine_%s_%s", hadTauSelectionLabel.data(), hadTauDecayModeLabel.data());
-      const edm::ParameterSet cfg_fit_2tau_data_gentau = cfg_triggerSF_2tau.getParameter<edm::ParameterSet>(fitName_2tau_data_gentau);
-      effTrigger_2tau_perLeg_data_gentau_[hadTauDecayMode].push_back(new lutWrapperCrystalBall(
-        fitName_2tau_data_gentau, cfg_fit_2tau_data_gentau,
-        lut::kXpt, 20., 170.
-      ));
-
-      const std::string fitName_2tau_data_faketau = Form("data_fake_%s_%s", hadTauSelectionLabel.data(), hadTauDecayModeLabel.data());
-      const edm::ParameterSet cfg_fit_2tau_data_faketau = cfg_triggerSF_2tau.getParameter<edm::ParameterSet>(fitName_2tau_data_faketau);
-      effTrigger_2tau_perLeg_data_faketau_[hadTauDecayMode].push_back(new lutWrapperCrystalBall(
-        fitName_2tau_data_faketau, cfg_fit_2tau_data_faketau,
-        lut::kXpt, 20., 170.
-      ));
-
-      const std::string fitName_2tau_mc_gentau = Form("mc_genuine_%s_%s", hadTauSelectionLabel.data(), hadTauDecayModeLabel.data());
-      const edm::ParameterSet cfg_fit_2tau_mc_gentau = cfg_triggerSF_2tau.getParameter<edm::ParameterSet>(fitName_2tau_mc_gentau);
-      effTrigger_2tau_perLeg_mc_gentau_[hadTauDecayMode].push_back(new lutWrapperCrystalBall(
-        fitName_2tau_mc_gentau, cfg_fit_2tau_mc_gentau,
-        lut::kXpt, 20., 170.
-      ));
-      const std::string fitName_2tau_mc_faketau = Form("mc_fake_%s_%s", hadTauSelectionLabel.data(), hadTauDecayModeLabel.data());
-      const edm::ParameterSet cfg_fit_2tau_mc_faketau = cfg_triggerSF_2tau.getParameter<edm::ParameterSet>(fitName_2tau_mc_faketau);
-      effTrigger_2tau_perLeg_mc_faketau_[hadTauDecayMode].push_back(new lutWrapperCrystalBall(
-        fitName_2tau_mc_faketau, cfg_fit_2tau_mc_faketau,
-        lut::kXpt, 20., 170.
-      ));
-    }
-  }
-  else if(era_ == kEra_2017)
-  {
-    const LocalFileInPath inputFileName_tauLeg("TauAnalysisTools/TauTriggerSFs/data/tauTriggerEfficiencies2017.root");
-    const std::string hadTauSelection_TauTriggerSFs2017 = aux::getHadTauSelectionLabel_2017(hadTauSelection_);
-    const std::string wpType = "MVAv2";
-    const std::string year = "2017";
-    effTrigger_2tau_tauLeg_ = new TauTriggerSFs2017(
-      inputFileName_tauLeg.fullPath(), "ditau", year, hadTauSelection_TauTriggerSFs2017, wpType
-    );
-  }
-  else if(era_ == kEra_2018)
-  {
-    const LocalFileInPath inputFileName_tauLeg("TauAnalysisTools/TauTriggerSFs/data/tauTriggerEfficiencies2018.root");    
-    const std::string hadTauSelection_TauTriggerSFs2018 = aux::getHadTauSelectionLabel_2017(hadTauSelection_);
-    const std::string wpType = "MVAv2";
-    const std::string year = "2018";
-    effTrigger_2tau_tauLeg_ = new TauTriggerSFs2017(
-      inputFileName_tauLeg.fullPath(), "ditau", year, hadTauSelection_TauTriggerSFs2018, wpType
-    );
-  }
-  else
-  {
-    throw cmsException(this) << "Invalid era = " << era_;
-  }
+  const LocalFileInPath inputFileName_tauLeg(Form(
+    "TauAnalysisTools/TauTriggerSFs/data/tauTriggerEfficiencies%s.root", era_str_.data()
+  ));
+  const std::string hadTauSelection_TauTriggerSFs2018 = aux::getHadTauSelectionLabel(hadTauSelection_);
+  const std::string wpType = "MVAv2";
+  effTrigger_2tau_tauLeg_ = new TauTriggerSFs2017(
+    inputFileName_tauLeg.fullPath(), "ditau", era_str_, hadTauSelection_TauTriggerSFs2018, wpType
+  );
 }
 
 Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::~Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger()
 {
-  if(era_ == kEra_2016)
-  {
-    aux::clearCollection(effTrigger_2tau_perLeg_data_gentau_);
-    aux::clearCollection(effTrigger_2tau_perLeg_data_faketau_);
-    aux::clearCollection(effTrigger_2tau_perLeg_mc_gentau_);
-    aux::clearCollection(effTrigger_2tau_perLeg_mc_faketau_);
-  }
-  else if(era_ == kEra_2017 || era_ == kEra_2018)
-  {
-    delete effTrigger_2tau_tauLeg_;
-  }
+  delete effTrigger_2tau_tauLeg_;
 }
 
 void
@@ -128,23 +65,9 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::setLeptons(int lepton_type,
 
 void
 Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::setHadTaus(int hadTau1_genPdgId, double hadTau1_pt, double hadTau1_eta, int hadTau1_decayMode,
-                                                              int hadTau2_genPdgId, double hadTau2_pt, double hadTau2_eta, int hadTau2_decayMode,
-                                                              int hadTau3_genPdgId, double hadTau3_pt, double hadTau3_eta, int hadTau3_decayMode)
+                                                              int hadTau2_genPdgId, double hadTau2_pt, double hadTau2_eta, int hadTau2_decayMode)
 {
-  hadTau1_genPdgId_  = hadTau1_genPdgId;
-  hadTau1_pt_        = hadTau1_pt;
-  hadTau1_eta_       = hadTau1_eta;
-  hadTau1_decayMode_ = hadTau1_decayMode;
-
-  hadTau2_genPdgId_  = hadTau2_genPdgId;
-  hadTau2_pt_        = hadTau2_pt;
-  hadTau2_eta_       = hadTau2_eta;
-  hadTau2_decayMode_ = hadTau2_decayMode;
-
-  hadTau3_genPdgId_  = hadTau3_genPdgId;
-  hadTau3_pt_        = hadTau3_pt;
-  hadTau3_eta_       = hadTau3_eta;
-  hadTau3_decayMode_ = hadTau3_decayMode;
+  throw cmsException(this, __func__, __LINE__) << "Invalid call";
 }
 
 void
@@ -190,204 +113,90 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
   bool isTriggered_1l     = false;
   bool isTriggered_1l1tau = false;
 
-  if(era_ == kEra_2016)
+  const auto getTriggerEfficiencyDataFunc = aux::getTriggerFuncData(triggerSF_option_);
+  const auto getTriggerEfficiencyMCFunc   = aux::getTriggerFuncMC(triggerSF_option_);
+  assert(getTriggerEfficiencyDataFunc);
+  assert(getTriggerEfficiencyMCFunc);
+
+  if(lepton_type_ == kElectron)
   {
-    const bool hadTau1_isGenTau = (hadTau1_genPdgId_ == 11 || hadTau1_genPdgId_ == 13 || hadTau1_genPdgId_ == 15);
-    const bool hadTau2_isGenTau = (hadTau2_genPdgId_ == 11 || hadTau2_genPdgId_ == 13 || hadTau2_genPdgId_ == 15);
-    const bool hadTau3_isGenTau = (hadTau3_genPdgId_ == 11 || hadTau3_genPdgId_ == 13 || hadTau3_genPdgId_ == 15);
-
-    if(lepton_type_ == kElectron)
+    if(isDEBUG_)
     {
-      if(isDEBUG_)
-      {
-        std::cout << "electron: pT = " << lepton_pt_ << ", eta = " << lepton_eta_ << '\n';
-      }
-
-      eff_1l_data = get_from_lut(effTrigger_1e_data_, lepton_pt_, lepton_eta_, isDEBUG_);
-      eff_1l_mc   = get_from_lut(effTrigger_1e_mc_,   lepton_pt_, lepton_eta_);
-      eff_1l1tau_lepLeg_data = get_from_lut(effTrigger_1e1tau_lepLeg_data_, lepton_pt_, lepton_eta_, isDEBUG_);
-      eff_1l1tau_lepLeg_mc   = get_from_lut(effTrigger_1e1tau_lepLeg_mc_,   lepton_pt_, lepton_eta_, isDEBUG_);
-
-      if(hadTau1_isGenTau)
-      {
-        eff_1l1tau_tauLeg1_data = get_from_lut(effTrigger_1e1tau_tauLeg_data_gentau_, hadTau1_pt_, hadTau1_eta_, hadTau1_decayMode_, isDEBUG_);
-        eff_1l1tau_tauLeg1_mc   = get_from_lut(effTrigger_1e1tau_tauLeg_mc_gentau_,   hadTau1_pt_, hadTau1_eta_, hadTau1_decayMode_, isDEBUG_);
-      }
-      else
-      {
-        eff_1l1tau_tauLeg1_data = get_from_lut(effTrigger_1e1tau_tauLeg_data_faketau_, hadTau1_pt_, hadTau1_eta_, hadTau1_decayMode_, isDEBUG_);
-        eff_1l1tau_tauLeg1_mc   = get_from_lut(effTrigger_1e1tau_tauLeg_mc_faketau_,   hadTau1_pt_, hadTau1_eta_, hadTau1_decayMode_, isDEBUG_);
-      }
-
-      if(hadTau2_isGenTau)
-      {
-        eff_1l1tau_tauLeg2_data = get_from_lut(effTrigger_1e1tau_tauLeg_data_gentau_, hadTau2_pt_, hadTau2_eta_, hadTau2_decayMode_, isDEBUG_);
-        eff_1l1tau_tauLeg2_mc   = get_from_lut(effTrigger_1e1tau_tauLeg_mc_gentau_,   hadTau2_pt_, hadTau2_eta_, hadTau2_decayMode_, isDEBUG_);
-      }
-      else
-      {
-        eff_1l1tau_tauLeg2_data = get_from_lut(effTrigger_1e1tau_tauLeg_data_faketau_, hadTau2_pt_, hadTau2_eta_, hadTau2_decayMode_, isDEBUG_);
-        eff_1l1tau_tauLeg2_mc   = get_from_lut(effTrigger_1e1tau_tauLeg_mc_faketau_,   hadTau2_pt_, hadTau2_eta_, hadTau2_decayMode_, isDEBUG_);
-      }
-
-      if(hadTau3_isGenTau)
-      {
-        eff_1l1tau_tauLeg2_data = get_from_lut(effTrigger_1e1tau_tauLeg_data_gentau_, hadTau3_pt_, hadTau3_eta_, hadTau3_decayMode_, isDEBUG_);
-        eff_1l1tau_tauLeg2_mc   = get_from_lut(effTrigger_1e1tau_tauLeg_mc_gentau_,   hadTau3_pt_, hadTau3_eta_, hadTau3_decayMode_, isDEBUG_);
-      }
-      else
-      {
-        eff_1l1tau_tauLeg3_data = get_from_lut(effTrigger_1e1tau_tauLeg_data_faketau_, hadTau3_pt_, hadTau3_eta_, hadTau3_decayMode_, isDEBUG_);
-        eff_1l1tau_tauLeg3_mc   = get_from_lut(effTrigger_1e1tau_tauLeg_mc_faketau_,   hadTau3_pt_, hadTau3_eta_, hadTau3_decayMode_, isDEBUG_);
-      }
-
-      isTriggered_1l     = isTriggered_1e_;
-      isTriggered_1l1tau = isTriggered_1e1tau_;
+      std::cout << "electron: pT = " << lepton_pt_ << ", eta = " << lepton_eta_ << '\n';
     }
-    else if(lepton_type_ == kMuon)
+    eff_1l_data            = get_from_lut(effTrigger_1e_data_,            lepton_pt_, lepton_eta_, isDEBUG_);
+    eff_1l_mc              = get_from_lut(effTrigger_1e_mc_,              lepton_pt_, lepton_eta_, isDEBUG_);
+    eff_1l1tau_lepLeg_data = get_from_lut(effTrigger_1e1tau_lepLeg_data_, lepton_pt_, lepton_eta_, isDEBUG_);
+    eff_1l1tau_lepLeg_mc   = get_from_lut(effTrigger_1e1tau_lepLeg_mc_,   lepton_pt_, lepton_eta_, isDEBUG_);
+
+    eff_1l1tau_tauLeg1_data = 0.;
+    eff_1l1tau_tauLeg1_mc   = 0.;
+    if(std::fabs(hadTau1_eta_) <= 2.1)
     {
-      if(isDEBUG_)
-      {
-        std::cout << "muon: pT = " << lepton_pt_ << ", eta = " << lepton_eta_ << '\n';
-      }
-
-      eff_1l_data = get_from_lut(effTrigger_1m_data_, lepton_pt_, lepton_eta_, isDEBUG_);
-      eff_1l_mc   = get_from_lut(effTrigger_1m_mc_,   lepton_pt_, lepton_eta_, isDEBUG_);
-      eff_1l1tau_lepLeg_data = get_from_lut(effTrigger_1m1tau_lepLeg_data_, lepton_pt_, lepton_eta_, isDEBUG_);
-      eff_1l1tau_lepLeg_mc   = get_from_lut(effTrigger_1m1tau_lepLeg_mc_,   lepton_pt_, lepton_eta_);
-
-      if(hadTau1_isGenTau)
-      {
-        eff_1l1tau_tauLeg1_data = get_from_lut(effTrigger_1m1tau_tauLeg_data_gentau_, hadTau1_pt_, hadTau1_eta_, isDEBUG_);
-        eff_1l1tau_tauLeg1_mc   = get_from_lut(effTrigger_1m1tau_tauLeg_mc_gentau_,   hadTau1_pt_, hadTau1_eta_, isDEBUG_);
-      }
-      else
-      {
-        eff_1l1tau_tauLeg1_data = get_from_lut(effTrigger_1m1tau_tauLeg_data_faketau_, hadTau1_pt_, hadTau1_eta_, isDEBUG_);
-        eff_1l1tau_tauLeg1_mc   = get_from_lut(effTrigger_1m1tau_tauLeg_mc_faketau_,   hadTau1_pt_, hadTau1_eta_, isDEBUG_);
-      }
-
-      if(hadTau2_isGenTau)
-      {
-        eff_1l1tau_tauLeg2_data = get_from_lut(effTrigger_1m1tau_tauLeg_data_gentau_, hadTau2_pt_, hadTau2_eta_, isDEBUG_);
-        eff_1l1tau_tauLeg2_mc   = get_from_lut(effTrigger_1m1tau_tauLeg_mc_gentau_,   hadTau2_pt_, hadTau2_eta_, isDEBUG_);
-      }
-      else
-      {
-        eff_1l1tau_tauLeg2_data = get_from_lut(effTrigger_1m1tau_tauLeg_data_faketau_, hadTau2_pt_, hadTau2_eta_, isDEBUG_);
-        eff_1l1tau_tauLeg2_mc   = get_from_lut(effTrigger_1m1tau_tauLeg_mc_faketau_,   hadTau2_pt_, hadTau2_eta_, isDEBUG_);
-      }
-
-      if(hadTau3_isGenTau)
-      {
-        eff_1l1tau_tauLeg3_data = get_from_lut(effTrigger_1m1tau_tauLeg_data_gentau_, hadTau3_pt_, hadTau3_eta_, isDEBUG_);
-        eff_1l1tau_tauLeg3_mc   = get_from_lut(effTrigger_1m1tau_tauLeg_mc_gentau_,   hadTau3_pt_, hadTau3_eta_, isDEBUG_);
-      }
-      else
-      {
-        eff_1l1tau_tauLeg3_data = get_from_lut(effTrigger_1m1tau_tauLeg_data_faketau_, hadTau3_pt_, hadTau3_eta_, isDEBUG_);
-        eff_1l1tau_tauLeg3_mc   = get_from_lut(effTrigger_1m1tau_tauLeg_mc_faketau_,   hadTau3_pt_, hadTau3_eta_, isDEBUG_);
-      }
-
-      isTriggered_1l     = isTriggered_1m_;
-      isTriggered_1l1tau = isTriggered_1m1tau_;
+      eff_1l1tau_tauLeg1_data = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
+      eff_1l1tau_tauLeg1_mc   = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
     }
-    else
+
+    eff_1l1tau_tauLeg2_data = 0.;
+    eff_1l1tau_tauLeg2_mc   = 0.;
+    if(std::fabs(hadTau2_eta_) <= 2.1)
     {
-      assert(0);
+      eff_1l1tau_tauLeg2_data = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
+      eff_1l1tau_tauLeg2_mc   = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
     }
+
+    eff_1l1tau_tauLeg3_data   = 0.;
+    eff_1l1tau_tauLeg3_mc     = 0.;
+    if(std::fabs(hadTau3_eta_) <= 2.1)
+    {
+      eff_1l1tau_tauLeg3_data = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
+      eff_1l1tau_tauLeg3_mc   = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
+    }
+
+    isTriggered_1l     = isTriggered_1e_;
+    isTriggered_1l1tau = isTriggered_1e1tau_;
   }
-  else if(era_ == kEra_2017 || era_ == kEra_2018)
+  else if(lepton_type_ == kMuon)
   {
-    const auto getTriggerEfficiencyDataFunc = aux::getTriggerFuncData(triggerSF_option_);
-    const auto getTriggerEfficiencyMCFunc   = aux::getTriggerFuncMC(triggerSF_option_);
-    assert(getTriggerEfficiencyDataFunc);
-    assert(getTriggerEfficiencyMCFunc);
-
-    if(lepton_type_ == kElectron)
+    if(isDEBUG_)
     {
-      if(isDEBUG_)
-      {
-        std::cout << "electron: pT = " << lepton_pt_ << ", eta = " << lepton_eta_ << '\n';
-      }
-      eff_1l_data            = get_from_lut(effTrigger_1e_data_,            lepton_pt_, lepton_eta_, isDEBUG_);
-      eff_1l_mc              = get_from_lut(effTrigger_1e_mc_,              lepton_pt_, lepton_eta_, isDEBUG_);
-      eff_1l1tau_lepLeg_data = get_from_lut(effTrigger_1e1tau_lepLeg_data_, lepton_pt_, lepton_eta_, isDEBUG_);
-      eff_1l1tau_lepLeg_mc   = get_from_lut(effTrigger_1e1tau_lepLeg_mc_,   lepton_pt_, lepton_eta_, isDEBUG_);
-
-      eff_1l1tau_tauLeg1_data = 0.;
-      eff_1l1tau_tauLeg1_mc   = 0.;
-      if(std::fabs(hadTau1_eta_) <= 2.1)
-      {
-        eff_1l1tau_tauLeg1_data = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
-        eff_1l1tau_tauLeg1_mc   = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
-      }
-
-      eff_1l1tau_tauLeg2_data = 0.;
-      eff_1l1tau_tauLeg2_mc   = 0.;
-      if(std::fabs(hadTau2_eta_) <= 2.1)
-      {
-        eff_1l1tau_tauLeg2_data = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
-        eff_1l1tau_tauLeg2_mc   = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
-      }
-
-      eff_1l1tau_tauLeg3_data   = 0.;
-      eff_1l1tau_tauLeg3_mc     = 0.;
-      if(std::fabs(hadTau3_eta_) <= 2.1)
-      {
-        eff_1l1tau_tauLeg3_data = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
-        eff_1l1tau_tauLeg3_mc   = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
-      }
-
-      isTriggered_1l     = isTriggered_1e_;
-      isTriggered_1l1tau = isTriggered_1e1tau_;
+      std::cout << "muon: pT = " << lepton_pt_ << ", eta = " << lepton_eta_ << '\n';
     }
-    else if(lepton_type_ == kMuon)
+    eff_1l_data            = get_from_lut(effTrigger_1m_data_,            lepton_pt_, lepton_eta_, isDEBUG_);
+    eff_1l_mc              = get_from_lut(effTrigger_1m_mc_,              lepton_pt_, lepton_eta_, isDEBUG_);
+    eff_1l1tau_lepLeg_data = get_from_lut(effTrigger_1m1tau_lepLeg_data_, lepton_pt_, lepton_eta_, isDEBUG_);
+    eff_1l1tau_lepLeg_mc   = get_from_lut(effTrigger_1m1tau_lepLeg_mc_,   lepton_pt_, lepton_eta_, isDEBUG_);
+
+    eff_1l1tau_tauLeg1_data = 0.;
+    eff_1l1tau_tauLeg1_mc   = 0.;
+    if(std::fabs(hadTau1_eta_) <= 2.1)
     {
-      if(isDEBUG_)
-      {
-        std::cout << "muon: pT = " << lepton_pt_ << ", eta = " << lepton_eta_ << '\n';
-      }
-      eff_1l_data            = get_from_lut(effTrigger_1m_data_,            lepton_pt_, lepton_eta_, isDEBUG_);
-      eff_1l_mc              = get_from_lut(effTrigger_1m_mc_,              lepton_pt_, lepton_eta_, isDEBUG_);
-      eff_1l1tau_lepLeg_data = get_from_lut(effTrigger_1m1tau_lepLeg_data_, lepton_pt_, lepton_eta_, isDEBUG_);
-      eff_1l1tau_lepLeg_mc   = get_from_lut(effTrigger_1m1tau_lepLeg_mc_,   lepton_pt_, lepton_eta_, isDEBUG_);
-
-      eff_1l1tau_tauLeg1_data = 0.;
-      eff_1l1tau_tauLeg1_mc   = 0.;
-      if(std::fabs(hadTau1_eta_) <= 2.1)
-      {
-        eff_1l1tau_tauLeg1_data = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
-        eff_1l1tau_tauLeg1_mc   = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
-      }
-      
-      eff_1l1tau_tauLeg2_data   = 0.;
-      eff_1l1tau_tauLeg2_mc     = 0.;
-      if(std::fabs(hadTau2_eta_) <= 2.1)
-      {
-        eff_1l1tau_tauLeg2_data = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
-        eff_1l1tau_tauLeg2_mc   = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
-      }
-
-      eff_1l1tau_tauLeg3_data   = 0.;
-      eff_1l1tau_tauLeg3_mc     = 0.;
-      if(std::fabs(hadTau3_eta_) <= 2.1)
-      {
-        eff_1l1tau_tauLeg3_data = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
-        eff_1l1tau_tauLeg3_mc   = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
-      }
-
-      isTriggered_1l     = isTriggered_1m_;
-      isTriggered_1l1tau = isTriggered_1m1tau_;
+      eff_1l1tau_tauLeg1_data = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
+      eff_1l1tau_tauLeg1_mc   = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
     }
-    else
+
+    eff_1l1tau_tauLeg2_data   = 0.;
+    eff_1l1tau_tauLeg2_mc     = 0.;
+    if(std::fabs(hadTau2_eta_) <= 2.1)
     {
-      assert(0);
+      eff_1l1tau_tauLeg2_data = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
+      eff_1l1tau_tauLeg2_mc   = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
     }
+
+    eff_1l1tau_tauLeg3_data   = 0.;
+    eff_1l1tau_tauLeg3_mc     = 0.;
+    if(std::fabs(hadTau3_eta_) <= 2.1)
+    {
+      eff_1l1tau_tauLeg3_data = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
+      eff_1l1tau_tauLeg3_mc   = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
+    }
+
+    isTriggered_1l     = isTriggered_1m_;
+    isTriggered_1l1tau = isTriggered_1m1tau_;
   }
   else
   {
-    throw cmsException(this, __func__, __LINE__) << "Invalid era = " << era_;
+    assert(0);
   }
 
   if(isDEBUG_)
@@ -407,72 +216,15 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
     std::cout << "eff_1l1tau_tauLeg3_data = " << eff_1l1tau_tauLeg3_data << '\n';
     std::cout << "eff_1l1tau_tauLeg3_mc = " << eff_1l1tau_tauLeg3_mc << '\n';
   }
-  
-  double eff_2tau_tauLeg1_data = 0.;
-  double eff_2tau_tauLeg1_mc = 0.;
-  double eff_2tau_tauLeg2_data = 0.;
-  double eff_2tau_tauLeg2_mc = 0.;
-  double eff_2tau_tauLeg3_data = 0.;
-  double eff_2tau_tauLeg3_mc = 0.;
 
-  if(era_ == kEra_2016)
-  {
-    const bool hadTau1_isGenTau = (hadTau1_genPdgId_ == 11 || hadTau1_genPdgId_ == 13 || hadTau1_genPdgId_ == 15);
-    if(hadTau1_isGenTau)
-    {
-      eff_2tau_tauLeg1_data = get_from_lut(effTrigger_2tau_perLeg_data_gentau_, hadTau1_pt_, hadTau1_eta_, hadTau1_decayMode_, isDEBUG_);
-      eff_2tau_tauLeg1_mc   = get_from_lut(effTrigger_2tau_perLeg_mc_gentau_,   hadTau1_pt_, hadTau1_eta_, hadTau1_decayMode_, isDEBUG_);
-    }
-    else
-    {
-      eff_2tau_tauLeg1_data = get_from_lut(effTrigger_2tau_perLeg_data_faketau_, hadTau1_pt_, hadTau1_eta_, hadTau1_decayMode_, isDEBUG_);
-      eff_2tau_tauLeg1_mc   = get_from_lut(effTrigger_2tau_perLeg_mc_faketau_,   hadTau1_pt_, hadTau1_eta_, hadTau1_decayMode_, isDEBUG_);
-    }
+  const double eff_2tau_tauLeg1_data = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
+  const double eff_2tau_tauLeg1_mc   = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
 
-    const bool hadTau2_isGenTau = (hadTau2_genPdgId_ == 11 || hadTau2_genPdgId_ == 13 || hadTau2_genPdgId_ == 15);
-    if(hadTau2_isGenTau)
-    {
-      eff_2tau_tauLeg2_data = get_from_lut(effTrigger_2tau_perLeg_data_gentau_, hadTau2_pt_, hadTau2_eta_, hadTau2_decayMode_, isDEBUG_);
-      eff_2tau_tauLeg2_mc   = get_from_lut(effTrigger_2tau_perLeg_mc_gentau_,   hadTau2_pt_, hadTau2_eta_, hadTau2_decayMode_, isDEBUG_);
-    }
-    else
-    {
-      eff_2tau_tauLeg2_data = get_from_lut(effTrigger_2tau_perLeg_data_faketau_, hadTau2_pt_, hadTau2_eta_, hadTau2_decayMode_, isDEBUG_);
-      eff_2tau_tauLeg2_mc   = get_from_lut(effTrigger_2tau_perLeg_mc_faketau_,   hadTau2_pt_, hadTau2_eta_, hadTau2_decayMode_, isDEBUG_);
-    }
+  const double eff_2tau_tauLeg2_data = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
+  const double eff_2tau_tauLeg2_mc   = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
 
-    const bool hadTau3_isGenTau = (hadTau3_genPdgId_ == 11 || hadTau3_genPdgId_ == 13 || hadTau3_genPdgId_ == 15);
-    if(hadTau3_isGenTau)
-    {
-      eff_2tau_tauLeg3_data = get_from_lut(effTrigger_2tau_perLeg_data_gentau_, hadTau3_pt_, hadTau3_eta_, hadTau3_decayMode_, isDEBUG_);
-      eff_2tau_tauLeg3_mc   = get_from_lut(effTrigger_2tau_perLeg_mc_gentau_,   hadTau3_pt_, hadTau3_eta_, hadTau3_decayMode_, isDEBUG_);
-    }
-    else
-    {
-      eff_2tau_tauLeg3_data = get_from_lut(effTrigger_2tau_perLeg_data_faketau_, hadTau3_pt_, hadTau3_eta_, hadTau3_decayMode_, isDEBUG_);
-      eff_2tau_tauLeg3_mc   = get_from_lut(effTrigger_2tau_perLeg_mc_faketau_,   hadTau3_pt_, hadTau3_eta_, hadTau3_decayMode_, isDEBUG_);
-    }
-  }
-  else if(era_ == kEra_2017 || era_ == kEra_2018)
-  {
-    const auto getTriggerEfficiencyDataFunc = aux::getTriggerFuncData(triggerSF_option_);
-    const auto getTriggerEfficiencyMCFunc   = aux::getTriggerFuncMC(triggerSF_option_);
-    assert(getTriggerEfficiencyDataFunc);
-    assert(getTriggerEfficiencyMCFunc);
-
-    eff_2tau_tauLeg1_data = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
-    eff_2tau_tauLeg1_mc   = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
-
-    eff_2tau_tauLeg2_data = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
-    eff_2tau_tauLeg2_mc   = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
-
-    eff_2tau_tauLeg3_data = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
-    eff_2tau_tauLeg3_mc   = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
-  }
-  else
-  {
-    throw cmsException(this, __func__, __LINE__) << "Invalid era = " << era_;
-  }
+  const double eff_2tau_tauLeg3_data = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
+  const double eff_2tau_tauLeg3_mc   = (effTrigger_2tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
 
   if(isDEBUG_)
   {
@@ -625,7 +377,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_lepton(int lepton_sta
     case kNot1lAndNot1l1tau: prob = 1. - std::max(eff_1l, eff_1l1tau_lepLeg);    break;
     default:                 assert(0);
   }
-  std::cout << "<Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_lepton>: prob = " << prob << '\n';
+  std::cout << get_human_line(this, __func__, __LINE__) << ": prob = " << prob << '\n';
   return prob;
 }
  
@@ -643,6 +395,6 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_tau(int tau_status,
     case kNot1l1tauAndNot2tau: prob = 1. - std::max(eff_1l1tau_tauLeg, eff_2tau_tauLeg);    break;
     default:                   assert(0);
   }
-  std::cout << "<Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_tau>: prob = " << prob << '\n';
+  std::cout << get_human_line(this, __func__, __LINE__) << ": prob = " << prob << '\n';
   return prob;
 }

@@ -1147,22 +1147,11 @@ int main(int argc, char* argv[])
         selHadTau_third_genPdgId, selHadTau_third->pt(), selHadTau_third->eta());
 
       dataToMCcorrectionInterface_hh_1l_3tau_trigger->setLeptons(selLepton_type, selLepton->pt(), selLepton->eta());
-      if(era == kEra_2016)
-      {
-        dataToMCcorrectionInterface_hh_1l_3tau_trigger->setHadTaus(
-          selHadTau_lead_genPdgId,    selHadTau_lead->pt(),    selHadTau_lead->eta(),    selHadTau_lead->decayMode(),
-          selHadTau_sublead_genPdgId, selHadTau_sublead->pt(), selHadTau_sublead->eta(), selHadTau_sublead->decayMode(),
-          selHadTau_third_genPdgId,   selHadTau_third->pt(),   selHadTau_third->eta(),   selHadTau_third->decayMode()
-        );
-      }
-      else if(era == kEra_2017)
-      {
-        dataToMCcorrectionInterface_hh_1l_3tau_trigger->setHadTaus(
-          selHadTau_lead->pt(),    selHadTau_lead->eta(),    selHadTau_lead->phi(),    selHadTau_lead->decayMode(),
-          selHadTau_sublead->pt(), selHadTau_sublead->eta(), selHadTau_sublead->phi(), selHadTau_sublead->decayMode(),
-          selHadTau_third->pt(),   selHadTau_third->eta(),   selHadTau_third->phi(),   selHadTau_third->decayMode()
-        );
-      }
+      dataToMCcorrectionInterface_hh_1l_3tau_trigger->setHadTaus(
+        selHadTau_lead->pt(),    selHadTau_lead->eta(),    selHadTau_lead->phi(),    selHadTau_lead->decayMode(),
+        selHadTau_sublead->pt(), selHadTau_sublead->eta(), selHadTau_sublead->phi(), selHadTau_sublead->decayMode(),
+        selHadTau_third->pt(),   selHadTau_third->eta(),   selHadTau_third->phi(),   selHadTau_third->decayMode()
+      );
       dataToMCcorrectionInterface_hh_1l_3tau_trigger->setTriggerBits(isTriggered_1e, isTriggered_1e1tau, isTriggered_1mu, isTriggered_1mu1tau, isTriggered_2tau);
 
 //--- apply data/MC corrections for trigger efficiency
