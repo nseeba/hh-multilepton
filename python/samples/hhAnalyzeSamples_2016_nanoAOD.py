@@ -1,6 +1,6 @@
 from collections import OrderedDict as OD
 
-# file generated at 2019-07-07 19:29:02 with the following command:
+# file generated at 2019-07-07 21:22:54 with the following command:
 # create_dictionary.py -m python/samples/metaDict_2016_hh.py -p python/samples/sampleLocations_2016_nanoAOD_hh_multilepton.txt -N samples_2016 -E 2016 -o python/samples -g hhAnalyzeSamples_2016_nanoAOD.py -M
 
 samples_2016 = OD()
@@ -1707,6 +1707,48 @@ samples_2016["/GluGluToHHTo4Tau_node_4_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
     [
       OD([
         ("path",      "/hdfs/cms/store/user/snandan/2016v3_2019Jun17/GluGluToHHTo4Tau_node_4_13TeV-madgraph/2016v3_2019Jun17_GluGluToHHTo4Tau_node_4_13TeV-madgraph__RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/190617_060337"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
+samples_2016["/GluGluToHHTo4Tau_node_5_13TeV-madgraph/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_ggf_nonresonant_hh_tttt"),
+  ("process_name_specific",           "signal_ggf_nonresonant_node_5_hh_4t"),
+  ("nof_files",                       2),
+  ("nof_db_files",                    2),
+  ("nof_events",                      {
+  }),
+  ("nof_tree_events",                 98210),
+  ("nof_db_events",                   98210),
+  ("fsize_local",                     235960346), # 235.96MB, avg file size 117.98MB
+  ("fsize_db",                        4483694248), # 4.48GB, avg file size 2.24GB
+  ("use_it",                          True),
+  ("xsection",                        0.003934),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         True),
+  ("LHE_set",                         "LHA IDs 262000 - 262100 -> NNPDF30_lo_as_0130 PDF set, expecting 101 weights (counted 101 weights)"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/cms/store/user/snandan/2016v3_2019Jun17/GluGluToHHTo4Tau_node_5_13TeV-madgraph/2016v3_2019Jun17_GluGluToHHTo4Tau_node_5_13TeV-madgraph__RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/190617_060546"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
