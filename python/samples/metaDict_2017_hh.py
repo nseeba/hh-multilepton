@@ -1,7 +1,7 @@
 from collections import OrderedDict as OD
 
-# file generated at 2019-06-10 03:52:09 with the following command:
-# find_samples.py -V -i ../../tthAnalysis/NanoAOD/test/datasets/txt/datasets_hh_multilepton_mc_2017_RunIIFall17MiniAODv2.txt -m python/samples/metaDict_2017_hh.py -s ../../tthAnalysis/NanoAOD/test/datasets/txt/sum_datasets_hh_multilepton_2017_RunIIFall17MiniAODv2.txt
+# file generated at 2019-07-07 19:19:09 with the following command:
+# find_samples.py -V -i ../../tthAnalysis/NanoAOD/test/datasets/txt/datasets_hh_multilepton_mc_2017_RunIIFall17MiniAODv2.txt -m python/samples/metaDict_2017_hh.py -s ../../tthAnalysis/NanoAOD/test/datasets/txt/sum_datasets_hh_multilepton_2017_RunIIFall17MiniAODv2.txt -c python/samples/sampleLocations_2017_nanoAOD_hh_multilepton.txt
 
 meta_dictionary = OD()
 
@@ -16,7 +16,7 @@ sum_events = {
 
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-250_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-250_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_250_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_250_hh_4t"),
   ("nof_db_events",         400000),
@@ -29,7 +29,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-250_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-260_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-260_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_260_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_260_hh_4t"),
   ("nof_db_events",         400000),
@@ -42,7 +42,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-260_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-270_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-270_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_270_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_270_hh_4t"),
   ("nof_db_events",         385000),
@@ -55,7 +55,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-270_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-280_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-280_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_280_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_280_hh_4t"),
   ("nof_db_events",         400000),
@@ -68,7 +68,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-280_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-300_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-300_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_300_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_300_hh_4t"),
   ("nof_db_events",         300000),
@@ -81,7 +81,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-300_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-350_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-350_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_350_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_350_hh_4t"),
   ("nof_db_events",         284000),
@@ -94,7 +94,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-350_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-400_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-400_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_400_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_400_hh_4t"),
   ("nof_db_events",         300000),
@@ -107,7 +107,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-400_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-450_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-450_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_450_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_450_hh_4t"),
   ("nof_db_events",         300000),
@@ -120,7 +120,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-450_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-500_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-500_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_500_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_500_hh_4t"),
   ("nof_db_events",         200000),
@@ -133,7 +133,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-500_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-550_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-550_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_550_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_550_hh_4t"),
   ("nof_db_events",         200000),
@@ -146,7 +146,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-550_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-600_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-600_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_600_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_600_hh_4t"),
   ("nof_db_events",         200000),
@@ -159,7 +159,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-600_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-650_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-650_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_650_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_650_hh_4t"),
   ("nof_db_events",         200000),
@@ -172,7 +172,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-650_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-700_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-700_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_700_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_700_hh_4t"),
   ("nof_db_events",         200000),
@@ -185,7 +185,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-700_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-750_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-750_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_750_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_750_hh_4t"),
   ("nof_db_events",         200000),
@@ -198,7 +198,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-750_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-800_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-800_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_800_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_800_hh_4t"),
   ("nof_db_events",         200000),
@@ -211,7 +211,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-800_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-850_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-850_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_850_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_850_hh_4t"),
   ("nof_db_events",         192000),
@@ -224,7 +224,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-850_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-900_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-900_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_900_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_900_hh_4t"),
   ("nof_db_events",         100000),
@@ -237,7 +237,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-900_narrow_13TeV-madgraph/RunIIFall
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-1000_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-1000_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_1000_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_1000_hh_4t"),
   ("nof_db_events",         100000),
@@ -250,7 +250,7 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-1000_narrow_13TeV-madgraph/RunIIFal
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-250_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-250_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_250_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_250_hh_4t"),
   ("nof_db_events",         391000),
@@ -263,7 +263,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-250_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-260_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_260_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_260_hh_4t"),
   ("nof_db_events",         386000),
@@ -276,7 +276,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-260_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-270_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_270_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_270_hh_4t"),
   ("nof_db_events",         380000),
@@ -289,7 +289,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-270_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-280_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-280_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_280_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_280_hh_4t"),
   ("nof_db_events",         400000),
@@ -302,7 +302,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-280_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-300_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-300_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_300_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_300_hh_4t"),
   ("nof_db_events",         400000),
@@ -315,7 +315,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-300_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-320_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-320_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_320_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_320_hh_4t"),
   ("nof_db_events",         298000),
@@ -328,7 +328,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-320_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-350_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-350_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_350_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_350_hh_4t"),
   ("nof_db_events",         384000),
@@ -341,7 +341,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-350_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-400_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-400_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_400_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_400_hh_4t"),
   ("nof_db_events",         300000),
@@ -354,7 +354,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-400_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-450_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-450_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_450_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_450_hh_4t"),
   ("nof_db_events",         280000),
@@ -367,7 +367,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-450_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-500_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-500_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_500_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_500_hh_4t"),
   ("nof_db_events",         284000),
@@ -393,7 +393,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-550_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-600_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-600_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_600_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_600_hh_4t"),
   ("nof_db_events",         198000),
@@ -406,7 +406,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-600_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-650_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-650_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_650_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_650_hh_4t"),
   ("nof_db_events",         200000),
@@ -419,7 +419,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-650_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-700_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-700_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_700_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_700_hh_4t"),
   ("nof_db_events",         189000),
@@ -432,7 +432,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-700_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-750_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-750_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_750_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_750_hh_4t"),
   ("nof_db_events",         196000),
@@ -445,7 +445,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-750_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-800_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-800_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_800_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_800_hh_4t"),
   ("nof_db_events",         200000),
@@ -458,7 +458,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-800_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-850_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-850_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_850_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_850_hh_4t"),
   ("nof_db_events",         194000),
@@ -471,7 +471,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-850_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-900_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-900_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_900_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_900_hh_4t"),
   ("nof_db_events",         100000),
@@ -484,7 +484,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-900_narrow_13TeV-madgraph_cor
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-1000_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-1000_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14"),
   ("sample_category",       "signal_ggf_spin2_1000_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_1000_hh_4t"),
   ("nof_db_events",         100000),
@@ -497,7 +497,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-1000_narrow_13TeV-madgraph_co
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-250_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-250_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_250_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_250_hh_2v2t"),
   ("nof_db_events",         399997),
@@ -510,7 +510,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-250_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_260_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_260_hh_2v2t"),
   ("nof_db_events",         399993),
@@ -523,7 +523,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_270_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_270_hh_2v2t"),
   ("nof_db_events",         399995),
@@ -536,7 +536,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-280_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-280_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_280_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_280_hh_2v2t"),
   ("nof_db_events",         379996),
@@ -562,7 +562,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-300_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-320_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-320_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_320_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_320_hh_2v2t"),
   ("nof_db_events",         299998),
@@ -575,7 +575,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-320_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-350_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-350_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_350_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_350_hh_2v2t"),
   ("nof_db_events",         299990),
@@ -588,7 +588,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-350_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-400_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-400_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_400_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_400_hh_2v2t"),
   ("nof_db_events",         286992),
@@ -601,7 +601,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-400_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-450_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-450_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_450_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_450_hh_2v2t"),
   ("nof_db_events",         291993),
@@ -614,7 +614,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-450_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-500_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-500_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_500_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_500_hh_2v2t"),
   ("nof_db_events",         269995),
@@ -627,7 +627,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-500_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-550_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo2V2Tau_M-550_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_550_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_550_hh_2v2t"),
   ("nof_db_events",         299996),
@@ -640,7 +640,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-550_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-600_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-600_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2"),
   ("sample_category",       "signal_ggf_spin0_600_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_600_hh_2v2t"),
   ("nof_db_events",         195995),
@@ -653,7 +653,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-600_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-650_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-650_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_650_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_650_hh_2v2t"),
   ("nof_db_events",         199995),
@@ -666,7 +666,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-650_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-700_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun26_GluGluToRadionToHHTo2V2Tau_M-700_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_700_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_700_hh_2v2t"),
   ("nof_db_events",         191997),
@@ -679,7 +679,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-700_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-750_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun26_GluGluToRadionToHHTo2V2Tau_M-750_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_750_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_750_hh_2v2t"),
   ("nof_db_events",         199998),
@@ -692,7 +692,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-750_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-800_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo2V2Tau_M-800_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_800_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_800_hh_2v2t"),
   ("nof_db_events",         199999),
@@ -705,7 +705,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-800_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-850_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-850_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_850_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_850_hh_2v2t"),
   ("nof_db_events",         191996),
@@ -718,7 +718,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-850_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-900_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo2V2Tau_M-900_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_900_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_900_hh_2v2t"),
   ("nof_db_events",         199997),
@@ -731,7 +731,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-900_narrow_13TeV-madgraph_correct
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-1000_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-1000_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_1000_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_1000_hh_2v2t"),
   ("nof_db_events",         99998),
@@ -744,7 +744,7 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-1000_narrow_13TeV-madgraph_correc
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-250_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-250_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_250_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_250_hh_2v2t"),
   ("nof_db_events",         394995),
@@ -757,7 +757,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-250_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_260_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_260_hh_2v2t"),
   ("nof_db_events",         395995),
@@ -770,7 +770,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_270_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_270_hh_2v2t"),
   ("nof_db_events",         399996),
@@ -783,7 +783,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-280_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-280_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_280_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_280_hh_2v2t"),
   ("nof_db_events",         394995),
@@ -796,7 +796,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-280_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-300_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo2V2Tau_M-300_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_300_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_300_hh_2v2t"),
   ("nof_db_events",         299995),
@@ -809,7 +809,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-300_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-320_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-320_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_320_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_320_hh_2v2t"),
   ("nof_db_events",         284992),
@@ -822,7 +822,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-320_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-350_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo2V2Tau_M-350_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_350_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_350_hh_2v2t"),
   ("nof_db_events",         299995),
@@ -835,7 +835,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-350_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-400_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo2V2Tau_M-400_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_400_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_400_hh_2v2t"),
   ("nof_db_events",         289998),
@@ -848,7 +848,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-400_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-450_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo2V2Tau_M-450_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_450_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_450_hh_2v2t"),
   ("nof_db_events",         279993),
@@ -861,7 +861,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-450_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-500_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-500_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_500_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_500_hh_2v2t"),
   ("nof_db_events",         199997),
@@ -874,7 +874,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-500_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-550_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo2V2Tau_M-550_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_550_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_550_hh_2v2t"),
   ("nof_db_events",         199995),
@@ -887,7 +887,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-550_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-600_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-600_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_600_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_600_hh_2v2t"),
   ("nof_db_events",         199996),
@@ -900,7 +900,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-600_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-650_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-650_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_650_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_650_hh_2v2t"),
   ("nof_db_events",         195999),
@@ -926,7 +926,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-700_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-750_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-750_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_750_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_750_hh_2v2t"),
   ("nof_db_events",         199999),
@@ -939,7 +939,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-750_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-800_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-800_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_800_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_800_hh_2v2t"),
   ("nof_db_events",         199998),
@@ -965,7 +965,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-850_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-900_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-900_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_900_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_900_hh_2v2t"),
   ("nof_db_events",         99999),
@@ -978,7 +978,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-900_narrow_13TeV-madgraph_c
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-1000_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-1000_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v"),
   ("sample_category",       "signal_ggf_spin2_1000_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_1000_hh_2v2t"),
   ("nof_db_events",         99999),
@@ -991,7 +991,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-1000_narrow_13TeV-madgraph_
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-250_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-250_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_250_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_250_hh_4v"),
   ("nof_db_events",         399999),
@@ -1004,7 +1004,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-250_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-260_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_260_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_260_hh_4v"),
   ("nof_db_events",         399998),
@@ -1017,7 +1017,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-260_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-270_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_270_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_270_hh_4v"),
   ("nof_db_events",         386000),
@@ -1030,7 +1030,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-270_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-280_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-280_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_280_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_280_hh_4v"),
   ("nof_db_events",         388998),
@@ -1043,7 +1043,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-280_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-300_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-300_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_300_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_300_hh_4v"),
   ("nof_db_events",         299999),
@@ -1056,7 +1056,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-300_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-320_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-320_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_320_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_320_hh_4v"),
   ("nof_db_events",         299998),
@@ -1069,7 +1069,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-320_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-350_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-350_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_350_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_350_hh_4v"),
   ("nof_db_events",         291998),
@@ -1082,7 +1082,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-350_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-400_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-400_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_400_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_400_hh_4v"),
   ("nof_db_events",         299999),
@@ -1095,7 +1095,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-400_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-450_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-450_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_450_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_450_hh_4v"),
   ("nof_db_events",         292000),
@@ -1108,7 +1108,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-450_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-500_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-500_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_500_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_500_hh_4v"),
   ("nof_db_events",         299997),
@@ -1121,7 +1121,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-500_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-550_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-550_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_550_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_550_hh_4v"),
   ("nof_db_events",         299998),
@@ -1134,7 +1134,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-550_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-600_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-600_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_600_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_600_hh_4v"),
   ("nof_db_events",         195999),
@@ -1147,7 +1147,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-600_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-650_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-650_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_650_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_650_hh_4v"),
   ("nof_db_events",         199999),
@@ -1160,7 +1160,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-650_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-700_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-700_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_700_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_700_hh_4v"),
   ("nof_db_events",         200000),
@@ -1173,7 +1173,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-700_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-750_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-750_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_750_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_750_hh_4v"),
   ("nof_db_events",         192000),
@@ -1186,7 +1186,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-750_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-800_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-800_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_800_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_800_hh_4v"),
   ("nof_db_events",         199997),
@@ -1199,7 +1199,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-800_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-850_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-850_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_850_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_850_hh_4v"),
   ("nof_db_events",         199999),
@@ -1212,7 +1212,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-850_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-900_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-900_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_900_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_900_hh_4v"),
   ("nof_db_events",         200000),
@@ -1225,7 +1225,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-900_narrow_13TeV-madgraph_correctedcf
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-1000_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-1000_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2"),
   ("sample_category",       "signal_ggf_spin0_1000_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_1000_hh_4v"),
   ("nof_db_events",         99999),
@@ -1238,7 +1238,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-1000_narrow_13TeV-madgraph_correctedc
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-250_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-250_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_250_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_250_hh_4v"),
   ("nof_db_events",         399996),
@@ -1251,7 +1251,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-250_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-260_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_260_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_260_hh_4v"),
   ("nof_db_events",         399997),
@@ -1264,7 +1264,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-260_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-270_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_270_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_270_hh_4v"),
   ("nof_db_events",         400000),
@@ -1277,7 +1277,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-270_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-280_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-280_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_280_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_280_hh_4v"),
   ("nof_db_events",         391999),
@@ -1290,7 +1290,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-280_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-300_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-300_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_300_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_300_hh_4v"),
   ("nof_db_events",         383998),
@@ -1303,7 +1303,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-300_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-320_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-320_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_320_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_320_hh_4v"),
   ("nof_db_events",         300000),
@@ -1316,7 +1316,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-320_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-350_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-350_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_350_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_350_hh_4v"),
   ("nof_db_events",         299999),
@@ -1329,7 +1329,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-350_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-400_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4V_M-400_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_400_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_400_hh_4v"),
   ("nof_db_events",         300000),
@@ -1342,7 +1342,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-400_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-450_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-450_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_450_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_450_hh_4v"),
   ("nof_db_events",         287998),
@@ -1355,7 +1355,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-450_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-500_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-500_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_500_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_500_hh_4v"),
   ("nof_db_events",         299997),
@@ -1368,7 +1368,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-500_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-550_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-550_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_550_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_550_hh_4v"),
   ("nof_db_events",         299998),
@@ -1381,7 +1381,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-550_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-600_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4V_M-600_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_600_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_600_hh_4v"),
   ("nof_db_events",         191998),
@@ -1394,7 +1394,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-600_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-650_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-650_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_650_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_650_hh_4v"),
   ("nof_db_events",         200000),
@@ -1407,7 +1407,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-650_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-700_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-700_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_700_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_700_hh_4v"),
   ("nof_db_events",         191999),
@@ -1420,7 +1420,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-700_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-750_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4V_M-750_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_750_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_750_hh_4v"),
   ("nof_db_events",         199997),
@@ -1433,7 +1433,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-750_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-800_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-800_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_800_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_800_hh_4v"),
   ("nof_db_events",         199998),
@@ -1446,7 +1446,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-800_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-850_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-850_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_850_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_850_hh_4v"),
   ("nof_db_events",         199999),
@@ -1472,7 +1472,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-900_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-1000_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4V_M-1000_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v"),
   ("sample_category",       "signal_ggf_spin2_1000_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_1000_hh_4v"),
   ("nof_db_events",         99999),
@@ -1485,7 +1485,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-1000_narrow_13TeV-madgraph_corr
 ])
 
 meta_dictionary["/VBFHHTo4Tau_CV_1_C2V_1_C3_1_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_VBFHHTo4Tau_CV_1_C2V_1_C3_1_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_vbf_nonresonant_1_1_1_hh_tttt"),
   ("process_name_specific", "signal_vbf_nonresonant_1_1_1_hh_4t"),
   ("nof_db_events",         384000),
@@ -1498,7 +1498,7 @@ meta_dictionary["/VBFHHTo4Tau_CV_1_C2V_1_C3_1_13TeV-madgraph/RunIIFall17MiniAODv
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_SM_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4Tau_node_SM_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_sm_hh_4t"),
   ("nof_db_events",         400000),
@@ -1511,7 +1511,7 @@ meta_dictionary["/GluGluToHHTo4Tau_node_SM_13TeV-madgraph_correctedcfg/RunIIFall
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_2_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4Tau_node_2_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_2_hh_4t"),
   ("nof_db_events",         388000),
@@ -1524,7 +1524,7 @@ meta_dictionary["/GluGluToHHTo4Tau_node_2_13TeV-madgraph_correctedcfg/RunIIFall1
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_3_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4Tau_node_3_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_3_hh_4t"),
   ("nof_db_events",         400000),
@@ -1537,7 +1537,7 @@ meta_dictionary["/GluGluToHHTo4Tau_node_3_13TeV-madgraph_correctedcfg/RunIIFall1
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_7_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4Tau_node_7_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_7_hh_4t"),
   ("nof_db_events",         374000),
@@ -1550,7 +1550,7 @@ meta_dictionary["/GluGluToHHTo4Tau_node_7_13TeV-madgraph_correctedcfg/RunIIFall1
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_9_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4Tau_node_9_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_9_hh_4t"),
   ("nof_db_events",         400000),
@@ -1563,7 +1563,7 @@ meta_dictionary["/GluGluToHHTo4Tau_node_9_13TeV-madgraph_correctedcfg/RunIIFall1
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_12_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4Tau_node_12_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_12_hh_4t"),
   ("nof_db_events",         396000),
@@ -1576,7 +1576,7 @@ meta_dictionary["/GluGluToHHTo4Tau_node_12_13TeV-madgraph_correctedcfg/RunIIFall
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_SM_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo2V2Tau_node_SM_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_sm_hh_2v2t"),
   ("nof_db_events",         399996),
@@ -1589,7 +1589,7 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_SM_13TeV-madgraph_correctedcfg/RunIIFa
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_2_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo2V2Tau_node_2_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_2_hh_2v2t"),
   ("nof_db_events",         369992),
@@ -1602,7 +1602,7 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_2_13TeV-madgraph_correctedcfg/RunIIFal
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_3_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo2V2Tau_node_3_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_3_hh_2v2t"),
   ("nof_db_events",         392996),
@@ -1615,7 +1615,7 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_3_13TeV-madgraph_correctedcfg/RunIIFal
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_4_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo2V2Tau_node_4_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_4_hh_2v2t"),
   ("nof_db_events",         375989),
@@ -1628,7 +1628,7 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_4_13TeV-madgraph_correctedcfg/RunIIFal
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_5_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo2V2Tau_node_5_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_5_hh_2v2t"),
   ("nof_db_events",         399994),
@@ -1641,7 +1641,7 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_5_13TeV-madgraph_correctedcfg/RunIIFal
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_6_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo2V2Tau_node_6_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_6_hh_2v2t"),
   ("nof_db_events",         399992),
@@ -1654,7 +1654,7 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_6_13TeV-madgraph_correctedcfg/RunIIFal
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_7_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo2V2Tau_node_7_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_7_hh_2v2t"),
   ("nof_db_events",         384992),
@@ -1667,7 +1667,7 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_7_13TeV-madgraph_correctedcfg/RunIIFal
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_8_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo2V2Tau_node_8_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_8_hh_2v2t"),
   ("nof_db_events",         399997),
@@ -1680,7 +1680,7 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_8_13TeV-madgraph_correctedcfg/RunIIFal
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_9_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo2V2Tau_node_9_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_9_hh_2v2t"),
   ("nof_db_events",         399991),
@@ -1693,7 +1693,7 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_9_13TeV-madgraph_correctedcfg/RunIIFal
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_10_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo2V2Tau_node_10_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_10_hh_2v2t"),
   ("nof_db_events",         399986),
@@ -1706,7 +1706,7 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_10_13TeV-madgraph_correctedcfg/RunIIFa
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_11_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo2V2Tau_node_11_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_11_hh_2v2t"),
   ("nof_db_events",         395994),
@@ -1732,7 +1732,7 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_12_13TeV-madgraph_correctedcfg/RunIIFa
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_SM_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_SM_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_sm_hh_4v"),
   ("nof_db_events",         379997),
@@ -1745,7 +1745,7 @@ meta_dictionary["/GluGluToHHTo4V_node_SM_13TeV-madgraph_correctedcfg/RunIIFall17
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_2_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_2_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_2_hh_4v"),
   ("nof_db_events",         399999),
@@ -1784,7 +1784,7 @@ meta_dictionary["/GluGluToHHTo4V_node_4_13TeV-madgraph_correctedcfg/RunIIFall17M
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_5_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo4V_node_5_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_5_hh_4v"),
   ("nof_db_events",         399999),
@@ -1797,7 +1797,7 @@ meta_dictionary["/GluGluToHHTo4V_node_5_13TeV-madgraph_correctedcfg/RunIIFall17M
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_6_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_6_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_6_hh_4v"),
   ("nof_db_events",         396000),
@@ -1810,7 +1810,7 @@ meta_dictionary["/GluGluToHHTo4V_node_6_13TeV-madgraph_correctedcfg/RunIIFall17M
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_7_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_7_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_7_hh_4v"),
   ("nof_db_events",         400000),
@@ -1823,7 +1823,7 @@ meta_dictionary["/GluGluToHHTo4V_node_7_13TeV-madgraph_correctedcfg/RunIIFall17M
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_8_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_8_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_8_hh_4v"),
   ("nof_db_events",         395995),
@@ -1836,7 +1836,7 @@ meta_dictionary["/GluGluToHHTo4V_node_8_13TeV-madgraph_correctedcfg/RunIIFall17M
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_9_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_9_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_9_hh_4v"),
   ("nof_db_events",         399997),
@@ -1849,7 +1849,7 @@ meta_dictionary["/GluGluToHHTo4V_node_9_13TeV-madgraph_correctedcfg/RunIIFall17M
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_10_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_10_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_10_hh_4v"),
   ("nof_db_events",         391996),
@@ -1862,7 +1862,7 @@ meta_dictionary["/GluGluToHHTo4V_node_10_13TeV-madgraph_correctedcfg/RunIIFall17
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_11_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_11_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_11_hh_4v"),
   ("nof_db_events",         399997),
@@ -1875,7 +1875,7 @@ meta_dictionary["/GluGluToHHTo4V_node_11_13TeV-madgraph_correctedcfg/RunIIFall17
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_12_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo4V_node_12_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_12_hh_4v"),
   ("nof_db_events",         394000),
