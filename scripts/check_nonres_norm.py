@@ -7,11 +7,11 @@ from HHStatAnalysis.AnalyticalModels.NonResonantModel import NonResonantModel
 from rootpy.plotting import Hist2D, Hist
 
 import ROOT
-import numpy as np
 
 import argparse
 import glob
 import os
+import math
 
 os.environ["MKL_NUM_THREADS"] = "1"
 inputTree = "Events"
@@ -157,6 +157,6 @@ if __name__ == '__main__':
     print('Category: {}'.format(category))
     for scan_idx in weight_sums[category]:
       weight_name = 'SM' if scan_idx == 0 else 'BM{}'.format(scan_idx)
-      weight_sum = np.sum(weight_sums[category][scan_idx])
+      weight_sum = math.fsum(weight_sums[category][scan_idx])
       weight_len = len(weight_sums[category][scan_idx])
       print('  {} -> {} ({} events)'.format(weight_name, weight_sum, weight_len))
