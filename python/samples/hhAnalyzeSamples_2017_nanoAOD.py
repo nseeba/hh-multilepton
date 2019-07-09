@@ -2230,48 +2230,6 @@ samples_2017["/GluGluToRadionToHHTo2V2Tau_M-800_narrow_13TeV-madgraph_correctedc
   ]),
 ])
 
-samples_2017["/GluGluToRadionToHHTo2V2Tau_M-850_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
-  ("type",                            "mc"),
-  ("sample_category",                 "signal_ggf_spin0_850_hh_wwtt"),
-  ("process_name_specific",           "signal_ggf_spin0_850_hh_2v2t"),
-  ("nof_files",                       1),
-  ("nof_db_files",                    12),
-  ("nof_events",                      {
-  }),
-  ("nof_tree_events",                 11000),
-  ("nof_db_events",                   191996),
-  ("fsize_local",                     29994067), # 29.99MB, avg file size 29.99MB
-  ("fsize_db",                        11335819766), # 11.34GB, avg file size 944.65MB
-  ("use_it",                          True),
-  ("xsection",                        0.030092),
-  ("genWeight",                       True),
-  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
-  ("has_LHE",                         True),
-  ("LHE_set",                         "LHA IDs 306000 - 306102 -> NNPDF31_nnlo_hessian_pdfas PDF set, expecting 103 weights (counted 103 weights)"),
-  ("nof_reweighting",                 0),
-  ("local_paths",
-    [
-      OD([
-        ("path",      "/hdfs/cms/store/user/snandan/2017v2_2019Jun18/GluGluToRadionToHHTo2V2Tau_M-850_narrow_13TeV-madgraph_correctedcfg/2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-850_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/190618_034818"),
-        ("selection", "*"),
-        ("blacklist", []),
-      ]),
-    ]
-  ),
-  ("missing_completely",           [
-    # not computed
-  ]),
-  ("missing_from_superset",        [
-    # not computed
-  ]),
-  ("missing_hlt_paths",            [
-
-  ]),
-  ("hlt_paths",                    [
-    # not computed
-  ]),
-])
-
 samples_2017["/GluGluToRadionToHHTo2V2Tau_M-900_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_spin0_900_hh_wwtt"),
@@ -2421,48 +2379,6 @@ samples_2017["/GluGluToBulkGravitonToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_corr
     [
       OD([
         ("path",      "/hdfs/cms/store/user/snandan/2017v2_2019Jun18/GluGluToBulkGravitonToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_correctedcfg/2017v2_2019Jun18_GluGluToBulkGravitonToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1/190618_093134"),
-        ("selection", "*"),
-        ("blacklist", []),
-      ]),
-    ]
-  ),
-  ("missing_completely",           [
-    # not computed
-  ]),
-  ("missing_from_superset",        [
-    # not computed
-  ]),
-  ("missing_hlt_paths",            [
-
-  ]),
-  ("hlt_paths",                    [
-    # not computed
-  ]),
-])
-
-samples_2017["/GluGluToBulkGravitonToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
-  ("type",                            "mc"),
-  ("sample_category",                 "signal_ggf_spin2_270_hh_wwtt"),
-  ("process_name_specific",           "signal_ggf_spin2_270_hh_2v2t"),
-  ("nof_files",                       1),
-  ("nof_db_files",                    19),
-  ("nof_events",                      {
-  }),
-  ("nof_tree_events",                 18000),
-  ("nof_db_events",                   399996),
-  ("fsize_local",                     34505318), # 34.51MB, avg file size 34.51MB
-  ("fsize_db",                        19945565524), # 19.95GB, avg file size 1.05GB
-  ("use_it",                          True),
-  ("xsection",                        0.030092),
-  ("genWeight",                       True),
-  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
-  ("has_LHE",                         True),
-  ("LHE_set",                         "LHA IDs 306000 - 306102 -> NNPDF31_nnlo_hessian_pdfas PDF set, expecting 103 weights (counted 103 weights)"),
-  ("nof_reweighting",                 0),
-  ("local_paths",
-    [
-      OD([
-        ("path",      "/hdfs/cms/store/user/snandan/2017v2_2019Jun17/GluGluToBulkGravitonToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_correctedcfg/2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1/190617_104824"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -5445,48 +5361,6 @@ samples_2017["/GluGluToHHTo2V2Tau_node_10_13TeV-madgraph_correctedcfg/RunIIFall1
     [
       OD([
         ("path",      "/hdfs/cms/store/user/snandan/2017v2_2019Jun17/GluGluToHHTo2V2Tau_node_10_13TeV-madgraph_correctedcfg/2017v2_2019Jun17_GluGluToHHTo2V2Tau_node_10_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/190617_144203"),
-        ("selection", "*"),
-        ("blacklist", []),
-      ]),
-    ]
-  ),
-  ("missing_completely",           [
-    # not computed
-  ]),
-  ("missing_from_superset",        [
-    # not computed
-  ]),
-  ("missing_hlt_paths",            [
-
-  ]),
-  ("hlt_paths",                    [
-    # not computed
-  ]),
-])
-
-samples_2017["/GluGluToHHTo2V2Tau_node_11_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
-  ("type",                            "mc"),
-  ("sample_category",                 "signal_ggf_nonresonant_hh_wwtt"),
-  ("process_name_specific",           "signal_ggf_nonresonant_node_11_hh_2v2t"),
-  ("nof_files",                       1),
-  ("nof_db_files",                    20),
-  ("nof_events",                      {
-  }),
-  ("nof_tree_events",                 3000),
-  ("nof_db_events",                   395994),
-  ("fsize_local",                     9337133), # 9.34MB, avg file size 9.34MB
-  ("fsize_db",                        21005832838), # 21.01GB, avg file size 1.05GB
-  ("use_it",                          True),
-  ("xsection",                        0.030092),
-  ("genWeight",                       True),
-  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
-  ("has_LHE",                         True),
-  ("LHE_set",                         "LHA IDs 306000 - 306102 -> NNPDF31_nnlo_hessian_pdfas PDF set, expecting 103 weights (counted 103 weights)"),
-  ("nof_reweighting",                 0),
-  ("local_paths",
-    [
-      OD([
-        ("path",      "/hdfs/cms/store/user/snandan/2017v2_2019Jun17/GluGluToHHTo2V2Tau_node_11_13TeV-madgraph_correctedcfg/2017v2_2019Jun17_GluGluToHHTo2V2Tau_node_11_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/190617_144342"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
