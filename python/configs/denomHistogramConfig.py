@@ -451,14 +451,13 @@ class denomHistogramConfig:
             outputFile = os.path.join(
                 self.dirs[key_dir][DKEY_HISTO], "%s.root" % process_name
             )
-            if os.path.isfile(outputFile) and tools_is_file_ok(outputFile, min_file_size = 2000):
-                logging.info('File {} already exists --> skipping job'.format(outputFile))
-                continue
-
             self.outputFiles[process_name] = {
                 'inputFiles' : [],
                 'outputFile' : outputFile
             }
+            if os.path.isfile(outputFile) and tools_is_file_ok(outputFile, min_file_size = 2000):
+                logging.info('File {} already exists --> skipping job'.format(outputFile))
+                continue
 
             for jobId in inputFileList.keys():
 
