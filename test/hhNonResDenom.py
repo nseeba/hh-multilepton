@@ -60,9 +60,9 @@ if '{era}' in output_file:
   output_file = output_file.format(era = era)
 
 if mode == 'hh_multilepton':
-  samples = load_samples(era, not use_preproc, base = 'hh_multilepton', suffix = 'hh')
+  samples = load_samples(era, not use_preproc, base = 'hh_multilepton')
 elif mode == 'hh_bbww':
-  samples = load_samples(era, not use_preproc, base = 'hh_bbww', suffix = 'hh')
+  samples = load_samples(era, not use_preproc, base = 'hh_bbww')
 elif mode == 'hh_bbww_sync':
   samples = load_samples(era, not use_preproc, base = 'hh_bbww', suffix = 'sync')
 else:
