@@ -1,6 +1,6 @@
 from collections import OrderedDict as OD
 
-# file generated at 2019-07-09 20:05:35 with the following command:
+# file generated at 2019-07-09 20:41:31 with the following command:
 # find_samples.py -V -i ../../tthAnalysis/NanoAOD/test/datasets/txt/datasets_hh_multilepton_mc_2017_RunIIFall17MiniAODv2.txt -m python/samples/metaDict_2017_hh.py -s ../../tthAnalysis/NanoAOD/test/datasets/txt/sum_datasets_hh_multilepton_2017_RunIIFall17MiniAODv2.txt -c python/samples/sampleLocations_2017_nanoAOD_hh_multilepton.txt
 
 meta_dictionary = OD()
@@ -1459,7 +1459,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-850_narrow_13TeV-madgraph_corre
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-900_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2019Jul07_GluGluToBulkGravitonToHHTo4V_M-900_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v"),
   ("sample_category",       "signal_ggf_spin2_900_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_900_hh_4v"),
   ("nof_db_events",         99998),
