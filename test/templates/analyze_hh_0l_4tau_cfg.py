@@ -62,7 +62,6 @@ process.analyze_hh_0l_4tau = cms.PSet(
             applyFitFunction = cms.bool(True),
         )
     ),
-    triggerSF_2tau = cms.PSet(),
 
     isMC = cms.bool(False),
     central_or_shift = cms.string(''),
