@@ -2,18 +2,22 @@ import collections
 import itertools
 import copy
 
-def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_wjets):
+def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_wjets = None):
 
   sum_events_hh  = copy.deepcopy(samples_era_hh['sum_events'])
   sum_events_bkg = copy.deepcopy(samples_era_bkg['sum_events'])
 
   del samples_era_hh['sum_events']
   del samples_era_bkg['sum_events']
-  del samples_era_wjets['sum_events']
+  if samples_era_wjets:
+    del samples_era_wjets['sum_events']
 
-  samples = collections.OrderedDict(itertools.chain(
-    samples_era_bkg.items(), samples_era_hh.items(), samples_era_wjets.items()
-  ))
+  if samples_era_wjets:
+    samples = collections.OrderedDict(itertools.chain(
+      samples_era_bkg.items(), samples_era_hh.items(), samples_era_wjets.items()
+    ))
+  else:
+    samples = collections.OrderedDict(itertools.chain(samples_era_bkg.items(), samples_era_hh.items()))
 
   samples['sum_events'] = sum_events_hh + sum_events_bkg
 
@@ -56,7 +60,7 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_wjets):
     elif sample_name.startswith('/TTW'):
       sample_info["sample_category"] = "TTW"
 
-    if sample_name in samples_era_wjets:
+    if samples_era_wjets and sample_name in samples_era_wjets:
       sample_info["use_it"] = False
 
   return samples
