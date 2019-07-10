@@ -1346,12 +1346,9 @@ int main(int argc, char* argv[])
     cutFlowTable.update("m(ll) > 12 GeV", evtWeight);
     cutFlowHistManager->fillHistograms("m(ll) > 12 GeV", evtWeight);
     
-    double minPt_lead = -1.;
-    if      ( era == kEra_2016 ) minPt_lead = 25.; 
-    else if ( era == kEra_2017 ) minPt_lead = 25.; 
-    else assert(0);
-    double minPt_sublead = 15.;
-    double minPt_third = 10.;
+    const double minPt_lead = 25.;
+    const double minPt_sublead = 15.;
+    const double minPt_third = 10.;
     if ( !(selLepton_lead->cone_pt() > minPt_lead && selLepton_sublead->cone_pt() > minPt_sublead && selLepton_third->cone_pt() > minPt_third) ) {
       if ( run_lumi_eventSelector ) {
     std::cout << "event " << eventInfo.str() << " FAILS lepton pT selection." << std::endl;
