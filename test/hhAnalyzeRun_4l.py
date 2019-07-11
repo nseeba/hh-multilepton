@@ -83,8 +83,9 @@ if __name__ == '__main__':
     executable_analyze                    = "analyze_hh_4l",
     cfgFile_analyze                       = "analyze_hh_4l_cfg.py",
     samples                               = samples,
+    hadTau_selection                      = "dR03mvaLoose", # to compute MHT
     applyFakeRateWeights                  = "4lepton",
-    leptonChargeSelections              = leptonChargeSelections,
+    leptonChargeSelections                = leptonChargeSelections,
     central_or_shifts                     = central_or_shifts,
     max_files_per_job                     = files_per_job,
     era                                   = era,

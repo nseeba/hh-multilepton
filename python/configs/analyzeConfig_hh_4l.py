@@ -41,6 +41,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
         executable_analyze,
         cfgFile_analyze,
         samples,
+        hadTau_selection,
         applyFakeRateWeights,
         leptonChargeSelections,
         central_or_shifts,
@@ -90,6 +91,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
     self.lepton_selections = [ "Tight", "Fakeable" ]
     self.lepton_frWeights = [ "enabled", "disabled" ]
     self.applyFakeRateWeights = applyFakeRateWeights
+    self.hadTau_selection_part2 = hadTau_selection
     run_mcClosure = 'central' not in self.central_or_shifts or len(central_or_shifts) > 1 or self.do_sync
     if self.era not in [ '2016', '2017', '2018' ]:
       logging.warning('mcClosure for lepton FR not possible for era %s' % self.era)
@@ -248,6 +250,9 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
     mcClosure_regex = re.compile('Fakeable_mcClosure_(?P<type>m|e)_wFakeRateWeights')
     for lepton_selection in self.lepton_selections:
 
+      hadTau_selection = "Tight"
+      hadTau_selection = "|".join([hadTau_selection, self.hadTau_selection_part2])
+
       electron_selection = lepton_selection
       muon_selection = lepton_selection
       if lepton_selection == "Fakeable_mcClosure_e":
@@ -330,6 +335,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                   'apply_leptonGenMatching'  : self.apply_leptonGenMatching,
                   'leptonChargeSelection'  : leptonChargeSelection,
                   'applyFakeRateWeights'     : applyFakeRateWeights,
+                  'hadTauSelection'          : hadTau_selection,
                   'central_or_shift'         : central_or_shift,
                   'fillGenEvtHistograms'     : True,
                   'apply_hlt_filter'         : self.hlt_filter,
