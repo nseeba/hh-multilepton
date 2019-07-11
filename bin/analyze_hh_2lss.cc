@@ -1496,17 +1496,7 @@ int main(int argc, char* argv[])
       std::cout << "evtWeight = " << evtWeight << std::endl;
     }
 
-    bool failsLowMassVeto = false;
-    for ( std::vector<const RecoLepton*>::const_iterator lepton1 = preselLeptonsFull.begin();
-    lepton1 != preselLeptonsFull.end(); ++lepton1 ) {
-      for ( std::vector<const RecoLepton*>::const_iterator lepton2 = lepton1 + 1;
-      lepton2 != preselLeptonsFull.end(); ++lepton2 ) {
-	double mass = ((*lepton1)->p4() + (*lepton2)->p4()).mass();
-	if ( mass < 12. ) {
-	  failsLowMassVeto = true;
-	}
-      }
-    }
+    const bool failsLowMassVeto = isfailsLowMassVeto(preselLeptonsFull);
     if ( failsLowMassVeto ) {
       if ( run_lumi_eventSelector ) {
     std::cout << "event " << eventInfo.str() << " FAILS low mass lepton pair veto." << std::endl;
@@ -1604,27 +1594,7 @@ int main(int argc, char* argv[])
     cutFlowTable.update(Form("sel lepton-pair %s charge", leptonChargeSelection_string.data()), evtWeight);
     cutFlowHistManager->fillHistograms("sel lepton-pair OS/SS charge", evtWeight);
 
-    bool isSameFlavor_OS = false;
-    double massSameFlavor_OS = -1.;
-    for ( std::vector<const RecoLepton*>::const_iterator lepton1 = preselLeptonsFull.begin();
-    lepton1 != preselLeptonsFull.end(); ++lepton1 ) {
-      for ( std::vector<const RecoLepton*>::const_iterator lepton2 = lepton1 + 1;
-      lepton2 != preselLeptonsFull.end(); ++lepton2 ) {
-	//---
-        // SB: add comment here
-        if ( ((*lepton1) == selLepton_lead    && (*lepton2) == selLepton_sublead) ||
-             ((*lepton1) == selLepton_sublead && (*lepton2) == selLepton_lead   ) ) {
-          continue;
-	}
-        //---
-	if ( (*lepton1)->pdgId() == -(*lepton2)->pdgId() ) { // pair of same flavor leptons of opposite charge
-	  isSameFlavor_OS = true;
-	  double mass = ((*lepton1)->p4() + (*lepton2)->p4()).mass();
-	  if ( std::fabs(mass - z_mass) < std::fabs(massSameFlavor_OS - z_mass) ) massSameFlavor_OS = mass;
-	}
-      }
-    }
-    bool failsZbosonMassVeto = isSameFlavor_OS && std::fabs(massSameFlavor_OS - z_mass) < z_window;
+    const bool failsZbosonMassVeto = isfailsZbosonMassVetoSFOS(preselLeptonsFull);
     if ( failsZbosonMassVeto ) {
       if ( run_lumi_eventSelector ) {
 	std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
@@ -1634,27 +1604,7 @@ int main(int argc, char* argv[])
     cutFlowTable.update("Z-boson mass veto", evtWeight);
     cutFlowHistManager->fillHistograms("Z-boson mass veto", evtWeight);
 
-    bool failsHtoZZVeto = false;
-    for ( std::vector<const RecoLepton*>::const_iterator lepton1 = preselLeptonsFull.begin();
-	  lepton1 != preselLeptonsFull.end(); ++lepton1 ) {
-      for ( std::vector<const RecoLepton*>::const_iterator lepton2 = lepton1 + 1;
-	    lepton2 != preselLeptonsFull.end(); ++lepton2 ) {
-        if ( (*lepton1)->pdgId() == -(*lepton2)->pdgId() ) { // first pair of same flavor leptons of opposite charge
-	  for ( std::vector<const RecoLepton*>::const_iterator lepton3 = preselLeptonsFull.begin();
-		lepton3 != preselLeptonsFull.end(); ++lepton3 ) {
-	    if ( (*lepton3) == (*lepton1) || (*lepton3) == (*lepton2) ) continue;
-	    for ( std::vector<const RecoLepton*>::const_iterator lepton4 = lepton3 + 1;
-		  lepton4 != preselLeptonsFull.end(); ++lepton4 ) {
-	      if ( (*lepton4) == (*lepton1) || (*lepton4) == (*lepton2) ) continue;
-	      if ( (*lepton3)->pdgId() == -(*lepton4)->pdgId() ) { // second pair of same flavor leptons of opposite charge
-		double mass = ((*lepton1)->p4() + (*lepton2)->p4() + (*lepton3)->p4() + (*lepton4)->p4()).mass();
-		if ( mass < 140. ) failsHtoZZVeto = true;
-	      }
-	    }
-	  }
-        }
-      }
-    }
+    const bool failsHtoZZVeto = isfailsHtoZZVeto(preselLeptonsFull);
     if ( failsHtoZZVeto ) {
       if ( run_lumi_eventSelector ) {
 	std::cout << "event " << eventInfo.str() << " FAILS H->ZZ*->4l veto." << std::endl;
