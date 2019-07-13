@@ -27,8 +27,6 @@ EvtHistManager_hh_2l_2tau::EvtHistManager_hh_2l_2tau(const edm::ParameterSet & c
   central_or_shiftOptions_["EventCounter"] = { "*" };
   central_or_shiftOptions_["EventNumber"] = { "*" };
   // central_or_shiftOptions_["BDTOutput_SUM_gen_mHH_400"] = { "*" };
-
-  //edm::ParameterSet cfg_analyze = cfg.getParameter<edm::ParameterSet>("analyze_hh_2l_2tau");
   std::vector<double> gen_mHH = cfg.getParameter<std::vector<double>>("gen_mHH");
 
   for(unsigned int i=0;i<gen_mHH.size();i++){
@@ -74,7 +72,6 @@ EvtHistManager_hh_2l_2tau::bookHistograms(TFileDirectory & dir)
   histogram_EventNumber_->GetXaxis()->SetBinLabel(1,"Odd");
   histogram_EventNumber_->GetXaxis()->SetBinLabel(2,"Even");
   // histogram_BDTOutput_SUM_gen_mHH_400_    = book1D(dir, "BDTOutput_SUM_gen_mHH_400",    "BDTOutput_SUM_gen_mHH_400",    100,  0.,    1.);
-
   for(unsigned int i=0;i < labels_.size();i++){
     TH1* histogram_BDT_output = book1D(dir, labels_[i], labels_[i], 100, 0., 1.); 
     histogram_Map_BDTOutput_SUM_.insert(std::make_pair(labels_[i], histogram_BDT_output));
@@ -121,12 +118,11 @@ EvtHistManager_hh_2l_2tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_HT_,               HT,               evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_STMET_,            STMET,            evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_EventCounter_,  0., evtWeight, evtWeightErr);
-  if(evt_number % 2){// ODD EVENT NUMBER CASE                                                                                                                                                                                                                     
-    fillWithOverFlow(histogram_EventNumber_,  0., evtWeight, evtWeightErr);                                                                                                                                                                                           
-  }else{ // EVEN EVENT NUMBER CASE                                                                                                                                                                                                                                      
+  if(evt_number % 2){// ODD EVENT NUMBER CASE                                                                                                                                                    
+    fillWithOverFlow(histogram_EventNumber_,  0., evtWeight, evtWeightErr);                                                                                                                         
+  }else{ // EVEN EVENT NUMBER CASE                                                                                                                                                                   
     fillWithOverFlow(histogram_EventNumber_,  1., evtWeight, evtWeightErr);     
   }      
-
 
   for(unsigned int i=0;i < labels_.size();i++){
     fillWithOverFlow(histogram_Map_BDTOutput_SUM_[labels_[i]], BDTOutput_SUM_Map[labels_[i]], evtWeight, evtWeightErr);

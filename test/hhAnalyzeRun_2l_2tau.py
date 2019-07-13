@@ -186,7 +186,14 @@ if __name__ == '__main__':
       "dihiggsVisMass"                    : {},
       "dihiggsMass"                       : {},
       "HT"                                : {},
-      "STMET"                             : {}
+      "STMET"                             : {},
+      "BDTOutput_1000"                    : {},
+      "BDTOutput_250"                    : {},
+      "BDTOutput_400"                    : {},
+      "BDTOutput_700"                    : {},
+      "BDTOutput_300"                    : {},
+      "BDTOutput_500"                    : {},
+      "BDTOutput_800"                    : {}
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,

@@ -35,9 +35,9 @@ for sample_name, sample_info in samples_2017.items():
     sample_info["use_it"] = 'nonresonant' not in sample_info["process_name_specific"] # temp: enable resonant samples only
 
   if sample_name.startswith('/ZZ'):
-    sample_info["sample_category"] = "ZZ"
+    sample_info["sample_category"] = "ZZ" ## ZZ + ZZZ
   elif sample_name.startswith('/WZ'):
-    sample_info["sample_category"] = "WZ"
+    sample_info["sample_category"] = "WZ" ## WZ + WZZ + WZG
   elif sample_name.startswith('/WW'):
     sample_info["sample_category"] = "WW"
   elif sample_name.startswith('/DY') and sample_name.find('JetsToLL') != -1 and sample_name.find('JetsToLL') < 10:
@@ -51,9 +51,11 @@ for sample_name, sample_info in samples_2017.items():
   elif sample_name.startswith('/VH'):
     sample_info["sample_category"] = "VH"
   elif sample_name.startswith('/TTZ'):
-    sample_info["sample_category"] = "TTZ"
-  elif sample_name.startswith('/TTW'):
-    sample_info["sample_category"] = "TTW"
+    sample_info["sample_category"] = "TTZ" ## TTZ + TTZZ + TTZH
+  elif sample_name.startswith('/TTWW'):
+    sample_info["sample_category"] = "TTWW" 
+  elif sample_name.startswith('/TTWJets'):
+    sample_info["sample_category"] = "TTW" ## TTW + TTWH
 
 
   if sample_info["sample_category"] == "Rares":
