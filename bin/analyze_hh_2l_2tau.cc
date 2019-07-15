@@ -562,6 +562,7 @@ int main(int argc, char* argv[])
 
   //XGBInterface BDT_SUM(BDTFileName, BDTInputVariables_SUM); // Sandeep's method
   TMVAInterface_OddEven BDT_SUM(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, BDTSpectatorVars); // Christian's method
+  BDT_SUM.enableBDTTransform();
   std::map<std::string, double> BDTInputs_SUM;
   // ------- TO DO ENDS !!! ------
 
