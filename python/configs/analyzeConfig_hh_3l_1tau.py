@@ -546,7 +546,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig_hh):
           # input processes: TT2l1g0j, TT1l2g0j, TT0l3g0j; ...
           # output process: conversions
           addBackgrounds_job_conversions_tuple = ("conversions", lepton_and_hadTau_selection_and_frWeight, chargeSumSelection)
-          key_addBackgrounds_job_conversions = getKey(*addBackgrounds_job_fakes_tuple)
+          key_addBackgrounds_job_conversions = getKey(*addBackgrounds_job_conversions_tuple)
           sample_categories = []
           sample_categories.extend(self.nonfake_backgrounds)
           processes_input = []
