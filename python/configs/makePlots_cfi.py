@@ -6,7 +6,7 @@ process.fwliteInput = cms.PSet(
     fileNames = cms.vstring(),
 )
 
-scaleSignal = 50
+scaleSignal = 10
 
 process.makePlots = cms.PSet(
     pluginType = cms.string("Plotter_HH"),
@@ -74,6 +74,7 @@ process.makePlots = cms.PSet(
             W = cms.string("1.0 +/- 0.20"),
             fakes_data = cms.string("1.0 +/- 0.20"),
             flips_data = cms.string("1.0 +/- 0.20"),
+            flips_mc = cms.string("1.0 +/- 0.20"),
             conversions = cms.string("1.0 +/- 0.20"),
             signal_spin0_400_hh = cms.string("1.0 +/- 0.20"),
         ),

@@ -52,6 +52,7 @@ public:
 		 //double BDTOutput_SUM_gen_mHH_400,
 		 // const std::vector<double> & BDTOutput_SUM,
 		 std::map<std::string, double>& BDTOutput_SUM_Map,
+		 unsigned int evt_number,
                  double evtWeight);
 
   const TH1 *
@@ -78,6 +79,7 @@ public:
   TH1 * histogram_HT_;
   TH1 * histogram_STMET_;
   TH1 * histogram_EventCounter_;
+  TH1 * histogram_EventNumber_;
   // TH1 * histogram_BDTOutput_SUM_gen_mHH_400_;
   std::map<std::string, TH1*> histogram_Map_BDTOutput_SUM_;   
   std::vector<string> labels_;

@@ -25,10 +25,9 @@ EvtHistManager_hh_2l_2tau::EvtHistManager_hh_2l_2tau(const edm::ParameterSet & c
   central_or_shiftOptions_["HT"] = { "central" };
   central_or_shiftOptions_["STMET"] = { "central" };
   central_or_shiftOptions_["EventCounter"] = { "*" };
+  central_or_shiftOptions_["EventNumber"] = { "*" };
   // central_or_shiftOptions_["BDTOutput_SUM_gen_mHH_400"] = { "*" };
-
-  edm::ParameterSet cfg_analyze = cfg.getParameter<edm::ParameterSet>("analyze_hh_2l_2tau");
-  std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
+  std::vector<double> gen_mHH = cfg.getParameter<std::vector<double>>("gen_mHH");
 
   for(unsigned int i=0;i<gen_mHH.size();i++){
     unsigned int mass_int = (int)gen_mHH[i]; // Conversion from double to unsigned int                                                                                                                                                                                
@@ -36,7 +35,7 @@ EvtHistManager_hh_2l_2tau::EvtHistManager_hh_2l_2tau(const edm::ParameterSet & c
     ostringstream temp;
     temp << mass_int;
     key = temp.str(); // Conversion from unsigned int to string                                                                                                                                                                                                             
-    std::string key_final = "signal_genmHH_" + key;
+    std::string key_final = "BDTOutput_" + key;
     labels_.push_back(key_final);
   }
 
@@ -69,8 +68,10 @@ EvtHistManager_hh_2l_2tau::bookHistograms(TFileDirectory & dir)
   histogram_HT_               = book1D(dir, "HT",               "HT",              150,  0., 1500.);
   histogram_STMET_            = book1D(dir, "STMET",            "STMET",           150,  0., 1500.);
   histogram_EventCounter_     = book1D(dir, "EventCounter",     "EventCounter",      1, -0.5,  +0.5);
+  histogram_EventNumber_      = book1D(dir, "EventNumber",     "EventNumber",      2, 0., 2.0);
+  histogram_EventNumber_->GetXaxis()->SetBinLabel(1,"Odd");
+  histogram_EventNumber_->GetXaxis()->SetBinLabel(2,"Even");
   // histogram_BDTOutput_SUM_gen_mHH_400_    = book1D(dir, "BDTOutput_SUM_gen_mHH_400",    "BDTOutput_SUM_gen_mHH_400",    100,  0.,    1.);
-
   for(unsigned int i=0;i < labels_.size();i++){
     TH1* histogram_BDT_output = book1D(dir, labels_[i], labels_[i], 100, 0., 1.); 
     histogram_Map_BDTOutput_SUM_.insert(std::make_pair(labels_[i], histogram_BDT_output));
@@ -95,6 +96,7 @@ EvtHistManager_hh_2l_2tau::fillHistograms(int numElectrons,
 					  double STMET,
 					  // double BDTOutput_SUM_gen_mHH_400,
 					  std::map<std::string, double> & BDTOutput_SUM_Map,
+					  unsigned int evt_number,
 					  double evtWeight)
 {
   const double evtWeightErr = 0.;
@@ -116,9 +118,13 @@ EvtHistManager_hh_2l_2tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_HT_,               HT,               evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_STMET_,            STMET,            evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_EventCounter_,  0., evtWeight, evtWeightErr);
+  if(evt_number % 2){// ODD EVENT NUMBER CASE                                                                                                                                                    
+    fillWithOverFlow(histogram_EventNumber_,  0., evtWeight, evtWeightErr);                                                                                                                         
+  }else{ // EVEN EVENT NUMBER CASE                                                                                                                                                                   
+    fillWithOverFlow(histogram_EventNumber_,  1., evtWeight, evtWeightErr);     
+  }      
 
   for(unsigned int i=0;i < labels_.size();i++){
     fillWithOverFlow(histogram_Map_BDTOutput_SUM_[labels_[i]], BDTOutput_SUM_Map[labels_[i]], evtWeight, evtWeightErr);
   }
-
 }
