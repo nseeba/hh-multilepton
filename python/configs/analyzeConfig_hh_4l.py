@@ -460,7 +460,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
           # input processes: TT3l1g0j, TT2l2g0j, TT1l3g0j, TT0l4g0j; ...
           # output process: conversions
           addBackgrounds_job_conversions_tuple = ("conversions", lepton_selection_and_frWeight, leptonChargeSelection)
-          key_addBackgrounds_job_conversions = getKey(*addBackgrounds_job_fakes_tuple)
+          key_addBackgrounds_job_conversions = getKey(*addBackgrounds_job_conversions_tuple)
           sample_categories = []
           sample_categories.extend(self.nonfake_backgrounds)
           processes_input = []
