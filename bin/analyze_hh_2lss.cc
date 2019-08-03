@@ -1595,7 +1595,7 @@ int main(int argc, char* argv[])
     cutFlowTable.update(Form("sel lepton-pair %s charge", leptonChargeSelection_string.data()), evtWeight);
     cutFlowHistManager->fillHistograms("sel lepton-pair OS/SS charge", evtWeight);
 
-    const bool failsZbosonMassVeto = isfailsZbosonMassVetoSFOS(preselLeptonsFull);
+    const bool failsZbosonMassVeto = isfailsZbosonMassVeto(preselLeptonsFull);
     if ( failsZbosonMassVeto ) {
       if ( run_lumi_eventSelector ) {
 	std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
