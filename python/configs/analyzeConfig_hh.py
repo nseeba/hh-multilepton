@@ -43,6 +43,11 @@ class analyzeConfig_hh(analyzeConfig):
     super(analyzeConfig_hh, self).__init__(**kwargs)
     self.signal_io = get_signal_per_masspoint(self.samples)
 
+  def accept_central_or_shift(self, central_or_shift, sample_category, sample_name):
+    if central_or_shift in systematics.LHE().hh and not (sample_category.startswith("signal") and sample_info['has_LHE']):
+      return False
+    return super(analyzeConfig_hh, self).accept_central_or_shift(central_or_shift, sample_category, sample_name)
+
   def createCfg_makePlots(self, jobOptions):
     """Fills the template of python configuration file for making control plots
 
