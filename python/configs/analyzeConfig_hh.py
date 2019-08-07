@@ -44,9 +44,15 @@ class analyzeConfig_hh(analyzeConfig):
     self.signal_io = get_signal_per_masspoint(self.samples)
 
   def accept_central_or_shift(self, central_or_shift, sample_category, sample_name):
-    if central_or_shift in systematics.LHE().hh and not (sample_category.startswith("signal") and sample_info['has_LHE']):
-      return False
-    return super(analyzeConfig_hh, self).accept_central_or_shift(central_or_shift, sample_category, sample_name)
+    if central_or_shift in systematics.LHE().hh and not (sample_category.startswith("signal") and sample_info['has_LHE']): return False
+    if central_or_shift in systematics.LHE().ttH and sample_category != "TTH":                        return False
+    if central_or_shift in systematics.LHE().tHq and sample_category != "tHq":                        return False
+    if central_or_shift in systematics.LHE().tHW and sample_category != "tHW":                        return False
+    if central_or_shift in systematics.LHE().ttW and sample_category not in [ "TTW", "TTWW" ]:        return False
+    if central_or_shift in systematics.LHE().ttZ and sample_category != "TTZ":                        return False
+    if central_or_shift in systematics.DYMCReweighting and not is_dymc_reweighting(sample_name):      return False
+    if central_or_shift in systematics.DYMCNormScaleFactors and not is_dymc_reweighting(sample_name): return False
+    return True
 
   def createCfg_makePlots(self, jobOptions):
     """Fills the template of python configuration file for making control plots
