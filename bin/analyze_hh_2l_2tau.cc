@@ -85,22 +85,21 @@
 #include "tthAnalysis/HiggsToTauTau/interface/Topness.h" // Topness
 #include "tthAnalysis/HiggsToTauTau/interface/backgroundEstimation.h" // prob_chargeMisId
 #include "tthAnalysis/HiggsToTauTau/interface/XGBInterface.h" // XGBInterface 
-#include "tthAnalysis/HiggsToTauTau/interface/TMVAInterface_OddEven.h" // TMVAInterface 
+#include "tthAnalysis/HiggsToTauTau/interface/TMVAInterface_OddEven.h" // TMVAInterface_OddEven
+#include "tthAnalysis/HiggsToTauTau/interface/TMVAInterface.h" // TMVAInterface
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2l_2tau.h" // EvtHistManager_hh_2l_2tau
 #include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
 #include "hhAnalysis/multilepton/interface/mySVfit4tauAuxFunctions.h" // getMeasuredTauLeptonType, getHadTauDecayMode
 
 #include "TauAnalysis/ClassicSVfit4tau/interface/svFitHistogramAdapter4tau.h" // HistogramAdapterDiHiggs, HistogramAdapterHiggs
-
-#include "TauAnalysis/ClassicSVfit/interface/ClassicSVfit.h" // ClassicSVfit                                                                                                                                                                                           
-#include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h" // classic_svFit::MeasuredTauLepton                                                                                                                                                                
+#include "TauAnalysis/ClassicSVfit/interface/ClassicSVfit.h" // ClassicSVfit                                                                                                                        
+#include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h" // classic_svFit::MeasuredTauLepton                                                                                                
 #include "TauAnalysis/ClassicSVfit/interface/svFitHistogramAdapter.h"
 #include "TauAnalysis/ClassicSVfit/interface/svFitAuxFunctions.h"
 
-#include <boost/range/algorithm/copy.hpp> // boost::copy()                                                                                                                                                                                                            
-#include <boost/range/adaptor/map.hpp> // boost::adaptors::map_keys                                                                                                                                                                                                     
+#include <boost/range/algorithm/copy.hpp> // boost::copy()                                                                                                                                          
+#include <boost/range/adaptor/map.hpp> // boost::adaptors::map_keys                                                                                                                                 
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
-
 
 #include <iostream> // std::cerr, std::fixed
 #include <iomanip> // std::setprecision(), std::setw()
@@ -384,8 +383,8 @@ int main(int argc, char* argv[])
   std::string BDTFileName_even  = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_even");
   std::string BDTFileName_odd   = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_odd");
   std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
-
-
+  std::string BDTFileName_even_pkl  = cfg_analyze.getParameter<std::string>("pkl_FileName_even");
+  std::string BDTFileName_odd_pkl   = cfg_analyze.getParameter<std::string>("pkl_FileName_odd");
 
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
   std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
@@ -544,11 +543,19 @@ int main(int argc, char* argv[])
 
   std::vector<std::string> BDTSpectatorVars = {};
 
-  //XGBInterface BDT_SUM(BDTFileName, BDTInputVariables_SUM); // Sandeep's method
-  TMVAInterface_OddEven BDT_SUM(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, BDTSpectatorVars); // Christian's method
+  // Xandra's method (with .pkl file)
+  XGBInterface XGB_SUM(BDTFileName_odd_pkl, BDTFileName_even_pkl, BDTInputVariables_SUM); 
+  
+  // ------- Using special TMVAInterface_OddEven class [Used in July11 submission]
+  // TMVAInterface_OddEven BDT_SUM(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, BDTSpectatorVars); 
+  // BDT_SUM.enableBDTTransform();
+
+  // -----  Using New TMVAInterface class with built-in Odd-Even interface ----- 
+  TMVAInterface BDT_SUM(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, BDTSpectatorVars); 
   BDT_SUM.enableBDTTransform();
+
   std::map<std::string, double> BDTInputs_SUM;
-  // ------- TO DO ENDS !!! ------
+  
 
 
 
@@ -1573,11 +1580,16 @@ int main(int argc, char* argv[])
     BDTInputs_SUM["diHiggsVisMass"]       = dihiggsVisMass_sel;
     BDTInputs_SUM["tau1_pt"]              = selHadTau_lead->pt();
     BDTInputs_SUM["nBJet_medium"]         = selBJets_btag_medium.size();
+    BDTInputs_SUM["gen_mHH"]              = 250.; // setting a Dummy value which will be reset depending on mass hypothesis 
     BDTInputs_SUM["nElectron"]            = selElectrons.size();
     BDTInputs_SUM["dr_lep_tau_min_SS"]    = dr_lep_tau_min_SS;
     BDTInputs_SUM["met_LD"]               = met_LD;
-    BDTInputs_SUM["dr_lep_tau_min_OS"]    = dr_lep_tau_min_OS;
     BDTInputs_SUM["tau2_pt"]              = selHadTau_sublead->pt();
+    BDTInputs_SUM["dr_lep_tau_min_OS"]    = dr_lep_tau_min_OS;
+    std::cout << "dihiggsMass " << dihiggsMass << " dihiggsVisMass_sel: " << dihiggsVisMass_sel << " tau1_pt: " << selHadTau_lead->pt() <<
+      " nBJet_medium: " << selBJets_btag_medium.size() << " nElectron: " << selElectrons.size() << " dr_lep_tau_min_SS: " << dr_lep_tau_min_SS <<
+      " met_LD: " << met_LD << " dr_lep_tau_min_OS: " << dr_lep_tau_min_OS << " tau2_pt: " << selHadTau_sublead->pt() << std::endl; 
+
 
     /*
     //double BDTOutput_SUM = BDT_SUM(BDTInputs_SUM);
@@ -1589,7 +1601,10 @@ int main(int argc, char* argv[])
     */
 
     std::map<std::string, double> BDTOutput_SUM_Map;
+    std::map<std::string, double> XGBOutput_SUM_Map;
+
     for(unsigned int i=0; i<gen_mHH.size(); i++){ // Loop over signal masses
+      std::cout<< "gen_mHH: " << gen_mHH[i] << std::endl;
       BDTInputs_SUM["gen_mHH"] = gen_mHH[i];
       unsigned int mass_int = (int)gen_mHH[i]; // Conversion from double to unsigned int
       std::string key = "";
@@ -1598,6 +1613,8 @@ int main(int argc, char* argv[])
       key = temp.str(); // Conversion from unsigned int to string
       std::string key_final = "BDTOutput_" + key;
       BDTOutput_SUM_Map.insert( std::make_pair(key_final, BDT_SUM(BDTInputs_SUM, eventInfo.event)) );
+      std::string XGB_key_final = "BDTOutput_" + key + "_pkl";
+      XGBOutput_SUM_Map.insert( std::make_pair(XGB_key_final, XGB_SUM(BDTInputs_SUM, eventInfo.event)) );
      }
     // ---- NEW ENDS ------
 
@@ -1644,6 +1661,7 @@ int main(int argc, char* argv[])
       HT, 
       STMET,
       BDTOutput_SUM_Map, // I AM HERE !!!
+      XGBOutput_SUM_Map, // I AM HERE !!!
       eventInfo.event,
       evtWeight);
     selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
@@ -1728,6 +1746,7 @@ int main(int argc, char* argv[])
         HT,
         STMET,
 	BDTOutput_SUM_Map, // I AM HERE !!!
+	XGBOutput_SUM_Map, // I AM HERE !!!
 	eventInfo.event,
         evtWeight_category);
         selHistManager->svFit4tau_wMassConstraint_in_categories_[*category]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight_category);
