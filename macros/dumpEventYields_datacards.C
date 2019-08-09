@@ -61,9 +61,9 @@ void dumpEventYields_datacards()
   background_processes["hh_2lss"].push_back("W");
   background_processes["hh_2lss"].push_back("VH");
   background_processes["hh_2lss"].push_back("Other");
-  background_processes["hh_2lss"].push_back("conversions"); 
-  background_processes["hh_2lss"].push_back("fakes_data"); 
-  background_processes["hh_2lss"].push_back("flips_data"); 
+  background_processes["hh_2lss"].push_back("Convs");
+  background_processes["hh_2lss"].push_back("data_fakes");
+  background_processes["hh_2lss"].push_back("data_flips");
   //background_processes["hh_2lss"].push_back("fakes_mc");
 
   background_processes["hh_2l_2tau"] = background_processes["hh_2lss"];

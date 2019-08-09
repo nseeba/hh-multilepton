@@ -110,7 +110,7 @@ void dumpEventYields_Stage2()
 
   std::vector<std::string> signal_process_parts;
   signal_process_parts.push_back("");
-  signal_process_parts.push_back("_conversion");
+  signal_process_parts.push_back("_Convs");
   signal_process_parts.push_back("_fake");
   
   std::map<std::string, vstring> background_processes; // key = channel
@@ -128,14 +128,14 @@ void dumpEventYields_Stage2()
   background_processes["hh_2lss"].push_back("VH");
   background_processes["hh_2lss"].push_back("Other");
   /*
-  background_processes["hh_2lss"].push_back("conversions");
-  background_processes["hh_2lss"].push_back("fakes_data");
-  background_processes["hh_2lss"].push_back("flips_data");
+  background_processes["hh_2lss"].push_back("Convs");
+  background_processes["hh_2lss"].push_back("data_fakes");
+  background_processes["hh_2lss"].push_back("data_flips");
   background_processes["hh_2lss"].push_back("fakes_mc");
   */
   std::vector<std::string> background_process_parts;
   background_process_parts.push_back("");
-  background_process_parts.push_back("_conversion");
+  background_process_parts.push_back("_Convs");
   background_process_parts.push_back("_fake");
 
   double lumi_datacard = 41.5;
@@ -187,10 +187,10 @@ void dumpEventYields_Stage2()
       if ( integral_parts.size() > 1 ) {
 	std::cout << " (non-fake = " << integral_parts[""] << " +/- " << integralErr_parts[""] << ","
 		  << " fake = " << integral_parts["_fake"] << " +/- " << integralErr_parts["_fake"] << ","
-		  << " conversion = " << integral_parts["_conversion"] << " +/- " << integralErr_parts["_conversion"] << ")" << std::endl;
+		  << " conversion = " << integral_parts["_Convs"] << " +/- " << integralErr_parts["_Convs"] << ")" << std::endl;
       }
       */
-	std::cout << (*signal_process) << " & " << integral_sum << " & " << integral_parts[""] << " & " << integral_parts["_fake"] << " & " << integral_parts["_conversion"] << " \\\\ " << std::endl;
+	std::cout << (*signal_process) << " & " << integral_sum << " & " << integral_parts[""] << " & " << integral_parts["_fake"] << " & " << integral_parts["_Convs"] << " \\\\ " << std::endl;
     }
     double Total = 0;
     double Non_Fake = 0;
@@ -223,14 +223,14 @@ void dumpEventYields_Stage2()
       if ( integral_parts.size() > 1 ) {
 	std::cout << " (non-fake = " << integral_parts[""] << " +/- " << integralErr_parts[""] << ","
 		  << " fake = " << integral_parts["_fake"] << " +/- " << integralErr_parts["_fake"] << ","
-		  << " conversion = " << integral_parts["_conversion"] << " +/- " << integralErr_parts["_conversion"] << ")" << std::endl;
+		  << " conversion = " << integral_parts["_Convs"] << " +/- " << integralErr_parts["_Convs"] << ")" << std::endl;
       }
       */
-      std::cout << (*background_process) << " & " << integral_sum << " & " << integral_parts[""] << " & " << integral_parts["_fake"] << " & " << integral_parts["_conversion"] << " \\\\ " << std::endl;
+      std::cout << (*background_process) << " & " << integral_sum << " & " << integral_parts[""] << " & " << integral_parts["_fake"] << " & " << integral_parts["_Convs"] << " \\\\ " << std::endl;
       Total += integral_sum;
       Non_Fake += integral_parts[""];
       Fake += integral_parts["_fake"];
-      Conversion += integral_parts["_conversion"];
+      Conversion += integral_parts["_Convs"];
     }
     std::cout << "Total " << " & " << Total << " & " << Non_Fake << " & " << Fake << " & " << Conversion << " \\\\ " << " \\hline " << std::endl;
     std::cout << " \\end{tabular} " << std::endl;
@@ -246,34 +246,34 @@ void dumpEventYields_Stage2()
       //      std::cout << "Fakes MC : " << Fakes_MC << std::endl;
     }
 
-    double Conversions = 0;
-    std::string histogramName_conversions = Form("%s/%s/EventCounter",
-      directories[*channel].data(), "conversions");
-    TH1* histogram_conversions = loadHistogram(inputFile, histogramName_conversions);
-    if ( histogram_conversions ) {
-      histogram_conversions->Scale(lumi_SF);
-      Conversions = compIntegral(histogram_conversions);
-      //      std::cout << "Conversions : " << Conversions << std::endl;
+    double Convs = 0;
+    std::string histogramName_Convs = Form("%s/%s/EventCounter",
+      directories[*channel].data(), "Convs");
+    TH1* histogram_Convs = loadHistogram(inputFile, histogramName_Convs);
+    if ( histogram_Convs ) {
+      histogram_Convs->Scale(lumi_SF);
+      Convs = compIntegral(histogram_Convs);
+      //      std::cout << "Convs : " << Convs << std::endl;
     }
 
-    double Fakes_Data = 0;
-    std::string histogramName_fakes_data = Form("%s/%s/EventCounter",
-      directories[*channel].data(), "fakes_data");
-    TH1* histogram_fakes_data = loadHistogram(inputFile, histogramName_fakes_data);
-    if ( histogram_fakes_data ) {
-      histogram_fakes_data->Scale(lumi_SF);
-      Fakes_Data = compIntegral(histogram_fakes_data);
-      std::cout << "Fakes Data : " << Fakes_Data << " \\\\" << std::endl;
+    double data_fakes = 0;
+    std::string histogramName_data_fakes = Form("%s/%s/EventCounter",
+      directories[*channel].data(), "data_fakes");
+    TH1* histogram_data_fakes = loadHistogram(inputFile, histogramName_data_fakes);
+    if ( histogram_data_fakes ) {
+      histogram_data_fakes->Scale(lumi_SF);
+      data_fakes = compIntegral(histogram_data_fakes);
+      std::cout << "Fakes Data : " << data_fakes << " \\\\" << std::endl;
     }
 
-    double Flips_data = 0;
-    std::string histogramName_flips_data = Form("%s/%s/EventCounter",
-     directories[*channel].data(), "flips_data");
-    TH1* histogram_flips_data = loadHistogram(inputFile, histogramName_flips_data);
-    if ( histogram_flips_data ) {
-      histogram_flips_data->Scale(lumi_SF);
-      Flips_data = compIntegral(histogram_flips_data);
-      std::cout << "Flips Data : " << Flips_data << " \\\\" << std::endl;
+    double data_flips = 0;
+    std::string histogramName_data_flips = Form("%s/%s/EventCounter",
+     directories[*channel].data(), "data_flips");
+    TH1* histogram_data_flips = loadHistogram(inputFile, histogramName_data_flips);
+    if ( histogram_data_flips ) {
+      histogram_data_flips->Scale(lumi_SF);
+      data_flips = compIntegral(histogram_data_flips);
+      std::cout << "Flips Data : " << data_flips << " \\\\" << std::endl;
     }
 
     double Data_Bbserved = 0;
@@ -286,7 +286,7 @@ void dumpEventYields_Stage2()
       std::cout << "Data Observed : " << Data_Bbserved << " \\\\" << std::endl;
     }
 
-    double Total_Background = Non_Fake + Conversions + Fakes_Data +Flips_data ;
+    double Total_Background = Non_Fake + Convs + data_fakes +data_flips ;
     std::cout << "Total Background = Non Fake + Conversion + Fakes Data + Flips Data = " << Total_Background << std::endl;
 
 

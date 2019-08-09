@@ -2,7 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 from hhAnalysis.multilepton.configs.makePlots_cfi import process
 
-process.makePlots.processesBackground = cms.vstring(["WW", "WZ", "ZZ", "TT", "TTZ", "TTW", "TTWW", "VH", "TH", "TTH", "DY", "W", "Other", "conversions", "fakes_data"])
+process.makePlots.processesBackground = cms.vstring(["WW", "WZ", "ZZ", "TT", "TTZ", "TTW", "TTWW", "VH", "TH", "TTH", "DY", "W", "Other", "Convs", "data_fakes"])
 
 process.makePlots.distributions.extend([
   cms.PSet(

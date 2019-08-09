@@ -134,7 +134,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
 
     self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
 
-    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "fakes_data", "fakes_mc" ]
+    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "data_fakes", "fakes_mc" ]
     self.prep_dcard_signals = []
     for sample_name, sample_info in self.samples.items():
       if not sample_info["use_it"]:
@@ -142,7 +142,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
       sample_category = sample_info["sample_category"]
       if sample_category.startswith("signal"):
         self.prep_dcard_signals.append(sample_category)
-    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "fakes_data" ]
+    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "data_fakes" ]
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.histogramDir_prep_dcard = "hh_0l_4tau_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_0l_4tau_SS_Tight"
@@ -509,7 +509,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
     for hadTau_charge_selection in self.hadTau_charge_selections:
       key_hadd_stage1_5_job = getKey(get_hadTau_selection_and_frWeight("Fakeable", "enabled"), hadTau_charge_selection)
       key_addFakes_dir = getKey("addBackgroundLeptonFakes")
-      key_addFakes_job = getKey("fakes_data", hadTau_charge_selection)
+      key_addFakes_job = getKey("data_fakes", hadTau_charge_selection)
       category_sideband = None
       if self.applyFakeRateWeights == "4tau":
         category_sideband = "hh_0l_4tau_%s_Fakeable_wFakeRateWeights" % hadTau_charge_selection

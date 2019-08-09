@@ -23,8 +23,8 @@ process.addBackgrounds_TailFit = cms.PSet(
             inputDir = cms.string("hh_2l_2tau_sumOS_Tight")
             ),
         ),
-    processData = cms.string("fakes_data"),
-    processToTailFit = cms.string("fakes_data"),
+    processData = cms.string("data_fakes"),
+    processToTailFit = cms.string("data_fakes"),
     processesToSubtract = cms.vstring(),
     sysShifts = cms.vstring(),
     apply_automatic_rebinning = cms.bool(True),
@@ -182,7 +182,7 @@ process.addBackgrounds_TailFit = cms.PSet(
 '''
 ## OLD ---
     InputDir  = cms.string("hh_2l_2tau_sumOS_Tight"),
-    processName = cms.string("fakes_data"),
+    processName = cms.string("data_fakes"),
     histogramName = cms.string("dihiggsMass"),
 
 
