@@ -37,10 +37,14 @@ EvtHistManager_hh_2l_2tau::EvtHistManager_hh_2l_2tau(const edm::ParameterSet & c
     key = temp.str(); // Conversion from unsigned int to string                                                                                                                                                                                                             
     std::string key_final = "BDTOutput_" + key;
     labels_.push_back(key_final);
+
+    std::string XGB_key_final = "BDTOutput_" + key + "_pkl";
+    XGB_labels_.push_back(XGB_key_final);
   }
 
   for(unsigned int i=0;i < labels_.size();i++){
     central_or_shiftOptions_[labels_[i]] = { "*" }; 
+    central_or_shiftOptions_[XGB_labels_[i]] = { "*" }; 
   }
 }
 
@@ -77,6 +81,11 @@ EvtHistManager_hh_2l_2tau::bookHistograms(TFileDirectory & dir)
     histogram_Map_BDTOutput_SUM_.insert(std::make_pair(labels_[i], histogram_BDT_output));
   }
 
+  for(unsigned int j=0;j < XGB_labels_.size();j++){
+    TH1* histogram_XGB_output = book1D(dir, XGB_labels_[j], XGB_labels_[j], 100, 0., 1.); 
+    histogram_Map_XGBOutput_SUM_.insert(std::make_pair(XGB_labels_[j], histogram_XGB_output));
+  }
+
 }
 
 void
@@ -96,6 +105,7 @@ EvtHistManager_hh_2l_2tau::fillHistograms(int numElectrons,
 					  double STMET,
 					  // double BDTOutput_SUM_gen_mHH_400,
 					  std::map<std::string, double> & BDTOutput_SUM_Map,
+					  std::map<std::string, double> & XGBOutput_SUM_Map,
 					  unsigned int evt_number,
 					  double evtWeight)
 {
@@ -127,4 +137,9 @@ EvtHistManager_hh_2l_2tau::fillHistograms(int numElectrons,
   for(unsigned int i=0;i < labels_.size();i++){
     fillWithOverFlow(histogram_Map_BDTOutput_SUM_[labels_[i]], BDTOutput_SUM_Map[labels_[i]], evtWeight, evtWeightErr);
   }
+
+  for(unsigned int i=0;i < XGB_labels_.size();i++){
+    fillWithOverFlow(histogram_Map_XGBOutput_SUM_[XGB_labels_[i]], XGBOutput_SUM_Map[XGB_labels_[i]], evtWeight, evtWeightErr);
+  }
+
 }
