@@ -84,7 +84,6 @@
 #include "tthAnalysis/HiggsToTauTau/interface/Topness.h" // Topness
 #include "tthAnalysis/HiggsToTauTau/interface/backgroundEstimation.h" // prob_chargeMisId
 #include "tthAnalysis/HiggsToTauTau/interface/XGBInterface.h" // XGBInterface 
-#include "tthAnalysis/HiggsToTauTau/interface/TMVAInterface_OddEven.h" // TMVAInterface_OddEven
 #include "tthAnalysis/HiggsToTauTau/interface/TMVAInterface.h" // TMVAInterface
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2l_2tau.h" // EvtHistManager_hh_2l_2tau
@@ -580,10 +579,6 @@ int main(int argc, char* argv[])
     // -----  Using New TMVAInterface class with built-in Odd-Even interface ----- 
     BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, BDTSpectatorVars); 
     BDT_SUM->enableBDTTransform();
-
-    // ------- Using special TMVAInterface_OddEven class [Used in July11 submission]
-    // TMVAInterface_OddEven BDT_SUM(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, BDTSpectatorVars); 
-    // BDT_SUM.enableBDTTransform();
   }
 
 
