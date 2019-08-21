@@ -462,6 +462,11 @@ int main(int argc, char* argv[])
 
 //--- declare event-level variables
   EventInfoHH eventInfo(isMC, isSignal);
+  const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
+  if((isMC_tH || isMC_ttH) && ! tHweights.empty())
+  {
+    eventInfo.loadWeight_tH(tHweights);
+  }
   EventInfoHHReader eventInfoReader(&eventInfo, puSys_option);
   inputTree -> registerReader(&eventInfoReader);
 
@@ -589,12 +594,6 @@ int main(int argc, char* argv[])
 	 
     lheInfoReader = new LHEInfoReader(hasLHE);
     inputTree -> registerReader(lheInfoReader);
-  }
-
-  const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
-  if((isMC_tH || isMC_ttH) && ! tHweights.empty())
-  {
-    eventInfo.loadWeight_tH(tHweights);
   }
 
   GenParticleReader* genWBosonReader = nullptr;
