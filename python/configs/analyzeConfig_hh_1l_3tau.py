@@ -402,6 +402,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
                   'apply_hlt_filter'         : self.hlt_filter,
                   'useNonNominal'            : self.use_nonnominal,
                   'fillGenEvtHistograms'     : True,
+                  'useObjectMultiplicity'    : False,
                 }
                 self.createCfg_analyze(self.jobOptions_analyze[key_analyze_job], sample_info, lepton_and_hadTau_selection)
 

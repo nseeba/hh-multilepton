@@ -330,6 +330,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                   'hadTauSelection'          : hadTau_selection,
                   'central_or_shift'         : central_or_shift,
                   'fillGenEvtHistograms'     : True,
+                  'useObjectMultiplicity'    : False,
                   'apply_hlt_filter'         : self.hlt_filter,
                 }
                 self.createCfg_analyze(self.jobOptions_analyze[key_analyze_job], sample_info, lepton_selection)

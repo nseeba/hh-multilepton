@@ -113,6 +113,7 @@ process.analyze_hh_2l_2tau = cms.PSet(
     useNonNominal = cms.bool(False),
     isDEBUG = cms.bool(False),
     hasLHE = cms.bool(True),
+    useObjectMultiplicity = cms.bool(False),
 
     selectBDT = cms.bool(False), ## Set it to true for making BDT training Ntuples
     ## ".xml -> Odd train:Even test" to be used for even evt no.  

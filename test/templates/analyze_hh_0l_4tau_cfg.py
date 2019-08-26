@@ -98,6 +98,7 @@ process.analyze_hh_0l_4tau = cms.PSet(
 
     isDEBUG = cms.bool(False),
     hasLHE = cms.bool(True),
+    useObjectMultiplicity = cms.bool(False),
 
     evtWeight = cms.PSet(
         apply = cms.bool(False),

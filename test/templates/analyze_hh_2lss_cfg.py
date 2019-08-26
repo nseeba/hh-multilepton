@@ -121,6 +121,7 @@ process.analyze_hh_2lss = cms.PSet(
     useNonNominal = cms.bool(False),
     isDEBUG = cms.bool(False),
     hasLHE = cms.bool(True),
+    useObjectMultiplicity = cms.bool(False),
     minNumJets = cms.int32(3),
 
     evtWeight = cms.PSet(
