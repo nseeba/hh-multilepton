@@ -98,13 +98,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
     self.hadTau_selection_part2 = hadTau_selection
     self.applyFakeRateWeights = applyFakeRateWeights
     run_mcClosure = 'central' not in self.central_or_shifts or len(central_or_shifts) > 1 or self.do_sync
-    if self.era not in [ '2016', '2017', '2018' ]:
-      logging.warning('mcClosure for lepton FR not possible for era %s' % self.era)
-      run_mcClosure = False
-    if run_mcClosure:
-      # Run MC closure jobs only if the analysis is run w/ (at least some) systematic uncertainties
-      #self.hadTau_selections.extend([ "Fakeable_mcClosure_all" ]) #TODO
-      pass
 
     self.hadTau_genMatches = [
       "4t0e0m0j", "3t1e0m0j", "3t0e1m0j", "3t0e0m1j", "2t2e0m0j", "2t1e1m0j", "2t1e0m1j", "2t0e2m0j", "2t0e1m1j", "2t0e0m2j",
@@ -124,8 +117,10 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
           self.hadTau_genMatches_fakes.append(hadTau_genMatch)
       if run_mcClosure:
         self.hadTau_selections.extend([ "Fakeable_mcClosure_t" ])
+      self.central_or_shifts_fr = systematics.FR_t
     else:
       raise ValueError("Invalid Configuration parameter 'applyFakeRateWeights' = %s !!" % applyFakeRateWeights)
+    self.pruneSystematics()
 
     self.hadTau_charge_selections = hadTau_charge_selections
 
@@ -242,11 +237,13 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
                 if central_or_shift_or_dummy in [ "hadd", "addBackgrounds" ] and process_name_or_dummy in [ "hadd" ]:
                   continue
                 if central_or_shift_or_dummy != "central" and central_or_shift_or_dummy not in central_or_shift_extensions:
-                  isFR_shape_shift = (central_or_shift_or_dummy in systematics.FR_all)
+                  isFR_shape_shift = (central_or_shift_or_dummy in self.central_or_shifts_fr)
                   if not ((hadTau_selection == "Fakeable" and hadTau_charge_selection == "OS" and isFR_shape_shift) or
                           (hadTau_selection == "Tight"    and hadTau_charge_selection == "OS")):
                     continue
                   if not is_mc and not isFR_shape_shift:
+                    continue
+                  if isFR_shape_shift and hadTau_selection == "Tight":
                     continue
                   if not self.accept_central_or_shift(central_or_shift_or_dummy, sample_category, sample_name, sample_info['has_LHE']):
                     continue
@@ -328,9 +325,11 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
             for central_or_shift in self.central_or_shifts:
               
               if central_or_shift != "central":
-                isFR_shape_shift = (central_or_shift in systematics.FR_all)
+                isFR_shape_shift = (central_or_shift in self.central_or_shifts_fr)
                 if not ((hadTau_selection == "Fakeable" and hadTau_charge_selection == "OS" and isFR_shape_shift) or
                         (hadTau_selection == "Tight"    and hadTau_charge_selection == "OS")):
+                  continue
+                if isFR_shape_shift and hadTau_selection == "Tight":
                   continue
                 if not is_mc and not isFR_shape_shift:
                   continue
