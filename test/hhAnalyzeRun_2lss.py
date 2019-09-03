@@ -54,52 +54,11 @@ for systematic_label in systematics_label:
 lumi = get_lumi(era)
 
 if mode == "default":
-  samples = load_samples(era, suffix = "preselected" if use_preselected else "")
-  samples_wjets = load_samples(era, suffix = "wjets_preselected" if use_preselected else "wjets")
-
-
-  for sample_name, sample_info in samples.items():
-    if sample_name == 'sum_events':
-      continue
-    if sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD_v14-v1', 'TTGJets_ext1' ]:
-      sample_info['use_it'] = False
-    elif sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD', 'TTGJets' ]:
-      sample_info['use_it'] = True
-
-    # since we run the regular analysis on "part1" of W+jets samples and reserve "part2" for the BDT training,
-    # we have to make sure that we don't use the non-split W+jets samples at all
-    if ('%s/part1' % sample_name) in samples_wjets or ('%s/part2' % sample_name) in samples_wjets:
-      sample_info['use_it'] = False
-    if sample_name.endswith('/part1'):
-      sample_info['use_it'] = True
-    if sample_name.endswith('/part2'):
-      sample_info['use_it'] = False
-
+  samples = load_samples(era)
   hadTau_veto = "dR03mvaMedium"
 
 elif mode == "forBDTtraining":
-
   samples = load_samples(era, suffix = "BDT")
-  samples_wjets = load_samples(era, suffix = "wjets")
-
-
-  for sample_name, sample_info in samples.items():
-    if sample_name == 'sum_events':
-      continue
-    if sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD_v14-v1', 'TTGJets_ext1' ]:
-      sample_info['use_it'] = True
-    elif sample_info['process_name_specific'] in [ 'WpWpJJ_EWK_QCD', 'TTGJets' ]:
-      sample_info['use_it'] = False
-
-    # since we run the regular analysis on "part1" of W+jets samples and reserve "part2" for the BDT training,
-    # we have to make sure that we don't use the non-split W+jets samples at all
-    if ('%s/part1' % sample_name) in samples_wjets or ('%s/part2' % sample_name) in samples_wjets:
-      sample_info['use_it'] = False
-    if sample_name.endswith('/part1'):
-      sample_info['use_it'] = False
-    if sample_name.endswith('/part2'):
-      sample_info['use_it'] = True
-
   hadTau_veto = "dR03mvaMedium"
 
 else:

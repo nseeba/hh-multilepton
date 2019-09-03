@@ -318,7 +318,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
                   if not is_mc and not isFR_shape_shift:
                     continue
 
-                if not self.accept_central_or_shift(central_or_shift, sample_category, sample_name):
+                if not self.accept_central_or_shift(central_or_shift, sample_category, sample_name, sample_info['has_LHE']):
                   continue
 
                 logging.info(" ... for '%s' and systematic uncertainty option '%s'" % (hadTau_selection_and_frWeight, central_or_shift))
@@ -546,7 +546,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
       if "SS" in self.hadTau_charge_selections:
         key_hadd_stage2_job = getKey(get_hadTau_selection_and_frWeight("Tight", "disabled"), "SS")
         prep_dcard_job_tuple = (self.channel, "SS", histogramToFit)
-        key_prep_dcard_job = getKey("OS", histogramToFit)
+        key_prep_dcard_job = getKey("SS", histogramToFit)
         self.jobOptions_prep_dcard[key_prep_dcard_job] = {
           'inputFile' : self.outputFile_hadd_stage2[key_hadd_stage2_job],
           'cfgFile_modified' : os.path.join(self.dirs[key_prep_dcard_dir][DKEY_CFGS], "prepareDatacards_%s_%s_%s_cfg.py" % prep_dcard_job_tuple),
@@ -562,7 +562,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
       #  - 'CMS_ttHl_Clos_shape_t'
       for hadTau_charge_selection in self.hadTau_charge_selections:
         key_prep_dcard_job = getKey(hadTau_charge_selection, histogramToFit)
-        key_hadd_stage2_job = getKey(leptonChargeSelection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
+        key_hadd_stage2_job = getKey(get_hadTau_selection_and_frWeight("Tight", "disabled"), hadTau_charge_selection)
         key_add_syst_fakerate_dir = getKey("addSystFakeRates")
         add_syst_fakerate_job_tuple = (self.channel, hadTau_charge_selection, histogramToFit)
         key_add_syst_fakerate_job = getKey(hadTau_charge_selection, histogramToFit)

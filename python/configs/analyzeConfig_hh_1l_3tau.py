@@ -360,7 +360,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
                   if not is_mc and not isFR_shape_shift:
                     continue
 
-                if not self.accept_central_or_shift(central_or_shift, sample_category, sample_name):
+                if not self.accept_central_or_shift(central_or_shift, sample_category, sample_name, sample_info['has_LHE']):
                   continue
 
                 logging.info(" ... for '%s' and systematic uncertainty option '%s'" % (lepton_and_hadTau_selection_and_frWeight, central_or_shift))
@@ -641,7 +641,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
       #  - 'CMS_ttHl_Clos_shape_t'
       for chargeSumSelection in self.chargeSumSelections:
         key_prep_dcard_job = getKey(chargeSumSelection, histogramToFit)
-        key_hadd_stage2_job = getKey(leptonChargeSelection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
+        key_hadd_stage2_job = getKey(get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
         key_add_syst_fakerate_dir = getKey("addSystFakeRates")
         add_syst_fakerate_job_tuple = (self.channel, chargeSumSelection, histogramToFit)
         key_add_syst_fakerate_job = getKey(chargeSumSelection, histogramToFit)

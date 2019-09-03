@@ -293,7 +293,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                   if not is_mc and not isFR_shape_shift:
                     continue
 
-                if not self.accept_central_or_shift(central_or_shift, sample_category, sample_name):
+                if not self.accept_central_or_shift(central_or_shift, sample_category, sample_name, sample_info['has_LHE']):
                   continue
 
                 logging.info(" ... for '%s' and systematic uncertainty option '%s'" % (lepton_selection_and_frWeight, central_or_shift))
@@ -485,7 +485,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                 processes_input = [ process_input + "_fake" for process_input in processes_input ]
                 process_output += "_fake"
               self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal] = {
-                'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5],
+                'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5_job],
                 'cfgFile_modified' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_CFGS], "addBackgrounds_%s_%s_%s_%s_cfg.py" % addBackgrounds_job_signal_tuple),
                 'outputFile' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_HIST], "addBackgrounds_%s_%s_%s_%s.root" % addBackgrounds_job_signal_tuple),
                 'logFile' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_LOGS], "addBackgrounds_%s_%s_%s_%s.log" % addBackgrounds_job_signal_tuple),
