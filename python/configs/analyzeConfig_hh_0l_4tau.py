@@ -217,21 +217,40 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
     """
 
     for sample_name, sample_info in self.samples.items():
-      if not sample_info["use_it"] or sample_info["sample_category"] in [ "additional_signal_overlap", "background_data_estimate" ]:
+      if not sample_info["use_it"]:
         continue
+
+      sample_category = sample_info["sample_category"]
+      is_mc = (sample_info["type"] == "mc")
       process_name = sample_info["process_name_specific"]
+
+      logging.info("Building dictionaries for sample %s..." % process_name)
       for hadTau_selection in self.hadTau_selections:
         for hadTau_frWeight in self.hadTau_frWeights:
           if hadTau_frWeight == "enabled" and not hadTau_selection.startswith("Fakeable"):
             continue
+          if hadTau_frWeight == "disabled" and not hadTau_selection in ["Tight", "forBDTtraining"]:
+            continue
+
           hadTau_selection_and_frWeight = get_hadTau_selection_and_frWeight(hadTau_selection, hadTau_frWeight)
           for hadTau_charge_selection in self.hadTau_charge_selections:
-            central_or_shifts_extended = [ "" ]
-            central_or_shifts_extended.extend(self.central_or_shifts)
-            central_or_shifts_extended.extend([ "hadd", "addBackgrounds" ])
+            central_or_shift_extensions = ["", "hadd", "addBackgrounds"]
+            central_or_shifts_extended = central_or_shift_extensions + self.central_or_shifts
             for central_or_shift_or_dummy in central_or_shifts_extended:
               process_name_extended = [ process_name, "hadd" ]
               for process_name_or_dummy in process_name_extended:
+                if central_or_shift_or_dummy in [ "hadd", "addBackgrounds" ] and process_name_or_dummy in [ "hadd" ]:
+                  continue
+                if central_or_shift_or_dummy != "central" and central_or_shift_or_dummy not in central_or_shift_extensions:
+                  isFR_shape_shift = (central_or_shift_or_dummy in systematics.FR_all)
+                  if not ((hadTau_selection == "Fakeable" and hadTau_charge_selection == "OS" and isFR_shape_shift) or
+                          (hadTau_selection == "Tight"    and hadTau_charge_selection == "OS")):
+                    continue
+                  if not is_mc and not isFR_shape_shift:
+                    continue
+                  if not self.accept_central_or_shift(central_or_shift_or_dummy, sample_category, sample_name, sample_info['has_LHE']):
+                    continue
+
                 key_dir = getKey(process_name_or_dummy, hadTau_selection_and_frWeight, hadTau_charge_selection, central_or_shift_or_dummy)
                 for dir_type in [ DKEY_CFGS, DKEY_HIST, DKEY_LOGS, DKEY_ROOT, DKEY_RLES ]:
                   initDict(self.dirs, [ key_dir, dir_type ])
@@ -297,42 +316,41 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
         for hadTau_charge_selection in self.hadTau_charge_selections:
 
           for sample_name, sample_info in self.samples.items():
-            if not sample_info["use_it"] or sample_info["sample_category"] in [ "additional_signal_overlap", "background_data_estimate" ]:
+            if not sample_info["use_it"]:
               continue
             process_name = sample_info["process_name_specific"]
             logging.info("Creating configuration files to run '%s' for sample %s" % (self.executable_analyze, process_name))
+            inputFileList = inputFileLists[sample_name]
 
             sample_category = sample_info["sample_category"]
             is_mc = (sample_info["type"] == "mc")
-            is_signal = (sample_category.startswith("signal"))
 
             for central_or_shift in self.central_or_shifts:
-
-              inputFileList = inputFileLists[sample_name]
-              for jobId in inputFileList.keys():
-                if central_or_shift != "central":
-                  isFR_shape_shift = (central_or_shift in systematics.FR_all)
-                  if not ((hadTau_selection == "Fakeable" and hadTau_charge_selection == "OS" and isFR_shape_shift) or
-                          (hadTau_selection == "Tight"    and hadTau_charge_selection == "OS")):
-                    continue
-                  if not is_mc and not isFR_shape_shift:
-                    continue
-
-                if not self.accept_central_or_shift(central_or_shift, sample_category, sample_name, sample_info['has_LHE']):
+              
+              if central_or_shift != "central":
+                isFR_shape_shift = (central_or_shift in systematics.FR_all)
+                if not ((hadTau_selection == "Fakeable" and hadTau_charge_selection == "OS" and isFR_shape_shift) or
+                        (hadTau_selection == "Tight"    and hadTau_charge_selection == "OS")):
+                  continue
+                if not is_mc and not isFR_shape_shift:
                   continue
 
-                logging.info(" ... for '%s' and systematic uncertainty option '%s'" % (hadTau_selection_and_frWeight, central_or_shift))
+              if not self.accept_central_or_shift(central_or_shift, sample_category, sample_name, sample_info['has_LHE']):
+                continue
+              
+              logging.info(" ... for '%s' and systematic uncertainty option '%s'" % (hadTau_selection_and_frWeight, central_or_shift))
 
-                # build config files for executing analysis code
-                key_analyze_dir = getKey(process_name, hadTau_selection_and_frWeight, hadTau_charge_selection, central_or_shift)
+              # build config files for executing analysis code
+              key_analyze_dir = getKey(process_name, hadTau_selection_and_frWeight, hadTau_charge_selection, central_or_shift)
+
+              for jobId in inputFileList.keys():
+
                 analyze_job_tuple = (process_name, hadTau_selection_and_frWeight, hadTau_charge_selection, central_or_shift, jobId)
                 key_analyze_job = getKey(*analyze_job_tuple)
                 ntupleFiles = inputFileList[jobId]
                 if len(ntupleFiles) == 0:
                   logging.warning("No input ntuples for %s --> skipping job !!" % (key_analyze_job))
                   continue
-
-                mcClosure_match = mcClosure_regex.match(hadTau_selection_and_frWeight)
 
                 cfgFile_modified_path = os.path.join(self.dirs[key_analyze_dir][DKEY_CFGS], "analyze_%s_%s_%s_%s_%i_cfg.py" % analyze_job_tuple)
                 logFile_path = os.path.join(self.dirs[key_analyze_dir][DKEY_LOGS], "analyze_%s_%s_%s_%s_%i.log" % analyze_job_tuple)
@@ -348,7 +366,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
                   hadTauSelection = "|".join([ hadTau_selection, self.hadTau_selection_part2 ])
                 if hadTau_selection == "Fakeable_mcClosure_t":
                   hadTauSelection = "Fakeable"
-                  hadTauSelection = "|".join([hadTau_selection, self.hadTau_selection_part2])
+                  hadTauSelection = "|".join([hadTauSelection, self.hadTau_selection_part2])
 
                 self.jobOptions_analyze[key_analyze_job] = {
                   'ntupleFiles'              : ntupleFiles,
