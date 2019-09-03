@@ -34,8 +34,7 @@ samples = load_samples(era)
 lumi = get_lumi(era)
 
 for sample_name, sample_info in samples.items():
-  if not isinstance(sample_info, OD):
-    continue
+  if sample_name == 'sum_events': continue
   if sample_info["process_name_specific"] in list(map(lambda m: 'x_to_hh_%d' % m, [ 270, 300, 350, 400, 450, 500, 600, 700, 800 ])):
     sample_info["use_it"] = True
   else:
