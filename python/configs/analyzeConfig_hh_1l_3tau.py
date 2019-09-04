@@ -623,19 +623,20 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
 
     logging.info("Creating configuration files to run 'prepareDatacards'")
     for histogramToFit in self.histograms_to_fit:
-      key_hadd_stage2_job = getKey(get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
       key_prep_dcard_dir = getKey("prepareDatacards")
-      prep_dcard_job_tuple = (self.channel, "OS", histogramToFit)
-      key_prep_dcard_job = getKey("OS", histogramToFit)
-      self.jobOptions_prep_dcard[key_prep_dcard_job] = {
-        'inputFile' : self.outputFile_hadd_stage2[key_hadd_stage2_job],
-        'cfgFile_modified' : os.path.join(self.dirs[key_prep_dcard_dir][DKEY_CFGS], "prepareDatacards_%s_%s_%s_cfg.py" % prep_dcard_job_tuple),
-        'datacardFile' : os.path.join(self.dirs[key_prep_dcard_dir][DKEY_DCRD], "prepareDatacards_%s_%s_%s.root" % prep_dcard_job_tuple),
-        'histogramDir' : self.histogramDir_prep_dcard,
-        'histogramToFit' : histogramToFit,
-        'label' : '1l+3#tau_{h}',
-      }
-      self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
+      if "OS" in self.chargeSumSelections:
+        key_hadd_stage2_job = getKey(get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
+        prep_dcard_job_tuple = (self.channel, "OS", histogramToFit)
+        key_prep_dcard_job = getKey("OS", histogramToFit)
+        self.jobOptions_prep_dcard[key_prep_dcard_job] = {
+          'inputFile' : self.outputFile_hadd_stage2[key_hadd_stage2_job],
+          'cfgFile_modified' : os.path.join(self.dirs[key_prep_dcard_dir][DKEY_CFGS], "prepareDatacards_%s_%s_%s_cfg.py" % prep_dcard_job_tuple),
+          'datacardFile' : os.path.join(self.dirs[key_prep_dcard_dir][DKEY_DCRD], "prepareDatacards_%s_%s_%s.root" % prep_dcard_job_tuple),
+          'histogramDir' : self.histogramDir_prep_dcard,
+          'histogramToFit' : histogramToFit,
+          'label' : '1l+3#tau_{h}',
+        }
+        self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
       if "SS" in self.chargeSumSelections:
         key_hadd_stage2_job = getKey(get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "SS")
         prep_dcard_job_tuple = (self.channel, "SS", histogramToFit)
@@ -659,7 +660,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
       #  - 'CMS_ttHl_Clos_shape_t'
       for chargeSumSelection in self.chargeSumSelections:
         key_prep_dcard_job = getKey(chargeSumSelection, histogramToFit)
-        key_hadd_stage2_job = getKey(get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
+        key_hadd_stage2_job = getKey(get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
         key_add_syst_fakerate_dir = getKey("addSystFakeRates")
         add_syst_fakerate_job_tuple = (self.channel, chargeSumSelection, histogramToFit)
         key_add_syst_fakerate_job = getKey(chargeSumSelection, histogramToFit)
@@ -695,19 +696,20 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
         self.createCfg_add_syst_fakerate(self.jobOptions_add_syst_fakerate[key_add_syst_fakerate_job])
 
     logging.info("Creating configuration files to run 'makePlots'")
-    key_hadd_stage2_job = getKey(get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
     key_makePlots_dir = getKey("makePlots")
-    key_makePlots_job = getKey("OS")    
-    self.jobOptions_make_plots[key_makePlots_job] = {
-      'executable' : self.executable_make_plots,
-      'inputFile' : self.outputFile_hadd_stage2[key_hadd_stage2_job],
-      'cfgFile_modified' : os.path.join(self.dirs[key_makePlots_dir][DKEY_CFGS], "makePlots_%s_cfg.py" % self.channel),
-      'outputFile' : os.path.join(self.dirs[key_makePlots_dir][DKEY_PLOT], "makePlots_%s.png" % self.channel),
-      'histogramDir' : self.histogramDir_prep_dcard,
-      'label' : '1l+3#tau_{h}',
-      'make_plots_backgrounds' : self.make_plots_backgrounds
-    }
-    self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
+    if "OS" in self.chargeSumSelections:
+      key_hadd_stage2_job = getKey(get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
+      key_makePlots_job = getKey("OS")
+      self.jobOptions_make_plots[key_makePlots_job] = {
+        'executable' : self.executable_make_plots,
+        'inputFile' : self.outputFile_hadd_stage2[key_hadd_stage2_job],
+        'cfgFile_modified' : os.path.join(self.dirs[key_makePlots_dir][DKEY_CFGS], "makePlots_%s_cfg.py" % self.channel),
+        'outputFile' : os.path.join(self.dirs[key_makePlots_dir][DKEY_PLOT], "makePlots_%s.png" % self.channel),
+        'histogramDir' : self.histogramDir_prep_dcard,
+        'label' : '1l+3#tau_{h}',
+        'make_plots_backgrounds' : self.make_plots_backgrounds
+      }
+      self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
     if "SS" in self.chargeSumSelections:
       key_hadd_stage2_job = getKey(get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "SS")
       key_makePlots_job = getKey("SS")      

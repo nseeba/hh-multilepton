@@ -25,6 +25,7 @@ parser.add_tau_id_wp()
 parser.add_hlt_filter()
 parser.add_files_per_job()
 parser.add_use_home()
+parser.add_sideband()
 args = parser.parse_args()
 
 # Common arguments
@@ -48,7 +49,7 @@ hlt_filter        = args.hlt_filter
 files_per_job     = args.files_per_job
 use_home          = args.use_home
 tau_id_wp         = args.tau_id_wp
-
+sideband          = args.sideband
 
 # Use the arguments
 central_or_shifts = []
@@ -58,7 +59,14 @@ for systematic_label in systematics_label:
       central_or_shifts.append(central_or_shift)
 lumi = get_lumi(era)
 
-chargeSumSelections      = [ "OS", "SS" ]
+if sideband == 'disabled':
+  chargeSumSelections = [ "OS" ]
+elif sideband == 'enabled':
+  chargeSumSelections = [ "OS", "SS" ]
+elif sideband == 'only':
+  chargeSumSelections = [ "SS" ]
+else:
+  raise ValueError("Invalid choice for the sideband: %s" % sideband)
 
 if mode == "default":
   samples = load_samples(era, suffix = "preselected_BDT_2l_2tau" if use_preselected else "BDT_2l_2tau")
@@ -103,7 +111,7 @@ if __name__ == '__main__':
     executable_analyze                    = "analyze_hh_2l_2tau",
     cfgFile_analyze                       = "analyze_hh_2l_2tau_cfg.py",
     samples                               = samples,
-    leptonChargeSelections              = [ "disabled" ],
+    leptonChargeSelections                = [ "disabled" ],
     hadTau_selection                      = hadTau_selection,
     hadTau_charge_selections              = [ "disabled" ],
     applyFakeRateWeights                  = "4L",
