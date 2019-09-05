@@ -26,6 +26,7 @@ parser.add_tau_id_wp()
 parser.add_hlt_filter()
 parser.add_files_per_job()
 parser.add_use_home()
+parser.add_sideband()
 args = parser.parse_args()
 
 # Common arguments
@@ -49,6 +50,7 @@ use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
 files_per_job     = args.files_per_job
 use_home          = args.use_home
+sideband          = args.sideband
 
 # Use the arguments
 central_or_shifts = []
@@ -59,7 +61,14 @@ for systematic_label in systematics_label:
 do_sync = mode.startswith('sync')
 lumi = get_lumi(era)
 
-hadTau_charge_selections = [ "OS", "SS" ]
+if sideband == 'disabled':
+  hadTau_charge_selections = [ "OS" ]
+elif sideband == 'enabled':
+  hadTau_charge_selections = [ "OS", "SS" ]
+elif sideband == 'only':
+  hadTau_charge_selections = [ "SS" ]
+else:
+  raise ValueError("Invalid choice for the sideband: %s" % sideband)
 
 if mode == "default":
   samples = load_samples(era, suffix = "preselected" if use_preselected else "")

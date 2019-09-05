@@ -1062,9 +1062,9 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
           if hadTau_charge_selection != "disabled":
             lepton_and_hadTau_charge_selection += "_tau%s" % hadTau_charge_selection
           for histogramToFit in self.histograms_to_fit:
+            key_prep_dcard_dir = getKey("prepareDatacards")
             if "OS" in self.chargeSumSelections:
               key_hadd_stage2_job = getKey(leptonChargeSelection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
-              key_prep_dcard_dir = getKey("prepareDatacards")
               prep_dcard_job_tuple = (self.channel, category, lepton_and_hadTau_charge_selection, "OS", histogramToFit)
               key_prep_dcard_job = getKey(category, leptonChargeSelection, hadTau_charge_selection, "OS", histogramToFit)
               self.jobOptions_prep_dcard[key_prep_dcard_job] = {
@@ -1137,19 +1137,20 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
           lepton_and_hadTau_charge_selection += "_lep%s" % leptonChargeSelection
         if hadTau_charge_selection != "disabled":
           lepton_and_hadTau_charge_selection += "_tau%s" % hadTau_charge_selection
-        key_hadd_stage2_job = getKey(leptonChargeSelection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
         key_makePlots_dir = getKey("makePlots")
-        key_makePlots_job = getKey(leptonChargeSelection, hadTau_charge_selection, "OS")        
-        self.jobOptions_make_plots[key_makePlots_job] = {
-          'executable' : self.executable_make_plots,
-          'inputFile' : self.outputFile_hadd_stage2[key_hadd_stage2_job],
-          'cfgFile_modified' : os.path.join(self.dirs[key_makePlots_dir][DKEY_CFGS], "makePlots_%s_%s_cfg.py" % (self.channel, lepton_and_hadTau_charge_selection)),
-          'outputFile' : os.path.join(self.dirs[key_makePlots_dir][DKEY_PLOT], "makePlots_%s_%s.png" % (self.channel, lepton_and_hadTau_charge_selection)),
-          'histogramDir' : getHistogramDir(self.category_inclusive, "Tight", "Tight", "disabled", leptonChargeSelection, hadTau_charge_selection, "OS"), ## We are making plots only for the inclusive category
-          'label' : '2l+2tau_{h}',
-          'make_plots_backgrounds' : self.make_plots_backgrounds
-        }
-        self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
+        if "OS" in self.chargeSumSelections:
+          key_hadd_stage2_job = getKey(leptonChargeSelection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
+          key_makePlots_job = getKey(leptonChargeSelection, hadTau_charge_selection, "OS")
+          self.jobOptions_make_plots[key_makePlots_job] = {
+            'executable' : self.executable_make_plots,
+            'inputFile' : self.outputFile_hadd_stage2[key_hadd_stage2_job],
+            'cfgFile_modified' : os.path.join(self.dirs[key_makePlots_dir][DKEY_CFGS], "makePlots_%s_%s_cfg.py" % (self.channel, lepton_and_hadTau_charge_selection)),
+            'outputFile' : os.path.join(self.dirs[key_makePlots_dir][DKEY_PLOT], "makePlots_%s_%s.png" % (self.channel, lepton_and_hadTau_charge_selection)),
+            'histogramDir' : getHistogramDir(self.category_inclusive, "Tight", "Tight", "disabled", leptonChargeSelection, hadTau_charge_selection, "OS"), ## We are making plots only for the inclusive category
+            'label' : '2l+2tau_{h}',
+            'make_plots_backgrounds' : self.make_plots_backgrounds
+          }
+          self.createCfg_makePlots(self.jobOptions_make_plots[key_makePlots_job])
         if "SS" in self.chargeSumSelections:
           key_hadd_stage2_job = getKey(leptonChargeSelection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "SS")
           key_makePlots_job = getKey(leptonChargeSelection, hadTau_charge_selection, "SS")          

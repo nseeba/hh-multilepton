@@ -24,6 +24,7 @@ parser.add_nonnominal()
 parser.add_hlt_filter()
 parser.add_files_per_job()
 parser.add_use_home()
+parser.add_sideband()
 args = parser.parse_args()
 
 # Common arguments
@@ -46,6 +47,7 @@ use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
 files_per_job     = args.files_per_job
 use_home          = args.use_home
+sideband          = args.sideband
 
 # Use the arguments
 central_or_shifts = []
@@ -55,7 +57,14 @@ for systematic_label in systematics_label:
       central_or_shifts.append(central_or_shift)
 lumi = get_lumi(era)
 
-leptonChargeSelections = [ "OS", "SS" ]
+if sideband == 'disabled':
+  leptonChargeSelections = [ "OS" ]
+elif sideband == 'enabled':
+  leptonChargeSelections = [ "OS", "SS" ]
+elif sideband == 'only':
+  leptonChargeSelections = [ "SS" ]
+else:
+  raise ValueError("Invalid choice for the sideband: %s" % sideband)
 
 if mode == "default":
   samples = load_samples(era, suffix = "preselected" if use_preselected else "")
