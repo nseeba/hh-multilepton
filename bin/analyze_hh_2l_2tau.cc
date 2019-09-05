@@ -586,7 +586,7 @@ int main(int argc, char* argv[])
 
   if(fitFunctionFileName != ""){ // Transfrom Input Var.s before feeding into the BDT .pkl/.xml files
     // Xandra's method (with .pkl file)
-    XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl , fitFunctionFileName,  BDTInputVariables_SUM); 
+    XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl , fitFunctionFileName,  BDTInputVariables_SUM);
 
     // -----  Using New TMVAInterface class with built-in Odd-Even interface ----- 
     BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, fitFunctionFileName, BDTSpectatorVars); 
@@ -594,7 +594,7 @@ int main(int argc, char* argv[])
   }else{
     // Xandra's method (with .pkl file)
     XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, BDTInputVariables_SUM); 
-  
+
     // -----  Using New TMVAInterface class with built-in Odd-Even interface ----- 
     BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, BDTSpectatorVars); 
     BDT_SUM->enableBDTTransform();

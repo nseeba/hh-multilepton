@@ -62,7 +62,6 @@ chargeSumSelections      = [ "OS", "SS" ]
 
 if mode == "default":
   samples = load_samples(era, suffix = "preselected_BDT_2l_2tau" if use_preselected else "BDT_2l_2tau")
-
   for sample_name, sample_info in samples.items():
     if sample_name == 'sum_events':
       continue
