@@ -26,6 +26,7 @@ parser.add_hlt_filter()
 parser.add_files_per_job()
 parser.add_use_home()
 parser.add_sideband()
+parser.add_tau_id()
 args = parser.parse_args()
 
 # Common arguments
@@ -49,6 +50,7 @@ hlt_filter        = args.hlt_filter
 files_per_job     = args.files_per_job
 use_home          = args.use_home
 sideband          = args.sideband
+tau_id            = args.tau_id
 
 # Use the arguments
 central_or_shifts = []
@@ -67,7 +69,11 @@ elif sideband == 'only':
 else:
   raise ValueError("Invalid choice for the sideband: %s" % sideband)
 
-hadTau_selection = "dR03mvaLoose"
+hadTauWP_map = {
+  'dR03mva' : 'Loose',
+  'deepVSj' : 'Loose',
+}
+hadTau_selection = tau_id + hadTauWP_map[tau_id]
 
 if mode == "default":
   samples = load_samples(era, suffix = "preselected" if use_preselected else "")
@@ -85,8 +91,13 @@ elif mode == "forBDTtraining":
        continue
      # uncomment the following line once we have the whitelist
      #sample_info['use_it'] = (sample_info['process_name_specific'] in whitelist)
-  hadTau_selection_relaxed = "dR03mvaVLoose"
-
+  hadTauWP_map_relaxed = {
+    'dR03mva' : 'Loose',
+    'deepVSj' : 'Loose',
+  }
+  if args.tau_id_wp:
+    tau_id = args.tau_id[:7]
+  hadTau_selection_relaxed = tau_id + hadTauWP_map_relaxed[tau_id]
 else:
   raise ValueError("Internal logic error")
 

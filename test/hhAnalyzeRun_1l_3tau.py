@@ -27,6 +27,7 @@ parser.add_hlt_filter()
 parser.add_files_per_job()
 parser.add_use_home()
 parser.add_sideband()
+parser.add_tau_id()
 args = parser.parse_args()
 
 # Common arguments
@@ -51,6 +52,7 @@ hlt_filter        = args.hlt_filter
 files_per_job     = args.files_per_job
 use_home          = args.use_home
 sideband          = args.sideband
+tau_id            = args.tau_id
 
 # Use the arguments
 central_or_shifts = []
@@ -70,9 +72,14 @@ elif sideband == 'only':
 else:
   raise ValueError("Invalid choice for the sideband: %s" % sideband)
 
+hadTauWP_map = {
+  'dR03mva' : 'Loose',
+  'deepVSj' : 'Loose',
+}
+hadTau_selection = tau_id + hadTauWP_map[tau_id]
+
 if mode == "default":
   samples = load_samples(era, suffix = "preselected" if use_preselected else "")
-  hadTau_selection = "dR03mvaLoose"
 else:
   raise ValueError("Invalid mode: %s" % mode)
 

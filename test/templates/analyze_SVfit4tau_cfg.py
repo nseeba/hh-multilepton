@@ -5,7 +5,7 @@ import os
 process = cms.PSet()
 
 process.fwliteInput = cms.PSet(
-    fileNames = cms.vstring('/home/karl/test_nanoAOD_tools/GluGluToRadionToHHTo4Tau_M-400_narrow_13TeV-madgraph_nanoAOD_1_i.root'),
+    fileNames = cms.vstring(''),
     maxEvents = cms.int32(-1),
     outputEvery = cms.uint32(1000)
 )
@@ -25,9 +25,8 @@ process.analyze_SVfit4tau = cms.PSet(
 
     mode = cms.string("rec"), # CV: 'rec', 'gen', or 'gen_smeared'
 
-    leptonSelection = cms.string('Tight'),
-
-    hadTauSelection = cms.string('Tight|dR03mvaMedium'),
+    leptonSelection = cms.string(),
+    hadTauSelection = cms.string(),
 
     SVfit4tau = cms.PSet(
         logM_wMassConstraint_MarkovChain = cms.vdouble(0.),

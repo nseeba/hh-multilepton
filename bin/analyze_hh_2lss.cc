@@ -472,11 +472,11 @@ int main(int argc, char* argv[])
   fakeableHadTauSelector.set_min_antiElectron(hadTauSelection_antiElectron);
   fakeableHadTauSelector.set_min_antiMuon(hadTauSelection_antiMuon);
   RecoHadTauCollectionSelectorTight tightHadTauSelector(era, -1, isDEBUG);
-  if ( hadTauSelection_part2 != "" ) tightHadTauSelector.set(hadTauSelection_part2);
+  tightHadTauSelector.set(hadTauSelection_part2);
   tightHadTauSelector.set_min_antiElectron(hadTauSelection_antiElectron);
   tightHadTauSelector.set_min_antiMuon(hadTauSelection_antiMuon);
   RecoHadTauSelectorTight tightHadTauFilter(era, -1, isDEBUG);
-  tightHadTauFilter.set("dR03mvaVTight");
+  tightHadTauFilter.set(hadTauSelection_part2);
   tightHadTauFilter.set_min_antiElectron(hadTauSelection_antiElectron);
   tightHadTauFilter.set_min_antiMuon(hadTauSelection_antiMuon);
 

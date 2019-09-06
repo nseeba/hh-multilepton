@@ -25,6 +25,7 @@ parser.add_hlt_filter()
 parser.add_files_per_job()
 parser.add_use_home()
 parser.add_sideband()
+parser.add_tau_id()
 args = parser.parse_args()
 
 # Common arguments
@@ -48,6 +49,7 @@ hlt_filter        = args.hlt_filter
 files_per_job     = args.files_per_job
 use_home          = args.use_home
 sideband          = args.sideband
+tau_id            = args.tau_id
 
 # Use the arguments
 central_or_shifts = []
@@ -74,6 +76,12 @@ elif mode == "forBDTtraining":
 else:
   raise ValueError("Invalid mode: %s" % mode)
 
+hadTauWP_veto_map = {
+  'dR03mva' : 'Loose',
+  'deepVSj' : 'Loose',
+}
+hadTau_selection_veto = tau_id + hadTauWP_veto_map[tau_id]
+
 for sample_name, sample_info in samples.items():
   if sample_name == 'sum_events': continue
   if sample_name.startswith('/Tau/Run'):
@@ -94,7 +102,7 @@ if __name__ == '__main__':
     executable_analyze                    = "analyze_hh_3l",
     cfgFile_analyze                       = "analyze_hh_3l_cfg.py",
     samples                               = samples,
-    hadTauVeto_selection                  = "dR03mvaLoose", # veto events containing taus that pass tau ID WP applied in 3l+1tau channel,
+    hadTauVeto_selection                  = hadTau_selection_veto,
     applyFakeRateWeights                  = "3lepton",
     leptonChargeSelections                = leptonChargeSelections,
     central_or_shifts                     = central_or_shifts,

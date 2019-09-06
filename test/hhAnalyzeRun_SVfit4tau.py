@@ -11,6 +11,7 @@ import sys
 import getpass
 
 parser = tthAnalyzeParser()
+parser.add_tau_id()
 args = parser.parse_args()
 
 # Common arguments
@@ -24,6 +25,7 @@ debug                = args.debug
 sample_filter        = args.filter
 num_parallel_jobs    = args.num_parallel_jobs
 running_method       = args.running_method
+tau_id               = args.tau_id
 
 # Use the arguments
 max_job_resubmission = 3;
@@ -32,6 +34,12 @@ max_files_per_job    = 1
 
 samples = load_samples(era)
 lumi = get_lumi(era)
+
+hadTauWP_map = {
+  'dR03mva' : 'Medium',
+  'deepVSj' : 'Medium',
+}
+hadTau_selection = tau_id + hadTauWP_map[tau_id]
 
 for sample_name, sample_info in samples.items():
   if sample_name == 'sum_events': continue
@@ -53,7 +61,7 @@ if __name__ == '__main__':
     cfgFile_analyze                 = "analyze_SVfit4tau_cfg.py",
     samples                         = samples,
     lepton_selection                = "Tight",
-    hadTau_selection                = "Tight|dR03mvaMedium",
+    hadTau_selection                = "Tight|%s" % hadTau_selection,
     SVfit4tau_logM_wMassConstraint_MarkovChain  = [ 0. ],
     SVfit4tau_logM_woMassConstraint_MarkovChain = [ 0. ],
     SVfit4tau_logM_wMassConstraint_VAMP         = [ 0. ],

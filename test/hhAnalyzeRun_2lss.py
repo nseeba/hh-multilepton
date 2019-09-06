@@ -23,6 +23,7 @@ parser.add_nonnominal()
 parser.add_hlt_filter()
 parser.add_files_per_job()
 parser.add_use_home()
+parser.add_tau_id()
 args = parser.parse_args()
 
 # Common arguments
@@ -44,6 +45,7 @@ use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
 files_per_job     = args.files_per_job
 use_home          = args.use_home
+tau_id            = args.tau_id
 
 # Use the arguments
 central_or_shifts = []
@@ -53,13 +55,16 @@ for systematic_label in systematics_label:
       central_or_shifts.append(central_or_shift)
 lumi = get_lumi(era)
 
+hadTauWP_veto_map = {
+  'dR03mva' : 'Medium',
+  'deepVSj' : 'Medium',
+}
+hadTau_selection_veto = tau_id + hadTauWP_veto_map[tau_id]
+
 if mode == "default":
   samples = load_samples(era)
-  hadTau_veto = "dR03mvaMedium"
-
 elif mode == "forBDTtraining":
   samples = load_samples(era, suffix = "BDT")
-  hadTau_veto = "dR03mvaMedium"
 
 else:
   raise ValueError("Internal logic error")
@@ -79,7 +84,7 @@ if __name__ == '__main__':
     executable_analyze                    = "analyze_hh_2lss",
     cfgFile_analyze                       = "analyze_hh_2lss_cfg.py",
     samples                               = samples,
-    hadTauVeto_selection                  = hadTau_veto,
+    hadTauVeto_selection                  = hadTau_selection_veto,
     applyFakeRateWeights                  = "2lepton",
     central_or_shifts                     = central_or_shifts,
     max_files_per_job                     = files_per_job,

@@ -26,6 +26,7 @@ parser.add_hlt_filter()
 parser.add_files_per_job()
 parser.add_use_home()
 parser.add_sideband()
+parser.add_tau_id()
 args = parser.parse_args()
 
 # Common arguments
@@ -50,6 +51,7 @@ files_per_job     = args.files_per_job
 use_home          = args.use_home
 tau_id_wp         = args.tau_id_wp
 sideband          = args.sideband
+tau_id            = args.tau_id
 
 # Use the arguments
 central_or_shifts = []
@@ -68,7 +70,11 @@ elif sideband == 'only':
 else:
   raise ValueError("Invalid choice for the sideband: %s" % sideband)
 
-hadTau_selection = "dR03mvaMedium"
+hadTauWP_map = {
+  'dR03mva' : 'Medium',
+  'deepVSj' : 'Medium',
+}
+hadTau_selection = tau_id + hadTauWP_map[tau_id]
 
 if mode == "default":
   samples = load_samples(era, suffix = "preselected_BDT_2l_2tau" if use_preselected else "BDT_2l_2tau")
@@ -82,7 +88,13 @@ elif mode == "forBDTtraining":
   if use_preselected:
     raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
   samples = load_samples(era, suffix = "BDT_2l_2tau")
-  hadTau_selection_relaxed = "dR03mvaLoose"
+  hadTauWP_map_relaxed = {
+    'dR03mva' : 'Loose',
+    'deepVSj' : 'Loose',
+  }
+  if args.tau_id_wp:
+    tau_id = args.tau_id[:7]
+  hadTau_selection_relaxed = tau_id + hadTauWP_map_relaxed[tau_id]
 else:
   raise ValueError("Internal logic error")
 
