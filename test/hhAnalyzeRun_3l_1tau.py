@@ -67,10 +67,10 @@ elif sideband == 'only':
 else:
   raise ValueError("Invalid choice for the sideband: %s" % sideband)
 
+hadTau_selection = "dR03mvaLoose"
+
 if mode == "default":
   samples = load_samples(era, suffix = "preselected" if use_preselected else "")
-  hadTau_selection = "dR03mvaLoose"
-
 elif mode == "forBDTtraining":
   if use_preselected:
     raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
@@ -85,8 +85,6 @@ elif mode == "forBDTtraining":
        continue
      # uncomment the following line once we have the whitelist
      #sample_info['use_it'] = (sample_info['process_name_specific'] in whitelist)
-
-  hadTau_selection = "dR03mvaLoose"
   hadTau_selection_relaxed = "dR03mvaVLoose"
 
 else:

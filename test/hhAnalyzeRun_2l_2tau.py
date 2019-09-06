@@ -68,6 +68,8 @@ elif sideband == 'only':
 else:
   raise ValueError("Invalid choice for the sideband: %s" % sideband)
 
+hadTau_selection = "dR03mvaMedium"
+
 if mode == "default":
   samples = load_samples(era, suffix = "preselected_BDT_2l_2tau" if use_preselected else "BDT_2l_2tau")
   for sample_name, sample_info in samples.items():
@@ -76,15 +78,10 @@ if mode == "default":
     sample_info['use_it'] = not sample_info['use_it']  ## skip samples used in bdt training in the main analysis
     if sample_info["process_name_specific"].startswith("signal") and 'hh' in sample_info["process_name_specific"]:
       sample_info["use_it"] = 'nonresonant' not in sample_info["process_name_specific"]
-
-  hadTau_selection = "dR03mvaMedium"
-
 elif mode == "forBDTtraining":
   if use_preselected:
     raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
-
   samples = load_samples(era, suffix = "BDT_2l_2tau")
-  hadTau_selection         = "dR03mvaMedium"
   hadTau_selection_relaxed = "dR03mvaLoose"
 else:
   raise ValueError("Internal logic error")
