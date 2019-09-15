@@ -77,13 +77,7 @@ hadTauWP_map = {
 hadTau_selection = tau_id + hadTauWP_map[tau_id]
 
 if mode == "default":
-  samples = load_samples(era, suffix = "preselected_BDT_2l_2tau" if use_preselected else "BDT_2l_2tau")
-  for sample_name, sample_info in samples.items():
-    if sample_name == 'sum_events':
-      continue
-    sample_info['use_it'] = not sample_info['use_it']  ## skip samples used in bdt training in the main analysis
-    if sample_info["process_name_specific"].startswith("signal") and 'hh' in sample_info["process_name_specific"]:
-      sample_info["use_it"] = 'nonresonant' not in sample_info["process_name_specific"]
+  samples = load_samples(era, suffix = "preselected" if use_preselected else "")
 elif mode == "forBDTtraining":
   if use_preselected:
     raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
