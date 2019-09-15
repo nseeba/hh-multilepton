@@ -25,7 +25,7 @@ def get_signal_per_masspoint(samples):
   io_pairs = {}
   for sample_key, sample_info in samples.items():
     process_cat = sample_info['sample_category']
-    if not sample_info['use_it'] or process_cat in [ "additional_signal_overlap", "background_data_estimate" ]:
+    if not sample_info['use_it']:
       continue
     resonant_match = RESONANT_REGEX.match(process_cat)
     if not resonant_match:
