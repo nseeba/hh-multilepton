@@ -16,7 +16,16 @@ EvtWeightRecorderHH::EvtWeightRecorderHH(const std::vector<std::string> & centra
                                          const std::string & central_or_shift,
                                          bool isMC)
   : EvtWeightRecorder(central_or_shifts, central_or_shift, isMC)
+  , bm_weight_(1.)
 {}
+
+double
+EvtWeightRecorderHH::get_inclusive(const std::string & central_or_shift) const
+{
+  double inclusive_weight = EvtWeightRecorder::get_inclusive(central_or_shift);
+  inclusive_weight *= bm_weight_;
+  return inclusive_weight;
+}
 
 double
 EvtWeightRecorderHH::get_tauSF(const std::string & central_or_shift) const
@@ -35,6 +44,12 @@ EvtWeightRecorderHH::get_tauSF(const std::string & central_or_shift) const
     }
   }
   return tauSF_weight;
+}
+
+void
+EvtWeightRecorderHH::record_bm(double weight)
+{
+  bm_weight_ = weight;
 }
 
 void

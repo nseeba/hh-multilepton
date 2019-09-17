@@ -17,7 +17,13 @@ public:
                       bool isMC);
 
   double
+  get_inclusive(const std::string & central_or_shift) const override;
+
+  double
   get_tauSF(const std::string & central_or_shift) const override;
+
+  void
+  record_bm(double weight);
 
   void
   record_tauTriggerEff(const Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger * const dataToMCcorrectionInterface_hh_0l_4tau_trigger);
@@ -68,6 +74,8 @@ public:
   get_jetToTau_FR_fourth(const std::string & central_or_shift);
 
 protected:
+  double bm_weight_;
+
   std::map<int, double> weights_FR_hadTau_third_;
   std::map<int, double> weights_FR_hadTau_fourth_;
   std::map<int, double> weights_SF_hadTau_third_;
