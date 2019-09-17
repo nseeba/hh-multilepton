@@ -4,17 +4,15 @@
 
 #include "tthAnalysis/HiggsToTauTau/interface/BranchAddressInitializer.h" // BranchAddressInitializer, TTree, Form()
 
-EventInfoHHReader::EventInfoHHReader(PUsys puSys_option,
-                                     bool read_genHiggsDecayMode,
+EventInfoHHReader::EventInfoHHReader(bool read_genHiggsDecayMode,
                                      bool read_puWeight)
-  : EventInfoHHReader(nullptr, puSys_option, read_genHiggsDecayMode, read_puWeight)
+  : EventInfoHHReader(nullptr, read_genHiggsDecayMode, read_puWeight)
 {}
 
 EventInfoHHReader::EventInfoHHReader(EventInfoHH * info,
-                                     PUsys puSys_option,
                                      bool read_genHiggsDecayMode,
                                      bool read_puWeight)
-  : EventInfoReader(info, puSys_option, read_genHiggsDecayMode, read_puWeight)
+  : EventInfoReader(info, read_genHiggsDecayMode, read_puWeight)
   , info_hh_(info)
   , branchName_gen_mHH("mHH_lhe")
   , branchName_gen_cosThetaStar("cosThetaStar_lhe")

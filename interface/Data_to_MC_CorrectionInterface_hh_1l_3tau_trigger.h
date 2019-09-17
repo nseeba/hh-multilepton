@@ -49,7 +49,7 @@ public:
   //-----------------------------------------------------------------------------
   // data/MC correction for trigger efficiency 
   double
-  getSF_triggerEff() const;
+  getSF_triggerEff(TriggerSFsys central_or_shift) const;
   //-----------------------------------------------------------------------------
 
 private:

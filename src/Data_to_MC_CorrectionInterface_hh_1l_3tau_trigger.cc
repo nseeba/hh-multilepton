@@ -92,7 +92,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::setHadTaus(double hadTau1_pt,
 }
 
 double
-Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
+Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff(TriggerSFsys central_or_shift) const
 {
   if(isDEBUG_)
   {
@@ -113,8 +113,8 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff() const
   bool isTriggered_1l     = false;
   bool isTriggered_1l1tau = false;
 
-  const auto getTriggerEfficiencyDataFunc = aux::getTriggerFuncData(triggerSF_option_);
-  const auto getTriggerEfficiencyMCFunc   = aux::getTriggerFuncMC(triggerSF_option_);
+  const auto getTriggerEfficiencyDataFunc = aux::getTriggerFuncData(central_or_shift);
+  const auto getTriggerEfficiencyMCFunc   = aux::getTriggerFuncMC(central_or_shift);
   assert(getTriggerEfficiencyDataFunc);
   assert(getTriggerEfficiencyMCFunc);
 
