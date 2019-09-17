@@ -184,7 +184,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     self.leptonChargeSelections = [ "OS" ]
     self.isBDTtraining       = True
 
-  def accept_systematics(self, central_or_shift, is_mc, lepton_selection, leptonChargeSelection, sample_category, sample_name):
+  def accept_systematics(self, central_or_shift, is_mc, lepton_selection, leptonChargeSelection, sample_category, sample_name, sample_info):
     if central_or_shift != "central":
       isFR_shape_shift = (central_or_shift in self.central_or_shifts_fr)
       if not ((lepton_selection == "Fakeable" and leptonChargeSelection == "OS" and isFR_shape_shift) or
@@ -253,8 +253,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
                   continue
 
                 if central_or_shift_or_dummy not in central_or_shift_extensions and not self.accept_systematics(
-                    central_or_shift_or_dummy, is_mc, lepton_selection, leptonChargeSelection,
-                    sample_category, sample_name
+                    central_or_shift_or_dummy, is_mc, lepton_selection, leptonChargeSelection, sample_category, sample_name, sample_info
                 ):
                   continue
 
@@ -352,8 +351,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
             central_or_shift_dedicated = self.central_or_shifts if use_th_weights else self.central_or_shifts_external
             for central_or_shift in central_or_shift_dedicated:
               if not self.accept_systematics(
-                  central_or_shift, is_mc, lepton_and_hadTau_selection, chargeSumSelection, sample_category,
-                  sample_name
+                  central_or_shift, is_mc, lepton_and_hadTau_selection, chargeSumSelection, sample_category, sample_name, sample_info
               ):
                 continue
 
@@ -361,8 +359,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
               if central_or_shift == "central" and not use_th_weights:
                 for central_or_shift_local in self.central_or_shifts_internal:
                   if self.accept_systematics(
-                      central_or_shift_local, is_mc, lepton_and_hadTau_selection, chargeSumSelection,
-                      sample_category, sample_name
+                      central_or_shift_local, is_mc, lepton_and_hadTau_selection, chargeSumSelection, sample_category, sample_name, sample_info
                   ):
                     central_or_shifts_local.append(central_or_shift_local)
 
