@@ -204,7 +204,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig_hh):
         return False
       if not self.accept_central_or_shift(central_or_shift, sample_category, sample_name, sample_info['has_LHE']):
         return False
-      return True
+    return True
 
   def createCfg_analyze(self, jobOptions, sample_info, lepton_and_hadTau_selection):
     """Create python configuration file for the analyze_hh_3l_1tau executable (analysis code)

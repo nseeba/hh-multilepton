@@ -188,7 +188,7 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
         return False
       if not self.accept_central_or_shift(central_or_shift, sample_category, sample_name, sample_info['has_LHE']):
         return False
-      return True
+    return True
 
   def createCfg_analyze(self, jobOptions, sample_info, lepton_selection):
     """Create python configuration file for the analyze_hh_2lss executable (analysis code)

@@ -424,7 +424,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
         return False
       if not self.accept_central_or_shift(central_or_shift, sample_category, sample_name, sample_info['has_LHE']):
         return False
-      return True
+    return True
 
   def create(self):
     """Creates all necessary config files and runs the complete analysis workfow -- either locally or on the batch system
