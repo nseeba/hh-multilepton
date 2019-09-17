@@ -32,6 +32,9 @@ public:
   record_tauTriggerEff(const Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger * const dataToMCcorrectionInterface_hh_1l_3tau_trigger);
 
   void
+  record_tauTriggerEff(const Data_to_MC_CorrectionInterface_1l_1tau_trigger * const dataToMCcorrectionInterface_1l_1tau_trigger);
+
+  void
   record_jetToTau_FR_third(const JetToTauFakeRateInterface * const jetToTauFakeRateInterface,
                            const RecoHadTau * const hadTau_third);
 

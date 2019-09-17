@@ -3,6 +3,7 @@
 #include "hhAnalysis/multilepton/interface/Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger.h"
 #include "hhAnalysis/multilepton/interface/Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger.h"
 
+#include "tthAnalysis/HiggsToTauTau/interface/Data_to_MC_CorrectionInterface_1l_1tau_trigger.h"
 #include "tthAnalysis/HiggsToTauTau/interface/JetToTauFakeRateInterface.h"
 #include "tthAnalysis/HiggsToTauTau/interface/sysUncertOptions.h"
 #include "tthAnalysis/HiggsToTauTau/interface/RecoHadTau.h"
@@ -82,6 +83,12 @@ EvtWeightRecorderHH::record_tauTriggerEff(const Data_to_MC_CorrectionInterface_h
     }
     weights_tauTriggerEff_[triggerSF_option] = dataToMCcorrectionInterface_hh_1l_3tau_trigger->getSF_triggerEff(triggerSF_option);
   }
+}
+
+void
+EvtWeightRecorderHH::record_tauTriggerEff(const Data_to_MC_CorrectionInterface_1l_1tau_trigger * const dataToMCcorrectionInterface_1l_1tau_trigger)
+{
+  return EvtWeightRecorder::record_tauTriggerEff(dataToMCcorrectionInterface_1l_1tau_trigger);
 }
 
 void
