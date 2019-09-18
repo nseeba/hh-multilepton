@@ -1371,9 +1371,9 @@ int main(int argc, char* argv[])
   std::cout << "sel. Entries by gen. matching:" << std::endl;
   for(const std::string & central_or_shift: central_or_shifts_local)
   {
+    std::cout << "central_or_shift = " << central_or_shift << '\n';
     for(const leptonGenMatchEntry & leptonGenMatch_definition: leptonGenMatch_definitions)
     {
-
       std::string process_and_genMatch = process_string;
       if ( apply_leptonGenMatching ) process_and_genMatch += leptonGenMatch_definition.name_;
 
