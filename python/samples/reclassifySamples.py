@@ -62,6 +62,11 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_wjets = None)
     elif sample_name.startswith('/TTW'):
       sample_info["sample_category"] = "TTW" # TTW + TTWH
 
+    # disable Tau PD by default -- to avoid double-counting the data events in all analysis channels but 0l+4tau and 1l+3tau
+    # where the PD is the only one enabled
+    elif sample_name.startswith('/Tau/'):
+      sample_info["use_it"] = False
+
     if samples_era_wjets and sample_name in samples_era_wjets:
       sample_info["use_it"] = False
 

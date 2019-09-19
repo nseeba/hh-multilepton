@@ -83,6 +83,15 @@ if mode == "default":
 else:
   raise ValueError("Invalid mode: %s" % mode)
 
+for sample_name, sample_info in samples.items():
+  if sample_name == 'sum_events': continue
+  if sample_info["type"] == "mc":
+    sample_info["triggers"] = [ "2tau" ]
+  if sample_name.startswith(("/DoubleEG/", "/DoubleMuon/", "/MuonEG/", "/SingleElectron/", "/SingleMuon/")):
+    sample_info["use_it"] = False
+  elif sample_name.startswith("/Tau/"):
+    sample_info["use_it"] = True
+
 if __name__ == '__main__':
   logging.info(
     "Running the jobs with the following systematic uncertainties enabled: %s" % \
