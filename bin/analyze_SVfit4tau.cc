@@ -69,8 +69,8 @@
 #include "hhAnalysis/multilepton/interface/GenHadTauSmearer.h" // GenHadTauSmearer
 #include "hhAnalysis/multilepton/interface/GenMEtSmearer.h" // GenMEtSmearer
 #include "hhAnalysis/multilepton/interface/mySVfit4tauAuxFunctions.h" // SVfit4tauResult, getMeasuredTauLeptonType, getHadTauDecayMode
-#include "hhAnalysis/multilepton/interface/EventInfoHH.h" // EventInfoHH
-#include "hhAnalysis/multilepton/interface/EventInfoHHReader.h" // EventInfoHHReader
+#include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h" // EventInfo
+#include "tthAnalysis/HiggsToTauTau/interface/EventInfoReader.h" // EventInfoReader
 
 #include "TauAnalysis/ClassicSVfit4tau/interface/ClassicSVfit4tau.h" // ClassicSVfit4tau
 #include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h" // classic_svFit::MeasuredTauLepton
@@ -327,8 +327,8 @@ int main(int argc, char* argv[])
   std::cout << "Loaded " << inputTree->getFileCount() << " file(s).\n";
 
 //--- declare event-level variables
-  EventInfoHH eventInfo(isMC);
-  EventInfoHHReader eventInfoReader(&eventInfo);
+  EventInfo eventInfo(isMC);
+  EventInfoReader eventInfoReader(&eventInfo);
   inputTree->registerReader(&eventInfoReader);
 
   if(eventWeightManager)

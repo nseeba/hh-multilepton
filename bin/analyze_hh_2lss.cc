@@ -87,8 +87,8 @@
 
 #include "hhAnalysis/multilepton/interface/RecoJetCollectionSelectorAK8_hh_Wjj.h" // RecoJetSelectorAK8_hh_Wjj
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2lss.h" // EvtHistManager_hh_2lss
-#include "hhAnalysis/multilepton/interface/EventInfoHH.h" // EventInfoHH
-#include "hhAnalysis/multilepton/interface/EventInfoHHReader.h" // EventInfoHHReader
+#include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h" // EventInfo
+#include "tthAnalysis/HiggsToTauTau/interface/EventInfoReader.h" // EventInfoReader
 #include "hhAnalysis/multilepton/interface/EvtWeightRecorderHH.h" // EvtWeightRecorderHH
 
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
@@ -411,13 +411,13 @@ int main(int argc, char* argv[])
   std::cout << "Loaded " << inputTree->getFileCount() << " file(s)." << std::endl;
 
 //--- declare event-level variables
-  EventInfoHH eventInfo(isMC, isSignal);
+  EventInfo eventInfo(isMC, isSignal);
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
   {
     eventInfo.loadWeight_tH(tHweights);
   }
-  EventInfoHHReader eventInfoReader(&eventInfo);
+  EventInfoReader eventInfoReader(&eventInfo);
   inputTree->registerReader(&eventInfoReader);
 
   ObjectMultiplicity objectMultiplicity;

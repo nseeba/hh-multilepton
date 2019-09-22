@@ -82,8 +82,8 @@
 #include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
 #include "hhAnalysis/multilepton/interface/Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger.h"
 #include "hhAnalysis/multilepton/interface/mySVfit4tauAuxFunctions.h" // getMeasuredTauLeptonType, getHadTauDecayMode
-#include "hhAnalysis/multilepton/interface/EventInfoHH.h" // EventInfoHH
-#include "hhAnalysis/multilepton/interface/EventInfoHHReader.h" // EventInfoHHReader
+#include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h" // EventInfo
+#include "tthAnalysis/HiggsToTauTau/interface/EventInfoReader.h" // EventInfoReader
 #include "hhAnalysis/multilepton/interface/EvtWeightRecorderHH.h" // EvtWeightRecorderHH
 
 #include "TauAnalysis/ClassicSVfit4tau/interface/ClassicSVfit4tau.h" // ClassicSVfit4tau
@@ -320,13 +320,13 @@ int main(int argc, char* argv[])
   std::cout << "Loaded " << inputTree -> getFileCount() << " file(s).\n";
 
 //--- declare event-level variables
-  EventInfoHH eventInfo(isMC, isSignal);
+  EventInfo eventInfo(isMC, isSignal);
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
   {
     eventInfo.loadWeight_tH(tHweights);
   }
-  EventInfoHHReader eventInfoReader(&eventInfo);
+  EventInfoReader eventInfoReader(&eventInfo);
   inputTree -> registerReader(&eventInfoReader);
 
   ObjectMultiplicity objectMultiplicity;
