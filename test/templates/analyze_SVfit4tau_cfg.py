@@ -38,7 +38,7 @@ process.analyze_SVfit4tau = cms.PSet(
 
     isMC = cms.bool(True),
     central_or_shift = cms.string('central'),
-    lumiScale = cms.double(1.),
+    lumiScale = cms.VPSet(),
     apply_genWeight = cms.bool(True),
 
     fillGenEvtHistograms = cms.bool(False),
