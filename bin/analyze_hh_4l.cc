@@ -60,6 +60,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/leptonTypes.h" // getLeptonType, kElectron, kMuon
 #include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // getBTagWeight_option, getHadTau_genPdgId, isHigherPt, isMatched
 #include "tthAnalysis/HiggsToTauTau/interface/leptonGenMatchingAuxFunctions.h" // getLeptonGenMatch_definitions_4lepton, getLeptonGenMatch_string, getLeptonGenMatch_int
+#include "tthAnalysis/HiggsToTauTau/interface/GenMatchInterface.h" // GenMatchInterface
 #include "tthAnalysis/HiggsToTauTau/interface/fakeBackgroundAuxFunctions.h" // getWeight_4L
 #include "tthAnalysis/HiggsToTauTau/interface/hltPath.h" // hltPath, create_hltPaths, hltPaths_isTriggered, hltPaths_delete
 #include "tthAnalysis/HiggsToTauTau/interface/hltPathReader.h" // hltPathReader
@@ -200,9 +201,11 @@ int main(int argc, char* argv[])
   const int muonSelection     = get_selection(muonSelection_string);
 
   bool apply_leptonGenMatching = cfg_analyze.getParameter<bool>("apply_leptonGenMatching");
-  std::vector<leptonGenMatchEntry> leptonGenMatch_definitions = getLeptonGenMatch_definitions_4lepton(apply_leptonGenMatching);
+  std::vector<leptonGenMatchEntry> leptonGenMatch_definitions = getLeptonGenMatch_definitions_4lepton(true);
   std::cout << "leptonGenMatch_definitions:" << std::endl;
   std::cout << leptonGenMatch_definitions;
+
+  GenMatchInterface genMatchInterface(4, apply_leptonGenMatching, false);
 
   TString hadTauSelection_string = cfg_analyze.getParameter<std::string>("hadTauSelection").data();
   TObjArray* hadTauSelection_parts = hadTauSelection_string.Tokenize("|");
@@ -474,12 +477,13 @@ int main(int argc, char* argv[])
   for(const std::string & central_or_shift: central_or_shifts_local)
   {
     const bool skipBooking = central_or_shift != central_or_shift_main;
-    for(const leptonGenMatchEntry & leptonGenMatch_definition: leptonGenMatch_definitions)
+    std::vector<const GenMatchEntry*> genMatchDefinitions = genMatchInterface.getGenMatchDefinitions();
+    for (const GenMatchEntry * genMatchDefinition : genMatchDefinitions)
     {
       std::string process_and_genMatch = process_string;
-      if ( apply_leptonGenMatching ) process_and_genMatch += leptonGenMatch_definition.name_;
+      process_and_genMatch += genMatchDefinition->getName();
 
-      int idxLepton = leptonGenMatch_definition.idx_;
+      int idxLepton = genMatchDefinition->getIdx();
 
       selHistManagerType* selHistManager = new selHistManagerType();
       if(! skipBooking)
@@ -522,7 +526,7 @@ int main(int argc, char* argv[])
         for(const std::string & decayMode_evt: decayModes_evt)
         {
           std::string decayMode_and_genMatch = decayMode_evt;
-          if ( apply_leptonGenMatching ) decayMode_and_genMatch += leptonGenMatch_definition.name_;
+          decayMode_and_genMatch += genMatchDefinition->getName();
 
           selHistManager->evt_in_decayModes_[decayMode_evt] = new EvtHistManager_hh_4l(makeHistManager_cfg(decayMode_and_genMatch,
             Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
@@ -574,6 +578,8 @@ int main(int argc, char* argv[])
   int analyzedEntries = 0;
   int selectedEntries = 0;
   double selectedEntries_weighted = 0.;
+  std::map<std::string, int> selectedEntries_byGenMatchType;             // key = process_and_genMatch
+  std::map<std::string, double> selectedEntries_weighted_byGenMatchType; // key = process_and_genMatch
   TH1* histogram_analyzedEntries = fs.make<TH1D>("analyzedEntries", "analyzedEntries", 1, -0.5, +0.5);
   TH1* histogram_selectedEntries = fs.make<TH1D>("selectedEntries", "selectedEntries", 1, -0.5, +0.5);
   cutFlowTableType cutFlowTable;
@@ -980,13 +986,6 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update(">= 4 presel leptons", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms(">= 4 presel leptons", evtWeightRecorder.get(central_or_shift_main));
-    const RecoLepton* preselLepton_lead = preselLeptonsFull[0];
-    const RecoLepton* preselLepton_sublead = preselLeptonsFull[1];
-    const RecoLepton* preselLepton_third = preselLeptonsFull[2];
-    const RecoLepton* preselLepton_fourth = preselLeptonsFull[3];
-    const leptonGenMatchEntry& preselLepton_genMatch = getLeptonGenMatch(leptonGenMatch_definitions, preselLepton_lead, preselLepton_sublead, preselLepton_third, preselLepton_fourth);
-    int idxPreselLepton_genMatch = preselLepton_genMatch.idx_;
-    assert(idxPreselLepton_genMatch != kGen_LeptonUndefined4);
 
     // require that trigger paths match event category (with event category based on preselLeptons)
     if ( !((preselElectrons.size() >= 3 &&                            (selTrigger_3e    || selTrigger_2e  || selTrigger_1e                                      )) ||
@@ -994,7 +993,7 @@ int main(int argc, char* argv[])
 	   (preselElectrons.size() >= 1 && preselMuons.size() >= 2 && (selTrigger_1e2mu || selTrigger_2mu || selTrigger_1e1mu || selTrigger_1mu || selTrigger_1e)) ||
 	   (                               preselMuons.size() >= 3 && (selTrigger_3mu   || selTrigger_2mu || selTrigger_1mu                                     ))) ) {
       if ( run_lumi_eventSelector ) {
-    std::cout << "event " << eventInfo.str() << " FAILS trigger selection for given preselLepton multiplicity." << std::endl;
+        std::cout << "event " << eventInfo.str() << " FAILS trigger selection for given preselLepton multiplicity." << std::endl;
 	std::cout << " (#preselElectrons = " << preselElectrons.size()
 		  << ", #preselMuons = " << preselMuons.size()
 		  << ", selTrigger_3mu = " << selTrigger_3mu
@@ -1046,15 +1045,6 @@ int main(int argc, char* argv[])
     const RecoLepton* selLepton_fourth = selLeptons[3];
     int selLepton_fourth_type = getLeptonType(selLepton_fourth->pdgId());
     const leptonGenMatchEntry& selLepton_genMatch = getLeptonGenMatch(leptonGenMatch_definitions, selLepton_lead, selLepton_sublead, selLepton_third, selLepton_fourth);
-    int idxSelLepton_genMatch = selLepton_genMatch.idx_;
-    assert(idxSelLepton_genMatch != kGen_LeptonUndefined4);
-    if ( isDEBUG ) {
-      std::cout << "selLepton_genMatch = " << getLeptonGenMatch_string(leptonGenMatch_definitions, idxSelLepton_genMatch) << std::endl;
-      if ( idxSelLepton_genMatch != kGen_4l0g0j ) {
-	std::cout << "--> CHECK!" << std::endl;
-	printCollection("selLeptons", selLeptons);
-      }
-    }
 
     if(isMC)
     {
@@ -1269,69 +1259,74 @@ int main(int argc, char* argv[])
     double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ? 
       svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
 
+//--- retrieve gen-matching flags
+    std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons);
+
 //--- fill histograms with events passing final selection
     for(const std::string & central_or_shift: central_or_shifts_local)
     {
-      const bool skipFilling = central_or_shift != central_or_shift_main;
-      selHistManagerType* selHistManager = selHistManagers[central_or_shift][idxSelLepton_genMatch];
-      assert(selHistManager != 0);
       const double evtWeight = evtWeightRecorder.get(central_or_shift);
-
-      if(! skipFilling)
+      const bool skipFilling = central_or_shift != central_or_shift_main;
+      for (const GenMatchEntry* genMatch : genMatches)
       {
-        selHistManager->electrons_->fillHistograms(selElectrons, evtWeight);
-        selHistManager->muons_->fillHistograms(selMuons, evtWeight);
-        selHistManager->jets_->fillHistograms(selJets, evtWeight);
-        selHistManager->BJets_loose_->fillHistograms(selBJets_loose, evtWeight);
-        selHistManager->BJets_medium_->fillHistograms(selBJets_medium, evtWeight);
-        selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
-        selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
-      }
-      selHistManager->evt_->fillHistograms(
-        selElectrons.size(),
-        selMuons.size(),
-        selJets.size(),
-        numSelJetsPtGt40,
-        selBJets_loose.size(),
-        selBJets_medium.size(),
-        dihiggsVisMass_sel,
-        dihiggsMass,
-        HT,
-        STMET,
-        evtWeight);
-      selHistManager->svFit4tau_woMassConstraint_->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
-      selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
-
-      if(isSignal)
-      {
-        const std::string decayModeStr = eventInfo.getDiHiggsDecayModeString();
-        if(! decayModeStr.empty())
+        selHistManagerType* selHistManager = selHistManagers[central_or_shift][genMatch->getIdx()];
+        assert(selHistManager);
+        if(! skipFilling)
         {
-          selHistManager -> evt_in_decayModes_[decayModeStr] -> fillHistograms(
-            selElectrons.size(),
-            selMuons.size(),
-            selJets.size(),
-            numSelJetsPtGt40,
-            selBJets_loose.size(),
-            selBJets_medium.size(),
-            dihiggsVisMass_sel,
-            dihiggsMass,
-            HT,
-            STMET,
-            evtWeight);
-          selHistManager->svFit4tau_woMassConstraint_in_decayModes_[decayModeStr]->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
-          selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayModeStr]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
+          selHistManager->electrons_->fillHistograms(selElectrons, evtWeight);
+          selHistManager->muons_->fillHistograms(selMuons, evtWeight);
+          selHistManager->jets_->fillHistograms(selJets, evtWeight);
+          selHistManager->BJets_loose_->fillHistograms(selBJets_loose, evtWeight);
+          selHistManager->BJets_medium_->fillHistograms(selBJets_medium, evtWeight);
+          selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
+          selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
         }
-      }
+        selHistManager->evt_->fillHistograms(
+          selElectrons.size(),
+          selMuons.size(),
+          selJets.size(),
+          numSelJetsPtGt40,
+          selBJets_loose.size(),
+          selBJets_medium.size(),
+          dihiggsVisMass_sel,
+          dihiggsMass,
+          HT,
+          STMET,
+          evtWeight);
+        selHistManager->svFit4tau_woMassConstraint_->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
+        selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
 
-      if(! skipFilling)
-      {
-        selHistManager->evtYield_->fillHistograms(eventInfo, evtWeight);
-        selHistManager->weights_->fillHistograms("genWeight", eventInfo.genWeight);
-        selHistManager->weights_->fillHistograms("pileupWeight", evtWeightRecorder.get_puWeight(central_or_shift));
-        selHistManager->weights_->fillHistograms("triggerWeight", evtWeightRecorder.get_sf_triggerEff(central_or_shift));
-        selHistManager->weights_->fillHistograms("data_to_MC_correction", evtWeightRecorder.get_data_to_MC_correction(central_or_shift));
-        selHistManager->weights_->fillHistograms("fakeRate", evtWeightRecorder.get_FR(central_or_shift));
+        if(isSignal)
+        {
+          const std::string decayModeStr = eventInfo.getDiHiggsDecayModeString();
+          if(! decayModeStr.empty())
+          {
+            selHistManager -> evt_in_decayModes_[decayModeStr] -> fillHistograms(
+              selElectrons.size(),
+              selMuons.size(),
+              selJets.size(),
+              numSelJetsPtGt40,
+              selBJets_loose.size(),
+              selBJets_medium.size(),
+              dihiggsVisMass_sel,
+              dihiggsMass,
+              HT,
+              STMET,
+              evtWeight);
+            selHistManager->svFit4tau_woMassConstraint_in_decayModes_[decayModeStr]->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
+            selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayModeStr]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
+          }
+        }
+
+        if(! skipFilling)
+        {
+          selHistManager->evtYield_->fillHistograms(eventInfo, evtWeight);
+          selHistManager->weights_->fillHistograms("genWeight", eventInfo.genWeight);
+          selHistManager->weights_->fillHistograms("pileupWeight", evtWeightRecorder.get_puWeight(central_or_shift));
+          selHistManager->weights_->fillHistograms("triggerWeight", evtWeightRecorder.get_sf_triggerEff(central_or_shift));
+          selHistManager->weights_->fillHistograms("data_to_MC_correction", evtWeightRecorder.get_data_to_MC_correction(central_or_shift));
+          selHistManager->weights_->fillHistograms("fakeRate", evtWeightRecorder.get_FR(central_or_shift));
+        }
       }
 
       if(isMC && ! skipFilling)
@@ -1353,8 +1348,12 @@ int main(int argc, char* argv[])
       (*selEventsFile) << eventInfo.run << ':' << eventInfo.lumi << ':' << eventInfo.event << '\n';
     }
 
-    ++selectedEntries;
+    ++selectedEntries;    
     selectedEntries_weighted += evtWeightRecorder.get(central_or_shift_main);
+    std::string process_and_genMatch = process_string;
+    process_and_genMatch += selLepton_genMatch.name_;
+    ++selectedEntries_byGenMatchType[process_and_genMatch]; 
+    selectedEntries_weighted_byGenMatchType[process_and_genMatch] += evtWeightRecorder.get(central_or_shift_main);
     histogram_selectedEntries->Fill(0.);
   }
 
@@ -1375,12 +1374,9 @@ int main(int argc, char* argv[])
     for(const leptonGenMatchEntry & leptonGenMatch_definition: leptonGenMatch_definitions)
     {
       std::string process_and_genMatch = process_string;
-      if ( apply_leptonGenMatching ) process_and_genMatch += leptonGenMatch_definition.name_;
-
-      int idxLepton = leptonGenMatch_definition.idx_;
-
-      const TH1* histogram_EventCounter = selHistManagers[central_or_shift][idxLepton]->evt_->getHistogram_EventCounter();
-      std::cout << " " << process_and_genMatch << " = " << histogram_EventCounter->GetEntries() << " (weighted = " << histogram_EventCounter->Integral() << ")" << std::endl;
+      process_and_genMatch += leptonGenMatch_definition.name_;
+      std::cout << " " << process_and_genMatch << " = " << selectedEntries_byGenMatchType[process_and_genMatch]
+		<< " (weighted = " << selectedEntries_weighted_byGenMatchType[process_and_genMatch] << ")" << std::endl;
     }
   }
   std::cout << std::endl;

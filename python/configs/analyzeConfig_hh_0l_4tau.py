@@ -99,22 +99,9 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
     self.applyFakeRateWeights = applyFakeRateWeights
     run_mcClosure = 'central' not in self.central_or_shifts or len(central_or_shifts) > 1 or self.do_sync
 
-    self.hadTau_genMatches = [
-      "4t0e0m0j", "3t1e0m0j", "3t0e1m0j", "3t0e0m1j", "2t2e0m0j", "2t1e1m0j", "2t1e0m1j", "2t0e2m0j", "2t0e1m1j", "2t0e0m2j",
-      "1t3e0m0j", "1t2e1m0j", "1t2e0m1j", "1t1e2m0j", "1t1e1m1j", "1t1e0m2j", "1t0e3m0j", "1t0e2m1j", "1t0e1m2j", "1t0e0m3j",
-      "0t4e0m0j", "0t3e1m0j", "0t2e2m0j", "0t1e3m0j", "0t0e4m0j", "0t3e0m1j", "0t2e1m1j", "0t1e2m1j", "0t0e3m1j", "0t2e0m2j",
-      "0t1e1m2j", "0t0e2m2j", "0t1e0m3j", "0t0e1m3j", "0t0e0m4j" ]
-
     self.apply_hadTauGenMatching = None
-    self.hadTau_genMatches_nonfakes = []
-    self.hadTau_genMatches_fakes = []
     if applyFakeRateWeights == "4tau":
       self.apply_hadTauGenMatching = True
-      for hadTau_genMatch in self.hadTau_genMatches:
-        if hadTau_genMatch.endswith("0j"):
-          self.hadTau_genMatches_nonfakes.append(hadTau_genMatch)
-        else:
-          self.hadTau_genMatches_fakes.append(hadTau_genMatch)
       if run_mcClosure:
         self.hadTau_selections.extend([ "Fakeable_mcClosure_t" ])
       self.central_or_shifts_fr = systematics.FR_t
@@ -407,70 +394,20 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
                 self.outputFile_hadd_stage1[key_hadd_stage1_job] = os.path.join(self.dirs[key_hadd_stage1_dir][DKEY_HIST],
                                                                                 "hadd_stage1_%s_%s_%s.root" % hadd_stage1_job_tuple)
 
-            if is_mc:
-              logging.info("Creating configuration files to run 'addBackgrounds' for sample %s" % process_name)
-
-              sample_categories = [ sample_category ]
-              for sample_category in sample_categories:
-                # sum non-fake and fake contributions for each MC sample separately
-                genMatch_categories = [ "nonfake", "fake" ]
-
-                for genMatch_category in genMatch_categories:
-                  key_hadd_stage1_job = getKey(process_name, hadTau_selection_and_frWeight, hadTau_charge_selection)
-                  key_addBackgrounds_dir = getKey(process_name, hadTau_selection_and_frWeight, hadTau_charge_selection, "addBackgrounds")
-                  addBackgrounds_job_tuple = None
-                  processes_input = None
-                  process_output = None
-                  if genMatch_category == "nonfake":
-                    # sum non-fake contributions for each MC sample separately
-                    # input processes: TT1l0g0j&2t0e0m0j, TT1l0g0j&1t1e0m0j, TT1l0g0j&1t0e1m0j, TT1l0g0j&0t2e0m0j, TT1l0g0j&0t1e1m0j, TT1l0g0j&0t0e2m0j; ...
-                    # output processes: TT; ...
-                    processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_nonfakes ]
-                    process_output = sample_category
-                    addBackgrounds_job_tuple = (process_name, sample_category, hadTau_selection_and_frWeight, hadTau_charge_selection)
-                  elif genMatch_category == "fake":
-                    # sum fake background contributions for each MC sample separately
-                    # input processes: TT1l0g0j&1t0e0m1j, TT1l0g0j&0t1e0m1j, TT1l0g0j&0t0e1m1j, TT1l0g0j&0t0e0m2j; ...
-                    # output processes: TT_fake; ...
-                    processes_input = [ "%s%s" % (sample_category, genMatch) for genMatch in self.hadTau_genMatches_fakes ]
-                    process_output = "%s_fake" % sample_category
-                    addBackgrounds_job_tuple = (process_name, "%s_fake" % sample_category, hadTau_selection_and_frWeight, hadTau_charge_selection)
-                  if processes_input:
-                    logging.info(" ...for genMatch option = '%s'" % genMatch_category)
-                    key_addBackgrounds_job = getKey(*addBackgrounds_job_tuple)
-                    cfgFile_modified = os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_CFGS], "addBackgrounds_%s_%s_%s_%s_cfg.py" % addBackgrounds_job_tuple)
-                    outputFile = os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_HIST], "addBackgrounds_%s_%s_%s_%s.root" % addBackgrounds_job_tuple)
-                    self.jobOptions_addBackgrounds[key_addBackgrounds_job] = {
-                      'inputFile' : self.outputFile_hadd_stage1[key_hadd_stage1_job],
-                      'cfgFile_modified' : cfgFile_modified,
-                      'outputFile' : outputFile,
-                      'logFile' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_LOGS], os.path.basename(cfgFile_modified).replace("_cfg.py", ".log")),
-                      'categories' : [ getHistogramDir(hadTau_selection, hadTau_frWeight, hadTau_charge_selection) ],
-                      'processes_input' : processes_input,
-                      'process_output' : process_output
-                    }
-                    self.createCfg_addBackgrounds(self.jobOptions_addBackgrounds[key_addBackgrounds_job])
-
-                    # initialize input and output file names for hadd_stage1_5
-                    key_hadd_stage1_5_dir = getKey("hadd", hadTau_selection_and_frWeight, hadTau_charge_selection)
-                    hadd_stage1_5_job_tuple = (hadTau_selection_and_frWeight, hadTau_charge_selection)
-                    key_hadd_stage1_5_job = getKey(*hadd_stage1_5_job_tuple)
-                    if not key_hadd_stage1_5_job in self.inputFiles_hadd_stage1_5:
-                      self.inputFiles_hadd_stage1_5[key_hadd_stage1_5_job] = []
-                    self.inputFiles_hadd_stage1_5[key_hadd_stage1_5_job].append(self.jobOptions_addBackgrounds[key_addBackgrounds_job]['outputFile'])
-                    self.outputFile_hadd_stage1_5[key_hadd_stage1_5_job] = os.path.join(self.dirs[key_hadd_stage1_5_dir][DKEY_HIST],
-                                                                                        "hadd_stage1_5_%s_%s.root" % hadd_stage1_5_job_tuple)
-
-            # add output files of hadd_stage1 for data to list of input files for hadd_stage1_5
-            if not is_mc:
-              key_hadd_stage1_job = getKey(process_name, hadTau_selection_and_frWeight, hadTau_charge_selection)
-              key_hadd_stage1_5_job = getKey(hadTau_selection_and_frWeight, hadTau_charge_selection)
-              if not key_hadd_stage1_5_job in self.inputFiles_hadd_stage1_5:
-                self.inputFiles_hadd_stage1_5[key_hadd_stage1_5_job] = []
-              self.inputFiles_hadd_stage1_5[key_hadd_stage1_5_job].append(self.outputFile_hadd_stage1[key_hadd_stage1_job])
+                
+            # add output files of hadd_stage1 to list of input files for hadd_stage1_5
+            key_hadd_stage1_job = getKey(process_name, hadTau_selection_and_frWeight, hadTau_charge_selection)
+            key_hadd_stage1_5_dir = getKey("hadd", hadTau_selection_and_frWeight, hadTau_charge_selection)
+            hadd_stage1_5_job_tuple = (hadTau_selection_and_frWeight, hadTau_charge_selection)
+            key_hadd_stage1_5_job = getKey(*hadd_stage1_5_job_tuple)
+            if not key_hadd_stage1_5_job in self.inputFiles_hadd_stage1_5:
+              self.inputFiles_hadd_stage1_5[key_hadd_stage1_5_job] = []
+            self.inputFiles_hadd_stage1_5[key_hadd_stage1_5_job].append(self.outputFile_hadd_stage1[key_hadd_stage1_job])
+            self.outputFile_hadd_stage1_5[key_hadd_stage1_5_job] = os.path.join(self.dirs[key_hadd_stage1_5_dir][DKEY_HIST],
+                                                                        "hadd_stage1_5_%s_%s.root" % hadd_stage1_5_job_tuple)
 
           # sum fake background contributions for the total of all MC sample
-          # input processes: TT1l0g0j&1t0e0m1j, TT1l0g0j&0t1e0m1j, TT1l0g0j&0t0e1m1j, TT1l0g0j&0t0e0m2j; ...
+          # input processes: TT_fake, TTW_fake, TTWW_fake, ...
           # output process: fakes_mc
           key_hadd_stage1_5_job = getKey(hadTau_selection_and_frWeight, hadTau_charge_selection)
           key_addBackgrounds_dir = getKey("addBackgrounds")

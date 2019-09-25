@@ -64,8 +64,8 @@
 #include "tthAnalysis/HiggsToTauTau/interface/leptonTypes.h" // getLeptonType, kElectron, kMuon
 #include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // getBTagWeight_option, getHadTau_genPdgId, isHigherPt, isMatched
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow2d
-#include "tthAnalysis/HiggsToTauTau/interface/leptonGenMatchingAuxFunctions.h" // getLeptonGenMatch_definitions_1lepton, getLeptonGenMatch_string, getLeptonGenMatch_int
 #include "tthAnalysis/HiggsToTauTau/interface/hadTauGenMatchingAuxFunctions.h" // getHadTauGenMatch_definitions_1tau, getHadTauGenMatch_string, getHadTauGenMatch_int
+#include "tthAnalysis/HiggsToTauTau/interface/GenMatchInterface.h" // GenMatchInterface
 #include "tthAnalysis/HiggsToTauTau/interface/fakeBackgroundAuxFunctions.h" // getWeight_4L, getWeight_4L
 #include "tthAnalysis/HiggsToTauTau/interface/hltPath.h" // hltPath, create_hltPaths, hltPaths_isTriggered, hltPaths_delete
 #include "tthAnalysis/HiggsToTauTau/interface/hltPathReader.h" // hltPathReader
@@ -178,9 +178,11 @@ int main(int argc, char* argv[])
   int tauLevel = get_tau_id_wp_int(hadTauSelection_part2);
 
   bool apply_hadTauGenMatching = cfg_analyze.getParameter<bool>("apply_hadTauGenMatching");
-  std::vector<hadTauGenMatchEntry> hadTauGenMatch_definitions = getHadTauGenMatch_definitions_4tau(apply_hadTauGenMatching);
+  std::vector<hadTauGenMatchEntry> hadTauGenMatch_definitions = getHadTauGenMatch_definitions_4tau(true);
   std::cout << "hadTauGenMatch_definitions:" << std::endl;
   std::cout << hadTauGenMatch_definitions;
+
+  GenMatchInterface genMatchInterface(4, apply_hadTauGenMatching);
 
   enum { kOS, kSS };
   std::string hadTauChargeSelection_string = cfg_analyze.getParameter<std::string>("hadTauChargeSelection");
@@ -474,11 +476,13 @@ int main(int argc, char* argv[])
   for(const std::string & central_or_shift: central_or_shifts_local)
   {
     const bool skipBooking = central_or_shift != central_or_shift_main;
-    for(const hadTauGenMatchEntry & hadTauGenMatch_definition: hadTauGenMatch_definitions)
+    std::vector<const GenMatchEntry*> genMatchDefinitions = genMatchInterface.getGenMatchDefinitions();
+    for (const GenMatchEntry * genMatchDefinition : genMatchDefinitions)
     {
       std::string process_and_genMatch = process_string;
-      if ( apply_hadTauGenMatching ) process_and_genMatch += hadTauGenMatch_definition.name_;
-      int idxHadTau = hadTauGenMatch_definition.idx_;
+      process_and_genMatch += genMatchDefinition->getName();
+
+      int idxHadTau = genMatchDefinition->getIdx();
 
       selHistManagerType* selHistManager = new selHistManagerType();
       if(! skipBooking)
@@ -536,7 +540,7 @@ int main(int argc, char* argv[])
         for(const std::string & decayMode_evt: decayModes_evt)
         {
           std::string decayMode_and_genMatch = decayMode_evt;
-          if(apply_hadTauGenMatching) decayMode_and_genMatch += hadTauGenMatch_definition.name_;
+          decayMode_and_genMatch += genMatchDefinition->getName();
 
           selHistManager->evt_in_decayModes_[decayMode_evt] = new EvtHistManager_hh_0l_4tau(makeHistManager_cfg(decayMode_and_genMatch,
             Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
@@ -589,6 +593,8 @@ int main(int argc, char* argv[])
   int analyzedEntries = 0;
   int selectedEntries = 0;
   double selectedEntries_weighted = 0.;
+  std::map<std::string, int> selectedEntries_byGenMatchType;             // key = process_and_genMatch
+  std::map<std::string, double> selectedEntries_weighted_byGenMatchType; // key = process_and_genMatch
   TH1* histogram_analyzedEntries = fs.make<TH1D>("analyzedEntries", "analyzedEntries", 1, -0.5, +0.5);
   TH1* histogram_selectedEntries = fs.make<TH1D>("selectedEntries", "selectedEntries", 1, -0.5, +0.5);
   cutFlowTableType cutFlowTable;
@@ -873,8 +879,6 @@ int main(int argc, char* argv[])
     const hadTauGenMatchEntry& fakeableHadTau_genMatch = getHadTauGenMatch(
       hadTauGenMatch_definitions, fakeableHadTau_lead, fakeableHadTau_sublead, fakeableHadTau_third, fakeableHadTau_fourth
     );
-    int idxFakeableHadTau_genMatch = fakeableHadTau_genMatch.idx_;
-    assert(idxFakeableHadTau_genMatch != kGen_HadTauUndefined4);
 
     if ( selBJets_loose.size() >= 2 || selBJets_medium.size() >= 1 ) continue;
     cutFlowTable.update("b-jet veto", evtWeightRecorder.get(central_or_shift_main));
@@ -1101,74 +1105,80 @@ int main(int argc, char* argv[])
     double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ? 
       svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
 
+//--- retrieve gen-matching flags
+    std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selHadTaus);
+
 //--- fill histograms with events passing final selection
     for(const std::string & central_or_shift: central_or_shifts_local)
     {
-      const bool skipFilling = central_or_shift != central_or_shift_main;
-      selHistManagerType* selHistManager = selHistManagers[central_or_shift][idxSelHadTau_genMatch];
-      assert(selHistManager != 0);
       const double evtWeight = evtWeightRecorder.get(central_or_shift);
-      if(! skipFilling)
+      const bool skipFilling = central_or_shift != central_or_shift_main;
+      for (const GenMatchEntry* genMatch : genMatches)
       {
-        selHistManager->electrons_->fillHistograms(preselElectrons, evtWeight);
-        selHistManager->muons_->fillHistograms(preselMuons, evtWeight);
-        selHistManager->hadTaus_->fillHistograms({ selHadTau_lead, selHadTau_sublead }, evtWeight);
-        selHistManager->leadHadTau_->fillHistograms({ selHadTau_lead }, evtWeight);
-        selHistManager->subleadHadTau_->fillHistograms({ selHadTau_sublead }, evtWeight);
-        selHistManager->thirdHadTau_->fillHistograms({ selHadTau_third }, evtWeight);
-        selHistManager->fourthHadTau_->fillHistograms({ selHadTau_fourth }, evtWeight);
-        selHistManager->jets_->fillHistograms(selJets, evtWeight);
-        selHistManager->BJets_loose_->fillHistograms(selBJets_loose, evtWeight);
-        selHistManager->BJets_medium_->fillHistograms(selBJets_medium, evtWeight);
-        selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
-        selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
-      }
-      selHistManager->evt_->fillHistograms(
-        preselElectrons.size(),
-        preselMuons.size(),
-        selHadTaus.size(),
-        selJets.size(),
-        numSelJetsPtGt40,
-        selBJets_loose.size(),
-        selBJets_medium.size(),
-        dihiggsVisMass_sel,
-        dihiggsMass,
-        HT,
-        STMET,
-        evtWeight);
-      selHistManager->svFit4tau_woMassConstraint_->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
-      selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
+        selHistManagerType* selHistManager = selHistManagers[central_or_shift][genMatch->getIdx()];
+        assert(selHistManager);
+        if(! skipFilling)
+        {
+          selHistManager->electrons_->fillHistograms(preselElectrons, evtWeight);
+          selHistManager->muons_->fillHistograms(preselMuons, evtWeight);
+	  selHistManager->hadTaus_->fillHistograms({ selHadTau_lead, selHadTau_sublead }, evtWeight);
+	  selHistManager->leadHadTau_->fillHistograms({ selHadTau_lead }, evtWeight);
+	  selHistManager->subleadHadTau_->fillHistograms({ selHadTau_sublead }, evtWeight);
+	  selHistManager->thirdHadTau_->fillHistograms({ selHadTau_third }, evtWeight);
+	  selHistManager->fourthHadTau_->fillHistograms({ selHadTau_fourth }, evtWeight);
+	  selHistManager->jets_->fillHistograms(selJets, evtWeight);
+	  selHistManager->BJets_loose_->fillHistograms(selBJets_loose, evtWeight);
+	  selHistManager->BJets_medium_->fillHistograms(selBJets_medium, evtWeight);
+	  selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
+	  selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
+	}
+        selHistManager->evt_->fillHistograms(
+          preselElectrons.size(),
+	  preselMuons.size(),
+	  selHadTaus.size(),
+	  selJets.size(),
+	  numSelJetsPtGt40,
+	  selBJets_loose.size(),
+	  selBJets_medium.size(),
+	  dihiggsVisMass_sel,
+	  dihiggsMass,
+	  HT,
+	  STMET,
+	  evtWeight);
+        selHistManager->svFit4tau_woMassConstraint_->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
+        selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
 
-      if( isSignal ) {
-        const std::string decayModeStr = eventInfo.getDiHiggsDecayModeString();
-        if ( !decayModeStr.empty() ) {
-          selHistManager->evt_in_decayModes_[decayModeStr]->fillHistograms(
-            preselElectrons.size(),
-            preselMuons.size(),
-            selHadTaus.size(),
-            selJets.size(),
-            numSelJetsPtGt40,
-            selBJets_loose.size(),
-            selBJets_medium.size(),
-            dihiggsVisMass_sel,
-            dihiggsMass,
-            HT,
-            STMET,
-            evtWeight);
-          selHistManager->svFit4tau_woMassConstraint_in_decayModes_[decayModeStr]->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
-          selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayModeStr]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
+        if( isSignal ) {
+          const std::string decayModeStr = eventInfo.getDiHiggsDecayModeString();
+          if ( !decayModeStr.empty() ) {
+            selHistManager->evt_in_decayModes_[decayModeStr]->fillHistograms(
+              preselElectrons.size(),
+	      preselMuons.size(),
+	      selHadTaus.size(),
+	      selJets.size(),
+	      numSelJetsPtGt40,
+	      selBJets_loose.size(),
+	      selBJets_medium.size(),
+	      dihiggsVisMass_sel,
+	      dihiggsMass,
+	      HT,
+	      STMET,
+	      evtWeight);
+            selHistManager->svFit4tau_woMassConstraint_in_decayModes_[decayModeStr]->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
+            selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayModeStr]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
+          }
         }
-      }
 
-      if(! skipFilling)
-      {
-        selHistManager->evtYield_->fillHistograms(eventInfo, evtWeight);
-        selHistManager->weights_->fillHistograms("genWeight", eventInfo.genWeight);
-        selHistManager->weights_->fillHistograms("pileupWeight", evtWeightRecorder.get_puWeight(central_or_shift));
-        selHistManager->weights_->fillHistograms("data_to_MC_correction", evtWeightRecorder.get_data_to_MC_correction(central_or_shift));
-        selHistManager->weights_->fillHistograms("triggerWeight", evtWeightRecorder.get_sf_triggerEff(central_or_shift));
-        selHistManager->weights_->fillHistograms("hadTauEff", evtWeightRecorder.get_tauSF(central_or_shift));
-        selHistManager->weights_->fillHistograms("fakeRate", evtWeightRecorder.get_FR(central_or_shift));
+        if(! skipFilling)
+        {
+          selHistManager->evtYield_->fillHistograms(eventInfo, evtWeight);
+	  selHistManager->weights_->fillHistograms("genWeight", eventInfo.genWeight);
+	  selHistManager->weights_->fillHistograms("pileupWeight", evtWeightRecorder.get_puWeight(central_or_shift));
+	  selHistManager->weights_->fillHistograms("data_to_MC_correction", evtWeightRecorder.get_data_to_MC_correction(central_or_shift));
+	  selHistManager->weights_->fillHistograms("triggerWeight", evtWeightRecorder.get_sf_triggerEff(central_or_shift));
+	  selHistManager->weights_->fillHistograms("hadTauEff", evtWeightRecorder.get_tauSF(central_or_shift));
+	  selHistManager->weights_->fillHistograms("fakeRate", evtWeightRecorder.get_FR(central_or_shift));
+        }
       }
 
       if(isMC && ! skipFilling)
@@ -1192,6 +1202,10 @@ int main(int argc, char* argv[])
 
     ++selectedEntries;
     selectedEntries_weighted += evtWeightRecorder.get(central_or_shift_main);
+    std::string process_and_genMatch = process_string;
+    process_and_genMatch += selHadTau_genMatch.name_;
+    ++selectedEntries_byGenMatchType[process_and_genMatch]; 
+    selectedEntries_weighted_byGenMatchType[process_and_genMatch] += evtWeightRecorder.get(central_or_shift_main);
     histogram_selectedEntries->Fill(0.);
   }
 
@@ -1212,12 +1226,9 @@ int main(int argc, char* argv[])
     for(const hadTauGenMatchEntry & hadTauGenMatch_definition: hadTauGenMatch_definitions)
     {
       std::string process_and_genMatch = process_string;
-      if ( apply_hadTauGenMatching ) process_and_genMatch += hadTauGenMatch_definition.name_;
-
-      int idxHadTau = hadTauGenMatch_definition.idx_;
-
-      const TH1* histogram_EventCounter = selHistManagers[central_or_shift][idxHadTau]->evt_->getHistogram_EventCounter();
-      std::cout << " " << process_and_genMatch << " = " << histogram_EventCounter->GetEntries() << " (weighted = " << histogram_EventCounter->Integral() << ")" << std::endl;
+      process_and_genMatch += hadTauGenMatch_definition.name_;
+      std::cout << " " << process_and_genMatch << " = " << selectedEntries_byGenMatchType[process_and_genMatch]
+		<< " (weighted = " << selectedEntries_weighted_byGenMatchType[process_and_genMatch] << ")" << std::endl;
     }
   }
   std::cout << std::endl;
