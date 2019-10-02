@@ -120,8 +120,6 @@ typedef std::vector<std::string> vstring;
 
 enum { kFR_disabled, kFR_3lepton };
 
-const double wBosonMass = 80.379; // GeV
-
 //const int hadTauSelection_antiElectron = 1; // vLoose
 //const int hadTauSelection_antiMuon = 1; // Loose
 const int hadTauSelection_antiElectron = -1; // not applied
