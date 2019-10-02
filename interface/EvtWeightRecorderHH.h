@@ -20,9 +20,6 @@ public:
   get_tauSF(const std::string & central_or_shift) const override;
 
   void
-  record_bm(double weight);
-
-  void
   record_tauTriggerEff(const Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger * const dataToMCcorrectionInterface_hh_0l_4tau_trigger);
 
   void
