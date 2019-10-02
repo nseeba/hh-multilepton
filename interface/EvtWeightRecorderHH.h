@@ -17,9 +17,6 @@ public:
                       bool isMC);
 
   double
-  get_inclusive(const std::string & central_or_shift) const override;
-
-  double
   get_tauSF(const std::string & central_or_shift) const override;
 
   void
@@ -77,8 +74,6 @@ public:
   get_jetToTau_FR_fourth(const std::string & central_or_shift);
 
 protected:
-  double bm_weight_;
-
   std::map<int, double> weights_FR_hadTau_third_;
   std::map<int, double> weights_FR_hadTau_fourth_;
   std::map<int, double> weights_SF_hadTau_third_;
