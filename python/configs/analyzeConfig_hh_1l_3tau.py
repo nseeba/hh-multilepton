@@ -680,6 +680,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
     self.addToMakefile_prep_dcard(lines_makefile)
     self.addToMakefile_add_syst_fakerate(lines_makefile)
     self.addToMakefile_make_plots(lines_makefile)
+    self.addToMakefile_validate(lines_makefile)
     self.createMakefile(lines_makefile)
 
     logging.info("Done.")

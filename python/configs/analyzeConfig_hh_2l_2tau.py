@@ -761,6 +761,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       self.addToMakefile_analyze(lines_makefile)
       self.addToMakefile_hadd_stage1(lines_makefile)
       self.targets.extend(self.phoniesToAdd)
+      self.addToMakefile_validate(lines_makefile)
       self.createMakefile(lines_makefile)
       logging.info("Done.")
       return self.num_jobs
@@ -1098,6 +1099,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     self.addToMakefile_prep_dcard(lines_makefile)
     self.addToMakefile_add_syst_fakerate(lines_makefile)
     self.addToMakefile_make_plots(lines_makefile)
+    self.addToMakefile_validate(lines_makefile)
     self.createMakefile(lines_makefile)
 
     logging.info("Done.")
