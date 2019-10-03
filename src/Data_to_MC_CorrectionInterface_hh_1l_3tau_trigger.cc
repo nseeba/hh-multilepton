@@ -131,7 +131,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff(TriggerSFsys
 
     eff_1l1tau_tauLeg1_data = 0.;
     eff_1l1tau_tauLeg1_mc   = 0.;
-    if(std::fabs(hadTau1_eta_) <= 2.1)
+    if(std::fabs(hadTau1_eta_) <= 2.1 && aux::hasDecayMode(allowedDecayModes_, hadTau1_decayMode_))
     {
       eff_1l1tau_tauLeg1_data = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
       eff_1l1tau_tauLeg1_mc   = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
@@ -139,7 +139,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff(TriggerSFsys
 
     eff_1l1tau_tauLeg2_data = 0.;
     eff_1l1tau_tauLeg2_mc   = 0.;
-    if(std::fabs(hadTau2_eta_) <= 2.1)
+    if(std::fabs(hadTau2_eta_) <= 2.1 && aux::hasDecayMode(allowedDecayModes_, hadTau2_decayMode_))
     {
       eff_1l1tau_tauLeg2_data = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
       eff_1l1tau_tauLeg2_mc   = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
@@ -147,7 +147,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff(TriggerSFsys
 
     eff_1l1tau_tauLeg3_data   = 0.;
     eff_1l1tau_tauLeg3_mc     = 0.;
-    if(std::fabs(hadTau3_eta_) <= 2.1)
+    if(std::fabs(hadTau3_eta_) <= 2.1 && aux::hasDecayMode(allowedDecayModes_, hadTau3_decayMode_))
     {
       eff_1l1tau_tauLeg3_data = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
       eff_1l1tau_tauLeg3_mc   = (effTrigger_1e1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
@@ -169,7 +169,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff(TriggerSFsys
 
     eff_1l1tau_tauLeg1_data = 0.;
     eff_1l1tau_tauLeg1_mc   = 0.;
-    if(std::fabs(hadTau1_eta_) <= 2.1)
+    if(std::fabs(hadTau1_eta_) <= 2.1 && aux::hasDecayMode(allowedDecayModes_, hadTau1_decayMode_))
     {
       eff_1l1tau_tauLeg1_data = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
       eff_1l1tau_tauLeg1_mc   = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
@@ -177,7 +177,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff(TriggerSFsys
 
     eff_1l1tau_tauLeg2_data   = 0.;
     eff_1l1tau_tauLeg2_mc     = 0.;
-    if(std::fabs(hadTau2_eta_) <= 2.1)
+    if(std::fabs(hadTau2_eta_) <= 2.1 && aux::hasDecayMode(allowedDecayModes_, hadTau2_decayMode_))
     {
       eff_1l1tau_tauLeg2_data = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
       eff_1l1tau_tauLeg2_mc   = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
@@ -185,7 +185,7 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff(TriggerSFsys
 
     eff_1l1tau_tauLeg3_data   = 0.;
     eff_1l1tau_tauLeg3_mc     = 0.;
-    if(std::fabs(hadTau3_eta_) <= 2.1)
+    if(std::fabs(hadTau3_eta_) <= 2.1 && aux::hasDecayMode(allowedDecayModes_, hadTau3_decayMode_))
     {
       eff_1l1tau_tauLeg3_data = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
       eff_1l1tau_tauLeg3_mc   = (effTrigger_1m1tau_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
