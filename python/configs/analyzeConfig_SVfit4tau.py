@@ -39,7 +39,7 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
         verbose = False,
         dry_run = False,
         isDebug = False,
-        use_home = True
+        use_home = False
       ):
     analyzeConfig.__init__(self,
       configDir                 = configDir,

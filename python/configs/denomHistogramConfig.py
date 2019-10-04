@@ -123,7 +123,7 @@ class denomHistogramConfig:
             pool_id  = '',
             verbose  = False,
             dry_run  = False,
-            use_home = True,
+            use_home = False,
           ):
 
         self.configDir             = configDir
