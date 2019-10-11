@@ -662,7 +662,7 @@ int main(int argc, char* argv[])
       if(objectMultiplicity.getNRecoLepton(kTight)             > 0 ||
          objectMultiplicity.getNRecoHadTau(tauId, tauLevel)    < 4  )
       {
-        if(! isDEBUG || run_lumi_eventSelector)
+        if(isDEBUG || run_lumi_eventSelector)
         {
           std::cout << "event " << eventInfo.str() << " FAILS preliminary object multiplicity cuts\n";
         }

@@ -66,7 +66,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
         isDebug           = False,
         use_nonnominal    = False,
         hlt_filter        = False,
-        use_home          = True
+        use_home          = False
       ):
     analyzeConfig_hh.__init__(self,
       configDir             = configDir,
@@ -625,6 +625,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
     self.addToMakefile_prep_dcard(lines_makefile)
     self.addToMakefile_add_syst_fakerate(lines_makefile)
     self.addToMakefile_make_plots(lines_makefile)
+    self.addToMakefile_validate(lines_makefile)
     self.createMakefile(lines_makefile)
 
     logging.info("Done.")
