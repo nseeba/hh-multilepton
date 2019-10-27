@@ -208,6 +208,7 @@ int main(int argc, char* argv[])
   bool isMC_ttH = process_string == "TTH";
   bool isMC_tH = process_string == "TH";
   bool isSignal = boost::starts_with(process_string, "signal_") && process_string.find("_hh_") != std::string::npos;
+  bool isMC_HH_nonres = boost::starts_with(process_string, "signal_ggf_nonresonant_");
 
   std::string histogramDir = cfg_analyze.getParameter<std::string>("histogramDir");
   bool isMCClosure_e = histogramDir.find("mcClosure_e") != std::string::npos;
@@ -432,13 +433,13 @@ int main(int argc, char* argv[])
   std::cout << "Loaded " << inputTree->getFileCount() << " file(s)." << std::endl;
 
 //--- declare event-level variables
-  EventInfo eventInfo(isMC, isSignal);
+  EventInfo eventInfo(isMC, isSignal, isMC_HH_nonres);
   const std::string default_cat_str = "default";
   std::vector<std::string> evt_cat_strs = { default_cat_str };
 
 //--- HH scan
   const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
-  const bool apply_HH_rwgt = isSignal && hhWeight_cfg.getParameter<bool>("apply_rwgt");
+  const bool apply_HH_rwgt = eventInfo.is_hh_nonresonant() && hhWeight_cfg.getParameter<bool>("apply_rwgt");
   const HHWeightInterface * HHWeight_calc = nullptr;
   if(apply_HH_rwgt)
   {
