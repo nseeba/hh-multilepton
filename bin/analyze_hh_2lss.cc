@@ -85,6 +85,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
 #include "tthAnalysis/HiggsToTauTau/interface/backgroundEstimation.h" // prob_chargeMisId
 #include "tthAnalysis/HiggsToTauTau/interface/XGBInterface.h" // XGBInterface 
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface.h" // HHWeightInterface
 
 #include "hhAnalysis/multilepton/interface/RecoJetCollectionSelectorAK8_hh_Wjj.h" // RecoJetSelectorAK8_hh_Wjj
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2lss.h" // EvtHistManager_hh_2lss
@@ -94,6 +95,7 @@
 
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
 #include <boost/algorithm/string/predicate.hpp> // boost::starts_with()
+#include <boost/algorithm/string/replace.hpp> // boost::replace_all_copy()
 
 #include <iostream> // std::cerr, std::fixed
 #include <iomanip> // std::setprecision(), std::setw()
@@ -222,7 +224,7 @@ int main(int argc, char* argv[])
   std::string process_string = cfg_analyze.getParameter<std::string>("process");
   bool isMC_ttH = process_string == "TTH";
   bool isMC_tH = process_string == "TH";
-  bool isSignal = boost::starts_with(process_string, "signal_");
+  bool isSignal = boost::starts_with(process_string, "signal_") && process_string.find("_hh_") != std::string::npos;
 
   std::string histogramDir = cfg_analyze.getParameter<std::string>("histogramDir");
   bool isMCClosure_e = histogramDir.find("mcClosure_e") != std::string::npos;
@@ -413,6 +415,21 @@ int main(int argc, char* argv[])
 
 //--- declare event-level variables
   EventInfo eventInfo(isMC, isSignal);
+  const std::string default_cat_str = "default";
+  std::vector<std::string> evt_cat_strs = { default_cat_str };
+
+//--- HH scan
+  const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
+  const bool apply_HH_rwgt = isSignal && hhWeight_cfg.getParameter<bool>("apply_rwgt");
+  const HHWeightInterface * HHWeight_calc = nullptr;
+  if(apply_HH_rwgt)
+  {
+    HHWeight_calc = new HHWeightInterface(hhWeight_cfg);
+    evt_cat_strs = HHWeight_calc->get_scan_strs();
+  }
+  const size_t Nscan = evt_cat_strs.size();
+  std::cout << "Number of points being scanned = " << Nscan << '\n';
+
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
   {
@@ -590,8 +607,8 @@ int main(int argc, char* argv[])
     JetHistManagerAK8* jetsAK8_Wjj_;
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
-    EvtHistManager_hh_2lss* evt_;
-    std::map<std::string, EvtHistManager_hh_2lss*> evt_in_categories_;
+    std::map<std::string, EvtHistManager_hh_2lss*> evt_;
+    std::map<std::string, std::map<std::string, EvtHistManager_hh_2lss*>> evt_in_categories_;
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
@@ -651,9 +668,24 @@ int main(int argc, char* argv[])
             Form("%s/sel/metFilters", histogramDir.data()), era_string, central_or_shift));
         selHistManager->metFilters_->bookHistograms(fs);
       }
-      selHistManager->evt_ = new EvtHistManager_hh_2lss(makeHistManager_cfg(process_and_genMatch,
-          Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
-      selHistManager->evt_->bookHistograms(fs);
+      for(const std::string & evt_cat_str: evt_cat_strs)
+      {
+        if(skipBooking && evt_cat_str != default_cat_str)
+        {
+          continue;
+        }
+        const std::string process_string_new = evt_cat_str == default_cat_str ?
+          process_string  :
+          process_string + evt_cat_str
+        ;
+
+        const std::string process_and_genMatchName = boost::replace_all_copy(
+          process_and_genMatch, process_string, process_string_new
+        );
+        selHistManager->evt_[evt_cat_str] = new EvtHistManager_hh_2lss(makeHistManager_cfg(process_and_genMatchName,
+            Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
+        selHistManager->evt_[evt_cat_str]->bookHistograms(fs);
+      }
       vstring categories_evt = {
         "2ess_3j",   "2ess_3j_vbf",   "2ess_3j_nonvbf",   "2muss_3j",   "2muss_3j_vbf",   "2muss_3j_nonvbf",   "1e1muss_3j",   "1e1muss_3j_vbf",   "1e1muss_3j_nonvbf",
         "2ess_ge3j", "2ess_ge3j_vbf", "2ess_ge3j_nonvbf", "2muss_ge3j", "2muss_ge3j_vbf", "2muss_ge3j_nonvbf", "1e1muss_ge3j", "1e1muss_ge3j_vbf", "1e1muss_ge3j_nonvbf",
@@ -663,9 +695,25 @@ int main(int argc, char* argv[])
       {
         TString histogramDir_category = histogramDir.data();
         histogramDir_category.ReplaceAll("2lss", category.data());
-        selHistManager->evt_in_categories_[category] = new EvtHistManager_hh_2lss(makeHistManager_cfg(process_and_genMatch,
-               Form("%s/sel/evt", histogramDir_category.Data()), era_string, central_or_shift));
-        selHistManager->evt_in_categories_[category]->bookHistograms(fs);
+
+        for(const std::string & evt_cat_str: evt_cat_strs)
+        {
+          if(skipBooking && evt_cat_str != default_cat_str)
+          {
+            continue;
+          }
+          const std::string process_string_new = evt_cat_str == default_cat_str ?
+            process_string  :
+            process_string + evt_cat_str
+          ;
+
+          const std::string process_and_genMatchName = boost::replace_all_copy(
+            process_and_genMatch, process_string, process_string_new
+          );
+          selHistManager->evt_in_categories_[evt_cat_str][category] = new EvtHistManager_hh_2lss(makeHistManager_cfg(process_and_genMatchName,
+                 Form("%s/sel/evt", histogramDir_category.Data()), era_string, central_or_shift));
+          selHistManager->evt_in_categories_[evt_cat_str][category]->bookHistograms(fs);
+        }
       }
       if(! skipBooking)
       {
@@ -1507,6 +1555,33 @@ int main(int argc, char* argv[])
     cutFlowTable.update("signal region veto", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("signal region veto", evtWeightRecorder.get(central_or_shift_main));
 
+    std::vector<double> WeightBM; // weights to do histograms for BMs
+    std::map<std::string, double> Weight_ktScan; // weights to do histograms
+    double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
+
+    if(apply_HH_rwgt)
+    {
+      assert(HHWeight_calc);
+      WeightBM = HHWeight_calc->getJHEPWeight(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+      Weight_ktScan = HHWeight_calc->getScanWeight(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+      HHWeight = WeightBM[0];
+      evtWeightRecorder.record_bm(HHWeight); // SM by default
+
+      if(isDEBUG)
+      {
+        std::cout << "mhh = " << eventInfo.gen_mHH          << " : "
+          "cost "             << eventInfo.gen_cosThetaStar << " : "
+          "weight = "         << HHWeight                   << '\n'
+          ;
+        std::cout << "Calculated " << Weight_ktScan.size() << " scan weights\n";
+        for(std::size_t bm_list = 0; bm_list < Weight_ktScan.size(); ++bm_list)
+        {
+          std::cout << "line = " << bm_list << " " << evt_cat_strs[bm_list] << "; Weight = " <<  Weight_ktScan[evt_cat_strs[bm_list]] << '\n';
+        }
+        std::cout << '\n';
+      }
+    }
+
     // compute signal extraction observables
     double dihiggsVisMass_sel = (selJetP4 + selLepton_lead->p4() + selLepton_sublead->p4()).mass();
     double dihiggsMass_wMet_sel = (selJetP4 + selLepton_lead->p4() + selLepton_sublead->p4() + met.p4()).mass();
@@ -1595,25 +1670,44 @@ int main(int argc, char* argv[])
           selHistManager->met_->fillHistograms(met, mhtP4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
         }
-        selHistManager->evt_->fillHistograms(
-          selElectrons.size(),
-          selMuons.size(),
-          selJets.size(),
-          numSelJetsPtGt40,
-          dihiggsVisMass_sel,
-          dihiggsMass_wMet_sel,
-          jetMass_sel,
-          leptonPairMass_sel,
-          ( tightElectrons.size() == 2 ) ? leptonPairMass_sel : -1.,
-          ( tightMuons.size() == 2 ) ? leptonPairMass_sel : -1.,
-          leptonPairCharge_sel,
-          HT,
-          STMET,
-          //BDTOutput_SUM,
-          BDTOutput_SUM[0],
-          BDTOutput_SUM[1],
-          evtWeight
-        );
+        std::map<std::string, double> rwgt_map;
+        for(const std::string & evt_cat_str: evt_cat_strs)
+        {
+          if(skipFilling && evt_cat_str != default_cat_str)
+          {
+            continue;
+          }
+          if(apply_HH_rwgt)
+          {
+            rwgt_map[evt_cat_str] = evtWeight * Weight_ktScan[evt_cat_str] / HHWeight;
+          }
+          else
+          {
+            rwgt_map[evt_cat_str] = evtWeight;
+          }
+        }
+        for(const auto & kv: rwgt_map)
+        {
+          selHistManager->evt_[kv.first]->fillHistograms(
+            selElectrons.size(),
+            selMuons.size(),
+            selJets.size(),
+            numSelJetsPtGt40,
+            dihiggsVisMass_sel,
+            dihiggsMass_wMet_sel,
+            jetMass_sel,
+            leptonPairMass_sel,
+            ( tightElectrons.size() == 2 ) ? leptonPairMass_sel : -1.,
+            ( tightMuons.size() == 2 ) ? leptonPairMass_sel : -1.,
+            leptonPairCharge_sel,
+            HT,
+            STMET,
+            //BDTOutput_SUM,
+            BDTOutput_SUM[0],
+            BDTOutput_SUM[1],
+            kv.second
+          );
+        }
 
         if(! skipFilling)
         {
@@ -1703,26 +1797,29 @@ int main(int argc, char* argv[])
           }
         }
 
-        for(const std::string & category: categories)
+        for(const auto & kv: rwgt_map)
         {
-          selHistManager->evt_in_categories_[category]->fillHistograms(
-            selElectrons.size(),
-            selMuons.size(),
-            selJets.size(),
-            numSelJetsPtGt40,
-            dihiggsVisMass_sel,
-            dihiggsMass_wMet_sel,
-            jetMass_sel,
-            leptonPairMass_sel,
-            ( tightElectrons.size() == 2 ) ? leptonPairMass_sel : -1.,
-            ( tightMuons.size() == 2 ) ? leptonPairMass_sel : -1.,
-            leptonPairCharge_sel,
-            HT,
-            STMET,
-            BDTOutput_SUM[0],
-            BDTOutput_SUM[1],
-            evtWeight
-          );
+          for(const std::string & category: categories)
+          {
+            selHistManager->evt_in_categories_[kv.first][category]->fillHistograms(
+              selElectrons.size(),
+              selMuons.size(),
+              selJets.size(),
+              numSelJetsPtGt40,
+              dihiggsVisMass_sel,
+              dihiggsMass_wMet_sel,
+              jetMass_sel,
+              leptonPairMass_sel,
+              ( tightElectrons.size() == 2 ) ? leptonPairMass_sel : -1.,
+              ( tightMuons.size() == 2 ) ? leptonPairMass_sel : -1.,
+              leptonPairCharge_sel,
+              HT,
+              STMET,
+              BDTOutput_SUM[0],
+              BDTOutput_SUM[1],
+              kv.second
+            );
+          }
         }
       } 
 
