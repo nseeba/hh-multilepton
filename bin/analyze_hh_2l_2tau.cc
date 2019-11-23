@@ -88,6 +88,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/XGBInterface.h" // XGBInterface 
 #include "tthAnalysis/HiggsToTauTau/interface/TMVAInterface.h" // TMVAInterface
 #include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface.h" // HHWeightInterface
+#include "tthAnalysis/HiggsToTauTau/interface/TensorFlowInterface.h" // TensorFlowInterface
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2l_2tau.h" // EvtHistManager_hh_2l_2tau
 #include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
@@ -334,6 +335,10 @@ int main(int argc, char* argv[])
   bool isDEBUG = cfg_analyze.getParameter<bool>("isDEBUG");
   if ( isDEBUG ) std::cout << "Warning: DEBUG mode enabled -> trigger selection will not be applied for data !!" << std::endl;
 
+  bool isDEBUG_NN = cfg_analyze.getParameter<bool>("isDEBUG_NN");
+  if ( isDEBUG_NN ) std::cout << "Warning: DEBUG mode enabled for NN interface only !!" << std::endl;
+
+
   checkOptionValidity(central_or_shift_main, isMC);
   const int met_option      = useNonNominal_jetmet ? kJetMET_central_nonNominal : getMET_option(central_or_shift_main, isMC);
   const int jetPt_option    = useNonNominal_jetmet ? kJetMET_central_nonNominal : getJet_option(central_or_shift_main, isMC);
@@ -405,6 +410,8 @@ int main(int argc, char* argv[])
   std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
   std::string BDTFileName_even_pkl  = cfg_analyze.getParameter<std::string>("pkl_FileName_even");
   std::string BDTFileName_odd_pkl   = cfg_analyze.getParameter<std::string>("pkl_FileName_odd");
+  std::string NNFileName_even_pb  = cfg_analyze.getParameter<std::string>("pb_FileName_even");
+  std::string NNFileName_odd_pb   = cfg_analyze.getParameter<std::string>("pb_FileName_odd");
   std::string fitFunctionFileName = cfg_analyze.getParameter<std::string>("fitFunctionFileName");
 
 
@@ -590,13 +597,23 @@ int main(int argc, char* argv[])
   XGBInterface* XGB_SUM  = nullptr;
   TMVAInterface* BDT_SUM = nullptr;
 
+  std::vector<std::string> NNInputVariables_SUM = BDTInputVariables_SUM; // Since same input varibales in the same order
+  std::vector<std::string> classes_TensorFlow_2l_2tau_Bkg_Sig_2cat = {"predictions_Bkg",  "predictions_Signal"}; // In the same order as defined in the jupyter notebook
+  TensorFlowInterface* NN_SUM = nullptr;
+
+  
+
   if(fitFunctionFileName != ""){ // Transfrom Input Var.s before feeding into the BDT .pkl/.xml files
     // Xandra's method (with .pkl file)
-    XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl , fitFunctionFileName,  BDTInputVariables_SUM);
+    XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, fitFunctionFileName,  BDTInputVariables_SUM);
 
     // -----  Using New TMVAInterface class with built-in Odd-Even interface ----- 
     BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, fitFunctionFileName, BDTSpectatorVars); 
     BDT_SUM->enableBDTTransform();
+
+    // ----- Using the TensorFlow class with bulit-in Odd-Even interface --- 
+    NN_SUM = new TensorFlowInterface(NNFileName_odd_pb, NNFileName_even_pb, NNInputVariables_SUM, classes_TensorFlow_2l_2tau_Bkg_Sig_2cat, fitFunctionFileName);
+
   }else{
     // Xandra's method (with .pkl file)
     XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, BDTInputVariables_SUM); 
@@ -604,9 +621,13 @@ int main(int argc, char* argv[])
     // -----  Using New TMVAInterface class with built-in Odd-Even interface ----- 
     BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, BDTSpectatorVars); 
     BDT_SUM->enableBDTTransform();
+
+    // ----- Using the TensorFlow class with bulit-in Odd-Even interface --- 
+    NN_SUM = new TensorFlowInterface(NNFileName_odd_pb, NNFileName_even_pb, NNInputVariables_SUM, classes_TensorFlow_2l_2tau_Bkg_Sig_2cat);
   }
 
   std::map<std::string, double> BDTInputs_SUM;
+  std::map<std::string, double> NNInputs_SUM;
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
   std::ostream* selEventsFile = ( selEventsFileName_output != "" ) ? new std::ofstream(selEventsFileName_output.data(), std::ios::out) : 0;
   std::cout << "selEventsFileName_output = " << selEventsFileName_output << std::endl;
@@ -1646,10 +1667,13 @@ int main(int argc, char* argv[])
     BDTInputs_SUM["dr_lep_tau_min_OS"]    = dr_lep_tau_min_OS;
     std::cout << "dihiggsMass " << dihiggsMass << " dihiggsVisMass_sel: " << dihiggsVisMass_sel << " tau1_pt: " << selHadTau_lead->pt() <<
       " nBJet_medium: " << selBJets_btag_medium.size() << " nElectron: " << selElectrons.size() << " dr_lep_tau_min_SS: " << dr_lep_tau_min_SS <<
-      " met_LD: " << met_LD << " dr_lep_tau_min_OS: " << dr_lep_tau_min_OS << " tau2_pt: " << selHadTau_sublead->pt() << std::endl; 
+      " met_LD: " << met_LD << " dr_lep_tau_min_OS: " << dr_lep_tau_min_OS << " tau2_pt: " << selHadTau_sublead->pt() << std::endl;
+ 
+    NNInputs_SUM = BDTInputs_SUM; // Since Both NN and BDT have the same input variables in the same order
 
     std::map<std::string, double> BDTOutput_SUM_Map;
     std::map<std::string, double> XGBOutput_SUM_Map;
+    std::map<std::string, std::map<std::string, double>> NNOutput_SUM_Map;
 
     for(unsigned int i=0; i<gen_mHH.size(); i++){ // Loop over signal masses
       std::cout<< "gen_mHH: " << gen_mHH[i] << std::endl;
@@ -1663,6 +1687,24 @@ int main(int argc, char* argv[])
       BDTOutput_SUM_Map.insert( std::make_pair(key_final, (*BDT_SUM)(BDTInputs_SUM, eventInfo.event)) );
       std::string XGB_key_final = "BDTOutput_" + key + "_pkl";
       XGBOutput_SUM_Map.insert( std::make_pair(XGB_key_final, (*XGB_SUM)(BDTInputs_SUM, eventInfo.event)) );
+      std::string NN_key_final = "NNOutput_" + key;
+      NNOutput_SUM_Map.insert( std::make_pair(NN_key_final, (*NN_SUM)(NNInputs_SUM, eventInfo.event)) );
+    }
+
+    if(isDEBUG_NN){
+      for(unsigned int i=0; i<gen_mHH.size(); i++){ // Loop over signal masses
+	std::cout<< "gen_mHH: " << gen_mHH[i] << std::endl;
+	unsigned int mass_int = (int)gen_mHH[i]; // Conversion from double to unsigned int                                                                                                                                                        
+	std::string key = "";
+	ostringstream temp;
+	temp << mass_int;
+	key = temp.str(); // Conversion from unsigned int to string
+	std::string NN_key_final = "NNOutput_" + key;
+	std::cout << "result v8 ";
+	std::map<std::string, double> NNOutput_cat = NNOutput_SUM_Map[NN_key_final];
+	for (auto elem : classes_TensorFlow_2l_2tau_Bkg_Sig_2cat ) std::cout << elem << " = " << NNOutput_cat[elem] <<" ";
+	std::cout << std::endl;
+      }
     }
 
 //--- retrieve gen-matching flags
@@ -2074,6 +2116,8 @@ int main(int argc, char* argv[])
 
   delete XGB_SUM;
   delete BDT_SUM;
+  delete NN_SUM;
+
 
   clock.Show("analyze_hh_2l_2tau");
 
