@@ -127,9 +127,9 @@ process.analyze_hh_2l_2tau = cms.PSet(
     ## "BDT .pkl -> Even train:Odd test" to be used for odd evt no.  
     pkl_FileName_odd = cms.string("hhAnalysis/multilepton/data/2l_2tau_HH_dR03mvaVLoose_oversampling_finalVars_allMasses_Train_all_Masses_2l_2tau_diagnostics_with_reweighting_XGB_evtLevelSUM_HH_2l_2tau_res_10Var_even_latest_10_2_10.pkl"),
     ## "NN .pb FILE-> Odd train:Even test" to be used for even evt no.  
-    pb_FileName_even = cms.string("hhAnalysis/multilepton/data/2l_2tau_NN_finalVars_allMasses_epochs_100_dropout_0o05_lr_5e-05_sch_decay_5e-06_batch_size_256_Odd.pb")
+    pb_FileName_even = cms.string("hhAnalysis/multilepton/data/2l_2tau_NN_finalVars_allMasses_epochs_100_dropout_0o05_lr_5e-05_sch_decay_5e-06_batch_size_256_Odd.pb"),
     ## "NN .pb FILE-> Even train:Odd test" to be used for odd evt no.  
-    pb_FileName_odd = cms.string("hhAnalysis/multilepton/data/2l_2tau_NN_finalVars_allMasses_epochs_100_dropout_0o05_lr_5e-05_sch_decay_5e-06_batch_size_256_Even.pb")
+    pb_FileName_odd = cms.string("hhAnalysis/multilepton/data/2l_2tau_NN_finalVars_allMasses_epochs_100_dropout_0o05_lr_5e-05_sch_decay_5e-06_batch_size_256_Even.pb"),
 
     fitFunctionFileName = cms.string('hhAnalysis/multilepton/data/TProfile_signal_fit_func_InputVar_AllMassTraining.root'),
 
