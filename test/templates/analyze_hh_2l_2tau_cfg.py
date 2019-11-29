@@ -112,19 +112,24 @@ process.analyze_hh_2l_2tau = cms.PSet(
 
     useNonNominal = cms.bool(False),
     isDEBUG = cms.bool(False),
+    isDEBUG_NN = cms.bool(True),
     hasLHE = cms.bool(True),
     useObjectMultiplicity = cms.bool(False),
 
     selectBDT = cms.bool(False), ## Set it to true for making BDT training Ntuples
-    ## ".xml -> Odd train:Even test" to be used for even evt no.  
+    ## "BDT .xml -> Odd train:Even test" to be used for even evt no.  
     BDT_xml_FileName_even = cms.string("hhAnalysis/multilepton/data/2l_2tau_HH_dR03mvaVLoose_oversampling_finalVars_allMasses_Train_all_Masses_2l_2tau_diagnostics_with_reweighting_XGB_evtLevelSUM_HH_2l_2tau_res_10Var_odd_latest_10_2_10.xml"),
-    ## ".xml -> Even train:Odd test" to be used for odd evt no.  
+    ## "BDT .xml -> Even train:Odd test" to be used for odd evt no.  
     BDT_xml_FileName_odd = cms.string("hhAnalysis/multilepton/data/2l_2tau_HH_dR03mvaVLoose_oversampling_finalVars_allMasses_Train_all_Masses_2l_2tau_diagnostics_with_reweighting_XGB_evtLevelSUM_HH_2l_2tau_res_10Var_even_latest_10_2_10.xml"),
     gen_mHH = cms.vdouble(250,260,270,280,300,350,400,450,500,550,600,650,700,750,800,850,900,1000), ## Set the signal mass range used in the BDT .pkl and .xml files
-    ## ".pkl -> Odd train:Even test" to be used for even evt no.  
+    ## "BDT .pkl -> Odd train:Even test" to be used for even evt no.  
     pkl_FileName_even = cms.string("hhAnalysis/multilepton/data/2l_2tau_HH_dR03mvaVLoose_oversampling_finalVars_allMasses_Train_all_Masses_2l_2tau_diagnostics_with_reweighting_XGB_evtLevelSUM_HH_2l_2tau_res_10Var_odd_latest_10_2_10.pkl"),
-    ## ".pkl -> Even train:Odd test" to be used for odd evt no.  
+    ## "BDT .pkl -> Even train:Odd test" to be used for odd evt no.  
     pkl_FileName_odd = cms.string("hhAnalysis/multilepton/data/2l_2tau_HH_dR03mvaVLoose_oversampling_finalVars_allMasses_Train_all_Masses_2l_2tau_diagnostics_with_reweighting_XGB_evtLevelSUM_HH_2l_2tau_res_10Var_even_latest_10_2_10.pkl"),
+    ## "NN .pb FILE-> Odd train:Even test" to be used for even evt no.  
+    pb_FileName_even = cms.string("hhAnalysis/multilepton/data/2l_2tau_NN_finalVars_allMasses_epochs_100_dropout_0o05_lr_5e-05_sch_decay_5e-06_batch_size_256_Odd.pb"),
+    ## "NN .pb FILE-> Even train:Odd test" to be used for odd evt no.  
+    pb_FileName_odd = cms.string("hhAnalysis/multilepton/data/2l_2tau_NN_finalVars_allMasses_epochs_100_dropout_0o05_lr_5e-05_sch_decay_5e-06_batch_size_256_Even.pb"),
 
     fitFunctionFileName = cms.string('hhAnalysis/multilepton/data/TProfile_signal_fit_func_InputVar_AllMassTraining.root'),
 
@@ -138,4 +143,15 @@ process.analyze_hh_2l_2tau = cms.PSet(
         branchTypeYaxis = cms.string(''),
     ),
     tHweights = cms.VPSet(),
+    hhWeight_cfg = cms.PSet(
+        denominator_file = cms.string(''),
+        klScan_file = cms.string('hhAnalysis/multilepton/data/kl_scan.dat'),
+        ktScan_file = cms.string(''),
+        coefFile = cms.string('HHStatAnalysis/AnalyticalModels/data/coefficientsByBin_extended_3M_costHHSim_19-4.txt'),
+        histtitle = cms.string(''),
+        isDEBUG = cms.bool(False),
+        do_scan = cms.bool(True),
+        do_ktscan = cms.bool(False),
+        apply_rwgt = cms.bool(False),
+    ),
 )

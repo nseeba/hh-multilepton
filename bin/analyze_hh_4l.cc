@@ -75,6 +75,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/TTreeWrapper.h" // TTreeWrapper
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface.h" // HHWeightInterface
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_4l.h" // EvtHistManager_hh_4l
 #include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
@@ -90,6 +91,7 @@
 
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
 #include <boost/algorithm/string/predicate.hpp> // boost::starts_with()
+#include <boost/algorithm/string/replace.hpp> // boost::replace_all_copy()
 
 #include <iostream> // std::cerr, std::fixed
 #include <iomanip> // std::setprecision(), std::setw()
@@ -146,7 +148,8 @@ int main(int argc, char* argv[])
   std::string process_string = cfg_analyze.getParameter<std::string>("process");
   bool isMC_ttH = process_string == "TTH";
   bool isMC_tH = process_string == "TH";
-  bool isSignal = boost::starts_with(process_string, "signal_");
+  bool isSignal = boost::starts_with(process_string, "signal_") && process_string.find("_hh_") != std::string::npos;
+  bool isMC_HH_nonres = boost::starts_with(process_string, "signal_ggf_nonresonant_");
 
   std::string histogramDir = cfg_analyze.getParameter<std::string>("histogramDir");
   bool isMCClosure_e = histogramDir.find("mcClosure_e") != std::string::npos;
@@ -344,7 +347,22 @@ int main(int argc, char* argv[])
   std::cout << "Loaded " << inputTree -> getFileCount() << " file(s).\n";
 
 //--- declare event-level variables
-  EventInfo eventInfo(isMC, isSignal);
+  EventInfo eventInfo(isMC, isSignal, isMC_HH_nonres);
+  const std::string default_cat_str = "default";
+  std::vector<std::string> evt_cat_strs = { default_cat_str };
+
+//--- HH scan
+  const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
+  const bool apply_HH_rwgt = eventInfo.is_hh_nonresonant() && hhWeight_cfg.getParameter<bool>("apply_rwgt");
+  const HHWeightInterface * HHWeight_calc = nullptr;
+  if(apply_HH_rwgt)
+  {
+    HHWeight_calc = new HHWeightInterface(hhWeight_cfg);
+    evt_cat_strs = HHWeight_calc->get_scan_strs();
+  }
+  const size_t Nscan = evt_cat_strs.size();
+  std::cout << "Number of points being scanned = " << Nscan << '\n';
+
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
   {
@@ -463,12 +481,12 @@ int main(int argc, char* argv[])
     JetHistManager* BJets_medium_;
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
-    EvtHistManager_hh_4l* evt_;
-    SVfit4tauHistManager_MarkovChain* svFit4tau_woMassConstraint_;
-    SVfit4tauHistManager_MarkovChain* svFit4tau_wMassConstraint_;
-    std::map<std::string, EvtHistManager_hh_4l*> evt_in_decayModes_;
-    std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_woMassConstraint_in_decayModes_;
-    std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_wMassConstraint_in_decayModes_;
+    std::map<std::string, EvtHistManager_hh_4l*> evt_;
+    std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_woMassConstraint_;
+    std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_wMassConstraint_;
+    std::map<std::string, std::map<std::string, EvtHistManager_hh_4l*>> evt_in_decayModes_;
+    std::map<std::string, std::map<std::string, SVfit4tauHistManager_MarkovChain*>> svFit4tau_woMassConstraint_in_decayModes_;
+    std::map<std::string, std::map<std::string, SVfit4tauHistManager_MarkovChain*>> svFit4tau_wMassConstraint_in_decayModes_;
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
@@ -513,15 +531,31 @@ int main(int argc, char* argv[])
           Form("%s/sel/metFilters", histogramDir.data()), era_string, central_or_shift));
         selHistManager->metFilters_->bookHistograms(fs);
       }
-      selHistManager->evt_ = new EvtHistManager_hh_4l(makeHistManager_cfg(process_and_genMatch,
-        Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
-      selHistManager->evt_->bookHistograms(fs);
-      selHistManager->svFit4tau_woMassConstraint_ = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
-        Form("%s/sel/svFit4tau_woMassConstraint", histogramDir.data()), era_string, central_or_shift));
-      selHistManager->svFit4tau_woMassConstraint_->bookHistograms(fs);
-      selHistManager->svFit4tau_wMassConstraint_ = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
-        Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), era_string, central_or_shift));
-      selHistManager->svFit4tau_wMassConstraint_->bookHistograms(fs);
+
+      for(const std::string & evt_cat_str: evt_cat_strs)
+      {
+        if(skipBooking && evt_cat_str != default_cat_str)
+        {
+          continue;
+        }
+        const std::string process_string_new = evt_cat_str == default_cat_str ?
+          process_string  :
+          process_string + evt_cat_str
+        ;
+
+        const std::string process_and_genMatchName = boost::replace_all_copy(
+          process_and_genMatch, process_string, process_string_new
+        );
+        selHistManager->evt_[evt_cat_str] = new EvtHistManager_hh_4l(makeHistManager_cfg(process_and_genMatchName,
+          Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
+        selHistManager->evt_[evt_cat_str]->bookHistograms(fs);
+        selHistManager->svFit4tau_woMassConstraint_[evt_cat_str] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatchName,
+          Form("%s/sel/svFit4tau_woMassConstraint", histogramDir.data()), era_string, central_or_shift));
+        selHistManager->svFit4tau_woMassConstraint_[evt_cat_str]->bookHistograms(fs);
+        selHistManager->svFit4tau_wMassConstraint_[evt_cat_str] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatchName,
+          Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), era_string, central_or_shift));
+        selHistManager->svFit4tau_wMassConstraint_[evt_cat_str]->bookHistograms(fs);
+      }
 
       const vstring decayModes_evt = eventInfo.getDiHiggsDecayModes();
       if(isSignal)
@@ -531,15 +565,30 @@ int main(int argc, char* argv[])
           std::string decayMode_and_genMatch = decayMode_evt;
           decayMode_and_genMatch += genMatchDefinition->getName();
 
-          selHistManager->evt_in_decayModes_[decayMode_evt] = new EvtHistManager_hh_4l(makeHistManager_cfg(decayMode_and_genMatch,
-            Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
-          selHistManager->evt_in_decayModes_[decayMode_evt]->bookHistograms(fs);
-          selHistManager->svFit4tau_woMassConstraint_in_decayModes_[decayMode_evt] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(decayMode_and_genMatch,
-            Form("%s/sel/svFit4tau_woMassConstraint", histogramDir.data()), era_string, central_or_shift));
-          selHistManager->svFit4tau_woMassConstraint_in_decayModes_[decayMode_evt]->bookHistograms(fs);
-          selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayMode_evt] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(decayMode_and_genMatch,
-            Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), era_string, central_or_shift));
-          selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayMode_evt]->bookHistograms(fs);
+          for(const std::string & evt_cat_str: evt_cat_strs)
+          {
+            if(skipBooking && evt_cat_str != default_cat_str)
+            {
+              continue;
+            }
+            const std::string process_string_new = evt_cat_str == default_cat_str ?
+              process_string:
+              process_string + "_" + evt_cat_str
+            ;
+            const std::string decayMode_and_genMatchName = boost::replace_all_copy(
+              decayMode_and_genMatch, process_string, process_string_new
+            );
+
+            selHistManager->evt_in_decayModes_[evt_cat_str][decayMode_evt] = new EvtHistManager_hh_4l(makeHistManager_cfg(decayMode_and_genMatchName,
+              Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
+            selHistManager->evt_in_decayModes_[evt_cat_str][decayMode_evt]->bookHistograms(fs);
+            selHistManager->svFit4tau_woMassConstraint_in_decayModes_[evt_cat_str][decayMode_evt] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(decayMode_and_genMatchName,
+              Form("%s/sel/svFit4tau_woMassConstraint", histogramDir.data()), era_string, central_or_shift));
+            selHistManager->svFit4tau_woMassConstraint_in_decayModes_[evt_cat_str][decayMode_evt]->bookHistograms(fs);
+            selHistManager->svFit4tau_wMassConstraint_in_decayModes_[evt_cat_str][decayMode_evt] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(decayMode_and_genMatchName,
+              Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), era_string, central_or_shift));
+            selHistManager->svFit4tau_wMassConstraint_in_decayModes_[evt_cat_str][decayMode_evt]->bookHistograms(fs);
+          }
         }
       }
 
@@ -1252,6 +1301,33 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update("signal region veto", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("signal region veto", evtWeightRecorder.get(central_or_shift_main));
+
+    std::vector<double> WeightBM; // weights to do histograms for BMs
+    std::map<std::string, double> Weight_ktScan; // weights to do histograms
+    double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
+
+    if(apply_HH_rwgt)
+    {
+      assert(HHWeight_calc);
+      WeightBM = HHWeight_calc->getJHEPWeight(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+      Weight_ktScan = HHWeight_calc->getScanWeight(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+      HHWeight = WeightBM[0];
+      evtWeightRecorder.record_bm(HHWeight); // SM by default
+
+      if(isDEBUG)
+      {
+        std::cout << "mhh = " << eventInfo.gen_mHH          << " : "
+          "cost "             << eventInfo.gen_cosThetaStar << " : "
+          "weight = "         << HHWeight                   << '\n'
+          ;
+        std::cout << "Calculated " << Weight_ktScan.size() << " scan weights\n";
+        for(std::size_t bm_list = 0; bm_list < Weight_ktScan.size(); ++bm_list)
+        {
+          std::cout << "line = " << bm_list << " " << evt_cat_strs[bm_list] << "; Weight = " <<  Weight_ktScan[evt_cat_strs[bm_list]] << '\n';
+        }
+        std::cout << '\n';
+      }
+    }
             
     std::vector<SVfit4tauResult> svFit4tauResults_woMassConstraint = compSVfit4tau(
       *selLepton_lead, *selLepton_sublead, *selLepton_third, *selLepton_fourth, met, chargeSumSelection_string, rnd, -1., 2.);
@@ -1284,40 +1360,61 @@ int main(int argc, char* argv[])
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
         }
-        selHistManager->evt_->fillHistograms(
-          selElectrons.size(),
-          selMuons.size(),
-          selJets.size(),
-          numSelJetsPtGt40,
-          selBJets_loose.size(),
-          selBJets_medium.size(),
-          dihiggsVisMass_sel,
-          dihiggsMass,
-          HT,
-          STMET,
-          evtWeight);
-        selHistManager->svFit4tau_woMassConstraint_->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
-        selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
-
-        if(isSignal)
+        std::map<std::string, double> rwgt_map;
+        for(const std::string & evt_cat_str: evt_cat_strs)
         {
-          const std::string decayModeStr = eventInfo.getDiHiggsDecayModeString();
-          if(! decayModeStr.empty())
+          if(skipFilling && evt_cat_str != default_cat_str)
           {
-            selHistManager -> evt_in_decayModes_[decayModeStr] -> fillHistograms(
-              selElectrons.size(),
-              selMuons.size(),
-              selJets.size(),
-              numSelJetsPtGt40,
-              selBJets_loose.size(),
-              selBJets_medium.size(),
-              dihiggsVisMass_sel,
-              dihiggsMass,
-              HT,
-              STMET,
-              evtWeight);
-            selHistManager->svFit4tau_woMassConstraint_in_decayModes_[decayModeStr]->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
-            selHistManager->svFit4tau_wMassConstraint_in_decayModes_[decayModeStr]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
+            continue;
+          }
+          if(apply_HH_rwgt)
+          {
+            rwgt_map[evt_cat_str] = evtWeight * Weight_ktScan[evt_cat_str] / HHWeight;
+          }
+          else
+          {
+            rwgt_map[evt_cat_str] = evtWeight;
+          }
+        }
+        for(const auto & kv: rwgt_map)
+        {
+          selHistManager->evt_[kv.first]->fillHistograms(
+            selElectrons.size(),
+            selMuons.size(),
+            selJets.size(),
+            numSelJetsPtGt40,
+            selBJets_loose.size(),
+            selBJets_medium.size(),
+            dihiggsVisMass_sel,
+            dihiggsMass,
+            HT,
+            STMET,
+            kv.second
+          );
+          selHistManager->svFit4tau_woMassConstraint_[kv.first]->fillHistograms(svFit4tauResults_woMassConstraint, kv.second);
+          selHistManager->svFit4tau_wMassConstraint_[kv.first]->fillHistograms(svFit4tauResults_wMassConstraint, kv.second);
+
+          if(isSignal)
+          {
+            const std::string decayModeStr = eventInfo.getDiHiggsDecayModeString();
+            if(! decayModeStr.empty())
+            {
+              selHistManager -> evt_in_decayModes_[kv.first][decayModeStr] -> fillHistograms(
+                selElectrons.size(),
+                selMuons.size(),
+                selJets.size(),
+                numSelJetsPtGt40,
+                selBJets_loose.size(),
+                selBJets_medium.size(),
+                dihiggsVisMass_sel,
+                dihiggsMass,
+                HT,
+                STMET,
+                kv.second
+              );
+              selHistManager->svFit4tau_woMassConstraint_in_decayModes_[kv.first][decayModeStr]->fillHistograms(svFit4tauResults_woMassConstraint, kv.second);
+              selHistManager->svFit4tau_wMassConstraint_in_decayModes_[kv.first][decayModeStr]->fillHistograms(svFit4tauResults_wMassConstraint, kv.second);
+            }
           }
         }
 

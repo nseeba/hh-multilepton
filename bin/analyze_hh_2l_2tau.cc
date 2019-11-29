@@ -87,6 +87,8 @@
 #include "tthAnalysis/HiggsToTauTau/interface/backgroundEstimation.h" // prob_chargeMisId
 #include "tthAnalysis/HiggsToTauTau/interface/XGBInterface.h" // XGBInterface 
 #include "tthAnalysis/HiggsToTauTau/interface/TMVAInterface.h" // TMVAInterface
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface.h" // HHWeightInterface
+#include "tthAnalysis/HiggsToTauTau/interface/TensorFlowInterface.h" // TensorFlowInterface
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2l_2tau.h" // EvtHistManager_hh_2l_2tau
 #include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
@@ -106,6 +108,7 @@
 #include <boost/range/adaptor/map.hpp> // boost::adaptors::map_keys
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
 #include <boost/algorithm/string/predicate.hpp> // boost::starts_with()
+#include <boost/algorithm/string/replace.hpp> // boost::replace_all_copy()
 
 #include <iostream> // std::cerr, std::fixed
 #include <iomanip> // std::setprecision(), std::setw()
@@ -205,7 +208,8 @@ int main(int argc, char* argv[])
   std::string process_string = cfg_analyze.getParameter<std::string>("process");
   bool isMC_ttH = process_string == "TTH";
   bool isMC_tH = process_string == "TH";
-  bool isSignal = boost::starts_with(process_string, "signal_");
+  bool isSignal = boost::starts_with(process_string, "signal_") && process_string.find("_hh_") != std::string::npos;
+  bool isMC_HH_nonres = boost::starts_with(process_string, "signal_ggf_nonresonant_");
 
   std::string histogramDir = cfg_analyze.getParameter<std::string>("histogramDir");
   bool isMCClosure_e = histogramDir.find("mcClosure_e") != std::string::npos;
@@ -331,6 +335,10 @@ int main(int argc, char* argv[])
   bool isDEBUG = cfg_analyze.getParameter<bool>("isDEBUG");
   if ( isDEBUG ) std::cout << "Warning: DEBUG mode enabled -> trigger selection will not be applied for data !!" << std::endl;
 
+  bool isDEBUG_NN = cfg_analyze.getParameter<bool>("isDEBUG_NN");
+  if ( isDEBUG_NN ) std::cout << "Warning: DEBUG mode enabled for NN interface only !!" << std::endl;
+
+
   checkOptionValidity(central_or_shift_main, isMC);
   const int met_option      = useNonNominal_jetmet ? kJetMET_central_nonNominal : getMET_option(central_or_shift_main, isMC);
   const int jetPt_option    = useNonNominal_jetmet ? kJetMET_central_nonNominal : getJet_option(central_or_shift_main, isMC);
@@ -402,6 +410,8 @@ int main(int argc, char* argv[])
   std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
   std::string BDTFileName_even_pkl  = cfg_analyze.getParameter<std::string>("pkl_FileName_even");
   std::string BDTFileName_odd_pkl   = cfg_analyze.getParameter<std::string>("pkl_FileName_odd");
+  std::string NNFileName_even_pb  = cfg_analyze.getParameter<std::string>("pb_FileName_even");
+  std::string NNFileName_odd_pb   = cfg_analyze.getParameter<std::string>("pb_FileName_odd");
   std::string fitFunctionFileName = cfg_analyze.getParameter<std::string>("fitFunctionFileName");
 
 
@@ -430,7 +440,22 @@ int main(int argc, char* argv[])
   std::cout << "Loaded " << inputTree->getFileCount() << " file(s)." << std::endl;
 
 //--- declare event-level variables
-  EventInfo eventInfo(isMC, isSignal);
+  EventInfo eventInfo(isMC, isSignal, isMC_HH_nonres);
+  const std::string default_cat_str = "default";
+  std::vector<std::string> evt_cat_strs = { default_cat_str };
+
+//--- HH scan
+  const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
+  const bool apply_HH_rwgt = eventInfo.is_hh_nonresonant() && hhWeight_cfg.getParameter<bool>("apply_rwgt");
+  const HHWeightInterface * HHWeight_calc = nullptr;
+  if(apply_HH_rwgt)
+  {
+    HHWeight_calc = new HHWeightInterface(hhWeight_cfg);
+    evt_cat_strs = HHWeight_calc->get_scan_strs();
+  }
+  const size_t Nscan = evt_cat_strs.size();
+  std::cout << "Number of points being scanned = " << Nscan << '\n';
+
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
   {
@@ -572,13 +597,23 @@ int main(int argc, char* argv[])
   XGBInterface* XGB_SUM  = nullptr;
   TMVAInterface* BDT_SUM = nullptr;
 
+  std::vector<std::string> NNInputVariables_SUM = BDTInputVariables_SUM; // Since same input varibales in the same order
+  std::vector<std::string> classes_TensorFlow_2l_2tau_Bkg_Sig_2cat = {"predictions_Bkg",  "predictions_Signal"}; // In the same order as defined in the jupyter notebook
+  TensorFlowInterface* NN_SUM = nullptr;
+
+  
+
   if(fitFunctionFileName != ""){ // Transfrom Input Var.s before feeding into the BDT .pkl/.xml files
     // Xandra's method (with .pkl file)
-    XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl , fitFunctionFileName,  BDTInputVariables_SUM);
+    XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, fitFunctionFileName,  BDTInputVariables_SUM);
 
     // -----  Using New TMVAInterface class with built-in Odd-Even interface ----- 
     BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, fitFunctionFileName, BDTSpectatorVars); 
     BDT_SUM->enableBDTTransform();
+
+    // ----- Using the TensorFlow class with bulit-in Odd-Even interface --- 
+    NN_SUM = new TensorFlowInterface(NNFileName_odd_pb, NNFileName_even_pb, NNInputVariables_SUM, classes_TensorFlow_2l_2tau_Bkg_Sig_2cat, fitFunctionFileName);
+
   }else{
     // Xandra's method (with .pkl file)
     XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, BDTInputVariables_SUM); 
@@ -586,9 +621,13 @@ int main(int argc, char* argv[])
     // -----  Using New TMVAInterface class with built-in Odd-Even interface ----- 
     BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, BDTSpectatorVars); 
     BDT_SUM->enableBDTTransform();
+
+    // ----- Using the TensorFlow class with bulit-in Odd-Even interface --- 
+    NN_SUM = new TensorFlowInterface(NNFileName_odd_pb, NNFileName_even_pb, NNInputVariables_SUM, classes_TensorFlow_2l_2tau_Bkg_Sig_2cat);
   }
 
   std::map<std::string, double> BDTInputs_SUM;
+  std::map<std::string, double> NNInputs_SUM;
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
   std::ostream* selEventsFile = ( selEventsFileName_output != "" ) ? new std::ofstream(selEventsFileName_output.data(), std::ios::out) : 0;
   std::cout << "selEventsFileName_output = " << selEventsFileName_output << std::endl;
@@ -610,12 +649,12 @@ int main(int argc, char* argv[])
     JetHistManager* BJets_medium_;
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
-    EvtHistManager_hh_2l_2tau* evt_;
-    SVfit4tauHistManager_MarkovChain* svFit4tau_wMassConstraint_;
-    std::map<std::string, EvtHistManager_hh_2l_2tau*> evt_in_decayModes_;
-    std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_wMassConstraint_in_decayModes_;
-    std::map<std::string, EvtHistManager_hh_2l_2tau*> evt_in_categories_;
-    std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_wMassConstraint_in_categories_;
+    std::map<std::string, EvtHistManager_hh_2l_2tau*> evt_;
+    std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_wMassConstraint_;
+    std::map<std::string, std::map<std::string, EvtHistManager_hh_2l_2tau*>> evt_in_decayModes_;
+    std::map<std::string, std::map<std::string, SVfit4tauHistManager_MarkovChain*>> svFit4tau_wMassConstraint_in_decayModes_;
+    std::map<std::string, std::map<std::string, EvtHistManager_hh_2l_2tau*>> evt_in_categories_;
+    std::map<std::string, std::map<std::string, SVfit4tauHistManager_MarkovChain*>> svFit4tau_wMassConstraint_in_categories_;
     GenEvtHistManager* genEvtHistManager_afterCuts_;
     LHEInfoHistManager* lheInfoHistManager_afterCuts_;
     std::map<std::string, LHEInfoHistManager*> lheInfoHistManager_afterCuts_in_categories_;
@@ -683,12 +722,27 @@ int main(int argc, char* argv[])
           Form("%s/sel/metFilters", histogramDir.data()), era_string, central_or_shift));
         selHistManager->metFilters_->bookHistograms(fs);
       }
-      selHistManager->evt_ = new EvtHistManager_hh_2l_2tau(makeHistManager_cfg(process_and_genMatch,
-        Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift, gen_mHH));
-      selHistManager->evt_->bookHistograms(fs);
-      selHistManager->svFit4tau_wMassConstraint_ = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
-        Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), era_string, central_or_shift));
-      selHistManager->svFit4tau_wMassConstraint_->bookHistograms(fs);
+      for(const std::string & evt_cat_str: evt_cat_strs)
+      {
+        if(skipBooking && evt_cat_str != default_cat_str)
+        {
+          continue;
+        }
+        const std::string process_string_new = evt_cat_str == default_cat_str ?
+          process_string  :
+          process_string + evt_cat_str
+        ;
+
+        const std::string process_and_genMatchName = boost::replace_all_copy(
+          process_and_genMatch, process_string, process_string_new
+        );
+        selHistManager->evt_[evt_cat_str] = new EvtHistManager_hh_2l_2tau(makeHistManager_cfg(process_and_genMatchName,
+          Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift, gen_mHH));
+        selHistManager->evt_[evt_cat_str]->bookHistograms(fs);
+        selHistManager->svFit4tau_wMassConstraint_[evt_cat_str] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatchName,
+          Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), era_string, central_or_shift));
+        selHistManager->svFit4tau_wMassConstraint_[evt_cat_str]->bookHistograms(fs);
+      }
 
       selHistManager->genEvtHistManager_afterCuts_ = nullptr;
       selHistManager->lheInfoHistManager_afterCuts_ = nullptr;
@@ -716,12 +770,28 @@ int main(int argc, char* argv[])
       {
         TString histogramDir_category = histogramDir.data();
         histogramDir_category.ReplaceAll("2l_2tau", category.data());
-        selHistManager->evt_in_categories_[category] = new EvtHistManager_hh_2l_2tau(makeHistManager_cfg(process_and_genMatch,
-          Form("%s/sel/evt", histogramDir_category.Data()), era_string, central_or_shift, gen_mHH)); // Added the signal mass vector
-        selHistManager->evt_in_categories_[category]->bookHistograms(fs);
-        selHistManager->svFit4tau_wMassConstraint_in_categories_[category] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
-          Form("%s/sel/svFit4tau_wMassConstraint", histogramDir_category.Data()), era_string, central_or_shift));
-        selHistManager->svFit4tau_wMassConstraint_in_categories_[category]->bookHistograms(fs);
+
+        for(const std::string & evt_cat_str: evt_cat_strs)
+        {
+          if(skipBooking && evt_cat_str != default_cat_str)
+          {
+            continue;
+          }
+          const std::string process_string_new = evt_cat_str == default_cat_str ?
+            process_string  :
+            process_string + evt_cat_str
+          ;
+
+          const std::string process_and_genMatchName = boost::replace_all_copy(
+            process_and_genMatch, process_string, process_string_new
+          );
+          selHistManager->evt_in_categories_[evt_cat_str][category] = new EvtHistManager_hh_2l_2tau(makeHistManager_cfg(process_and_genMatchName,
+            Form("%s/sel/evt", histogramDir_category.Data()), era_string, central_or_shift, gen_mHH)); // Added the signal mass vector
+          selHistManager->evt_in_categories_[evt_cat_str][category]->bookHistograms(fs);
+          selHistManager->svFit4tau_wMassConstraint_in_categories_[evt_cat_str][category] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatchName,
+            Form("%s/sel/svFit4tau_wMassConstraint", histogramDir_category.Data()), era_string, central_or_shift));
+          selHistManager->svFit4tau_wMassConstraint_in_categories_[evt_cat_str][category]->bookHistograms(fs);
+        }
         if(isMC && ! skipBooking)
         {
           selHistManager->lheInfoHistManager_afterCuts_in_categories_[category] = new LHEInfoHistManager(makeHistManager_cfg(process_and_genMatch,
@@ -1482,6 +1552,33 @@ int main(int argc, char* argv[])
     cutFlowTable.update("signal region veto", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("signal region veto", evtWeightRecorder.get(central_or_shift_main));
 
+    std::vector<double> WeightBM; // weights to do histograms for BMs
+    std::map<std::string, double> Weight_ktScan; // weights to do histograms
+    double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
+
+    if(apply_HH_rwgt)
+    {
+      assert(HHWeight_calc);
+      WeightBM = HHWeight_calc->getJHEPWeight(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+      Weight_ktScan = HHWeight_calc->getScanWeight(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+      HHWeight = WeightBM[0];
+      evtWeightRecorder.record_bm(HHWeight); // SM by default
+
+      if(isDEBUG)
+      {
+        std::cout << "mhh = " << eventInfo.gen_mHH          << " : "
+          "cost "             << eventInfo.gen_cosThetaStar << " : "
+          "weight = "         << HHWeight                   << '\n'
+          ;
+        std::cout << "Calculated " << Weight_ktScan.size() << " scan weights\n";
+        for(std::size_t bm_list = 0; bm_list < Weight_ktScan.size(); ++bm_list)
+        {
+          std::cout << "line = " << bm_list << " " << evt_cat_strs[bm_list] << "; Weight = " <<  Weight_ktScan[evt_cat_strs[bm_list]] << '\n';
+        }
+        std::cout << '\n';
+      }
+    }
+
     const Particle::LorentzVector tautau_p4 = selHadTau_lead->p4() + selHadTau_sublead->p4();
     const double mTauTauVis_sel = tautau_p4.mass();
             
@@ -1570,10 +1667,13 @@ int main(int argc, char* argv[])
     BDTInputs_SUM["dr_lep_tau_min_OS"]    = dr_lep_tau_min_OS;
     std::cout << "dihiggsMass " << dihiggsMass << " dihiggsVisMass_sel: " << dihiggsVisMass_sel << " tau1_pt: " << selHadTau_lead->pt() <<
       " nBJet_medium: " << selBJets_btag_medium.size() << " nElectron: " << selElectrons.size() << " dr_lep_tau_min_SS: " << dr_lep_tau_min_SS <<
-      " met_LD: " << met_LD << " dr_lep_tau_min_OS: " << dr_lep_tau_min_OS << " tau2_pt: " << selHadTau_sublead->pt() << std::endl; 
+      " met_LD: " << met_LD << " dr_lep_tau_min_OS: " << dr_lep_tau_min_OS << " tau2_pt: " << selHadTau_sublead->pt() << std::endl;
+ 
+    NNInputs_SUM = BDTInputs_SUM; // Since Both NN and BDT have the same input variables in the same order
 
     std::map<std::string, double> BDTOutput_SUM_Map;
     std::map<std::string, double> XGBOutput_SUM_Map;
+    std::map<std::string, std::map<std::string, double>> NNOutput_SUM_Map;
 
     for(unsigned int i=0; i<gen_mHH.size(); i++){ // Loop over signal masses
       std::cout<< "gen_mHH: " << gen_mHH[i] << std::endl;
@@ -1587,6 +1687,24 @@ int main(int argc, char* argv[])
       BDTOutput_SUM_Map.insert( std::make_pair(key_final, (*BDT_SUM)(BDTInputs_SUM, eventInfo.event)) );
       std::string XGB_key_final = "BDTOutput_" + key + "_pkl";
       XGBOutput_SUM_Map.insert( std::make_pair(XGB_key_final, (*XGB_SUM)(BDTInputs_SUM, eventInfo.event)) );
+      std::string NN_key_final = "NNOutput_" + key;
+      NNOutput_SUM_Map.insert( std::make_pair(NN_key_final, (*NN_SUM)(NNInputs_SUM, eventInfo.event)) );
+    }
+
+    if(isDEBUG_NN){
+      for(unsigned int i=0; i<gen_mHH.size(); i++){ // Loop over signal masses
+	std::cout<< "gen_mHH: " << gen_mHH[i] << std::endl;
+	unsigned int mass_int = (int)gen_mHH[i]; // Conversion from double to unsigned int                                                                                                                                                        
+	std::string key = "";
+	ostringstream temp;
+	temp << mass_int;
+	key = temp.str(); // Conversion from unsigned int to string
+	std::string NN_key_final = "NNOutput_" + key;
+	std::cout << "result v8 ";
+	std::map<std::string, double> NNOutput_cat = NNOutput_SUM_Map[NN_key_final];
+	for (auto elem : classes_TensorFlow_2l_2tau_Bkg_Sig_2cat ) std::cout << elem << " = " << NNOutput_cat[elem] <<" ";
+	std::cout << std::endl;
+      }
     }
 
 //--- retrieve gen-matching flags
@@ -1626,48 +1744,6 @@ int main(int argc, char* argv[])
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
         }
-        selHistManager->evt_->fillHistograms(
-          selElectrons.size(),
-          selMuons.size(),
-          selHadTaus.size(),
-          selJets.size(),
-          numSelJetsPtGt40,
-          selBJets_loose.size(),
-          selBJets_medium.size(),
-          mTauTauVis_sel,
-          leptonPairCharge_sel,
-          hadTauPairCharge_sel,
-          dihiggsVisMass_sel,
-          dihiggsMass,
-          HT,
-          STMET,
-          BDTOutput_SUM_Map,
-          XGBOutput_SUM_Map,
-          eventInfo.event,
-          evtWeight
-        );
-        selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
-        if(isMC && ! skipFilling)
-        {
-          selHistManager->genEvtHistManager_afterCuts_->fillHistograms(
-            genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeightRecorder.get_inclusive(central_or_shift)
-          );
-          selHistManager->lheInfoHistManager_afterCuts_->fillHistograms(*lheInfoReader, evtWeight);
-
-          if(eventWeightManager)
-          {
-            selHistManager->genEvtHistManager_afterCuts_->fillHistograms(eventWeightManager, evtWeightRecorder.get_inclusive(central_or_shift));
-          }
-        }
-        if(! skipFilling)
-        {
-          selHistManager->evtYield_->fillHistograms(eventInfo, evtWeight);
-          selHistManager->weights_->fillHistograms("genWeight", eventInfo.genWeight);
-          selHistManager->weights_->fillHistograms("pileupWeight", evtWeightRecorder.get_puWeight(central_or_shift));
-          selHistManager->weights_->fillHistograms("triggerWeight", evtWeightRecorder.get_sf_triggerEff(central_or_shift));
-          selHistManager->weights_->fillHistograms("data_to_MC_correction", evtWeightRecorder.get_tauSF(central_or_shift));
-          selHistManager->weights_->fillHistograms("fakeRate", evtWeightRecorder.get_FR(central_or_shift));
-        }
 
         std::vector<std::string> categories;
         if      ( isCharge_lepton_SS ) categories.push_back("2lSS_2tau");
@@ -1698,18 +1774,25 @@ int main(int argc, char* argv[])
           } else assert(0);
         } else assert(0);
 
-        for(const std::string & category: categories)
+        std::map<std::string, double> rwgt_map;
+        for(const std::string & evt_cat_str: evt_cat_strs)
         {
-          double evtWeight_category = evtWeight;
-          if ( category.find("_wChargeFlipWeights") != std::string::npos )
+          if(skipFilling && evt_cat_str != default_cat_str)
           {
-            double prob_chargeMisId_lead = prob_chargeMisId(era, getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta());
-            double prob_chargeMisId_sublead = prob_chargeMisId(era, getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
-            evtWeight_category *= ( prob_chargeMisId_lead + prob_chargeMisId_sublead);
+            continue;
           }
-          if(selHistManager->evt_in_categories_.find(category) != selHistManager->evt_in_categories_.end())
+          if(apply_HH_rwgt)
           {
-            selHistManager->evt_in_categories_[category]->fillHistograms(
+            rwgt_map[evt_cat_str] = evtWeight * Weight_ktScan[evt_cat_str] / HHWeight;
+          }
+          else
+          {
+            rwgt_map[evt_cat_str] = evtWeight;
+          }
+        }
+        for(const auto & kv: rwgt_map)
+        {
+          selHistManager->evt_[kv.first]->fillHistograms(
             selElectrons.size(),
             selMuons.size(),
             selHadTaus.size(),
@@ -1727,14 +1810,80 @@ int main(int argc, char* argv[])
             BDTOutput_SUM_Map,
             XGBOutput_SUM_Map,
             eventInfo.event,
-            evtWeight_category);
-            selHistManager->svFit4tau_wMassConstraint_in_categories_[category]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight_category);
+            kv.second
+          );
+          selHistManager->svFit4tau_wMassConstraint_[kv.first]->fillHistograms(svFit4tauResults_wMassConstraint, kv.second);
+        }
+        if(isMC && ! skipFilling)
+        {
+          selHistManager->genEvtHistManager_afterCuts_->fillHistograms(
+            genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeightRecorder.get_inclusive(central_or_shift)
+          );
+          selHistManager->lheInfoHistManager_afterCuts_->fillHistograms(*lheInfoReader, evtWeight);
+
+          if(eventWeightManager)
+          {
+            selHistManager->genEvtHistManager_afterCuts_->fillHistograms(eventWeightManager, evtWeightRecorder.get_inclusive(central_or_shift));
+          }
+        }
+        if(! skipFilling)
+        {
+          selHistManager->evtYield_->fillHistograms(eventInfo, evtWeight);
+          selHistManager->weights_->fillHistograms("genWeight", eventInfo.genWeight);
+          selHistManager->weights_->fillHistograms("pileupWeight", evtWeightRecorder.get_puWeight(central_or_shift));
+          selHistManager->weights_->fillHistograms("triggerWeight", evtWeightRecorder.get_sf_triggerEff(central_or_shift));
+          selHistManager->weights_->fillHistograms("data_to_MC_correction", evtWeightRecorder.get_tauSF(central_or_shift));
+          selHistManager->weights_->fillHistograms("fakeRate", evtWeightRecorder.get_FR(central_or_shift));
+        }
+
+        for(const std::string & category: categories)
+        {
+          double evtWeight_chargeFlip = 1.;
+          if ( category.find("_wChargeFlipWeights") != std::string::npos )
+          {
+            double prob_chargeMisId_lead = prob_chargeMisId(era, getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta());
+            double prob_chargeMisId_sublead = prob_chargeMisId(era, getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
+            evtWeight_chargeFlip *= ( prob_chargeMisId_lead + prob_chargeMisId_sublead);
+          }
+          for(const auto & kv: rwgt_map)
+          {
+            double evtWeight_category = kv.second * evtWeight_chargeFlip;
+            if ( category.find("_wChargeFlipWeights") != std::string::npos )
+            {
+              double prob_chargeMisId_lead = prob_chargeMisId(era, getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta());
+              double prob_chargeMisId_sublead = prob_chargeMisId(era, getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
+              evtWeight_category *= ( prob_chargeMisId_lead + prob_chargeMisId_sublead);
+            }
+            if(selHistManager->evt_in_categories_.find(category) != selHistManager->evt_in_categories_.end())
+            {
+              selHistManager->evt_in_categories_[kv.first][category]->fillHistograms(
+                selElectrons.size(),
+                selMuons.size(),
+                selHadTaus.size(),
+                selJets.size(),
+                numSelJetsPtGt40,
+                selBJets_loose.size(),
+                selBJets_medium.size(),
+                mTauTauVis_sel,
+                leptonPairCharge_sel,
+                hadTauPairCharge_sel,
+                dihiggsVisMass_sel,
+                dihiggsMass,
+                HT,
+                STMET,
+                BDTOutput_SUM_Map,
+                XGBOutput_SUM_Map,
+                eventInfo.event,
+                evtWeight_category
+              );
+              selHistManager->svFit4tau_wMassConstraint_in_categories_[kv.first][category]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight_category);
+            }
           }
           if(isMC && ! skipFilling)
           {
-            selHistManager->lheInfoHistManager_afterCuts_in_categories_[category]->fillHistograms(*lheInfoReader, evtWeight_category);
+            selHistManager->lheInfoHistManager_afterCuts_in_categories_[category]->fillHistograms(*lheInfoReader, evtWeight * evtWeight_chargeFlip);
           }
-	}
+        }
       }
     }
 
@@ -1967,6 +2116,8 @@ int main(int argc, char* argv[])
 
   delete XGB_SUM;
   delete BDT_SUM;
+  delete NN_SUM;
+
 
   clock.Show("analyze_hh_2l_2tau");
 
