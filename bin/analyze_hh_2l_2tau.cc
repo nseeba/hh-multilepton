@@ -85,7 +85,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/mvaInputVariables.h" // comp_*()
 #include "tthAnalysis/HiggsToTauTau/interface/Topness.h" // Topness
 #include "tthAnalysis/HiggsToTauTau/interface/backgroundEstimation.h" // prob_chargeMisId
-#include "tthAnalysis/HiggsToTauTau/interface/XGBInterface.h" // XGBInterface 
+#include "tthAnalysis/HiggsToTauTau/interface/XGBInterface.h" // XGBInterface
 #include "tthAnalysis/HiggsToTauTau/interface/TMVAInterface.h" // TMVAInterface
 #include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface.h" // HHWeightInterface
 #include "tthAnalysis/HiggsToTauTau/interface/TensorFlowInterface.h" // TensorFlowInterface
@@ -335,8 +335,8 @@ int main(int argc, char* argv[])
   bool isDEBUG = cfg_analyze.getParameter<bool>("isDEBUG");
   if ( isDEBUG ) std::cout << "Warning: DEBUG mode enabled -> trigger selection will not be applied for data !!" << std::endl;
 
-  bool isDEBUG_NN = cfg_analyze.getParameter<bool>("isDEBUG_NN");
-  if ( isDEBUG_NN ) std::cout << "Warning: DEBUG mode enabled for NN interface only !!" << std::endl;
+  //bool isDEBUG_NN = cfg_analyze.getParameter<bool>("isDEBUG_NN");
+  //if ( isDEBUG_NN ) std::cout << "Warning: DEBUG mode enabled for NN interface only !!" << std::endl;
 
 
   checkOptionValidity(central_or_shift_main, isMC);
@@ -410,8 +410,8 @@ int main(int argc, char* argv[])
   std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
   std::string BDTFileName_even_pkl  = cfg_analyze.getParameter<std::string>("pkl_FileName_even");
   std::string BDTFileName_odd_pkl   = cfg_analyze.getParameter<std::string>("pkl_FileName_odd");
-  std::string NNFileName_even_pb  = cfg_analyze.getParameter<std::string>("pb_FileName_even");
-  std::string NNFileName_odd_pb   = cfg_analyze.getParameter<std::string>("pb_FileName_odd");
+  std::string NNFileName_even_pb  = "hhAnalysis/multilepton/data/test_2l_2tau_HH_dumb.pb"; //cfg_analyze.getParameter<std::string>("pb_FileName_even");
+  std::string NNFileName_odd_pb   = "hhAnalysis/multilepton/data/test_2l_2tau_HH_dumb.pb"; //cfg_analyze.getParameter<std::string>("pb_FileName_odd");
   std::string fitFunctionFileName = cfg_analyze.getParameter<std::string>("fitFunctionFileName");
 
 
@@ -578,56 +578,47 @@ int main(int argc, char* argv[])
     inputTree->registerReader(lheInfoReader);
   }
 
-  std::vector<std::string> BDTInputVariables_SUM = 
+  std::vector<std::string> BDTInputVariables_SUM =
     {
-      "diHiggsMass", 
-      "diHiggsVisMass", 
-      "tau1_pt", 
-      "nBJet_medium", 
-      "gen_mHH", 
-      "nElectron", 
-      "dr_lep_tau_min_SS", 
-      "met_LD", 
-      "tau2_pt", 
+      "diHiggsMass",
+      "diHiggsVisMass",
+      "tau1_pt",
+      "nBJet_medium",
+      "gen_mHH",
+      "nElectron",
+      "dr_lep_tau_min_SS",
+      "met_LD",
+      "tau2_pt",
       "dr_lep_tau_min_OS"
     }; // Need to adapt to different mass training modes: all, low and High (Currently this is for all mass traning)
 
-  std::vector<std::string> BDTSpectatorVars = {};
+    std::vector<std::string> NNInputVariables_SUM =
+      {
+       "jet1_pt",
+       "jet2_pt",
+       "tau1_pt",
+       "tau2_pt",
+       "mTauTauVis",
+       "cosThetaS_hadTau",
+       "mbb_loose",
+       "met_LD",
+       "dr_leps",
+       "dr_taus",
+       "nJet",
+       "nBJetLoose",
+       "nBJetMedium"
+     }; // this is for the dumb training
 
-  XGBInterface* XGB_SUM  = nullptr;
-  TMVAInterface* BDT_SUM = nullptr;
+  fitFunctionFileName = "";
+  // X: IMPORTANT To Ram, this is hidden in some config that I do not want to try to find
+  // ---> fix that when you fix the .pb file
 
-  std::vector<std::string> NNInputVariables_SUM = BDTInputVariables_SUM; // Since same input varibales in the same order
-  std::vector<std::string> classes_TensorFlow_2l_2tau_Bkg_Sig_2cat = {"predictions_Bkg",  "predictions_Signal"}; // In the same order as defined in the jupyter notebook
-  TensorFlowInterface* NN_SUM = nullptr;
-
-  
-
-  if(fitFunctionFileName != ""){ // Transfrom Input Var.s before feeding into the BDT .pkl/.xml files
-    // Xandra's method (with .pkl file)
-    XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, fitFunctionFileName,  BDTInputVariables_SUM);
-
-    // -----  Using New TMVAInterface class with built-in Odd-Even interface ----- 
-    BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, fitFunctionFileName, BDTSpectatorVars); 
-    BDT_SUM->enableBDTTransform();
-
-    // ----- Using the TensorFlow class with bulit-in Odd-Even interface --- 
-    NN_SUM = new TensorFlowInterface(NNFileName_odd_pb, NNFileName_even_pb, NNInputVariables_SUM, classes_TensorFlow_2l_2tau_Bkg_Sig_2cat, fitFunctionFileName);
-
-  }else{
-    // Xandra's method (with .pkl file)
-    XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, BDTInputVariables_SUM); 
-
-    // -----  Using New TMVAInterface class with built-in Odd-Even interface ----- 
-    BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, BDTSpectatorVars); 
-    BDT_SUM->enableBDTTransform();
-
-    // ----- Using the TensorFlow class with bulit-in Odd-Even interface --- 
-    NN_SUM = new TensorFlowInterface(NNFileName_odd_pb, NNFileName_even_pb, NNInputVariables_SUM, classes_TensorFlow_2l_2tau_Bkg_Sig_2cat);
-  }
+  XGBInterface* XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, fitFunctionFileName,  BDTInputVariables_SUM);
+  TMVAInterface* BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, fitFunctionFileName);
+  BDT_SUM->enableBDTTransform();
+  TensorFlowInterface* NN_SUM = new TensorFlowInterface(NNFileName_odd_pb, NNInputVariables_SUM, {}, NNFileName_even_pb, fitFunctionFileName);
 
   std::map<std::string, double> BDTInputs_SUM;
-  std::map<std::string, double> NNInputs_SUM;
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
   std::ostream* selEventsFile = ( selEventsFileName_output != "" ) ? new std::ofstream(selEventsFileName_output.data(), std::ios::out) : 0;
   std::cout << "selEventsFileName_output = " << selEventsFileName_output << std::endl;
@@ -876,19 +867,19 @@ int main(int argc, char* argv[])
     "object multiplicity",
     "trigger",
     ">= 2 presel leptons",
-    ">= 2 sel leptons", 
-    "lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV", 
-    "<= 2 tight leptons",  
-    ">= 2 sel taus",     
-    "tau-pair OS/SS charge", 
-    "sel lepton+tau charge", 
-    "fakeable lepton trigger match", 
-    "HLT filter matching",   
-    "b-jet veto",   
-    "m(ll) > 12 GeV", 
+    ">= 2 sel leptons",
+    "lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV",
+    "<= 2 tight leptons",
+    ">= 2 sel taus",
+    "tau-pair OS/SS charge",
+    "sel lepton+tau charge",
+    "fakeable lepton trigger match",
+    "HLT filter matching",
+    "b-jet veto",
+    "m(ll) > 12 GeV",
     "Z-boson mass veto",
     "MEt filters",
-    "signal region veto", 
+    "signal region veto",
   };
 
   CutFlowTableHistManager * cutFlowHistManager = new CutFlowTableHistManager(cutFlowTableCfg, cuts);
@@ -1295,7 +1286,7 @@ int main(int argc, char* argv[])
       continue;
     }
 
-   
+
     // require exactly two leptons passing tight selection criteria, to avoid overlap with other channels
     if ( !(tightLeptonsFull.size() <= 2) ) {
       if ( run_lumi_eventSelector ) {
@@ -1581,7 +1572,7 @@ int main(int argc, char* argv[])
 
     const Particle::LorentzVector tautau_p4 = selHadTau_lead->p4() + selHadTau_sublead->p4();
     const double mTauTauVis_sel = tautau_p4.mass();
-            
+
     double leptonPairCharge_sel = selLepton_lead->charge() + selLepton_sublead->charge();
     double hadTauPairCharge_sel = selHadTau_lead->charge() + selHadTau_sublead->charge();
 
@@ -1595,12 +1586,11 @@ int main(int argc, char* argv[])
       *selLepton_lead, *selLepton_sublead, *selHadTau_lead, *selHadTau_sublead, met, chargeSumSelection_string, rnd, 125., 2.);
 
     double dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selHadTau_lead->p4() + selHadTau_sublead->p4()).mass();
-    double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ? 
+    double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ?
       svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
 
     // pre-compute BDT variables-1
     const double deltaEta_lep1_lep2 = (selLepton_lead->p4() - selLepton_sublead->p4()).eta();
-    std::cout<< "deltaEta_lep1_lep2 " << deltaEta_lep1_lep2 << std::endl;
     const double deltaEta_lep1_tau1 = (selLepton_lead->p4() - selHadTau_lead->p4()).eta();
     const double deltaEta_lep1_tau2 = (selLepton_lead->p4() - selHadTau_sublead->p4()).eta();
     const double deltaEta_lep2_tau1 = (selLepton_sublead->p4() - selHadTau_lead->p4()).eta();
@@ -1623,10 +1613,10 @@ int main(int argc, char* argv[])
     const double dr_lep2_tau1 = deltaR(selLepton_sublead->p4(), selHadTau_lead->p4());
     const double dr_lep1_tau2 = deltaR(selLepton_lead->p4(),    selHadTau_sublead->p4());
     const double dr_lep2_tau2 = deltaR(selLepton_sublead->p4(), selHadTau_sublead->p4());
-    const double dr_lep1_tau1_tau2_min = std::min(dr_lep1_tau1, dr_lep1_tau2); 
-    const double dr_lep1_tau1_tau2_max = std::max(dr_lep1_tau1, dr_lep1_tau2); 
-    const double dr_lep2_tau1_tau2_min = std::min(dr_lep2_tau1, dr_lep2_tau2); 
-    const double dr_lep2_tau1_tau2_max = std::max(dr_lep2_tau1, dr_lep2_tau2); 
+    const double dr_lep1_tau1_tau2_min = std::min(dr_lep1_tau1, dr_lep1_tau2);
+    const double dr_lep1_tau1_tau2_max = std::max(dr_lep1_tau1, dr_lep1_tau2);
+    const double dr_lep2_tau1_tau2_min = std::min(dr_lep2_tau1, dr_lep2_tau2);
+    const double dr_lep2_tau1_tau2_max = std::max(dr_lep2_tau1, dr_lep2_tau2);
     double dr_lep_tau_min_OS = 0.;
     if(isCharge_lepton_OS){
       dr_lep_tau_min_OS = std::min(std::min(dr_lep1_tau1, dr_lep1_tau2), std::min(dr_lep2_tau1, dr_lep2_tau2));
@@ -1659,24 +1649,44 @@ int main(int argc, char* argv[])
     BDTInputs_SUM["diHiggsVisMass"]       = dihiggsVisMass_sel;
     BDTInputs_SUM["tau1_pt"]              = selHadTau_lead->pt();
     BDTInputs_SUM["nBJet_medium"]         = selBJets_btag_medium.size();
-    BDTInputs_SUM["gen_mHH"]              = 250.; // setting a Dummy value which will be reset depending on mass hypothesis 
+    BDTInputs_SUM["gen_mHH"]              = 250.; // setting a Dummy value which will be reset depending on mass hypothesis
     BDTInputs_SUM["nElectron"]            = selElectrons.size();
     BDTInputs_SUM["dr_lep_tau_min_SS"]    = dr_lep_tau_min_SS;
     BDTInputs_SUM["met_LD"]               = met_LD;
     BDTInputs_SUM["tau2_pt"]              = selHadTau_sublead->pt();
     BDTInputs_SUM["dr_lep_tau_min_OS"]    = dr_lep_tau_min_OS;
-    std::cout << "dihiggsMass " << dihiggsMass << " dihiggsVisMass_sel: " << dihiggsVisMass_sel << " tau1_pt: " << selHadTau_lead->pt() <<
-      " nBJet_medium: " << selBJets_btag_medium.size() << " nElectron: " << selElectrons.size() << " dr_lep_tau_min_SS: " << dr_lep_tau_min_SS <<
-      " met_LD: " << met_LD << " dr_lep_tau_min_OS: " << dr_lep_tau_min_OS << " tau2_pt: " << selHadTau_sublead->pt() << std::endl;
- 
-    NNInputs_SUM = BDTInputs_SUM; // Since Both NN and BDT have the same input variables in the same order
+    if ( isDEBUG ) {
+      std::cout << "Input variables ";
+      for (auto elem : BDTInputs_SUM ) std::cout << elem.first << " " << elem.second << "\n";
+      std::cout << std::endl;
+    }
+
+    const std::map<std::string, double> mvaInputsValues = {
+      {"tau1_pt",          selHadTau_lead->pt()},
+      {"tau2_pt",          selHadTau_sublead->pt()},
+      {"jet1_pt",          selBJets_loose.size() > 0  ? selJets[0]->pt() : 0.},
+      {"jet2_pt",          selBJets_loose.size() > 1  ? selJets[1]->pt() : 0.},
+      {"mTauTauVis",       (selHadTau_lead->p4() + selHadTau_sublead->p4()).mass()},
+      {"cosThetaS_hadTau", 1.0},
+      {"mbb_loose",        selBJets_loose.size() > 1  ? (selBJets_loose[0]->p4()  + selBJets_loose[1]->p4() ).mass() : 0.},
+      {"nBJetLoose",       selBJets_loose.size() },
+      {"nBJetMedium",      selBJets_medium.size() },
+      {"nJet",             selJets.size() },
+      {"dr_leps",          dr_leps},
+      {"dr_taus",          dr_taus},
+      {"met_LD",           met_LD}
+    };
+    if ( isDEBUG ) {
+      std::cout << "Input variables ";
+      for (auto elem : mvaInputsValues ) std::cout << elem.first << " " << elem.second << "\n";
+      std::cout << std::endl;
+    }
 
     std::map<std::string, double> BDTOutput_SUM_Map;
     std::map<std::string, double> XGBOutput_SUM_Map;
-    std::map<std::string, std::map<std::string, double>> NNOutput_SUM_Map;
+    std::map<std::string, double> NNOutput_SUM_Map;
 
     for(unsigned int i=0; i<gen_mHH.size(); i++){ // Loop over signal masses
-      std::cout<< "gen_mHH: " << gen_mHH[i] << std::endl;
       BDTInputs_SUM["gen_mHH"] = gen_mHH[i];
       unsigned int mass_int = (int)gen_mHH[i]; // Conversion from double to unsigned int
       std::string key = "";
@@ -1688,23 +1698,9 @@ int main(int argc, char* argv[])
       std::string XGB_key_final = "BDTOutput_" + key + "_pkl";
       XGBOutput_SUM_Map.insert( std::make_pair(XGB_key_final, (*XGB_SUM)(BDTInputs_SUM, eventInfo.event)) );
       std::string NN_key_final = "NNOutput_" + key;
-      NNOutput_SUM_Map.insert( std::make_pair(NN_key_final, (*NN_SUM)(NNInputs_SUM, eventInfo.event)) );
-    }
-
-    if(isDEBUG_NN){
-      for(unsigned int i=0; i<gen_mHH.size(); i++){ // Loop over signal masses
-	std::cout<< "gen_mHH: " << gen_mHH[i] << std::endl;
-	unsigned int mass_int = (int)gen_mHH[i]; // Conversion from double to unsigned int                                                                                                                                                        
-	std::string key = "";
-	ostringstream temp;
-	temp << mass_int;
-	key = temp.str(); // Conversion from unsigned int to string
-	std::string NN_key_final = "NNOutput_" + key;
-	std::cout << "result v8 ";
-	std::map<std::string, double> NNOutput_cat = NNOutput_SUM_Map[NN_key_final];
-	for (auto elem : classes_TensorFlow_2l_2tau_Bkg_Sig_2cat ) std::cout << elem << " = " << NNOutput_cat[elem] <<" ";
-	std::cout << std::endl;
-      }
+      double NN_output_value = (*NN_SUM)(mvaInputsValues, eventInfo.event)["output"];
+      if ( isDEBUG ) std::cout << "result NN_output_value " << NN_output_value << "\n";
+      NNOutput_SUM_Map.insert( std::make_pair(NN_key_final, NN_output_value) );
     }
 
 //--- retrieve gen-matching flags
@@ -1891,11 +1887,11 @@ int main(int argc, char* argv[])
       (*selEventsFile) << eventInfo.run << ':' << eventInfo.lumi << ':' << eventInfo.event << '\n';
     }
 
-    //--- reconstruct mass of tau-pair using SVfit algorithm                                                                                                                                                                                                       
-    //                                                                                                                                                                                                                                                             
-    //    NOTE: SVfit needs to be run after all event selection cuts are applied,                                                                                                                                                                                   
-    //          because the algorithm takes O(1 second per event) to run                                                                                                                                                                                           
-    //                                                                                                                                                                                                                                                                    
+    //--- reconstruct mass of tau-pair using SVfit algorithm
+    //
+    //    NOTE: SVfit needs to be run after all event selection cuts are applied,
+    //          because the algorithm takes O(1 second per event) to run
+    //
     std::vector<classic_svFit::MeasuredTauLepton> measuredTauLeptons;
     classic_svFit::MeasuredTauLepton::kDecayType leg1Type = classic_svFit::MeasuredTauLepton::kTauToHadDecay;
     double leg1Mass = selHadTau_lead->mass();
@@ -1914,9 +1910,9 @@ int main(int argc, char* argv[])
 
 
     // pre-compute BDT variables-2
-    //double mTauTau = -1.; // CV: temporarily comment-out the following line, to make code compile with "old" and "new" version of ClassicSVfit                                                                                                          
+    //double mTauTau = -1.; // CV: temporarily comment-out the following line, to make code compile with "old" and "new" version of ClassicSVfit
     const double mTauTau   = ( svFitAlgo.isValidSolution() ) ? static_cast<classic_svFit::HistogramAdapterDiTau*>(svFitAlgo.getHistogramAdapter())->getMass() : -1.;
-    
+
     Topness topness_publishedChi2(Topness::kPublishedChi2);
     if(selBJet_lead && selBJet_sublead)
     {
@@ -1961,8 +1957,8 @@ int main(int argc, char* argv[])
 	  ("dr_lep1_tau1_tau2_max", dr_lep1_tau1_tau2_max)
 	  ("dr_lep2_tau1_tau2_min", dr_lep2_tau1_tau2_min)
 	  ("dr_lep2_tau1_tau2_max", dr_lep2_tau1_tau2_max)
-	  ("dr_lep_tau_min_OS", dr_lep_tau_min_OS) 
-	  ("dr_lep_tau_min_SS", dr_lep_tau_min_SS) 
+	  ("dr_lep_tau_min_OS", dr_lep_tau_min_OS)
+	  ("dr_lep_tau_min_SS", dr_lep_tau_min_SS)
 	  ("pt_HH_recoil",             pt_HH_recoil)
           ("lep1_pt",                  selLepton_lead->pt())
           ("lep1_conePt",              selLepton_lead->cone_pt())
@@ -1988,7 +1984,7 @@ int main(int argc, char* argv[])
           ("dr_lep2_tau1",             dr_lep2_tau1)
           ("dr_lep1_tau2",             dr_lep1_tau2)
           ("dr_lep2_tau2",             dr_lep2_tau2)
-	  ("m_lep1_tau1",              m_lep1_tau1)  
+	  ("m_lep1_tau1",              m_lep1_tau1)
 	  ("m_lep2_tau1",              m_lep2_tau1)
 	  ("m_lep1_tau2",              m_lep1_tau2)
 	  ("m_lep2_tau2",              m_lep2_tau2)
@@ -2035,7 +2031,7 @@ int main(int argc, char* argv[])
     process_and_genMatch += selLepton_genMatch.name_;
     process_and_genMatch += "&";
     process_and_genMatch += selHadTau_genMatch.name_;
-    ++selectedEntries_byGenMatchType[process_and_genMatch]; 
+    ++selectedEntries_byGenMatchType[process_and_genMatch];
     selectedEntries_weighted_byGenMatchType[process_and_genMatch] += evtWeightRecorder.get(central_or_shift_main);
     histogram_selectedEntries->Fill(0.);
   }
@@ -2113,11 +2109,6 @@ int main(int argc, char* argv[])
   hltPaths_delete(triggers_1e1mu);
 
   delete inputTree;
-
-  delete XGB_SUM;
-  delete BDT_SUM;
-  delete NN_SUM;
-
 
   clock.Show("analyze_hh_2l_2tau");
 
