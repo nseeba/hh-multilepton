@@ -53,6 +53,10 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_wjets = None)
       sample_info["sample_category"] = "TH"
     elif sample_name.startswith('/TTTo'):
       sample_info["sample_category"] = "TT"
+      sample_info["use_it"] = True
+    elif sample_name.startswith('/TTJets'):
+      sample_info["sample_category"] = "TT"
+      sample_info["use_it"] = False
     elif sample_name.startswith('/VH'):
       sample_info["sample_category"] = "VH"
     elif sample_name.startswith('/TTZ'):
