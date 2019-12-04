@@ -60,11 +60,11 @@ if '{era}' in output_file:
   output_file = output_file.format(era = era)
 
 if mode == 'hh_multilepton':
-  samples = load_samples(era, use_preproc, base = 'hh_multilepton', suffix = 'DeepTauIDv2p1')
+  samples = load_samples(era, not use_preproc, base = 'hh_multilepton', suffix = 'DeepTauIDv2p1')
 elif mode == 'hh_bbww':
-  samples = load_samples(era, use_preproc, base = 'hh_bbww', suffix = 'DeepTauIDv2p1')
+  samples = load_samples(era, not use_preproc, base = 'hh_bbww', suffix = 'DeepTauIDv2p1')
 elif mode == 'hh_bbww_sync':
-  samples = load_samples(era, use_preproc, base = 'hh_bbww', suffix = 'sync')
+  samples = load_samples(era, not use_preproc, base = 'hh_bbww', suffix = 'sync')
 else:
   raise ValueError('Invalid mode: %s' % mode)
 
