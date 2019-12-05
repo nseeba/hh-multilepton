@@ -1,6 +1,6 @@
 from collections import OrderedDict as OD
 
-# file generated at 2019-08-03 16:27:50 with the following command:
+# file generated at 2019-11-14 14:03:31 with the following command:
 # find_samples.py -V -i ../../tthAnalysis/NanoAOD/test/datasets/txt/datasets_hh_multilepton_mc_2017_RunIIFall17MiniAODv2.txt -m python/samples/metaDict_2017_hh.py -s ../../tthAnalysis/NanoAOD/test/datasets/txt/sum_datasets_hh_multilepton_2017_RunIIFall17MiniAODv2.txt -c python/samples/sampleLocations_2017_nanoAOD_hh_multilepton.txt
 
 meta_dictionary = OD()
@@ -16,7 +16,7 @@ sum_events = {
 
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-250_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-250_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct18_GluGluToRadionToHHTo4Tau_M-250_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_250_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_250_hh_4t"),
   ("nof_db_events",         400000),
@@ -25,11 +25,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-250_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.11GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-10-07 00:33:14"),
+  ("comment",               "100.0%; status: VALID; size: 20.11GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-10-07 00:33:14"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-260_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-260_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct18_GluGluToRadionToHHTo4Tau_M-260_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_260_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_260_hh_4t"),
   ("nof_db_events",         400000),
@@ -38,11 +38,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-260_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.10GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-10-04 12:15:56"),
+  ("comment",               "100.0%; status: VALID; size: 19.10GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-10-04 12:15:56"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-270_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-270_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4Tau_M-270_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_270_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_270_hh_4t"),
   ("nof_db_events",         385000),
@@ -51,11 +51,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-270_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 18.51GB; nevents: 385.00k; release: 9_4_7; last modified: 2018-10-07 19:38:27"),
+  ("comment",               "100.0%; status: VALID; size: 18.51GB; nevents: 385.00k; release: 9_4_7; last modified: 2018-10-07 19:38:27"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-280_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-280_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct18_GluGluToRadionToHHTo4Tau_M-280_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_280_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_280_hh_4t"),
   ("nof_db_events",         400000),
@@ -64,11 +64,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-280_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.22GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-10-15 04:28:04"),
+  ("comment",               "100.0%; status: VALID; size: 20.22GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-10-15 04:28:04"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-300_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-300_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct18_GluGluToRadionToHHTo4Tau_M-300_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_300_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_300_hh_4t"),
   ("nof_db_events",         300000),
@@ -77,11 +77,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-300_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 14.61GB; nevents: 300.00k; release: 9_4_7; last modified: 2018-10-04 16:58:26"),
+  ("comment",               "100.0%; status: VALID; size: 14.61GB; nevents: 300.00k; release: 9_4_7; last modified: 2018-10-04 16:58:26"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-350_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-350_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4Tau_M-350_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_350_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_350_hh_4t"),
   ("nof_db_events",         284000),
@@ -90,11 +90,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-350_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 14.27GB; nevents: 284.00k; release: 9_4_7; last modified: 2018-10-05 15:58:40"),
+  ("comment",               "100.0%; status: VALID; size: 14.27GB; nevents: 284.00k; release: 9_4_7; last modified: 2018-10-05 15:58:40"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-400_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-400_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4Tau_M-400_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_400_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_400_hh_4t"),
   ("nof_db_events",         300000),
@@ -103,11 +103,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-400_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.11GB; nevents: 300.00k; release: 9_4_7; last modified: 2018-10-08 08:46:46"),
+  ("comment",               "100.0%; status: VALID; size: 15.11GB; nevents: 300.00k; release: 9_4_7; last modified: 2018-10-08 08:46:46"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-450_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-450_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4Tau_M-450_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_450_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_450_hh_4t"),
   ("nof_db_events",         300000),
@@ -116,11 +116,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-450_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.31GB; nevents: 300.00k; release: 9_4_7; last modified: 2018-10-06 15:09:59"),
+  ("comment",               "100.0%; status: VALID; size: 15.31GB; nevents: 300.00k; release: 9_4_7; last modified: 2018-10-06 15:09:59"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-500_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-500_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4Tau_M-500_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_500_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_500_hh_4t"),
   ("nof_db_events",         200000),
@@ -129,11 +129,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-500_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 10.31GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-15 04:27:17"),
+  ("comment",               "100.0%; status: VALID; size: 10.31GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-15 04:27:17"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-550_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-550_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4Tau_M-550_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_550_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_550_hh_4t"),
   ("nof_db_events",         200000),
@@ -142,11 +142,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-550_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 10.44GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-15 04:42:35"),
+  ("comment",               "100.0%; status: VALID; size: 10.44GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-15 04:42:35"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-600_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-600_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4Tau_M-600_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_600_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_600_hh_4t"),
   ("nof_db_events",         200000),
@@ -155,11 +155,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-600_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 10.56GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-07 08:59:45"),
+  ("comment",               "100.0%; status: VALID; size: 10.56GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-07 08:59:45"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-650_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-650_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4Tau_M-650_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_650_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_650_hh_4t"),
   ("nof_db_events",         200000),
@@ -168,11 +168,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-650_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 10.64GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-07 10:46:20"),
+  ("comment",               "100.0%; status: VALID; size: 10.64GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-07 10:46:20"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-700_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-700_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4Tau_M-700_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_700_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_700_hh_4t"),
   ("nof_db_events",         200000),
@@ -181,11 +181,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-700_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 10.71GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-04 12:15:36"),
+  ("comment",               "100.0%; status: VALID; size: 10.71GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-04 12:15:36"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-750_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-750_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4Tau_M-750_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_750_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_750_hh_4t"),
   ("nof_db_events",         200000),
@@ -194,11 +194,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-750_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.20GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-05 06:36:12"),
+  ("comment",               "100.0%; status: VALID; size: 11.20GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-05 06:36:12"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-800_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-800_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4Tau_M-800_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_800_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_800_hh_4t"),
   ("nof_db_events",         200000),
@@ -207,11 +207,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-800_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.27GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-05 16:04:52"),
+  ("comment",               "100.0%; status: VALID; size: 11.27GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-05 16:04:52"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-850_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-850_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4Tau_M-850_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_850_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_850_hh_4t"),
   ("nof_db_events",         192000),
@@ -220,11 +220,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-850_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 10.93GB; nevents: 192.00k; release: 9_4_7; last modified: 2018-10-06 03:12:10"),
+  ("comment",               "100.0%; status: VALID; size: 10.93GB; nevents: 192.00k; release: 9_4_7; last modified: 2018-10-06 03:12:10"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-900_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-900_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4Tau_M-900_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_900_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_900_hh_4t"),
   ("nof_db_events",         100000),
@@ -233,11 +233,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-900_narrow_13TeV-madgraph/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 5.51GB; nevents: 100.00k; release: 9_4_7; last modified: 2018-10-07 00:27:04"),
+  ("comment",               "100.0%; status: VALID; size: 5.51GB; nevents: 100.00k; release: 9_4_7; last modified: 2018-10-07 00:27:04"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4Tau_M-1000_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4Tau_M-1000_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4Tau_M-1000_narrow_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_1000_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin0_1000_hh_4t"),
   ("nof_db_events",         100000),
@@ -246,11 +246,11 @@ meta_dictionary["/GluGluToRadionToHHTo4Tau_M-1000_narrow_13TeV-madgraph/RunIIFal
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 5.54GB; nevents: 100.00k; release: 9_4_7; last modified: 2018-10-07 00:32:36"),
+  ("comment",               "100.0%; status: VALID; size: 5.54GB; nevents: 100.00k; release: 9_4_7; last modified: 2018-10-07 00:32:36"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-250_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-250_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-250_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_250_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_250_hh_4t"),
   ("nof_db_events",         391000),
@@ -259,11 +259,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-250_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 18.88GB; nevents: 391.00k; release: 9_4_7; last modified: 2018-09-21 02:54:58"),
+  ("comment",               "100.0%; status: VALID; size: 18.88GB; nevents: 391.00k; release: 9_4_7; last modified: 2018-09-21 02:54:58"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-260_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_260_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_260_hh_4t"),
   ("nof_db_events",         386000),
@@ -272,11 +272,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-260_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 18.93GB; nevents: 386.00k; release: 9_4_7; last modified: 2018-10-13 05:53:43"),
+  ("comment",               "100.0%; status: VALID; size: 18.93GB; nevents: 386.00k; release: 9_4_7; last modified: 2018-10-13 05:53:43"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-270_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_270_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_270_hh_4t"),
   ("nof_db_events",         380000),
@@ -285,11 +285,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-270_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 18.93GB; nevents: 380.00k; release: 9_4_7; last modified: 2018-10-17 12:32:44"),
+  ("comment",               "100.0%; status: VALID; size: 18.93GB; nevents: 380.00k; release: 9_4_7; last modified: 2018-10-17 12:32:44"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-280_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-280_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-280_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_280_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_280_hh_4t"),
   ("nof_db_events",         400000),
@@ -298,11 +298,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-280_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.71GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-10-18 02:53:32"),
+  ("comment",               "100.0%; status: VALID; size: 19.71GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-10-18 02:53:32"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-300_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-300_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-300_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_300_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_300_hh_4t"),
   ("nof_db_events",         400000),
@@ -311,11 +311,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-300_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.10GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-10-15 04:45:03"),
+  ("comment",               "100.0%; status: VALID; size: 20.10GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-10-15 04:45:03"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-320_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-320_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-320_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_320_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_320_hh_4t"),
   ("nof_db_events",         298000),
@@ -324,11 +324,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-320_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.18GB; nevents: 298.00k; release: 9_4_7; last modified: 2019-03-31 18:01:21"),
+  ("comment",               "100.0%; status: VALID; size: 15.18GB; nevents: 298.00k; release: 9_4_7; last modified: 2019-03-31 18:01:21"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-350_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-350_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-350_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_350_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_350_hh_4t"),
   ("nof_db_events",         384000),
@@ -337,11 +337,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-350_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.35GB; nevents: 384.00k; release: 9_4_7; last modified: 2018-10-07 19:35:30"),
+  ("comment",               "100.0%; status: VALID; size: 19.35GB; nevents: 384.00k; release: 9_4_7; last modified: 2018-10-07 19:35:30"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-400_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-400_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-400_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_400_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_400_hh_4t"),
   ("nof_db_events",         300000),
@@ -350,11 +350,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-400_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.43GB; nevents: 300.00k; release: 9_4_7; last modified: 2018-10-15 07:06:03"),
+  ("comment",               "100.0%; status: VALID; size: 15.43GB; nevents: 300.00k; release: 9_4_7; last modified: 2018-10-15 07:06:03"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-450_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-450_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-450_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_450_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_450_hh_4t"),
   ("nof_db_events",         280000),
@@ -363,11 +363,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-450_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 14.67GB; nevents: 280.00k; release: 9_4_7; last modified: 2018-10-17 12:25:47"),
+  ("comment",               "100.0%; status: VALID; size: 14.67GB; nevents: 280.00k; release: 9_4_7; last modified: 2018-10-17 12:25:47"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-500_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-500_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-500_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_500_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_500_hh_4t"),
   ("nof_db_events",         284000),
@@ -376,11 +376,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-500_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.25GB; nevents: 284.00k; release: 9_4_7; last modified: 2019-02-21 02:43:27"),
+  ("comment",               "100.0%; status: VALID; size: 15.25GB; nevents: 284.00k; release: 9_4_7; last modified: 2019-02-21 02:43:27"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-550_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-550_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-550_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_550_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_550_hh_4t"),
   ("nof_db_events",         200000),
@@ -389,11 +389,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-550_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 10.73GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-17 12:59:28"),
+  ("comment",               "100.0%; status: VALID; size: 10.73GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-17 12:59:28"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-600_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-600_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-600_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_600_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_600_hh_4t"),
   ("nof_db_events",         198000),
@@ -402,11 +402,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-600_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 10.88GB; nevents: 198.00k; release: 9_4_7; last modified: 2018-10-13 06:01:27"),
+  ("comment",               "100.0%; status: VALID; size: 10.88GB; nevents: 198.00k; release: 9_4_7; last modified: 2018-10-13 06:01:27"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-650_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-650_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-650_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_650_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_650_hh_4t"),
   ("nof_db_events",         200000),
@@ -415,11 +415,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-650_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.00GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-15 04:58:31"),
+  ("comment",               "100.0%; status: VALID; size: 11.00GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-15 04:58:31"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-700_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-700_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-700_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_700_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_700_hh_4t"),
   ("nof_db_events",         189000),
@@ -428,11 +428,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-700_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 10.56GB; nevents: 189.00k; release: 9_4_7; last modified: 2018-10-17 12:38:36"),
+  ("comment",               "100.0%; status: VALID; size: 10.56GB; nevents: 189.00k; release: 9_4_7; last modified: 2018-10-17 12:38:36"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-750_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-750_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-750_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_750_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_750_hh_4t"),
   ("nof_db_events",         196000),
@@ -441,11 +441,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-750_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.13GB; nevents: 196.00k; release: 9_4_7; last modified: 2018-10-13 06:13:15"),
+  ("comment",               "100.0%; status: VALID; size: 11.13GB; nevents: 196.00k; release: 9_4_7; last modified: 2018-10-13 06:13:15"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-800_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-800_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-800_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_800_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_800_hh_4t"),
   ("nof_db_events",         200000),
@@ -454,11 +454,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-800_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.30GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-17 12:14:08"),
+  ("comment",               "100.0%; status: VALID; size: 11.30GB; nevents: 200.00k; release: 9_4_7; last modified: 2018-10-17 12:14:08"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-850_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4Tau_M-850_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-850_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_850_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_850_hh_4t"),
   ("nof_db_events",         194000),
@@ -467,11 +467,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-850_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.27GB; nevents: 194.00k; release: 9_4_7; last modified: 2019-04-07 02:09:25"),
+  ("comment",               "100.0%; status: VALID; size: 11.27GB; nevents: 194.00k; release: 9_4_7; last modified: 2019-04-07 02:09:25"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-900_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-900_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-900_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-"),
   ("sample_category",       "signal_ggf_spin2_900_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_900_hh_4t"),
   ("nof_db_events",         100000),
@@ -480,11 +480,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-900_narrow_13TeV-madgraph_cor
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 5.74GB; nevents: 100.00k; release: 9_4_7; last modified: 2018-10-18 02:19:56"),
+  ("comment",               "100.0%; status: VALID; size: 5.74GB; nevents: 100.00k; release: 9_4_7; last modified: 2018-10-18 02:19:56"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-1000_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4Tau_M-1000_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4Tau_M-1000_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14"),
   ("sample_category",       "signal_ggf_spin2_1000_hh_tttt"),
   ("process_name_specific", "signal_ggf_spin2_1000_hh_4t"),
   ("nof_db_events",         100000),
@@ -493,11 +493,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4Tau_M-1000_narrow_13TeV-madgraph_co
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 5.92GB; nevents: 100.00k; release: 9_4_7; last modified: 2018-10-15 05:35:32"),
+  ("comment",               "100.0%; status: VALID; size: 5.92GB; nevents: 100.00k; release: 9_4_7; last modified: 2018-10-15 05:35:32"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-250_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-250_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-250_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_250_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_250_hh_2v2t"),
   ("nof_db_events",         399997),
@@ -506,11 +506,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-250_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.34GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-23 17:13:36"),
+  ("comment",               "100.0%; status: VALID; size: 20.34GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-23 17:13:36"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_260_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_260_hh_2v2t"),
   ("nof_db_events",         399993),
@@ -519,11 +519,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.53GB; nevents: 399.99k; release: 9_4_7; last modified: 2019-03-16 09:59:03"),
+  ("comment",               "100.0%; status: VALID; size: 19.53GB; nevents: 399.99k; release: 9_4_7; last modified: 2019-03-16 09:59:03"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_270_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_270_hh_2v2t"),
   ("nof_db_events",         399995),
@@ -532,11 +532,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.47GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-16 17:37:41"),
+  ("comment",               "100.0%; status: VALID; size: 19.47GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-16 17:37:41"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-280_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-280_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-280_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_280_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_280_hh_2v2t"),
   ("nof_db_events",         379996),
@@ -545,11 +545,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-280_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.59GB; nevents: 380.00k; release: 9_4_7; last modified: 2019-03-16 22:22:46"),
+  ("comment",               "100.0%; status: VALID; size: 19.59GB; nevents: 380.00k; release: 9_4_7; last modified: 2019-03-16 22:22:46"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-300_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-300_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-300_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_300_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_300_hh_2v2t"),
   ("nof_db_events",         299994),
@@ -558,11 +558,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-300_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 14.92GB; nevents: 299.99k; release: 9_4_7; last modified: 2019-03-04 08:52:20"),
+  ("comment",               "100.0%; status: VALID; size: 14.92GB; nevents: 299.99k; release: 9_4_7; last modified: 2019-03-04 08:52:20"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-320_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-320_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-320_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_320_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_320_hh_2v2t"),
   ("nof_db_events",         299998),
@@ -571,11 +571,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-320_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.00GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-13 17:04:54"),
+  ("comment",               "100.0%; status: VALID; size: 15.00GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-13 17:04:54"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-350_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-350_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-350_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_350_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_350_hh_2v2t"),
   ("nof_db_events",         299990),
@@ -584,11 +584,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-350_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.24GB; nevents: 299.99k; release: 9_4_7; last modified: 2019-03-11 10:06:19"),
+  ("comment",               "100.0%; status: VALID; size: 15.24GB; nevents: 299.99k; release: 9_4_7; last modified: 2019-03-11 10:06:19"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-400_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-400_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-400_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_400_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_400_hh_2v2t"),
   ("nof_db_events",         286992),
@@ -597,11 +597,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-400_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 14.88GB; nevents: 286.99k; release: 9_4_7; last modified: 2019-03-16 09:50:17"),
+  ("comment",               "100.0%; status: VALID; size: 14.88GB; nevents: 286.99k; release: 9_4_7; last modified: 2019-03-16 09:50:17"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-450_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-450_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-450_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_450_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_450_hh_2v2t"),
   ("nof_db_events",         291993),
@@ -610,11 +610,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-450_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.42GB; nevents: 291.99k; release: 9_4_7; last modified: 2019-03-12 20:44:40"),
+  ("comment",               "100.0%; status: VALID; size: 15.42GB; nevents: 291.99k; release: 9_4_7; last modified: 2019-03-12 20:44:40"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-500_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-500_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-500_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_500_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_500_hh_2v2t"),
   ("nof_db_events",         269995),
@@ -623,11 +623,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-500_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 14.44GB; nevents: 270.00k; release: 9_4_7; last modified: 2019-03-18 20:00:55"),
+  ("comment",               "100.0%; status: VALID; size: 14.44GB; nevents: 270.00k; release: 9_4_7; last modified: 2019-03-18 20:00:55"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-550_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo2V2Tau_M-550_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-550_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_550_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_550_hh_2v2t"),
   ("nof_db_events",         299996),
@@ -636,11 +636,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-550_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 16.22GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-20 23:51:08"),
+  ("comment",               "100.0%; status: VALID; size: 16.22GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-20 23:51:08"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-600_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-600_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-600_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2"),
   ("sample_category",       "signal_ggf_spin0_600_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_600_hh_2v2t"),
   ("nof_db_events",         195995),
@@ -649,11 +649,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-600_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 10.73GB; nevents: 196.00k; release: 9_4_7; last modified: 2019-04-01 07:39:54"),
+  ("comment",               "100.0%; status: VALID; size: 10.73GB; nevents: 196.00k; release: 9_4_7; last modified: 2019-04-01 07:39:54"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-650_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-650_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-650_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_650_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_650_hh_2v2t"),
   ("nof_db_events",         199995),
@@ -662,11 +662,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-650_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.04GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-11 15:01:30"),
+  ("comment",               "100.0%; status: VALID; size: 11.04GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-11 15:01:30"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-700_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun26_GluGluToRadionToHHTo2V2Tau_M-700_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-700_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_700_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_700_hh_2v2t"),
   ("nof_db_events",         191997),
@@ -675,11 +675,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-700_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 10.77GB; nevents: 192.00k; release: 9_4_7; last modified: 2019-03-16 13:37:30"),
+  ("comment",               "100.0%; status: VALID; size: 10.77GB; nevents: 192.00k; release: 9_4_7; last modified: 2019-03-16 13:37:30"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-750_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun26_GluGluToRadionToHHTo2V2Tau_M-750_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-750_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_750_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_750_hh_2v2t"),
   ("nof_db_events",         199998),
@@ -688,11 +688,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-750_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.66GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-11 16:47:10"),
+  ("comment",               "100.0%; status: VALID; size: 11.66GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-11 16:47:10"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-800_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo2V2Tau_M-800_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-800_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_800_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_800_hh_2v2t"),
   ("nof_db_events",         199999),
@@ -701,11 +701,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-800_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.77GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-11 15:02:00"),
+  ("comment",               "100.0%; status: VALID; size: 11.77GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-11 15:02:00"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-850_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jul22_GluGluToRadionToHHTo2V2Tau_M-850_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-850_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_850_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_850_hh_2v2t"),
   ("nof_db_events",         191996),
@@ -714,11 +714,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-850_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.34GB; nevents: 192.00k; release: 9_4_7; last modified: 2019-03-10 20:18:51"),
+  ("comment",               "100.0%; status: VALID; size: 11.34GB; nevents: 192.00k; release: 9_4_7; last modified: 2019-03-10 20:18:51"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-900_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo2V2Tau_M-900_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct18_GluGluToRadionToHHTo2V2Tau_M-900_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_900_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_900_hh_2v2t"),
   ("nof_db_events",         199997),
@@ -727,11 +727,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-900_narrow_13TeV-madgraph_correct
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.42GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-08 09:27:21"),
+  ("comment",               "100.0%; status: VALID; size: 11.42GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-08 09:27:21"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-1000_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToRadionToHHTo2V2Tau_M-1000_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo2V2Tau_M-1000_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_1000_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin0_1000_hh_2v2t"),
   ("nof_db_events",         99998),
@@ -740,11 +740,11 @@ meta_dictionary["/GluGluToRadionToHHTo2V2Tau_M-1000_narrow_13TeV-madgraph_correc
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 5.78GB; nevents: 100.00k; release: 9_4_7; last modified: 2019-03-07 02:52:45"),
+  ("comment",               "100.0%; status: VALID; size: 5.78GB; nevents: 100.00k; release: 9_4_7; last modified: 2019-03-07 02:52:45"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-250_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-250_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-250_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_250_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_250_hh_2v2t"),
   ("nof_db_events",         394995),
@@ -753,11 +753,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-250_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.49GB; nevents: 395.00k; release: 9_4_7; last modified: 2019-05-03 23:36:31"),
+  ("comment",               "100.0%; status: VALID; size: 19.49GB; nevents: 395.00k; release: 9_4_7; last modified: 2019-05-03 23:36:31"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_260_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_260_hh_2v2t"),
   ("nof_db_events",         395995),
@@ -766,11 +766,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-260_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.81GB; nevents: 396.00k; release: 9_4_7; last modified: 2019-03-15 02:06:50"),
+  ("comment",               "100.0%; status: VALID; size: 19.81GB; nevents: 396.00k; release: 9_4_7; last modified: 2019-03-15 02:06:50"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jul09_GluGluToBulkGravitonToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_270_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_270_hh_2v2t"),
   ("nof_db_events",         399996),
@@ -779,11 +779,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-270_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.95GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-04 10:35:16"),
+  ("comment",               "100.0%; status: VALID; size: 19.95GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-04 10:35:16"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-280_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-280_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-280_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_280_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_280_hh_2v2t"),
   ("nof_db_events",         394995),
@@ -792,11 +792,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-280_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.92GB; nevents: 395.00k; release: 9_4_7; last modified: 2019-03-12 20:46:16"),
+  ("comment",               "100.0%; status: VALID; size: 19.92GB; nevents: 395.00k; release: 9_4_7; last modified: 2019-03-12 20:46:16"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-300_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo2V2Tau_M-300_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-300_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_300_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_300_hh_2v2t"),
   ("nof_db_events",         299995),
@@ -805,11 +805,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-300_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.23GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-14 08:08:47"),
+  ("comment",               "100.0%; status: VALID; size: 15.23GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-14 08:08:47"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-320_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-320_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-320_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_320_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_320_hh_2v2t"),
   ("nof_db_events",         284992),
@@ -818,11 +818,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-320_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 14.57GB; nevents: 284.99k; release: 9_4_7; last modified: 2019-03-15 08:55:22"),
+  ("comment",               "100.0%; status: VALID; size: 14.57GB; nevents: 284.99k; release: 9_4_7; last modified: 2019-03-15 08:55:22"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-350_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo2V2Tau_M-350_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-350_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_350_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_350_hh_2v2t"),
   ("nof_db_events",         299995),
@@ -831,11 +831,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-350_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.71GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-15 02:11:19"),
+  ("comment",               "100.0%; status: VALID; size: 15.71GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-15 02:11:19"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-400_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo2V2Tau_M-400_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-400_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_400_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_400_hh_2v2t"),
   ("nof_db_events",         289998),
@@ -844,11 +844,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-400_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.48GB; nevents: 290.00k; release: 9_4_7; last modified: 2019-03-13 20:40:21"),
+  ("comment",               "100.0%; status: VALID; size: 15.48GB; nevents: 290.00k; release: 9_4_7; last modified: 2019-03-13 20:40:21"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-450_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo2V2Tau_M-450_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-450_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_450_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_450_hh_2v2t"),
   ("nof_db_events",         279993),
@@ -857,11 +857,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-450_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.20GB; nevents: 279.99k; release: 9_4_7; last modified: 2019-03-18 20:02:05"),
+  ("comment",               "100.0%; status: VALID; size: 15.20GB; nevents: 279.99k; release: 9_4_7; last modified: 2019-03-18 20:02:05"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-500_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-500_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-500_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_500_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_500_hh_2v2t"),
   ("nof_db_events",         199997),
@@ -870,11 +870,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-500_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.04GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-12 20:46:07"),
+  ("comment",               "100.0%; status: VALID; size: 11.04GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-12 20:46:07"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-550_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo2V2Tau_M-550_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-550_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_550_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_550_hh_2v2t"),
   ("nof_db_events",         199995),
@@ -883,11 +883,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-550_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.24GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-11 04:57:17"),
+  ("comment",               "100.0%; status: VALID; size: 11.24GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-11 04:57:17"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-600_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-600_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-600_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_600_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_600_hh_2v2t"),
   ("nof_db_events",         199996),
@@ -896,11 +896,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-600_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.27GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-12 20:36:49"),
+  ("comment",               "100.0%; status: VALID; size: 11.27GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-12 20:36:49"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-650_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-650_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-650_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_650_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_650_hh_2v2t"),
   ("nof_db_events",         195999),
@@ -909,11 +909,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-650_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.15GB; nevents: 196.00k; release: 9_4_7; last modified: 2019-03-11 06:53:08"),
+  ("comment",               "100.0%; status: VALID; size: 11.15GB; nevents: 196.00k; release: 9_4_7; last modified: 2019-03-11 06:53:08"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-700_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-700_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-700_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_700_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_700_hh_2v2t"),
   ("nof_db_events",         195997),
@@ -922,11 +922,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-700_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.27GB; nevents: 196.00k; release: 9_4_7; last modified: 2019-03-14 16:55:24"),
+  ("comment",               "100.0%; status: VALID; size: 11.27GB; nevents: 196.00k; release: 9_4_7; last modified: 2019-03-14 16:55:24"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-750_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-750_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-750_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_750_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_750_hh_2v2t"),
   ("nof_db_events",         199999),
@@ -935,11 +935,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-750_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.37GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-07 05:54:49"),
+  ("comment",               "100.0%; status: VALID; size: 11.37GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-07 05:54:49"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-800_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-800_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-800_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_800_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_800_hh_2v2t"),
   ("nof_db_events",         199998),
@@ -948,11 +948,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-800_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.49GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-14 14:03:02"),
+  ("comment",               "100.0%; status: VALID; size: 11.49GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-14 14:03:02"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-850_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jul07_GluGluToBulkGravitonToHHTo2V2Tau_M-850_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-850_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_850_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_850_hh_2v2t"),
   ("nof_db_events",         191995),
@@ -961,11 +961,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-850_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.61GB; nevents: 192.00k; release: 9_4_7; last modified: 2019-03-22 09:58:47"),
+  ("comment",               "100.0%; status: VALID; size: 11.61GB; nevents: 192.00k; release: 9_4_7; last modified: 2019-03-22 09:58:47"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-900_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-900_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-900_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v1"),
   ("sample_category",       "signal_ggf_spin2_900_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_900_hh_2v2t"),
   ("nof_db_events",         99999),
@@ -974,11 +974,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-900_narrow_13TeV-madgraph_c
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 5.98GB; nevents: 100.00k; release: 9_4_7; last modified: 2019-03-11 21:40:18"),
+  ("comment",               "100.0%; status: VALID; size: 5.98GB; nevents: 100.00k; release: 9_4_7; last modified: 2019-03-11 21:40:18"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-1000_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo2V2Tau_M-1000_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo2V2Tau_M-1000_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v"),
   ("sample_category",       "signal_ggf_spin2_1000_hh_wwtt"),
   ("process_name_specific", "signal_ggf_spin2_1000_hh_2v2t"),
   ("nof_db_events",         99999),
@@ -987,11 +987,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo2V2Tau_M-1000_narrow_13TeV-madgraph_
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 5.97GB; nevents: 100.00k; release: 9_4_7; last modified: 2019-03-11 03:38:15"),
+  ("comment",               "100.0%; status: VALID; size: 5.97GB; nevents: 100.00k; release: 9_4_7; last modified: 2019-03-11 03:38:15"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-250_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-250_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-250_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_250_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_250_hh_4v"),
   ("nof_db_events",         399999),
@@ -1000,11 +1000,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-250_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.46GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-14 09:52:36"),
+  ("comment",               "100.0%; status: VALID; size: 20.46GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-14 09:52:36"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-260_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_260_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_260_hh_4v"),
   ("nof_db_events",         399998),
@@ -1013,11 +1013,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-260_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.55GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-13 02:59:43"),
+  ("comment",               "100.0%; status: VALID; size: 19.55GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-13 02:59:43"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-270_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_270_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_270_hh_4v"),
   ("nof_db_events",         386000),
@@ -1026,11 +1026,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-270_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 18.99GB; nevents: 386.00k; release: 9_4_7; last modified: 2019-03-13 20:44:46"),
+  ("comment",               "100.0%; status: VALID; size: 18.99GB; nevents: 386.00k; release: 9_4_7; last modified: 2019-03-13 20:44:46"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-280_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-280_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-280_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_280_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_280_hh_4v"),
   ("nof_db_events",         388998),
@@ -1039,11 +1039,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-280_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.25GB; nevents: 389.00k; release: 9_4_7; last modified: 2019-03-11 10:04:54"),
+  ("comment",               "100.0%; status: VALID; size: 20.25GB; nevents: 389.00k; release: 9_4_7; last modified: 2019-03-11 10:04:54"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-300_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-300_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-300_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_300_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_300_hh_4v"),
   ("nof_db_events",         299999),
@@ -1052,11 +1052,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-300_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.10GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-13 02:58:52"),
+  ("comment",               "100.0%; status: VALID; size: 15.10GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-13 02:58:52"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-320_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-320_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-320_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_320_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_320_hh_4v"),
   ("nof_db_events",         299998),
@@ -1065,11 +1065,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-320_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.31GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-11 06:49:53"),
+  ("comment",               "100.0%; status: VALID; size: 15.31GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-11 06:49:53"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-350_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-350_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-350_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_350_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_350_hh_4v"),
   ("nof_db_events",         291998),
@@ -1078,11 +1078,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-350_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.12GB; nevents: 292.00k; release: 9_4_7; last modified: 2019-03-14 20:21:35"),
+  ("comment",               "100.0%; status: VALID; size: 15.12GB; nevents: 292.00k; release: 9_4_7; last modified: 2019-03-14 20:21:35"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-400_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-400_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-400_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_400_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_400_hh_4v"),
   ("nof_db_events",         299999),
@@ -1091,11 +1091,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-400_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.99GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-13 20:39:39"),
+  ("comment",               "100.0%; status: VALID; size: 15.99GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-13 20:39:39"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-450_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-450_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-450_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_450_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_450_hh_4v"),
   ("nof_db_events",         292000),
@@ -1104,11 +1104,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-450_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.87GB; nevents: 292.00k; release: 9_4_7; last modified: 2019-03-16 05:47:35"),
+  ("comment",               "100.0%; status: VALID; size: 15.87GB; nevents: 292.00k; release: 9_4_7; last modified: 2019-03-16 05:47:35"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-500_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-500_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-500_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_500_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_500_hh_4v"),
   ("nof_db_events",         299997),
@@ -1117,11 +1117,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-500_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 16.48GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-13 04:47:53"),
+  ("comment",               "100.0%; status: VALID; size: 16.48GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-13 04:47:53"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-550_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-550_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-550_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_550_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_550_hh_4v"),
   ("nof_db_events",         299998),
@@ -1130,11 +1130,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-550_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 16.71GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-10 20:18:40"),
+  ("comment",               "100.0%; status: VALID; size: 16.71GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-03-10 20:18:40"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-600_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-600_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-600_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_600_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_600_hh_4v"),
   ("nof_db_events",         195999),
@@ -1143,11 +1143,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-600_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.10GB; nevents: 196.00k; release: 9_4_7; last modified: 2019-03-12 21:44:13"),
+  ("comment",               "100.0%; status: VALID; size: 11.10GB; nevents: 196.00k; release: 9_4_7; last modified: 2019-03-12 21:44:13"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-650_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-650_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-650_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_650_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_650_hh_4v"),
   ("nof_db_events",         199999),
@@ -1156,11 +1156,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-650_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.47GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-27 00:26:57"),
+  ("comment",               "100.0%; status: VALID; size: 11.47GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-27 00:26:57"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-700_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-700_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-700_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_700_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_700_hh_4v"),
   ("nof_db_events",         200000),
@@ -1169,11 +1169,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-700_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.59GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-14 16:59:07"),
+  ("comment",               "100.0%; status: VALID; size: 11.59GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-14 16:59:07"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-750_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-750_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-750_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_750_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_750_hh_4v"),
   ("nof_db_events",         192000),
@@ -1182,11 +1182,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-750_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.59GB; nevents: 192.00k; release: 9_4_7; last modified: 2019-03-11 03:38:48"),
+  ("comment",               "100.0%; status: VALID; size: 11.59GB; nevents: 192.00k; release: 9_4_7; last modified: 2019-03-11 03:38:48"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-800_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-800_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-800_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_800_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_800_hh_4v"),
   ("nof_db_events",         199997),
@@ -1195,11 +1195,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-800_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 12.06GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-08 17:40:59"),
+  ("comment",               "100.0%; status: VALID; size: 12.06GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-08 17:40:59"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-850_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-850_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-850_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_850_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_850_hh_4v"),
   ("nof_db_events",         199999),
@@ -1208,11 +1208,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-850_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 12.16GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-10 21:32:56"),
+  ("comment",               "100.0%; status: VALID; size: 12.16GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-10 21:32:56"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-900_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-900_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-900_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin0_900_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_900_hh_4v"),
   ("nof_db_events",         200000),
@@ -1221,11 +1221,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-900_narrow_13TeV-madgraph_correctedcf
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.89GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-11 03:38:58"),
+  ("comment",               "100.0%; status: VALID; size: 11.89GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-11 03:38:58"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-1000_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToRadionToHHTo4V_M-1000_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToRadionToHHTo4V_M-1000_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2"),
   ("sample_category",       "signal_ggf_spin0_1000_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_1000_hh_4v"),
   ("nof_db_events",         99999),
@@ -1234,11 +1234,11 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-1000_narrow_13TeV-madgraph_correctedc
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 5.93GB; nevents: 100.00k; release: 9_4_7; last modified: 2019-05-09 08:59:43"),
+  ("comment",               "100.0%; status: VALID; size: 5.93GB; nevents: 100.00k; release: 9_4_7; last modified: 2019-05-09 08:59:43"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-250_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-250_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-250_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_250_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_250_hh_4v"),
   ("nof_db_events",         399996),
@@ -1247,11 +1247,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-250_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.07GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-05-10 23:05:41"),
+  ("comment",               "100.0%; status: VALID; size: 20.07GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-05-10 23:05:41"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-260_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-260_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_260_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_260_hh_4v"),
   ("nof_db_events",         399997),
@@ -1260,11 +1260,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-260_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.88GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-14 13:55:46"),
+  ("comment",               "100.0%; status: VALID; size: 19.88GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-14 13:55:46"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-270_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-270_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_270_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_270_hh_4v"),
   ("nof_db_events",         400000),
@@ -1273,11 +1273,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-270_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.20GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-12 20:46:36"),
+  ("comment",               "100.0%; status: VALID; size: 20.20GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-12 20:46:36"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-280_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-280_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-280_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_280_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_280_hh_4v"),
   ("nof_db_events",         391999),
@@ -1286,11 +1286,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-280_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.89GB; nevents: 392.00k; release: 9_4_7; last modified: 2019-05-17 07:27:19"),
+  ("comment",               "100.0%; status: VALID; size: 19.89GB; nevents: 392.00k; release: 9_4_7; last modified: 2019-05-17 07:27:19"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-300_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-300_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-300_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_300_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_300_hh_4v"),
   ("nof_db_events",         383998),
@@ -1299,11 +1299,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-300_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.71GB; nevents: 384.00k; release: 9_4_7; last modified: 2019-05-15 22:27:34"),
+  ("comment",               "100.0%; status: VALID; size: 19.71GB; nevents: 384.00k; release: 9_4_7; last modified: 2019-05-15 22:27:34"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-320_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-320_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-320_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_320_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_320_hh_4v"),
   ("nof_db_events",         300000),
@@ -1312,11 +1312,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-320_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 15.66GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-05-19 00:22:01"),
+  ("comment",               "100.0%; status: VALID; size: 15.66GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-05-19 00:22:01"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-350_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-350_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-350_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_350_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_350_hh_4v"),
   ("nof_db_events",         299999),
@@ -1325,11 +1325,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-350_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 16.01GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-05-17 12:41:42"),
+  ("comment",               "100.0%; status: VALID; size: 16.01GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-05-17 12:41:42"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-400_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4V_M-400_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-400_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_400_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_400_hh_4v"),
   ("nof_db_events",         300000),
@@ -1338,11 +1338,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-400_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 16.48GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-05-19 11:17:41"),
+  ("comment",               "100.0%; status: VALID; size: 16.48GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-05-19 11:17:41"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-450_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-450_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-450_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_450_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_450_hh_4v"),
   ("nof_db_events",         287998),
@@ -1351,11 +1351,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-450_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 16.21GB; nevents: 288.00k; release: 9_4_7; last modified: 2019-03-15 08:47:13"),
+  ("comment",               "100.0%; status: VALID; size: 16.21GB; nevents: 288.00k; release: 9_4_7; last modified: 2019-03-15 08:47:13"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-500_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-500_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-500_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_500_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_500_hh_4v"),
   ("nof_db_events",         299997),
@@ -1364,11 +1364,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-500_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 17.05GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-05-21 18:09:10"),
+  ("comment",               "100.0%; status: VALID; size: 17.05GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-05-21 18:09:10"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-550_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-550_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-550_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_550_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_550_hh_4v"),
   ("nof_db_events",         299998),
@@ -1377,11 +1377,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-550_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 17.21GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-05-12 13:31:18"),
+  ("comment",               "100.0%; status: VALID; size: 17.21GB; nevents: 300.00k; release: 9_4_7; last modified: 2019-05-12 13:31:18"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-600_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4V_M-600_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-600_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_600_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_600_hh_4v"),
   ("nof_db_events",         191998),
@@ -1390,11 +1390,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-600_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.18GB; nevents: 192.00k; release: 9_4_7; last modified: 2019-05-23 14:27:10"),
+  ("comment",               "100.0%; status: VALID; size: 11.18GB; nevents: 192.00k; release: 9_4_7; last modified: 2019-05-23 14:27:10"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-650_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-650_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-650_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_650_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_650_hh_4v"),
   ("nof_db_events",         200000),
@@ -1403,11 +1403,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-650_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.73GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-05-11 00:11:58"),
+  ("comment",               "100.0%; status: VALID; size: 11.73GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-05-11 00:11:58"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-700_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-700_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-700_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_700_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_700_hh_4v"),
   ("nof_db_events",         191999),
@@ -1416,11 +1416,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-700_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.31GB; nevents: 192.00k; release: 9_4_7; last modified: 2019-03-13 17:02:18"),
+  ("comment",               "100.0%; status: VALID; size: 11.31GB; nevents: 192.00k; release: 9_4_7; last modified: 2019-03-13 17:02:18"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-750_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4V_M-750_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-750_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_750_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_750_hh_4v"),
   ("nof_db_events",         199997),
@@ -1429,11 +1429,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-750_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.82GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-14 16:49:49"),
+  ("comment",               "100.0%; status: VALID; size: 11.82GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-14 16:49:49"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-800_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-800_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-800_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_800_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_800_hh_4v"),
   ("nof_db_events",         199998),
@@ -1442,11 +1442,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-800_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 11.93GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-13 20:45:26"),
+  ("comment",               "100.0%; status: VALID; size: 11.93GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-13 20:45:26"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-850_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToBulkGravitonToHHTo4V_M-850_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-850_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_850_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_850_hh_4v"),
   ("nof_db_events",         199999),
@@ -1455,11 +1455,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-850_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 12.46GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-14 01:46:21"),
+  ("comment",               "100.0%; status: VALID; size: 12.46GB; nevents: 200.00k; release: 9_4_7; last modified: 2019-03-14 01:46:21"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-900_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jul07_GluGluToBulkGravitonToHHTo4V_M-900_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-900_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_spin2_900_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_900_hh_4v"),
   ("nof_db_events",         99998),
@@ -1468,11 +1468,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-900_narrow_13TeV-madgraph_corre
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 6.16GB; nevents: 100.00k; release: 9_4_7; last modified: 2019-03-14 22:53:43"),
+  ("comment",               "100.0%; status: VALID; size: 6.16GB; nevents: 100.00k; release: 9_4_7; last modified: 2019-03-14 22:53:43"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-1000_narrow_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToBulkGravitonToHHTo4V_M-1000_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToBulkGravitonToHHTo4V_M-1000_narrow_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v"),
   ("sample_category",       "signal_ggf_spin2_1000_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_1000_hh_4v"),
   ("nof_db_events",         99999),
@@ -1481,11 +1481,11 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-1000_narrow_13TeV-madgraph_corr
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 6.19GB; nevents: 100.00k; release: 9_4_7; last modified: 2019-03-11 06:49:27"),
+  ("comment",               "100.0%; status: VALID; size: 6.19GB; nevents: 100.00k; release: 9_4_7; last modified: 2019-03-11 06:49:27"),
 ])
 
 meta_dictionary["/VBFHHTo4Tau_CV_1_C2V_1_C3_1_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_VBFHHTo4Tau_CV_1_C2V_1_C3_1_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_VBFHHTo4Tau_CV_1_C2V_1_C3_1_13TeV-madgraph__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_vbf_nonresonant_1_1_1_hh_tttt"),
   ("process_name_specific", "signal_vbf_nonresonant_1_1_1_hh_4t"),
   ("nof_db_events",         384000),
@@ -1494,11 +1494,11 @@ meta_dictionary["/VBFHHTo4Tau_CV_1_C2V_1_C3_1_13TeV-madgraph/RunIIFall17MiniAODv
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.52GB; nevents: 384.00k; release: 9_4_7; last modified: 2018-08-14 13:42:37"),
+  ("comment",               "100.0%; status: VALID; size: 20.52GB; nevents: 384.00k; release: 9_4_7; last modified: 2018-08-14 13:42:37"),
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_SM_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4Tau_node_SM_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4Tau_node_SM_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_sm_hh_4t"),
   ("nof_db_events",         400000),
@@ -1507,11 +1507,11 @@ meta_dictionary["/GluGluToHHTo4Tau_node_SM_13TeV-madgraph_correctedcfg/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.77GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-10-07 00:29:46"),
+  ("comment",               "100.0%; status: VALID; size: 20.77GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-10-07 00:29:46"),
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_2_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4Tau_node_2_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4Tau_node_2_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_2_hh_4t"),
   ("nof_db_events",         388000),
@@ -1520,11 +1520,11 @@ meta_dictionary["/GluGluToHHTo4Tau_node_2_13TeV-madgraph_correctedcfg/RunIIFall1
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.14GB; nevents: 388.00k; release: 9_4_7; last modified: 2018-10-04 12:13:06"),
+  ("comment",               "100.0%; status: VALID; size: 21.14GB; nevents: 388.00k; release: 9_4_7; last modified: 2018-10-04 12:13:06"),
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_3_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4Tau_node_3_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct18_GluGluToHHTo4Tau_node_3_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_3_hh_4t"),
   ("nof_db_events",         400000),
@@ -1533,11 +1533,11 @@ meta_dictionary["/GluGluToHHTo4Tau_node_3_13TeV-madgraph_correctedcfg/RunIIFall1
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.76GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-10-05 15:59:05"),
+  ("comment",               "100.0%; status: VALID; size: 20.76GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-10-05 15:59:05"),
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_7_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4Tau_node_7_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct19_GluGluToHHTo4Tau_node_7_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_7_hh_4t"),
   ("nof_db_events",         374000),
@@ -1546,11 +1546,11 @@ meta_dictionary["/GluGluToHHTo4Tau_node_7_13TeV-madgraph_correctedcfg/RunIIFall1
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.52GB; nevents: 374.00k; release: 9_4_7; last modified: 2018-10-05 15:45:55"),
+  ("comment",               "100.0%; status: VALID; size: 19.52GB; nevents: 374.00k; release: 9_4_7; last modified: 2018-10-05 15:45:55"),
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_9_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4Tau_node_9_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4Tau_node_9_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_9_hh_4t"),
   ("nof_db_events",         400000),
@@ -1559,11 +1559,11 @@ meta_dictionary["/GluGluToHHTo4Tau_node_9_13TeV-madgraph_correctedcfg/RunIIFall1
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.90GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-09-19 08:27:56"),
+  ("comment",               "100.0%; status: VALID; size: 21.90GB; nevents: 400.00k; release: 9_4_7; last modified: 2018-09-19 08:27:56"),
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_12_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4Tau_node_12_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4Tau_node_12_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_12_hh_4t"),
   ("nof_db_events",         396000),
@@ -1572,11 +1572,11 @@ meta_dictionary["/GluGluToHHTo4Tau_node_12_13TeV-madgraph_correctedcfg/RunIIFall
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.18GB; nevents: 396.00k; release: 9_4_7; last modified: 2018-10-05 06:34:17"),
+  ("comment",               "100.0%; status: VALID; size: 20.18GB; nevents: 396.00k; release: 9_4_7; last modified: 2018-10-05 06:34:17"),
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_SM_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo2V2Tau_node_SM_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo2V2Tau_node_SM_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_sm_hh_2v2t"),
   ("nof_db_events",         399996),
@@ -1585,11 +1585,11 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_SM_13TeV-madgraph_correctedcfg/RunIIFa
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.71GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-12 20:31:29"),
+  ("comment",               "100.0%; status: VALID; size: 21.71GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-12 20:31:29"),
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_2_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo2V2Tau_node_2_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo2V2Tau_node_2_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_2_hh_2v2t"),
   ("nof_db_events",         369992),
@@ -1598,11 +1598,11 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_2_13TeV-madgraph_correctedcfg/RunIIFal
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.67GB; nevents: 369.99k; release: 9_4_7; last modified: 2019-03-18 19:59:40"),
+  ("comment",               "100.0%; status: VALID; size: 20.67GB; nevents: 369.99k; release: 9_4_7; last modified: 2019-03-18 19:59:40"),
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_3_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo2V2Tau_node_3_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo2V2Tau_node_3_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_3_hh_2v2t"),
   ("nof_db_events",         392996),
@@ -1611,11 +1611,11 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_3_13TeV-madgraph_correctedcfg/RunIIFal
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.86GB; nevents: 393.00k; release: 9_4_7; last modified: 2019-03-13 01:12:35"),
+  ("comment",               "100.0%; status: VALID; size: 20.86GB; nevents: 393.00k; release: 9_4_7; last modified: 2019-03-13 01:12:35"),
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_4_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo2V2Tau_node_4_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo2V2Tau_node_4_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_4_hh_2v2t"),
   ("nof_db_events",         375989),
@@ -1624,11 +1624,11 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_4_13TeV-madgraph_correctedcfg/RunIIFal
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 19.92GB; nevents: 375.99k; release: 9_4_7; last modified: 2019-03-13 18:44:19"),
+  ("comment",               "100.0%; status: VALID; size: 19.92GB; nevents: 375.99k; release: 9_4_7; last modified: 2019-03-13 18:44:19"),
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_5_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo2V2Tau_node_5_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo2V2Tau_node_5_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_5_hh_2v2t"),
   ("nof_db_events",         399994),
@@ -1637,11 +1637,11 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_5_13TeV-madgraph_correctedcfg/RunIIFal
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.84GB; nevents: 399.99k; release: 9_4_7; last modified: 2019-03-20 22:16:15"),
+  ("comment",               "100.0%; status: VALID; size: 21.84GB; nevents: 399.99k; release: 9_4_7; last modified: 2019-03-20 22:16:15"),
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_6_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo2V2Tau_node_6_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo2V2Tau_node_6_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_6_hh_2v2t"),
   ("nof_db_events",         399992),
@@ -1650,11 +1650,11 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_6_13TeV-madgraph_correctedcfg/RunIIFal
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.12GB; nevents: 399.99k; release: 9_4_7; last modified: 2019-03-14 14:02:38"),
+  ("comment",               "100.0%; status: VALID; size: 21.12GB; nevents: 399.99k; release: 9_4_7; last modified: 2019-03-14 14:02:38"),
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_7_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo2V2Tau_node_7_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo2V2Tau_node_7_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_7_hh_2v2t"),
   ("nof_db_events",         384992),
@@ -1663,11 +1663,11 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_7_13TeV-madgraph_correctedcfg/RunIIFal
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.50GB; nevents: 384.99k; release: 9_4_7; last modified: 2019-03-13 18:51:06"),
+  ("comment",               "100.0%; status: VALID; size: 20.50GB; nevents: 384.99k; release: 9_4_7; last modified: 2019-03-13 18:51:06"),
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_8_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo2V2Tau_node_8_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo2V2Tau_node_8_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_8_hh_2v2t"),
   ("nof_db_events",         399997),
@@ -1676,11 +1676,11 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_8_13TeV-madgraph_correctedcfg/RunIIFal
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.04GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-10 21:33:53"),
+  ("comment",               "100.0%; status: VALID; size: 21.04GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-10 21:33:53"),
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_9_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo2V2Tau_node_9_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo2V2Tau_node_9_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_9_hh_2v2t"),
   ("nof_db_events",         399991),
@@ -1689,11 +1689,11 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_9_13TeV-madgraph_correctedcfg/RunIIFal
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 22.60GB; nevents: 399.99k; release: 9_4_7; last modified: 2019-03-08 20:38:53"),
+  ("comment",               "100.0%; status: VALID; size: 22.60GB; nevents: 399.99k; release: 9_4_7; last modified: 2019-03-08 20:38:53"),
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_10_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo2V2Tau_node_10_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo2V2Tau_node_10_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_10_hh_2v2t"),
   ("nof_db_events",         399986),
@@ -1702,11 +1702,11 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_10_13TeV-madgraph_correctedcfg/RunIIFa
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.18GB; nevents: 399.99k; release: 9_4_7; last modified: 2019-03-11 08:41:47"),
+  ("comment",               "100.0%; status: VALID; size: 21.18GB; nevents: 399.99k; release: 9_4_7; last modified: 2019-03-11 08:41:47"),
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_11_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jul09_GluGluToHHTo2V2Tau_node_11_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo2V2Tau_node_11_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_11_hh_2v2t"),
   ("nof_db_events",         395994),
@@ -1715,11 +1715,11 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_11_13TeV-madgraph_correctedcfg/RunIIFa
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.01GB; nevents: 395.99k; release: 9_4_7; last modified: 2019-03-12 20:40:51"),
+  ("comment",               "100.0%; status: VALID; size: 21.01GB; nevents: 395.99k; release: 9_4_7; last modified: 2019-03-12 20:40:51"),
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_12_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo2V2Tau_node_12_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo2V2Tau_node_12_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_12_hh_2v2t"),
   ("nof_db_events",         399993),
@@ -1728,11 +1728,11 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_12_13TeV-madgraph_correctedcfg/RunIIFa
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.05GB; nevents: 399.99k; release: 9_4_7; last modified: 2019-03-16 11:40:55"),
+  ("comment",               "100.0%; status: VALID; size: 21.05GB; nevents: 399.99k; release: 9_4_7; last modified: 2019-03-16 11:40:55"),
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_SM_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_SM_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4V_node_SM_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_sm_hh_4v"),
   ("nof_db_events",         379997),
@@ -1741,11 +1741,11 @@ meta_dictionary["/GluGluToHHTo4V_node_SM_13TeV-madgraph_correctedcfg/RunIIFall17
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.70GB; nevents: 380.00k; release: 9_4_7; last modified: 2019-03-12 20:29:20"),
+  ("comment",               "100.0%; status: VALID; size: 20.70GB; nevents: 380.00k; release: 9_4_7; last modified: 2019-03-12 20:29:20"),
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_2_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_2_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4V_node_2_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_2_hh_4v"),
   ("nof_db_events",         399999),
@@ -1754,11 +1754,11 @@ meta_dictionary["/GluGluToHHTo4V_node_2_13TeV-madgraph_correctedcfg/RunIIFall17M
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 23.05GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-11 06:49:43"),
+  ("comment",               "100.0%; status: VALID; size: 23.05GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-11 06:49:43"),
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_3_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_3_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4V_node_3_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_3_hh_4v"),
   ("nof_db_events",         382999),
@@ -1767,11 +1767,11 @@ meta_dictionary["/GluGluToHHTo4V_node_3_13TeV-madgraph_correctedcfg/RunIIFall17M
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 20.94GB; nevents: 383.00k; release: 9_4_7; last modified: 2019-03-23 09:29:26"),
+  ("comment",               "100.0%; status: VALID; size: 20.94GB; nevents: 383.00k; release: 9_4_7; last modified: 2019-03-23 09:29:26"),
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_4_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_4_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4V_node_4_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_4_hh_4v"),
   ("nof_db_events",         391999),
@@ -1780,11 +1780,11 @@ meta_dictionary["/GluGluToHHTo4V_node_4_13TeV-madgraph_correctedcfg/RunIIFall17M
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.34GB; nevents: 392.00k; release: 9_4_7; last modified: 2019-03-14 14:02:05"),
+  ("comment",               "100.0%; status: VALID; size: 21.34GB; nevents: 392.00k; release: 9_4_7; last modified: 2019-03-14 14:02:05"),
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_5_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo4V_node_5_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4V_node_5_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_5_hh_4v"),
   ("nof_db_events",         399999),
@@ -1793,11 +1793,11 @@ meta_dictionary["/GluGluToHHTo4V_node_5_13TeV-madgraph_correctedcfg/RunIIFall17M
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 22.42GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-11 03:38:26"),
+  ("comment",               "100.0%; status: VALID; size: 22.42GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-11 03:38:26"),
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_6_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_6_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4V_node_6_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_6_hh_4v"),
   ("nof_db_events",         396000),
@@ -1806,11 +1806,11 @@ meta_dictionary["/GluGluToHHTo4V_node_6_13TeV-madgraph_correctedcfg/RunIIFall17M
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.47GB; nevents: 396.00k; release: 9_4_7; last modified: 2019-03-15 02:11:57"),
+  ("comment",               "100.0%; status: VALID; size: 21.47GB; nevents: 396.00k; release: 9_4_7; last modified: 2019-03-15 02:11:57"),
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_7_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_7_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4V_node_7_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_7_hh_4v"),
   ("nof_db_events",         400000),
@@ -1819,11 +1819,11 @@ meta_dictionary["/GluGluToHHTo4V_node_7_13TeV-madgraph_correctedcfg/RunIIFall17M
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.85GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-15 02:07:04"),
+  ("comment",               "100.0%; status: VALID; size: 21.85GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-15 02:07:04"),
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_8_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_8_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4V_node_8_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_8_hh_4v"),
   ("nof_db_events",         395995),
@@ -1832,11 +1832,11 @@ meta_dictionary["/GluGluToHHTo4V_node_8_13TeV-madgraph_correctedcfg/RunIIFall17M
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.29GB; nevents: 396.00k; release: 9_4_7; last modified: 2019-03-16 08:10:56"),
+  ("comment",               "100.0%; status: VALID; size: 21.29GB; nevents: 396.00k; release: 9_4_7; last modified: 2019-03-16 08:10:56"),
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_9_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_9_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4V_node_9_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_9_hh_4v"),
   ("nof_db_events",         399997),
@@ -1845,11 +1845,11 @@ meta_dictionary["/GluGluToHHTo4V_node_9_13TeV-madgraph_correctedcfg/RunIIFall17M
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 23.47GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-14 20:29:02"),
+  ("comment",               "100.0%; status: VALID; size: 23.47GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-14 20:29:02"),
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_10_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_10_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4V_node_10_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_10_hh_4v"),
   ("nof_db_events",         391996),
@@ -1858,11 +1858,11 @@ meta_dictionary["/GluGluToHHTo4V_node_10_13TeV-madgraph_correctedcfg/RunIIFall17
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.24GB; nevents: 392.00k; release: 9_4_7; last modified: 2019-03-12 20:39:09"),
+  ("comment",               "100.0%; status: VALID; size: 21.24GB; nevents: 392.00k; release: 9_4_7; last modified: 2019-03-12 20:39:09"),
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_11_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun17_GluGluToHHTo4V_node_11_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4V_node_11_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_11_hh_4v"),
   ("nof_db_events",         399997),
@@ -1871,11 +1871,11 @@ meta_dictionary["/GluGluToHHTo4V_node_11_13TeV-madgraph_correctedcfg/RunIIFall17
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.69GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-13 13:57:22"),
+  ("comment",               "100.0%; status: VALID; size: 21.69GB; nevents: 400.00k; release: 9_4_7; last modified: 2019-03-13 13:57:22"),
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_12_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           "2017v2_2019Jun18_GluGluToHHTo4V_node_12_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo4V_node_12_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_12_hh_4v"),
   ("nof_db_events",         394000),
@@ -1884,7 +1884,7 @@ meta_dictionary["/GluGluToHHTo4V_node_12_13TeV-madgraph_correctedcfg/RunIIFall17
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 21.09GB; nevents: 394.00k; release: 9_4_7; last modified: 2019-03-12 21:44:20"),
+  ("comment",               "100.0%; status: VALID; size: 21.09GB; nevents: 394.00k; release: 9_4_7; last modified: 2019-03-12 21:44:20"),
 ])
 
 
