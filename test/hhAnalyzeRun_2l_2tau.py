@@ -25,6 +25,7 @@ parser.add_tau_id_wp()
 parser.add_hlt_filter()
 parser.add_files_per_job()
 parser.add_use_home()
+parser.add_jet_cleaning()
 parser.add_sideband()
 parser.add_tau_id()
 args = parser.parse_args()
@@ -52,6 +53,7 @@ use_home          = args.use_home
 tau_id_wp         = args.tau_id_wp
 sideband          = args.sideband
 tau_id            = args.tau_id
+jet_cleaning      = args.jet_cleaning
 
 # Use the arguments
 central_or_shifts = []
@@ -60,6 +62,7 @@ for systematic_label in systematics_label:
     if central_or_shift not in central_or_shifts:
       central_or_shifts.append(central_or_shift)
 lumi = get_lumi(era)
+jet_cleaning_by_index = (jet_cleaning == 'by_index')
 
 if sideband == 'disabled':
   chargeSumSelections = [ "OS" ]
@@ -119,6 +122,7 @@ if __name__ == '__main__':
     applyFakeRateWeights                  = "4L",
     chargeSumSelections                   = chargeSumSelections,
     central_or_shifts                     = central_or_shifts,
+    jet_cleaning_by_index                 = jet_cleaning_by_index,
     max_files_per_job                     = files_per_job,
     era                                   = era,
     use_lumi                              = True,

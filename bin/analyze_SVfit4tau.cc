@@ -294,6 +294,7 @@ int main(int argc, char* argv[])
   std::string branchName_genPhotons = cfg_analyze.getParameter<std::string>("branchName_genPhotons");
   std::string branchName_genJets = cfg_analyze.getParameter<std::string>("branchName_genJets");
   bool redoGenMatching = cfg_analyze.getParameter<bool>("redoGenMatching");
+  bool jetCleaningByIndex = cfg_analyze.getParameter<bool>("jetCleaningByIndex");
 
   std::string branchName_genTaus = cfg_analyze.getParameter<std::string>("branchName_genTaus");
   std::string branchName_genHiggsBosons = cfg_analyze.getParameter<std::string>("branchName_genHiggsBosons");
@@ -371,6 +372,7 @@ int main(int argc, char* argv[])
   inputTree->registerReader(jetReader);
   RecoJetCollectionGenMatcher jetGenMatcher;
   RecoJetCollectionCleaner jetCleaner(0.4);
+  RecoJetCollectionCleanerByIndex jetCleanerByIndex(isDEBUG);
   RecoJetCollectionSelector jetSelector(era);
   RecoJetCollectionSelectorBtagLoose jetSelectorBtagLoose(era);
   RecoJetCollectionSelectorBtagMedium jetSelectorBtagMedium(era);
@@ -761,7 +763,10 @@ int main(int argc, char* argv[])
     if ( isDEBUG ) {
       printCollection("uncleanedJets", jet_ptrs);
     }
-    const std::vector<const RecoJet*> cleanedJets = jetCleaner(jet_ptrs, fakeableElectrons, fakeableMuons, fakeableHadTaus);
+    const std::vector<const RecoJet*> cleanedJets = jetCleaningByIndex ?
+      jetCleanerByIndex(jet_ptrs, fakeableElectrons, fakeableMuons, fakeableHadTaus) :
+      jetCleaner       (jet_ptrs, fakeableElectrons, fakeableMuons, fakeableHadTaus)
+    ;
     const std::vector<const RecoJet*> selJets = jetSelector(cleanedJets);
     const std::vector<const RecoJet*> selBJets_loose = jetSelectorBtagLoose(cleanedJets);
     const std::vector<const RecoJet*> selBJets_medium = jetSelectorBtagMedium(cleanedJets);

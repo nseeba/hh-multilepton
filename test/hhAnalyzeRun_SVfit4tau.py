@@ -12,6 +12,7 @@ import getpass
 
 parser = tthAnalyzeParser()
 parser.add_tau_id()
+parser.add_jet_cleaning()
 args = parser.parse_args()
 
 # Common arguments
@@ -26,6 +27,7 @@ sample_filter        = args.filter
 num_parallel_jobs    = args.num_parallel_jobs
 running_method       = args.running_method
 tau_id               = args.tau_id
+jet_cleaning         = args.jet_cleaning
 
 # Use the arguments
 max_job_resubmission = 3;
@@ -34,6 +36,7 @@ max_files_per_job    = 1
 
 samples = load_samples(era)
 lumi = get_lumi(era)
+jet_cleaning_by_index = (jet_cleaning == 'by_index')
 
 hadTauWP_map = {
   'dR03mva' : 'Medium',
@@ -67,6 +70,7 @@ if __name__ == '__main__':
     SVfit4tau_logM_wMassConstraint_VAMP         = [ 0. ],
     modes                           = [ "rec", "gen", "gen_smeared" ],
     central_or_shifts               = central_or_shift,
+    jet_cleaning_by_index           = jet_cleaning_by_index,
     max_files_per_job               = max_files_per_job,
     era                             = era,
     use_lumi                        = True,
