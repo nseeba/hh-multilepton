@@ -13,6 +13,7 @@ import getpass
 parser = tthAnalyzeParser()
 parser.add_tau_id()
 parser.add_jet_cleaning()
+parser.add_gen_matching()
 args = parser.parse_args()
 
 # Common arguments
@@ -28,6 +29,7 @@ num_parallel_jobs    = args.num_parallel_jobs
 running_method       = args.running_method
 tau_id               = args.tau_id
 jet_cleaning         = args.jet_cleaning
+gen_matching      = args.gen_matching
 
 # Use the arguments
 max_job_resubmission = 3;
@@ -37,6 +39,7 @@ max_files_per_job    = 1
 samples = load_samples(era)
 lumi = get_lumi(era)
 jet_cleaning_by_index = (jet_cleaning == 'by_index')
+gen_matching_by_index = (gen_matching == 'by_index')
 
 hadTauWP_map = {
   'dR03mva' : 'Medium',
@@ -71,6 +74,7 @@ if __name__ == '__main__':
     modes                           = [ "rec", "gen", "gen_smeared" ],
     central_or_shifts               = central_or_shift,
     jet_cleaning_by_index           = jet_cleaning_by_index,
+    gen_matching_by_index           = gen_matching_by_index,
     max_files_per_job               = max_files_per_job,
     era                             = era,
     use_lumi                        = True,

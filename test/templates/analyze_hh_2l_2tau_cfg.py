@@ -98,6 +98,11 @@ process.analyze_hh_2l_2tau = cms.PSet(
     branchName_met = cms.string('MET'),
     branchName_memOutput = cms.string(''),
 
+    branchName_muonGenMatch     = cms.string('MuonGenMatch'),
+    branchName_electronGenMatch = cms.string('ElectronGenMatch'),
+    branchName_hadTauGenMatch   = cms.string('TauGenMatch'),
+    branchName_jetGenMatch      = cms.string('JetGenMatch'),
+
     branchName_genLeptons = cms.string('GenLep'),
     branchName_genHadTaus = cms.string('GenVisTau'),
     branchName_genPhotons = cms.string('GenPhoton'),
