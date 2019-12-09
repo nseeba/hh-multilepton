@@ -110,9 +110,9 @@ process.analyze_hh_3l = cms.PSet(
     branchName_genJets = cms.string('GenJet'),
     branchName_genHiggses = cms.string('GenHiggs'),
 
-    redoGenMatching = cms.bool(True),
-    genMatchingByIndex = cms.bool(False),
-    jetCleaningByIndex = cms.bool(False),
+    redoGenMatching = cms.bool(False),
+    genMatchingByIndex = cms.bool(True),
+    jetCleaningByIndex = cms.bool(True),
 
     branchName_genWBosons = cms.string('GenVbosons'),
     branchName_genWJets = cms.string('GenWZQuark'),

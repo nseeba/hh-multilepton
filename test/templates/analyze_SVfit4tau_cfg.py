@@ -60,9 +60,9 @@ process.analyze_SVfit4tau = cms.PSet(
     branchName_genPhotons = cms.string('GenPhoton'),
     branchName_genJets = cms.string('GenJet'),
 
-    redoGenMatching = cms.bool(True),
-    genMatchingByIndex = cms.bool(False),
-    jetCleaningByIndex = cms.bool(False),
+    redoGenMatching = cms.bool(False),
+    genMatchingByIndex = cms.bool(True),
+    jetCleaningByIndex = cms.bool(True),
 
     branchName_genTaus = cms.string('GenTau'),
     branchName_genHiggsBosons = cms.string('GenHiggs'),

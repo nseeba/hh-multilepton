@@ -111,9 +111,9 @@ process.analyze_hh_3l_1tau = cms.PSet(
     branchName_genPhotons = cms.string('GenPhoton'),
     branchName_genJets = cms.string('GenJet'),
 
-    redoGenMatching = cms.bool(True),
-    genMatchingByIndex = cms.bool(False),
-    jetCleaningByIndex = cms.bool(False),
+    redoGenMatching = cms.bool(False),
+    genMatchingByIndex = cms.bool(True),
+    jetCleaningByIndex = cms.bool(True),
 
     selEventsFileName_input = cms.string(''),
     selEventsFileName_output = cms.string(''),
