@@ -28,7 +28,7 @@ parser.add_argument('-V', '--validate',
   help = 'R|Validate the results',
 )
 parser.add_argument('-o', '--output-file',
-  type = str, dest = 'output_file', metavar = 'filename', default = 'denom_{era}_DeepTauIDv2p1.root',
+  type = str, dest = 'output_file', metavar = 'filename', default = 'denom_{era}.root',
   required = False,
   help = 'R|File name of the output file',
 )
@@ -60,9 +60,9 @@ if '{era}' in output_file:
   output_file = output_file.format(era = era)
 
 if mode == 'hh_multilepton':
-  samples = load_samples(era, not use_preproc, base = 'hh_multilepton', suffix = 'DeepTauIDv2p1')
+  samples = load_samples(era, not use_preproc, base = 'hh_multilepton')
 elif mode == 'hh_bbww':
-  samples = load_samples(era, not use_preproc, base = 'hh_bbww', suffix = 'DeepTauIDv2p1')
+  samples = load_samples(era, not use_preproc, base = 'hh_bbww')
 elif mode == 'hh_bbww_sync':
   samples = load_samples(era, not use_preproc, base = 'hh_bbww', suffix = 'sync')
 else:
