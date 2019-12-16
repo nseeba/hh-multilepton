@@ -48,22 +48,22 @@ Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::setHadTaus(double hadTau1_pt,
   hadTau1_pt_        = hadTau1_pt;
   hadTau1_eta_       = hadTau1_eta;
   hadTau1_phi_       = hadTau1_phi;
-  hadTau1_decayMode_ = aux::dmCheck(hadTau1_decayMode);
+  hadTau1_decayMode_ = hadTau1_decayMode;
 
   hadTau2_pt_        = hadTau2_pt;
   hadTau2_eta_       = hadTau2_eta;
   hadTau2_phi_       = hadTau2_phi;
-  hadTau2_decayMode_ = aux::dmCheck(hadTau2_decayMode);
+  hadTau2_decayMode_ = hadTau2_decayMode;
 
   hadTau3_pt_        = hadTau3_pt;
   hadTau3_eta_       = hadTau3_eta;
   hadTau3_phi_       = hadTau3_phi;
-  hadTau3_decayMode_ = aux::dmCheck(hadTau3_decayMode);
+  hadTau3_decayMode_ = hadTau3_decayMode;
 
   hadTau4_pt_        = hadTau4_pt;
   hadTau4_eta_       = hadTau4_eta;
   hadTau4_phi_       = hadTau4_phi;
-  hadTau4_decayMode_ = aux::dmCheck(hadTau4_decayMode);
+  hadTau4_decayMode_ = hadTau4_decayMode;
 }
 
 double
@@ -83,33 +83,28 @@ Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::getSF_triggerEff(TriggerSFsys
   double eff_2tau_tauLeg4_data = 0.;
   double eff_2tau_tauLeg4_mc   = 0.;
 
-  const auto getTriggerEfficiencyDataFunc = aux::getTriggerFuncData(central_or_shift);
-  const auto getTriggerEfficiencyMCFunc   = aux::getTriggerFuncMC(central_or_shift);
-  assert(getTriggerEfficiencyDataFunc);
-  assert(getTriggerEfficiencyMCFunc);
-
   if(std::fabs(hadTau1_eta_) <= 2.1 && aux::hasDecayMode(allowedDecayModes_, hadTau1_decayMode_))
   {
-    eff_2tau_tauLeg1_data = (effTrigger_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
-    eff_2tau_tauLeg1_mc   = (effTrigger_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
+    eff_2tau_tauLeg1_data = effTrigger_tauLeg_.getTauTriggerEvalData(central_or_shift, hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
+    eff_2tau_tauLeg1_mc   = effTrigger_tauLeg_.getTauTriggerEvalMC  (central_or_shift, hadTau1_pt_, hadTau1_eta_, hadTau1_phi_, hadTau1_decayMode_);
   }
 
   if(std::fabs(hadTau2_eta_) <= 2.1 && aux::hasDecayMode(allowedDecayModes_, hadTau2_decayMode_))
   {
-    eff_2tau_tauLeg2_data = (effTrigger_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
-    eff_2tau_tauLeg2_mc   = (effTrigger_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
+    eff_2tau_tauLeg2_data = effTrigger_tauLeg_.getTauTriggerEvalData(central_or_shift, hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
+    eff_2tau_tauLeg2_mc   = effTrigger_tauLeg_.getTauTriggerEvalMC  (central_or_shift, hadTau2_pt_, hadTau2_eta_, hadTau2_phi_, hadTau2_decayMode_);
   }
 
   if(std::fabs(hadTau3_eta_) <= 2.1 && aux::hasDecayMode(allowedDecayModes_, hadTau3_decayMode_))
   {
-    eff_2tau_tauLeg3_data = (effTrigger_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
-    eff_2tau_tauLeg3_mc   = (effTrigger_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
+    eff_2tau_tauLeg3_data = effTrigger_tauLeg_.getTauTriggerEvalData(central_or_shift, hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
+    eff_2tau_tauLeg3_mc   = effTrigger_tauLeg_.getTauTriggerEvalMC  (central_or_shift, hadTau3_pt_, hadTau3_eta_, hadTau3_phi_, hadTau3_decayMode_);
   }
 
   if(std::fabs(hadTau4_eta_) <= 2.1 && aux::hasDecayMode(allowedDecayModes_, hadTau4_decayMode_))
   {
-    eff_2tau_tauLeg4_data = (effTrigger_tauLeg_->*getTriggerEfficiencyDataFunc)(hadTau4_pt_, hadTau4_eta_, hadTau4_phi_, hadTau4_decayMode_);
-    eff_2tau_tauLeg4_mc   = (effTrigger_tauLeg_->*getTriggerEfficiencyMCFunc)  (hadTau4_pt_, hadTau4_eta_, hadTau4_phi_, hadTau4_decayMode_);
+    eff_2tau_tauLeg4_data = effTrigger_tauLeg_.getTauTriggerEvalData(central_or_shift, hadTau4_pt_, hadTau4_eta_, hadTau4_phi_, hadTau4_decayMode_);
+    eff_2tau_tauLeg4_mc   = effTrigger_tauLeg_.getTauTriggerEvalMC  (central_or_shift, hadTau4_pt_, hadTau4_eta_, hadTau4_phi_, hadTau4_decayMode_);
   }
 
   double prob_data = 0.;
