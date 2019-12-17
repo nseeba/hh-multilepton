@@ -83,9 +83,6 @@ private:
               double eff_1l1tau_tauLeg,
               double eff_2tau_tauLeg) const;
 
-  //-----------------------------------------------------------------------------
-  TauTriggerSFs2017 * effTrigger_2tau_tauLeg_;
-
   bool isTriggered_2tau_;
 
   int hadTau3_genPdgId_;
@@ -93,6 +90,8 @@ private:
   double hadTau3_eta_;
   double hadTau3_phi_;
   int hadTau3_decayMode_;
+
+  TauTriggerSFInterface effTrigger_2tau_tauLeg_;
 };
 
 #endif // tthAnalysis_HiggsToTauTau_data_to_MC_corrections_hh_1l_3tau_trigger_h
