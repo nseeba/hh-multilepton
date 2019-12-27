@@ -33,7 +33,8 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_wjets = None)
       sample_info["has_LHE"] = False
 
     if sample_info["process_name_specific"].startswith('signal') and 'hh' in sample_info["process_name_specific"]:
-      sample_info["use_it"] = 'nonresonant' not in sample_info["process_name_specific"] # temp: enable resonant samples only
+      ##sample_info["use_it"] = 'nonresonant' not in sample_info["process_name_specific"] # temp: enable resonant samples only
+      sample_info["use_it"] = True # CV: enable non-resonant samples (needed for HH->bbWW analysis !!)
 
     if sample_info["sample_category"] == "Rares":
       sample_info["sample_category"] = "Other"
