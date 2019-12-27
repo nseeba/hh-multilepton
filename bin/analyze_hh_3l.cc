@@ -1932,7 +1932,7 @@ int main(int argc, char* argv[])
 	//double e = (met.p4() + selLeptons[iLepton1]->p4()).E();
 	//double z = (met.p4() + selLeptons[iLepton1]->p4()).Pz();
 	//double mT = std::sqrt(e*e - z*z);
-	double mT = comp_MT_met_lep1(selLeptons[iLepton1]->p4(), met.pt(), met.phi());
+        double mT = comp_MT_met(selLeptons[iLepton1], met.pt(), met.phi());
 	if (mT < 0.) std::cout << "analyze_hh_3l:: mT (MET+Lepton) < 0 \t\t *** ERROR ***" << std::endl;
 	if (mTMetLepton1 < 0.) 			 mTMetLepton1 = mT;
 	else if (mTMetLepton2 < 0.)  mTMetLepton2 = mT;
@@ -1989,12 +1989,12 @@ int main(int argc, char* argv[])
     
     //--- compute output of BDTs used to discriminate ttH vs. ttV and ttH vs. ttbar
     //    in 3l category of ttH multilepton analysis
-    const double lep1_conePt = comp_lep1_conePt(*selLepton_lead);
-    const double lep2_conePt = comp_lep2_conePt(*selLepton_sublead);
-    const double lep3_conePt = comp_lep3_conePt(*selLepton_third);
-    const double mindr_lep1_jet = comp_mindr_lep1_jet(*selLepton_lead, selJetsAK4);
-    const double mindr_lep2_jet = comp_mindr_lep2_jet(*selLepton_sublead, selJetsAK4);
-    const double mindr_lep3_jet = comp_mindr_lep3_jet(*selLepton_third, selJetsAK4);
+    const double lep1_conePt = comp_lep_conePt(*selLepton_lead);
+    const double lep2_conePt = comp_lep_conePt(*selLepton_sublead);
+    const double lep3_conePt = comp_lep_conePt(*selLepton_third);
+    const double mindr_lep1_jet = comp_mindr_jet(*selLepton_lead, selJetsAK4);
+    const double mindr_lep2_jet = comp_mindr_jet(*selLepton_sublead, selJetsAK4);
+    const double mindr_lep3_jet = comp_mindr_jet(*selLepton_third, selJetsAK4);
     const double avg_dr_jet = comp_avg_dr_jet(selJetsAK4);
 
 
@@ -2024,15 +2024,15 @@ int main(int argc, char* argv[])
       {"lep1_conePt",         lep1_conePt},
       {"lep1_eta",            selLepton_lead -> eta()},
       {"mindr_lep1_jet",      TMath::Min(10., mindr_lep1_jet)},
-      {"mT_lep1",             comp_MT_met_lep1(*selLepton_lead, met.pt(), met.phi())},
+      {"mT_lep1",             comp_MT_met(selLepton_lead, met.pt(), met.phi())},
       {"lep2_conePt",         lep2_conePt},
       {"lep2_eta",            selLepton_sublead -> eta()},
       {"mindr_lep2_jet",      TMath::Min(10., mindr_lep2_jet)},
-      {"mT_lep2",             comp_MT_met_lep1(*selLepton_sublead, met.pt(), met.phi())},
+      {"mT_lep2",             comp_MT_met(selLepton_sublead, met.pt(), met.phi())},
       {"lep3_conePt",         lep3_conePt},
       {"lep3_eta",            selLepton_third -> eta()},
       {"mindr_lep3_jet",      TMath::Min(10., mindr_lep3_jet)},
-      {"mT_lep3",             comp_MT_met_lep1(*selLepton_third, met.pt(), met.phi())},
+      {"mT_lep3",             comp_MT_met(selLepton_third, met.pt(), met.phi())},
       {"avg_dr_jet",          avg_dr_jet},
       {"dr_leps",             deltaR(selLepton_lead -> p4(), selLepton_sublead -> p4())},
       {"dr_lss",              dr_lss},
@@ -2280,19 +2280,19 @@ int main(int argc, char* argv[])
 	("lep1_eta",            selLepton_lead -> eta())
 	("lep1_tth_mva",        selLepton_lead -> mvaRawTTH())
 	("mindr_lep1_jet",      TMath::Min(10., mindr_lep1_jet))
-	("mT_lep1",             comp_MT_met_lep1(*selLepton_lead, met.pt(), met.phi()))
+        ("mT_lep1",             comp_MT_met(selLepton_lead, met.pt(), met.phi()))
 	("lep2_pt",             selLepton_sublead -> pt())
 	("lep2_conePt",         lep2_conePt)
 	("lep2_eta",            selLepton_sublead -> eta())
 	("lep2_tth_mva",        selLepton_sublead -> mvaRawTTH())
 	("mindr_lep2_jet",      TMath::Min(10., mindr_lep2_jet))
-	("mT_lep2",             comp_MT_met_lep1(*selLepton_sublead, met.pt(), met.phi()))
+        ("mT_lep2",             comp_MT_met(selLepton_sublead, met.pt(), met.phi()))
 	("lep3_pt",             selLepton_third -> pt())
 	("lep3_conePt",         lep3_conePt)
 	("lep3_eta",            selLepton_third -> eta())
 	("lep3_tth_mva",        selLepton_third -> mvaRawTTH())
 	("mindr_lep3_jet",      TMath::Min(10., mindr_lep3_jet))
-	("mT_lep3",             comp_MT_met_lep1(*selLepton_third, met.pt(), met.phi()))
+        ("mT_lep3",             comp_MT_met(selLepton_third, met.pt(), met.phi()))
 	("avg_dr_jet",          avg_dr_jet)
 	("ptmiss",              met.pt())
 	("htmiss",              mht_p4.pt())

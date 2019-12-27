@@ -1658,8 +1658,8 @@ int main(int argc, char* argv[])
     double leptonPairCharge_sel = selLepton_lead->charge() + selLepton_sublead->charge();
 
     //--- compute variables BDTs used to discriminate . . .
-    const double mindr_lep1_jet  = comp_mindr_lep1_jet(*selLepton_lead, selJets);
-    const double mindr_lep2_jet  = comp_mindr_lep2_jet(*selLepton_sublead, selJets);
+    const double mindr_lep1_jet  = comp_mindr_jet(*selLepton_lead, selJets);
+    const double mindr_lep2_jet  = comp_mindr_jet(*selLepton_sublead, selJets);
     Particle::LorentzVector llP4 = selLeptonP4_lead + selLeptonP4_sublead;
     double dR_ll = deltaR(selLeptonP4_lead, selLeptonP4_sublead);
     double pT_ll = llP4.pt();
@@ -1671,9 +1671,9 @@ int main(int argc, char* argv[])
     BDTInputs_SUM["leptonPairMass_sel"]   = leptonPairMass_sel;
     BDTInputs_SUM["HT"]                   = HT;
     BDTInputs_SUM["mindr_lep1_jet"]       = std::min(10., mindr_lep1_jet);
-    BDTInputs_SUM["mT_lep1"]              = comp_MT_met_lep1(*selLepton_lead, met.pt(), met.phi());
+    BDTInputs_SUM["mT_lep1"]              = comp_MT_met(selLepton_lead, met.pt(), met.phi());
     BDTInputs_SUM["mindr_lep2_jet"]       = std::min(10., mindr_lep2_jet);
-    BDTInputs_SUM["mT_lep2"]              = comp_MT_met_lep1(*selLepton_sublead, met.pt(), met.phi());
+    BDTInputs_SUM["mT_lep2"]              = comp_MT_met(selLepton_sublead, met.pt(), met.phi());
     BDTInputs_SUM["dR_ll"]                = dR_ll;
     BDTInputs_SUM["max_lep_eta"]          = TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
 
@@ -1925,15 +1925,15 @@ int main(int argc, char* argv[])
         ("STMET",                          STMET)
         ("evtWeight",                      evtWeightRecorder.get(central_or_shift_main))
 	("lep1_pt",                        selLepton_lead->pt())
-	("lep1_conePt",                    comp_lep1_conePt(*selLepton_lead))
+        ("lep1_conePt",                    comp_lep_conePt(*selLepton_lead))
 	("lep1_eta",                       selLepton_lead->eta())
 	("mindr_lep1_jet",                 std::min(10., mindr_lep1_jet) )
-	("mT_lep1",                        comp_MT_met_lep1(*selLepton_lead, met.pt(), met.phi()))
+        ("mT_lep1",                        comp_MT_met(selLepton_lead, met.pt(), met.phi()))
 	("lep2_pt",                        selLepton_sublead->pt())
-	("lep2_conePt",                    comp_lep2_conePt(*selLepton_sublead))
+        ("lep2_conePt",                    comp_lep_conePt(*selLepton_sublead))
 	("lep2_eta",                       selLepton_sublead->eta())
 	("mindr_lep2_jet",                 std::min(10., mindr_lep2_jet) )
-	("mT_lep2",                        comp_MT_met_lep1(*selLepton_sublead, met.pt(), met.phi()))
+        ("mT_lep2",                        comp_MT_met(selLepton_sublead, met.pt(), met.phi()))
 	("dR_ll",                          dR_ll)
 	("pT_ll",                          pT_ll)
 	("max_lep_eta",                    TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta())))
