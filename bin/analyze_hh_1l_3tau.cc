@@ -262,6 +262,12 @@ int main(int argc, char* argv[])
     central_or_shifts_local = { central_or_shift_main };
   }
 
+  edm::ParameterSet triggerWhiteList;
+  if(! isMC)
+  {
+    triggerWhiteList = cfg_analyze.getParameter<edm::ParameterSet>("triggerWhiteList");
+  }
+
   const edm::ParameterSet additionalEvtWeight = cfg_analyze.getParameter<edm::ParameterSet>("evtWeight");
   const bool applyAdditionalEvtWeight = additionalEvtWeight.getParameter<bool>("apply");
   EvtWeightManager * eventWeightManager = nullptr;
@@ -914,15 +920,15 @@ int main(int argc, char* argv[])
     } 
     //std::cout << "isTriggered_2tau_L1 = " << isTriggered_2tau_L1 << std::endl;
 
-    bool isTriggered_1e = hltPaths_isTriggered(triggers_1e, isDEBUG);
+    bool isTriggered_1e = hltPaths_isTriggered(triggers_1e, triggerWhiteList, eventInfo, isMC, isDEBUG);
     //std::cout << "isTriggered_1e = " << isTriggered_1e << std::endl;
-    bool isTriggered_1e1tau = hltPaths_isTriggered(triggers_1e1tau, isDEBUG);
+    bool isTriggered_1e1tau = hltPaths_isTriggered(triggers_1e1tau, triggerWhiteList, eventInfo, isMC, isDEBUG);
     //std::cout << "isTriggered_1e1tau = " << isTriggered_1e1tau << std::endl;
-    bool isTriggered_1mu = hltPaths_isTriggered(triggers_1mu, isDEBUG);
+    bool isTriggered_1mu = hltPaths_isTriggered(triggers_1mu, triggerWhiteList, eventInfo, isMC, isDEBUG);
     //std::cout << "isTriggered_1mu = " << isTriggered_1mu << std::endl;
-    bool isTriggered_1mu1tau = hltPaths_isTriggered(triggers_1mu1tau, isDEBUG);
+    bool isTriggered_1mu1tau = hltPaths_isTriggered(triggers_1mu1tau, triggerWhiteList, eventInfo, isMC, isDEBUG);
     //std::cout << "isTriggered_1mu1tau = " << isTriggered_1mu1tau << std::endl;
-    bool isTriggered_2tau = hltPaths_isTriggered(triggers_2tau, isDEBUG) && isTriggered_2tau_L1;
+    bool isTriggered_2tau = hltPaths_isTriggered(triggers_2tau, triggerWhiteList, eventInfo, isMC, isDEBUG) && isTriggered_2tau_L1;
     //std::cout << "isTriggered_2tau = " << isTriggered_2tau << std::endl;
 
     bool selTrigger_1e = use_triggers_1e && isTriggered_1e;
