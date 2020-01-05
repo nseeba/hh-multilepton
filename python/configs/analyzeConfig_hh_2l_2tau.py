@@ -607,7 +607,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
                       'useNonNominal'            : self.use_nonnominal,
                       'selectBDT'                : self.isBDTtraining,
                       'fillGenEvtHistograms'     : True,
-                      'useObjectMultiplicity'    : True,
                     }
                     self.createCfg_analyze(self.jobOptions_analyze[key_analyze_job], sample_info, lepton_and_hadTau_selection)
 
