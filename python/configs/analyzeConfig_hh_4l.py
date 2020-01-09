@@ -348,7 +348,6 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                   'central_or_shift'         : central_or_shift,
                   'central_or_shifts_local'  : central_or_shifts_local,
                   'fillGenEvtHistograms'     : True,
-                  'useObjectMultiplicity'    : True,
                   'apply_hlt_filter'         : self.hlt_filter,
                 }
                 self.createCfg_analyze(self.jobOptions_analyze[key_analyze_job], sample_info, lepton_selection)
