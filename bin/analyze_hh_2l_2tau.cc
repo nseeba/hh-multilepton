@@ -424,8 +424,10 @@ int main(int argc, char* argv[])
   std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
   std::string BDTFileName_even_pkl  = cfg_analyze.getParameter<std::string>("pkl_FileName_even");
   std::string BDTFileName_odd_pkl   = cfg_analyze.getParameter<std::string>("pkl_FileName_odd");
-  std::string NNFileName_even_pb  = "hhAnalysis/multilepton/data/test_2l_2tau_HH_dumb.pb"; //cfg_analyze.getParameter<std::string>("pb_FileName_even");
-  std::string NNFileName_odd_pb   = "hhAnalysis/multilepton/data/test_2l_2tau_HH_dumb.pb"; //cfg_analyze.getParameter<std::string>("pb_FileName_odd");
+  //std::string NNFileName_even_pb  = "hhAnalysis/multilepton/data/test_2l_2tau_HH_dumb.pb";
+  std::string NNFileName_even_pb  = cfg_analyze.getParameter<std::string>("pb_FileName_even");
+  //std::string NNFileName_odd_pb   = "hhAnalysis/multilepton/data/test_2l_2tau_HH_dumb.pb"; 
+  std::string NNFileName_odd_pb   = cfg_analyze.getParameter<std::string>("pb_FileName_odd");
   std::string fitFunctionFileName = cfg_analyze.getParameter<std::string>("fitFunctionFileName");
 
 
@@ -628,27 +630,22 @@ int main(int argc, char* argv[])
       "dr_lep_tau_min_OS"
     }; // Need to adapt to different mass training modes: all, low and High (Currently this is for all mass traning)
 
-    std::vector<std::string> NNInputVariables_SUM =
-      {
-       "jet1_pt",
-       "jet2_pt",
-       "tau1_pt",
-       "tau2_pt",
-       "mTauTauVis",
-       "cosThetaS_hadTau",
-       "mbb_loose",
-       "met_LD",
-       "dr_leps",
-       "dr_taus",
-       "nJet",
-       "nBJetLoose",
-       "nBJetMedium"
-     }; // this is for the dumb training
 
-  fitFunctionFileName = "";
-  // X: IMPORTANT To Ram, this is hidden in some config that I do not want to try to find
-  // ---> fix that when you fix the .pb file
+  std::vector<std::string> NNInputVariables_SUM =
+    {
+      "diHiggsMass",
+      "diHiggsVisMass",
+      "tau1_pt",
+      "nBJet_medium",
+      "gen_mHH",
+      "nElectron",
+      "dr_lep_tau_min_SS",
+      "met_LD",
+      "tau2_pt",
+      "dr_lep_tau_min_OS"
+    }; // this is for the dumb training
 
+  assert(fitFunctionFileName != "");
   XGBInterface* XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, fitFunctionFileName,  BDTInputVariables_SUM);
   TMVAInterface* BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, fitFunctionFileName);
   BDT_SUM->enableBDTTransform();
