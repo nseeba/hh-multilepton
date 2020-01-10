@@ -1738,20 +1738,18 @@ int main(int argc, char* argv[])
     }
 
     const std::map<std::string, double> mvaInputsValues = {
-      {"tau1_pt",          selHadTau_lead->pt()},
-      {"tau2_pt",          selHadTau_sublead->pt()},
-      {"jet1_pt",          selBJets_loose.size() > 0  ? selJets[0]->pt() : 0.},
-      {"jet2_pt",          selBJets_loose.size() > 1  ? selJets[1]->pt() : 0.},
-      {"mTauTauVis",       (selHadTau_lead->p4() + selHadTau_sublead->p4()).mass()},
-      {"cosThetaS_hadTau", 1.0},
-      {"mbb_loose",        selBJets_loose.size() > 1  ? (selBJets_loose[0]->p4()  + selBJets_loose[1]->p4() ).mass() : 0.},
-      {"nBJetLoose",       selBJets_loose.size() },
-      {"nBJetMedium",      selBJets_medium.size() },
-      {"nJet",             selJets.size() },
-      {"dr_leps",          dr_leps},
-      {"dr_taus",          dr_taus},
-      {"met_LD",           met_LD}
+      {"diHiggsMass", dihiggsMass},
+      {"diHiggsVisMass", dihiggsVisMass_sel},
+      {"tau1_pt",  selHadTau_lead->pt()},
+      {"nBJet_medium", selBJets_btag_medium.size()},
+      {"gen_mHH",       250.}, // setting a Dummy value which will be reset depending on mass hypothesis
+      {"nElectron", selElectrons.size()},
+      {"dr_lep_tau_min_SS", dr_lep_tau_min_SS},
+      {"met_LD",           met_LD},
+      {"tau2_pt", selHadTau_sublead->pt()},
+      {"dr_lep_tau_min_OS", dr_lep_tau_min_OS}
     };
+
     if ( isDEBUG ) {
       std::cout << "Input variables ";
       for (auto elem : mvaInputsValues ) std::cout << elem.first << " " << elem.second << "\n";
