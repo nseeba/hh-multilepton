@@ -84,6 +84,7 @@ if __name__ == '__main__':
     num_parallel_jobs               = 100, # KE: run up to 100 'hadd' jobs in parallel on batch system
     dry_run                         = dry_run,
     isDebug                         = debug,
+    submission_cmd                  = sys.argv,
   )
 
   job_statistics = analysis.create()

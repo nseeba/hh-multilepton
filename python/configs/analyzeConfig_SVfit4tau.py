@@ -41,7 +41,8 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
         verbose = False,
         dry_run = False,
         isDebug = False,
-        use_home = False
+        use_home = False,
+        submission_cmd = None,
       ):
     analyzeConfig.__init__(self,
       configDir                 = configDir,
@@ -66,6 +67,7 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
       isDebug                   = isDebug,
       use_home                  = use_home,
       template_dir              = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'multilepton', 'test', 'templates'),
+      submission_cmd            = submission_cmd,
     )
 
     self.lepton_selection = lepton_selection

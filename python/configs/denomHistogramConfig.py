@@ -106,6 +106,7 @@ class denomHistogramConfig:
             verbose  = False,
             dry_run  = False,
             use_home = False,
+            submission_cmd = None,
           ):
 
         self.configDir             = configDir
@@ -143,9 +144,11 @@ class denomHistogramConfig:
         self.stderr_file_path = os.path.join(self.configDir, "stderr_nonResDenom.log")
         self.sw_ver_file_cfg  = os.path.join(self.configDir, "VERSION_nonResDenom.log")
         self.sw_ver_file_out  = os.path.join(self.outputDir, "VERSION_nonResDenom.log")
-        self.stdout_file_path, self.stderr_file_path, self.sw_ver_file_cfg, self.sw_ver_file_out = get_log_version((
-            self.stdout_file_path, self.stderr_file_path, self.sw_ver_file_cfg, self.sw_ver_file_out
+        self.submission_out   = os.path.join(self.configDir, "SUBMISSION_nonResDenom.log")
+        self.stdout_file_path, self.stderr_file_path, self.sw_ver_file_cfg, self.sw_ver_file_out, self.submission_out = get_log_version((
+            self.stdout_file_path, self.stderr_file_path, self.sw_ver_file_cfg, self.sw_ver_file_out, self.submission_out
         ))
+        check_submission_cmd(self.submission_out, submission_cmd)
 
         self.sbatchFile_nonResDenom = os.path.join(self.configDir, "sbatch_nonResDenom.py")
         self.cfgFiles_nonResDenom    = {}

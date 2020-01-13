@@ -68,6 +68,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig_hh):
         use_nonnominal    = False,
         hlt_filter        = False,
         use_home          = False,
+        submission_cmd    = None,
       ):
     analyzeConfig_hh.__init__(self,
       configDir             = configDir,
@@ -92,6 +93,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig_hh):
       isDebug               = isDebug,
       use_home              = use_home,
       template_dir          = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'multilepton', 'test', 'templates'),
+      submission_cmd        = submission_cmd,
     )
 
     self.lepton_and_hadTau_selections = [ "Tight", "Fakeable" ]
