@@ -5,28 +5,10 @@ from tthAnalysis.HiggsToTauTau.sbatchManagerTools import createScript_sbatch as 
 from tthAnalysis.HiggsToTauTau.sbatchManagerTools import createScript_sbatch_hadd as tools_createScript_sbatch_hadd
 from tthAnalysis.HiggsToTauTau.sbatchManagerTools import is_file_ok as tools_is_file_ok
 from tthAnalysis.HiggsToTauTau.safe_root import ROOT
-from tthAnalysis.HiggsToTauTau.common import logging
+from tthAnalysis.HiggsToTauTau.common import logging, DEPENDENCIES
 
 import os
 import uuid
-
-DEPENDENCIES = [
-    "", # CMSSW_BASE/src
-    "tthAnalysis/NanoAOD",
-    "tthAnalysis/HiggsToTauTau",
-    "TauAnalysisTools/TauTriggerSFs",
-    "TauAnalysis/ClassicSVfit",
-    "TauAnalysis/SVfitTF",
-    "ttH_Htautau_MEM_Analysis",
-    "tthAnalysis/tthMEM",
-    "hhAnalysis/multilepton",
-    "hhAnalysis/bbww",
-    "TauAnalysis/ClassicSVfit4tau",
-    "hhAnalysis/bbwwMEM",
-    "hhAnalysis/Heavymassestimator",
-    "HHStatAnalysis",
-    "Support",
-]
 
 DKEY_SCRIPTS    = "scripts"
 DKEY_CFGS       = "cfgs"

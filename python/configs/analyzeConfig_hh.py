@@ -11,16 +11,6 @@ RESONANT_REGEX_PATTERN = r'signal_(?P<%s>[ggf|vbf]+)_spin(?P<%s>[0|2]{1})_(?P<%s
 )
 RESONANT_REGEX = re.compile(RESONANT_REGEX_PATTERN)
 
-DEPENDENCIES.extend([
-  "hhAnalysis/multilepton",
-  "hhAnalysis/bbww",
-  "TauAnalysis/ClassicSVfit4tau",
-  "hhAnalysis/bbwwMEM",
-  "hhAnalysis/Heavymassestimator",
-  "HHStatAnalysis",
-  "Support",
-])
-
 def get_signal_per_masspoint(samples):
   io_pairs = {}
   for sample_key, sample_info in samples.items():
