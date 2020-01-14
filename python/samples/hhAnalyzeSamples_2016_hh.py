@@ -1,7 +1,7 @@
 from collections import OrderedDict as OD
 
-# file generated at 2019-12-09 00:28:19 with the following command:
-# create_dictionary.py -m python/samples/metaDict_2016_hh.py -p /hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples -N samples_2016 -E 2016 -o python/samples -g hhAnalyzeSamples_2016_hh.py -M
+# file generated at 2020-01-13 17:24:11 with the following command:
+# create_dictionary.py -m python/samples/metaDict_2016_hh.py -p /hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples -N samples_2016 -E 2016 -o python/samples -g hhAnalyzeSamples_2016_hh.py -M
 
 samples_2016 = OD()
 samples_2016["/GluGluToRadionToHHTo4Tau_M-250_narrow_13TeV-madgraph/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM"] = OD([
@@ -20,7 +20,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-250_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 100000),
   ("nof_db_events",                   100000),
-  ("fsize_local",                     312505013), # 312.51MB, avg file size 312.51MB
+  ("fsize_local",                     330561599), # 330.56MB, avg file size 330.56MB
   ("fsize_db",                        3874786969), # 3.87GB, avg file size 1.94GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -32,7 +32,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-250_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_250_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_250_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -68,7 +68,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-260_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 99204),
   ("nof_db_events",                   99204),
-  ("fsize_local",                     313382759), # 313.38MB, avg file size 313.38MB
+  ("fsize_local",                     331297043), # 331.30MB, avg file size 331.30MB
   ("fsize_db",                        3865138450), # 3.87GB, avg file size 3.87GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -80,7 +80,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-260_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_260_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_260_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -116,7 +116,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-270_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 100000),
   ("nof_db_events",                   100000),
-  ("fsize_local",                     319280013), # 319.28MB, avg file size 319.28MB
+  ("fsize_local",                     337584166), # 337.58MB, avg file size 337.58MB
   ("fsize_db",                        3829876445), # 3.83GB, avg file size 1.91GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -128,7 +128,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-270_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_270_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_270_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -164,7 +164,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-280_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 98567),
   ("nof_db_events",                   98567),
-  ("fsize_local",                     317694171), # 317.69MB, avg file size 317.69MB
+  ("fsize_local",                     335720902), # 335.72MB, avg file size 335.72MB
   ("fsize_db",                        3900002340), # 3.90GB, avg file size 1.95GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -176,7 +176,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-280_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_280_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_280_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -212,7 +212,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-300_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 94730),
   ("nof_db_events",                   94730),
-  ("fsize_local",                     311214143), # 311.21MB, avg file size 311.21MB
+  ("fsize_local",                     328819618), # 328.82MB, avg file size 328.82MB
   ("fsize_db",                        3783167238), # 3.78GB, avg file size 1.89GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -224,7 +224,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-300_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_300_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_300_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -260,7 +260,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-320_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 100000),
   ("nof_db_events",                   100000),
-  ("fsize_local",                     334145989), # 334.15MB, avg file size 334.15MB
+  ("fsize_local",                     352683594), # 352.68MB, avg file size 352.68MB
   ("fsize_db",                        3916703835), # 3.92GB, avg file size 1.96GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -272,7 +272,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-320_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_320_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_320_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -308,7 +308,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-340_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 100000),
   ("nof_db_events",                   100000),
-  ("fsize_local",                     339689036), # 339.69MB, avg file size 339.69MB
+  ("fsize_local",                     358885028), # 358.89MB, avg file size 358.89MB
   ("fsize_db",                        3984955042), # 3.98GB, avg file size 1.99GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -320,7 +320,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-340_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_340_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_340_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -356,7 +356,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-350_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 98356),
   ("nof_db_events",                   98356),
-  ("fsize_local",                     336905265), # 336.91MB, avg file size 336.91MB
+  ("fsize_local",                     356033371), # 356.03MB, avg file size 356.03MB
   ("fsize_db",                        4031403477), # 4.03GB, avg file size 2.02GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -368,7 +368,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-350_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_350_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_350_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -404,7 +404,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-400_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 97614),
   ("nof_db_events",                   97614),
-  ("fsize_local",                     346672193), # 346.67MB, avg file size 346.67MB
+  ("fsize_local",                     365937949), # 365.94MB, avg file size 365.94MB
   ("fsize_db",                        4056144350), # 4.06GB, avg file size 2.03GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -416,7 +416,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-400_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_400_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_400_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -452,7 +452,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-450_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 100000),
   ("nof_db_events",                   100000),
-  ("fsize_local",                     366266766), # 366.27MB, avg file size 366.27MB
+  ("fsize_local",                     386826454), # 386.83MB, avg file size 386.83MB
   ("fsize_db",                        4254873375), # 4.25GB, avg file size 2.13GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -464,7 +464,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-450_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_450_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_450_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -500,7 +500,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-500_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 50000),
   ("nof_db_events",                   50000),
-  ("fsize_local",                     189105867), # 189.11MB, avg file size 189.11MB
+  ("fsize_local",                     199498480), # 199.50MB, avg file size 199.50MB
   ("fsize_db",                        2208888272), # 2.21GB, avg file size 2.21GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -512,7 +512,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-500_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_500_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_500_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -548,7 +548,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-550_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 50000),
   ("nof_db_events",                   50000),
-  ("fsize_local",                     193696344), # 193.70MB, avg file size 193.70MB
+  ("fsize_local",                     204206543), # 204.21MB, avg file size 204.21MB
   ("fsize_db",                        2111067830), # 2.11GB, avg file size 2.11GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -560,7 +560,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-550_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_550_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_550_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -596,7 +596,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-600_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 50000),
   ("nof_db_events",                   50000),
-  ("fsize_local",                     198354567), # 198.35MB, avg file size 198.35MB
+  ("fsize_local",                     208597091), # 208.60MB, avg file size 208.60MB
   ("fsize_db",                        2253668540), # 2.25GB, avg file size 1.13GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -608,7 +608,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-600_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_600_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_600_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -644,7 +644,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-650_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 48463),
   ("nof_db_events",                   48463),
-  ("fsize_local",                     196155591), # 196.16MB, avg file size 196.16MB
+  ("fsize_local",                     206281525), # 206.28MB, avg file size 206.28MB
   ("fsize_db",                        2355229431), # 2.36GB, avg file size 2.36GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -656,7 +656,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-650_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_650_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_650_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -692,7 +692,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-700_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 50000),
   ("nof_db_events",                   50000),
-  ("fsize_local",                     206176462), # 206.18MB, avg file size 206.18MB
+  ("fsize_local",                     216710254), # 216.71MB, avg file size 216.71MB
   ("fsize_db",                        2263100514), # 2.26GB, avg file size 2.26GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -704,7 +704,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-700_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_700_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_700_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -740,7 +740,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-750_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 50000),
   ("nof_db_events",                   50000),
-  ("fsize_local",                     209377562), # 209.38MB, avg file size 209.38MB
+  ("fsize_local",                     220048232), # 220.05MB, avg file size 220.05MB
   ("fsize_db",                        2299577348), # 2.30GB, avg file size 1.15GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -752,7 +752,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-750_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_750_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_750_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -788,7 +788,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-800_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 50000),
   ("nof_db_events",                   50000),
-  ("fsize_local",                     212327845), # 212.33MB, avg file size 212.33MB
+  ("fsize_local",                     223168840), # 223.17MB, avg file size 223.17MB
   ("fsize_db",                        2263981849), # 2.26GB, avg file size 2.26GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -800,7 +800,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-800_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_800_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_800_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -836,7 +836,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-900_narrow_13TeV-madgraph/RunIISummer1
   }),
   ("nof_tree_events",                 50000),
   ("nof_db_events",                   50000),
-  ("fsize_local",                     217013999), # 217.01MB, avg file size 217.01MB
+  ("fsize_local",                     228014726), # 228.01MB, avg file size 228.01MB
   ("fsize_db",                        2478591891), # 2.48GB, avg file size 2.48GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -848,7 +848,7 @@ samples_2016["/GluGluToRadionToHHTo4Tau_M-900_narrow_13TeV-madgraph/RunIISummer1
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin0_900_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin0_900_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -884,7 +884,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-250_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 99430),
   ("nof_db_events",                   99430),
-  ("fsize_local",                     315614626), # 315.61MB, avg file size 315.61MB
+  ("fsize_local",                     333600026), # 333.60MB, avg file size 333.60MB
   ("fsize_db",                        3877049177), # 3.88GB, avg file size 1.94GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -896,7 +896,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-250_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_250_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_250_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -932,7 +932,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-260_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 97772),
   ("nof_db_events",                   97772),
-  ("fsize_local",                     314155482), # 314.16MB, avg file size 314.16MB
+  ("fsize_local",                     331761581), # 331.76MB, avg file size 331.76MB
   ("fsize_db",                        3871755682), # 3.87GB, avg file size 1.94GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -944,7 +944,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-260_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_260_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_260_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -980,7 +980,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-270_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 100000),
   ("nof_db_events",                   100000),
-  ("fsize_local",                     324867401), # 324.87MB, avg file size 324.87MB
+  ("fsize_local",                     343540327), # 343.54MB, avg file size 343.54MB
   ("fsize_db",                        3873301459), # 3.87GB, avg file size 1.94GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -992,7 +992,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-270_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_270_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_270_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1028,7 +1028,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-280_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 98688),
   ("nof_db_events",                   98688),
-  ("fsize_local",                     324175793), # 324.18MB, avg file size 324.18MB
+  ("fsize_local",                     342685670), # 342.69MB, avg file size 342.69MB
   ("fsize_db",                        4085852491), # 4.09GB, avg file size 2.04GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1040,7 +1040,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-280_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_280_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_280_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1076,7 +1076,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-300_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 99502),
   ("nof_db_events",                   99502),
-  ("fsize_local",                     334443114), # 334.44MB, avg file size 334.44MB
+  ("fsize_local",                     353016823), # 353.02MB, avg file size 353.02MB
   ("fsize_db",                        3937638636), # 3.94GB, avg file size 1.97GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1088,7 +1088,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-300_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_300_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_300_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1124,7 +1124,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-320_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 97676),
   ("nof_db_events",                   97676),
-  ("fsize_local",                     333829905), # 333.83MB, avg file size 333.83MB
+  ("fsize_local",                     352847993), # 352.85MB, avg file size 352.85MB
   ("fsize_db",                        3947093624), # 3.95GB, avg file size 3.95GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1136,7 +1136,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-320_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_320_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_320_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1172,7 +1172,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-340_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 99226),
   ("nof_db_events",                   99226),
-  ("fsize_local",                     345389611), # 345.39MB, avg file size 345.39MB
+  ("fsize_local",                     364933681), # 364.93MB, avg file size 364.93MB
   ("fsize_db",                        4027035901), # 4.03GB, avg file size 2.01GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1184,7 +1184,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-340_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_340_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_340_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1220,7 +1220,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-350_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 98212),
   ("nof_db_events",                   98212),
-  ("fsize_local",                     344785727), # 344.79MB, avg file size 344.79MB
+  ("fsize_local",                     364239112), # 364.24MB, avg file size 364.24MB
   ("fsize_db",                        4125701387), # 4.13GB, avg file size 2.06GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1232,7 +1232,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-350_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_350_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_350_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1268,7 +1268,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-400_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 98789),
   ("nof_db_events",                   98789),
-  ("fsize_local",                     360354737), # 360.35MB, avg file size 360.35MB
+  ("fsize_local",                     380466103), # 380.47MB, avg file size 380.47MB
   ("fsize_db",                        4251757973), # 4.25GB, avg file size 2.13GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1280,7 +1280,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-400_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_400_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_400_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1316,7 +1316,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-450_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 100000),
   ("nof_db_events",                   100000),
-  ("fsize_local",                     377632246), # 377.63MB, avg file size 377.63MB
+  ("fsize_local",                     398083398), # 398.08MB, avg file size 398.08MB
   ("fsize_db",                        4221394903), # 4.22GB, avg file size 2.11GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1328,7 +1328,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-450_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_450_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_450_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1364,7 +1364,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-500_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 49535),
   ("nof_db_events",                   49535),
-  ("fsize_local",                     192827077), # 192.83MB, avg file size 192.83MB
+  ("fsize_local",                     203183101), # 203.18MB, avg file size 203.18MB
   ("fsize_db",                        2291615192), # 2.29GB, avg file size 763.87MB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1376,7 +1376,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-500_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_500_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_500_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1412,7 +1412,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-550_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 50000),
   ("nof_db_events",                   50000),
-  ("fsize_local",                     200190912), # 200.19MB, avg file size 200.19MB
+  ("fsize_local",                     210495338), # 210.50MB, avg file size 210.50MB
   ("fsize_db",                        2274028392), # 2.27GB, avg file size 2.27GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1424,7 +1424,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-550_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_550_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_550_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1460,7 +1460,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-600_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 49175),
   ("nof_db_events",                   49175),
-  ("fsize_local",                     201336598), # 201.34MB, avg file size 201.34MB
+  ("fsize_local",                     211617148), # 211.62MB, avg file size 211.62MB
   ("fsize_db",                        2305398213), # 2.31GB, avg file size 2.31GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1472,7 +1472,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-600_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_600_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_600_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1508,7 +1508,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-650_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 50000),
   ("nof_db_events",                   50000),
-  ("fsize_local",                     208821817), # 208.82MB, avg file size 208.82MB
+  ("fsize_local",                     219430741), # 219.43MB, avg file size 219.43MB
   ("fsize_db",                        2270214311), # 2.27GB, avg file size 2.27GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1520,7 +1520,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-650_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_650_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_650_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1556,7 +1556,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-700_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 49080),
   ("nof_db_events",                   49080),
-  ("fsize_local",                     208558854), # 208.56MB, avg file size 208.56MB
+  ("fsize_local",                     219041086), # 219.04MB, avg file size 219.04MB
   ("fsize_db",                        2393147016), # 2.39GB, avg file size 2.39GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1568,7 +1568,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-700_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_700_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_700_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1604,7 +1604,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-750_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 50000),
   ("nof_db_events",                   50000),
-  ("fsize_local",                     215972099), # 215.97MB, avg file size 215.97MB
+  ("fsize_local",                     226805071), # 226.81MB, avg file size 226.81MB
   ("fsize_db",                        2439402593), # 2.44GB, avg file size 2.44GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1616,7 +1616,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-750_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_750_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_750_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1652,7 +1652,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-800_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 49178),
   ("nof_db_events",                   49178),
-  ("fsize_local",                     215413327), # 215.41MB, avg file size 215.41MB
+  ("fsize_local",                     226295069), # 226.30MB, avg file size 226.30MB
   ("fsize_db",                        2401512581), # 2.40GB, avg file size 2.40GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1664,7 +1664,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-800_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_800_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_800_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1700,7 +1700,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-900_narrow_13TeV-madgraph/RunIIS
   }),
   ("nof_tree_events",                 49283),
   ("nof_db_events",                   49283),
-  ("fsize_local",                     220112100), # 220.11MB, avg file size 220.11MB
+  ("fsize_local",                     231170026), # 231.17MB, avg file size 231.17MB
   ("fsize_db",                        2506744879), # 2.51GB, avg file size 2.51GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1712,7 +1712,7 @@ samples_2016["/GluGluToBulkGravitonToHHTo4Tau_M-900_narrow_13TeV-madgraph/RunIIS
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_spin2_900_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_spin2_900_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1748,7 +1748,7 @@ samples_2016["/GluGluToHHTo4Tau_node_SM_13TeV-madgraph/RunIISummer16MiniAODv3-PU
   }),
   ("nof_tree_events",                 100000),
   ("nof_db_events",                   100000),
-  ("fsize_local",                     374692372), # 374.69MB, avg file size 374.69MB
+  ("fsize_local",                     395003112), # 395.00MB, avg file size 395.00MB
   ("fsize_db",                        4335254200), # 4.34GB, avg file size 2.17GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1760,7 +1760,7 @@ samples_2016["/GluGluToHHTo4Tau_node_SM_13TeV-madgraph/RunIISummer16MiniAODv3-PU
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_sm_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_sm_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1796,7 +1796,7 @@ samples_2016["/GluGluToHHTo4Tau_node_box_13TeV-madgraph/RunIISummer16MiniAODv3-P
   }),
   ("nof_tree_events",                 100000),
   ("nof_db_events",                   100000),
-  ("fsize_local",                     366630518), # 366.63MB, avg file size 366.63MB
+  ("fsize_local",                     386879263), # 386.88MB, avg file size 386.88MB
   ("fsize_db",                        4343698408), # 4.34GB, avg file size 2.17GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1808,7 +1808,7 @@ samples_2016["/GluGluToHHTo4Tau_node_box_13TeV-madgraph/RunIISummer16MiniAODv3-P
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_box_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_box_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1844,7 +1844,7 @@ samples_2016["/GluGluToHHTo4Tau_node_2_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   }),
   ("nof_tree_events",                 95878),
   ("nof_db_events",                   95878),
-  ("fsize_local",                     403552625), # 403.55MB, avg file size 403.55MB
+  ("fsize_local",                     423857873), # 423.86MB, avg file size 423.86MB
   ("fsize_db",                        4587536778), # 4.59GB, avg file size 2.29GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1856,7 +1856,7 @@ samples_2016["/GluGluToHHTo4Tau_node_2_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_2_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_2_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1892,7 +1892,7 @@ samples_2016["/GluGluToHHTo4Tau_node_3_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   }),
   ("nof_tree_events",                 99000),
   ("nof_db_events",                   99000),
-  ("fsize_local",                     377228858), # 377.23MB, avg file size 377.23MB
+  ("fsize_local",                     397576156), # 397.58MB, avg file size 397.58MB
   ("fsize_db",                        4402287226), # 4.40GB, avg file size 1.47GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1904,7 +1904,7 @@ samples_2016["/GluGluToHHTo4Tau_node_3_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_3_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_3_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1940,7 +1940,7 @@ samples_2016["/GluGluToHHTo4Tau_node_4_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   }),
   ("nof_tree_events",                 97777),
   ("nof_db_events",                   97777),
-  ("fsize_local",                     362013833), # 362.01MB, avg file size 362.01MB
+  ("fsize_local",                     381685313), # 381.69MB, avg file size 381.69MB
   ("fsize_db",                        4296631601), # 4.30GB, avg file size 2.15GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -1952,7 +1952,7 @@ samples_2016["/GluGluToHHTo4Tau_node_4_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_4_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_4_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -1988,7 +1988,7 @@ samples_2016["/GluGluToHHTo4Tau_node_5_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   }),
   ("nof_tree_events",                 98210),
   ("nof_db_events",                   98210),
-  ("fsize_local",                     395197276), # 395.20MB, avg file size 395.20MB
+  ("fsize_local",                     415399959), # 415.40MB, avg file size 415.40MB
   ("fsize_db",                        4483694248), # 4.48GB, avg file size 2.24GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -2000,7 +2000,7 @@ samples_2016["/GluGluToHHTo4Tau_node_5_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_5_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_5_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -2036,7 +2036,7 @@ samples_2016["/GluGluToHHTo4Tau_node_6_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   }),
   ("nof_tree_events",                 99178),
   ("nof_db_events",                   99178),
-  ("fsize_local",                     365151558), # 365.15MB, avg file size 365.15MB
+  ("fsize_local",                     384786588), # 384.79MB, avg file size 384.79MB
   ("fsize_db",                        4255863331), # 4.26GB, avg file size 2.13GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -2048,7 +2048,7 @@ samples_2016["/GluGluToHHTo4Tau_node_6_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_6_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_6_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -2084,7 +2084,7 @@ samples_2016["/GluGluToHHTo4Tau_node_7_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   }),
   ("nof_tree_events",                 97801),
   ("nof_db_events",                   97801),
-  ("fsize_local",                     337253563), # 337.25MB, avg file size 337.25MB
+  ("fsize_local",                     355881175), # 355.88MB, avg file size 355.88MB
   ("fsize_db",                        3951072091), # 3.95GB, avg file size 1.98GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -2096,7 +2096,7 @@ samples_2016["/GluGluToHHTo4Tau_node_7_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_7_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_7_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -2132,7 +2132,7 @@ samples_2016["/GluGluToHHTo4Tau_node_8_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   }),
   ("nof_tree_events",                 99301),
   ("nof_db_events",                   99301),
-  ("fsize_local",                     380572782), # 380.57MB, avg file size 380.57MB
+  ("fsize_local",                     400936186), # 400.94MB, avg file size 400.94MB
   ("fsize_db",                        4354193987), # 4.35GB, avg file size 1.45GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -2144,7 +2144,7 @@ samples_2016["/GluGluToHHTo4Tau_node_8_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_8_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_8_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -2180,7 +2180,7 @@ samples_2016["/GluGluToHHTo4Tau_node_9_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   }),
   ("nof_tree_events",                 98588),
   ("nof_db_events",                   98588),
-  ("fsize_local",                     390912472), # 390.91MB, avg file size 390.91MB
+  ("fsize_local",                     411129625), # 411.13MB, avg file size 411.13MB
   ("fsize_db",                        4491891214), # 4.49GB, avg file size 2.25GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -2192,7 +2192,7 @@ samples_2016["/GluGluToHHTo4Tau_node_9_13TeV-madgraph/RunIISummer16MiniAODv3-PUM
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_9_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_9_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -2228,7 +2228,7 @@ samples_2016["/GluGluToHHTo4Tau_node_10_13TeV-madgraph/RunIISummer16MiniAODv3-PU
   }),
   ("nof_tree_events",                 98724),
   ("nof_db_events",                   98724),
-  ("fsize_local",                     345763307), # 345.76MB, avg file size 345.76MB
+  ("fsize_local",                     364982998), # 364.98MB, avg file size 364.98MB
   ("fsize_db",                        4130096263), # 4.13GB, avg file size 2.07GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -2240,7 +2240,7 @@ samples_2016["/GluGluToHHTo4Tau_node_10_13TeV-madgraph/RunIISummer16MiniAODv3-PU
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_10_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_10_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -2276,7 +2276,7 @@ samples_2016["/GluGluToHHTo4Tau_node_11_13TeV-madgraph/RunIISummer16MiniAODv3-PU
   }),
   ("nof_tree_events",                 100000),
   ("nof_db_events",                   100000),
-  ("fsize_local",                     367488251), # 367.49MB, avg file size 367.49MB
+  ("fsize_local",                     387702835), # 387.70MB, avg file size 387.70MB
   ("fsize_db",                        4262962926), # 4.26GB, avg file size 2.13GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -2288,7 +2288,7 @@ samples_2016["/GluGluToHHTo4Tau_node_11_13TeV-madgraph/RunIISummer16MiniAODv3-PU
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_11_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_11_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -2324,7 +2324,7 @@ samples_2016["/GluGluToHHTo4Tau_node_12_13TeV-madgraph/RunIISummer16MiniAODv3-PU
   }),
   ("nof_tree_events",                 99190),
   ("nof_db_events",                   99190),
-  ("fsize_local",                     351731715), # 351.73MB, avg file size 351.73MB
+  ("fsize_local",                     371412477), # 371.41MB, avg file size 371.41MB
   ("fsize_db",                        4123293762), # 4.12GB, avg file size 2.06GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -2336,7 +2336,7 @@ samples_2016["/GluGluToHHTo4Tau_node_12_13TeV-madgraph/RunIISummer16MiniAODv3-PU
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2019Dec08_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_12_hh_4t"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2016/2020Jan13_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_12_hh_4t"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
