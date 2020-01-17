@@ -35,10 +35,11 @@ EvtHistManager_hh_2l_2tau::EvtHistManager_hh_2l_2tau(const edm::ParameterSet & c
     ostringstream temp;
     temp << mass_int;
     key = temp.str(); // Conversion from unsigned int to string                                                                                                                                                                                                             
-    std::string key_final = "BDTOutput_" + key;
+    std::string key_final = "BDTOutput_" + key; // For the TMVAInterface
     labels_.push_back(key_final);
 
-    std::string XGB_key_final = "BDTOutput_" + key + "_pkl";
+    //std::string XGB_key_final = "BDTOutput_" + key + "_pkl"; // For the XGBInterface
+    std::string XGB_key_final = "NNOutput_" + key;             // For the TensorFlowInterface
     XGB_labels_.push_back(XGB_key_final);
   }
 

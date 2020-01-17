@@ -341,10 +341,6 @@ int main(int argc, char* argv[])
   bool isDEBUG = cfg_analyze.getParameter<bool>("isDEBUG");
   if ( isDEBUG ) std::cout << "Warning: DEBUG mode enabled -> trigger selection will not be applied for data !!" << std::endl;
 
-  //bool isDEBUG_NN = cfg_analyze.getParameter<bool>("isDEBUG_NN");
-  //if ( isDEBUG_NN ) std::cout << "Warning: DEBUG mode enabled for NN interface only !!" << std::endl;
-
-
   checkOptionValidity(central_or_shift_main, isMC);
   const int met_option      = useNonNominal_jetmet ? kJetMET_central_nonNominal : getMET_option(central_or_shift_main, isMC);
   const int jetPt_option    = useNonNominal_jetmet ? kJetMET_central_nonNominal : getJet_option(central_or_shift_main, isMC);
@@ -422,11 +418,9 @@ int main(int argc, char* argv[])
   std::string BDTFileName_even  = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_even");
   std::string BDTFileName_odd   = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_odd");
   std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
-  std::string BDTFileName_even_pkl  = cfg_analyze.getParameter<std::string>("pkl_FileName_even");
-  std::string BDTFileName_odd_pkl   = cfg_analyze.getParameter<std::string>("pkl_FileName_odd");
-  //std::string NNFileName_even_pb  = "hhAnalysis/multilepton/data/test_2l_2tau_HH_dumb.pb";
+  //std::string BDTFileName_even_pkl  = cfg_analyze.getParameter<std::string>("pkl_FileName_even");
+  //std::string BDTFileName_odd_pkl   = cfg_analyze.getParameter<std::string>("pkl_FileName_odd");
   std::string NNFileName_even_pb  = cfg_analyze.getParameter<std::string>("pb_FileName_even");
-  //std::string NNFileName_odd_pb   = "hhAnalysis/multilepton/data/test_2l_2tau_HH_dumb.pb"; 
   std::string NNFileName_odd_pb   = cfg_analyze.getParameter<std::string>("pb_FileName_odd");
   std::string fitFunctionFileName = cfg_analyze.getParameter<std::string>("fitFunctionFileName");
 
@@ -646,9 +640,11 @@ int main(int argc, char* argv[])
     }; // this is for the dumb training
 
   assert(fitFunctionFileName != "");
-  XGBInterface* XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, fitFunctionFileName,  BDTInputVariables_SUM);
+  //XGBInterface* XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, fitFunctionFileName,  BDTInputVariables_SUM);
+
   TMVAInterface* BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, fitFunctionFileName);
   BDT_SUM->enableBDTTransform();
+
   TensorFlowInterface* NN_SUM = new TensorFlowInterface(NNFileName_odd_pb, NNInputVariables_SUM, {}, NNFileName_even_pb, fitFunctionFileName);
 
   std::map<std::string, double> BDTInputs_SUM;
@@ -1757,7 +1753,7 @@ int main(int argc, char* argv[])
     }
 
     std::map<std::string, double> BDTOutput_SUM_Map;
-    std::map<std::string, double> XGBOutput_SUM_Map;
+    //std::map<std::string, double> XGBOutput_SUM_Map;
     std::map<std::string, double> NNOutput_SUM_Map;
 
     for(unsigned int i=0; i<gen_mHH.size(); i++){ // Loop over signal masses
@@ -1769,12 +1765,12 @@ int main(int argc, char* argv[])
       key = temp.str(); // Conversion from unsigned int to string
       std::string key_final = "BDTOutput_" + key;
       BDTOutput_SUM_Map.insert( std::make_pair(key_final, (*BDT_SUM)(BDTInputs_SUM, eventInfo.event)) );
-      std::string XGB_key_final = "BDTOutput_" + key + "_pkl";
-      XGBOutput_SUM_Map.insert( std::make_pair(XGB_key_final, (*XGB_SUM)(BDTInputs_SUM, eventInfo.event)) );
+
+      //std::string XGB_key_final = "BDTOutput_" + key + "_pkl";
+      //XGBOutput_SUM_Map.insert( std::make_pair(XGB_key_final, (*XGB_SUM)(BDTInputs_SUM, eventInfo.event)) );
+
       std::string NN_key_final = "NNOutput_" + key;
-      double NN_output_value = (*NN_SUM)(mvaInputsValues, eventInfo.event)["output"];
-      if ( isDEBUG ) std::cout << "result NN_output_value " << NN_output_value << "\n";
-      NNOutput_SUM_Map.insert( std::make_pair(NN_key_final, NN_output_value) );
+      NNOutput_SUM_Map.insert( std::make_pair(NN_key_final, (*NN_SUM)(mvaInputsValues, eventInfo.event)["output"]) );
     }
 
 //--- retrieve gen-matching flags
@@ -1878,7 +1874,8 @@ int main(int argc, char* argv[])
             HT,
             STMET,
             BDTOutput_SUM_Map,
-            XGBOutput_SUM_Map,
+            //XGBOutput_SUM_Map,
+	    NNOutput_SUM_Map,
             eventInfo.event,
             kv.second
           );
@@ -1942,7 +1939,8 @@ int main(int argc, char* argv[])
                 HT,
                 STMET,
                 BDTOutput_SUM_Map,
-                XGBOutput_SUM_Map,
+                //XGBOutput_SUM_Map,
+		NNOutput_SUM_Map,
                 eventInfo.event,
                 evtWeight_category
               );
