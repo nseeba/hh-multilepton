@@ -76,4 +76,7 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_wjets = None)
     if samples_era_wjets and sample_name in samples_era_wjets:
       sample_info["use_it"] = False
 
+    if sample_name.startswith(('/TGJets', '/TTGJets', '/WGTo', '/ZGTo')):
+      sample_info["sample_category"] = "XGamma"
+
   return samples
