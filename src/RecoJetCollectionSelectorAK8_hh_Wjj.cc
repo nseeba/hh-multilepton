@@ -97,13 +97,13 @@ RecoJetSelectorAK8_hh_Wjj::set_min_jetId(int min_jetId)
 }
 
 void
-RecoJetSelectorAK8_hh_Wjj::set_lepton(const RecoLepton * lepton)
+RecoJetSelectorAK8_hh_Wjj::set_lepton(const RecoLepton * lepton) const
 {
   leptons_ = { lepton };
 }
 
 void
-RecoJetSelectorAK8_hh_Wjj::set_leptons(const std::vector<const RecoLepton *> & leptons)
+RecoJetSelectorAK8_hh_Wjj::set_leptons(const std::vector<const RecoLepton *> & leptons) const
 {
   leptons_ = leptons;
 }

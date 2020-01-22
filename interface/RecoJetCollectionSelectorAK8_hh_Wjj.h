@@ -31,8 +31,8 @@ public:
   void set_max_subJet2_absEta(double max_absEta);
   void set_min_jetId(int min_jetId);
 
-  void set_lepton(const RecoLepton * lepton);
-  void set_leptons(const std::vector<const RecoLepton *> & leptons);
+  void set_lepton(const RecoLepton * lepton) const;
+  void set_leptons(const std::vector<const RecoLepton *> & leptons) const;
 
   /**
    * @brief Get cut thresholds
@@ -73,7 +73,7 @@ protected:
   Double_t min_subJet2_pt_;            ///< lower cut threshold on pT of second subjet
   Double_t max_subJet2_absEta_;        ///< upper cut threshold on absolute value of eta of second subjet
 
-  std::vector<const RecoLepton *> leptons_; ///< pointer to electron or muon produced in H->WW*->jj lnu decay
+  mutable std::vector<const RecoLepton *> leptons_; ///< pointer to electron or muon produced in H->WW*->jj lnu decay
   
   bool debug_;
 };
