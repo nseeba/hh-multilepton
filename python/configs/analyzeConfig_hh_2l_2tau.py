@@ -440,7 +440,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
                     if hadTau_charge_selection != "disabled":
                       lepton_and_hadTau_charge_selection += "_hadTau%s" % hadTau_charge_selection
                     lepton_and_hadTau_charge_selection += "_sum%s" % chargeSumSelection
-                    for dir_type in [ DKEY_CFGS, DKEY_HIST, DKEY_LOGS, DKEY_ROOT, DKEY_RLES, DKEY_SYNC ]:
+                    for dir_type in [ DKEY_CFGS, DKEY_HIST, DKEY_LOGS, DKEY_RLES, DKEY_SYNC ]:
                       initDict(self.dirs, [ key_dir, dir_type ])
                       if dir_type in [ DKEY_CFGS, DKEY_LOGS ]:
                         self.dirs[key_dir][dir_type] = os.path.join(self.configDir, dir_type, self.channel,
@@ -450,7 +450,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
                           "_".join([ lepton_and_hadTau_selection_and_frWeight + lepton_and_hadTau_charge_selection ]), process_name_or_dummy, central_or_shift_or_dummy)
     for subdirectory in [ "addBackgrounds", "addBackgroundLeptonFakes", "addBackgroundLeptonFlips", "addBackgrounds_TailFit", "prepareDatacards", "addSystFakeRates", "makePlots" ]:
       key_dir = getKey(subdirectory)
-      for dir_type in [ DKEY_CFGS, DKEY_HIST, DKEY_LOGS, DKEY_ROOT, DKEY_DCRD, DKEY_PLOT ]:
+      for dir_type in [ DKEY_CFGS, DKEY_HIST, DKEY_LOGS, DKEY_DCRD, DKEY_PLOT ]:
         initDict(self.dirs, [ key_dir, dir_type ])
         if dir_type in [ DKEY_CFGS, DKEY_LOGS, DKEY_DCRD, DKEY_PLOT ]:
           self.dirs[key_dir][dir_type] = os.path.join(self.configDir, dir_type, self.channel, subdirectory)

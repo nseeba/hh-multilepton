@@ -123,7 +123,7 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
       process_name = sample_info["process_name_specific"]
       for mode in self.modes:
         key_dir = getKey(process_name, mode)
-        for dir_type in [ DKEY_CFGS, DKEY_HIST, DKEY_LOGS, DKEY_ROOT, DKEY_RLES, DKEY_SYNC ]:
+        for dir_type in [ DKEY_CFGS, DKEY_HIST, DKEY_LOGS, DKEY_RLES, DKEY_SYNC ]:
           initDict(self.dirs, [ key_dir, dir_type ])
           if dir_type in [ DKEY_CFGS, DKEY_LOGS ]:
             self.dirs[key_dir][dir_type] = os.path.join(self.configDir, dir_type, self.channel, "_".join([ mode ]), process_name)
