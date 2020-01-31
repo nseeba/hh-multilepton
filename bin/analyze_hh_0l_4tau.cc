@@ -1004,13 +1004,13 @@ int main(int argc, char* argv[])
     if ( !(fakeableHadTausFull.size() >= 4) ) continue;
     cutFlowTable.update(">= 4 fakeable taus", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms(">= 4 fakeable taus", evtWeightRecorder.get(central_or_shift_main));
-    const RecoHadTau* fakeableHadTau_lead = fakeableHadTausFull[0];
-    const RecoHadTau* fakeableHadTau_sublead = fakeableHadTausFull[1];
-    const RecoHadTau* fakeableHadTau_third = fakeableHadTausFull[2];
-    const RecoHadTau* fakeableHadTau_fourth = fakeableHadTausFull[3];
-    const hadTauGenMatchEntry& fakeableHadTau_genMatch = getHadTauGenMatch(
-      hadTauGenMatch_definitions, fakeableHadTau_lead, fakeableHadTau_sublead, fakeableHadTau_third, fakeableHadTau_fourth
-    );
+    //const RecoHadTau* fakeableHadTau_lead = fakeableHadTausFull[0];
+    //const RecoHadTau* fakeableHadTau_sublead = fakeableHadTausFull[1];
+    //const RecoHadTau* fakeableHadTau_third = fakeableHadTausFull[2];
+    //const RecoHadTau* fakeableHadTau_fourth = fakeableHadTausFull[3];
+    //const hadTauGenMatchEntry& fakeableHadTau_genMatch = getHadTauGenMatch(
+    //  hadTauGenMatch_definitions, fakeableHadTau_lead, fakeableHadTau_sublead, fakeableHadTau_third, fakeableHadTau_fourth
+    //);
 
     if ( selBJets_loose.size() >= 2 || selBJets_medium.size() >= 1 ) continue;
     cutFlowTable.update("b-jet veto", evtWeightRecorder.get(central_or_shift_main));
