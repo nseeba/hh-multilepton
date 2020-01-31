@@ -317,7 +317,6 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet,
   return true;
 }
 
-
 bool
 RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet) const
 {
