@@ -32,7 +32,10 @@ public:
   //-----------------------------------------------------------------------------
 
 protected:
-    
+
+  bool
+  check_triggerSFsys_opt(TriggerSFsys central_or_shift) const;
+
   // define states of tau leg of ditau trigger for each reconstructed tau
   enum { k2tau, kNot2tau };
 

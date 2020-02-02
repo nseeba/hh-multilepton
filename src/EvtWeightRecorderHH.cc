@@ -45,7 +45,7 @@ EvtWeightRecorderHH::record_tauTriggerEff(const Data_to_MC_CorrectionInterface_h
   weights_tauTriggerEff_.clear();
   for(const std::string & central_or_shift: central_or_shifts_)
   {
-    const TriggerSFsys triggerSF_option = getTriggerSF_option(central_or_shift);
+    const TriggerSFsys triggerSF_option = getTriggerSF_option(central_or_shift, TriggerSFsysChoice::hadTauOnly);
     if(weights_tauTriggerEff_.count(triggerSF_option))
     {
       continue;
@@ -61,7 +61,7 @@ EvtWeightRecorderHH::record_tauTriggerEff(const Data_to_MC_CorrectionInterface_h
   weights_tauTriggerEff_.clear();
   for(const std::string & central_or_shift: central_or_shifts_)
   {
-    const TriggerSFsys triggerSF_option = getTriggerSF_option(central_or_shift);
+    const TriggerSFsys triggerSF_option = getTriggerSF_option(central_or_shift, TriggerSFsysChoice::hadTauOnly);
     if(weights_tauTriggerEff_.count(triggerSF_option))
     {
       continue;

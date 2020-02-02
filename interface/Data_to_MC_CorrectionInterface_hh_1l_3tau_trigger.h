@@ -52,7 +52,10 @@ public:
   getSF_triggerEff(TriggerSFsys central_or_shift) const;
   //-----------------------------------------------------------------------------
 
-private:
+protected:
+
+  bool
+  check_triggerSFsys_opt(TriggerSFsys central_or_shift) const;
 
   // define states of single lepton trigger and of lepton leg of lepton+tau cross trigger for each reconstructed lepton
   enum
