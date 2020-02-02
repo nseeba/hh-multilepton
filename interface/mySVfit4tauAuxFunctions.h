@@ -139,7 +139,7 @@ compSVfit4tau(const ChargedParticle & measuredTau1,
               double massConstraint = -1.,                      // CV: default is not to apply mass constraint
               double logM = 0.,                                 // CV: default is not to apply log(M) term
               int intAlgo = ClassicSVfit4tau::kAlgoMarkovChain, // CV: default is to use Markov-Chain integration
-              int verbosity = 1);
+              int verbosity = 0);
 
 // reconstruct di-Higgs system for one particular (given) pairing of visible tau decay products
 SVfit4tauResult
@@ -151,6 +151,6 @@ compSVfit4tau(const Particle::LorentzVector & measuredTau1Higgs1P4, int measured
               double massConstraint = -1.,                      // CV: default is not to apply mass constraint
               double logM = 0.,                                 // CV: default is not to apply log(M) term
               int intAlgo = ClassicSVfit4tau::kAlgoMarkovChain, // CV: default is to use Markov-Chain integration
-              int verbosity = 1);
+              int verbosity = 0);
 
 #endif
