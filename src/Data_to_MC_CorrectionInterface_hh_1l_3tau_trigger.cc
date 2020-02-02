@@ -283,9 +283,15 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff(TriggerSFsys
             ++nTrig_2tau_tauLeg;
           }
 
-	  std::cout << "nTrig_1l = " << nTrig_1l << "," 
-		    << " nTrig_1l1tau_lepLeg = " << nTrig_1l1tau_lepLeg << ", nTrig_1l1tau_tauLeg = " << nTrig_1l1tau_tauLeg << "," 
-                    << " nTrig_2tau_tauLeg = " << nTrig_2tau_tauLeg << '\n';
+          if(isDEBUG_)
+          {
+            std::cout
+              << "nTrig_1l = " << nTrig_1l << ","
+                 " nTrig_1l1tau_lepLeg = " << nTrig_1l1tau_lepLeg << ","
+                 " nTrig_1l1tau_tauLeg = " << nTrig_1l1tau_tauLeg << ","
+                 " nTrig_2tau_tauLeg   = " << nTrig_2tau_tauLeg   << '\n'
+            ;
+          }
 
           const bool isTrig_1l_toy     = nTrig_1l >= 1;
           const bool isTrig_1l1tau_toy = nTrig_1l1tau_lepLeg >= 1 && nTrig_1l1tau_tauLeg >= 1;
@@ -295,9 +301,16 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getSF_triggerEff(TriggerSFsys
              isTriggered_1l1tau == isTrig_1l1tau_toy &&
              isTriggered_2tau_ == isTrig_2tau_toy     )
           {
-	    std::cout << "isTrig_1l_toy = " << isTrig_1l_toy << ", isTrig_1l1tau_toy = " << isTrig_1l1tau_toy << ", isTrig_2tau_toy = " << isTrig_2tau_toy << ":"
-		      << " prob_data = " << (prob_lepton_data * prob_tau1_data * prob_tau2_data * prob_tau3_data) << ","
-                      << " prob_mc = " << (prob_lepton_mc * prob_tau1_mc * prob_tau2_mc * prob_tau3_mc) << '\n';
+            if(isDEBUG_)
+            {
+              std::cout
+                << "isTrig_1l_toy      = " << isTrig_1l_toy     << ","
+                   " isTrig_1l1tau_toy = " << isTrig_1l1tau_toy << ","
+                   " isTrig_2tau_toy   = " << isTrig_2tau_toy   << ":"
+                   " prob_data = " << (prob_lepton_data * prob_tau1_data * prob_tau2_data * prob_tau3_data) << ","
+                   " prob_mc   = " << (prob_lepton_mc * prob_tau1_mc * prob_tau2_mc * prob_tau3_mc)         << '\n'
+              ;
+            }
             prob_data += prob_lepton_data * prob_tau1_data * prob_tau2_data * prob_tau3_data;
             prob_mc   += prob_lepton_mc   * prob_tau1_mc   * prob_tau2_mc   * prob_tau3_mc;
           }
@@ -361,7 +374,10 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_lepton(int lepton_sta
     case kNot1lAndNot1l1tau: prob = 1. - std::max(eff_1l, eff_1l1tau_lepLeg);    break;
     default:                 assert(0);
   }
-  std::cout << get_human_line(this, __func__, __LINE__) << ": prob = " << prob << '\n';
+  if(isDEBUG_)
+  {
+    std::cout << get_human_line(this, __func__, __LINE__) << ": prob = " << prob << '\n';
+  }
   return prob;
 }
  
@@ -379,6 +395,9 @@ Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger::getProb_tau(int tau_status,
     case kNot1l1tauAndNot2tau: prob = 1. - std::max(eff_1l1tau_tauLeg, eff_2tau_tauLeg);    break;
     default:                   assert(0);
   }
-  std::cout << get_human_line(this, __func__, __LINE__) << ": prob = " << prob << '\n';
+  if(isDEBUG_)
+  {
+    std::cout << get_human_line(this, __func__, __LINE__) << ": prob = " << prob << '\n';
+  }
   return prob;
 }
