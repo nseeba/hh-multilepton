@@ -168,8 +168,7 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
   def accept_systematics(self, central_or_shift, is_mc, lepton_selection, leptonChargeSelection, sample_info):
     if central_or_shift != "central":
       isFR_shape_shift = (central_or_shift in self.central_or_shifts_fr)
-      if not ((lepton_selection == "Fakeable" and leptonChargeSelection == "SS" and isFR_shape_shift) or
-              (lepton_selection == "Tight" and leptonChargeSelection == "SS")):
+      if not ((lepton_selection == "Fakeable" and isFR_shape_shift) or lepton_selection == "Tight"):
         return False
       if not is_mc and not isFR_shape_shift:
         return False
