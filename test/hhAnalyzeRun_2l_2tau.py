@@ -137,7 +137,6 @@ if __name__ == '__main__':
     num_parallel_jobs                     = num_parallel_jobs,
     executable_addBackgrounds             = "addBackgrounds",
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
-    executable_addBackgrounds_TailFit     = "addBackgrounds_TailFit", 
     executable_addFlips                   = "addBackgroundLeptonFlips",
     histograms_to_fit                     = {
       "EventCounter"                      : {},
@@ -153,7 +152,14 @@ if __name__ == '__main__':
       "BDTOutput_700"                    : {},
       "BDTOutput_300"                    : {},
       "BDTOutput_500"                    : {},
-      "BDTOutput_800"                    : {}
+      "BDTOutput_800"                    : {},
+      "NNOutput_1000"                    : {},
+      "NNOutput_250"                    : {},
+      "NNOutput_400"                    : {},
+      "NNOutput_700"                    : {},
+      "NNOutput_300"                    : {},
+      "NNOutput_500"                    : {},
+      "NNOutput_800"                    : {}
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,
