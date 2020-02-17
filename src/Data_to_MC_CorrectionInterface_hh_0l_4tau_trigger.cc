@@ -73,6 +73,7 @@ Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::getSF_triggerEff(TriggerSFsys
   {
     std::cout << get_human_line(this, __func__, __LINE__) << '\n';
   }
+  assert(check_triggerSFsys_opt(central_or_shift));
 
   double eff_2tau_tauLeg1_data = 0.;
   double eff_2tau_tauLeg1_mc   = 0.;
@@ -198,4 +199,16 @@ Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::getProb_tau(int tau_status,
     default:       assert(0);
   }
   return prob;
+}
+
+bool
+Data_to_MC_CorrectionInterface_hh_0l_4tau_trigger::check_triggerSFsys_opt(TriggerSFsys central_or_shift) const
+{
+  return
+    central_or_shift == TriggerSFsys::central          ||
+    central_or_shift == TriggerSFsys::shiftUp          ||
+    central_or_shift == TriggerSFsys::shiftDown        ||
+    central_or_shift == TriggerSFsys::shift_0l2tauUp   ||
+    central_or_shift == TriggerSFsys::shift_0l2tauDown
+  ;
 }

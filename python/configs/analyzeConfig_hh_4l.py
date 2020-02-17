@@ -138,8 +138,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
   def accept_systematics(self, central_or_shift, is_mc, lepton_selection, leptonChargeSelection, sample_info):
     if central_or_shift != "central":
       isFR_shape_shift = (central_or_shift in self.central_or_shifts_fr)
-      if not ((lepton_selection == "Fakeable" and leptonChargeSelection == "OS" and isFR_shape_shift) or
-              (lepton_selection == "Tight" and leptonChargeSelection == "OS")):
+      if not ((lepton_selection == "Fakeable" and isFR_shape_shift) or lepton_selection == "Tight"):
         return False
       if not is_mc and not isFR_shape_shift:
         return False
@@ -211,23 +210,27 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                   continue
                   
                 key_dir = getKey(process_name_or_dummy, lepton_selection_and_frWeight, leptonChargeSelection, central_or_shift_or_dummy)
-                for dir_type in [ DKEY_CFGS, DKEY_HIST, DKEY_LOGS, DKEY_ROOT, DKEY_RLES, DKEY_SYNC ]:
+                for dir_type in [ DKEY_CFGS, DKEY_HIST, DKEY_LOGS, DKEY_RLES, DKEY_SYNC ]:
+                  if dir_type == DKEY_SYNC and not self.do_sync:
+                    continue
                   initDict(self.dirs, [ key_dir, dir_type ])
                   if dir_type in [ DKEY_CFGS, DKEY_LOGS ]:
                     self.dirs[key_dir][dir_type] = os.path.join(self.configDir, dir_type, self.channel,
                       "_".join([ lepton_selection_and_frWeight, leptonChargeSelection ]), process_name_or_dummy, central_or_shift_or_dummy)
                   else:
                     self.dirs[key_dir][dir_type] = os.path.join(self.outputDir, dir_type, self.channel,
-                      "_".join([ lepton_selection_and_frWeight, leptonChargeSelection ]), process_name_or_dummy, central_or_shift_or_dummy)
+                      "_".join([ lepton_selection_and_frWeight, leptonChargeSelection ]), process_name_or_dummy)
     for subdirectory in [ "addBackgrounds", "addBackgroundLeptonFakes", "prepareDatacards", "addSystFakeRates", "makePlots" ]:
       key_dir = getKey(subdirectory)
-      for dir_type in [ DKEY_CFGS, DKEY_HIST, DKEY_LOGS, DKEY_ROOT, DKEY_DCRD, DKEY_PLOT ]:
+      for dir_type in [ DKEY_CFGS, DKEY_HIST, DKEY_LOGS, DKEY_DCRD, DKEY_PLOT ]:
         initDict(self.dirs, [ key_dir, dir_type ])
         if dir_type in [ DKEY_CFGS, DKEY_LOGS, DKEY_DCRD, DKEY_PLOT ]:
           self.dirs[key_dir][dir_type] = os.path.join(self.configDir, dir_type, self.channel, subdirectory)
         else:
           self.dirs[key_dir][dir_type] = os.path.join(self.outputDir, dir_type, self.channel, subdirectory)
     for dir_type in [ DKEY_CFGS, DKEY_SCRIPTS, DKEY_HIST, DKEY_LOGS, DKEY_DCRD, DKEY_PLOT, DKEY_HADD_RT, DKEY_SYNC ]:
+      if dir_type == DKEY_SYNC and not self.do_sync:
+        continue
       initDict(self.dirs, [ dir_type ])
       if dir_type in [ DKEY_CFGS, DKEY_SCRIPTS, DKEY_LOGS, DKEY_DCRD, DKEY_PLOT, DKEY_HADD_RT ]:
         self.dirs[dir_type] = os.path.join(self.configDir, dir_type, self.channel)
