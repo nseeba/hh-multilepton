@@ -104,10 +104,10 @@ if mode == "default":
 elif mode == "forBDTtraining":
   if use_preselected:
     raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
-  samples = load_samples(era, suffix = "BDT_2l_2tau")
+  samples = load_samples(era, suffix = "")
   hadTauWP_map_relaxed = {
-    'dR03mva' : 'Loose',
-    'deepVSj' : 'Loose',
+    'dR03mva' : 'VLoose',
+    'deepVSj' : 'VLoose',
   }
   if args.tau_id_wp:
     tau_id = args.tau_id[:7]
