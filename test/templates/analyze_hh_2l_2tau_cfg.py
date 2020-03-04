@@ -123,6 +123,8 @@ process.analyze_hh_2l_2tau = cms.PSet(
     isDEBUG = cms.bool(False),
     isDEBUG_NN = cms.bool(True),
     hasLHE = cms.bool(True),
+    hasPS = cms.bool(False),
+    apply_LHE_nom = cms.bool(False),
     useObjectMultiplicity = cms.bool(False),
 
     selectBDT = cms.bool(False), ## Set it to true for making BDT training Ntuples
