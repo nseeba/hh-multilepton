@@ -1320,7 +1320,8 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms("sel tau veto", evtWeightRecorder.get(central_or_shift_main));
 
 //--- compute MHT and linear MET discriminant (met_LD)
-    RecoMEt met = metReader->read();
+    const RecoMEt met_uncorr = metReader->read();
+    const RecoMEt met = recompute_met(met_uncorr, jets, met_option, isDEBUG);
     const Particle::LorentzVector& metP4 = met.p4();
     Particle::LorentzVector mhtP4 = compMHT(fakeableLeptonsFull, fakeableHadTaus, selJets);
     double met_LD = compMEt_LD(metP4, mhtP4);
