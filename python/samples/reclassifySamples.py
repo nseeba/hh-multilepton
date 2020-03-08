@@ -39,11 +39,11 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_wjets = None)
 
     if sample_info["sample_category"] == "Rares":
       sample_info["sample_category"] = "Other"
-    elif sample_name.startswith('/ZZ'):
-      sample_info["sample_category"] = "ZZ" # ZZ + ZZZ
-    elif sample_name.startswith('/WZ'):
-      sample_info["sample_category"] = "WZ" # WZ + WZZ + WZG
-    elif sample_name.startswith('/WW'):
+    elif sample_name.startswith('/ZZTo'):
+      sample_info["sample_category"] = "ZZ"
+    elif sample_name.startswith('/WZTo'):
+      sample_info["sample_category"] = "WZ"
+    elif sample_name.startswith('/WWTo'):
       sample_info["sample_category"] = "WW"
     elif sample_name.startswith('/DY') and sample_name.find('JetsToLL') != -1 and sample_name.find('JetsToLL') < 10:
       sample_info["sample_category"] = "DY"
@@ -59,14 +59,14 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_wjets = None)
     elif sample_name.startswith('/TTJets'):
       sample_info["sample_category"] = "TT"
       sample_info["use_it"] = False
-    elif sample_name.startswith('/VH'):
+    elif sample_name.startswith(('/VH', '/ZH')):
       sample_info["sample_category"] = "VH"
-    elif sample_name.startswith('/TTZ'):
-      sample_info["sample_category"] = "TTZ" # TTZ + TTZZ + TTZH
+    elif sample_name.startswith(('/TTZTo', '/ttZJets')):
+      sample_info["sample_category"] = "TTZ"
     elif sample_name.startswith('/TTWW'):
       sample_info["sample_category"] = "TTWW"
-    elif sample_name.startswith('/TTW'):
-      sample_info["sample_category"] = "TTW" # TTW + TTWH
+    elif sample_name.startswith(('/TTWJets', '/ttWJets')):
+      sample_info["sample_category"] = "TTW"
 
     # disable Tau PD by default -- to avoid double-counting the data events in all analysis channels but 0l+4tau and 1l+3tau
     # where the PD is the only one enabled
