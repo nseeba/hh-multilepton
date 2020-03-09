@@ -1,4 +1,3 @@
-
 #include <TFile.h>
 #include <TString.h>
 #include <TH1.h>
@@ -12,6 +11,24 @@
 #include <iostream>
 #include <iomanip>
 #include <assert.h>
+
+#include <boost/algorithm/string/replace.hpp>
+
+using namespace std;
+
+
+void eraseSubStr(std::string & mainStr, const std::string & toErase)
+{
+  // Search for the substring in string
+  size_t pos = mainStr.find(toErase);
+ 
+  if (pos != std::string::npos)
+    {
+      // If found then erase it from string
+      mainStr.erase(pos, toErase.length());
+    }
+}
+
 
 TH1* loadHistogram(TFile* inputFile, const std::string& histogramName)
 {
@@ -75,45 +92,134 @@ void dumpEventYields_Stage2()
   vstring channels;
   //channels.push_back("hh_0l_4tau");
   //channels.push_back("hh_1l_3tau");
-  //channels.push_back("hh_2l_2tau");
+  channels.push_back("hh_2l_2tau");
   //channels.push_back("hh_3l_1tau");
   //channels.push_back("hh_4l");
-  channels.push_back("hh_2lss");
+  //channels.push_back("hh_2lss");
 
-  //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2017/2018Sep6/histograms/hh_2l_2tau/";
-  // std::string inputFilePath = "/hdfs/local/sbhowmik/hhAnalysis/2017/2018Sept27/histograms/hh_2lss/";
-  std::string inputFilePath = "/hdfs/local/sbhowmik/hhAnalysis/2017/2017Sept29/histograms/hh_2lss/";
+  int Era = 2016; 
+  double lumi_datacard_2016 = 35.9;
+  double lumi_projection_2016 = 35.9;
+  double lumi_SF = lumi_projection_2016/lumi_datacard_2016;
+  std::cout << "scaling (Era: "<< Era  << ")  signal and background yields to L=" << lumi_projection_2016 << "fb^-1 @ 13 TeV." << std::endl;
+  
+
+  /*
+  int Era = 2017; 
+  double lumi_datacard_2017 = 41.5;
+  double lumi_projection_2017 = 41.5;
+  double lumi_SF = lumi_projection_2017/lumi_datacard_2017;
+  std::cout << "scaling (Era: "<< Era  << ")  signal and background yields to L=" << lumi_projection_2017 << "fb^-1 @ 13 TeV." << std::endl;
+  */
+
+  /*
+  int Era = 2018; 
+  double lumi_datacard_2018 = 59.7;
+  double lumi_projection_2018 = 59.7;
+  double lumi_SF = lumi_projection_2018/lumi_datacard_2018;
+  std::cout << "scaling (Era: "<< Era  << ")  signal and background yields to L=" << lumi_projection_2018 << "fb^-1 @ 13 TeV." << std::endl;
+  */
+
+
+  // --------- Tight sumOS filePaths -----------
+  //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2016/2020Feb23_deepVSjMedium_2016/histograms/hh_2l_2tau";
+  //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2016/2020Feb23_deepVSjLoose_2016/histograms/hh_2l_2tau";
+  //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2016/2020Feb23_deepVSjVLoose_2016/histograms/hh_2l_2tau";
+  //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2016/2020Feb24_deepVSjVVLoose_2016/histograms/hh_2l_2tau";
+  //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2017/2020Feb17_wdR03mva_TauID/histograms/hh_2l_2tau"; // dR03mvaMedium jet->tau FRs used here
+  //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2017/2020Feb12/histograms/hh_2l_2tau";                // deepVSjMedium, 2017 Era 
+  //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2017/2020Feb21_deepVSjLoose/histograms/hh_2l_2tau";
+  //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2017/2020Feb21_deepVSjVLoose/histograms/hh_2l_2tau";
+  //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2017/2020Feb21_deepVSjVVLoose/histograms/hh_2l_2tau";
+
+  // --------- Tight sumSS filePaths -----------
+  //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2017/2020Mar3_SS_Only/histograms/hh_2l_2tau/";
+  //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2017/2020Mar3_deepVSjLoose_SS_Only/histograms/hh_2l_2tau/";
+  //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2017/2020Mar3_deepVSjVLoose_SS_Only/histograms/hh_2l_2tau/";
+  std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2017/2020Mar3_deepVSjVVLoose_SS_Only/histograms/hh_2l_2tau/";
+
+
+  //std::string Tau_ID = "deepVSjMedium (2016)";
+  //std::string Tau_ID = "deepVSjLoose (2016)";
+  //std::string Tau_ID = "deepVSjVLoose (2016)";
+  //std::string Tau_ID = "deepVSjVVLoose (2016)";
+  //std::string Tau_ID = "dR03MVAMedium (2017)";
+  //std::string Tau_ID = "deepVSjMedium (2017)";
+  //std::string Tau_ID = "deepVSjLoose (2017)";
+  //std::string Tau_ID = "deepVSjVLoose (2017)";
+  std::string Tau_ID = "deepVSjVVLoose (2017)";
+
+
+  //std::string inputFilePath = "/hdfs/local/sbhowmik/hhAnalysis/2017/2018Sept27/histograms/hh_2lss/";
+  //std::string inputFilePath = "/hdfs/local/sbhowmik/hhAnalysis/2017/2017Sept29/histograms/hh_2lss/";
 
   std::map<std::string, std::string> inputFileNames; // key = channel
   // inputFileNames["hh_0l_4tau"] = "hh_0l_4tau/histograms_harvested_stage2_hh_0l_4tau_Tight_OS.root";
   // inputFileNames["hh_1l_3tau"] = "hh_1l_3tau/histograms_harvested_stage2_hh_1l_3tau_Tight_OS.root";
-  //inputFileNames["hh_2l_2tau"] = "histograms_harvested_stage2_hh_2l_2tau_disabled_disabled_Tight_OS.root";
+  if(Era == 2016){
+    //inputFileNames["hh_2l_2tau"] = "Tight_sumOS/hadd/hadd_stage2_disabled_disabled_Tight_OS.root";
+    inputFileNames["hh_2l_2tau"] = "Tight_sumSS/hadd/hadd_stage2_disabled_disabled_Tight_SS.root";
+  }else{
+    //inputFileNames["hh_2l_2tau"] = "Tight_sumOS/hadd/histograms_harvested_stage2_hh_2l_2tau_disabled_disabled_Tight_OS.root";
+    inputFileNames["hh_2l_2tau"] = "Tight_sumSS/hadd/histograms_harvested_stage2_hh_2l_2tau_disabled_disabled_Tight_SS.root";
+  }
   // inputFileNames["hh_3l_1tau"] = "hh_3l_1tau/histograms_harvested_stage2_hh_3l_1tau_Tight_OS.root";
   // inputFileNames["hh_4l"]      = "";
-  inputFileNames["hh_2lss"] = "histograms_harvested_stage2_hh_2lss_Tight_SS.root";
+  //inputFileNames["hh_2lss"] = "histograms_harvested_stage2_hh_2lss_Tight_SS.root";
   //inputFileNames["hh_2lss"] = "histograms_harvested_stage2_hh_2lss_Tight_OS.root";
 
   std::map<std::string, std::string> directories; // key = channel
   // directories["hh_0l_4tau"] = "hh_0l_4tau_OS_Tight/sel/evt";
   // directories["hh_1l_3tau"] = "hh_1l_3tau_OS_Tight/sel/evt";
-  //directories["hh_2l_2tau"] = "hh_2l_2tau_sumOS_Tight/sel/evt";
   // directories["hh_3l_1tau"] = "hh_3l_1tau_OS_lepTight_tauTight/sel/evt";
   // directories["hh_4l"]      = "";
-  directories["hh_2lss"] = "hh_2lss_SS_Tight/sel/evt";
+  //directories["hh_2lss"] = "hh_2lss_SS_Tight/sel/evt";
   //directories["hh_2lss"] = "hh_2lss_OS_Tight/sel/evt";
 
+  //directories["hh_2l_2tau"] = "hh_2l_2tau_sumOS_Tight/sel/evt";
+  directories["hh_2l_2tau"] = "hh_2l_2tau_sumSS_Tight/sel/evt";
+
+
+
   std::map<std::string, vstring> signal_processes; // key = channel
-  signal_processes["hh_2lss"].push_back("signal_ggf_spin0_400_hh_tttt");
-  signal_processes["hh_2lss"].push_back("signal_ggf_spin0_400_hh_wwtt");
-  signal_processes["hh_2lss"].push_back("signal_ggf_spin0_400_hh_wwww");
-  signal_processes["hh_2lss"].push_back("signal_spin0_400_hh");
+  signal_processes["hh_2l_2tau"].push_back("signal_spin0_400_hh");
+  signal_processes["hh_2l_2tau"].push_back("signal_spin2_400_hh");
+  signal_processes["hh_2l_2tau"].push_back("signal_spin0_700_hh");
+  signal_processes["hh_2l_2tau"].push_back("signal_spin2_700_hh");
+  //signal_processes["hh_2lss"].push_back("signal_ggf_spin0_400_hh_tttt");
+  //signal_processes["hh_2lss"].push_back("signal_ggf_spin0_400_hh_wwtt");
+  //signal_processes["hh_2lss"].push_back("signal_ggf_spin0_400_hh_wwww");
+  //signal_processes["hh_2lss"].push_back("signal_spin0_400_hh");
 
   std::vector<std::string> signal_process_parts;
   signal_process_parts.push_back("");
-  signal_process_parts.push_back("_Convs");
-  signal_process_parts.push_back("_fake");
+  //signal_process_parts.push_back("_Convs");
+  //signal_process_parts.push_back("_fake");
   
   std::map<std::string, vstring> background_processes; // key = channel
+  background_processes["hh_2l_2tau"].push_back("VH");
+  background_processes["hh_2l_2tau"].push_back("TT");
+  background_processes["hh_2l_2tau"].push_back("ZZ");
+  background_processes["hh_2l_2tau"].push_back("WZ");
+  background_processes["hh_2l_2tau"].push_back("WW");
+  background_processes["hh_2l_2tau"].push_back("DY");
+  background_processes["hh_2l_2tau"].push_back("W");
+  background_processes["hh_2l_2tau"].push_back("TTWW");
+  background_processes["hh_2l_2tau"].push_back("TTW");
+  background_processes["hh_2l_2tau"].push_back("TTZ");
+  background_processes["hh_2l_2tau"].push_back("TTH");
+  background_processes["hh_2l_2tau"].push_back("TH");
+  background_processes["hh_2l_2tau"].push_back("qqH");
+  background_processes["hh_2l_2tau"].push_back("ggH");
+  background_processes["hh_2l_2tau"].push_back("XGamma");
+  background_processes["hh_2l_2tau"].push_back("Other");
+  background_processes["hh_2l_2tau"].push_back("Convs");
+  background_processes["hh_2l_2tau"].push_back("fakes_mc");
+  background_processes["hh_2l_2tau"].push_back("data_fakes");
+  background_processes["hh_2l_2tau"].push_back("flips_mc");
+  background_processes["hh_2l_2tau"].push_back("data_obs");
+
+  /*
   background_processes["hh_2lss"].push_back("TT");
   background_processes["hh_2lss"].push_back("TTW");
   background_processes["hh_2lss"].push_back("TTWW");
@@ -127,21 +233,17 @@ void dumpEventYields_Stage2()
   background_processes["hh_2lss"].push_back("W");
   background_processes["hh_2lss"].push_back("VH");
   background_processes["hh_2lss"].push_back("Other");
-  /*
-  background_processes["hh_2lss"].push_back("Convs");
-  background_processes["hh_2lss"].push_back("data_fakes");
-  background_processes["hh_2lss"].push_back("data_flips");
-  background_processes["hh_2lss"].push_back("fakes_mc");
+  
+  //background_processes["hh_2lss"].push_back("Convs");
+  //background_processes["hh_2lss"].push_back("data_fakes");
+  //background_processes["hh_2lss"].push_back("data_flips");
+  //background_processes["hh_2lss"].push_back("fakes_mc");
   */
+
   std::vector<std::string> background_process_parts;
   background_process_parts.push_back("");
   background_process_parts.push_back("_Convs");
   background_process_parts.push_back("_fake");
-
-  double lumi_datacard = 41.5;
-  double lumi_projection = 41.5;
-  double lumi_SF = lumi_projection/lumi_datacard;
-  std::cout << "scaling signal and background yields to L=" << lumi_projection << "fb^-1 @ 13 TeV." << std::endl;
 
   for ( vstring::const_iterator channel = channels.begin();
 	channel != channels.end(); ++channel ) {
@@ -157,21 +259,31 @@ void dumpEventYields_Stage2()
       assert(0);
 
     }
+    std::cout<< "\\begin{frame}{ Event Yields: " <<  Tau_ID <<  "} " << std::endl;
+    std::cout<< "\\fontsize{7pt}{8}\\selectfont  " << std::endl;
     std::cout << " \\begin{table}[htbp]" << std::endl;
-    std::cout << " \\begin{tabular}{|l|c|c|c|c|}\\hline " << std::endl;
-    std::cout << "Process   & Total & Non Fakes & Fakes & Conversins \\\\ \\hline" << std::endl; 
+    std::string category_name = directories[*channel];
+    eraseSubStr(category_name, "/sel/evt");
+    boost::replace_all(category_name, "_", "\\_");
+    std::cout << "\\caption{" << category_name << "}" << std::endl;
+    std::cout << "\\centering" << std::endl;
+    std::cout << "\\resizebox{0.60\\textwidth}{!}{\\begin{tabular}{|l|c|c|c|c|}\\hline " << std::endl;
+    std::cout << "Process   & Total & Non Fakes & Fakes & Conversions \\\\ \\hline" << std::endl; 
     for ( vstring::const_iterator signal_process = signal_processes[*channel].begin();
 	  signal_process != signal_processes[*channel].end(); ++signal_process ) {
       std::map<std::string, double> integral_parts;
       std::map<std::string, double> integralErr_parts;
       double integral_sum = 0.;
       double integralErr2_sum = 0.;
+      double Unwt_evts = 0.;
       for ( std::vector<std::string>::const_iterator signal_process_part = signal_process_parts.begin();
 	    signal_process_part != signal_process_parts.end(); ++signal_process_part ) {
 	std::string histogramName = Form("%s/%s%s/EventCounter", 
           directories[*channel].data(), signal_process->data(), signal_process_part->data());
 	TH1* histogram = loadHistogram(inputFile, histogramName);
+
 	if ( histogram ) {
+	  Unwt_evts = histogram->GetEntries();
 	  histogram->Scale(lumi_SF);
 	  double integral = compIntegral(histogram);
 	  integral_parts[*signal_process_part] = integral;
@@ -190,7 +302,12 @@ void dumpEventYields_Stage2()
 		  << " conversion = " << integral_parts["_Convs"] << " +/- " << integralErr_parts["_Convs"] << ")" << std::endl;
       }
       */
-	std::cout << (*signal_process) << " & " << integral_sum << " & " << integral_parts[""] << " & " << integral_parts["_fake"] << " & " << integral_parts["_Convs"] << " \\\\ " << std::endl;
+
+      std::string ProcessName = (std::string)(*signal_process);
+      boost::replace_all(ProcessName, "_", "\\_");
+      std::cout << std::fixed;
+      std::cout << std::setprecision(2);
+      std::cout << ProcessName << " & " << integral_sum << "(" << Unwt_evts << ")" << " & " << integral_parts[""] << " & " << integral_parts["_fake"] << " & " << integral_parts["_Convs"] << " \\\\ \\hline" << std::endl;
     }
     double Total = 0;
     double Non_Fake = 0;
@@ -202,12 +319,14 @@ void dumpEventYields_Stage2()
       std::map<std::string, double> integralErr_parts;
       double integral_sum = 0.;
       double integralErr2_sum = 0.;
+      double Unwt_evts = 0.;
       for ( std::vector<std::string>::const_iterator background_process_part = background_process_parts.begin();
 	    background_process_part != background_process_parts.end(); ++background_process_part ) {
 	std::string histogramName = Form("%s/%s%s/EventCounter", 
           directories[*channel].data(), background_process->data(), background_process_part->data());
 	TH1* histogram = loadHistogram(inputFile, histogramName);
 	if ( histogram ) {
+	  Unwt_evts = histogram->GetEntries();
 	  histogram->Scale(lumi_SF);
 	  double integral = compIntegral(histogram);
 	  integral_parts[*background_process_part] = integral;
@@ -226,15 +345,37 @@ void dumpEventYields_Stage2()
 		  << " conversion = " << integral_parts["_Convs"] << " +/- " << integralErr_parts["_Convs"] << ")" << std::endl;
       }
       */
-      std::cout << (*background_process) << " & " << integral_sum << " & " << integral_parts[""] << " & " << integral_parts["_fake"] << " & " << integral_parts["_Convs"] << " \\\\ " << std::endl;
+
+      std::string ProcessName = (std::string)(*background_process);
+
+      if( !( (ProcessName == "fakes_mc") || (ProcessName == "Convs") || (ProcessName == "data_fakes") || (ProcessName == "flips_mc") || ( ProcessName == "data_obs")) ){
+	boost::replace_all(ProcessName, "_", "\\_");
+	std::cout << std::fixed;
+	std::cout << std::setprecision(2);
+	std::cout << ProcessName << " & " << integral_sum << "(" << Unwt_evts << ")" << " & " << integral_parts[""] << " & " << integral_parts["_fake"] << " & " << integral_parts["_Convs"] << " \\\\ \\hline" << std::endl;
+      }else{
+	boost::replace_all(ProcessName, "_", "\\_");
+	std::cout << std::fixed;
+	std::cout << std::setprecision(2);
+	std::cout << ProcessName << " & " << integral_sum << " & " << integral_parts[""] << " & " << integral_parts["_fake"] << " & " << integral_parts["_Convs"] << " \\\\ \\hline" << std::endl;
+
+      }
+
+      //std::cout << (*background_process) << " & " << integral_sum << "(" << Unwt_evts << ")" << " & " << integral_parts[""] << " & " << integral_parts["_fake"] << " & " << integral_parts["_Convs"] << " \\\\ " << std::endl;
+ 
+      if(((*background_process) == "fakes_mc") || ((*background_process) == "data_obs")){continue;} // Do not add fakes_mc or data to the total bg yield
+
       Total += integral_sum;
       Non_Fake += integral_parts[""];
       Fake += integral_parts["_fake"];
       Conversion += integral_parts["_Convs"];
     }
-    std::cout << "Total " << " & " << Total << " & " << Non_Fake << " & " << Fake << " & " << Conversion << " \\\\ " << " \\hline " << std::endl;
-    std::cout << " \\end{tabular} " << std::endl;
+    std::cout << "Total Bg: " << " & " << Total << " & " << Non_Fake << " & " << Fake << " & " << Conversion << " \\\\ " << " \\hline " << std::endl;
+    std::cout << " \\end{tabular}} " << std::endl;
     std::cout << " \\end{table} " << std::endl;
+    std::cout << " \\end{frame} " << std::endl;
+       
+
 
     double Fakes_MC = 0;
     std::string histogramName_fakes_mc = Form("%s/%s/EventCounter",
@@ -276,14 +417,14 @@ void dumpEventYields_Stage2()
       std::cout << "Flips Data : " << data_flips << " \\\\" << std::endl;
     }
 
-    double Data_Bbserved = 0;
+    double Data_Observed = 0;
     std::string histogramName = Form("%s/%s/EventCounter", 
       directories[*channel].data(), "data_obs");
     TH1* histogram = loadHistogram(inputFile, histogramName);
     if ( histogram ) {
       histogram->Scale(lumi_SF);
-      Data_Bbserved = compIntegral(histogram);
-      std::cout << "Data Observed : " << Data_Bbserved << " \\\\" << std::endl;
+      Data_Observed = compIntegral(histogram);
+      std::cout << "Data Observed : " << Data_Observed << " \\\\" << std::endl;
     }
 
     double Total_Background = Non_Fake + Convs + data_fakes +data_flips ;
