@@ -88,6 +88,7 @@ process.analyze_hh_2l_2tau = cms.PSet(
     apply_l1PreFireWeight = cms.bool(True),
     apply_hlt_filter = cms.bool(False),
     apply_met_filters = cms.bool(True),
+    apply_ZbosonMassVeto = cms.bool(True),
     cfgMEtFilter = cms.PSet(),
     triggerWhiteList = cms.PSet(),
     apply_hadTauFakeRateSF = cms.bool(False),

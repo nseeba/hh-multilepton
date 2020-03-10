@@ -318,6 +318,8 @@ int main(int argc, char* argv[])
   bool apply_hadTauFakeRateSF = cfg_analyze.getParameter<bool>("apply_hadTauFakeRateSF");
   const bool useNonNominal = cfg_analyze.getParameter<bool>("useNonNominal");
   const bool useNonNominal_jetmet = useNonNominal || ! isMC;
+  bool apply_ZbosonMassVeto = cfg_analyze.getParameter<bool>("apply_ZbosonMassVeto");
+
 
   if(! central_or_shifts_local.empty())
   {
@@ -1595,12 +1597,14 @@ int main(int argc, char* argv[])
     cutFlowTable.update("m(ll) > 12 GeV", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("m(ll) > 12 GeV", evtWeightRecorder.get(central_or_shift_main));
 
-    const bool failsZbosonMassVeto = isfailsZbosonMassVeto(preselLeptonsFull);
-    if ( failsZbosonMassVeto ) {
-      if ( run_lumi_eventSelector ) {
-        std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
+    if(apply_ZbosonMassVeto){
+      const bool failsZbosonMassVeto = isfailsZbosonMassVeto(preselLeptonsFull);
+      if ( failsZbosonMassVeto ) {
+	if ( run_lumi_eventSelector ) {
+	  std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
+	}
+	continue;
       }
-      continue;
     }
     cutFlowTable.update("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
