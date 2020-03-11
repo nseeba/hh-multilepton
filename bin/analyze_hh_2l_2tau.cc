@@ -318,7 +318,7 @@ int main(int argc, char* argv[])
   bool apply_hadTauFakeRateSF = cfg_analyze.getParameter<bool>("apply_hadTauFakeRateSF");
   const bool useNonNominal = cfg_analyze.getParameter<bool>("useNonNominal");
   const bool useNonNominal_jetmet = useNonNominal || ! isMC;
-  bool apply_ZbosonMassVeto = cfg_analyze.getParameter<bool>("apply_ZbosonMassVeto");
+  bool invert_ZbosonMassVeto = cfg_analyze.getParameter<bool>("invert_ZbosonMassVeto");
 
 
   if(! central_or_shifts_local.empty())
@@ -907,25 +907,51 @@ int main(int argc, char* argv[])
   const edm::ParameterSet cutFlowTableCfg = makeHistManager_cfg(
     process_string, Form("%s/sel/cutFlow", histogramDir.data()), era_string, central_or_shift_main
   );
-  const std::vector<std::string> cuts = {
-    "run:ls:event selection",
-    "object multiplicity",
-    "trigger",
-    ">= 2 presel leptons",
-    ">= 2 sel leptons",
-    "lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV",
-    "<= 2 tight leptons",
-    ">= 2 sel taus",
-    "tau-pair OS/SS charge",
-    "sel lepton+tau charge",
-    "fakeable lepton trigger match",
-    "HLT filter matching",
-    "b-jet veto",
-    "m(ll) > 12 GeV",
-    "Z-boson mass veto",
-    "MEt filters",
-    "signal region veto",
-  };
+
+  std::vector<std::string> cuts_temp = {};
+  if(invert_ZbosonMassVeto){
+    cuts_temp = {
+      "run:ls:event selection",
+      "object multiplicity",
+      "trigger",
+      ">= 2 presel leptons",
+      ">= 2 sel leptons",
+      "lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV",
+      "<= 2 tight leptons",
+      ">= 2 sel taus",
+      "tau-pair OS/SS charge",
+      "sel lepton+tau charge",
+      "fakeable lepton trigger match",
+      "HLT filter matching",
+      "b-jet veto",
+      "m(ll) > 12 GeV",
+      "Z-boson mass veto inverted",
+      "MEt filters",
+      "signal region veto",
+    };
+  }else{
+    cuts_temp = {
+      "run:ls:event selection",
+      "object multiplicity",
+      "trigger",
+      ">= 2 presel leptons",
+      ">= 2 sel leptons",
+      "lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV",
+      "<= 2 tight leptons",
+      ">= 2 sel taus",
+      "tau-pair OS/SS charge",
+      "sel lepton+tau charge",
+      "fakeable lepton trigger match",
+      "HLT filter matching",
+      "b-jet veto",
+      "m(ll) > 12 GeV",
+      "Z-boson mass veto",
+      "MEt filters",
+      "signal region veto",
+    };
+  }
+
+  const std::vector<std::string> cuts = cuts_temp;
 
   CutFlowTableHistManager * cutFlowHistManager = new CutFlowTableHistManager(cutFlowTableCfg, cuts);
   cutFlowHistManager->bookHistograms(fs);
@@ -1597,17 +1623,27 @@ int main(int argc, char* argv[])
     cutFlowTable.update("m(ll) > 12 GeV", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("m(ll) > 12 GeV", evtWeightRecorder.get(central_or_shift_main));
 
-    if(apply_ZbosonMassVeto){
-      const bool failsZbosonMassVeto = isfailsZbosonMassVeto(preselLeptonsFull);
+    const bool failsZbosonMassVeto = isfailsZbosonMassVeto(preselLeptonsFull);
+    if(invert_ZbosonMassVeto){
+      if ( !failsZbosonMassVeto ) {
+	if ( run_lumi_eventSelector ) {
+	  std::cout << "event " << eventInfo.str() << " FAILS inverted Z-boson veto." << std::endl;
+	}
+	continue;
+      }
+      cutFlowTable.update("Z-boson mass veto inverted", evtWeightRecorder.get(central_or_shift_main));
+      cutFlowHistManager->fillHistograms("Z-boson mass veto inverted", evtWeightRecorder.get(central_or_shift_main));
+    }else{
       if ( failsZbosonMassVeto ) {
 	if ( run_lumi_eventSelector ) {
 	  std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
 	}
 	continue;
       }
+      cutFlowTable.update("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
+      cutFlowHistManager->fillHistograms("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
     }
-    cutFlowTable.update("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
-    cutFlowHistManager->fillHistograms("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
+  
 
     if ( apply_met_filters ) {
       if ( !metFilterSelector(metFilters) ) {

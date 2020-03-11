@@ -136,9 +136,9 @@ if __name__ == '__main__':
     executable_analyze                    = "analyze_hh_2l_2tau",
     cfgFile_analyze                       = "analyze_hh_2l_2tau_cfg.py",
     samples                               = samples,
-    leptonChargeSelections                = [ "disabled" ],
+    leptonChargeSelections                = [ "disabled", "OS", "SS"], ## Default. is just disabled 
     hadTau_selection                      = hadTau_selection,
-    hadTau_charge_selections              = [ "disabled" ],
+    hadTau_charge_selections              = [ "disabled", "OS", "SS" ], ## Default. is just disabled 
     applyFakeRateWeights                  = "4L",
     chargeSumSelections                   = chargeSumSelections,
     central_or_shifts                     = central_or_shifts,
@@ -148,6 +148,7 @@ if __name__ == '__main__':
     era                                   = era,
     use_lumi                              = True,
     lumi                                  = lumi,
+    invert_ZbosonMassVeto                 = True,  ## Default is False
     check_output_files                    = check_output_files,
     running_method                        = running_method,
     num_parallel_jobs                     = num_parallel_jobs,
