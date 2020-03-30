@@ -61,9 +61,6 @@ public:
                   bool passesTight_hadTau_sublead,
                   bool passesTight_hadTau_third);
 
-  void
-  compute_FR_1l();
-
   double
   get_jetToTau_FR_third(const std::string & central_or_shift);
 

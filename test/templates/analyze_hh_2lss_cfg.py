@@ -57,7 +57,8 @@ process.analyze_hh_2lss = cms.PSet(
     leptonFakeRateWeight = cms.PSet(
         inputFileName = cms.string(""),
         histogramName_e = cms.string(""),
-        histogramName_mu = cms.string("")
+        histogramName_mu = cms.string(""),
+        era = cms.string(""),
     ),
     hadTauFakeRateWeight = cms.PSet(
         inputFileName = cms.string(""),
@@ -83,7 +84,7 @@ process.analyze_hh_2lss = cms.PSet(
     apply_genWeight = cms.bool(True),
     apply_DYMCReweighting = cms.bool(False),
     apply_DYMCNormScaleFactors = cms.bool(False),
-    apply_topPtReweighting = cms.bool(False),
+    apply_topPtReweighting = cms.string(''),
     apply_l1PreFireWeight = cms.bool(True),
     apply_hlt_filter = cms.bool(False),
     apply_met_filters = cms.bool(True),
@@ -132,6 +133,8 @@ process.analyze_hh_2lss = cms.PSet(
     useNonNominal = cms.bool(False),
     isDEBUG = cms.bool(False),
     hasLHE = cms.bool(True),
+    hasPS = cms.bool(False),
+    apply_LHE_nom = cms.bool(False),
     useObjectMultiplicity = cms.bool(False),
     minNumJets = cms.int32(3),
 

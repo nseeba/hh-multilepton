@@ -60,12 +60,12 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
         era,
         use_lumi,
         lumi,
+        invert_ZbosonMassVeto,
         check_output_files,
         running_method,
         num_parallel_jobs,
         executable_addBackgrounds,
         executable_addBackgroundJetToTauFakes,
-        executable_addBackgrounds_TailFit,
         executable_addFlips,
         histograms_to_fit,
         select_rle_output = False,
@@ -103,6 +103,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       submission_cmd        = submission_cmd,
     )
 
+    self.invert_ZbosonMassVeto = invert_ZbosonMassVeto
     self.lepton_and_hadTau_selections = [ "Tight", "Fakeable" ]
     self.lepton_and_hadTau_frWeights = [ "enabled", "disabled" ]
     self.hadTau_selection_part2 = hadTau_selection
@@ -144,7 +145,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
 
     self.executable_addBackgrounds = executable_addBackgrounds
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
-    self.executable_addTailFits = executable_addBackgrounds_TailFit
     self.executable_addFlips = executable_addFlips
 
     self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTZ", "DY", "Other", "VH", "TTH", "TH", "W", "TTWW"] 
@@ -183,10 +183,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       "hh_1e1muOS_2tau", "hh_2muSS_2tau", "hh_2muOS_2tau",
       "hh_2lOS_2tau_wChargeFlipWeights", "hh_2eOS_2tau_wChargeFlipWeights", "hh_2muOS_2tau_wChargeFlipWeights", "hh_1e1muOS_2tau_wChargeFlipWeights"]  ## N.B.: Inclusive category is a member of this list 
     self.category_inclusive = "hh_2l_2tau"
-
-    self.cfgFile_addTailFits = os.path.join(self.template_dir, "addBackgrounds_TailFit_cfg.py")             
-    self.jobOptions_addTailFits = {} 
-    self.num_jobs['addTailFits'] = 0
 
   def set_BDT_training(self, hadTau_selection_relaxed):
     """Run analysis with loose selection criteria for leptons and hadronic taus,
@@ -245,138 +241,21 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       jobOptions['apply_hadTauFakeRateSF'] = True
 
     lines = super(analyzeConfig_hh_2l_2tau, self).createCfg_analyze(jobOptions, sample_info)
+    lines.append("process.analyze_hh_2l_2tau.invert_ZbosonMassVeto   = cms.bool(%s)" % self.invert_ZbosonMassVeto)
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
 
-  def createCfg_addTailFits(self, jobOptions):
-      """Create python configuration file for the addBackgrounds_TailFit executable (Tail Fitting of histograms)                                                                                                                                
-      Args:                                                                                                                                                                                                                                          
-      inputFiles: input file (the ROOT file produced by hadd_stage1)                                                                                                                                                                                 
-      outputFile: output file of the job                                                                                                                                                                                                               
-      """
-      lines = []
-      lines.append("process.fwliteInput.fileNames = cms.vstring('%s')" % jobOptions['inputFile'])
-      lines.append("process.fwliteOutput.fileName = cms.string('%s')" % os.path.basename(jobOptions['outputFile']))
-      lines.append("process.addBackgrounds_TailFit.categories = cms.VPSet(")
-      lines.append("     cms.PSet(")
-      lines.append("         inputDir = cms.string('%s')," % os.path.basename(jobOptions['inputDir']))
-      lines.append("         outputDir = cms.string('%s')," % os.path.basename(jobOptions['inputDir']))
-      lines.append("         ),")
-      lines.append(")")
-      lines.append("process.addBackgrounds_TailFit.HistogramsToTailFit = cms.VPSet(")
-      lines.append("     cms.PSet(")
-      lines.append("         name = cms.string('%s')," % "dihiggsMass")
-      lines.append("         nominal_fit_func = cms.PSet(")
-      lines.append("            FitfuncName   = cms.string('%s')," % "Exponential")
-      lines.append("            FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_nom_dihiggsMass'])
-      lines.append("            FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_nom_dihiggsMass'])
-      lines.append("            ),")
-      lines.append("         alternate_fit_funcs = cms.VPSet(")
-      lines.append("            cms.PSet(")
-      if self.hadTau_selection_part2 == "dR05mvaTight":
-        lines.append("              FitfuncName   = cms.string('%s')," % "LegendrePolynomial1")
-      else:
-        lines.append("              FitfuncName   = cms.string('%s')," % "LegendrePolynomial3")
-      lines.append("                FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_alt0_dihiggsMass'])
-      lines.append("                FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_alt0_dihiggsMass'])
-      lines.append("                ),")
-      lines.append("         )")
-      lines.append("     ),")
-      lines.append("     cms.PSet(")
-      lines.append("         name = cms.string('%s')," % "dihiggsVisMass")
-      lines.append("         nominal_fit_func = cms.PSet(")
-      lines.append("            FitfuncName   = cms.string('%s')," % "Exponential")
-      lines.append("            FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_nom_dihiggsVisMass'])
-      lines.append("            FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_nom_dihiggsVisMass'])
-      lines.append("            ),")
-      lines.append("         alternate_fit_funcs = cms.VPSet(")
-      lines.append("            cms.PSet(")
-      lines.append("                FitfuncName   = cms.string('%s')," % "LegendrePolynomial1")
-      lines.append("                FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_alt0_dihiggsVisMass'])
-      lines.append("                FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_alt0_dihiggsVisMass'])
-      lines.append("                ),")
-      lines.append("         )")
-      lines.append("     ),")         
-      lines.append("     cms.PSet(")
-      lines.append("         name = cms.string('%s')," % "STMET")
-      lines.append("         nominal_fit_func = cms.PSet(")
-      lines.append("            FitfuncName   = cms.string('%s')," % "Exponential")
-      lines.append("            FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_nom_STMET'])
-      lines.append("            FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_nom_STMET'])
-      lines.append("            ),")
-      lines.append("         alternate_fit_funcs = cms.VPSet(")
-      lines.append("            cms.PSet(")
-      lines.append("                FitfuncName   = cms.string('%s')," % "LegendrePolynomial1")
-      lines.append("                FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_alt0_STMET'])
-      lines.append("                FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_alt0_STMET'])
-      lines.append("                ),")
-      lines.append("         )")
-      lines.append("     ),")
-      lines.append("     cms.PSet(")
-      lines.append("         name = cms.string('%s')," % "HT")
-      lines.append("         nominal_fit_func = cms.PSet(")
-      lines.append("            FitfuncName   = cms.string('%s')," % "Exponential")
-      lines.append("            FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_nom_HT'])
-      lines.append("            FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_nom_HT'])
-      lines.append("            ),")
-      lines.append("         alternate_fit_funcs = cms.VPSet(")
-      lines.append("            cms.PSet(")
-      lines.append("                FitfuncName   = cms.string('%s')," % "LegendrePolynomial1")
-      lines.append("                FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_alt0_HT'])
-      lines.append("                FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_alt0_HT'])
-      lines.append("                ),")
-      lines.append("         )")
-      lines.append("     ),")
-      lines.append("     cms.PSet(")
-      lines.append("         name = cms.string('%s')," % "mTauTauVis")
-      lines.append("         nominal_fit_func = cms.PSet(")
-      lines.append("            FitfuncName   = cms.string('%s')," % "Exponential")
-      lines.append("            FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_nom_mTauTauVis'])
-      lines.append("            FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_nom_mTauTauVis'])
-      lines.append("            ),")
-      lines.append("         alternate_fit_funcs = cms.VPSet(")
-      lines.append("            cms.PSet(")
-      if self.hadTau_selection_part2 == "dR05mvaTight":
-        lines.append("              FitfuncName   = cms.string('%s')," % "LegendrePolynomial1")
-      else:
-        lines.append("              FitfuncName   = cms.string('%s')," % "LegendrePolynomial3")
-      lines.append("                FitRange      = cms.vdouble(%s)," % jobOptions['fitrange_alt0_mTauTauVis'])
-      lines.append("                FitParameters = cms.vdouble(%s)," % jobOptions['fitparam_alt0_mTauTauVis'])
-      lines.append("                ),")
-      lines.append("         )")
-      lines.append("     ),")
-      lines.append(")")
-      create_cfg(self.cfgFile_addTailFits, jobOptions['cfgFile_modified'], lines)
 
-  def createScript_sbatch_addTailFits(self, executable, sbatchFile, jobOptions):
-   """Creates the python script necessary to submit the analysis jobs to the batch system
-   """
-   self.num_jobs['addTailFits'] += self.createScript_sbatch(executable, sbatchFile, jobOptions)
-
-  #def addToMakefile_backgrounds_from_data_withFlipsAndTailFits(self, lines_makefile, make_target = "phony_addTailFits", make_dependency = "phony_hadd_stage1"):
-  def addToMakefile_backgrounds_from_data_withFlipsAndTailFits(self, lines_makefile, make_target = "phony_addFlips", make_dependency = "phony_hadd_stage1"):
+  def addToMakefile_backgrounds_from_data_withFlips(self, lines_makefile, make_target = "phony_addFlips", make_dependency = "phony_hadd_stage1"):
      self.addToMakefile_addBackgrounds(lines_makefile, "phony_addBackgrounds", "phony_hadd_stage1", self.sbatchFile_addBackgrounds, self.jobOptions_addBackgrounds)
      self.addToMakefile_hadd_stage1_5(lines_makefile, "phony_hadd_stage1_5", "phony_addBackgrounds")
      self.addToMakefile_addBackgrounds(lines_makefile, "phony_addBackgrounds_sum", "phony_hadd_stage1_5", self.sbatchFile_addBackgrounds_sum, self.jobOptions_addBackgrounds_sum)
      self.addToMakefile_addFakes(lines_makefile, "phony_addFakes", "phony_hadd_stage1_5")
-     self.addToMakefile_addTailFits(lines_makefile, "phony_addTailFits", "phony_addFakes")
      self.addToMakefile_hadd_stage1_6(lines_makefile, "phony_hadd_stage1_6", "phony_addFakes")
      self.addToMakefile_addFlips(lines_makefile, "phony_addFlips", "phony_hadd_stage1_6")
      if make_target != "phony_addFlips":
        lines_makefile.append("%s: %s" % (make_target, "phony_addFlips"))
        lines_makefile.append("")
-     self.make_dependency_hadd_stage2 = " ".join([ "phony_addBackgrounds_sum", make_target, "phony_addTailFits" ])
-  ## --------------------------###
-
-
-  def addToMakefile_addTailFits(self, lines_makefile, make_target, make_dependency): ## Added make_target, make_dependency as arguments and the next 3 lines
-    if not make_target in self.phoniesToAdd:
-      self.phoniesToAdd.append(make_target)
-    lines_makefile.append("%s: %s" % (make_target, make_dependency))
-    if self.is_sbatch:
-      lines_makefile.append("\t%s %s" % ("python", self.sbatchFile_addTailFits))
-      lines_makefile.append("")
-    for jobOptions in self.jobOptions_addTailFits.values():
-      self.filesToClean.append(jobOptions['outputFile'])
+     self.make_dependency_hadd_stage2 = " ".join([ "phony_addBackgrounds_sum", make_target])
 
   def accept_systematics(self, central_or_shift, is_mc, lepton_and_hadTau_selection, chargeSumSelection, sample_info):
     if central_or_shift != "central":
@@ -448,8 +327,9 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
                           "_".join([ lepton_and_hadTau_selection_and_frWeight + lepton_and_hadTau_charge_selection ]), process_name_or_dummy, central_or_shift_or_dummy)
                       else:
                         self.dirs[key_dir][dir_type] = os.path.join(self.outputDir, dir_type, self.channel,
-                          "_".join([ lepton_and_hadTau_selection_and_frWeight + lepton_and_hadTau_charge_selection ]), process_name_or_dummy)
-    for subdirectory in [ "addBackgrounds", "addBackgroundLeptonFakes", "addBackgroundLeptonFlips", "addBackgrounds_TailFit", "prepareDatacards", "addSystFakeRates", "makePlots" ]:
+                          "_".join([ lepton_and_hadTau_selection_and_frWeight + lepton_and_hadTau_charge_selection ]), process_name_or_dummy, central_or_shift_or_dummy)
+
+    for subdirectory in [ "addBackgrounds", "addBackgroundLeptonFakes", "addBackgroundLeptonFlips", "prepareDatacards", "addSystFakeRates", "makePlots" ]:
       key_dir = getKey(subdirectory)
       for dir_type in [ DKEY_CFGS, DKEY_HIST, DKEY_LOGS, DKEY_DCRD, DKEY_PLOT ]:
         initDict(self.dirs, [ key_dir, dir_type ])
@@ -847,108 +727,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
             key_hadd_stage2_job = getKey(leptonChargeSelection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
             self.inputFiles_hadd_stage2[key_hadd_stage2_job].append(self.jobOptions_addFlips[key_addFlips_job]['outputFile'])
 
-    logging.info("Creating configuration files to run 'addBackgrounds_TailFit'")
-    for leptonChargeSelection in self.leptonChargeSelections:
-      for hadTau_charge_selection in self.hadTau_charge_selections:
-        for chargeSumSelection in self.chargeSumSelections:
-          fitrange_nom_dihiggsMass  = [350., 1500.]
-          fitparam_nom_dihiggsMass  = [1.0, -0.1]
-          fitrange_alt0_dihiggsMass = [350., 1500.]
-          fitparam_alt0_dihiggsMass = [1.0, 0.001, 0.0001, 0.001]
-          fitrange_nom_dihiggsVisMass  = [300., 1500.]                                                                                                                                                                                         
-          fitparam_nom_dihiggsVisMass  = [0.8, -0.001]
-          fitrange_alt0_dihiggsVisMass = [300., 1500.]                                                                                                                                                                                          
-          fitparam_alt0_dihiggsVisMass = [0.01, -0.01]      
-          fitrange_nom_STMET  = [350., 1500.]                                                                                                                                                                                                        
-          fitparam_nom_STMET  = [0.002, -0.01]                                                                                                                                                                                                       
-          fitrange_alt0_STMET = [350., 1500.]                                                                                                                                                                                                        
-          fitparam_alt0_STMET = [0.1, 0.01]   
-          fitrange_nom_HT  = [300., 1500.]                                                                                                                                                                                               
-          fitparam_nom_HT  = [0.7, -0.0001]                                                                                                                                                                                              
-          fitrange_alt0_HT = [300., 1500.]                                                                                                                                                                                               
-          fitparam_alt0_HT = [0.05, 0.01]         
-          fitrange_nom_mTauTauVis  = [90., 200.]
-          fitparam_nom_mTauTauVis  = [1.0, -0.01]
-          fitrange_alt0_mTauTauVis = [90., 200.]
-          fitparam_alt0_mTauTauVis = [1.0, 0.1, 0.01, 0.001]
-          if self.hadTau_selection_part2 == "dR05mvaTight" and chargeSumSelection == "OS": 
-            fitrange_nom_dihiggsMass  = [450., 1500.]
-            fitparam_nom_dihiggsMass  = [0.1, -0.01]
-            fitrange_alt0_dihiggsMass = [450., 1500.] 
-            fitparam_alt0_dihiggsMass = [0.1, -0.01]  ## LegendrePoly3 was giving fit failure so switched to LegPolyn1 (LegPolyn2 is symmetric hence useless here)
-            fitrange_nom_dihiggsVisMass  = [250., 1500.]                                                                                                                                                                                         
-            fitparam_nom_dihiggsVisMass  = [0.15, -0.01]
-            fitrange_alt0_dihiggsVisMass = [250., 1500.]                                                                                                                                                                                          
-            fitparam_alt0_dihiggsVisMass = [0.2, -0.1] 
-            fitrange_nom_STMET  = [300., 1500.]                                                                                                                                                                                                        
-            fitparam_nom_STMET  = [0.15, -0.01]                                                                                                                                                                                                       
-            fitrange_alt0_STMET = [300., 1500.]                                                                                                                                                                                                        
-            fitparam_alt0_STMET = [0.15, 0.01]   
-            fitrange_nom_HT  = [200., 1500.]                                                                                                                                                                                               
-            fitparam_nom_HT  = [0.1, -0.01]                                                                                                                                                                                              
-            fitrange_alt0_HT = [200., 1500.]                                                                                                                                                                                               
-            fitparam_alt0_HT = [0.05, 0.01]      
-            fitrange_nom_mTauTauVis  = [55., 200.]
-            fitparam_nom_mTauTauVis  = [1.0, -0.1]
-            fitrange_alt0_mTauTauVis = [55., 200.]  
-            fitparam_alt0_mTauTauVis = [1.0, 0.1]   ## LegendrePoly3 was giving fit failure so switched to LegPolyn1 (LegPolyn2 is symmetric hence useless here)
-          if self.hadTau_selection_part2 == "dR05mvaTight" and chargeSumSelection == "SS": 
-            fitrange_nom_dihiggsMass  = [350., 1500.]
-            fitparam_nom_dihiggsMass  = [1.0, -0.1]
-            fitrange_alt0_dihiggsMass = [350., 1500.]
-            fitparam_alt0_dihiggsMass = [1.0, -0.01]  ## LegendrePoly3 was giving fit failure so switched to LegPolyn1 (LegPolyn2 is symmetric hence useless here) 
-            fitrange_nom_dihiggsVisMass  = [300., 1500.]                                                                                                                                                                                         
-            fitparam_nom_dihiggsVisMass  = [0.8, -0.001]
-            fitrange_alt0_dihiggsVisMass = [300., 1500.]                                                                                                                                                                                          
-            fitparam_alt0_dihiggsVisMass = [0.01, -0.01] 
-            fitrange_nom_STMET  = [350., 1500.]                                                                                                                                                                                                        
-            fitparam_nom_STMET  = [0.002, -0.01]                                                                                                                                                                                                       
-            fitrange_alt0_STMET = [350., 1500.]                                                                                                                                                                                                        
-            fitparam_alt0_STMET = [0.1, 0.01]   
-            fitrange_nom_HT  = [300., 1500.]                                                                                                                                                                                               
-            fitparam_nom_HT  = [0.7, -0.0001]                                                                                                                                                                                              
-            fitrange_alt0_HT = [300., 1500.]                                                                                                                                                                                               
-            fitparam_alt0_HT = [0.05, 0.01]     
-            fitrange_nom_mTauTauVis  = [55., 200.]
-            fitparam_nom_mTauTauVis  = [1.0, -0.1]
-            fitrange_alt0_mTauTauVis = [55., 200.]
-            fitparam_alt0_mTauTauVis = [1.0, 0.1] ## LegendrePoly3 was giving fit failure so switched to LegPolyn1 (LegPolyn2 is symmetric hence useless here)
-
-          key_addFakes_job = getKey("data_fakes", self.category_inclusive, leptonChargeSelection, hadTau_charge_selection, chargeSumSelection) ## This will run only on the inclusive category
-          key_addTailFits_dir = getKey("addBackgrounds_TailFit")
-          addTailFits_job_tuple = (self.category_inclusive, leptonChargeSelection, hadTau_charge_selection, chargeSumSelection)
-          key_addTailFits_job = getKey(*addTailFits_job_tuple)
-          
-          self.jobOptions_addTailFits[key_addTailFits_job] = {
-            'inputFile' : self.jobOptions_addFakes[key_addFakes_job]['outputFile'],
-            'cfgFile_modified' : os.path.join(self.dirs[key_addTailFits_dir][DKEY_CFGS], "addBackgrounds_TailFit_%s_%s_%s_%s_cfg.py" % addTailFits_job_tuple),
-            'outputFile' : os.path.join(self.dirs[key_addTailFits_dir][DKEY_HIST], "addBackgrounds_TailFit_%s_%s_%s_%s.root" % addTailFits_job_tuple),
-            'logFile' : os.path.join(self.dirs[key_addTailFits_dir][DKEY_LOGS], "addBackgrounds_TailFit_%s_%s_%s_%s.log" % addTailFits_job_tuple),
-            'inputDir' : getHistogramDir(self.category_inclusive, "Tight", "Tight", "disabled", leptonChargeSelection, hadTau_charge_selection, chargeSumSelection),
-            'fitrange_nom_dihiggsMass'  : fitrange_nom_dihiggsMass,
-            'fitparam_nom_dihiggsMass'  : fitparam_nom_dihiggsMass,
-            'fitrange_alt0_dihiggsMass' : fitrange_alt0_dihiggsMass,
-            'fitparam_alt0_dihiggsMass' : fitparam_alt0_dihiggsMass,
-            'fitrange_nom_dihiggsVisMass'  : fitrange_nom_dihiggsVisMass,
-            'fitparam_nom_dihiggsVisMass'  : fitparam_nom_dihiggsVisMass,
-            'fitrange_alt0_dihiggsVisMass' : fitrange_alt0_dihiggsVisMass,
-            'fitparam_alt0_dihiggsVisMass' : fitparam_alt0_dihiggsVisMass,
-            'fitrange_nom_STMET'  : fitrange_nom_STMET,
-            'fitparam_nom_STMET'  : fitparam_nom_STMET,
-            'fitrange_alt0_STMET' : fitrange_alt0_STMET,
-            'fitparam_alt0_STMET' : fitparam_alt0_STMET,
-            'fitrange_nom_HT'  : fitrange_nom_HT,
-            'fitparam_nom_HT'  : fitparam_nom_HT,
-            'fitrange_alt0_HT' : fitrange_alt0_HT,
-            'fitparam_alt0_HT' : fitparam_alt0_HT,
-            'fitrange_nom_mTauTauVis'  : fitrange_nom_mTauTauVis,
-            'fitparam_nom_mTauTauVis'  : fitparam_nom_mTauTauVis,
-            'fitrange_alt0_mTauTauVis' : fitrange_alt0_mTauTauVis,
-            'fitparam_alt0_mTauTauVis' : fitparam_alt0_mTauTauVis
-            }
-          self.createCfg_addTailFits(self.jobOptions_addTailFits[key_addTailFits_job])
-          key_hadd_stage2_job = getKey(leptonChargeSelection, hadTau_charge_selection, get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), chargeSumSelection)
-          self.inputFiles_hadd_stage2[key_hadd_stage2_job].append(self.jobOptions_addTailFits[key_addTailFits_job]['outputFile'])
 
     logging.info("Creating configuration files to run 'prepareDatacards'")
     for category in self.categories:
@@ -1090,17 +868,12 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       logging.info("Creating script for submitting '%s' jobs to batch system" % self.executable_addFlips)
       self.sbatchFile_addFlips = os.path.join(self.dirs[DKEY_SCRIPTS], "sbatch_addFlips_%s.py" % self.channel)
       self.createScript_sbatch(self.executable_addFlips, self.sbatchFile_addFlips, self.jobOptions_addFlips)
-      logging.info("Creating script for submitting '%s' jobs to batch system" % self.executable_addTailFits)
-      self.sbatchFile_addTailFits = os.path.join(self.dirs[DKEY_SCRIPTS], "sbatch_addTailFits_%s.py" % self.channel)
-      self.createScript_sbatch_addTailFits(self.executable_addTailFits, self.sbatchFile_addTailFits, self.jobOptions_addTailFits)
 
     logging.info("Creating Makefile")
     lines_makefile = []
     self.addToMakefile_analyze(lines_makefile)
     self.addToMakefile_hadd_stage1(lines_makefile)
-    #self.addToMakefile_backgrounds_from_data_withFlips(lines_makefile)
-    self.addToMakefile_backgrounds_from_data_withFlipsAndTailFits(lines_makefile)
-    #self.addToMakefile_addTailFits(lines_makefile)
+    self.addToMakefile_backgrounds_from_data_withFlips(lines_makefile)
     self.addToMakefile_hadd_stage2(lines_makefile)
     self.addToMakefile_prep_dcard(lines_makefile)
     self.addToMakefile_add_syst_fakerate(lines_makefile)

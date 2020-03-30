@@ -36,6 +36,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/GenPhotonReader.h" // GenPhotonReader
 #include "tthAnalysis/HiggsToTauTau/interface/GenJetReader.h" // GenJetReader
 #include "tthAnalysis/HiggsToTauTau/interface/LHEInfoReader.h" // LHEInfoReader
+#include "tthAnalysis/HiggsToTauTau/interface/PSWeightReader.h" // PSWeightReader
 #include "tthAnalysis/HiggsToTauTau/interface/ObjectMultiplicityReader.h" // ObjectMultiplicityReader
 #include "tthAnalysis/HiggsToTauTau/interface/convert_to_ptrs.h" // convert_to_ptrs
 #include "tthAnalysis/HiggsToTauTau/interface/ParticleCollectionCleaner.h" // RecoElectronCollectionCleaner, RecoMuonCollectionCleaner, RecoHadTauCollectionCleaner, RecoJetCollectionCleaner
@@ -208,6 +209,7 @@ int main(int argc, char* argv[])
   std::string process_string = cfg_analyze.getParameter<std::string>("process");
   bool isMC_ttH = process_string == "TTH";
   bool isMC_tH = process_string == "TH";
+  bool isMC_EWK = process_string == "WZ" || process_string == "ZZ";
   bool isSignal = boost::starts_with(process_string, "signal_") && process_string.find("_hh_") != std::string::npos;
   bool isMC_HH_nonres = boost::starts_with(process_string, "signal_ggf_nonresonant_");
 
@@ -299,12 +301,15 @@ int main(int argc, char* argv[])
 
   bool isMC = cfg_analyze.getParameter<bool>("isMC");
   bool hasLHE = cfg_analyze.getParameter<bool>("hasLHE");
+  bool hasPS = cfg_analyze.getParameter<bool>("hasPS");
+  bool apply_LHE_nom = cfg_analyze.getParameter<bool>("apply_LHE_nom");
   bool useObjectMultiplicity = cfg_analyze.getParameter<bool>("useObjectMultiplicity");
   std::string central_or_shift_main = cfg_analyze.getParameter<std::string>("central_or_shift");
   std::vector<std::string> central_or_shifts_local = cfg_analyze.getParameter<std::vector<std::string>>("central_or_shifts_local");
   edm::VParameterSet lumiScale = cfg_analyze.getParameter<edm::VParameterSet>("lumiScale");
   bool apply_genWeight = cfg_analyze.getParameter<bool>("apply_genWeight");
-  bool apply_topPtReweighting = cfg_analyze.getParameter<bool>("apply_topPtReweighting");
+  std::string apply_topPtReweighting_str = cfg_analyze.getParameter<std::string>("apply_topPtReweighting");
+  bool apply_topPtReweighting = ! apply_topPtReweighting_str.empty();
   bool apply_l1PreFireWeight = cfg_analyze.getParameter<bool>("apply_l1PreFireWeight");
   bool apply_hlt_filter = cfg_analyze.getParameter<bool>("apply_hlt_filter");
   bool apply_met_filters = cfg_analyze.getParameter<bool>("apply_met_filters");
@@ -313,6 +318,8 @@ int main(int argc, char* argv[])
   bool apply_hadTauFakeRateSF = cfg_analyze.getParameter<bool>("apply_hadTauFakeRateSF");
   const bool useNonNominal = cfg_analyze.getParameter<bool>("useNonNominal");
   const bool useNonNominal_jetmet = useNonNominal || ! isMC;
+  bool invert_ZbosonMassVeto = cfg_analyze.getParameter<bool>("invert_ZbosonMassVeto");
+
 
   if(! central_or_shifts_local.empty())
   {
@@ -381,6 +388,7 @@ int main(int argc, char* argv[])
   LeptonFakeRateInterface* leptonFakeRateInterface = 0;
   if ( applyFakeRateWeights == kFR_2lepton || applyFakeRateWeights == kFR_4L ) {
     edm::ParameterSet cfg_leptonFakeRateWeight = cfg_analyze.getParameter<edm::ParameterSet>("leptonFakeRateWeight");
+    cfg_leptonFakeRateWeight.addParameter<std::string>("era", era_string);
     leptonFakeRateInterface = new LeptonFakeRateInterface(cfg_leptonFakeRateWeight);
   }
 
@@ -473,6 +481,10 @@ int main(int argc, char* argv[])
     eventInfo.loadWeight_tH(tHweights);
   }
   EventInfoReader eventInfoReader(&eventInfo);
+  if(apply_topPtReweighting)
+  {
+    eventInfoReader.setTopPtRwgtBranchName(apply_topPtReweighting_str);
+  }
   inputTree->registerReader(&eventInfoReader);
 
   ObjectMultiplicity objectMultiplicity;
@@ -566,6 +578,7 @@ int main(int argc, char* argv[])
   GenPhotonReader * genPhotonReader = nullptr;
   GenJetReader * genJetReader = nullptr;
   LHEInfoReader * lheInfoReader = nullptr;
+  PSWeightReader * psWeightReader = nullptr;
 
   GenParticleReader * genMatchToMuonReader     = nullptr;
   GenParticleReader * genMatchToElectronReader = nullptr;
@@ -609,6 +622,8 @@ int main(int argc, char* argv[])
     }
     lheInfoReader = new LHEInfoReader(hasLHE);
     inputTree->registerReader(lheInfoReader);
+    psWeightReader = new PSWeightReader(hasPS, apply_LHE_nom);
+    inputTree -> registerReader(psWeightReader);
   }
 
   std::vector<std::string> BDTInputVariables_SUM =
@@ -892,25 +907,51 @@ int main(int argc, char* argv[])
   const edm::ParameterSet cutFlowTableCfg = makeHistManager_cfg(
     process_string, Form("%s/sel/cutFlow", histogramDir.data()), era_string, central_or_shift_main
   );
-  const std::vector<std::string> cuts = {
-    "run:ls:event selection",
-    "object multiplicity",
-    "trigger",
-    ">= 2 presel leptons",
-    ">= 2 sel leptons",
-    "lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV",
-    "<= 2 tight leptons",
-    ">= 2 sel taus",
-    "tau-pair OS/SS charge",
-    "sel lepton+tau charge",
-    "fakeable lepton trigger match",
-    "HLT filter matching",
-    "b-jet veto",
-    "m(ll) > 12 GeV",
-    "Z-boson mass veto",
-    "MEt filters",
-    "signal region veto",
-  };
+
+  std::vector<std::string> cuts_temp = {};
+  if(invert_ZbosonMassVeto){
+    cuts_temp = {
+      "run:ls:event selection",
+      "object multiplicity",
+      "trigger",
+      ">= 2 presel leptons",
+      ">= 2 sel leptons",
+      "lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV",
+      "<= 2 tight leptons",
+      ">= 2 sel taus",
+      "tau-pair OS/SS charge",
+      "sel lepton+tau charge",
+      "fakeable lepton trigger match",
+      "HLT filter matching",
+      "b-jet veto",
+      "m(ll) > 12 GeV",
+      "Z-boson mass veto inverted",
+      "MEt filters",
+      "signal region veto",
+    };
+  }else{
+    cuts_temp = {
+      "run:ls:event selection",
+      "object multiplicity",
+      "trigger",
+      ">= 2 presel leptons",
+      ">= 2 sel leptons",
+      "lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV",
+      "<= 2 tight leptons",
+      ">= 2 sel taus",
+      "tau-pair OS/SS charge",
+      "sel lepton+tau charge",
+      "fakeable lepton trigger match",
+      "HLT filter matching",
+      "b-jet veto",
+      "m(ll) > 12 GeV",
+      "Z-boson mass veto",
+      "MEt filters",
+      "signal region veto",
+    };
+  }
+
+  const std::vector<std::string> cuts = cuts_temp;
 
   CutFlowTableHistManager * cutFlowHistManager = new CutFlowTableHistManager(cutFlowTableCfg, cuts);
   cutFlowHistManager->bookHistograms(fs);
@@ -1011,7 +1052,9 @@ int main(int argc, char* argv[])
       if(l1PreFiringWeightReader) evtWeightRecorder.record_l1PrefireWeight(l1PreFiringWeightReader);
       if(apply_topPtReweighting)  evtWeightRecorder.record_toppt_rwgt(eventInfo.topPtRwgtSF);
       lheInfoReader->read();
+      psWeightReader->read();
       evtWeightRecorder.record_lheScaleWeight(lheInfoReader);
+      evtWeightRecorder.record_psWeight(psWeightReader);
       evtWeightRecorder.record_puWeight(&eventInfo);
       evtWeightRecorder.record_nom_tH_weight(&eventInfo);
       evtWeightRecorder.record_lumiScale(lumiScale);
@@ -1305,7 +1348,8 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms(">= 2 presel leptons", evtWeightRecorder.get(central_or_shift_main));
 
 //--- compute MHT and linear MET discriminant (met_LD)
-    RecoMEt met = metReader->read();
+    const RecoMEt met_uncorr = metReader->read();
+    const RecoMEt met = recompute_met(met_uncorr, jets, met_option, isDEBUG);
     Particle::LorentzVector mht_p4 = compMHT(fakeableLeptonsFull, fakeableHadTausFull, selJets);
     double met_LD = compMEt_LD(met.p4(), mht_p4);
     double HT = compHT(fakeableLeptons, fakeableHadTaus, selJets);
@@ -1466,6 +1510,12 @@ int main(int argc, char* argv[])
 //    described on the BTV POG twiki https://twiki.cern.ch/twiki/bin/view/CMS/BTagShapeCalibration )
       evtWeightRecorder.record_btagWeight(selJets);
 
+      if(isMC_EWK)
+      {
+        evtWeightRecorder.record_ewk_jet(selJets);
+        evtWeightRecorder.record_ewk_bjet(selBJets_medium);
+      }
+
       dataToMCcorrectionInterface->setLeptons(
         selLepton_lead_type, selLepton_lead->pt(), selLepton_lead->cone_pt(), selLepton_lead->eta(),
         selLepton_sublead_type, selLepton_sublead->pt(), selLepton_sublead->cone_pt(), selLepton_sublead->eta()
@@ -1574,14 +1624,26 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms("m(ll) > 12 GeV", evtWeightRecorder.get(central_or_shift_main));
 
     const bool failsZbosonMassVeto = isfailsZbosonMassVeto(preselLeptonsFull);
-    if ( failsZbosonMassVeto ) {
-      if ( run_lumi_eventSelector ) {
-        std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
+    if(invert_ZbosonMassVeto){
+      if ( !failsZbosonMassVeto ) {
+	if ( run_lumi_eventSelector ) {
+	  std::cout << "event " << eventInfo.str() << " FAILS inverted Z-boson veto." << std::endl;
+	}
+	continue;
       }
-      continue;
+      cutFlowTable.update("Z-boson mass veto inverted", evtWeightRecorder.get(central_or_shift_main));
+      cutFlowHistManager->fillHistograms("Z-boson mass veto inverted", evtWeightRecorder.get(central_or_shift_main));
+    }else{
+      if ( failsZbosonMassVeto ) {
+	if ( run_lumi_eventSelector ) {
+	  std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
+	}
+	continue;
+      }
+      cutFlowTable.update("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
+      cutFlowHistManager->fillHistograms("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
     }
-    cutFlowTable.update("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
-    cutFlowHistManager->fillHistograms("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
+  
 
     if ( apply_met_filters ) {
       if ( !metFilterSelector(metFilters) ) {
@@ -2170,6 +2232,7 @@ int main(int argc, char* argv[])
   delete genPhotonReader;
   delete genJetReader;
   delete lheInfoReader;
+  delete psWeightReader;
 
   delete bdt_filler;
   for(auto & kv: genEvtHistManager_beforeCuts)

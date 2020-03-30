@@ -30,7 +30,7 @@ parser.add_jet_cleaning()
 parser.add_gen_matching()
 parser.add_sideband()
 parser.add_tau_id()
-parser.enable_regrouped_jec()
+parser.enable_regrouped_jerc()
 parser.add_split_trigger_sys()
 args = parser.parse_args()
 
@@ -59,13 +59,13 @@ sideband          = args.sideband
 tau_id            = args.tau_id
 jet_cleaning      = args.jet_cleaning
 gen_matching      = args.gen_matching
-regroup_jec       = args.enable_regrouped_jec
+regroup_jerc      = args.enable_regrouped_jerc
 split_trigger_sys = args.split_trigger_sys
 
-if regroup_jec:
+if regroup_jerc:
   if 'full' not in systematics_label:
-    raise RuntimeError("Regrouped JEC was enabled but not running with full systematics")
-  systematics.full.extend(systematics.JEC_regrouped)
+    raise RuntimeError("Regrouped JEC or split JER was enabled but not running with full systematics")
+  systematics.full.extend(systematics.JEC_regrouped + systematics.JER_split)
 if split_trigger_sys == 'yes':
   for trigger_sys in systematics.triggerSF:
     del systematics.internal[systematics.internal.index(trigger_sys)]
@@ -104,10 +104,10 @@ if mode == "default":
 elif mode == "forBDTtraining":
   if use_preselected:
     raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
-  samples = load_samples(era, suffix = "BDT_2l_2tau")
+  samples = load_samples(era, suffix = "")
   hadTauWP_map_relaxed = {
-    'dR03mva' : 'Loose',
-    'deepVSj' : 'Loose',
+    'dR03mva' : 'VLoose',
+    'deepVSj' : 'VLoose',
   }
   if args.tau_id_wp:
     tau_id = args.tau_id[:7]
@@ -136,9 +136,9 @@ if __name__ == '__main__':
     executable_analyze                    = "analyze_hh_2l_2tau",
     cfgFile_analyze                       = "analyze_hh_2l_2tau_cfg.py",
     samples                               = samples,
-    leptonChargeSelections                = [ "disabled" ],
+    leptonChargeSelections                = [ "disabled", "OS", "SS"], ## Default. is just disabled 
     hadTau_selection                      = hadTau_selection,
-    hadTau_charge_selections              = [ "disabled" ],
+    hadTau_charge_selections              = [ "disabled", "OS", "SS" ], ## Default. is just disabled 
     applyFakeRateWeights                  = "4L",
     chargeSumSelections                   = chargeSumSelections,
     central_or_shifts                     = central_or_shifts,
@@ -148,12 +148,12 @@ if __name__ == '__main__':
     era                                   = era,
     use_lumi                              = True,
     lumi                                  = lumi,
+    invert_ZbosonMassVeto                 = True,  ## Default is False
     check_output_files                    = check_output_files,
     running_method                        = running_method,
     num_parallel_jobs                     = num_parallel_jobs,
     executable_addBackgrounds             = "addBackgrounds",
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
-    executable_addBackgrounds_TailFit     = "addBackgrounds_TailFit", 
     executable_addFlips                   = "addBackgroundLeptonFlips",
     histograms_to_fit                     = {
       "EventCounter"                      : {},
@@ -169,7 +169,14 @@ if __name__ == '__main__':
       "BDTOutput_700"                    : {},
       "BDTOutput_300"                    : {},
       "BDTOutput_500"                    : {},
-      "BDTOutput_800"                    : {}
+      "BDTOutput_800"                    : {},
+      "NNOutput_1000"                    : {},
+      "NNOutput_250"                    : {},
+      "NNOutput_400"                    : {},
+      "NNOutput_700"                    : {},
+      "NNOutput_300"                    : {},
+      "NNOutput_500"                    : {},
+      "NNOutput_800"                    : {}
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,
