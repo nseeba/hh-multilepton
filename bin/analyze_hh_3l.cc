@@ -726,6 +726,37 @@ int main(int argc, char* argv[])
   std::map<std::string, LHEInfoHistManager*> lheInfoHistManager;
   std::map<std::string, std::map<int, selHistManagerType*>> selHistManagers;
 
+  std::map<int, TH1*> hMEt_All_0 ;
+  std::map<int, TH1*> hHt_All_0;
+  std::map<int, TH1*> hMEt_LD_All_0;
+  std::map<int, TH1*> hHT_All_0;
+  std::map<int, TH1*> hSTMET_All_0;
+  //
+  std::map<int, TH1*> hMEt_SFOS_0;
+  std::map<int, TH1*> hHt_SFOS_0;
+  std::map<int, TH1*> hMEt_LD_SFOS_0;
+  std::map<int, TH1*> hHT_SFOS_0;
+  std::map<int, TH1*> hSTMET_SFOS_0;
+  //
+  std::map<int, TH1*> hMEt_All_1;
+  std::map<int, TH1*> hHt_All_1;
+  std::map<int, TH1*> hMEt_LD_All_1;
+  std::map<int, TH1*> hHT_All_1;
+  std::map<int, TH1*> hSTMET_All_1;
+  //
+  std::map<int, TH1*> hMEt_SFOS_1;
+  std::map<int, TH1*> hHt_SFOS_1;
+  std::map<int, TH1*> hMEt_LD_SFOS_1;
+  std::map<int, TH1*> hHT_SFOS_1;
+  std::map<int, TH1*> hSTMET_SFOS_1;
+  //
+  std::map<int, TH1*> hm_2lpreselUnclean_0;
+  std::map<int, TH1*> hm_2lpreselUnclean_1;
+  std::map<int, TH1*> hm_SFOS2lpresel_0;
+  std::map<int, TH1*> hm_SFOS2lpresel_1;
+  std::map<int, TH1*> hm_SFOS4lpresel_0;
+  std::map<int, TH1*> hm_SFOS4lpresel_1;
+
   //TH1* histogram_analyzedEntries = fs.make<TH1D>("analyzedEntries", "analyzedEntries", 1, -0.5, +0.5);
   //std::map<std::string, std::map<int, TH1*>> hMEt_All_0;
 
@@ -901,6 +932,42 @@ int main(int argc, char* argv[])
         selHistManager->weights_->bookHistograms(fs, { "genWeight", "pileupWeight", "triggerWeight", "data_to_MC_correction", "fakeRate" });
       }
       selHistManagers[central_or_shift][idxLepton] = selHistManager;
+
+      if (central_or_shift == central_or_shift_main) {
+	//TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_string.data()));
+	TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_and_genMatch.data()));
+	hMEt_All_0[idxLepton]        = subD1.make<TH1D>("hMEt_All_0", "hMEt_All_0", 200, 0.,500.);
+	hHt_All_0[idxLepton]         = subD1.make<TH1D>("hHt_All_0", "hHt_All_0", 200, 0.,500.);
+	hMEt_LD_All_0[idxLepton]     = subD1.make<TH1D>("hMEt_LD_All_0", "hMEt_LD_All_0", 200, 0.,500.);
+	hHT_All_0[idxLepton]         = subD1.make<TH1D>("hHT_All_0", "hHT_All_0", 200, 0.,1000.);
+	hSTMET_All_0[idxLepton]      = subD1.make<TH1D>("hSTMET_All_0", "hSTMET_All_0", 200, 0.,1000.);
+	//
+	hMEt_SFOS_0[idxLepton]       = subD1.make<TH1D>("hMEt_SFOS_0", "hMEt_SFOS_0", 200, 0.,500.);
+	hHt_SFOS_0[idxLepton]        = subD1.make<TH1D>("hHt_SFOS_0", "hHt_SFOS_0", 200, 0.,500.);
+	hMEt_LD_SFOS_0[idxLepton]    = subD1.make<TH1D>("hMEt_LD_SFOS_0", "hMEt_LD_SFOS_0", 200, 0.,500.);
+	hHT_SFOS_0[idxLepton]        = subD1.make<TH1D>("hHT_SFOS_0", "hHT_SFOS_0", 200, 0.,1000.);
+	hSTMET_SFOS_0[idxLepton]     = subD1.make<TH1D>("hSTMET_SFOS_0", "hSTMET_SFOS_0", 200, 0.,1000.);
+	//
+	hMEt_All_1[idxLepton]        = subD1.make<TH1D>("hMEt_All_1", "hMEt_All_1", 200, 0.,500.);
+	hHt_All_1[idxLepton]         = subD1.make<TH1D>("hHt_All_1", "hHt_All_1", 200, 0.,500.);
+	hMEt_LD_All_1[idxLepton]     = subD1.make<TH1D>("hMEt_LD_All_1", "hMEt_LD_All_1", 200, 0.,500.);
+	hHT_All_1[idxLepton]         = subD1.make<TH1D>("hHT_All_1", "hHT_All_1", 200, 0.,1000.);
+	hSTMET_All_1[idxLepton]      = subD1.make<TH1D>("hSTMET_All_1", "hSTMET_All_1", 200, 0.,1000.);
+	//
+	hMEt_SFOS_1[idxLepton]       = subD1.make<TH1D>("hMEt_SFOS_1", "hMEt_SFOS_1", 200, 0.,500.);
+	hHt_SFOS_1[idxLepton]        = subD1.make<TH1D>("hHt_SFOS_1", "hHt_SFOS_1", 200, 0.,500.);
+	hMEt_LD_SFOS_1[idxLepton]    = subD1.make<TH1D>("hMEt_LD_SFOS_1", "hMEt_LD_SFOS_1", 200, 0.,500.);
+	hHT_SFOS_1[idxLepton]        = subD1.make<TH1D>("hHT_SFOS_1", "hHT_SFOS_1", 200, 0.,1000.);
+	hSTMET_SFOS_1[idxLepton]     = subD1.make<TH1D>("hSTMET_SFOS_1", "hSTMET_SFOS_1", 200, 0.,1000.);
+	//
+	hm_2lpreselUnclean_0[idxLepton]     = subD1.make<TH1D>("hm_2lpreselUnclean_0",    "hm_2lpreselUnclean_0",     200, 0.,200.);
+	hm_2lpreselUnclean_1[idxLepton]     = subD1.make<TH1D>("hm_2lpreselUnclean_1",    "hm_2lpreselUnclean_1",     200, 0.,200.);
+	hm_SFOS2lpresel_0[idxLepton]        = subD1.make<TH1D>("hm_SFOS2lpresel_0",       "hm_SFOS2lpresel_0",        200, 0.,200.);
+	hm_SFOS2lpresel_1[idxLepton]        = subD1.make<TH1D>("hm_SFOS2lpresel_1",       "hm_SFOS2lpresel_1",        200, 0.,200.);
+	hm_SFOS4lpresel_0[idxLepton]        = subD1.make<TH1D>("hm_SFOS4lpresel_0",       "hm_SFOS4lpresel_0",        200, 0.,500.);
+	hm_SFOS4lpresel_1[idxLepton]        = subD1.make<TH1D>("hm_SFOS4lpresel_1",       "hm_SFOS4lpresel_1",        200, 0.,500.);
+      }
+      
     }
 
     if(isMC && ! skipBooking)
@@ -1005,7 +1072,7 @@ int main(int argc, char* argv[])
   /*HistManagerBase *histManager1 = new HistManagerBase(makeHistManager_cfg(process_string,
 	  Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift_main));
 	  TH1 *hMEt_All_0; */
-  
+  /*
   TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_string.data()));
   TH1 *hMEt_All_0        = subD1.make<TH1D>("hMEt_All_0", "hMEt_All_0", 200, 0.,500.);
   TH1 *hHt_All_0         = subD1.make<TH1D>("hHt_All_0", "hHt_All_0", 200, 0.,500.);
@@ -1037,7 +1104,7 @@ int main(int argc, char* argv[])
   TH1 *hm_SFOS2lpresel_1        = subD1.make<TH1D>("hm_SFOS2lpresel_1",       "hm_SFOS2lpresel_1",        200, 0.,200.);
   TH1 *hm_SFOS4lpresel_0        = subD1.make<TH1D>("hm_SFOS4lpresel_0",       "hm_SFOS4lpresel_0",        200, 0.,500.);
   TH1 *hm_SFOS4lpresel_1        = subD1.make<TH1D>("hm_SFOS4lpresel_1",       "hm_SFOS4lpresel_1",        200, 0.,500.);
-
+  */
 
 
 
@@ -1764,13 +1831,36 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms("sel lepton charge", evtWeightRecorder.get(central_or_shift_main));
 
 
+    /*std::cout << "processing Entry " << inputTree -> getCurrentMaxEventIdx()
+                << " or " << inputTree -> getCurrentEventIdx() << " entry in #"
+                << (inputTree -> getProcessedFileCount() - 1)
+                << " (" << eventInfo
+                << ") file (" << selectedEntries << " Entries selected)\n";*/
+//--- retrieve gen-matching flags    
+    std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons);
+    int genMatchIdx_0 = 2; // 0: fakes, 1: Convs, 2: non-fakes
+    
+    //std::cout << "genMatches: " << genMatches.size() << std::endl;
+    cutFlowTable.update(Form("GenMatch entries: %lu",genMatches.size()), evtWeightRecorder.get(central_or_shift_main));
+    if (genMatches.size() != 1) {
+      std::cout << "analyze_hh_3l: GenMatches in an event: " << genMatches.size() << "\t\t\t ERROR: Code is not ready for it ****" << std::endl;
+      throw cmsException("analyze_hh_3l", __LINE__) << " GenMatches in an event: " << genMatches.size() << "\t\t\t ERROR: Code is not ready for it **** \n";
+    }
+    
+    for (const GenMatchEntry* genMatch : genMatches) {
+      //std::cout << "genMatch Idx: " << genMatch->getIdx() << ", name: " << genMatch->getName() << std::endl;
+      cutFlowTable.update(Form("GenMatch entry Idx %i",genMatch->getIdx()), evtWeightRecorder.get(central_or_shift_main));
+      genMatchIdx_0 = genMatch->getIdx();
+    }
+
+    
     //Check: failsLowMassVeto
     for(auto lepton1_it = preselLeptonsFullUncleaned.begin(); lepton1_it != preselLeptonsFullUncleaned.end(); ++lepton1_it) {
       const RecoLepton * lepton1 = *lepton1_it;
       for(auto lepton2_it = lepton1_it + 1; lepton2_it != preselLeptonsFullUncleaned.end(); ++lepton2_it) {
 	const RecoLepton * lepton2 = *lepton2_it;
 	const double mass = (lepton1->p4() + lepton2->p4()).mass();
-	hm_2lpreselUnclean_0->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
+	hm_2lpreselUnclean_0[genMatchIdx_0]->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
       }
     }
     
@@ -1784,12 +1874,14 @@ int main(int argc, char* argv[])
     cutFlowTable.update("m(ll) > 12 GeV", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("m(ll) > 12 GeV", evtWeightRecorder.get(central_or_shift_main));
 
+    
+
     for(auto lepton1_it = preselLeptonsFullUncleaned.begin(); lepton1_it != preselLeptonsFullUncleaned.end(); ++lepton1_it) {
       const RecoLepton * lepton1 = *lepton1_it;
       for(auto lepton2_it = lepton1_it + 1; lepton2_it != preselLeptonsFullUncleaned.end(); ++lepton2_it) {
 	const RecoLepton * lepton2 = *lepton2_it;
 	const double mass = (lepton1->p4() + lepton2->p4()).mass();
-	hm_2lpreselUnclean_1->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
+	hm_2lpreselUnclean_1[genMatchIdx_0]->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
       }
     }
     
@@ -1805,7 +1897,7 @@ int main(int argc, char* argv[])
           isSameFlavor_OS = true;
 	  numSameFlavor_OS_Full++;
           double mass = ((*lepton1)->p4() + (*lepton2)->p4()).mass();
-	  hm_SFOS2lpresel_0->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
+	  hm_SFOS2lpresel_0[genMatchIdx_0]->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
           if ( std::fabs(mass - z_mass) < std::fabs(massSameFlavor_OS - z_mass) ) massSameFlavor_OS = mass;
         }
       }
@@ -1827,7 +1919,7 @@ int main(int argc, char* argv[])
 	    lepton2 != preselLeptonsFull.end(); ++lepton2 ) {
         if ( (*lepton1)->pdgId() == -(*lepton2)->pdgId() ) { // pair of same flavor leptons of opposite charge
 	  double mass = ((*lepton1)->p4() + (*lepton2)->p4()).mass();
-	  hm_SFOS2lpresel_1->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
+	  hm_SFOS2lpresel_1[genMatchIdx_0]->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
         }
       }
     }
@@ -1856,7 +1948,7 @@ int main(int argc, char* argv[])
 	      if(lepton3->pdgId() == -lepton4->pdgId()) {
 		// second pair of same flavor leptons of opposite charge
 		const double mass = (lepton1->p4() + lepton2->p4() + lepton3->p4() + lepton4->p4()).mass();
-		hm_SFOS4lpresel_0->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
+		hm_SFOS4lpresel_0[genMatchIdx_0]->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
 	      }
 	    }
 	  }
@@ -1895,7 +1987,7 @@ int main(int argc, char* argv[])
 	      if(lepton3->pdgId() == -lepton4->pdgId()) {
 		// second pair of same flavor leptons of opposite charge
 		const double mass = (lepton1->p4() + lepton2->p4() + lepton3->p4() + lepton4->p4()).mass();
-		hm_SFOS4lpresel_1->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
+		hm_SFOS4lpresel_1[genMatchIdx_0]->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
 	      }
 	    }
 	  }
@@ -2117,17 +2209,17 @@ int main(int argc, char* argv[])
     } 
 
     const bool isSameFlavor_OS_FO = isSFOS(fakeableLeptons);
-    hMEt_All_0->Fill(met.pt(),      evtWeightRecorder.get(central_or_shift_main));
-    hHt_All_0->Fill(mht_p4.pt(),    evtWeightRecorder.get(central_or_shift_main));
-    hMEt_LD_All_0->Fill(met_LD,     evtWeightRecorder.get(central_or_shift_main));
-    hHT_All_0->Fill(HT,             evtWeightRecorder.get(central_or_shift_main));
-    hSTMET_All_0->Fill(STMET,       evtWeightRecorder.get(central_or_shift_main));
+    hMEt_All_0[genMatchIdx_0]->Fill(met.pt(),      evtWeightRecorder.get(central_or_shift_main));
+    hHt_All_0[genMatchIdx_0]->Fill(mht_p4.pt(),    evtWeightRecorder.get(central_or_shift_main));
+    hMEt_LD_All_0[genMatchIdx_0]->Fill(met_LD,     evtWeightRecorder.get(central_or_shift_main));
+    hHT_All_0[genMatchIdx_0]->Fill(HT,             evtWeightRecorder.get(central_or_shift_main));
+    hSTMET_All_0[genMatchIdx_0]->Fill(STMET,       evtWeightRecorder.get(central_or_shift_main));
     if (isSameFlavor_OS_FO) {
-      hMEt_SFOS_0->Fill(met.pt(),   evtWeightRecorder.get(central_or_shift_main));
-      hHt_SFOS_0->Fill(mht_p4.pt(), evtWeightRecorder.get(central_or_shift_main));
-      hMEt_LD_SFOS_0->Fill(met_LD,  evtWeightRecorder.get(central_or_shift_main));
-      hHT_SFOS_0->Fill(HT,          evtWeightRecorder.get(central_or_shift_main));
-      hSTMET_SFOS_0->Fill(STMET,    evtWeightRecorder.get(central_or_shift_main));
+      hMEt_SFOS_0[genMatchIdx_0]->Fill(met.pt(),   evtWeightRecorder.get(central_or_shift_main));
+      hHt_SFOS_0[genMatchIdx_0]->Fill(mht_p4.pt(), evtWeightRecorder.get(central_or_shift_main));
+      hMEt_LD_SFOS_0[genMatchIdx_0]->Fill(met_LD,  evtWeightRecorder.get(central_or_shift_main));
+      hHT_SFOS_0[genMatchIdx_0]->Fill(HT,          evtWeightRecorder.get(central_or_shift_main));
+      hSTMET_SFOS_0[genMatchIdx_0]->Fill(STMET,    evtWeightRecorder.get(central_or_shift_main));
     }
     
     double met_LD_cut = 0.;
@@ -2144,17 +2236,17 @@ int main(int argc, char* argv[])
     cutFlowTable.update("met LD", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("met LD", evtWeightRecorder.get(central_or_shift_main));
 
-    hMEt_All_1->Fill(met.pt(),      evtWeightRecorder.get(central_or_shift_main));
-    hHt_All_1->Fill(mht_p4.pt(),    evtWeightRecorder.get(central_or_shift_main));
-    hMEt_LD_All_1->Fill(met_LD,     evtWeightRecorder.get(central_or_shift_main));
-    hHT_All_1->Fill(HT,             evtWeightRecorder.get(central_or_shift_main));
-    hSTMET_All_1->Fill(STMET,       evtWeightRecorder.get(central_or_shift_main));
+    hMEt_All_1[genMatchIdx_0]->Fill(met.pt(),      evtWeightRecorder.get(central_or_shift_main));
+    hHt_All_1[genMatchIdx_0]->Fill(mht_p4.pt(),    evtWeightRecorder.get(central_or_shift_main));
+    hMEt_LD_All_1[genMatchIdx_0]->Fill(met_LD,     evtWeightRecorder.get(central_or_shift_main));
+    hHT_All_1[genMatchIdx_0]->Fill(HT,             evtWeightRecorder.get(central_or_shift_main));
+    hSTMET_All_1[genMatchIdx_0]->Fill(STMET,       evtWeightRecorder.get(central_or_shift_main));
     if (isSameFlavor_OS_FO) {
-      hMEt_SFOS_1->Fill(met.pt(),   evtWeightRecorder.get(central_or_shift_main));
-      hHt_SFOS_1->Fill(mht_p4.pt(), evtWeightRecorder.get(central_or_shift_main));
-      hMEt_LD_SFOS_1->Fill(met_LD,  evtWeightRecorder.get(central_or_shift_main));
-      hHT_SFOS_1->Fill(HT,          evtWeightRecorder.get(central_or_shift_main));
-      hSTMET_SFOS_1->Fill(STMET,    evtWeightRecorder.get(central_or_shift_main));
+      hMEt_SFOS_1[genMatchIdx_0]->Fill(met.pt(),   evtWeightRecorder.get(central_or_shift_main));
+      hHt_SFOS_1[genMatchIdx_0]->Fill(mht_p4.pt(), evtWeightRecorder.get(central_or_shift_main));
+      hMEt_LD_SFOS_1[genMatchIdx_0]->Fill(met_LD,  evtWeightRecorder.get(central_or_shift_main));
+      hHT_SFOS_1[genMatchIdx_0]->Fill(HT,          evtWeightRecorder.get(central_or_shift_main));
+      hSTMET_SFOS_1[genMatchIdx_0]->Fill(STMET,    evtWeightRecorder.get(central_or_shift_main));
     }
 
     if ( apply_met_filters ) {
@@ -2562,7 +2654,7 @@ int main(int argc, char* argv[])
 
     
 //--- retrieve gen-matching flags    
-    std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons);
+    //std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons);
     
     
 //--- fill histograms with events passing final selection
