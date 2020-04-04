@@ -36,7 +36,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     lepton_selection: either `Tight`, `Loose` or `Fakeable`
 
   See $CMSSW_BASE/src/tthAnalysis/HiggsToTauTau/python/analyzeConfig.py
-  for documentation of further Args.
+  for documentation of further Args. 
 
   """
   def __init__(self,
@@ -120,9 +120,11 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     self.pruneSystematics()
     self.internalizeSystematics()
 
+    '''
     print "analyzeConfig_hh_3l::__init__: lepton_genMatches_nonfakes:",self.lepton_genMatches_nonfakes,\
         ", lepton_genMatches_Convs:",self.lepton_genMatches_Convs,", lepton_genMatches_fakes:",self.lepton_genMatches_fakes;
     sys.stdout.flush();
+    '''  
 
     self.leptonChargeSelections = leptonChargeSelections
 
@@ -160,9 +162,11 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     self.isBDTtraining = False
 
     self.categories = [
-      "hh_3lneg", "hh_3lpos",
-      "hh_3l_Geq1j", "hh_3l_Only1j", "hh_3l_Geq2j",
-      "hh_3l_nonVBF", "hh_3l_VBF" ]
+      "hh_WjjBoosted", "hh_WjjResolved", "hh_WjjHasOnly1j",
+      #"hh_3lneg", "hh_3lpos",
+      #"hh_3l_nonVBF", "hh_3l_VBF"
+    ]
+
     self.category_inclusive = "hh_3l"
     if self.category_inclusive not in self.categories:
       self.categories.append(self.category_inclusive)
