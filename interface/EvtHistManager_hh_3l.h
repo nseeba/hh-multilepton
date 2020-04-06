@@ -159,8 +159,6 @@ class EvtHistManager_hh_3l
   getHistogram_EventCounter() const;
 
  private:
-  int era_;
-
   TH1 * hnumElectrons_;
   TH1 * hnumMuons_;
   TH1 * hnumLeptons_;

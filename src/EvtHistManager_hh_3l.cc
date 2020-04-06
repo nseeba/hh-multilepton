@@ -1,12 +1,10 @@
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_3l.h"
 
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow(), getLogWeight()
-#include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // get_era(), kEra_*
 #include "tthAnalysis/HiggsToTauTau/interface/cmsException.h" // cmsException()
 
 EvtHistManager_hh_3l::EvtHistManager_hh_3l(const edm::ParameterSet & cfg)
   : HistManagerBase(cfg)
-  , era_(get_era(cfg.getParameter<std::string>("era")))
 {
   central_or_shiftOptions_["numElectrons"]                   = { "central" }; 
   central_or_shiftOptions_["numMuons"]                       = { "central" }; 

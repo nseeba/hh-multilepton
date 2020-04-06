@@ -174,7 +174,7 @@ int main(int argc, char* argv[])
   bool isMCClosure_t = histogramDir.find("mcClosure_t") != std::string::npos;
 
   std::string era_string = cfg_analyze.getParameter<std::string>("era");
-  const int era = get_era(era_string);
+  const Era era = get_era(era_string);
 
   vstring triggerNames_1e = cfg_analyze.getParameter<vstring>("triggers_1e");
   std::vector<hltPath*> triggers_1e = create_hltPaths(triggerNames_1e, "triggers_1e");
@@ -309,10 +309,10 @@ int main(int argc, char* argv[])
   Data_to_MC_CorrectionInterface_Base * dataToMCcorrectionInterface = nullptr;
   switch(era)
   {
-    case kEra_2016: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2016(cfg_dataToMCcorrectionInterface); break;
-    case kEra_2017: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2017(cfg_dataToMCcorrectionInterface); break;
-    case kEra_2018: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2018(cfg_dataToMCcorrectionInterface); break;
-    default: throw cmsException("analyze_hh_1l_3tau", __LINE__) << "Invalid era = " << era;
+    case Era::k2016: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2016(cfg_dataToMCcorrectionInterface); break;
+    case Era::k2017: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2017(cfg_dataToMCcorrectionInterface); break;
+    case Era::k2018: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2018(cfg_dataToMCcorrectionInterface); break;
+    default: throw cmsException("analyze_hh_1l_3tau", __LINE__) << "Invalid era = " << static_cast<int>(era);
   }
   Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger* dataToMCcorrectionInterface_hh_1l_3tau_trigger = new Data_to_MC_CorrectionInterface_hh_1l_3tau_trigger(cfg_dataToMCcorrectionInterface);
 
@@ -929,7 +929,7 @@ int main(int argc, char* argv[])
     // CV: require DoubleTau trigger in 2017 MC to pass L1 tau pT > 32 GeV threshold
     //    (cf. slide 6 of https://indico.cern.ch/event/700042/contributions/2871830/attachments/1591232/2527113/180129_TauPOGmeeting_TriggerEfficiency_hsert.pdf )
     bool isTriggered_2tau_L1 = true;
-    if ( era == kEra_2017 && isMC ) { 
+    if ( era == Era::k2017 && isMC ) { 
       std::vector<TrigObj> trigObjs = trigObjReader.read();
       int numTrigObjs = countTrigObjs_passingL1(trigObjs, 15, 32.);
       //std::cout << "numTrigObjs = " << numTrigObjs << std::endl;
