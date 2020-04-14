@@ -222,7 +222,7 @@ int main(int argc, char* argv[])
   std::string histogramDir = cfg_analyze.getParameter<std::string>("histogramDir");
 
   std::string era_string = cfg_analyze.getParameter<std::string>("era");
-  const int era = get_era(era_string);
+  const Era era = get_era(era_string);
 
   std::string mode_string = cfg_analyze.getParameter<std::string>("mode");
   int mode = kMode_undefined;

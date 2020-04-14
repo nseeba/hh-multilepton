@@ -1,14 +1,14 @@
-#include "hhAnalysis/multilepton/interface/RecoJetCollectionSelectorAK8_hh_Wjj.h" // RecoJetSelectorAK8_hh_Wjj
+#include "hhAnalysis/multilepton/interface/RecoJetCollectionSelectorAK8_hh_Wjj.h"
 
-#include "tthAnalysis/HiggsToTauTau/interface/RecoLepton.h" // RecoLepton
-#include "tthAnalysis/HiggsToTauTau/interface/cmsException.h" // cmsException()
-#include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // kEra_*
+#include "tthAnalysis/HiggsToTauTau/interface/RecoLepton.h"           // RecoLepton
+#include "tthAnalysis/HiggsToTauTau/interface/cmsException.h"         // cmsException()
+#include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // Era::k*
 
 #include "DataFormats/Math/interface/deltaR.h" // deltaR()
 
 #include <TString.h> // Form()
 
-RecoJetSelectorAK8_hh_Wjj::RecoJetSelectorAK8_hh_Wjj(int era, int index, bool debug)
+RecoJetSelectorAK8_hh_Wjj::RecoJetSelectorAK8_hh_Wjj(Era era, int index, bool debug)
   : min_pt_(100.)
   , max_absEta_(2.4)
   , min_msoftdrop_(-1.e+3)
@@ -23,9 +23,9 @@ RecoJetSelectorAK8_hh_Wjj::RecoJetSelectorAK8_hh_Wjj(int era, int index, bool de
 {
   switch(era)
   {
-    case kEra_2016: min_jetId_ = 1; break; // 1 means loose
-    case kEra_2018:
-    case kEra_2017: min_jetId_ = 2; break; // 2 means tight (loose jet ID deprecated since 94x)
+    case Era::k2016: min_jetId_ = 1; break; // 1 means loose
+    case Era::k2018:
+    case Era::k2017: min_jetId_ = 2; break; // 2 means tight (loose jet ID deprecated since 94x)
     default: throw cmsException(this) << "Implement me!";
   }
 }
