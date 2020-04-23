@@ -149,7 +149,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig_hh):
 
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_3l_1tau_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_3l_1tau_cfg.py") #TODO
-    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" , "W"] + [ "Convs", "data_fakes" ]
+    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ] + [ "Convs", "data_fakes" ]
     self.select_rle_output = select_rle_output
     self.use_nonnominal = use_nonnominal
     self.hlt_filter = hlt_filter
@@ -189,14 +189,16 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig_hh):
       central_or_shift: either 'central' or one of the systematic uncertainties defined in $CMSSW_BASE/src/hhAnalysis/multilepton/bin/analyze_hh_3l_1tau.cc
     """
     lepton_and_hadTau_frWeight = "disabled" if jobOptions['applyFakeRateWeights'] == "disabled" else "enabled"
-    if (jobOptions['muonSelection'] == jobOptions['electronSelection']): jobOptions['histogramDir'] = getHistogramDir(
-      jobOptions['muonSelection'], jobOptions['hadTauSelection'], lepton_and_hadTau_frWeight,
-      jobOptions['chargeSumSelection']
-    )
-    else: jobOptions['histogramDir'] = getHistogramDir(
-      lepton_and_hadTau_selection, jobOptions['hadTauSelection'], lepton_and_hadTau_frWeight,
-      jobOptions['chargeSumSelection']
-    )
+    if ( jobOptions['muonSelection'] == jobOptions['electronSelection'] ): 
+      jobOptions['histogramDir'] = getHistogramDir(
+        jobOptions['muonSelection'], jobOptions['hadTauSelection'], lepton_and_hadTau_frWeight,
+        jobOptions['chargeSumSelection']
+      )
+    else: 
+      jobOptions['histogramDir'] = getHistogramDir(
+        lepton_and_hadTau_selection, jobOptions['hadTauSelection'], lepton_and_hadTau_frWeight,
+        jobOptions['chargeSumSelection']
+      )
     if 'mcClosure' in lepton_and_hadTau_selection:
       self.mcClosure_dir['%s_%s' % (lepton_and_hadTau_selection, jobOptions['chargeSumSelection'])] = jobOptions['histogramDir']
 
