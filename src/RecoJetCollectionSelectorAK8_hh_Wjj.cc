@@ -289,26 +289,37 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet,
     if(debug_)
     {
       std::cout << "FAILS subjet selection criteria\njet: " << jet;
-      returnType = Form("FAILS subjet selection criteria");
+      returnType = "FAILS subjet selection criteria";
 
-      if(! (deltaR(jet.subJet1()->p4(), lepton->p4()) > 0.1  &&
-            deltaR(jet.subJet2()->p4(), lepton->p4()) > 0.1 ))
+      if(! jet.subJet1())
       {
-        returnType += Form("  dR(subjet, lep) < 0.1");
+        returnType += "  first subjet missing";
       }
-      if(! ((jet.subJet1()->pt()      >= min_subJet1_pt_    &&
-             jet.subJet2()->pt()      >= min_subJet2_pt_     ) ||
-            (jet.subJet1()->pt()      >= min_subJet2_pt_    &&
-             jet.subJet2()->pt()      >= min_subJet1_pt_     ) ))
+      else if(! jet.subJet2())
       {
-        returnType += Form("  pT < trsh");
+        returnType += "  second subjet missing";
       }
-      if(! ((jet.subJet1()->absEta()  <= max_subJet1_absEta_ &&
-             jet.subJet2()->absEta()  <= max_subJet2_absEta_  ) ||
-            (jet.subJet1()->absEta()  <= max_subJet2_absEta_ &&
-             jet.subJet2()->absEta()  <= max_subJet1_absEta_  ) ))
+      else
       {
-        returnType += Form("  |eta| > trsh");
+        if(! (deltaR(jet.subJet1()->p4(), lepton->p4()) > 0.1  &&
+              deltaR(jet.subJet2()->p4(), lepton->p4()) > 0.1 ))
+        {
+          returnType += "  dR(subjet, lep) < 0.1";
+        }
+        if(! ((jet.subJet1()->pt()      >= min_subJet1_pt_    &&
+               jet.subJet2()->pt()      >= min_subJet2_pt_     ) ||
+              (jet.subJet1()->pt()      >= min_subJet2_pt_    &&
+               jet.subJet2()->pt()      >= min_subJet1_pt_     ) ))
+        {
+          returnType += "  pT < trsh";
+        }
+        if(! ((jet.subJet1()->absEta()  <= max_subJet1_absEta_ &&
+               jet.subJet2()->absEta()  <= max_subJet2_absEta_  ) ||
+              (jet.subJet1()->absEta()  <= max_subJet2_absEta_ &&
+               jet.subJet2()->absEta()  <= max_subJet1_absEta_  ) ))
+        {
+          returnType += "  |eta| > trsh";
+        }
       }
     }
     return false;

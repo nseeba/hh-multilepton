@@ -1,5 +1,5 @@
-/*   versionL With AK8LS
- *   Date: 20200220
+/*   versionL With AK8LS without H_WW_jj selector
+ *   Date: 20200401
  */
  
 
@@ -2002,7 +2002,7 @@ int main(int argc, char* argv[])
 
     std::vector<RecoJetAK8> jets_ak8_Wjj = jetReaderAK8_Wjj->read();
     std::vector<const RecoJetAK8*> jet_ptrs_ak8_Wjj = convert_to_ptrs(jets_ak8_Wjj);    
-    //std::vector<const RecoJetAK8*> selJetsAK8 = jetSelectorAK8(jet_ptrs_ak8_Wjj, isHigherPt); 
+    std::vector<const RecoJetAK8*> selJetsAK8_selectorAK8 = jetSelectorAK8(jet_ptrs_ak8_Wjj, isHigherPt); 
     
     if(isDEBUG || run_lumi_eventSelector) 
     {
@@ -2018,7 +2018,8 @@ int main(int argc, char* argv[])
     double AK8JetPt_max = -1.;
     const RecoJetAK8* AK8JetLead = nullptr;
     size_t idxLepton_H_WW_ljj_1 = 9999;
-    for (size_t ijet = 0; ijet < jet_ptrs_ak8_Wjj.size(); ++ijet) {
+    //for (size_t ijet = 0; ijet < jet_ptrs_ak8_Wjj.size(); ++ijet) {
+    for (size_t ijet = 0; ijet < selJetsAK8_selectorAK8.size(); ++ijet) {
       //std::cout << "\tijet: " << ijet << ", pt: " << jet_ptrs_ak8_Wjj[ijet]->pt() << std::endl;
       if (jet_ptrs_ak8_Wjj[ijet]->pt() > AK8JetPt_max) {
 	AK8JetPt_max = jet_ptrs_ak8_Wjj[ijet]->pt();
@@ -2111,7 +2112,7 @@ int main(int argc, char* argv[])
     //selJetsAK4_Wjj = selJetsAK4;  
     */
 
-     if (idxLepton_H_WW_ljj < 3) { // Approach - 0
+     if (idxLepton_H_WW_ljj < 3) { // Approach - 0 
        selLepton_H_WW_ljj = selLeptons[idxLepton_H_WW_ljj]; 
        selLepton1_H_WW_ll = selLeptons[idxLepton1_H_WW_ll];
        selLepton2_H_WW_ll = selLeptons[idxLepton2_H_WW_ll];
@@ -2120,7 +2121,11 @@ int main(int argc, char* argv[])
 
     jetSelectorAK8_Wjj.getSelector().set_leptons({selLeptons[0], selLeptons[1], selLeptons[2]});
     selJetsAK8_Wjj_wSelectorAK8_Wjj = jetSelectorAK8_Wjj(jet_ptrs_ak8_Wjj, isHigherPt);
-    selJetsAK8_Wjj = selJetsAK8_Wjj_wSelectorAK8_Wjj;
+    
+    selJetsAK8_Wjj = selJetsAK8_Wjj_wSelectorAK8_Wjj; // using AK8LS_H_WW_jj selector
+    //selJetsAK8_Wjj = jet_ptrs_ak8_Wjj; // without using AK8LS_H_WW_jj selector, just use AK8LS
+    //selJetsAK8_Wjj = selJetsAK8_selectorAK8; // without using AK8LS_H_WW_jj selector, just use AK8LS
+     
     selJetsAK4_Wjj = jetSelectorAK4(cleanedJetsAK4, isHigherPt);
     
     if ( (AK8JetLead && AK8JetLead->subJet1() && AK8JetLead->subJet2())  &&
@@ -2130,9 +2135,13 @@ int main(int argc, char* argv[])
 	cutFlowTable.update("AK8; but AK8_hh_Wjj selector failed && nAK4==0", evtWeightRecorder.get(central_or_shift_main));
       }
     }
+
     
-    if (selJetsAK8_Wjj.size() >= 1 && selJetsAK8_Wjj[0] && selJetsAK8_Wjj[0]->subJet1() && selJetsAK8_Wjj[0]->subJet2()) {
-      selJetAK8_Wjj = selJetsAK8_Wjj[0];
+    //if (selJetsAK8_Wjj.size() >= 1 && selJetsAK8_Wjj[0] && selJetsAK8_Wjj[0]->subJet1() && selJetsAK8_Wjj[0]->subJet2()) {  // using AK8LS_H_WW_jj selector
+    //selJetAK8_Wjj = selJetsAK8_Wjj[0];
+    if (AK8JetLead && AK8JetLead->subJet1() && AK8JetLead->subJet2()) { // without using AK8LS_H_WW_jj selector, just use AK8LS
+      selJetAK8_Wjj = AK8JetLead;
+      
       selJet1_Wjj = selJetAK8_Wjj->subJet1();
       selJet2_Wjj = selJetAK8_Wjj->subJet2();
       isWjjBoosted = true;
