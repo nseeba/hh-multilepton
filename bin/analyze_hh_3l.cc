@@ -103,6 +103,11 @@
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfoReader.h" // EventInfoReader
 #include "hhAnalysis/multilepton/interface/EvtWeightRecorderHH.h" // EvtWeightRecorderHH
 
+#include "hhAnalysis/multilepton/interface/RecoElectronCollectionSelectorFakeable_hh_multilepton.h" // Lepton selection for hh_multilepton analysis
+#include "hhAnalysis/multilepton/interface/RecoElectronCollectionSelectorTight_hh_multilepton.h"
+#include "hhAnalysis/multilepton/interface/RecoMuonCollectionSelectorFakeable_hh_multilepton.h"
+#include "hhAnalysis/multilepton/interface/RecoMuonCollectionSelectorTight_hh_multilepton.h"
+
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
 #include <boost/algorithm/string/predicate.hpp> // boost::starts_with()
 #include <boost/algorithm/string/replace.hpp> // boost::replace_all_copy()
@@ -543,6 +548,8 @@ int main(int argc, char* argv[])
   RecoMuonCollectionSelectorLoose preselMuonSelector(era, -1, isDEBUG);
   RecoMuonCollectionSelectorFakeable fakeableMuonSelector(era, -1, isDEBUG);
   RecoMuonCollectionSelectorTight tightMuonSelector(era, -1, isDEBUG);
+  //RecoMuonCollectionSelectorFakeable_hh_multilepton fakeableMuonSelector(era, -1, isDEBUG);
+  //RecoMuonCollectionSelectorTight_hh_multilepton tightMuonSelector(era, -1, isDEBUG);
 
   RecoElectronReader* electronReader = new RecoElectronReader(era, branchName_electrons, isMC, readGenObjects);
   inputTree -> registerReader(electronReader);
@@ -551,7 +558,9 @@ int main(int argc, char* argv[])
   RecoElectronCollectionSelectorLoose preselElectronSelector(era, -1, isDEBUG);
   RecoElectronCollectionSelectorFakeable fakeableElectronSelector(era, -1, isDEBUG);
   RecoElectronCollectionSelectorTight tightElectronSelector(era, -1, isDEBUG);
-
+  //RecoElectronCollectionSelectorFakeable_hh_multilepton fakeableElectronSelector(era, -1, isDEBUG);
+  //RecoElectronCollectionSelectorTight_hh_multilepton tightElectronSelector(era, -1, isDEBUG);
+ 
   RecoHadTauReader* hadTauReader = new RecoHadTauReader(era, branchName_hadTaus, isMC, readGenObjects);
   hadTauReader->setHadTauPt_central_or_shift(hadTauPt_option);
   inputTree -> registerReader(hadTauReader);
@@ -1043,77 +1052,34 @@ int main(int argc, char* argv[])
   const edm::ParameterSet cutFlowTableCfg = makeHistManager_cfg(
     process_string, Form("%s/sel/cutFlow", histogramDir.data()), era_string, central_or_shift_main
   );
+  
   const std::vector<std::string> cuts = {
     "run:ls:event selection",
     "object multiplicity",
     "trigger",
     ">= 3 presel leptons",
     "presel lepton trigger match",
-    ">= N jets",
-    "b-jet veto",
-    "3 sel leptons",
+    ">= 3 sel leptons",
+    "<= 3 tight sel leptons"
     "fakeable lepton trigger match",
     "HLT filter matching",
+    "b-jet veto",
     "sel tau veto",
-    "m(ll) > 12 GeV",
     "lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV && third lepton pT > 10 GeV",
     "sel lepton charge",
+    ">= 1 jets from W->jj",
+    "m(ll) > 12 GeV",
     "Z-boson mass veto",
     "H->ZZ*->4l veto",
     "met LD",
     "MEt filters",
     "signal region veto",
+    "After all cuts: evt category isWjjBoosted",
+    "After all cuts: evt category isWjjResolved",
+    "After all cuts: evt category isWjjHasOnly1j"
   };
   CutFlowTableHistManager * cutFlowHistManager = new CutFlowTableHistManager(cutFlowTableCfg, cuts);
   cutFlowHistManager->bookHistograms(fs);
-
-  //TH1 *hMEt_All_0 = HistManagerBase::book1D(Form("%s/sel/evt/%s",histogramDir.data(),process_string.data()), "MEt_All_0", "MEt_All_0", 200, 0., 500.);
-  
-  /*HistManagerBase *histManager1 = new HistManagerBase(makeHistManager_cfg(process_string,
-	  Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift_main));
-	  TH1 *hMEt_All_0; */
-  /*
-  TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_string.data()));
-  TH1 *hMEt_All_0        = subD1.make<TH1D>("hMEt_All_0", "hMEt_All_0", 200, 0.,500.);
-  TH1 *hHt_All_0         = subD1.make<TH1D>("hHt_All_0", "hHt_All_0", 200, 0.,500.);
-  TH1 *hMEt_LD_All_0     = subD1.make<TH1D>("hMEt_LD_All_0", "hMEt_LD_All_0", 200, 0.,500.);
-  TH1 *hHT_All_0         = subD1.make<TH1D>("hHT_All_0", "hHT_All_0", 200, 0.,1000.);
-  TH1 *hSTMET_All_0      = subD1.make<TH1D>("hSTMET_All_0", "hSTMET_All_0", 200, 0.,1000.);
-  //
-  TH1 *hMEt_SFOS_0       = subD1.make<TH1D>("hMEt_SFOS_0", "hMEt_SFOS_0", 200, 0.,500.);
-  TH1 *hHt_SFOS_0        = subD1.make<TH1D>("hHt_SFOS_0", "hHt_SFOS_0", 200, 0.,500.);
-  TH1 *hMEt_LD_SFOS_0    = subD1.make<TH1D>("hMEt_LD_SFOS_0", "hMEt_LD_SFOS_0", 200, 0.,500.);
-  TH1 *hHT_SFOS_0        = subD1.make<TH1D>("hHT_SFOS_0", "hHT_SFOS_0", 200, 0.,1000.);
-  TH1 *hSTMET_SFOS_0     = subD1.make<TH1D>("hSTMET_SFOS_0", "hSTMET_SFOS_0", 200, 0.,1000.);
-  //
-  TH1 *hMEt_All_1        = subD1.make<TH1D>("hMEt_All_1", "hMEt_All_1", 200, 0.,500.);
-  TH1 *hHt_All_1         = subD1.make<TH1D>("hHt_All_1", "hHt_All_1", 200, 0.,500.);
-  TH1 *hMEt_LD_All_1     = subD1.make<TH1D>("hMEt_LD_All_1", "hMEt_LD_All_1", 200, 0.,500.);
-  TH1 *hHT_All_1         = subD1.make<TH1D>("hHT_All_1", "hHT_All_1", 200, 0.,1000.);
-  TH1 *hSTMET_All_1      = subD1.make<TH1D>("hSTMET_All_1", "hSTMET_All_1", 200, 0.,1000.);
-  //
-  TH1 *hMEt_SFOS_1       = subD1.make<TH1D>("hMEt_SFOS_1", "hMEt_SFOS_1", 200, 0.,500.);
-  TH1 *hHt_SFOS_1        = subD1.make<TH1D>("hHt_SFOS_1", "hHt_SFOS_1", 200, 0.,500.);
-  TH1 *hMEt_LD_SFOS_1    = subD1.make<TH1D>("hMEt_LD_SFOS_1", "hMEt_LD_SFOS_1", 200, 0.,500.);
-  TH1 *hHT_SFOS_1        = subD1.make<TH1D>("hHT_SFOS_1", "hHT_SFOS_1", 200, 0.,1000.);
-  TH1 *hSTMET_SFOS_1     = subD1.make<TH1D>("hSTMET_SFOS_1", "hSTMET_SFOS_1", 200, 0.,1000.);
-  //
-  TH1 *hm_2lpreselUnclean_0     = subD1.make<TH1D>("hm_2lpreselUnclean_0",    "hm_2lpreselUnclean_0",     200, 0.,200.);
-  TH1 *hm_2lpreselUnclean_1     = subD1.make<TH1D>("hm_2lpreselUnclean_1",    "hm_2lpreselUnclean_1",     200, 0.,200.);
-  TH1 *hm_SFOS2lpresel_0        = subD1.make<TH1D>("hm_SFOS2lpresel_0",       "hm_SFOS2lpresel_0",        200, 0.,200.);
-  TH1 *hm_SFOS2lpresel_1        = subD1.make<TH1D>("hm_SFOS2lpresel_1",       "hm_SFOS2lpresel_1",        200, 0.,200.);
-  TH1 *hm_SFOS4lpresel_0        = subD1.make<TH1D>("hm_SFOS4lpresel_0",       "hm_SFOS4lpresel_0",        200, 0.,500.);
-  TH1 *hm_SFOS4lpresel_1        = subD1.make<TH1D>("hm_SFOS4lpresel_1",       "hm_SFOS4lpresel_1",        200, 0.,500.);
-  */
-
-
-
-  
-  /*
-  TH1 * = subD1.make<TH1D>("", "", 200, 0.,500.);
-  TH1 * = subD1.make<TH1D>("", "", 200, 0.,500.);
-  */
-
 
   
 
@@ -1604,28 +1570,6 @@ int main(int argc, char* argv[])
     cutFlowTable.update("presel lepton trigger match", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("presel lepton trigger match", evtWeightRecorder.get(central_or_shift_main));
 
-    // apply requirement on jets (incl. b-tagged jets) and hadronic taus on preselection level
-    if ( !((int)selJetsAK4.size() >= minNumJets) ) {
-      if ( run_lumi_eventSelector ) {
-    std::cout << "event " << eventInfo.str() << " FAILS selJets selection." << std::endl;
-    printCollection("selJets", selJetsAK4);
-      }
-      //continue;
-    }
-    cutFlowTable.update(">= N jets", evtWeightRecorder.get(central_or_shift_main));
-    cutFlowHistManager->fillHistograms(">= N jets", evtWeightRecorder.get(central_or_shift_main));
-
-    if ( (selBJetsAK4_loose.size() >= 2 || selBJetsAK4_medium.size() >= 1) ) {
-      if ( run_lumi_eventSelector ) {
-    std::cout << "event " << eventInfo.str() << " FAILS selBJets selection." << std::endl;
-	printCollection("selJetsAK4", selJetsAK4);
-	printCollection("selBJetsAK4_loose", selBJetsAK4_loose);
-	printCollection("selBJetsAK4_medium", selBJetsAK4_medium);
-      }
-      continue;
-    }
-    cutFlowTable.update("b-jet veto", evtWeightRecorder.get(central_or_shift_main));
-    cutFlowHistManager->fillHistograms("b-jet veto", evtWeightRecorder.get(central_or_shift_main));
 
 //--- compute MHT and linear MET discriminant (met_LD)
     const RecoMEt met_uncorr = metReader->read();
@@ -1650,6 +1594,7 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update(">= 3 sel leptons", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms(">= 3 sel leptons", evtWeightRecorder.get(central_or_shift_main));
+    
     const RecoLepton* selLepton_lead = selLeptons[0];
     int selLepton_lead_type = getLeptonType(selLepton_lead->pdgId());
     const RecoLepton* selLepton_sublead = selLeptons[1];
@@ -1776,6 +1721,20 @@ int main(int argc, char* argv[])
     cutFlowTable.update("HLT filter matching", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("HLT filter matching", evtWeightRecorder.get(central_or_shift_main));
 
+
+    if ( (selBJetsAK4_loose.size() >= 2 || selBJetsAK4_medium.size() >= 1) ) {
+      if ( run_lumi_eventSelector ) {
+    std::cout << "event " << eventInfo.str() << " FAILS selBJets selection." << std::endl;
+	printCollection("selJetsAK4", selJetsAK4);
+	printCollection("selBJetsAK4_loose", selBJetsAK4_loose);
+	printCollection("selBJetsAK4_medium", selBJetsAK4_medium);
+      }
+      continue;
+    }
+    cutFlowTable.update("b-jet veto", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms("b-jet veto", evtWeightRecorder.get(central_or_shift_main));
+
+    
     if ( selHadTaus.size() > 0 ) {
       if ( run_lumi_eventSelector ) {
     std::cout << "event " << eventInfo.str() << " FAILS selHadTaus veto." << std::endl;
@@ -1831,25 +1790,189 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms("sel lepton charge", evtWeightRecorder.get(central_or_shift_main));
 
 
-    /*std::cout << "processing Entry " << inputTree -> getCurrentMaxEventIdx()
-                << " or " << inputTree -> getCurrentEventIdx() << " entry in #"
-                << (inputTree -> getProcessedFileCount() - 1)
-                << " (" << eventInfo
-                << ") file (" << selectedEntries << " Entries selected)\n";*/
+
+    std::vector<RecoJetAK8> jets_ak8_Wjj = jetReaderAK8_Wjj->read();
+    std::vector<const RecoJetAK8*> jet_ptrs_ak8_Wjj = convert_to_ptrs(jets_ak8_Wjj);    
+    std::vector<const RecoJetAK8*> selJetsAK8_selectorAK8 = jetSelectorAK8(jet_ptrs_ak8_Wjj, isHigherPt); 
+    
+    if(isDEBUG || run_lumi_eventSelector) 
+    {
+      printCollection("uncleaned AK8 jets (Wjj)", jet_ptrs_ak8_Wjj);        
+    }
+
+    bool isWjjBoosted = false;
+    bool isWjjResolved = false;
+    bool isWjjHasOnly1j = false;
+    
+    double AK8JetPt_max = -1.;
+    const RecoJetAK8* AK8JetLead = nullptr;
+    size_t idxLepton_H_WW_ljj_1 = 9999;
+    //for (size_t ijet = 0; ijet < jet_ptrs_ak8_Wjj.size(); ++ijet) {
+    for (size_t ijet = 0; ijet < selJetsAK8_selectorAK8.size(); ++ijet) {
+      //std::cout << "\tijet: " << ijet << ", pt: " << jet_ptrs_ak8_Wjj[ijet]->pt() << std::endl;
+      if (jet_ptrs_ak8_Wjj[ijet]->pt() > AK8JetPt_max) {
+	AK8JetPt_max = jet_ptrs_ak8_Wjj[ijet]->pt();
+	AK8JetLead = jet_ptrs_ak8_Wjj[ijet];
+      }
+    }
+    
+    
+    // Seperate out H->WW->lNu jj lepton from H->WW->2l2Nu leptons
+    // lepton pair with least dR would be from H->WW->2l2Nu, so the remained lepton would be from H->WW->lNu jj
+    // Approach - 0 : Not used    
+    size_t idxLepton_H_WW_ljj = 9999;
+    size_t idxLepton1_H_WW_ll = 9999;
+    size_t idxLepton2_H_WW_ll = 9999;
+    double mindRLepton_H_WW_ll = 9999.;
+    //size_t idxLepton1_H_WW_ll = -1, idxLepton2_H_WW_ll = -1;
+    for (size_t idxLepton1 = 0; idxLepton1 < 3; ++idxLepton1) {
+      //std::cout<<"idxLepton1: "<<idxLepton1<<std::endl;
+      for (size_t idxLepton2 = idxLepton1+1; idxLepton2 < 3; ++idxLepton2) {
+	double dr = deltaR(selLeptons[idxLepton1]->p4(), selLeptons[idxLepton2]->p4());
+	if ((selLeptons[idxLepton1]->charge() * selLeptons[idxLepton2]->charge() < 0.) &&
+	    (dr < mindRLepton_H_WW_ll) ) {
+	  mindRLepton_H_WW_ll = dr;
+	  idxLepton1_H_WW_ll  = idxLepton1;
+	  idxLepton2_H_WW_ll  = idxLepton2;
+	  idxLepton_H_WW_ljj  = 0;
+	  if (idxLepton_H_WW_ljj == idxLepton1) idxLepton_H_WW_ljj++;
+	  if (idxLepton_H_WW_ljj == idxLepton2) idxLepton_H_WW_ljj++;
+	  //idxLepton1_H_WW_ll = idxLepton1;
+	  //idxLepton2_H_WW_ll = idxLepton2;
+	}
+      }
+    }
+    if ( isDEBUG ) {
+      std::cout << "idxLepton_H_WW_ljj: " << idxLepton_H_WW_ljj
+		<< ", idxLepton1_H_WW_ll: " << idxLepton1_H_WW_ll
+		<< ", idxLepton2_H_WW_ll: " << idxLepton2_H_WW_ll
+		<< std::endl;
+    }
+ 
+
+    // Seperate out H->WW->lNu jj lepton from H->WW->2l2Nu leptons
+    // lepton pair with least dR would be from H->WW->2l2Nu, so the remained lepton would be from H->WW->lNu jj
+    // Approach - I
+    if (AK8JetLead) {
+      for (size_t idxLepton1 = 0; idxLepton1 < 3; ++idxLepton1) {
+	for (size_t idxLepton2 = idxLepton1+1; idxLepton2 < 3; ++idxLepton2) {
+	  // no need to check opposite-sign lepton pair
+	  if (selLeptons[idxLepton1]->charge() * selLeptons[idxLepton2]->charge() < 0.) continue;
+
+	  if ( deltaR(AK8JetLead->p4(), selLeptons[idxLepton1]->p4()) <
+	       deltaR(AK8JetLead->p4(), selLeptons[idxLepton2]->p4()) ) {
+	    idxLepton_H_WW_ljj_1 = idxLepton1;
+	  } else {
+	    idxLepton_H_WW_ljj_1 = idxLepton2;
+	  }
+	}
+      }
+    }
+    if ( isDEBUG ) std::cout << "idxLepton_H_WW_ljj_1: " << idxLepton_H_WW_ljj_1 << std::endl;
+    
+    const RecoLepton* selLepton_H_WW_ljj = nullptr;
+    const RecoLepton* selLepton1_H_WW_ll = nullptr;
+    const RecoLepton* selLepton2_H_WW_ll = nullptr;
+    std::vector<const RecoJetAK8*> selJetsAK8_Wjj_wSelectorAK8_Wjj;
+    std::vector<const RecoJetAK8*> selJetsAK8_Wjj;
+    std::vector<const RecoJet*> selJetsAK4_Wjj;
+    const RecoJetAK8* selJetAK8_Wjj = nullptr;
+    const RecoJetBase* selJet1_Wjj = nullptr;
+    const RecoJetBase* selJet2_Wjj = nullptr;
+
+
+     if (idxLepton_H_WW_ljj < 3) { // Approach - 0 
+       selLepton_H_WW_ljj = selLeptons[idxLepton_H_WW_ljj]; 
+       selLepton1_H_WW_ll = selLeptons[idxLepton1_H_WW_ll];
+       selLepton2_H_WW_ll = selLeptons[idxLepton2_H_WW_ll];
+     }
+     
+
+    jetSelectorAK8_Wjj.getSelector().set_leptons({selLeptons[0], selLeptons[1], selLeptons[2]});
+    selJetsAK8_Wjj_wSelectorAK8_Wjj = jetSelectorAK8_Wjj(jet_ptrs_ak8_Wjj, isHigherPt);
+    
+    selJetsAK8_Wjj = selJetsAK8_Wjj_wSelectorAK8_Wjj; // using AK8LS_H_WW_jj selector
+    //selJetsAK8_Wjj = jet_ptrs_ak8_Wjj; // without using AK8LS_H_WW_jj selector, just use AK8LS
+    //selJetsAK8_Wjj = selJetsAK8_selectorAK8; // without using AK8LS_H_WW_jj selector, just use AK8LS
+     
+    selJetsAK4_Wjj = jetSelectorAK4(cleanedJetsAK4, isHigherPt);
+
+
+    
+    if (selJetsAK8_Wjj.size() >= 1 && selJetsAK8_Wjj[0] && selJetsAK8_Wjj[0]->subJet1() && selJetsAK8_Wjj[0]->subJet2()) {  // using AK8LS_H_WW_jj selector
+      selJetAK8_Wjj = selJetsAK8_Wjj[0];
+      selJet1_Wjj = selJetAK8_Wjj->subJet1();
+      selJet2_Wjj = selJetAK8_Wjj->subJet2();
+      isWjjBoosted = true;
+      assert(selJet1_Wjj && selJet2_Wjj);
+    } else {      
+      double minRank = 1.e+3;
+      // Question: use selJetsAK4 (cleaned w.r.t fakable lepton and tau jets) or selJetsAK4_Wjj (cleaned w.r.t fakable lepton only) for non-boosted AK4 jets
+      for ( std::vector<const RecoJet*>::const_iterator selJet1 = selJetsAK4_Wjj.begin();
+	    selJet1 != selJetsAK4_Wjj.end(); ++selJet1 ) {
+	for ( std::vector<const RecoJet*>::const_iterator selJet2 = selJet1 + 1;
+	      selJet2 != selJetsAK4_Wjj.end(); ++selJet2 ) {
+	  Particle::LorentzVector jjP4 = (*selJet1)->p4() + (*selJet2)->p4();
+	  double m_jj = jjP4.mass();
+	  double pT_jj = jjP4.pt();
+	  double rank = TMath::Abs(m_jj - wBosonMass)/TMath::Sqrt(TMath::Max(10., pT_jj));
+	  if ( rank < minRank ) {
+	    selJet1_Wjj = (*selJet1);
+	    selJet2_Wjj = (*selJet2);
+	    minRank = rank;
+	  }
+	} 
+      }
+      if ( !selJet1_Wjj && selJetsAK4_Wjj.size() >= 1 ) selJet1_Wjj = selJetsAK4_Wjj[0];
+      if ( !selJet2_Wjj && selJetsAK4_Wjj.size() >= 2 ) selJet2_Wjj = selJetsAK4_Wjj[1];
+      if ( selJet1_Wjj && selJet2_Wjj ) {
+	isWjjResolved = true;
+      }
+      else {
+	if (selJetsAK4_Wjj.size() == 1) {
+	  selJet1_Wjj = selJetsAK4_Wjj[0];
+	  isWjjHasOnly1j = true;
+	}
+      }
+      if ( isDEBUG ) {
+	std::cout << "found resolved W->jj decay:" << std::endl;
+	std::cout << "AK4 jet #1:";
+	if ( selJet1_Wjj ) std::cout << " pT = " << selJet1_Wjj->pt() << ", eta = " << selJet1_Wjj->eta() << ", phi = " << selJet1_Wjj->phi() << std::endl;
+	else std::cout << " N/A" << std::endl;
+	std::cout << "AK4 jet #2:";
+	if ( selJet2_Wjj ) std::cout << " pT = " << selJet2_Wjj->pt() << ", eta = " << selJet2_Wjj->eta() << ", phi = " << selJet2_Wjj->phi() << std::endl;
+	else std::cout << " N/A" << std::endl;
+      }
+    }
+
+    if (isWjjBoosted)   cutFlowTable.update("AK8 hh_Wjj selector isWjjBoosted", evtWeightRecorder.get(central_or_shift_main));
+    if (isWjjResolved)  cutFlowTable.update("AK8 hh_Wjj selector isWjjResolved", evtWeightRecorder.get(central_or_shift_main));
+    if (isWjjHasOnly1j) cutFlowTable.update("AK8 hh_Wjj selector isWjjHasOnly1j", evtWeightRecorder.get(central_or_shift_main));
+    
+    if ( !(selJet1_Wjj || selJet2_Wjj) ) {
+      if ( run_lumi_eventSelector ) {
+        std::cout << "event " << eventInfo.str() << " FAILS >= 1 jets from W->jj selection\n";
+      }
+      continue;
+    }
+    cutFlowTable.update(">= 1 jets from W->jj", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms(">= 1 jets from W->jj", evtWeightRecorder.get(central_or_shift_main));
+
+
+
+
+    
 //--- retrieve gen-matching flags    
     std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons);
     int genMatchIdx_0 = 2; // 0: fakes, 1: Convs, 2: non-fakes
     
-    //std::cout << "genMatches: " << genMatches.size() << std::endl;
-    cutFlowTable.update(Form("GenMatch entries: %lu",genMatches.size()), evtWeightRecorder.get(central_or_shift_main));
     if (genMatches.size() != 1) {
       std::cout << "analyze_hh_3l: GenMatches in an event: " << genMatches.size() << "\t\t\t ERROR: Code is not ready for it ****" << std::endl;
       throw cmsException("analyze_hh_3l", __LINE__) << " GenMatches in an event: " << genMatches.size() << "\t\t\t ERROR: Code is not ready for it **** \n";
     }
     
     for (const GenMatchEntry* genMatch : genMatches) {
-      //std::cout << "genMatch Idx: " << genMatch->getIdx() << ", name: " << genMatch->getName() << std::endl;
-      cutFlowTable.update(Form("GenMatch entry Idx %i",genMatch->getIdx()), evtWeightRecorder.get(central_or_shift_main));
+      //cutFlowTable.update(Form("GenMatch entry Idx %i",genMatch->getIdx()), evtWeightRecorder.get(central_or_shift_main));
       genMatchIdx_0 = genMatch->getIdx();
     }
 
@@ -2000,222 +2123,7 @@ int main(int argc, char* argv[])
 
     
 
-    std::vector<RecoJetAK8> jets_ak8_Wjj = jetReaderAK8_Wjj->read();
-    std::vector<const RecoJetAK8*> jet_ptrs_ak8_Wjj = convert_to_ptrs(jets_ak8_Wjj);    
-    std::vector<const RecoJetAK8*> selJetsAK8_selectorAK8 = jetSelectorAK8(jet_ptrs_ak8_Wjj, isHigherPt); 
-    
-    if(isDEBUG || run_lumi_eventSelector) 
-    {
-      printCollection("uncleaned AK8 jets (Wjj)", jet_ptrs_ak8_Wjj);        
-    }
 
-    cutFlowTable.update("AK8 hh_Wjj selector test1", evtWeightRecorder.get(central_or_shift_main));
-
-    bool isWjjBoosted = false;
-    bool isWjjResolved = false;
-    bool isWjjHasOnly1j = false;
-    
-    double AK8JetPt_max = -1.;
-    const RecoJetAK8* AK8JetLead = nullptr;
-    size_t idxLepton_H_WW_ljj_1 = 9999;
-    //for (size_t ijet = 0; ijet < jet_ptrs_ak8_Wjj.size(); ++ijet) {
-    for (size_t ijet = 0; ijet < selJetsAK8_selectorAK8.size(); ++ijet) {
-      //std::cout << "\tijet: " << ijet << ", pt: " << jet_ptrs_ak8_Wjj[ijet]->pt() << std::endl;
-      if (jet_ptrs_ak8_Wjj[ijet]->pt() > AK8JetPt_max) {
-	AK8JetPt_max = jet_ptrs_ak8_Wjj[ijet]->pt();
-	AK8JetLead = jet_ptrs_ak8_Wjj[ijet];
-      }
-    }
-    if (AK8JetLead) cutFlowTable.update("TestAK8: AK8JetLead found", evtWeightRecorder.get(central_or_shift_main));
-    if (AK8JetLead && AK8JetLead->subJet1() && AK8JetLead->subJet2()) {
-      cutFlowTable.update("TestAK8: AK8JetLead + 2subjets found", evtWeightRecorder.get(central_or_shift_main));
-    }
-    
-    // Seperate out H->WW->lNu jj lepton from H->WW->2l2Nu leptons
-    // lepton pair with least dR would be from H->WW->2l2Nu, so the remained lepton would be from H->WW->lNu jj
-    // Approach - 0 : Not used    
-    size_t idxLepton_H_WW_ljj = 9999;
-    size_t idxLepton1_H_WW_ll = 9999;
-    size_t idxLepton2_H_WW_ll = 9999;
-    double mindRLepton_H_WW_ll = 9999.;
-    //size_t idxLepton1_H_WW_ll = -1, idxLepton2_H_WW_ll = -1;
-    for (size_t idxLepton1 = 0; idxLepton1 < 3; ++idxLepton1) {
-      //std::cout<<"idxLepton1: "<<idxLepton1<<std::endl;
-      for (size_t idxLepton2 = idxLepton1+1; idxLepton2 < 3; ++idxLepton2) {
-	double dr = deltaR(selLeptons[idxLepton1]->p4(), selLeptons[idxLepton2]->p4());
-	if ((selLeptons[idxLepton1]->charge() * selLeptons[idxLepton2]->charge() < 0.) &&
-	    (dr < mindRLepton_H_WW_ll) ) {
-	  mindRLepton_H_WW_ll = dr;
-	  idxLepton1_H_WW_ll  = idxLepton1;
-	  idxLepton2_H_WW_ll  = idxLepton2;
-	  idxLepton_H_WW_ljj  = 0;
-	  if (idxLepton_H_WW_ljj == idxLepton1) idxLepton_H_WW_ljj++;
-	  if (idxLepton_H_WW_ljj == idxLepton2) idxLepton_H_WW_ljj++;
-	  //idxLepton1_H_WW_ll = idxLepton1;
-	  //idxLepton2_H_WW_ll = idxLepton2;
-	}
-      }
-    }
-    if ( isDEBUG ) {
-      std::cout << "idxLepton_H_WW_ljj: " << idxLepton_H_WW_ljj
-		<< ", idxLepton1_H_WW_ll: " << idxLepton1_H_WW_ll
-		<< ", idxLepton2_H_WW_ll: " << idxLepton2_H_WW_ll
-		<< std::endl;
-    }
- 
-
-    // Seperate out H->WW->lNu jj lepton from H->WW->2l2Nu leptons
-    // lepton pair with least dR would be from H->WW->2l2Nu, so the remained lepton would be from H->WW->lNu jj
-    // Approach - I
-    if (AK8JetLead) {
-      for (size_t idxLepton1 = 0; idxLepton1 < 3; ++idxLepton1) {
-	for (size_t idxLepton2 = idxLepton1+1; idxLepton2 < 3; ++idxLepton2) {
-	  // no need to check opposite-sign lepton pair
-	  if (selLeptons[idxLepton1]->charge() * selLeptons[idxLepton2]->charge() < 0.) continue;
-
-	  if ( deltaR(AK8JetLead->p4(), selLeptons[idxLepton1]->p4()) <
-	       deltaR(AK8JetLead->p4(), selLeptons[idxLepton2]->p4()) ) {
-	    idxLepton_H_WW_ljj_1 = idxLepton1;
-	  } else {
-	    idxLepton_H_WW_ljj_1 = idxLepton2;
-	  }
-	}
-      }
-    }
-    if ( isDEBUG ) std::cout << "idxLepton_H_WW_ljj_1: " << idxLepton_H_WW_ljj_1 << std::endl;
-    
-    const RecoLepton* selLepton_H_WW_ljj = nullptr;
-    const RecoLepton* selLepton1_H_WW_ll = nullptr;
-    const RecoLepton* selLepton2_H_WW_ll = nullptr;
-    std::vector<const RecoJetAK8*> selJetsAK8_Wjj_wSelectorAK8_Wjj;
-    std::vector<const RecoJetAK8*> selJetsAK8_Wjj;
-    std::vector<const RecoJet*> selJetsAK4_Wjj;
-    const RecoJetAK8* selJetAK8_Wjj = nullptr;
-    const RecoJetBase* selJet1_Wjj = nullptr;
-    const RecoJetBase* selJet2_Wjj = nullptr;
-    //bool isAK8_Wjj = false;
-
-    /*
-    if (idxLepton_H_WW_ljj_1 < 3) { 
-      // selLepton_H_WW_ljj = selLeptons[idxLepton_H_WW_ljj]; // Approach - 0
-      selLepton_H_WW_ljj = selLeptons[idxLepton_H_WW_ljj_1]; // Approach - I
-      jetSelectorAK8_Wjj.getSelector().set_lepton(selLepton_H_WW_ljj);
-
-      selJetsAK8_Wjj = jetSelectorAK8_Wjj(jet_ptrs_ak8_Wjj, isHigherPt);  
-      //selJetsAK4_Wjj = jetSelectorAK4(cleanedJetsAK4_wrtLeptons, isHigherPt);
-      selJetsAK4_Wjj = jetSelectorAK4(cleanedJetsAK4, isHigherPt);
-
-      cutFlowTable.update("TestAK8: AK8JetLead + selLepton_H_WW_ljj found", evtWeightRecorder.get(central_or_shift_main));
-    }
-    //selJetsAK8_Wjj = jetSelectorAK8_Wjj(jet_ptrs_ak8_Wjj, isHigherPt);
-    //selJetsAK4_Wjj = jetSelectorAK4(cleanedJetsAK4_wrtLeptons, isHigherPt);
-    //selJetsAK4_Wjj = selJetsAK4;  
-    */
-
-     if (idxLepton_H_WW_ljj < 3) { // Approach - 0 
-       selLepton_H_WW_ljj = selLeptons[idxLepton_H_WW_ljj]; 
-       selLepton1_H_WW_ll = selLeptons[idxLepton1_H_WW_ll];
-       selLepton2_H_WW_ll = selLeptons[idxLepton2_H_WW_ll];
-     }
-     
-
-    jetSelectorAK8_Wjj.getSelector().set_leptons({selLeptons[0], selLeptons[1], selLeptons[2]});
-    selJetsAK8_Wjj_wSelectorAK8_Wjj = jetSelectorAK8_Wjj(jet_ptrs_ak8_Wjj, isHigherPt);
-    
-    selJetsAK8_Wjj = selJetsAK8_Wjj_wSelectorAK8_Wjj; // using AK8LS_H_WW_jj selector
-    //selJetsAK8_Wjj = jet_ptrs_ak8_Wjj; // without using AK8LS_H_WW_jj selector, just use AK8LS
-    //selJetsAK8_Wjj = selJetsAK8_selectorAK8; // without using AK8LS_H_WW_jj selector, just use AK8LS
-     
-    selJetsAK4_Wjj = jetSelectorAK4(cleanedJetsAK4, isHigherPt);
-    
-    if ( (AK8JetLead && AK8JetLead->subJet1() && AK8JetLead->subJet2())  &&
-	 !(selJetsAK8_Wjj.size() >= 1 && selJetsAK8_Wjj[0] && selJetsAK8_Wjj[0]->subJet1() && selJetsAK8_Wjj[0]->subJet2()) ) {
-      cutFlowTable.update("AK8; but AK8_hh_Wjj selector failed", evtWeightRecorder.get(central_or_shift_main));
-      if (selJetsAK4.size() == 0) {
-	cutFlowTable.update("AK8; but AK8_hh_Wjj selector failed && nAK4==0", evtWeightRecorder.get(central_or_shift_main));
-      }
-    }
-
-    
-    //if (selJetsAK8_Wjj.size() >= 1 && selJetsAK8_Wjj[0] && selJetsAK8_Wjj[0]->subJet1() && selJetsAK8_Wjj[0]->subJet2()) {  // using AK8LS_H_WW_jj selector
-    //selJetAK8_Wjj = selJetsAK8_Wjj[0];
-    if (AK8JetLead && AK8JetLead->subJet1() && AK8JetLead->subJet2()) { // without using AK8LS_H_WW_jj selector, just use AK8LS
-      selJetAK8_Wjj = AK8JetLead;
-      
-      selJet1_Wjj = selJetAK8_Wjj->subJet1();
-      selJet2_Wjj = selJetAK8_Wjj->subJet2();
-      isWjjBoosted = true;
-      assert(selJet1_Wjj && selJet2_Wjj);
-      cutFlowTable.update("AK8 hh_Wjj selector isWjjBoosted - crosscheck1", evtWeightRecorder.get(central_or_shift_main));
-    } else {      
-      double minRank = 1.e+3;
-      // Question: use selJetsAK4 (cleaned w.r.t fakable lepton and tau jets) or selJetsAK4_Wjj (cleaned w.r.t fakable lepton only) for non-boosted AK4 jets
-      for ( std::vector<const RecoJet*>::const_iterator selJet1 = selJetsAK4_Wjj.begin();
-	    selJet1 != selJetsAK4_Wjj.end(); ++selJet1 ) {
-	for ( std::vector<const RecoJet*>::const_iterator selJet2 = selJet1 + 1;
-	      selJet2 != selJetsAK4_Wjj.end(); ++selJet2 ) {
-	  Particle::LorentzVector jjP4 = (*selJet1)->p4() + (*selJet2)->p4();
-	  double m_jj = jjP4.mass();
-	  double pT_jj = jjP4.pt();
-	  double rank = TMath::Abs(m_jj - wBosonMass)/TMath::Sqrt(TMath::Max(10., pT_jj));
-	  if ( rank < minRank ) {
-	    selJet1_Wjj = (*selJet1);
-	    selJet2_Wjj = (*selJet2);
-	    minRank = rank;
-	  }
-	} 
-      }
-      if ( !selJet1_Wjj && selJetsAK4_Wjj.size() >= 1 ) selJet1_Wjj = selJetsAK4_Wjj[0];
-      if ( !selJet2_Wjj && selJetsAK4_Wjj.size() >= 2 ) selJet2_Wjj = selJetsAK4_Wjj[1];
-      if ( selJet1_Wjj && selJet2_Wjj ) {
-	isWjjResolved = true;
-	cutFlowTable.update("AK8 hh_Wjj selector isWjjResolved - crosscheck1", evtWeightRecorder.get(central_or_shift_main));
-      }
-      else {
-	if (selJetsAK4_Wjj.size() == 1) {
-	  selJet1_Wjj = selJetsAK4_Wjj[0];
-	  isWjjHasOnly1j = true;
-	  cutFlowTable.update("AK8 hh_Wjj selector isWjjHasOnly1j - crosscheck1", evtWeightRecorder.get(central_or_shift_main));
-	}
-	cutFlowTable.update("AK8 hh_Wjj selector isWjjHasOnly1j - crosscheck2", evtWeightRecorder.get(central_or_shift_main));
-	cutFlowTable.update(Form("AK8 hh_Wjj selector isWjjHasOnly1j - crosscheck3 - selJetsAK4_Wjj.size(): %lu",selJetsAK4_Wjj.size()), evtWeightRecorder.get(central_or_shift_main));
-      }
-      if ( isDEBUG ) {
-	std::cout << "found resolved W->jj decay:" << std::endl;
-	std::cout << "AK4 jet #1:";
-	if ( selJet1_Wjj ) std::cout << " pT = " << selJet1_Wjj->pt() << ", eta = " << selJet1_Wjj->eta() << ", phi = " << selJet1_Wjj->phi() << std::endl;
-	else std::cout << " N/A" << std::endl;
-	std::cout << "AK4 jet #2:";
-	if ( selJet2_Wjj ) std::cout << " pT = " << selJet2_Wjj->pt() << ", eta = " << selJet2_Wjj->eta() << ", phi = " << selJet2_Wjj->phi() << std::endl;
-	else std::cout << " N/A" << std::endl;
-      }
-      cutFlowTable.update("AK8 hh_Wjj selector isWjjResolved || isWjjHasOnly1j ", evtWeightRecorder.get(central_or_shift_main));
-    }
-
-    cutFlowTable.update("AK8 hh_Wjj selector test2", evtWeightRecorder.get(central_or_shift_main));
-    if (isWjjBoosted)   cutFlowTable.update("AK8 hh_Wjj selector isWjjBoosted", evtWeightRecorder.get(central_or_shift_main));
-    if (isWjjResolved)  cutFlowTable.update("AK8 hh_Wjj selector isWjjResolved", evtWeightRecorder.get(central_or_shift_main));
-    if (isWjjHasOnly1j) cutFlowTable.update("AK8 hh_Wjj selector isWjjHasOnly1j", evtWeightRecorder.get(central_or_shift_main));
-    
-    if ( !(selJet1_Wjj || selJet2_Wjj) ) {
-      if ( run_lumi_eventSelector ) {
-        std::cout << "event " << eventInfo.str() << " FAILS >= 1 jets from W->jj selection\n";
-      }
-      continue;
-    }
-
-    cutFlowTable.update("AK8 hh_Wjj selector test3", evtWeightRecorder.get(central_or_shift_main));
-
-    cutFlowTable.update(">= 1 jets from W->jj", evtWeightRecorder.get(central_or_shift_main));
-    cutFlowHistManager->fillHistograms(">= 1 jets from W->jj", evtWeightRecorder.get(central_or_shift_main));
-    if ( (selJet1_Wjj && !selJet2_Wjj) || (!selJet1_Wjj && selJet2_Wjj)) {
-      cutFlowTable.update("Only 1 W->jj jet", evtWeightRecorder.get(central_or_shift_main));
-      cutFlowHistManager->fillHistograms("Only 1 W->jj jet", evtWeightRecorder.get(central_or_shift_main));
-    }
-    if (selJet1_Wjj && selJet2_Wjj) {
-      cutFlowTable.update("W->jj jet 1 and 2", evtWeightRecorder.get(central_or_shift_main));
-      cutFlowHistManager->fillHistograms("W->jj jet 1 and 2", evtWeightRecorder.get(central_or_shift_main));
-    } 
 
     const bool isSameFlavor_OS_FO = isSFOS(fakeableLeptons);
     hMEt_All_0[genMatchIdx_0]->Fill(met.pt(),      evtWeightRecorder.get(central_or_shift_main));
@@ -2314,6 +2222,23 @@ int main(int argc, char* argv[])
         std::cout << '\n';
       }
     }
+
+
+   
+    if (isWjjBoosted) {
+      cutFlowTable.update("After all cuts: evt category isWjjBoosted", evtWeightRecorder.get(central_or_shift_main));
+      cutFlowHistManager->fillHistograms("After all cuts: evt category isWjjBoosted", evtWeightRecorder.get(central_or_shift_main));
+    }
+    if (isWjjResolved) {
+      cutFlowTable.update("After all cuts: evt category isWjjResolved", evtWeightRecorder.get(central_or_shift_main));
+      cutFlowHistManager->fillHistograms("After all cuts: evt category isWjjResolved", evtWeightRecorder.get(central_or_shift_main));
+    }
+    if (isWjjHasOnly1j) {
+      cutFlowTable.update("After all cuts: evt category isWjjHasOnly1j", evtWeightRecorder.get(central_or_shift_main));
+      cutFlowHistManager->fillHistograms("After all cuts: evt category isWjjHasOnly1j", evtWeightRecorder.get(central_or_shift_main));
+    }
+    
+ 
 
     // SS: Yet to implement this for hh->wwww
     double dihiggsVisMass_sel = -1., dihiggsMass = -1.;
