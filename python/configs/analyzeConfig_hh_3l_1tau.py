@@ -94,6 +94,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig_hh):
       use_home              = use_home,
       template_dir          = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'multilepton', 'test', 'templates'),
       submission_cmd        = submission_cmd,
+      use_dymumu_tau_fr     = True,
     )
 
     self.lepton_and_hadTau_selections = [ "Tight", "Fakeable" ]
