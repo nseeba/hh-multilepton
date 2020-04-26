@@ -148,7 +148,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
     self.executable_addFlips = executable_addFlips
 
-    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTZ", "DY", "Other", "VH", "TTH", "TH", "W", "TTWW"] 
+    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTZ", "DY", "Other", "VH", "TTH", "TH", "W", "TTWW", "XGamma", "ggH", "qqH"] 
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc", "flips_mc"]
