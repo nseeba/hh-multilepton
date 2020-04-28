@@ -4,7 +4,7 @@ import copy
 
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 
-def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar):
+def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None):
 
   sum_events_hh  = copy.deepcopy(samples_era_hh['sum_events'])
   sum_events_bkg = copy.deepcopy(samples_era_bkg['sum_events'])
