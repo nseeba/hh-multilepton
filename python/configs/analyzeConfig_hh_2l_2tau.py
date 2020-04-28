@@ -102,6 +102,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       template_dir          = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'multilepton', 'test', 'templates'),
       submission_cmd        = submission_cmd,
       use_dymumu_tau_fr     = True,
+      apply_nc_correction   = False,
     )
 
     self.invert_ZbosonMassVeto = invert_ZbosonMassVeto
