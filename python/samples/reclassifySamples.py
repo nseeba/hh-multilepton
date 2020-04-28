@@ -2,14 +2,18 @@ import collections
 import itertools
 import copy
 
+from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
+
 def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None):
 
   sum_events_hh  = copy.deepcopy(samples_era_hh['sum_events'])
   sum_events_bkg = copy.deepcopy(samples_era_bkg['sum_events'])
+  sum_events_ttbar = []
 
   del samples_era_hh['sum_events']
   del samples_era_bkg['sum_events']
   if samples_era_ttbar:
+    sum_events_ttbar = copy.deepcopy(samples_era_ttbar['sum_events'])
     del samples_era_ttbar['sum_events']
 
   if samples_era_ttbar:
@@ -19,7 +23,7 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None)
   else:
     samples = collections.OrderedDict(itertools.chain(samples_era_bkg.items(), samples_era_hh.items()))
 
-  samples['sum_events'] = sum_events_hh + sum_events_bkg
+  samples['sum_events'] = sum_events_hh + sum_events_bkg + sum_events_ttbar
 
   from collections import OrderedDict as OD
 
@@ -54,7 +58,8 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None)
     elif sample_info["sample_category"] in [ "tHq", "tHW" ]:
       sample_info["sample_category"] = "TH"
     elif sample_name.startswith('/TTTo'):
-      sample_info["sample_category"] = "TT"
+      if sample_info["sample_category"].replace("TT_", "") not in systematics.ttbar:
+        sample_info["sample_category"] = "TT"
       sample_info["use_it"] = True
     elif sample_name.startswith('/TTJets'):
       sample_info["sample_category"] = "TT"

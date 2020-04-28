@@ -95,6 +95,8 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
       use_home                  = use_home,
       template_dir              = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'multilepton', 'test', 'templates'),
       submission_cmd            = submission_cmd,
+      use_dymumu_tau_fr         = True,
+      apply_nc_correction       = False,
     )
 
     self.lepton_selections = [ "Tight", "Fakeable" ]
@@ -120,7 +122,7 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
     self.executable_addFakes = executable_addFakes
     self.executable_addFlips = "addBackgroundLeptonFlips"
 
-    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ]
+    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH", "ggH", "qqH"]
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     #self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ]
