@@ -43,7 +43,7 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None)
 
     if sample_info["sample_category"] == "Rares":
       sample_info["sample_category"] = "Other"
-    elif sample_name.startswith('/ZZTo'):
+    elif sample_name.startswith(('/ZZTo', '/GluGluToContinToZZTo')):
       sample_info["sample_category"] = "ZZ"
     elif sample_name.startswith('/WZTo'):
       sample_info["sample_category"] = "WZ"
