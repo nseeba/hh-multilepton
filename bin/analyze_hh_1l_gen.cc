@@ -137,7 +137,7 @@ const int printLevel = 1;
 
 //bool wayToSortDecreasing(double i, double j) { return i > j; }
 
-int era_current;
+Era era_current;
 
 double
 smoothBtagCut(double assocJet_pt)  // RecoMuonSelectorFakeable::
@@ -387,7 +387,7 @@ int main(int argc, char* argv[])
   bool isMCClosure_m = histogramDir.find("mcClosure_m") != std::string::npos;
 
   std::string era_string = cfg_analyze.getParameter<std::string>("era");
-  const int era = get_era(era_string);
+  const Era era = get_era(era_string);
   era_current = era;
 
   // single lepton triggers
@@ -461,7 +461,7 @@ int main(int argc, char* argv[])
   bool isMC = cfg_analyze.getParameter<bool>("isMC");
   if (!isMC) {
     std::cout << "analyze_hh_1l_gen: running not on MC.  Generator-level studies can only run on MC *** ERROR ***" << std::endl;
-    throw cmsException("analyze_hh_1l_gen", __LINE__) << " Generator-level studies can only run on MC  " << era;
+    throw cmsException("analyze_hh_1l_gen", __LINE__) << " Generator-level studies can only run on MC  " << static_cast<int>(era);
   }
   
   bool hasLHE = cfg_analyze.getParameter<bool>("hasLHE");
@@ -529,12 +529,12 @@ int main(int argc, char* argv[])
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiMuon", hadTauSelection_antiMuon);
   Data_to_MC_CorrectionInterface_Base * dataToMCcorrectionInterface = nullptr;
   switch(era)
-    {
-    case kEra_2016: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2016(cfg_dataToMCcorrectionInterface); break;
-    case kEra_2017: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2017(cfg_dataToMCcorrectionInterface); break;
-    case kEra_2018: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2018(cfg_dataToMCcorrectionInterface); break;
-    default: throw cmsException("analyze_hh_1l_gen", __LINE__) << "Invalid era = " << era;
-    }
+  {
+    case Era::k2016: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2016(cfg_dataToMCcorrectionInterface); break;
+    case Era::k2017: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2017(cfg_dataToMCcorrectionInterface); break;
+    case Era::k2018: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2018(cfg_dataToMCcorrectionInterface); break;
+    default: throw cmsException("analyze_hh_3l", __LINE__) << "Invalid era = " << static_cast<int>(era);
+  }
 
   std::string applyFakeRateWeights_string = cfg_analyze.getParameter<std::string>("applyFakeRateWeights");
   int applyFakeRateWeights = -1;
@@ -706,7 +706,7 @@ int main(int argc, char* argv[])
   RecoJetCollectionSelectorBtagMedium jetSelectorAK4_bTagMedium(era, -1, isDEBUG);
   
   // refer analyze_hh_bb1l.cc macro
-  RecoJetReaderAK8* jetReaderAK8_Wjj = new RecoJetReaderAK8(era, branchName_jets_ak8_Wjj, branchName_subjets_ak8_Wjj);
+  RecoJetReaderAK8* jetReaderAK8_Wjj = new RecoJetReaderAK8(era, isMC, branchName_jets_ak8_Wjj, branchName_subjets_ak8_Wjj);
   // TO-DO: implement jet energy scale uncertainties, b-tag weights,  
   //        and jet  pT and (softdrop) mass corrections described in Section 3.4.3 of AN-2018/058 (v4)
   inputTree->registerReader(jetReaderAK8_Wjj);
@@ -2522,7 +2522,7 @@ int main(int argc, char* argv[])
 	  }
 	  continue;
 	}
-	if ( selTrigger_SingleElectron && isTriggered_DoubleEG && era != kEra_2018 ) {
+	if ( selTrigger_SingleElectron && isTriggered_DoubleEG && era != Era::k2018 ) {
 	  if ( run_lumi_eventSelector ) {
 	    std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
 	    std::cout << " (selTrigger_SingleElectron = " << selTrigger_SingleElectron
