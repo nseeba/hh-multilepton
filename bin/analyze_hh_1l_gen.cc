@@ -103,6 +103,9 @@
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfoReader.h" // EventInfoReader
 #include "hhAnalysis/multilepton/interface/EvtWeightRecorderHH.h" // EvtWeightRecorderHH
 
+#include "tthAnalysis/HiggsToTauTau/interface/RecoMuon.h" // RecoMuon
+#include "tthAnalysis/HiggsToTauTau/interface/RecoElectron.h" // RecoElectron
+ 
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
 #include <boost/algorithm/string/predicate.hpp> // boost::starts_with()
 #include <boost/algorithm/string/replace.hpp> // boost::replace_all_copy()
@@ -117,7 +120,7 @@
 #include <array> // std::array<>
 #include <tuple> // std::tuple<>, std::get<>(), std::make_tuple()
 #include <TH2.h> // TH2
-
+ 
 #define DoNotUsehh_3lConditions // uncomment this if 2lss_1tau rec-level selection conditions are not required
 
 typedef math::PtEtaPhiMLorentzVector LV;
@@ -130,11 +133,9 @@ enum { kFR_disabled, kFR_3lepton };
 const int hadTauSelection_antiElectron = -1; // not applied
 const int hadTauSelection_antiMuon = -1; // not applied
 
-const int printLevel = 3;
+const int printLevel = 1;
 
 //bool wayToSortDecreasing(double i, double j) { return i > j; }
-
-
 
 int era_current;
 
@@ -214,8 +215,6 @@ findGenLepton_and_NeutrinoFromWBoson_1(const GenParticle* genWBoson, const std::
 bool isGenMarchFound(Particle::LorentzVector LVRecoParticle,  std::vector<GenParticle*> genParticles) {
   bool isGenMatchFound = false;
   for (size_t igenP=0; igenP < genParticles.size(); igenP++) {
-    if ( ! genParticles[igenP]) continue;
-    
     Particle::LorentzVector LVGenP = genParticles[igenP]->p4();
     if ( deltaR(LVRecoParticle, LVGenP) < 0.3 &&
 	 (std::abs(LVRecoParticle.pt() - LVGenP.pt()) < 0.5*LVGenP.pt()))
@@ -227,8 +226,6 @@ bool isGenMarchFound(Particle::LorentzVector LVRecoParticle,  std::vector<GenPar
 bool isGenMarchFound(Particle::LorentzVector LVRecoParticle,  std::vector<GenParticle*> genParticles, int &idxGenParticle) {
   bool isGenMatchFound = false;
   for (size_t igenP=0; igenP < genParticles.size(); igenP++) {
-    if ( ! genParticles[igenP]) continue;
-    
     Particle::LorentzVector LVGenP = genParticles[igenP]->p4();
     if ( deltaR(LVRecoParticle, LVGenP) < 0.3 &&
 	 (std::abs(LVRecoParticle.pt() - LVGenP.pt()) < 0.5*LVGenP.pt())) {
@@ -241,12 +238,7 @@ bool isGenMarchFound(Particle::LorentzVector LVRecoParticle,  std::vector<GenPar
 
 bool isGenMarchFound(Particle::LorentzVector LVRecoParticle,  std::vector<GenParticle*> genParticles, GenParticle *& matchedGenParticle) {
   bool isGenMatchFound = false;
-
-  //if ( ! genParticles) return isGenMatchFound;
-  
   for (size_t igenP=0; igenP < genParticles.size(); igenP++) {
-    if ( ! genParticles[igenP]) continue;
-    
     Particle::LorentzVector LVGenP = genParticles[igenP]->p4();
     if ( deltaR(LVRecoParticle, LVGenP) < 0.3 &&
 	 (std::abs(LVRecoParticle.pt() - LVGenP.pt()) < 0.5*LVGenP.pt())) {
@@ -366,20 +358,20 @@ int main(int argc, char* argv[])
     return EXIT_FAILURE;
   }
 
-  std::cout << "<analyze_hh_3l_gen>:" << std::endl;
+  std::cout << "<analyze_hh_1l_gen>:" << std::endl;
 
   //--- keep track of time it takes the macro to execute
   TBenchmark clock;
-  clock.Start("analyze_hh_3l_gen");
+  clock.Start("analyze_hh_1l_gen");
 
   //--- read python configuration parameters
   if ( !edm::readPSetsFrom(argv[1])->existsAs<edm::ParameterSet>("process") )
-    throw cms::Exception("analyze_hh_3l_gen")
+    throw cms::Exception("analyze_hh_1l_gen")
       << "No ParameterSet 'process' found in configuration file = " << argv[1] << " !!\n";
 
   edm::ParameterSet cfg = edm::readPSetsFrom(argv[1])->getParameter<edm::ParameterSet>("process");
 
-  edm::ParameterSet cfg_analyze = cfg.getParameter<edm::ParameterSet>("analyze_hh_3l_gen");
+  edm::ParameterSet cfg_analyze = cfg.getParameter<edm::ParameterSet>("analyze_hh_1l_gen");
 
   std::string treeName = cfg_analyze.getParameter<std::string>("treeName");
 
@@ -397,7 +389,7 @@ int main(int argc, char* argv[])
   std::string era_string = cfg_analyze.getParameter<std::string>("era");
   const int era = get_era(era_string);
   era_current = era;
-  
+
   // single lepton triggers
   vstring triggerNames_1e = cfg_analyze.getParameter<vstring>("triggers_1e");
   std::vector<hltPath*> triggers_1e = create_hltPaths(triggerNames_1e, "triggers_1e");
@@ -461,15 +453,15 @@ int main(int argc, char* argv[])
   int leptonChargeSelection = -1;
   if      ( leptonChargeSelection_string == "OS" ) leptonChargeSelection = kOS;
   else if ( leptonChargeSelection_string == "SS" ) leptonChargeSelection = kSS;
-  else throw cms::Exception("analyze_hh_3l_gen")
+  else throw cms::Exception("analyze_hh_1l_gen")
 	 << "Invalid Configuration parameter 'leptonChargeSelection' = " << leptonChargeSelection_string << " !!\n";
 
   const int minNumJets = 1;
 
   bool isMC = cfg_analyze.getParameter<bool>("isMC");
   if (!isMC) {
-    std::cout << "analyze_hh_3l_gen: running not on MC.  Generator-level studies can only run on MC *** ERROR ***" << std::endl;
-    throw cmsException("analyze_hh_3l_gen", __LINE__) << " Generator-level studies can only run on MC  " << era;
+    std::cout << "analyze_hh_1l_gen: running not on MC.  Generator-level studies can only run on MC *** ERROR ***" << std::endl;
+    throw cmsException("analyze_hh_1l_gen", __LINE__) << " Generator-level studies can only run on MC  " << era;
   }
   
   bool hasLHE = cfg_analyze.getParameter<bool>("hasLHE");
@@ -541,14 +533,14 @@ int main(int argc, char* argv[])
     case kEra_2016: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2016(cfg_dataToMCcorrectionInterface); break;
     case kEra_2017: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2017(cfg_dataToMCcorrectionInterface); break;
     case kEra_2018: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2018(cfg_dataToMCcorrectionInterface); break;
-    default: throw cmsException("analyze_hh_3l_gen", __LINE__) << "Invalid era = " << era;
+    default: throw cmsException("analyze_hh_1l_gen", __LINE__) << "Invalid era = " << era;
     }
 
   std::string applyFakeRateWeights_string = cfg_analyze.getParameter<std::string>("applyFakeRateWeights");
   int applyFakeRateWeights = -1;
   if      ( applyFakeRateWeights_string == "disabled" ) applyFakeRateWeights = kFR_disabled;
   else if ( applyFakeRateWeights_string == "3lepton"  ) applyFakeRateWeights = kFR_3lepton;
-  else throw cms::Exception("analyze_hh_3l_gen")
+  else throw cms::Exception("analyze_hh_1l_gen")
 	 << "Invalid Configuration parameter 'applyFakeRateWeights' = " << applyFakeRateWeights_string << " !!\n";
 
   LeptonFakeRateInterface* leptonFakeRateInterface = 0;
@@ -593,7 +585,7 @@ int main(int argc, char* argv[])
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
   std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
   RunLumiEventSelector* run_lumi_eventSelector = nullptr;
-  if ( selEventsFileName_input != "" ) { 
+  if ( selEventsFileName_input != "" ) {
     edm::ParameterSet cfgRunLumiEventSelector;
     cfgRunLumiEventSelector.addParameter<std::string>("inputFileName", selEventsFileName_input);
     cfgRunLumiEventSelector.addParameter<std::string>("separator", ":");
@@ -1390,19 +1382,27 @@ int main(int argc, char* argv[])
   CutFlowTableHistManager * cutFlowHistManager = new CutFlowTableHistManager(cutFlowTableCfg, cuts);
   cutFlowHistManager->bookHistograms(fs);
 
-  int knMuPassJetBtagMedium = 0;
-  int knMuPassFakeablePromptMva = 0;
-  int knMuFailFakeablePromptMva = 0;
+  std::cout << "Siddh here1 $" << std::endl;
+  std::cout << inputTree << std::endl;
+  std::cout << "Siddh here1_1_1" << std::endl;
+  std::cout << inputTree -> hasNextEvent() << std::endl;
+  std::cout << "Siddh here1_1" << std::endl;
+  std::cout << run_lumi_eventSelector << std::endl;
+  std::cout << "Siddh here1_2" << std::endl;
+  if (run_lumi_eventSelector) std::cout <<  run_lumi_eventSelector -> areWeDone() << std::endl;
+  std::cout << "Siddh here1_3" << std::endl;
   
   while(inputTree -> hasNextEvent() && (! run_lumi_eventSelector || (run_lumi_eventSelector && ! run_lumi_eventSelector -> areWeDone())))
     {
-      if(inputTree -> canReport(reportEvery) /*|| printLevel > 2*/)
+      
+      if(inputTree -> canReport(reportEvery) || printLevel > 2)
 	{
 	  std::cout << "processing Entry " << inputTree -> getCurrentMaxEventIdx()
 		    << " or " << inputTree -> getCurrentEventIdx() << " entry in #"
 		    << (inputTree -> getProcessedFileCount() - 1)
 		    << " (" << eventInfo
-		    << ") file (" << selectedEntries << " Entries selected)\n";
+		    << ") file (" << selectedEntries << " Entries selected)"
+		    << std::endl;
 	}
       ++analyzedEntries;
       histogram_analyzedEntries->Fill(0.);
@@ -1414,18 +1414,6 @@ int main(int argc, char* argv[])
       EvtWeightRecorderHH evtWeightRecorder(central_or_shifts_local, central_or_shift_main, isMC);
       cutFlowTable.update("run:ls:event selection", evtWeightRecorder.get(central_or_shift_main));
       cutFlowHistManager->fillHistograms("run:ls:event selection", evtWeightRecorder.get(central_or_shift_main));
-      
-      if(inputTree -> canReport(reportEvery) || printLevel > 2)
-	{
-	  std::cout << "\n\nprocessing Entry " << inputTree -> getCurrentMaxEventIdx()
-		    << " or " << inputTree -> getCurrentEventIdx() << " entry in #"
-		    << (inputTree -> getProcessedFileCount() - 1)
-		    << " (" << eventInfo
-		    << ") file (" << selectedEntries << " Entries selected)"
-		    << std::endl;
-	}
-
-      
 
       if ( isDEBUG ) {
 	std::cout << "event #" << inputTree -> getCurrentMaxEventIdx() << ' ' << eventInfo << '\n';
@@ -1580,6 +1568,10 @@ int main(int argc, char* argv[])
       bool isGenEvtHHTo4W_2l_2qq = false;
       bool isGenEvtHHTo4W_1l_3qq = false;
       bool isGenEvtHHTo4W_0l_4qq = false;
+
+      // Event HH->4W->1L1Nu 6q
+      GenParticle *genLeptonFromHHTo4WW_1l_3qq = nullptr;
+      
       
       // Event HH->4W->3l3nu 2q 
       GenParticle *genLeptonFromHToWW_lnu_qq = nullptr;
@@ -1592,8 +1584,7 @@ int main(int argc, char* argv[])
       GenParticle *genNutrino2FromHToWW_2l2nu = nullptr;
       bool isGenEvtCatBoosted  = false;
       bool isGenEvtCatResolved = false;
-      int nGenMuFromHHTo4W = 0;
-      int nGenEleFromHHTo4W = 0;
+      
 
       bool isHHTo4WDecayParticlesWithInCMSGeoAcpt  = false;
       bool isHHTo4WDecayParticlesWithInCMSRecoAcpt = false;
@@ -1611,14 +1602,15 @@ int main(int argc, char* argv[])
       ptThrshLeptons["ptThrsh_4l"] = std::vector<double> {25., 15., 15., 10.};
       ptThrshLeptons["ptThrsh_3l"] = std::vector<double> {25., 15., 10.};
       ptThrshLeptons["ptThrsh_2l"] = std::vector<double> {25., 15.};
-      ptThrshLeptons["ptThrsh_1l"] = std::vector<double> {30.};
+      //ptThrshLeptons["ptThrsh_1l"] = std::vector<double> {30.};
+      ptThrshLeptons["ptThrsh_1l"] = std::vector<double> {10.}; // tmp
 
       const double ptThresholdJet = 25.;
 
-      bool isHHTo4W_3lnu_1qq_GenStudy = false;
       
       
-      if (isMC && isHHTo4W_3lnu_1qq_GenStudy) {
+      
+      if (isMC) {
 	// store GenParticles for events HH->4W -> 3l3nu 2q ----------- Approach-1 new ----------------
 	for (size_t iParticle=0; iParticle < genHiggses.size(); iParticle++) {
 	  genHiggses_Copy1.push_back(dynamic_cast<GenParticle*>(&genHiggses[iParticle]));
@@ -1876,12 +1868,17 @@ int main(int argc, char* argv[])
 	if (nGenWBosonInHHDecay == 4 && nGenWDecayLeptonic == 1 && nGenWDecayHadronic == 3) isGenEvtHHTo4W_1l_3qq = true;
 	if (nGenWBosonInHHDecay == 4 && nGenWDecayLeptonic == 0 && nGenWDecayHadronic == 4) isGenEvtHHTo4W_0l_4qq = true;
 
-	// Select HHTo4W_3l_1qq events only
-	if ( !(isGenEvtHHTo4W_3l_1qq)) continue;
+	// Select HHTo4W_1l_3qq events only
+	if ( !(isGenEvtHHTo4W_1l_3qq)) continue;
 	
 	if (printLevel > 4) printf("gen HH --> %iW%iZ event: %i l, %i hadronic decay mode \n",nGenWBosonInHHDecay,nGenZBosonInHHDecay, nGenWDecayLeptonic,nGenWDecayHadronic);
 	cutFlowTable.update(Form("gen HH --> %iW%iZ event: %i l, %i hadronic decay mode",nGenWBosonInHHDecay,nGenZBosonInHHDecay, nGenWDecayLeptonic,nGenWDecayHadronic), evtWeightRecorder.get(central_or_shift_main));
-	cutFlowHistManager->fillHistograms(Form("gen HH --> %iW%iZ event: %i l, %i hadronic decay mode",nGenWBosonInHHDecay,nGenZBosonInHHDecay, nGenWDecayLeptonic,nGenWDecayHadronic), evtWeightRecorder.get(central_or_shift_main));
+
+
+
+
+	
+
 
 
 
@@ -1975,10 +1972,42 @@ int main(int argc, char* argv[])
 	}
 
 	
+	// HHTo4WW_1l_3qq ------------------------------------
+	if ((nGenWBosonInHHDecay == 4) && nGenWDecayLeptonic == 1 && nGenWDecayHadronic == 3) {
+	  isGenEvtHHTo4W_1l_3qq = true;
+	  
+	  for (size_t iGenH=0; iGenH <genWFromHHTo4W.size(); iGenH++) {
+	    std::string sIdxH = Form("iH%lu",iGenH);
+	    std::vector<GenParticle *> genWsFromH = genWFromHHTo4W[sIdxH];
 
+
+	    for (size_t iW=0; iW < genWsFromH.size(); iW++) {
+	      std::string sIdxH_IdxW = Form("iH%lu_iW%lu",iGenH,iW);
+	      std::vector<GenParticle *> genWDaughters = genWDaughtersFromHHTo4W[sIdxH_IdxW];
+
+
+	      if (genWDecayModeFromHHTo4W[sIdxH_IdxW] == sWDecayMode_Leptonic) {
+		genLeptonFromHHTo4WW_1l_3qq = genWDaughters[0];
+	      }
+	    }
+	  }
+
+	  if (printLevel > 5) {
+	    std::cout << "Printf HH->4W 1l 3jj particles: \n";
+	    dumpGenParticle("genLeptonFromHHTo4WW_1l_3qq",genLeptonFromHHTo4WW_1l_3qq,0);
+	  }
+
+	  if (std::abs(genLeptonFromHHTo4WW_1l_3qq->pdgId()) == 11) {
+	    cutFlowTable.update("gen HH --> 4W --> 1l 3qq, within CMS geoetry & reco acpt, 1l: electron", evtWeightRecorder.get(central_or_shift_main));
+	  } else if (std::abs(genLeptonFromHHTo4WW_1l_3qq->pdgId()) == 13) {
+	    cutFlowTable.update("gen HH --> 4W --> 1l 3qq, within CMS geoetry & reco acpt, 1l: muon", evtWeightRecorder.get(central_or_shift_main));
+	  }
+	  
+	}
 	
-	      
-	if ((nGenWBosonInHHDecay == 4) && nGenWDecayLeptonic == 3 && nGenWDecayHadronic == 1) {
+
+       // HHTo4WW_3l_1qq ------------------------------------
+	if ((nGenWBosonInHHDecay == 4) && nGenWDecayLeptonic == 3 && nGenWDecayHadronic == 1  &&  0==1) {
 	  isGenEvtHHTo4W_3l_1qq = true;
 	  int idxH_TypeHToWW_lnu_qq         = -1;
 	  int idxH_TypeHToWW_2l2nu          = -1;
@@ -2030,22 +2059,6 @@ int main(int argc, char* argv[])
 	    dumpGenParticle("genNutrino2FromHToWW_2l2nu",genNutrino2FromHToWW_2l2nu,0);
 	  }
 
-	    
-	  std::vector<GenParticle *> genLepsFromHHTo4W = {genLepton1FromHToWW_2l2nu, genLepton2FromHToWW_2l2nu, genLeptonFromHToWW_lnu_qq};
-	  nGenMuFromHHTo4W  = 0;
-	  nGenEleFromHHTo4W = 0;
-	  for (size_t i=0; i < genLepsFromHHTo4W.size(); i++) {
-	    GenParticle *gen = genLepsFromHHTo4W[i];
-	    if (std::abs(gen->pdgId()) == 11)  nGenEleFromHHTo4W++;
-	    if (std::abs(gen->pdgId()) == 13)  nGenMuFromHHTo4W++;
-	  }
-	  if (nGenEleFromHHTo4W >= 1) {
-	    cutFlowTable.update("gen HH --> 4W --> 3l 1qq, within CMS geoetry & reco acpt, nEle > 0", evtWeightRecorder.get(central_or_shift_main));
-	  }
-	  if (nGenMuFromHHTo4W >= 1) {
-	    cutFlowTable.update("gen HH --> 4W --> 3l 1qq, within CMS geoetry & reco acpt, nMu  > 0", evtWeightRecorder.get(central_or_shift_main));
-	  }
-	  
 
 	  if ((genJet1FromHToWW_lnu_qq->p4() + genJet2FromHToWW_lnu_qq->p4()).pt() > ptWFatjetBoosted) {
 	    isGenEvtCatBoosted = true;
@@ -2351,7 +2364,7 @@ int main(int argc, char* argv[])
 			 <<", genLepton1FromH_WW_lnulnu: "<<genLepton1FromH_WW_lnulnu
 			 <<", genLepton2FromH_WW_lnulnu: "<<genLepton2FromH_WW_lnulnu
 			 <<std::endl;
-	      } 
+	      }
 
 
 
@@ -2460,9 +2473,9 @@ int main(int argc, char* argv[])
       bool selTrigger_2e1mu = use_triggers_2e1mu && isTriggered_2e1mu;
       bool selTrigger_1e2mu = use_triggers_1e2mu && isTriggered_1e2mu;
       bool selTrigger_3mu = use_triggers_3mu && isTriggered_3mu;
-      if ( !(selTrigger_1e || selTrigger_1mu   ||
+      if ( !(selTrigger_1e || selTrigger_1mu  /* ||
 	     selTrigger_2e || selTrigger_1e1mu || selTrigger_2mu   ||
-	     selTrigger_3e || selTrigger_2e1mu || selTrigger_1e2mu || selTrigger_3mu) ) {
+	     selTrigger_3e || selTrigger_2e1mu || selTrigger_1e2mu || selTrigger_3mu*/) ) {
 	if ( run_lumi_eventSelector ) {
 	  std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
 	  std::cout << " (selTrigger_3mu = " << selTrigger_3mu
@@ -2475,7 +2488,7 @@ int main(int argc, char* argv[])
 		    << ", selTrigger_1mu = " << selTrigger_1mu
 		    << ", selTrigger_1e = " << selTrigger_1e << ")" << std::endl;
 	}
-	continue;
+	//continue;
       }
       cutFlowTable.update("trigger_0", evtWeightRecorder.get(central_or_shift_main));
       cutFlowHistManager->fillHistograms("trigger_0", evtWeightRecorder.get(central_or_shift_main));
@@ -2563,7 +2576,10 @@ int main(int argc, char* argv[])
 	fakeableElectronSelector.enable_offline_e_trigger_cuts();
 	tightElectronSelector.enable_offline_e_trigger_cuts();
       }
-    
+
+
+      
+      
       //--- build collections of electrons, muons and hadronic taus;
       //    resolve overlaps in order of priority: muon, electron,
       const std::vector<RecoMuon> muons = muonReader->read();
@@ -2627,532 +2643,464 @@ int main(int argc, char* argv[])
 
 
       // Lepton reconstruction
-      std::vector<GenParticle*> genLeptonsFromHHTo4W = {genLepton1FromHToWW_2l2nu, genLepton2FromHToWW_2l2nu, genLeptonFromHToWW_lnu_qq};
-      std::vector<GenParticle*> genElectronsFromHHTo4W;
-      std::vector<GenParticle*> genMuonsFromHHTo4W;
-      for (size_t i=0; i < genLeptonsFromHHTo4W.size(); i++) {
-	if ( ! genLeptonsFromHHTo4W[i]) continue;
-	if (std::abs(genLeptonsFromHHTo4W[i]->pdgId()) == 11) genElectronsFromHHTo4W.push_back(genLeptonsFromHHTo4W[i]);
-	if (std::abs(genLeptonsFromHHTo4W[i]->pdgId()) == 13) genMuonsFromHHTo4W.push_back(genLeptonsFromHHTo4W[i]);
-      }
-      
+      //std::vector<GenParticle*> genLeptonsFromHHTo4W = {genLepton1FromHToWW_2l2nu, genLepton2FromHToWW_2l2nu, genLeptonFromHToWW_lnu_qq};
+      std::vector<GenParticle*> genLeptonsFromHHTo4W = {genLeptonFromHHTo4WW_1l_3qq};
 
-      bool isLeptonSelectionEfficiencyStudy = false;
+
       
-      if (isLeptonSelectionEfficiencyStudy) { // lepton selection efficiency
-	
-      
-	double max_jetBtagCSV_mu = get_BtagWP(era, Btag::kDeepJet, BtagWP::kMedium);
-	double mvaTTH_wp_mu = 0.85;
+      double max_jetBtagCSV_mu = get_BtagWP(era, Btag::kDeepJet, BtagWP::kMedium);
+      double mvaTTH_wp_mu = 0.85;
 
     
       
 
-	int nMuGenMatch = 0;
-	int nMuPassPt = 0;
-	int nMuPassConePt = 0;
-	int nMuPassEta = 0;
-	int nMuPassDxy = 0;
-	int nMuPassDz = 0;
-	int nMuPassSidp3d = 0;
-	int nMuPassRelIso = 0;
-	int nMuPassLooseIdPOG = 0;
-	int nMuPassMediumIdPOG = 0;
-	int nMuPassJetBtagMedium = 0;
-	int nMuPassFakeablePromptMva = 0;
-	int nMuFailFakeablePromptMva = 0;
-	int nMuFailFakeablePromptMvaAndPassJetBtag = 0;
-	int nMuFailFakeablePromptMvaAndPassJetBtagAndJetRelIso = 0;
-	int nMuPassTight = 0;
+      int nMuGenMatch = 0;
+      int nMuPassPt = 0;
+      int nMuPassConePt = 0;
+      int nMuPassEta = 0;
+      int nMuPassDxy = 0;
+      int nMuPassDz = 0;
+      int nMuPassSidp3d = 0;
+      int nMuPassRelIso = 0;
+      int nMuPassLooseIdPOG = 0;
+      int nMuPassMediumIdPOG = 0;
+      int nMuPassJetBtagMedium = 0;
+      int nMuPassFakeablePromptMva = 0;
+      int nMuFailFakeablePromptMva = 0;
+      int nMuFailFakeablePromptMvaAndPassJetBtag = 0;
+      int nMuFailFakeablePromptMvaAndPassJetBtagAndJetRelIso = 0;
+      int nMuPassTight = 0;
 
-	int npreselMuGenMatch = 0;
-	int nfakeableMuGenMatch = 0;
-	int ntightMuGenMatch = 0;
+      int npreselMuGenMatch = 0;
+      int nfakeableMuGenMatch = 0;
+      int ntightMuGenMatch = 0;
 
-	int nMuPassMediumIdPOGAndJetBTagMedium = 0;
-	int nMuPassMediumIdPOGAndJetBTagInter = 0;
-	int nMuPassMediumIdPOGAndJetBTagInterAndJetRelIso = 0;
-	/*
-	  int  = 0;
-	  int  = 0;
-	  int  = 0;
-	  int  = 0;
-	  int  = 0;
-	  int  = 0;
-	  int  = 0;
-	  int  = 0;
-	*/
+      int nMuPassMediumIdPOGAndJetBTagMedium = 0;
+      int nMuPassMediumIdPOGAndJetBTagInter = 0;
+      int nMuPassMediumIdPOGAndJetBTagInterAndJetRelIso = 0;
+      /*
+      int  = 0;
+      int  = 0;
+      int  = 0;
+      int  = 0;
+      int  = 0;
+      int  = 0;
+      int  = 0;
+      int  = 0;
+      */
       
-	for (size_t iL=0; iL < cleanedMuons.size(); iL++) {
-	  const RecoMuon *lep = cleanedMuons[iL];
-	  GenParticle *genP;
-	  //if ( ! (isGenMarchFound(lep->p4(), genLeptonsFromHHTo4W, genP))) continue;
-	  if ( ! (isGenMarchFound(lep->p4(), genMuonsFromHHTo4W, genP))) continue;
-	  nMuGenMatch++;
+      for (size_t iL=0; iL < cleanedMuons.size(); iL++) {
+	const RecoMuon *lep = cleanedMuons[iL];
+	GenParticle *genP;
+	if ( ! (isGenMarchFound(lep->p4(), genLeptonsFromHHTo4W, genP))) continue;
+	nMuGenMatch++;
 	
-	  if (lep->lepton_pt() < 5.) continue;
-	  nMuPassPt++;
+	if (lep->lepton_pt() < 5.) continue;
+	nMuPassPt++;
 
-	  if (lep->cone_pt() < 10.) continue;
-	  nMuPassConePt++;
+	if (lep->cone_pt() < 10.) continue;
+	nMuPassConePt++;
 	
-	  if (lep->absEta() > 2.4) continue;
-	  nMuPassEta++;
+	if (lep->absEta() > 2.4) continue;
+	nMuPassEta++;
 	
-	  if (std::abs(lep->dxy()) > 0.05) continue;
-	  nMuPassDxy++;
+	if (std::abs(lep->dxy()) > 0.05) continue;
+	nMuPassDxy++;
 
-	  if (std::abs(lep->dz()) > 0.1) continue;
-	  nMuPassDz++;
+	if (std::abs(lep->dz()) > 0.1) continue;
+	nMuPassDz++;
 
-	  if (lep->sip3d() > 8.) continue;
-	  nMuPassSidp3d++;
+	if (lep->sip3d() > 8.) continue;
+	nMuPassSidp3d++;
 	
-	  if (lep->relIso() > 0.4) continue;
-	  nMuPassRelIso++;
+	if (lep->relIso() > 0.4) continue;
+	nMuPassRelIso++;
 	
-	  if ( ! lep->passesLooseIdPOG()) continue;
-	  nMuPassLooseIdPOG++;
+	if ( ! lep->passesLooseIdPOG()) continue;
+	nMuPassLooseIdPOG++;
 
-	  if (lep->passesMediumIdPOG()) {
-	    nMuPassMediumIdPOG++;
+	if (lep->passesMediumIdPOG()) {
+	  nMuPassMediumIdPOG++;
 
-	    if ( ! (lep->jetBtagCSV() > max_jetBtagCSV_mu)) {
-	      nMuPassMediumIdPOGAndJetBTagMedium++;
-	    }
+	  if ( ! (lep->jetBtagCSV() > max_jetBtagCSV_mu)) {
+	    nMuPassMediumIdPOGAndJetBTagMedium++;
+	  }
 
-	    double max_jetBtagCSV_interp = smoothBtagCut(lep->assocJet_pt());
-	    if (lep->jetBtagCSV() <= max_jetBtagCSV_interp) {
-	      nMuPassMediumIdPOGAndJetBTagInter++;
+	  double max_jetBtagCSV_interp = smoothBtagCut(lep->assocJet_pt());
+	  if (lep->jetBtagCSV() <= max_jetBtagCSV_interp) {
+	    nMuPassMediumIdPOGAndJetBTagInter++;
 	    
-	      if( !  (lep->jetPtRatio() < 2./3)) {
-		nMuPassMediumIdPOGAndJetBTagInterAndJetRelIso++;
-	      }	    
-	    }	  
-	  }
+	    if( !  (lep->jetPtRatio() < 2./3)) {
+	      nMuPassMediumIdPOGAndJetBTagInterAndJetRelIso++;
+	    }	    
+	  }	  
+	}
 
 	
-	  if (lep->jetBtagCSV() > max_jetBtagCSV_mu) continue;
-	  nMuPassJetBtagMedium++;
+	if (lep->jetBtagCSV() > max_jetBtagCSV_mu) continue;
+	nMuPassJetBtagMedium++;
 
-	  if (lep->mvaRawTTH() > mvaTTH_wp_mu ) { // fakeable passed prompt mva
-	    nMuPassFakeablePromptMva++;	  
+	if (lep->mvaRawTTH() > mvaTTH_wp_mu ) { // fakeable passed prompt mva
+	  nMuPassFakeablePromptMva++;	  
 	  
-	  } else { // fakeable failed prompt mva
-	    nMuFailFakeablePromptMva++;
+	} else { // fakeable failed prompt mva
+	  nMuFailFakeablePromptMva++;
 
-	    double max_jetBtagCSV_interp = smoothBtagCut(lep->assocJet_pt());
-	    if (lep->jetBtagCSV() <= max_jetBtagCSV_interp) {
-	      nMuFailFakeablePromptMvaAndPassJetBtag++;
+	  double max_jetBtagCSV_interp = smoothBtagCut(lep->assocJet_pt());
+	  if (lep->jetBtagCSV() <= max_jetBtagCSV_interp) {
+	    nMuFailFakeablePromptMvaAndPassJetBtag++;
 
-	      if( !  (lep->jetPtRatio() < 2./3)) {
-		nMuFailFakeablePromptMvaAndPassJetBtagAndJetRelIso++;	      
-	      }
+	    if( !  (lep->jetPtRatio() < 2./3)) {
+	      nMuFailFakeablePromptMvaAndPassJetBtagAndJetRelIso++;	      
 	    }
 	  }
-
-	
-	  if (lep->passesMediumIdPOG() &&
-	      !(lep->jetBtagCSV() > max_jetBtagCSV_mu) &&
-	      (lep->mvaRawTTH() > mvaTTH_wp_mu) ) {
-	    nMuPassTight++;
-	  }
-
-	}
-	
-
-	if (nMuGenMatch >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nMuGenMatch >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nMuPassPt >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nMuPassPt >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nMuPassConePt >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nMuPassConePt >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nMuPassEta >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nMuPassEta >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nMuPassDxy >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nMuPassDxy >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nMuPassDz >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nMuPassDz >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nMuPassSidp3d >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nMuPassSidp3d >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nMuPassRelIso >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nMuPassRelIso >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nMuPassLooseIdPOG >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nMuPassLooseIdPOG >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nMuPassMediumIdPOG >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nMuPassMediumIdPOG >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	
-	if (nMuPassJetBtagMedium >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nMuPassJetBtagMedium >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-
-	  if (nMuPassFakeablePromptMva >= 1) {
-	    cutFlowTable.update("nMuPassFakeablePromptMva >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	    knMuPassFakeablePromptMva++;
-	  }
-	  if (nMuFailFakeablePromptMva >= 1) {
-	    cutFlowTable.update("nMuFailFakeablePromptMva >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	    knMuFailFakeablePromptMva++;
-	  }
-	  if (nMuFailFakeablePromptMvaAndPassJetBtag >= 1) {
-	    cutFlowTable.update("nMuFailFakeablePromptMvaAndPassJetBtag >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	  }
-	  if (nMuFailFakeablePromptMvaAndPassJetBtagAndJetRelIso >= 1) {
-	    cutFlowTable.update("nMuFailFakeablePromptMvaAndPassJetBtagAndJetRelIso >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	  }
-	}      
-	
-	
-	if (nMuPassTight >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nMuPassTight >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
 	}
 
-	if (nMuPassMediumIdPOGAndJetBTagMedium >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nMuPassMediumIdPOGAndJetBTagMedium >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nMuPassMediumIdPOGAndJetBTagInter >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nMuPassMediumIdPOGAndJetBTagInter >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nMuPassMediumIdPOGAndJetBTagInterAndJetRelIso >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nMuPassMediumIdPOGAndJetBTagInterAndJetRelIso >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
 	
-	
+	if (lep->passesMediumIdPOG() &&
+	    !(lep->jetBtagCSV() > max_jetBtagCSV_mu) &&
+	    (lep->mvaRawTTH() > mvaTTH_wp_mu) ) {
+	  nMuPassTight++;
+	}
+
+      }
+
+      if (nMuGenMatch >= 1) {
+	cutFlowTable.update("nMuGenMatch >=1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuPassPt >= 1) {
+	cutFlowTable.update("nMuPassPt >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuPassConePt >= 1) {
+	cutFlowTable.update("nMuPassConePt >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuPassEta >= 1) {
+	cutFlowTable.update("nMuPassEta >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuPassDxy >= 1) {
+	cutFlowTable.update("nMuPassDxy >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuPassDz >= 1) {
+	cutFlowTable.update("nMuPassDz >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuPassSidp3d >= 1) {
+	cutFlowTable.update("nMuPassSidp3d >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuPassRelIso >= 1) {
+	cutFlowTable.update("nMuPassRelIso >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuPassLooseIdPOG >= 1) {
+	cutFlowTable.update("nMuPassLooseIdPOG >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuPassMediumIdPOG >= 1) {
+	cutFlowTable.update("nMuPassMediumIdPOG >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuPassJetBtagMedium >= 1) {
+	cutFlowTable.update("nMuPassJetBtagMedium >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }      
+      if (nMuPassFakeablePromptMva >= 1) {
+	cutFlowTable.update("nMuPassFakeablePromptMva >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuFailFakeablePromptMva >= 1) {
+	cutFlowTable.update("nMuFailFakeablePromptMva >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuFailFakeablePromptMvaAndPassJetBtag >= 1) {
+	cutFlowTable.update("nMuFailFakeablePromptMvaAndPassJetBtag >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuFailFakeablePromptMvaAndPassJetBtagAndJetRelIso >= 1) {
+	cutFlowTable.update("nMuFailFakeablePromptMvaAndPassJetBtagAndJetRelIso >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuPassTight >= 1) {
+	cutFlowTable.update("nMuPassTight >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+
+      if (nMuPassMediumIdPOGAndJetBTagMedium >= 1) {
+	cutFlowTable.update("nMuPassMediumIdPOGAndJetBTagMedium >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuPassMediumIdPOGAndJetBTagInter >= 1) {
+	cutFlowTable.update("nMuPassMediumIdPOGAndJetBTagInter >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nMuPassMediumIdPOGAndJetBTagInterAndJetRelIso >= 1) {
+	cutFlowTable.update("nMuPassMediumIdPOGAndJetBTagInterAndJetRelIso >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
    
 
-	for (size_t iL=0; iL < preselMuons.size(); iL++) {
-	  const RecoLepton *lep = preselMuons[iL];
-	  GenParticle *genP;
-	  if ( ! (isGenMarchFound(lep->p4(), genMuonsFromHHTo4W, genP))) continue;
-	  npreselMuGenMatch++;
-	}
-	if (npreselMuGenMatch >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("npreselMuGenMatch >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}      
+      for (size_t iL=0; iL < preselMuons.size(); iL++) {
+	const RecoLepton *lep = preselMuons[iL];
+	GenParticle *genP;
+	if ( ! (isGenMarchFound(lep->p4(), genLeptonsFromHHTo4W, genP))) continue;
+	npreselMuGenMatch++;
+      }
+      if (npreselMuGenMatch >= 1) {
+	cutFlowTable.update("npreselMuGenMatch >=1", evtWeightRecorder.get(central_or_shift_main));
+      }      
 
-	for (size_t iL=0; iL < fakeableMuons.size(); iL++) {
-	  const RecoLepton *lep1 = fakeableMuons[iL];
-	  GenParticle *genP;
-	  if ( ! (isGenMarchFound(lep1->p4(), genMuonsFromHHTo4W, genP))) continue;
-	  nfakeableMuGenMatch++;
-
-	  const RecoMuon *lep = dynamic_cast<const RecoMuon *>(lep1);
-	  
-	  std::string sFailedLep;
-
-	  if (lep->lepton_pt() < 5.) sFailedLep += "(lep->lepton_pt() < 5.), ";
-	  
-
-	  if (lep->cone_pt() < 10.) sFailedLep += "(lep->cone_pt() < 10.), ";
-	
-	  if (lep->absEta() > 2.4) sFailedLep += "(lep->absEta() > 2.4), ";
-	
-	  if (std::abs(lep->dxy()) > 0.05) sFailedLep += "(std::abs(lep->dxy()) > 0.05), ";
-
-	  if (std::abs(lep->dz()) > 0.1) sFailedLep += "(std::abs(lep->dz()) > 0.1), ";
-
-	  if (lep->sip3d() > 8.) sFailedLep += "(lep->sip3d() > 8.), ";
-	
-	  if (lep->relIso() > 0.4) sFailedLep += "(lep->relIso() > 0.4), ";
-	
-	  if ( ! lep->passesLooseIdPOG()) sFailedLep += "( ! lep->passesLooseIdPOG()), ";
-
-	  if (lep->jetBtagCSV() > max_jetBtagCSV_mu) sFailedLep += "(lep->jetBtagCSV() > max_jetBtagCSV_mu), ";
-
-	  if (lep->jetBtagCSV() <= max_jetBtagCSV_mu) {
-	    double max_jetBtagCSV_interp = smoothBtagCut(lep->assocJet_pt());
-	    if (lep->jetBtagCSV() > max_jetBtagCSV_interp) sFailedLep += "(lep->jetBtagCSV() > max_jetBtagCSV_interp), ";
-
-	    if(   (lep->jetPtRatio() < 2./3)) sFailedLep += "(lep->jetPtRatio() < 2./3), ";
-	    
-	  }
-	  
-	  if ( ! sFailedLep.empty()) {
-	    if (printLevel > 4)  std::cout << "Fakeable lepton strutiny iL:" << iL << ", failed condition: " << sFailedLep << ", \t lep: " << *lep << std::endl;
-	    cutFlowTable.update(Form("FakeableMuon scrutiny: %s",sFailedLep.data()), evtWeightRecorder.get(central_or_shift_main));
-	  }
-	}
-	if (nfakeableMuGenMatch >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("nfakeableMuGenMatch >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
+      for (size_t iL=0; iL < fakeableMuons.size(); iL++) {
+	const RecoLepton *lep = fakeableMuons[iL];
+	GenParticle *genP;
+	if ( ! (isGenMarchFound(lep->p4(), genLeptonsFromHHTo4W, genP))) continue;
+	nfakeableMuGenMatch++;
+      }
+      if (nfakeableMuGenMatch >= 1) {
+	cutFlowTable.update("nfakeableMuGenMatch >=1", evtWeightRecorder.get(central_or_shift_main));
+      }
 
 
-	for (size_t iL=0; iL < tightMuons.size(); iL++) {
-	  const RecoLepton *lep = tightMuons[iL];
-	  GenParticle *genP;
-	  if ( ! (isGenMarchFound(lep->p4(), genMuonsFromHHTo4W, genP))) continue;
-	  ntightMuGenMatch++;
-	}
-	if (ntightMuGenMatch >= nGenMuFromHHTo4W && nGenMuFromHHTo4W > 0) {
-	  cutFlowTable.update("ntightMuGenMatch >= nGenMuFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
+      for (size_t iL=0; iL < tightMuons.size(); iL++) {
+	const RecoLepton *lep = tightMuons[iL];
+	GenParticle *genP;
+	if ( ! (isGenMarchFound(lep->p4(), genLeptonsFromHHTo4W, genP))) continue;
+	ntightMuGenMatch++;
+      }
+      if (ntightMuGenMatch >= 1) {
+	cutFlowTable.update("ntightMuGenMatch >=1", evtWeightRecorder.get(central_or_shift_main));
+      }
 
 
 
 
-
-
-
-
-
-
-
-	double binning_absEta_ele = 1.479;
-	double min_sigmaEtaEta_trig_ele = 0.011;
-	double max_sigmaEtaEta_trig_ele = 0.019;
-	double max_HoE_trig_ele = 0.10;
-	double min_OoEminusOoP_trig_ele = -0.04;
-	double max_jetBtagCSV_ele = get_BtagWP(era, Btag::kDeepJet, BtagWP::kMedium);
-	double wp_mvaTTH_ele = 0.80;
-	double min_jetPtRatio_ele = (1. / 1.7); 
+      double binning_absEta_ele = 1.479;
+      double min_sigmaEtaEta_trig_ele = 0.011;
+      double max_sigmaEtaEta_trig_ele = 0.019;
+      double max_HoE_trig_ele = 0.10;
+      double min_OoEminusOoP_trig_ele = -0.04;
+      double max_jetBtagCSV_ele = get_BtagWP(era, Btag::kDeepJet, BtagWP::kMedium);
+      double wp_mvaTTH_ele = 0.80;
+      double min_jetPtRatio_ele = (1. / 1.7); 
       
-	int nEleGenMatch = 0;
-	int nElePassPt = 0;
-	int nElePassConePt = 0;
-	int nElePassEta = 0;
-	int nElePassDxy = 0;
-	int nElePassDz = 0;
-	int nElePassSidp3d = 0;
-	int nElePassRelIso = 0;
+      int nEleGenMatch = 0;
+      int nElePassPt = 0;
+      int nElePassConePt = 0;
+      int nElePassEta = 0;
+      int nElePassDxy = 0;
+      int nElePassDz = 0;
+      int nElePassSidp3d = 0;
+      int nElePassRelIso = 0;
       
-	int nElePassNLostHits1 = 0;
-	int nElePassLooseIdPOG = 0;
-	int nElePassNLostHits0 = 0;
-	int nElePassSigmaEtaEta = 0;
-	int nElePassHoE = 0;
-	int nElePassOoEminusOoP = 0;
-	int nElePassConversions = 0;
-	int nElePassWP80IdPOG = 0;
-	int nElePassJetBtagMedium = 0;
+      int nElePassNLostHits1 = 0;
+      int nElePassLooseIdPOG = 0;
+      int nElePassNLostHits0 = 0;
+      int nElePassSigmaEtaEta = 0;
+      int nElePassHoE = 0;
+      int nElePassOoEminusOoP = 0;
+      int nElePassConversions = 0;
+      int nElePassWP80IdPOG = 0;
+      int nElePassJetBtagMedium = 0;
       
-	int nElePassPromptMva = 0;
-	int nEleFailPromptMva = 0;
-	int nEleFailPromptMvaAndPassWP80IdPOG = 0;
-	int nEleFailPromptMvaAndPassWP80IdPOGAndJetRelIso = 0;
-	int nElePassTight = 0;
+      int nElePassPromptMva = 0;
+      int nEleFailPromptMva = 0;
+      int nEleFailPromptMvaAndPassWP80IdPOG = 0;
+      int nEleFailPromptMvaAndPassWP80IdPOGAndJetRelIso = 0;
+      int nElePassTight = 0;
 
-	int nElePassWP80IdPOGAndJetBTagMedium = 0;
-	int nElePassWP80IdPOGAndJetBTagMediumAndJetRelIso = 0;      
+      int nElePassWP80IdPOGAndJetBTagMedium = 0;
+      int nElePassWP80IdPOGAndJetBTagMediumAndJetRelIso = 0;      
       
-	int npreselEleGenMatch = 0;
-	int nfakeableEleGenMatch = 0;
-	int ntightEleGenMatch = 0;
+      int npreselEleGenMatch = 0;
+      int nfakeableEleGenMatch = 0;
+      int ntightEleGenMatch = 0;
       
 
-	for (size_t iL=0; iL < cleanedElectrons.size(); iL++) {
-	  const RecoElectron *lep = cleanedElectrons[iL];
-	  GenParticle *genP;
-	  //if ( ! (isGenMarchFound(lep->p4(), genLeptonsFromHHTo4W, genP))) continue;
-	  if ( ! (isGenMarchFound(lep->p4(), genElectronsFromHHTo4W, genP))) continue;
-	  nEleGenMatch++;
+       for (size_t iL=0; iL < cleanedElectrons.size(); iL++) {
+	const RecoElectron *lep = cleanedElectrons[iL];
+	GenParticle *genP;
+	if ( ! (isGenMarchFound(lep->p4(), genLeptonsFromHHTo4W, genP))) continue;
+	nEleGenMatch++;
 	
-	  if (lep->lepton_pt() < 5.) continue;
-	  nElePassPt++;
+	if (lep->lepton_pt() < 5.) continue;
+	nElePassPt++;
 
-	  if (lep->cone_pt() < 10.) continue;
-	  nElePassConePt++;
+	if (lep->cone_pt() < 10.) continue;
+	nElePassConePt++;
 	
-	  if (lep->absEta() > 2.5) continue;
-	  nElePassEta++;
+	if (lep->absEta() > 2.5) continue;
+	nElePassEta++;
 	
-	  if (std::abs(lep->dxy()) > 0.05) continue;
-	  nElePassDxy++;
+	if (std::abs(lep->dxy()) > 0.05) continue;
+	nElePassDxy++;
 
-	  if (std::abs(lep->dz()) > 0.1) continue;
-	  nElePassDz++;
+	if (std::abs(lep->dz()) > 0.1) continue;
+	nElePassDz++;
 
-	  if (lep->sip3d() > 8.) continue;
-	  nElePassSidp3d++;
+	if (lep->sip3d() > 8.) continue;
+	nElePassSidp3d++;
 	
-	  if (lep->relIso() > 0.4) continue;
-	  nElePassRelIso++;
+	if (lep->relIso() > 0.4) continue;
+	nElePassRelIso++;
 
 
-	  if (lep->nLostHits() > 1) continue;
-	  nElePassNLostHits1++;
+	if (lep->nLostHits() > 1) continue;
+	nElePassNLostHits1++;
 
-	  if ( ! lep->mvaID_POG(EGammaWP::WPL)) continue;
-	  nElePassLooseIdPOG++;
+	if ( ! lep->mvaID_POG(EGammaWP::WPL)) continue;
+	nElePassLooseIdPOG++;
 
-	  if (lep->nLostHits() > 0) continue;
-	  nElePassNLostHits0++;
+	if (lep->nLostHits() > 0) continue;
+	nElePassNLostHits0++;
 
-	  double max_sigmaEtaEta_trig = min_sigmaEtaEta_trig_ele +
-	    max_sigmaEtaEta_trig_ele * (lep->absEtaSC() > binning_absEta_ele);	
-	  if (lep->sigmaEtaEta() > max_sigmaEtaEta_trig) continue;
-	  nElePassSigmaEtaEta++;
+	double max_sigmaEtaEta_trig = min_sigmaEtaEta_trig_ele +
+	  max_sigmaEtaEta_trig_ele * (lep->absEtaSC() > binning_absEta_ele);	
+	if (lep->sigmaEtaEta() > max_sigmaEtaEta_trig) continue;
+	nElePassSigmaEtaEta++;
 
-	  if (lep->HoE() > max_HoE_trig_ele) continue;
-	  nElePassHoE++;
+	if (lep->HoE() > max_HoE_trig_ele) continue;
+	nElePassHoE++;
 	
-	  if (lep->OoEminusOoP() < min_OoEminusOoP_trig_ele) continue;
-	  nElePassOoEminusOoP++;
+	if (lep->OoEminusOoP() < min_OoEminusOoP_trig_ele) continue;
+	nElePassOoEminusOoP++;
 
-	  if ( ! lep->passesConversionVeto()) continue;
-	  nElePassConversions++;
+	if ( ! lep->passesConversionVeto()) continue;
+	nElePassConversions++;
 
-	  if(lep->mvaID_POG(EGammaWP::WP80)) {
-	    nElePassWP80IdPOG++;
+	if(lep->mvaID_POG(EGammaWP::WP80)) {
+	  nElePassWP80IdPOG++;
 
-	    if ( ! (lep->jetBtagCSV() > max_jetBtagCSV_ele)) {
-	      nElePassWP80IdPOGAndJetBTagMedium++;
+	  if ( ! (lep->jetBtagCSV() > max_jetBtagCSV_ele)) {
+	    nElePassWP80IdPOGAndJetBTagMedium++;
 
-	      if ( !(lep->jetPtRatio() < min_jetPtRatio_ele)) {
-		nElePassWP80IdPOGAndJetBTagMediumAndJetRelIso++;
-	      }
+	    if ( !(lep->jetPtRatio() < min_jetPtRatio_ele)) {
+	      nElePassWP80IdPOGAndJetBTagMediumAndJetRelIso++;
 	    }
 	  }
+	}
 	
-	  if (lep->jetBtagCSV() > max_jetBtagCSV_ele) continue;
-	  nElePassJetBtagMedium++;
+	if (lep->jetBtagCSV() > max_jetBtagCSV_ele) continue;
+	nElePassJetBtagMedium++;
 
-	  if (lep->mvaRawTTH() > wp_mvaTTH_ele) { // fakeable/tight passed prompt ele mva
-	    nElePassPromptMva++;  
-	    nElePassTight++;
-	  } else { // fakeable failed prompt ele mva
-	    nEleFailPromptMva++;
+	if (lep->mvaRawTTH() > wp_mvaTTH_ele) { // fakeable/tight passed prompt ele mva
+	  nElePassPromptMva++;  
+	  nElePassTight++;
+	} else { // fakeable failed prompt ele mva
+	  nEleFailPromptMva++;
 	  
-	    if (lep->mvaID_POG(EGammaWP::WP80)) {
-	      nEleFailPromptMvaAndPassWP80IdPOG++;
+	  if (lep->mvaID_POG(EGammaWP::WP80)) {
+	    nEleFailPromptMvaAndPassWP80IdPOG++;
 	    
-	      if ( !(lep->jetPtRatio() < min_jetPtRatio_ele)) {
-		nEleFailPromptMvaAndPassWP80IdPOGAndJetRelIso++;
-	      }
-	    }   
-
-	  }
-
+	    if ( !(lep->jetPtRatio() < min_jetPtRatio_ele)) {
+	      nEleFailPromptMvaAndPassWP80IdPOGAndJetRelIso++;
+	    }
+	  }   
 
 	}
 
 
+      }
 
 
-	if (nEleGenMatch >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nEleGenMatch >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassPt >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassPt >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassConePt >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassConePt >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassEta >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassEta >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassDxy >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassDxy >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassDz >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassDz >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassSidp3d >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassSidp3d >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassRelIso >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassRelIso >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
 
-	if (nElePassNLostHits1 >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassNLostHits_1 >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassLooseIdPOG >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassLooseIdPOG >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassNLostHits0 >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassNLostHits_0 >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassSigmaEtaEta >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassSigmaEtaEta >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassHoE >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassHoE >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassOoEminusOoP >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassOoEminusOoP >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassConversions >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassConversions >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassWP80IdPOG >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassWP80IdPOG >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassJetBtagMedium >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassJetBtagMedium >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
 
-	  if (nElePassPromptMva >= 1) {
-	    cutFlowTable.update("nElePassPromptMva >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	  }
-	  if (nEleFailPromptMva >= 1) {
-	    cutFlowTable.update("nEleFailPromptMva >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	  }
-	  if (nEleFailPromptMvaAndPassWP80IdPOG >= 1) {
-	    cutFlowTable.update("nEleFailPromptMvaAndPassWP80IdPOG >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	  }
-	  if (nEleFailPromptMvaAndPassWP80IdPOGAndJetRelIso >= 1) {
-	    cutFlowTable.update("nEleFailPromptMvaAndPassWP80IdPOGAndJetRelIso >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	  }
-	  
-	}
-	if (nElePassTight >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassTight >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
+      if (nEleGenMatch >= 1) {
+	cutFlowTable.update("nEleGenMatch >=1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassPt >= 1) {
+	cutFlowTable.update("nElePassPt >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassConePt >= 1) {
+	cutFlowTable.update("nElePassConePt >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassEta >= 1) {
+	cutFlowTable.update("nElePassEta >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassDxy >= 1) {
+	cutFlowTable.update("nElePassDxy >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassDz >= 1) {
+	cutFlowTable.update("nElePassDz >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassSidp3d >= 1) {
+	cutFlowTable.update("nElePassSidp3d >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassRelIso >= 1) {
+	cutFlowTable.update("nElePassRelIso >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
 
-	if (nElePassWP80IdPOGAndJetBTagMedium >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassWP80IdPOGAndJetBTagMedium >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-	if (nElePassWP80IdPOGAndJetBTagMediumAndJetRelIso >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nElePassWP80IdPOGAndJetBTagMediumAndJetRelIso >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}   
+      if (nElePassNLostHits1 >= 1) {
+	cutFlowTable.update("nElePassNLostHits_1 >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassLooseIdPOG >= 1) {
+	cutFlowTable.update("nElePassLooseIdPOG >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassNLostHits0 >= 1) {
+	cutFlowTable.update("nElePassNLostHits_0 >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassSigmaEtaEta >= 1) {
+	cutFlowTable.update("nElePassSigmaEtaEta >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassHoE >= 1) {
+	cutFlowTable.update("nElePassHoE >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassOoEminusOoP >= 1) {
+	cutFlowTable.update("nElePassOoEminusOoP >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassConversions >= 1) {
+	cutFlowTable.update("nElePassConversions >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassWP80IdPOG >= 1) {
+	cutFlowTable.update("nElePassWP80IdPOG >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassJetBtagMedium >= 1) {
+	cutFlowTable.update("nElePassJetBtagMedium >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassPromptMva >= 1) {
+	cutFlowTable.update("nElePassPromptMva >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nEleFailPromptMva >= 1) {
+	cutFlowTable.update("nEleFailPromptMva >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nEleFailPromptMvaAndPassWP80IdPOG >= 1) {
+	cutFlowTable.update("nEleFailPromptMvaAndPassWP80IdPOG >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nEleFailPromptMvaAndPassWP80IdPOGAndJetRelIso >= 1) {
+	cutFlowTable.update("nEleFailPromptMvaAndPassWP80IdPOGAndJetRelIso >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassTight >= 1) {
+	cutFlowTable.update("nElePassTight >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+
+      if (nElePassWP80IdPOGAndJetBTagMedium >= 1) {
+	cutFlowTable.update("nElePassWP80IdPOGAndJetBTagMedium >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }
+      if (nElePassWP80IdPOGAndJetBTagMediumAndJetRelIso >= 1) {
+	cutFlowTable.update("nElePassWP80IdPOGAndJetBTagMediumAndJetRelIso >= 1", evtWeightRecorder.get(central_or_shift_main));
+      }   
 
        
 
-	for (size_t iL=0; iL < preselElectrons.size(); iL++) {
-	  const RecoLepton *lep = preselElectrons[iL];
-	  GenParticle *genP;
-	  if ( ! (isGenMarchFound(lep->p4(), genElectronsFromHHTo4W, genP))) continue;
-	  npreselEleGenMatch++;
-	}
-	if (npreselEleGenMatch >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("npreselEleGenMatch >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}      
-
-	for (size_t iL=0; iL < fakeableElectrons.size(); iL++) {
-	  const RecoLepton *lep = fakeableElectrons[iL];
-	  GenParticle *genP;
-	  if ( ! (isGenMarchFound(lep->p4(), genElectronsFromHHTo4W, genP))) continue;
-	  nfakeableEleGenMatch++;
-	}
-	if (nfakeableEleGenMatch >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("nfakeableEleGenMatch >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-
-
-	for (size_t iL=0; iL < tightElectrons.size(); iL++) {
-	  const RecoLepton *lep = tightElectrons[iL];
-	  GenParticle *genP;
-	  if ( ! (isGenMarchFound(lep->p4(), genElectronsFromHHTo4W, genP))) continue;
-	  ntightEleGenMatch++;
-	}
-	if (ntightEleGenMatch >= nGenEleFromHHTo4W && nGenEleFromHHTo4W > 0) {
-	  cutFlowTable.update("ntightEleGenMatch >= nGenEleFromHHTo4W", evtWeightRecorder.get(central_or_shift_main));
-	}
-
-
-
-
-	//continue;
-
+      for (size_t iL=0; iL < preselElectrons.size(); iL++) {
+	const RecoLepton *lep = preselElectrons[iL];
+	GenParticle *genP;
+	if ( ! (isGenMarchFound(lep->p4(), genLeptonsFromHHTo4W, genP))) continue;
+	npreselEleGenMatch++;
       }
+      if (npreselEleGenMatch >= 1) {
+	cutFlowTable.update("npreselEleGenMatch >=1", evtWeightRecorder.get(central_or_shift_main));
+      }      
+
+      for (size_t iL=0; iL < fakeableElectrons.size(); iL++) {
+	const RecoLepton *lep = fakeableElectrons[iL];
+	GenParticle *genP;
+	if ( ! (isGenMarchFound(lep->p4(), genLeptonsFromHHTo4W, genP))) continue;
+	nfakeableEleGenMatch++;
+      }
+      if (nfakeableEleGenMatch >= 1) {
+	cutFlowTable.update("nfakeableEleGenMatch >=1", evtWeightRecorder.get(central_or_shift_main));
+      }
+
+
+      for (size_t iL=0; iL < tightElectrons.size(); iL++) {
+	const RecoLepton *lep = tightElectrons[iL];
+	GenParticle *genP;
+	if ( ! (isGenMarchFound(lep->p4(), genLeptonsFromHHTo4W, genP))) continue;
+	ntightEleGenMatch++;
+      }
+      if (ntightEleGenMatch >= 1) {
+	cutFlowTable.update("ntightEleGenMatch >=1", evtWeightRecorder.get(central_or_shift_main));
+      }
+
+      
+      continue;
+
+
       
 
       
@@ -3444,7 +3392,7 @@ int main(int argc, char* argv[])
 	const RecoJetAK8 *   jetAK8  = selJetsAK8_all[iJ];
 	const RecoSubjetAK8* subjet1 = jetAK8->subJet1();
 	const RecoSubjetAK8* subjet2 = jetAK8->subJet2();
-	Particle::LorentzVector LVGenWjj;
+	Particle::LorentzVector LVGenWjj = genJet1FromHToWW_lnu_qq->p4() + genJet2FromHToWW_lnu_qq->p4();
 	bool isJetAK8GenMatch     = false;
 	bool isSubjet1AK8GenMatch = false;
 	bool isSubjet2AK8GenMatch = false;
@@ -3452,11 +3400,6 @@ int main(int argc, char* argv[])
 	int idxGenParticleMatch_1 = -1;
 	
 	if ( !(subjet1 && subjet2)) continue;
-
-	if ( ( ! genJet1FromHToWW_lnu_qq) || ( ! genJet2FromHToWW_lnu_qq)) continue;
-	
-	LVGenWjj = genJet1FromHToWW_lnu_qq->p4() + genJet2FromHToWW_lnu_qq->p4();
-	
 	
 	if ((deltaR(jetAK8->p4(), LVGenWjj) < 0.3) &&
 	    (std::abs(jetAK8->pt() - LVGenWjj.pt()) < 0.5*LVGenWjj.pt()) ) {
@@ -3782,8 +3725,8 @@ int main(int argc, char* argv[])
       //int genMatchIdx_0 = 2; // 0: fakes, 1: Convs, 2: non-fakes
       //cutFlowTable.update(Form("GenMatch entries: %lu",genMatches.size()), evtWeightRecorder.get(central_or_shift_main));
       if (genMatches.size() != 1) {
-	std::cout << "analyze_hh_3l_gen: GenMatches in an event: " << genMatches.size() << "\t\t\t ERROR: Code is not ready for it ****" << std::endl;
-	throw cmsException("analyze_hh_3l_gen", __LINE__) << " GenMatches in an event: " << genMatches.size() << "\t\t\t ERROR: Code is not ready for it **** \n";
+	std::cout << "analyze_hh_1l_gen: GenMatches in an event: " << genMatches.size() << "\t\t\t ERROR: Code is not ready for it ****" << std::endl;
+	throw cmsException("analyze_hh_1l_gen", __LINE__) << " GenMatches in an event: " << genMatches.size() << "\t\t\t ERROR: Code is not ready for it **** \n";
       }
       for (const GenMatchEntry* genMatch : genMatches) {
 	//cutFlowTable.update(Form("GenMatch entry Idx %i",genMatch->getIdx()), evtWeightRecorder.get(central_or_shift_main));
@@ -4462,50 +4405,6 @@ int main(int argc, char* argv[])
 	    }
 	}
 
-
-
-
-
-
-      if (isMC) {
-	if (printLevel > 2) {
-	  std::cout << "Print Generator level particle collection after passing all selection conditions: " << std::endl;
-	  if (genLeptons.size()>0)   printCollection("genLeptons", genLeptons);
-	  if (genElectrons.size()>0) printCollection("genElectrons", genElectrons);
-	  if (genMuons.size()>0)     printCollection("genMuons", genMuons);
-	  if (genHadTaus.size()>0)   printCollection("genHadTaus", genHadTaus);
-	  if (genNeutrinos.size()>0) printCollection("genNeutrinos", genNeutrinos);
-	  if (genPhotons.size()>0)   printCollection("genPhotons", genPhotons);
-	  if (genJets.size()>0)      printCollection("genJets", genJets);
-	  if (genHiggses.size()>0)   printCollection("genHiggses", genHiggses);
-	  if (genWBosons.size()>0)   dumpGenParticles("genWBoson", genWBosons);
-	  if (genWJets.size()>0)     dumpGenParticles("genWJet", genWJets);
-
-	  std::cout << "GenMatch collection::\n";
-	  if (electronGenMatch.size()>0)  printCollection("electronGenMatch", electronGenMatch);
-	  if (muonGenMatch.size()>0)  printCollection("muonGenMatch", muonGenMatch);
-	  if (hadTauGenMatch.size()>0)  printCollection("hadTauGenMatch", hadTauGenMatch);
-	  if (jetGenMatch.size()>0)  printCollection("jetGenMatch", jetGenMatch);
-	}      
-	if (printLevel > 2) printf("\nngenHiggs: %lu, ngenW: %lu, ngenLep: %lu, ngenNu: %lu, ngenJet: %lu, ngenWjets: %lu, \t\t ngenHadTaus: %lu, \t\t genMatchIdx_0: %i  \n\n\n",
-				   genHiggses.size(),genWBosons.size(),genLeptons.size(),genNeutrinos.size(),genJets.size(),genWJets.size(),
-				   genHadTaus.size(),
-				   genMatchIdx_0);      
-      }
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
       // SS: Yet to implement this for hh->wwww
       double dihiggsVisMass_sel = -1., dihiggsMass = -1.;
       double WTojjMass = -1.;
@@ -4545,7 +4444,7 @@ int main(int argc, char* argv[])
 	  //double z = (met.p4() + selLeptons[iLepton1]->p4()).Pz();
 	  //double mT = std::sqrt(e*e - z*z);
 	  double mT = comp_MT_met(selLeptons[iLepton1], met.pt(), met.phi());
-	  if (mT < 0.) std::cout << "analyze_hh_3l_gen:: mT (MET+Lepton) < 0 \t\t *** ERROR ***" << std::endl;
+	  if (mT < 0.) std::cout << "analyze_hh_1l_gen:: mT (MET+Lepton) < 0 \t\t *** ERROR ***" << std::endl;
 	  if (mTMetLepton1 < 0.) 			 mTMetLepton1 = mT;
 	  else if (mTMetLepton2 < 0.)  mTMetLepton2 = mT;
 	}
@@ -4657,8 +4556,8 @@ int main(int argc, char* argv[])
 	  dr_los_max = dr1;
 	}	
       } else {
-	std::cout << "analyze_hh_3l_gen: Error in calculating dr_os " << std::endl;
-	throw cmsException("analyze_hh_3l_gen", __LINE__) << "Error in calculating dr_os \n";
+	std::cout << "analyze_hh_1l_gen: Error in calculating dr_os " << std::endl;
+	throw cmsException("analyze_hh_1l_gen", __LINE__) << "Error in calculating dr_os \n";
       }
 
 
@@ -4782,8 +4681,8 @@ int main(int argc, char* argv[])
       // Complain if there is a mistake in picking leptons in Approach 2
       if ((selLepton2_H_WW_ll_Approach2->p4() + selLepton1_H_WW_ll_Approach2->p4()).mass() >
 	  (selLepton2_H_WW_ll_Approach2->p4() + selLepton_H_WW_ljj_Approach2->p4()).mass() ) { // mistake in picking leptons in Approach 2
-	std::cout << "analyze_hh_3l_gen: mistake in picking leptons in Approach 2" << std::endl;
-	throw cmsException("analyze_hh_3l_gen", __LINE__) << "Error in calculating dr_os n";
+	std::cout << "analyze_hh_1l_gen: mistake in picking leptons in Approach 2" << std::endl;
+	throw cmsException("analyze_hh_1l_gen", __LINE__) << "Error in calculating dr_os n";
       }
     
       double mT_LeptonIdx1_Met_Approach2 = comp_MT_met(selLepton1_H_WW_ll_Approach2, met.pt(), met.phi());
@@ -5697,9 +5596,6 @@ int main(int argc, char* argv[])
     }
   std::cout << std::endl;
 
-  printf("knMuPassJetBtagMedium: %i, knMuPassFakeablePromptMva: %i, knMuFailFakeablePromptMva %i \t missmatch: %i\n",knMuPassJetBtagMedium,knMuPassFakeablePromptMva,knMuFailFakeablePromptMva,
-	 (knMuPassFakeablePromptMva+knMuFailFakeablePromptMva - knMuPassJetBtagMedium));
-
   //--- manually write histograms to output file
   fs.file().cd();
   //histogram_analyzedEntries->Write();
@@ -5751,7 +5647,7 @@ int main(int argc, char* argv[])
 
   delete inputTree;
 
-  clock.Show("analyze_hh_3l_gen");
+  clock.Show("analyze_hh_1l_gen");
 
   return EXIT_SUCCESS;
 }
