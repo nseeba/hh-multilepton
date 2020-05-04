@@ -2,24 +2,28 @@ import collections
 import itertools
 import copy
 
-def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_wjets = None):
+from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
+
+def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None):
 
   sum_events_hh  = copy.deepcopy(samples_era_hh['sum_events'])
   sum_events_bkg = copy.deepcopy(samples_era_bkg['sum_events'])
+  sum_events_ttbar = []
 
   del samples_era_hh['sum_events']
   del samples_era_bkg['sum_events']
-  if samples_era_wjets:
-    del samples_era_wjets['sum_events']
+  if samples_era_ttbar:
+    sum_events_ttbar = copy.deepcopy(samples_era_ttbar['sum_events'])
+    del samples_era_ttbar['sum_events']
 
-  if samples_era_wjets:
+  if samples_era_ttbar:
     samples = collections.OrderedDict(itertools.chain(
-      samples_era_bkg.items(), samples_era_hh.items(), samples_era_wjets.items()
+      samples_era_bkg.items(), samples_era_hh.items(), samples_era_ttbar.items()
     ))
   else:
     samples = collections.OrderedDict(itertools.chain(samples_era_bkg.items(), samples_era_hh.items()))
 
-  samples['sum_events'] = sum_events_hh + sum_events_bkg
+  samples['sum_events'] = sum_events_hh + sum_events_bkg + sum_events_ttbar
 
   from collections import OrderedDict as OD
 
@@ -39,7 +43,7 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_wjets = None)
 
     if sample_info["sample_category"] == "Rares":
       sample_info["sample_category"] = "Other"
-    elif sample_name.startswith('/ZZTo'):
+    elif sample_name.startswith(('/ZZTo', '/GluGluToContinToZZTo')):
       sample_info["sample_category"] = "ZZ"
     elif sample_name.startswith('/WZTo'):
       sample_info["sample_category"] = "WZ"
@@ -54,7 +58,8 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_wjets = None)
     elif sample_info["sample_category"] in [ "tHq", "tHW" ]:
       sample_info["sample_category"] = "TH"
     elif sample_name.startswith('/TTTo'):
-      sample_info["sample_category"] = "TT"
+      if sample_info["sample_category"].replace("TT_", "") not in systematics.ttbar:
+        sample_info["sample_category"] = "TT"
       sample_info["use_it"] = True
     elif sample_name.startswith('/TTJets'):
       sample_info["sample_category"] = "TT"
@@ -73,7 +78,7 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_wjets = None)
     elif sample_name.startswith('/Tau/'):
       sample_info["use_it"] = False
 
-    if samples_era_wjets and sample_name in samples_era_wjets:
+    if samples_era_ttbar and sample_name in samples_era_ttbar:
       sample_info["use_it"] = False
 
     if sample_name.startswith(('/TGJets', '/TTGJets', '/WGTo', '/ZGTo')):

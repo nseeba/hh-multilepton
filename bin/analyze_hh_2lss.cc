@@ -88,6 +88,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/XGBInterface.h" // XGBInterface 
 #include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface.h" // HHWeightInterface
 
+#include "tthAnalysis/HiggsToTauTau/interface/RecoJetCollectionSelectorAK8.h" // RecoJetSelectorAK8
 #include "hhAnalysis/multilepton/interface/RecoJetCollectionSelectorAK8_hh_Wjj.h" // RecoJetSelectorAK8_hh_Wjj
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2lss.h" // EvtHistManager_hh_2lss
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h" // EventInfo
@@ -123,6 +124,15 @@ struct HadTauHistManagerWrapper_eta
   double etaMin_;
   double etaMax_;
 };
+
+
+bool hasOverlapJets(const RecoJet *jet, std::vector<const RecoSubjetAK8*> selSubjetsAK8) {
+  bool hasOverlap = false;
+  for (size_t i=0; i < selSubjetsAK8.size(); i++) {
+    if (deltaR(jet->p4(), selSubjetsAK8[i]->p4()) < 0.3) hasOverlap = true;
+  }
+  return hasOverlap;
+}
 
 void dumpGenParticles(const std::string& label, const std::vector<GenParticle>& particles)
 {
@@ -234,7 +244,7 @@ int main(int argc, char* argv[])
   bool isMCClosure_m = histogramDir.find("mcClosure_m") != std::string::npos;
 
   std::string era_string = cfg_analyze.getParameter<std::string>("era");
-  const int era = get_era(era_string);
+  const Era era = get_era(era_string);
 
   vstring triggerNames_1e = cfg_analyze.getParameter<vstring>("triggers_1e");
   std::vector<hltPath*> triggers_1e = create_hltPaths(triggerNames_1e);
@@ -359,10 +369,10 @@ int main(int argc, char* argv[])
   Data_to_MC_CorrectionInterface_Base * dataToMCcorrectionInterface = nullptr;
   switch(era)
   {
-    case kEra_2016: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2016(cfg_dataToMCcorrectionInterface); break;
-    case kEra_2017: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2017(cfg_dataToMCcorrectionInterface); break;
-    case kEra_2018: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2018(cfg_dataToMCcorrectionInterface); break;
-    default: throw cmsException("analyze_hh_2lss", __LINE__) << "Invalid era = " << era;
+    case Era::k2016: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2016(cfg_dataToMCcorrectionInterface); break;
+    case Era::k2017: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2017(cfg_dataToMCcorrectionInterface); break;
+    case Era::k2018: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2018(cfg_dataToMCcorrectionInterface); break;
+    default: throw cmsException("analyze_hh_2lss", __LINE__) << "Invalid era = " << static_cast<int>(era);
   }
 
   std::string applyFakeRateWeights_string = cfg_analyze.getParameter<std::string>("applyFakeRateWeights");
@@ -385,9 +395,12 @@ int main(int argc, char* argv[])
   std::string branchName_electrons = cfg_analyze.getParameter<std::string>("branchName_electrons");
   std::string branchName_muons = cfg_analyze.getParameter<std::string>("branchName_muons");
   std::string branchName_hadTaus = cfg_analyze.getParameter<std::string>("branchName_hadTaus");
-  std::string branchName_jets = cfg_analyze.getParameter<std::string>("branchName_jets");
-  std::string branchName_jets_ak8 = cfg_analyze.getParameter<std::string>("branchName_jets_ak8");
-  std::string branchName_subjets_ak8 = cfg_analyze.getParameter<std::string>("branchName_subjets_ak8");
+  //std::string branchName_jets = cfg_analyze.getParameter<std::string>("branchName_jets");
+  //std::string branchName_jets_ak8 = cfg_analyze.getParameter<std::string>("branchName_jets_ak8");
+  //std::string branchName_subjets_ak8 = cfg_analyze.getParameter<std::string>("branchName_subjets_ak8");
+  std::string branchName_jets = cfg_analyze.getParameter<std::string>("branchName_jets_ak4");
+  std::string branchName_jets_ak8 = cfg_analyze.getParameter<std::string>("branchName_jets_ak8_Wjj");
+  std::string branchName_subjets_ak8 = cfg_analyze.getParameter<std::string>("branchName_subjets_ak8_Wjj");
   std::string branchName_met = cfg_analyze.getParameter<std::string>("branchName_met");
 
   std::string branchName_genLeptons = cfg_analyze.getParameter<std::string>("branchName_genLeptons");
@@ -537,11 +550,12 @@ int main(int argc, char* argv[])
   RecoJetCollectionSelectorBtagLoose jetSelectorBtagLoose(era, -1, isDEBUG);
   RecoJetCollectionSelectorBtagMedium jetSelectorBtagMedium(era, -1, isDEBUG);
 
-  RecoJetReaderAK8* jetReaderAK8 = new RecoJetReaderAK8(era, branchName_jets_ak8, branchName_subjets_ak8);
+  RecoJetReaderAK8* jetReaderAK8 = new RecoJetReaderAK8(era, isMC, branchName_jets_ak8, branchName_subjets_ak8);
   inputTree->registerReader(jetReaderAK8);
   RecoJetCollectionCleanerAK8 jetCleanerAK8_dR08(0.8, isDEBUG);
   RecoJetCollectionCleanerAK8 jetCleanerAK8_dR12(1.2, isDEBUG);
   RecoJetCollectionCleanerAK8 jetCleanerAK8_dR16(1.6, isDEBUG);
+  RecoJetCollectionSelectorAK8 jetSelectorAK8(era, -1, isDEBUG);
   RecoJetCollectionSelectorAK8_hh_Wjj jetSelectorAK8_Wjj(era, -1, isDEBUG); // Need to redefine new class RecoJetCollectionSelectorAK8_WWWW_Wjj
 
   GenParticleReader* genWBosonReader = nullptr;
@@ -1047,7 +1061,7 @@ int main(int argc, char* argv[])
 	}
 	continue;
       }
-      if ( selTrigger_1e && isTriggered_2e && era != kEra_2018 ) {
+      if ( selTrigger_1e && isTriggered_2e && era != Era::k2018 ) {
         if ( run_lumi_eventSelector ) {
           std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
           std::cout << " (selTrigger_1e = " << selTrigger_1e
@@ -1188,6 +1202,11 @@ int main(int argc, char* argv[])
     const std::vector<const RecoJet*> cleanedJetsVBF = jetCleaner(jet_ptrs, fakeableLeptons);
     const std::vector<const RecoJet*> selJetsVBF = jetSelectorVBF(cleanedJetsVBF, isHigherPt);
 
+
+    
+
+
+    
     if(isDEBUG || run_lumi_eventSelector)
     {
       printCollection("uncleanedJets", jet_ptrs);
@@ -1331,6 +1350,7 @@ int main(int argc, char* argv[])
     Particle::LorentzVector mhtP4 = compMHT(fakeableLeptonsFull, fakeableHadTaus, selJets);
     double met_LD = compMEt_LD(metP4, mhtP4);
 
+    /*
     Particle::LorentzVector selJetP4;
     double mass_jj_W = 0;
     for ( std::vector<const RecoJet*>::const_iterator selJet1_W = selJets.begin();
@@ -1353,7 +1373,7 @@ int main(int argc, char* argv[])
 	  }
 	}
       }
-    }
+      }*/
 
     double HT = compHT(fakeableLeptons, {}, selJets);
     double STMET = compSTMEt(fakeableLeptons, {}, selJets, met.p4());
@@ -1388,16 +1408,8 @@ int main(int argc, char* argv[])
     cutFlowTable.update("<= 2 tight leptons", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("<= 2 tight leptons", evtWeightRecorder.get(central_or_shift_main));
 
-    std::vector<RecoJetAK8> jets_ak8 = jetReaderAK8->read();
-    std::vector<const RecoJetAK8*> jet_ptrs_ak8 = convert_to_ptrs(jets_ak8);
+
     
-    if ( isDEBUG || run_lumi_eventSelector ) {
-      printCollection("uncleaned AK8 jets", jet_ptrs_ak8);
-      //printWjj(jet_ptrs_ak8, jetSelectorAK8_Wjj, genWBosons, genWJets);
-    }
-
-    const RecoJetAK8* selJetAK8_Wjj = nullptr;
-
     // require that trigger paths match event category (with event category based on fakeableLeptons)
     if ( !((fakeableElectrons.size() >= 2 &&                              (selTrigger_2e    || selTrigger_1e                  )) ||
 	   (fakeableElectrons.size() >= 1 && fakeableMuons.size() >= 1 && (selTrigger_1e1mu || selTrigger_1mu || selTrigger_1e)) ||
@@ -1592,6 +1604,126 @@ int main(int argc, char* argv[])
     cutFlowTable.update(Form("sel lepton-pair %s charge", leptonChargeSelection_string.data()), evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("sel lepton-pair OS/SS charge", evtWeightRecorder.get(central_or_shift_main));
 
+
+
+
+
+
+    std::vector<RecoJetAK8> jets_ak8 = jetReaderAK8->read();
+    std::vector<const RecoJetAK8*> jet_ptrs_ak8 = convert_to_ptrs(jets_ak8);
+    std::vector<const RecoJetAK8*> selJetsAK8 = jetSelectorAK8(jet_ptrs_ak8, isHigherPt);
+    jetSelectorAK8_Wjj.getSelector().set_leptons({selLeptons[0], selLeptons[1]});
+    std::vector<const RecoJetAK8*> selJetsAK8_Wjj = jetSelectorAK8_Wjj(jet_ptrs_ak8, isHigherPt);    
+    std::vector<const RecoJetAK8*> selJetsAK8_Wjj_selected;
+    const RecoJetAK8* selJetAK8_Wjj = nullptr;
+
+    bool isEventBoosted     = false;
+    bool isEventSemiboosted = false;
+    bool isEventResolved    = false;
+    Particle::LorentzVector selJetP4;
+    double mass_jj_W = 0;
+     
+    if ( isDEBUG || run_lumi_eventSelector ) {
+      printCollection("uncleaned AK8 jets", jet_ptrs_ak8);
+      //printWjj(jet_ptrs_ak8, jetSelectorAK8_Wjj, genWBosons, genWJets);
+    }
+
+
+    // fill selJetsAK8_Wjj_selected
+    for (size_t i=0; i<selJetsAK8_Wjj.size(); i++) {
+      if (selJetsAK8_Wjj[i] && selJetsAK8_Wjj[i]->subJet1() && selJetsAK8_Wjj[i]->subJet2()) {
+	selJetsAK8_Wjj_selected.push_back(selJetsAK8_Wjj[i]);
+      }      
+    }
+
+    
+    
+    if (selJetsAK8_Wjj_selected.size() >= 2) { // boosted category
+      selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() + selJetsAK8_Wjj_selected[0]->subJet2()->p4() +
+		  selJetsAK8_Wjj_selected[1]->subJet1()->p4() + selJetsAK8_Wjj_selected[1]->subJet2()->p4());
+      isEventBoosted = true;
+    } else if (selJetsAK8_Wjj_selected.size() == 1 && selJets.size() >= 1) { // semiboosted category
+      std::vector<const RecoSubjetAK8*> selSubjetsAK8 = {selJetsAK8_Wjj_selected[0]->subJet1(), selJetsAK8_Wjj_selected[0]->subJet2()};
+      double dm_min = 9999.;
+      size_t idxWJet1 = 9999;
+      size_t idxWJet2 = 9999;
+      for (size_t iJet1=0; iJet1 < selJets.size(); iJet1++ ) {
+	const RecoJet *jet1 = selJets[iJet1];
+	if (hasOverlapJets(jet1, selSubjetsAK8)) continue;
+	
+	for (size_t iJet2=iJet1+1; iJet2 < selJets.size(); iJet2++ ) {
+	  const RecoJet *jet2 = selJets[iJet2];
+	  if (hasOverlapJets(jet2, selSubjetsAK8)) continue;
+	
+	  double dm = std::fabs((jet1->p4() + jet2->p4()).mass() - w_mass);
+	  if (dm < dm_min) {
+	    dm_min = dm;
+	    idxWJet1 = iJet1;
+	    idxWJet2 = iJet2;
+	  }	  
+	}
+      }
+      if (idxWJet1 != 9999 && idxWJet2 != 9999) { // for 2 AK4 jets case
+	selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() + selJetsAK8_Wjj_selected[0]->subJet2()->p4() +
+		    selJets[idxWJet1]->p4() + selJets[idxWJet2]->p4());
+	isEventSemiboosted = true;
+      } else if ( !hasOverlapJets(selJets[0], selSubjetsAK8)) { // for 1 AK4 jet case
+	selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() + selJetsAK8_Wjj_selected[0]->subJet2()->p4() +
+		    selJets[0]->p4());
+	isEventSemiboosted = true;
+      }
+    } else if (selJetsAK8_Wjj_selected.size() == 0 && selJets.size() >= 1) { // resolved category
+      mass_jj_W = 0;
+      for ( std::vector<const RecoJet*>::const_iterator selJet1_W = selJets.begin();
+	    selJet1_W != selJets.end(); ++selJet1_W ) {
+	for ( std::vector<const RecoJet*>::const_iterator selJet2_W = selJet1_W + 1;
+	      selJet2_W != selJets.end(); ++selJet2_W ) {
+	  double mass_jj = ((*selJet1_W)->p4() + (*selJet2_W)->p4()).mass();
+	  if ( std::fabs(mass_jj - w_mass) < std::fabs(mass_jj_W - w_mass) || mass_jj_W==0) {
+	    mass_jj_W = mass_jj;
+	    selJetP4 = (*selJet1_W)->p4() + (*selJet2_W)->p4();
+	    int counter = 0;
+	    for ( std::vector<const RecoJet*>::const_iterator selJet3_4 = selJets.begin();
+		  selJet3_4 != selJets.end(); ++selJet3_4 ) {
+	      if ((*selJet3_4)!=(*selJet1_W) && (*selJet3_4)!=(*selJet2_W)){
+		counter++;
+		if (counter <= 2){
+		  selJetP4 += (*selJet3_4)->p4();
+		}
+	      }
+	    }
+	  }
+	}
+      }
+      isEventResolved = true;
+    }
+
+
+    if (isEventBoosted) {
+      cutFlowTable.update("event category criteria passed: boosted", evtWeightRecorder.get(central_or_shift_main));
+      cutFlowHistManager->fillHistograms("event category criteria passed: boosted", evtWeightRecorder.get(central_or_shift_main));
+    }
+    if (isEventSemiboosted) {
+      cutFlowTable.update("event category criteria passed: semiboosted", evtWeightRecorder.get(central_or_shift_main));
+      cutFlowHistManager->fillHistograms("event category criteria passed: semiboosted", evtWeightRecorder.get(central_or_shift_main));
+    }
+    if (isEventResolved) {
+      cutFlowTable.update("event category criteria passed: resolved", evtWeightRecorder.get(central_or_shift_main));
+      cutFlowHistManager->fillHistograms("event category criteria passed: resolved", evtWeightRecorder.get(central_or_shift_main));
+    }
+
+
+    if ( !(isEventBoosted || isEventSemiboosted || isEventResolved)) continue;
+    
+    cutFlowTable.update("event category criteria passed: boosted / semiboosted / resolved", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms("event category criteria passed: boosted / semiboosted / resolved", evtWeightRecorder.get(central_or_shift_main));
+
+
+
+
+
+
+    
     const bool failsZbosonMassVeto = isfailsZbosonMassVeto(preselLeptonsFull);
     if ( failsZbosonMassVeto ) {
       if ( run_lumi_eventSelector ) {

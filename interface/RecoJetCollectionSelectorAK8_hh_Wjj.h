@@ -2,7 +2,8 @@
 #define hhAnalysis_multilepton_RecoJetCollectionSelectorAK8_hh_Wjj_h
 
 #include "tthAnalysis/HiggsToTauTau/interface/ParticleCollectionSelector.h" // ParticleCollectionSelector
-#include "tthAnalysis/HiggsToTauTau/interface/RecoJetAK8.h" // RecoJetAK8
+#include "tthAnalysis/HiggsToTauTau/interface/RecoJetAK8.h"                 // RecoJetAK8
+#include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h"       // Era
 
 #include <string> // std::string
 
@@ -11,7 +12,7 @@ class RecoLepton;
 class RecoJetSelectorAK8_hh_Wjj
 {
 public:
-  explicit RecoJetSelectorAK8_hh_Wjj(int era,
+  explicit RecoJetSelectorAK8_hh_Wjj(Era era,
                                      int index = -1,
                                      bool debug = false);
   ~RecoJetSelectorAK8_hh_Wjj() {}

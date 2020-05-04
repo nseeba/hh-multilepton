@@ -1,14 +1,14 @@
-#include "hhAnalysis/multilepton/interface/RecoJetCollectionSelectorAK8_hh_Wjj.h" // RecoJetSelectorAK8_hh_Wjj
+#include "hhAnalysis/multilepton/interface/RecoJetCollectionSelectorAK8_hh_Wjj.h"
 
-#include "tthAnalysis/HiggsToTauTau/interface/RecoLepton.h" // RecoLepton
-#include "tthAnalysis/HiggsToTauTau/interface/cmsException.h" // cmsException()
-#include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // kEra_*
+#include "tthAnalysis/HiggsToTauTau/interface/RecoLepton.h"           // RecoLepton
+#include "tthAnalysis/HiggsToTauTau/interface/cmsException.h"         // cmsException()
+#include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // Era::k*
 
 #include "DataFormats/Math/interface/deltaR.h" // deltaR()
 
 #include <TString.h> // Form()
 
-RecoJetSelectorAK8_hh_Wjj::RecoJetSelectorAK8_hh_Wjj(int era, int index, bool debug)
+RecoJetSelectorAK8_hh_Wjj::RecoJetSelectorAK8_hh_Wjj(Era era, int index, bool debug)
   : min_pt_(100.)
   , max_absEta_(2.4)
   , min_msoftdrop_(-1.e+3)
@@ -23,9 +23,9 @@ RecoJetSelectorAK8_hh_Wjj::RecoJetSelectorAK8_hh_Wjj(int era, int index, bool de
 {
   switch(era)
   {
-    case kEra_2016: min_jetId_ = 1; break; // 1 means loose
-    case kEra_2018:
-    case kEra_2017: min_jetId_ = 2; break; // 2 means tight (loose jet ID deprecated since 94x)
+    case Era::k2016: min_jetId_ = 1; break; // 1 means loose
+    case Era::k2018:
+    case Era::k2017: min_jetId_ = 2; break; // 2 means tight (loose jet ID deprecated since 94x)
     default: throw cmsException(this) << "Implement me!";
   }
 }
@@ -289,26 +289,37 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet,
     if(debug_)
     {
       std::cout << "FAILS subjet selection criteria\njet: " << jet;
-      returnType = Form("FAILS subjet selection criteria");
+      returnType = "FAILS subjet selection criteria";
 
-      if(! (deltaR(jet.subJet1()->p4(), lepton->p4()) > 0.1  &&
-            deltaR(jet.subJet2()->p4(), lepton->p4()) > 0.1 ))
+      if(! jet.subJet1())
       {
-        returnType += Form("  dR(subjet, lep) < 0.1");
+        returnType += "  first subjet missing";
       }
-      if(! ((jet.subJet1()->pt()      >= min_subJet1_pt_    &&
-             jet.subJet2()->pt()      >= min_subJet2_pt_     ) ||
-            (jet.subJet1()->pt()      >= min_subJet2_pt_    &&
-             jet.subJet2()->pt()      >= min_subJet1_pt_     ) ))
+      else if(! jet.subJet2())
       {
-        returnType += Form("  pT < trsh");
+        returnType += "  second subjet missing";
       }
-      if(! ((jet.subJet1()->absEta()  <= max_subJet1_absEta_ &&
-             jet.subJet2()->absEta()  <= max_subJet2_absEta_  ) ||
-            (jet.subJet1()->absEta()  <= max_subJet2_absEta_ &&
-             jet.subJet2()->absEta()  <= max_subJet1_absEta_  ) ))
+      else
       {
-        returnType += Form("  |eta| > trsh");
+        if(! (deltaR(jet.subJet1()->p4(), lepton->p4()) > 0.1  &&
+              deltaR(jet.subJet2()->p4(), lepton->p4()) > 0.1 ))
+        {
+          returnType += "  dR(subjet, lep) < 0.1";
+        }
+        if(! ((jet.subJet1()->pt()      >= min_subJet1_pt_    &&
+               jet.subJet2()->pt()      >= min_subJet2_pt_     ) ||
+              (jet.subJet1()->pt()      >= min_subJet2_pt_    &&
+               jet.subJet2()->pt()      >= min_subJet1_pt_     ) ))
+        {
+          returnType += "  pT < trsh";
+        }
+        if(! ((jet.subJet1()->absEta()  <= max_subJet1_absEta_ &&
+               jet.subJet2()->absEta()  <= max_subJet2_absEta_  ) ||
+              (jet.subJet1()->absEta()  <= max_subJet2_absEta_ &&
+               jet.subJet2()->absEta()  <= max_subJet1_absEta_  ) ))
+        {
+          returnType += "  |eta| > trsh";
+        }
       }
     }
     return false;
