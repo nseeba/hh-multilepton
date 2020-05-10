@@ -1,6 +1,6 @@
 from collections import OrderedDict as OD
 
-# file generated at 2019-11-14 14:03:31 with the following command:
+# file generated at 2020-05-10 14:09:27 with the following command:
 # find_samples.py -V -i ../../tthAnalysis/NanoAOD/test/datasets/txt/datasets_hh_multilepton_mc_2017_RunIIFall17MiniAODv2.txt -m python/samples/metaDict_2017_hh.py -s ../../tthAnalysis/NanoAOD/test/datasets/txt/sum_datasets_hh_multilepton_2017_RunIIFall17MiniAODv2.txt -c python/samples/sampleLocations_2017_nanoAOD_hh_multilepton.txt
 
 meta_dictionary = OD()
@@ -1575,6 +1575,58 @@ meta_dictionary["/GluGluToHHTo4Tau_node_12_13TeV-madgraph_correctedcfg/RunIIFall
   ("comment",               "100.0%; status: VALID; size: 20.18GB; nevents: 396.00k; release: 9_4_7; last modified: 2018-10-05 06:34:17"),
 ])
 
+meta_dictionary["/GluGluToHHTo4Tau_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
+  ("crab_string",           "2017v2_2020May05_GluGluToHHTo4Tau_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("sample_category",       "signal_ggf_nonresonant_cHHH0_hh_tttt"),
+  ("process_name_specific", "signal_ggf_nonresonant_cHHH0_hh_4t"),
+  ("nof_db_events",         993800),
+  ("nof_db_files",          55),
+  ("fsize_db",              48437908822),
+  ("xsection",              0.003934),
+  ("use_it",                True),
+  ("genWeight",             True),
+  ("comment",               "100.0%; status: VALID; size: 48.44GB; nevents: 993.80k; release: 9_4_7; last modified: 2020-02-28 00:16:50"),
+])
+
+meta_dictionary["/GluGluToHHTo4Tau_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
+  ("crab_string",           "2017v2_2020May05_GluGluToHHTo4Tau_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("sample_category",       "signal_ggf_nonresonant_cHHH1_hh_tttt"),
+  ("process_name_specific", "signal_ggf_nonresonant_cHHH1_hh_4t"),
+  ("nof_db_events",         973200),
+  ("nof_db_files",          55),
+  ("fsize_db",              47737447211),
+  ("xsection",              0.003934),
+  ("use_it",                True),
+  ("genWeight",             True),
+  ("comment",               "100.0%; status: VALID; size: 47.74GB; nevents: 973.20k; release: 9_4_7; last modified: 2020-03-13 05:36:24"),
+])
+
+meta_dictionary["/GluGluToHHTo4Tau_node_cHHH2p45_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
+  ("crab_string",           "2017v2_2020May05_GluGluToHHTo4Tau_node_cHHH2p45_TuneCP5_PSWeights_13TeV-powheg-pythia8__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v"),
+  ("sample_category",       "signal_ggf_nonresonant_cHHH2p45_hh_tttt"),
+  ("process_name_specific", "signal_ggf_nonresonant_cHHH2p45_hh_4t"),
+  ("nof_db_events",         1000000),
+  ("nof_db_files",          62),
+  ("fsize_db",              49299783371),
+  ("xsection",              0.003934),
+  ("use_it",                True),
+  ("genWeight",             True),
+  ("comment",               "100.0%; status: VALID; size: 49.30GB; nevents: 1.00M; release: 9_4_7; last modified: 2020-02-29 14:07:30"),
+])
+
+meta_dictionary["/GluGluToHHTo4Tau_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
+  ("crab_string",           "2017v2_2020May05_GluGluToHHTo4Tau_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("sample_category",       "signal_ggf_nonresonant_cHHH5_hh_tttt"),
+  ("process_name_specific", "signal_ggf_nonresonant_cHHH5_hh_4t"),
+  ("nof_db_events",         991200),
+  ("nof_db_files",          58),
+  ("fsize_db",              47501791315),
+  ("xsection",              0.003934),
+  ("use_it",                True),
+  ("genWeight",             True),
+  ("comment",               "100.0%; status: VALID; size: 47.50GB; nevents: 991.20k; release: 9_4_7; last modified: 2020-03-13 18:52:20"),
+])
+
 meta_dictionary["/GluGluToHHTo2V2Tau_node_SM_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
   ("crab_string",           "2017v2_2019Oct04_GluGluToHHTo2V2Tau_node_SM_13TeV-madgraph_correctedcfg__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
@@ -1729,6 +1781,58 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_12_13TeV-madgraph_correctedcfg/RunIIFa
   ("use_it",                True),
   ("genWeight",             True),
   ("comment",               "100.0%; status: VALID; size: 21.05GB; nevents: 399.99k; release: 9_4_7; last modified: 2019-03-16 11:40:55"),
+])
+
+meta_dictionary["/GluGluToHHTo2V2Tau_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
+  ("crab_string",           "2017v2_2020May05_GluGluToHHTo2V2Tau_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("sample_category",       "signal_ggf_nonresonant_cHHH0_hh_wwtt"),
+  ("process_name_specific", "signal_ggf_nonresonant_cHHH0_hh_2v2t"),
+  ("nof_db_events",         399995),
+  ("nof_db_files",          38),
+  ("fsize_db",              20212438535),
+  ("xsection",              0.030092),
+  ("use_it",                True),
+  ("genWeight",             True),
+  ("comment",               "100.0%; status: VALID; size: 20.21GB; nevents: 400.00k; release: 9_4_7; last modified: 2020-03-20 16:52:46"),
+])
+
+meta_dictionary["/GluGluToHHTo2V2Tau_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
+  ("crab_string",           "2017v2_2020May05_GluGluToHHTo2V2Tau_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("sample_category",       "signal_ggf_nonresonant_cHHH1_hh_wwtt"),
+  ("process_name_specific", "signal_ggf_nonresonant_cHHH1_hh_2v2t"),
+  ("nof_db_events",         399997),
+  ("nof_db_files",          22),
+  ("fsize_db",              20236176844),
+  ("xsection",              0.030092),
+  ("use_it",                True),
+  ("genWeight",             True),
+  ("comment",               "100.0%; status: VALID; size: 20.24GB; nevents: 400.00k; release: 9_4_7; last modified: 2020-02-22 23:01:17"),
+])
+
+meta_dictionary["/GluGluToHHTo2V2Tau_node_cHHH2p45_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
+  ("crab_string",           "2017v2_2020May05_GluGluToHHTo2V2Tau_node_cHHH2p45_TuneCP5_PSWeights_13TeV-powheg-pythia8__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14"),
+  ("sample_category",       "signal_ggf_nonresonant_cHHH2p45_hh_wwtt"),
+  ("process_name_specific", "signal_ggf_nonresonant_cHHH2p45_hh_2v2t"),
+  ("nof_db_events",         390697),
+  ("nof_db_files",          38),
+  ("fsize_db",              20005894046),
+  ("xsection",              0.030092),
+  ("use_it",                True),
+  ("genWeight",             True),
+  ("comment",               "100.0%; status: VALID; size: 20.01GB; nevents: 390.70k; release: 9_4_7; last modified: 2020-03-06 22:01:24"),
+])
+
+meta_dictionary["/GluGluToHHTo2V2Tau_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
+  ("crab_string",           "2017v2_2020May05_GluGluToHHTo2V2Tau_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("sample_category",       "signal_ggf_nonresonant_cHHH5_hh_wwtt"),
+  ("process_name_specific", "signal_ggf_nonresonant_cHHH5_hh_2v2t"),
+  ("nof_db_events",         395591),
+  ("nof_db_files",          24),
+  ("fsize_db",              19318646300),
+  ("xsection",              0.030092),
+  ("use_it",                True),
+  ("genWeight",             True),
+  ("comment",               "100.0%; status: VALID; size: 19.32GB; nevents: 395.59k; release: 9_4_7; last modified: 2020-02-26 09:59:41"),
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_SM_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
@@ -1887,123 +1991,187 @@ meta_dictionary["/GluGluToHHTo4V_node_12_13TeV-madgraph_correctedcfg/RunIIFall17
   ("comment",               "100.0%; status: VALID; size: 21.09GB; nevents: 394.00k; release: 9_4_7; last modified: 2019-03-12 21:44:20"),
 ])
 
+meta_dictionary["/GluGluToHHTo4V_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
+  ("crab_string",           "2017v2_2020May05_GluGluToHHTo4V_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("sample_category",       "signal_ggf_nonresonant_cHHH0_hh_wwww"),
+  ("process_name_specific", "signal_ggf_nonresonant_cHHH0_hh_4v"),
+  ("nof_db_events",         999992),
+  ("nof_db_files",          74),
+  ("fsize_db",              51563406070),
+  ("xsection",              0.057547),
+  ("use_it",                True),
+  ("genWeight",             True),
+  ("comment",               "100.0%; status: VALID; size: 51.56GB; nevents: 999.99k; release: 9_4_7; last modified: 2020-02-29 05:39:40"),
+])
+
+meta_dictionary["/GluGluToHHTo4V_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
+  ("crab_string",           "2017v2_2020May05_GluGluToHHTo4V_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("sample_category",       "signal_ggf_nonresonant_cHHH1_hh_wwww"),
+  ("process_name_specific", "signal_ggf_nonresonant_cHHH1_hh_4v"),
+  ("nof_db_events",         963693),
+  ("nof_db_files",          53),
+  ("fsize_db",              50159794192),
+  ("xsection",              0.057547),
+  ("use_it",                True),
+  ("genWeight",             True),
+  ("comment",               "100.0%; status: VALID; size: 50.16GB; nevents: 963.69k; release: 9_4_7; last modified: 2020-02-26 10:03:49"),
+])
+
+meta_dictionary["/GluGluToHHTo4V_node_cHHH2p45_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
+  ("crab_string",           "2017v2_2020May05_GluGluToHHTo4V_node_cHHH2p45_TuneCP5_PSWeights_13TeV-powheg-pythia8__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("sample_category",       "signal_ggf_nonresonant_cHHH2p45_hh_wwww"),
+  ("process_name_specific", "signal_ggf_nonresonant_cHHH2p45_hh_4v"),
+  ("nof_db_events",         999996),
+  ("nof_db_files",          63),
+  ("fsize_db",              52111900186),
+  ("xsection",              0.057547),
+  ("use_it",                True),
+  ("genWeight",             True),
+  ("comment",               "100.0%; status: VALID; size: 52.11GB; nevents: 1000.00k; release: 9_4_7; last modified: 2020-03-14 13:51:34"),
+])
+
+meta_dictionary["/GluGluToHHTo4V_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
+  ("crab_string",           "2017v2_2020May05_GluGluToHHTo4V_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1"),
+  ("sample_category",       "signal_ggf_nonresonant_cHHH5_hh_wwww"),
+  ("process_name_specific", "signal_ggf_nonresonant_cHHH5_hh_4v"),
+  ("nof_db_events",         999995),
+  ("nof_db_files",          42),
+  ("fsize_db",              49489862385),
+  ("xsection",              0.057547),
+  ("use_it",                True),
+  ("genWeight",             True),
+  ("comment",               "100.0%; status: VALID; size: 49.49GB; nevents: 1000.00k; release: 9_4_7; last modified: 2020-03-27 16:13:07"),
+])
+
 
 # event statistics by sample category:
-# signal_ggf_spin0_250_hh_tttt:         400.00k
-# signal_ggf_spin0_260_hh_tttt:         400.00k
-# signal_ggf_spin0_270_hh_tttt:         385.00k
-# signal_ggf_spin0_280_hh_tttt:         400.00k
-# signal_ggf_spin0_300_hh_tttt:         300.00k
-# signal_ggf_spin0_350_hh_tttt:         284.00k
-# signal_ggf_spin0_400_hh_tttt:         300.00k
-# signal_ggf_spin0_450_hh_tttt:         300.00k
-# signal_ggf_spin0_500_hh_tttt:         200.00k
-# signal_ggf_spin0_550_hh_tttt:         200.00k
-# signal_ggf_spin0_600_hh_tttt:         200.00k
-# signal_ggf_spin0_650_hh_tttt:         200.00k
-# signal_ggf_spin0_700_hh_tttt:         200.00k
-# signal_ggf_spin0_750_hh_tttt:         200.00k
-# signal_ggf_spin0_800_hh_tttt:         200.00k
-# signal_ggf_spin0_850_hh_tttt:         192.00k
-# signal_ggf_spin0_900_hh_tttt:         100.00k
-# signal_ggf_spin0_1000_hh_tttt:        100.00k
-# signal_ggf_spin2_250_hh_tttt:         391.00k
-# signal_ggf_spin2_260_hh_tttt:         386.00k
-# signal_ggf_spin2_270_hh_tttt:         380.00k
-# signal_ggf_spin2_280_hh_tttt:         400.00k
-# signal_ggf_spin2_300_hh_tttt:         400.00k
-# signal_ggf_spin2_320_hh_tttt:         298.00k
-# signal_ggf_spin2_350_hh_tttt:         384.00k
-# signal_ggf_spin2_400_hh_tttt:         300.00k
-# signal_ggf_spin2_450_hh_tttt:         280.00k
-# signal_ggf_spin2_500_hh_tttt:         284.00k
-# signal_ggf_spin2_550_hh_tttt:         200.00k
-# signal_ggf_spin2_600_hh_tttt:         198.00k
-# signal_ggf_spin2_650_hh_tttt:         200.00k
-# signal_ggf_spin2_700_hh_tttt:         189.00k
-# signal_ggf_spin2_750_hh_tttt:         196.00k
-# signal_ggf_spin2_800_hh_tttt:         200.00k
-# signal_ggf_spin2_850_hh_tttt:         194.00k
-# signal_ggf_spin2_900_hh_tttt:         100.00k
-# signal_ggf_spin2_1000_hh_tttt:        100.00k
-# signal_ggf_spin0_250_hh_wwtt:         400.00k
-# signal_ggf_spin0_260_hh_wwtt:         399.99k
-# signal_ggf_spin0_270_hh_wwtt:         400.00k
-# signal_ggf_spin0_280_hh_wwtt:         380.00k
-# signal_ggf_spin0_300_hh_wwtt:         299.99k
-# signal_ggf_spin0_320_hh_wwtt:         300.00k
-# signal_ggf_spin0_350_hh_wwtt:         299.99k
-# signal_ggf_spin0_400_hh_wwtt:         286.99k
-# signal_ggf_spin0_450_hh_wwtt:         291.99k
-# signal_ggf_spin0_500_hh_wwtt:         270.00k
-# signal_ggf_spin0_550_hh_wwtt:         300.00k
-# signal_ggf_spin0_600_hh_wwtt:         196.00k
-# signal_ggf_spin0_650_hh_wwtt:         200.00k
-# signal_ggf_spin0_700_hh_wwtt:         192.00k
-# signal_ggf_spin0_750_hh_wwtt:         200.00k
-# signal_ggf_spin0_800_hh_wwtt:         200.00k
-# signal_ggf_spin0_850_hh_wwtt:         192.00k
-# signal_ggf_spin0_900_hh_wwtt:         200.00k
-# signal_ggf_spin0_1000_hh_wwtt:        100.00k
-# signal_ggf_spin2_250_hh_wwtt:         395.00k
-# signal_ggf_spin2_260_hh_wwtt:         396.00k
-# signal_ggf_spin2_270_hh_wwtt:         400.00k
-# signal_ggf_spin2_280_hh_wwtt:         395.00k
-# signal_ggf_spin2_300_hh_wwtt:         300.00k
-# signal_ggf_spin2_320_hh_wwtt:         284.99k
-# signal_ggf_spin2_350_hh_wwtt:         300.00k
-# signal_ggf_spin2_400_hh_wwtt:         290.00k
-# signal_ggf_spin2_450_hh_wwtt:         279.99k
-# signal_ggf_spin2_500_hh_wwtt:         200.00k
-# signal_ggf_spin2_550_hh_wwtt:         200.00k
-# signal_ggf_spin2_600_hh_wwtt:         200.00k
-# signal_ggf_spin2_650_hh_wwtt:         196.00k
-# signal_ggf_spin2_700_hh_wwtt:         196.00k
-# signal_ggf_spin2_750_hh_wwtt:         200.00k
-# signal_ggf_spin2_800_hh_wwtt:         200.00k
-# signal_ggf_spin2_850_hh_wwtt:         192.00k
-# signal_ggf_spin2_900_hh_wwtt:         100.00k
-# signal_ggf_spin2_1000_hh_wwtt:        100.00k
-# signal_ggf_spin0_250_hh_wwww:         400.00k
-# signal_ggf_spin0_260_hh_wwww:         400.00k
-# signal_ggf_spin0_270_hh_wwww:         386.00k
-# signal_ggf_spin0_280_hh_wwww:         389.00k
-# signal_ggf_spin0_300_hh_wwww:         300.00k
-# signal_ggf_spin0_320_hh_wwww:         300.00k
-# signal_ggf_spin0_350_hh_wwww:         292.00k
-# signal_ggf_spin0_400_hh_wwww:         300.00k
-# signal_ggf_spin0_450_hh_wwww:         292.00k
-# signal_ggf_spin0_500_hh_wwww:         300.00k
-# signal_ggf_spin0_550_hh_wwww:         300.00k
-# signal_ggf_spin0_600_hh_wwww:         196.00k
-# signal_ggf_spin0_650_hh_wwww:         200.00k
-# signal_ggf_spin0_700_hh_wwww:         200.00k
-# signal_ggf_spin0_750_hh_wwww:         192.00k
-# signal_ggf_spin0_800_hh_wwww:         200.00k
-# signal_ggf_spin0_850_hh_wwww:         200.00k
-# signal_ggf_spin0_900_hh_wwww:         200.00k
-# signal_ggf_spin0_1000_hh_wwww:        100.00k
-# signal_ggf_spin2_250_hh_wwww:         400.00k
-# signal_ggf_spin2_260_hh_wwww:         400.00k
-# signal_ggf_spin2_270_hh_wwww:         400.00k
-# signal_ggf_spin2_280_hh_wwww:         392.00k
-# signal_ggf_spin2_300_hh_wwww:         384.00k
-# signal_ggf_spin2_320_hh_wwww:         300.00k
-# signal_ggf_spin2_350_hh_wwww:         300.00k
-# signal_ggf_spin2_400_hh_wwww:         300.00k
-# signal_ggf_spin2_450_hh_wwww:         288.00k
-# signal_ggf_spin2_500_hh_wwww:         300.00k
-# signal_ggf_spin2_550_hh_wwww:         300.00k
-# signal_ggf_spin2_600_hh_wwww:         192.00k
-# signal_ggf_spin2_650_hh_wwww:         200.00k
-# signal_ggf_spin2_700_hh_wwww:         192.00k
-# signal_ggf_spin2_750_hh_wwww:         200.00k
-# signal_ggf_spin2_800_hh_wwww:         200.00k
-# signal_ggf_spin2_850_hh_wwww:         200.00k
-# signal_ggf_spin2_900_hh_wwww:         100.00k
-# signal_ggf_spin2_1000_hh_wwww:        100.00k
-# signal_vbf_nonresonant_1_1_1_hh_tttt: 384.00k
-# signal_ggf_nonresonant_hh_tttt:       2.36M
-# signal_ggf_nonresonant_hh_wwtt:       4.72M
-# signal_ggf_nonresonant_hh_wwww:       4.73M
+# signal_ggf_spin0_250_hh_tttt:            400.00k
+# signal_ggf_spin0_260_hh_tttt:            400.00k
+# signal_ggf_spin0_270_hh_tttt:            385.00k
+# signal_ggf_spin0_280_hh_tttt:            400.00k
+# signal_ggf_spin0_300_hh_tttt:            300.00k
+# signal_ggf_spin0_350_hh_tttt:            284.00k
+# signal_ggf_spin0_400_hh_tttt:            300.00k
+# signal_ggf_spin0_450_hh_tttt:            300.00k
+# signal_ggf_spin0_500_hh_tttt:            200.00k
+# signal_ggf_spin0_550_hh_tttt:            200.00k
+# signal_ggf_spin0_600_hh_tttt:            200.00k
+# signal_ggf_spin0_650_hh_tttt:            200.00k
+# signal_ggf_spin0_700_hh_tttt:            200.00k
+# signal_ggf_spin0_750_hh_tttt:            200.00k
+# signal_ggf_spin0_800_hh_tttt:            200.00k
+# signal_ggf_spin0_850_hh_tttt:            192.00k
+# signal_ggf_spin0_900_hh_tttt:            100.00k
+# signal_ggf_spin0_1000_hh_tttt:           100.00k
+# signal_ggf_spin2_250_hh_tttt:            391.00k
+# signal_ggf_spin2_260_hh_tttt:            386.00k
+# signal_ggf_spin2_270_hh_tttt:            380.00k
+# signal_ggf_spin2_280_hh_tttt:            400.00k
+# signal_ggf_spin2_300_hh_tttt:            400.00k
+# signal_ggf_spin2_320_hh_tttt:            298.00k
+# signal_ggf_spin2_350_hh_tttt:            384.00k
+# signal_ggf_spin2_400_hh_tttt:            300.00k
+# signal_ggf_spin2_450_hh_tttt:            280.00k
+# signal_ggf_spin2_500_hh_tttt:            284.00k
+# signal_ggf_spin2_550_hh_tttt:            200.00k
+# signal_ggf_spin2_600_hh_tttt:            198.00k
+# signal_ggf_spin2_650_hh_tttt:            200.00k
+# signal_ggf_spin2_700_hh_tttt:            189.00k
+# signal_ggf_spin2_750_hh_tttt:            196.00k
+# signal_ggf_spin2_800_hh_tttt:            200.00k
+# signal_ggf_spin2_850_hh_tttt:            194.00k
+# signal_ggf_spin2_900_hh_tttt:            100.00k
+# signal_ggf_spin2_1000_hh_tttt:           100.00k
+# signal_ggf_spin0_250_hh_wwtt:            400.00k
+# signal_ggf_spin0_260_hh_wwtt:            399.99k
+# signal_ggf_spin0_270_hh_wwtt:            400.00k
+# signal_ggf_spin0_280_hh_wwtt:            380.00k
+# signal_ggf_spin0_300_hh_wwtt:            299.99k
+# signal_ggf_spin0_320_hh_wwtt:            300.00k
+# signal_ggf_spin0_350_hh_wwtt:            299.99k
+# signal_ggf_spin0_400_hh_wwtt:            286.99k
+# signal_ggf_spin0_450_hh_wwtt:            291.99k
+# signal_ggf_spin0_500_hh_wwtt:            270.00k
+# signal_ggf_spin0_550_hh_wwtt:            300.00k
+# signal_ggf_spin0_600_hh_wwtt:            196.00k
+# signal_ggf_spin0_650_hh_wwtt:            200.00k
+# signal_ggf_spin0_700_hh_wwtt:            192.00k
+# signal_ggf_spin0_750_hh_wwtt:            200.00k
+# signal_ggf_spin0_800_hh_wwtt:            200.00k
+# signal_ggf_spin0_850_hh_wwtt:            192.00k
+# signal_ggf_spin0_900_hh_wwtt:            200.00k
+# signal_ggf_spin0_1000_hh_wwtt:           100.00k
+# signal_ggf_spin2_250_hh_wwtt:            395.00k
+# signal_ggf_spin2_260_hh_wwtt:            396.00k
+# signal_ggf_spin2_270_hh_wwtt:            400.00k
+# signal_ggf_spin2_280_hh_wwtt:            395.00k
+# signal_ggf_spin2_300_hh_wwtt:            300.00k
+# signal_ggf_spin2_320_hh_wwtt:            284.99k
+# signal_ggf_spin2_350_hh_wwtt:            300.00k
+# signal_ggf_spin2_400_hh_wwtt:            290.00k
+# signal_ggf_spin2_450_hh_wwtt:            279.99k
+# signal_ggf_spin2_500_hh_wwtt:            200.00k
+# signal_ggf_spin2_550_hh_wwtt:            200.00k
+# signal_ggf_spin2_600_hh_wwtt:            200.00k
+# signal_ggf_spin2_650_hh_wwtt:            196.00k
+# signal_ggf_spin2_700_hh_wwtt:            196.00k
+# signal_ggf_spin2_750_hh_wwtt:            200.00k
+# signal_ggf_spin2_800_hh_wwtt:            200.00k
+# signal_ggf_spin2_850_hh_wwtt:            192.00k
+# signal_ggf_spin2_900_hh_wwtt:            100.00k
+# signal_ggf_spin2_1000_hh_wwtt:           100.00k
+# signal_ggf_spin0_250_hh_wwww:            400.00k
+# signal_ggf_spin0_260_hh_wwww:            400.00k
+# signal_ggf_spin0_270_hh_wwww:            386.00k
+# signal_ggf_spin0_280_hh_wwww:            389.00k
+# signal_ggf_spin0_300_hh_wwww:            300.00k
+# signal_ggf_spin0_320_hh_wwww:            300.00k
+# signal_ggf_spin0_350_hh_wwww:            292.00k
+# signal_ggf_spin0_400_hh_wwww:            300.00k
+# signal_ggf_spin0_450_hh_wwww:            292.00k
+# signal_ggf_spin0_500_hh_wwww:            300.00k
+# signal_ggf_spin0_550_hh_wwww:            300.00k
+# signal_ggf_spin0_600_hh_wwww:            196.00k
+# signal_ggf_spin0_650_hh_wwww:            200.00k
+# signal_ggf_spin0_700_hh_wwww:            200.00k
+# signal_ggf_spin0_750_hh_wwww:            192.00k
+# signal_ggf_spin0_800_hh_wwww:            200.00k
+# signal_ggf_spin0_850_hh_wwww:            200.00k
+# signal_ggf_spin0_900_hh_wwww:            200.00k
+# signal_ggf_spin0_1000_hh_wwww:           100.00k
+# signal_ggf_spin2_250_hh_wwww:            400.00k
+# signal_ggf_spin2_260_hh_wwww:            400.00k
+# signal_ggf_spin2_270_hh_wwww:            400.00k
+# signal_ggf_spin2_280_hh_wwww:            392.00k
+# signal_ggf_spin2_300_hh_wwww:            384.00k
+# signal_ggf_spin2_320_hh_wwww:            300.00k
+# signal_ggf_spin2_350_hh_wwww:            300.00k
+# signal_ggf_spin2_400_hh_wwww:            300.00k
+# signal_ggf_spin2_450_hh_wwww:            288.00k
+# signal_ggf_spin2_500_hh_wwww:            300.00k
+# signal_ggf_spin2_550_hh_wwww:            300.00k
+# signal_ggf_spin2_600_hh_wwww:            192.00k
+# signal_ggf_spin2_650_hh_wwww:            200.00k
+# signal_ggf_spin2_700_hh_wwww:            192.00k
+# signal_ggf_spin2_750_hh_wwww:            200.00k
+# signal_ggf_spin2_800_hh_wwww:            200.00k
+# signal_ggf_spin2_850_hh_wwww:            200.00k
+# signal_ggf_spin2_900_hh_wwww:            100.00k
+# signal_ggf_spin2_1000_hh_wwww:           100.00k
+# signal_vbf_nonresonant_1_1_1_hh_tttt:    384.00k
+# signal_ggf_nonresonant_hh_tttt:          2.36M
+# signal_ggf_nonresonant_cHHH0_hh_tttt:    993.80k
+# signal_ggf_nonresonant_cHHH1_hh_tttt:    973.20k
+# signal_ggf_nonresonant_cHHH2p45_hh_tttt: 1.00M
+# signal_ggf_nonresonant_cHHH5_hh_tttt:    991.20k
+# signal_ggf_nonresonant_hh_wwtt:          4.72M
+# signal_ggf_nonresonant_cHHH0_hh_wwtt:    400.00k
+# signal_ggf_nonresonant_cHHH1_hh_wwtt:    400.00k
+# signal_ggf_nonresonant_cHHH2p45_hh_wwtt: 390.70k
+# signal_ggf_nonresonant_cHHH5_hh_wwtt:    395.59k
+# signal_ggf_nonresonant_hh_wwww:          4.73M
+# signal_ggf_nonresonant_cHHH0_hh_wwww:    999.99k
+# signal_ggf_nonresonant_cHHH1_hh_wwww:    963.69k
+# signal_ggf_nonresonant_cHHH2p45_hh_wwww: 1000.00k
+# signal_ggf_nonresonant_cHHH5_hh_wwww:    1000.00k
 
