@@ -492,7 +492,7 @@ meta_dictionary["/VBFToRadionToHHTo4T_M-600_narrow_TuneCP5_PSWeights_13TeV-madgr
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "50.0%; status: VALID; size: 15.18GB; nevents: 200.00k; release: 10_2_5; last modified: 2019-10-13 15:45:51"),
+  ("comment",               "100.0%; status: VALID; size: 15.18GB; nevents: 200.00k; release: 10_2_5; last modified: 2019-10-13 15:45:51"),
 ])
 
 meta_dictionary["/VBFToRadionToHHTo4T_M-650_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] =  OD([
@@ -1727,7 +1727,7 @@ meta_dictionary["/VBFToRadionToHHTo2V2Tau_M-350_narrow_TuneCP5_PSWeights_13TeV-m
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "83.33%; status: VALID; size: 21.46GB; nevents: 300.00k; release: 10_2_5; last modified: 2019-10-13 06:59:48"),
+  ("comment",               "100.0%; status: VALID; size: 21.46GB; nevents: 300.00k; release: 10_2_5; last modified: 2019-10-13 06:59:48"),
 ])
 
 meta_dictionary["/VBFToRadionToHHTo2V2Tau_M-400_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] =  OD([
@@ -1922,7 +1922,7 @@ meta_dictionary["/VBFToRadionToHHTo2V2Tau_M-1750_narrow_TuneCP5_PSWeights_13TeV-
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "90.0%; status: VALID; size: 7.66GB; nevents: 99.00k; release: 10_2_5; last modified: 2020-02-04 05:35:12"),
+  ("comment",               "100.0%; status: VALID; size: 7.66GB; nevents: 99.00k; release: 10_2_5; last modified: 2020-02-04 05:35:12"),
 ])
 
 meta_dictionary["/VBFToRadionToHHTo2V2Tau_M-2000_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM"] =  OD([

@@ -1700,13 +1700,13 @@ samples_2018["/VBFToRadionToHHTo4T_M-600_narrow_TuneCP5_PSWeights_13TeV-madgraph
   ("type",                            "mc"),
   ("sample_category",                 "signal_vbf_spin0_600_hh_tttt"),
   ("process_name_specific",           "signal_vbf_spin0_600_hh_4t"),
-  ("nof_files",                       2),
+  ("nof_files",                       4),
   ("nof_db_files",                    6),
   ("nof_events",                      {
   }),
-  ("nof_tree_events",                 100000),
+  ("nof_tree_events",                 200000),
   ("nof_db_events",                   200000),
-  ("fsize_local",                     328957766), # 328.96MB, avg file size 164.48MB
+  ("fsize_local",                     657360598), # 657.36MB, avg file size 164.34MB
   ("fsize_db",                        15178299980), # 15.18GB, avg file size 2.53GB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -6165,13 +6165,13 @@ samples_2018["/VBFToRadionToHHTo2V2Tau_M-350_narrow_TuneCP5_PSWeights_13TeV-madg
   ("type",                            "mc"),
   ("sample_category",                 "signal_vbf_spin0_350_hh_wwtt"),
   ("process_name_specific",           "signal_vbf_spin0_350_hh_2v2t"),
-  ("nof_files",                       5),
+  ("nof_files",                       6),
   ("nof_db_files",                    6),
   ("nof_events",                      {
   }),
-  ("nof_tree_events",                 249997),
+  ("nof_tree_events",                 299996),
   ("nof_db_events",                   299996),
-  ("fsize_local",                     740942554), # 740.94MB, avg file size 148.19MB
+  ("fsize_local",                     888957000), # 888.96MB, avg file size 148.16MB
   ("fsize_db",                        21462869404), # 21.46GB, avg file size 3.58GB
   ("use_it",                          True),
   ("xsection",                        0.030092),
