@@ -1,7 +1,7 @@
 from collections import OrderedDict as OD
 
-# file generated at 2020-04-15 14:16:25 with the following command:
-# create_dictionary.py -m python/samples/metaDict_2017_hh.py -p /hdfs/local/karl/ttHNtupleProduction/2017/2020Apr12_woPresel_nom_hh/ntuples -N samples_2017 -E 2017 -o python/samples -g hhAnalyzeSamples_2017_hh.py -M
+# file generated at 2020-05-10 23:28:51 with the following command:
+# create_dictionary.py -m python/samples/metaDict_2017_hh.py -p python/samples/sampleLocations_2017_hh_multilepton.txt -N samples_2017 -E 2017 -o python/samples -g hhAnalyzeSamples_2017_hh.py -M
 
 samples_2017 = OD()
 samples_2017["/GluGluToRadionToHHTo4Tau_M-250_narrow_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
@@ -6086,6 +6086,226 @@ samples_2017["/GluGluToHHTo4Tau_node_12_13TeV-madgraph_correctedcfg/RunIIFall17M
   ]),
 ])
 
+samples_2017["/GluGluToHHTo4Tau_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_ggf_nonresonant_cHHH0_hh_tttt"),
+  ("process_name_specific",           "signal_ggf_nonresonant_cHHH0_hh_4t"),
+  ("nof_files",                       4),
+  ("nof_db_files",                    55),
+  ("nof_events",                      {
+    'Count'                                                                          : [       993800, ],
+    'CountWeighted'                                                                  : [       935851,       935669,       935817, ],
+    'CountWeightedLHEWeightScale'                                                    : [      1082691,      1063663,      1050261,       957200,       935851,       918645,       848701,       826741,       808004, ],
+    'CountWeightedLHEEnvelope'                                                       : [      1120989,       789225, ],
+    'CountWeightedPSWeight'                                                          : [       935768,       935778,      1290379,       935888,       935258,       616218, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [        63677,        63686,        87839,        63696,        63678,        41943, ],
+    'CountWeightedL1PrefireNom'                                                      : [       911437,       911261,       911450, ],
+    'CountWeightedL1Prefire'                                                         : [       911437,       905448,       917280, ],
+    'CountWeightedLHEWeightScaleL1PrefireNom'                                        : [      1054093,      1035798,      1022950,       932019,       911437,       894870,       826437,       805249,       787167, ],
+    'CountWeightedLHEEnvelopeL1PrefireNom'                                           : [      1091408,       768879, ],
+    'CountWeightedPSWeightL1PrefireNom'                                              : [       911473,       911225,      1256467,       911342,       911090,       600414, ],
+    'CountWeightedPSWeightOriginalXWGTUPL1PrefireNom'                                : [        62007,        61999,        85509,        62009,        62016,        40856, ],
+  }),
+  ("nof_tree_events",                 993800),
+  ("nof_db_events",                   993800),
+  ("fsize_local",                     3943086597), # 3.94GB, avg file size 985.77MB
+  ("fsize_db",                        48437908822), # 48.44GB, avg file size 880.69MB
+  ("use_it",                          True),
+  ("xsection",                        0.003934),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         True),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHA IDs 306000 - 306102 -> NNPDF31_nnlo_hessian_pdfas PDF set, expecting 103 weights (counted 103 weights)"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020May10_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_cHHH0_hh_4t"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
+samples_2017["/GluGluToHHTo4Tau_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_ggf_nonresonant_cHHH1_hh_tttt"),
+  ("process_name_specific",           "signal_ggf_nonresonant_cHHH1_hh_4t"),
+  ("nof_files",                       4),
+  ("nof_db_files",                    55),
+  ("nof_events",                      {
+    'Count'                                                                          : [       973200, ],
+    'CountWeighted'                                                                  : [       872136,       872118,       872067, ],
+    'CountWeightedLHEWeightScale'                                                    : [       992977,       977089,       966616,       892237,       872084,       856363,       800845,       778974,       760653, ],
+    'CountWeightedLHEEnvelope'                                                       : [      1035593,       737506, ],
+    'CountWeightedPSWeight'                                                          : [       872236,       872399,      1204905,       872058,       871816,       572707, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [        29118,        29117,        40213,        29117,        29123,        19142, ],
+    'CountWeightedL1PrefireNom'                                                      : [       848529,       848506,       848480, ],
+    'CountWeightedL1Prefire'                                                         : [       848529,       842776,       854144, ],
+    'CountWeightedLHEWeightScaleL1PrefireNom'                                        : [       965739,       950499,       940503,       867879,       848485,       833352,       779049,       757960,       740293, ],
+    'CountWeightedLHEEnvelopeL1PrefireNom'                                           : [      1007228,       717762, ],
+    'CountWeightedPSWeightL1PrefireNom'                                              : [       848728,       848623,      1172049,       848309,       848462,       557450, ],
+    'CountWeightedPSWeightOriginalXWGTUPL1PrefireNom'                                : [        28330,        28320,        39112,        28320,        28339,        18630, ],
+  }),
+  ("nof_tree_events",                 973200),
+  ("nof_db_events",                   973200),
+  ("fsize_local",                     3956154436), # 3.96GB, avg file size 989.04MB
+  ("fsize_db",                        47737447211), # 47.74GB, avg file size 867.95MB
+  ("use_it",                          True),
+  ("xsection",                        0.003934),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         True),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHA IDs 306000 - 306102 -> NNPDF31_nnlo_hessian_pdfas PDF set, expecting 103 weights (counted 103 weights)"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020May10_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_cHHH1_hh_4t"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
+samples_2017["/GluGluToHHTo4Tau_node_cHHH2p45_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_ggf_nonresonant_cHHH2p45_hh_tttt"),
+  ("process_name_specific",           "signal_ggf_nonresonant_cHHH2p45_hh_4t"),
+  ("nof_files",                       4),
+  ("nof_db_files",                    62),
+  ("nof_events",                      {
+    'Count'                                                                          : [      1000000, ],
+    'CountWeighted'                                                                  : [       862699,       862784,       862588, ],
+    'CountWeightedLHEWeightScale'                                                    : [       984111,       970391,       961616,       880359,       862660,       848881,       787948,       768525,       752163, ],
+    'CountWeightedLHEEnvelope'                                                       : [      1036235,       720362, ],
+    'CountWeightedPSWeight'                                                          : [       862675,       862634,      1192856,       862719,       862023,       565254, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [        13174,        13170,        18213,        13176,        13176,         8642, ],
+    'CountWeightedL1PrefireNom'                                                      : [       839326,       839328,       839303, ],
+    'CountWeightedL1Prefire'                                                         : [       839326,       833632,       844891, ],
+    'CountWeightedLHEWeightScaleL1PrefireNom'                                        : [       957020,       943929,       935618,       856272,       839292,       826081,       766478,       747796,       732056, ],
+    'CountWeightedLHEEnvelopeL1PrefireNom'                                           : [      1007764,       701107, ],
+    'CountWeightedPSWeightL1PrefireNom'                                              : [       839434,       839077,      1160201,       839179,       838911,       550264, ],
+    'CountWeightedPSWeightOriginalXWGTUPL1PrefireNom'                                : [        12817,        12809,        17713,        12815,        12821,         8412, ],
+  }),
+  ("nof_tree_events",                 1000000),
+  ("nof_db_events",                   1000000),
+  ("fsize_local",                     4097331725), # 4.10GB, avg file size 1.02GB
+  ("fsize_db",                        49299783371), # 49.30GB, avg file size 795.16MB
+  ("use_it",                          True),
+  ("xsection",                        0.003934),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         True),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHA IDs 306000 - 306102 -> NNPDF31_nnlo_hessian_pdfas PDF set, expecting 103 weights (counted 103 weights)"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020May10_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_cHHH2p45_hh_4t"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
+samples_2017["/GluGluToHHTo4Tau_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_ggf_nonresonant_cHHH5_hh_tttt"),
+  ("process_name_specific",           "signal_ggf_nonresonant_cHHH5_hh_4t"),
+  ("nof_files",                       4),
+  ("nof_db_files",                    58),
+  ("nof_events",                      {
+    'Count'                                                                          : [       991200, ],
+    'CountWeighted'                                                                  : [       975626,       975693,       975702, ],
+    'CountWeightedLHEWeightScale'                                                    : [      1168608,      1146590,      1129634,       995072,       975590,       959165,       856874,       839680,       824117, ],
+    'CountWeightedLHEEnvelope'                                                       : [      1204297,       807343, ],
+    'CountWeightedPSWeight'                                                          : [       975827,       976011,      1343630,       975431,       974448,       643645, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [        79542,        79552,       109577,        79503,        79483,        52458, ],
+    'CountWeightedL1PrefireNom'                                                      : [       952048,       952064,       952126, ],
+    'CountWeightedL1Prefire'                                                         : [       952048,       946138,       957784, ],
+    'CountWeightedLHEWeightScaleL1PrefireNom'                                        : [      1139822,      1118645,      1102359,       970753,       952013,       936189,       836058,       819501,       804495, ],
+    'CountWeightedLHEEnvelopeL1PrefireNom'                                           : [      1174711,       788094, ],
+    'CountWeightedPSWeightL1PrefireNom'                                              : [       952387,       952222,      1310755,       951653,       951156,       628464, ],
+    'CountWeightedPSWeightOriginalXWGTUPL1PrefireNom'                                : [        77621,        77604,       106884,        77555,        77574,        51214, ],
+  }),
+  ("nof_tree_events",                 991200),
+  ("nof_db_events",                   991200),
+  ("fsize_local",                     3732773160), # 3.73GB, avg file size 933.19MB
+  ("fsize_db",                        47501791315), # 47.50GB, avg file size 819.00MB
+  ("use_it",                          True),
+  ("xsection",                        0.003934),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         True),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHA IDs 306000 - 306102 -> NNPDF31_nnlo_hessian_pdfas PDF set, expecting 103 weights (counted 103 weights)"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020May10_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_cHHH5_hh_4t"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
 samples_2017["/GluGluToHHTo2V2Tau_node_SM_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_wwtt"),
@@ -6698,6 +6918,226 @@ samples_2017["/GluGluToHHTo2V2Tau_node_12_13TeV-madgraph_correctedcfg/RunIIFall1
   ]),
 ])
 
+samples_2017["/GluGluToHHTo2V2Tau_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_ggf_nonresonant_cHHH0_hh_wwtt"),
+  ("process_name_specific",           "signal_ggf_nonresonant_cHHH0_hh_2v2t"),
+  ("nof_files",                       2),
+  ("nof_db_files",                    38),
+  ("nof_events",                      {
+    'Count'                                                                          : [       399995, ],
+    'CountWeighted'                                                                  : [       376452,       376409,       376504, ],
+    'CountWeightedLHEWeightScale'                                                    : [       435351,       427787,       422484,       384984,       376452,       369623,       341435,       332649,       325151, ],
+    'CountWeightedLHEEnvelope'                                                       : [       450943,       317427, ],
+    'CountWeightedPSWeight'                                                          : [       376490,       376554,       532995,       376405,       375922,       235506, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [        25619,        25615,        36307,        25612,        25627,        16025, ],
+    'CountWeightedL1PrefireNom'                                                      : [       367376,       367315,       367446, ],
+    'CountWeightedL1Prefire'                                                         : [       367376,       365109,       369571, ],
+    'CountWeightedLHEWeightScaleL1PrefireNom'                                        : [       424694,       417409,       412317,       375609,       367376,       360781,       333152,       324656,       317406, ],
+    'CountWeightedLHEEnvelopeL1PrefireNom'                                           : [       439929,       309859, ],
+    'CountWeightedPSWeightL1PrefireNom'                                              : [       367444,       367376,       520025,       367279,       366961,       229930, ],
+    'CountWeightedPSWeightOriginalXWGTUPL1PrefireNom'                                : [        24997,        24985,        35414,        24984,        25008,        15641, ],
+  }),
+  ("nof_tree_events",                 399995),
+  ("nof_db_events",                   399995),
+  ("fsize_local",                     1667330465), # 1.67GB, avg file size 833.67MB
+  ("fsize_db",                        20212438535), # 20.21GB, avg file size 531.91MB
+  ("use_it",                          True),
+  ("xsection",                        0.030092),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         True),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHA IDs 306000 - 306102 -> NNPDF31_nnlo_hessian_pdfas PDF set, expecting 103 weights (counted 103 weights)"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020May10_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_cHHH0_hh_2v2t"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
+samples_2017["/GluGluToHHTo2V2Tau_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_ggf_nonresonant_cHHH1_hh_wwtt"),
+  ("process_name_specific",           "signal_ggf_nonresonant_cHHH1_hh_2v2t"),
+  ("nof_files",                       2),
+  ("nof_db_files",                    22),
+  ("nof_events",                      {
+    'Count'                                                                          : [       399997, ],
+    'CountWeighted'                                                                  : [       358665,       358695,       358737, ],
+    'CountWeightedLHEWeightScale'                                                    : [       408533,       401965,       397630,       366975,       358661,       352198,       329315,       320316,       312770, ],
+    'CountWeightedLHEEnvelope'                                                       : [       426078,       303236, ],
+    'CountWeightedPSWeight'                                                          : [       358746,       358715,       508267,       358657,       358134,       223911, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [        11984,        11990,        16967,        11984,        11961,         7497, ],
+    'CountWeightedL1PrefireNom'                                                      : [       349604,       349603,       349670, ],
+    'CountWeightedL1Prefire'                                                         : [       349604,       347366,       351782, ],
+    'CountWeightedLHEWeightScaleL1PrefireNom'                                        : [       398049,       391743,       387601,       357607,       349598,       343365,       320937,       312245,       304957, ],
+    'CountWeightedLHEEnvelopeL1PrefireNom'                                           : [       415174,       295650, ],
+    'CountWeightedPSWeightL1PrefireNom'                                              : [       349713,       349545,       495339,       349535,       349209,       218341, ],
+    'CountWeightedPSWeightOriginalXWGTUPL1PrefireNom'                                : [        11677,        11679,        16529,        11674,        11657,         7306, ],
+  }),
+  ("nof_tree_events",                 399997),
+  ("nof_db_events",                   399997),
+  ("fsize_local",                     1716564419), # 1.72GB, avg file size 858.28MB
+  ("fsize_db",                        20236176844), # 20.24GB, avg file size 919.83MB
+  ("use_it",                          True),
+  ("xsection",                        0.030092),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         True),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHA IDs 306000 - 306102 -> NNPDF31_nnlo_hessian_pdfas PDF set, expecting 103 weights (counted 103 weights)"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020May10_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_cHHH1_hh_2v2t"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
+samples_2017["/GluGluToHHTo2V2Tau_node_cHHH2p45_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_ggf_nonresonant_cHHH2p45_hh_wwtt"),
+  ("process_name_specific",           "signal_ggf_nonresonant_cHHH2p45_hh_2v2t"),
+  ("nof_files",                       2),
+  ("nof_db_files",                    38),
+  ("nof_events",                      {
+    'Count'                                                                          : [       390697, ],
+    'CountWeighted'                                                                  : [       337054,       337107,       336998, ],
+    'CountWeightedLHEWeightScale'                                                    : [       384407,       379149,       375816,       343880,       337047,       331703,       307743,       300217,       293880, ],
+    'CountWeightedLHEEnvelope'                                                       : [       404933,       281346, ],
+    'CountWeightedPSWeight'                                                          : [       337108,       336895,       479288,       336976,       337462,       209569, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [         5132,         5128,         7300,         5130,         5143,         3192, ],
+    'CountWeightedL1PrefireNom'                                                      : [       328435,       328475,       328399, ],
+    'CountWeightedL1Prefire'                                                         : [       328435,       326310,       330498, ],
+    'CountWeightedLHEWeightScaleL1PrefireNom'                                        : [       374404,       369380,       366219,       334997,       328427,       323301,       299831,       292582,       286477, ],
+    'CountWeightedLHEEnvelopeL1PrefireNom'                                           : [       394434,       274242, ],
+    'CountWeightedPSWeightL1PrefireNom'                                              : [       328543,       328239,       466891,       328290,       328875,       204318, ],
+    'CountWeightedPSWeightOriginalXWGTUPL1PrefireNom'                                : [         5001,         4996,         7111,         4997,         5011,         3111, ],
+  }),
+  ("nof_tree_events",                 390697),
+  ("nof_db_events",                   390697),
+  ("fsize_local",                     1680122513), # 1.68GB, avg file size 840.06MB
+  ("fsize_db",                        20005894046), # 20.01GB, avg file size 526.47MB
+  ("use_it",                          True),
+  ("xsection",                        0.030092),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         True),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHA IDs 306000 - 306102 -> NNPDF31_nnlo_hessian_pdfas PDF set, expecting 103 weights (counted 103 weights)"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020May10_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_cHHH2p45_hh_2v2t"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
+samples_2017["/GluGluToHHTo2V2Tau_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_ggf_nonresonant_cHHH5_hh_wwtt"),
+  ("process_name_specific",           "signal_ggf_nonresonant_cHHH5_hh_2v2t"),
+  ("nof_files",                       2),
+  ("nof_db_files",                    24),
+  ("nof_events",                      {
+    'Count'                                                                          : [       395591, ],
+    'CountWeighted'                                                                  : [       389418,       389419,       389478, ],
+    'CountWeightedLHEWeightScale'                                                    : [       466549,       457674,       450840,       397226,       389407,       382784,       342052,       335139,       328889, ],
+    'CountWeightedLHEEnvelope'                                                       : [       480704,       322267, ],
+    'CountWeightedPSWeight'                                                          : [       389343,       389360,       550977,       389532,       389033,       243977, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [        31731,        31736,        44931,        31746,        31728,        19882, ],
+    'CountWeightedL1PrefireNom'                                                      : [       380892,       380871,       380965, ],
+    'CountWeightedL1Prefire'                                                         : [       380892,       378712,       382986, ],
+    'CountWeightedLHEWeightScaleL1PrefireNom'                                        : [       456127,       447569,       440985,       388432,       380881,       374489,       334530,       327852,       321808, ],
+    'CountWeightedLHEEnvelopeL1PrefireNom'                                           : [       470001,       315317, ],
+    'CountWeightedPSWeightL1PrefireNom'                                              : [       380880,       380751,       538841,       380931,       380687,       238754, ],
+    'CountWeightedPSWeightOriginalXWGTUPL1PrefireNom'                                : [        31037,        31030,        43934,        31042,        31042,        19454, ],
+  }),
+  ("nof_tree_events",                 395591),
+  ("nof_db_events",                   395591),
+  ("fsize_local",                     1537744284), # 1.54GB, avg file size 768.87MB
+  ("fsize_db",                        19318646300), # 19.32GB, avg file size 804.94MB
+  ("use_it",                          True),
+  ("xsection",                        0.030092),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         True),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHA IDs 306000 - 306102 -> NNPDF31_nnlo_hessian_pdfas PDF set, expecting 103 weights (counted 103 weights)"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020May10_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_cHHH5_hh_2v2t"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
 samples_2017["/GluGluToHHTo4V_node_SM_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_wwww"),
@@ -7291,6 +7731,226 @@ samples_2017["/GluGluToHHTo4V_node_12_13TeV-madgraph_correctedcfg/RunIIFall17Min
     [
       OD([
         ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Apr12_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_12_hh_4v"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
+samples_2017["/GluGluToHHTo4V_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_ggf_nonresonant_cHHH0_hh_wwww"),
+  ("process_name_specific",           "signal_ggf_nonresonant_cHHH0_hh_4v"),
+  ("nof_files",                       4),
+  ("nof_db_files",                    74),
+  ("nof_events",                      {
+    'Count'                                                                          : [       999992, ],
+    'CountWeighted'                                                                  : [       941119,       941134,       941175, ],
+    'CountWeightedLHEWeightScale'                                                    : [      1088489,      1069434,      1056038,       962564,       941119,       923902,       853666,       831616,       812804, ],
+    'CountWeightedLHEEnvelope'                                                       : [      1127315,       793624, ],
+    'CountWeightedPSWeight'                                                          : [       941174,       940441,      1363793,       941065,       940417,       561378, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [        64077,        64047,        92943,        64075,        64089,        38212, ],
+    'CountWeightedL1PrefireNom'                                                      : [       920508,       920496,       920557, ],
+    'CountWeightedL1Prefire'                                                         : [       920508,       915249,       925548, ],
+    'CountWeightedLHEWeightScaleL1PrefireNom'                                        : [      1064301,      1045886,      1032974,       941277,       920508,       903838,       834848,       813468,       795223, ],
+    'CountWeightedLHEEnvelopeL1PrefireNom'                                           : [      1102313,       776451, ],
+    'CountWeightedPSWeightL1PrefireNom'                                              : [       920657,       919604,      1333802,       920330,       920236,       549321, ],
+    'CountWeightedPSWeightOriginalXWGTUPL1PrefireNom'                                : [        62662,        62610,        90873,        62645,        62696,        37380, ],
+  }),
+  ("nof_tree_events",                 999992),
+  ("nof_db_events",                   999992),
+  ("fsize_local",                     4273382154), # 4.27GB, avg file size 1.07GB
+  ("fsize_db",                        51563406070), # 51.56GB, avg file size 696.80MB
+  ("use_it",                          True),
+  ("xsection",                        0.057547),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         True),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHA IDs 306000 - 306102 -> NNPDF31_nnlo_hessian_pdfas PDF set, expecting 103 weights (counted 103 weights)"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020May10_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_cHHH0_hh_4v"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
+samples_2017["/GluGluToHHTo4V_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_ggf_nonresonant_cHHH1_hh_wwww"),
+  ("process_name_specific",           "signal_ggf_nonresonant_cHHH1_hh_4v"),
+  ("nof_files",                       4),
+  ("nof_db_files",                    53),
+  ("nof_events",                      {
+    'Count'                                                                          : [       963693, ],
+    'CountWeighted'                                                                  : [       863450,       863367,       863425, ],
+    'CountWeightedLHEWeightScale'                                                    : [       982850,       967204,       956900,       883250,       863398,       847807,       792835,       771214,       753100, ],
+    'CountWeightedLHEEnvelope'                                                       : [      1025266,       729958, ],
+    'CountWeightedPSWeight'                                                          : [       863096,       863103,      1252438,       863811,       862238,       513989, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [        28788,        28779,        41835,        28808,        28835,        17146, ],
+    'CountWeightedL1PrefireNom'                                                      : [       843205,       843107,       843250, ],
+    'CountWeightedL1Prefire'                                                         : [       843205,       838113,       848108, ],
+    'CountWeightedLHEWeightScaleL1PrefireNom'                                        : [       959494,       944426,       934552,       862365,       843161,       828120,       774151,       753220,       735684, ],
+    'CountWeightedLHEEnvelopeL1PrefireNom'                                           : [      1000952,       713069, ],
+    'CountWeightedPSWeightL1PrefireNom'                                              : [       842989,       842616,      1222964,       843444,       842471,       502190, ],
+    'CountWeightedPSWeightOriginalXWGTUPL1PrefireNom'                                : [        28110,        28089,        40838,        28120,        28165,        16748, ],
+  }),
+  ("nof_tree_events",                 963693),
+  ("nof_db_events",                   963693),
+  ("fsize_local",                     4252379242), # 4.25GB, avg file size 1.06GB
+  ("fsize_db",                        50159794192), # 50.16GB, avg file size 946.41MB
+  ("use_it",                          True),
+  ("xsection",                        0.057547),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         True),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHA IDs 306000 - 306102 -> NNPDF31_nnlo_hessian_pdfas PDF set, expecting 103 weights (counted 103 weights)"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020May10_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_cHHH1_hh_4v"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
+samples_2017["/GluGluToHHTo4V_node_cHHH2p45_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_ggf_nonresonant_cHHH2p45_hh_wwww"),
+  ("process_name_specific",           "signal_ggf_nonresonant_cHHH2p45_hh_4v"),
+  ("nof_files",                       4),
+  ("nof_db_files",                    63),
+  ("nof_events",                      {
+    'Count'                                                                          : [       999996, ],
+    'CountWeighted'                                                                  : [       861864,       861982,       861826, ],
+    'CountWeightedLHEWeightScale'                                                    : [       982961,       969437,       960814,       879381,       861860,       848131,       787038,       767739,       751484, ],
+    'CountWeightedLHEEnvelope'                                                       : [      1035202,       719599, ],
+    'CountWeightedPSWeight'                                                          : [       861759,       861962,      1251386,       862003,       859598,       511508, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [        13135,        13140,        19084,        13136,        13112,         7797, ],
+    'CountWeightedL1PrefireNom'                                                      : [       841423,       841515,       841413, ],
+    'CountWeightedL1Prefire'                                                         : [       841423,       836310,       846345, ],
+    'CountWeightedLHEWeightScaleL1PrefireNom'                                        : [       959272,       946310,       938104,       858304,       841411,       828213,       768245,       749613,       733917, ],
+    'CountWeightedLHEEnvelopeL1PrefireNom'                                           : [      1010337,       702750, ],
+    'CountWeightedPSWeightL1PrefireNom'                                              : [       841473,       841378,      1221414,       841382,       839388,       499639, ],
+    'CountWeightedPSWeightOriginalXWGTUPL1PrefireNom'                                : [        12820,        12820,        18620,        12816,        12800,         7613, ],
+  }),
+  ("nof_tree_events",                 999996),
+  ("nof_db_events",                   999996),
+  ("fsize_local",                     4383868589), # 4.38GB, avg file size 1.10GB
+  ("fsize_db",                        52111900186), # 52.11GB, avg file size 827.17MB
+  ("use_it",                          True),
+  ("xsection",                        0.057547),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         True),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHA IDs 306000 - 306102 -> NNPDF31_nnlo_hessian_pdfas PDF set, expecting 103 weights (counted 103 weights)"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020May10_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_cHHH2p45_hh_4v"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
+samples_2017["/GluGluToHHTo4V_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_ggf_nonresonant_cHHH5_hh_wwww"),
+  ("process_name_specific",           "signal_ggf_nonresonant_cHHH5_hh_4v"),
+  ("nof_files",                       4),
+  ("nof_db_files",                    42),
+  ("nof_events",                      {
+    'Count'                                                                          : [       999995, ],
+    'CountWeighted'                                                                  : [       984276,       984304,       984293, ],
+    'CountWeightedLHEWeightScale'                                                    : [      1179209,      1156816,      1139581,      1004012,       984227,       967553,       864513,       847068,       831297, ],
+    'CountWeightedLHEEnvelope'                                                       : [      1215121,       814477, ],
+    'CountWeightedPSWeight'                                                          : [       984252,       984553,      1423337,       984320,       980600,       587952, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [        80228,        80243,       116176,        80231,        80091,        47921, ],
+    'CountWeightedL1PrefireNom'                                                      : [       964973,       964956,       965030, ],
+    'CountWeightedL1Prefire'                                                         : [       964973,       959941,       969748, ],
+    'CountWeightedLHEWeightScaleL1PrefireNom'                                        : [      1155523,      1133871,      1117228,       984076,       964933,       948786,       847497,       830601,       815309, ],
+    'CountWeightedLHEEnvelopeL1PrefireNom'                                           : [      1190813,       798779, ],
+    'CountWeightedPSWeightL1PrefireNom'                                              : [       965100,       965005,      1395136,       964824,       961752,       576759, ],
+    'CountWeightedPSWeightOriginalXWGTUPL1PrefireNom'                                : [        78659,        78642,       113864,        78635,        78544,        47004, ],
+  }),
+  ("nof_tree_events",                 999995),
+  ("nof_db_events",                   999995),
+  ("fsize_local",                     3927066273), # 3.93GB, avg file size 981.77MB
+  ("fsize_db",                        49489862385), # 49.49GB, avg file size 1.18GB
+  ("use_it",                          True),
+  ("xsection",                        0.057547),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         True),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHA IDs 306000 - 306102 -> NNPDF31_nnlo_hessian_pdfas PDF set, expecting 103 weights (counted 103 weights)"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020May10_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_cHHH5_hh_4v"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
