@@ -6468,7 +6468,7 @@ samples_2018["/VBFToRadionToHHTo2V2Tau_M-650_narrow_TuneCP5_PSWeights_13TeV-madg
       OD([
         ("path",      "/hdfs/cms/store/user/kaehatah/2018_2020May05/VBFToRadionToHHTo2V2Tau_M-650_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8/2018_2020May05_VBFToRadionToHHTo2V2Tau_M-650_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/200505_214145"),
         ("selection", "*"),
-        ("blacklist", [3]),
+        ("blacklist", []),
       ]),
     ]
   ),
@@ -6656,7 +6656,7 @@ samples_2018["/VBFToRadionToHHTo2V2Tau_M-850_narrow_TuneCP5_PSWeights_13TeV-madg
       OD([
         ("path",      "/hdfs/cms/store/user/kaehatah/2018_2020May05/VBFToRadionToHHTo2V2Tau_M-850_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8/2018_2020May05_VBFToRadionToHHTo2V2Tau_M-850_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/200505_214743"),
         ("selection", "*"),
-        ("blacklist", [2]),
+        ("blacklist", []),
       ]),
     ]
   ),
