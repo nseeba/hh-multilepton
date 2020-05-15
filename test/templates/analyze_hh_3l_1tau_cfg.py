@@ -105,6 +105,7 @@ process.analyze_hh_3l_1tau = cms.PSet(
     branchName_hadTaus = cms.string('Tau'),
     branchName_jets = cms.string('Jet'),
     branchName_met = cms.string('MET'),
+    branchName_vertex = cms.string('PV'),
 
     branchName_muonGenMatch = cms.string('MuonGenMatch'),
     branchName_electronGenMatch = cms.string('ElectronGenMatch'),

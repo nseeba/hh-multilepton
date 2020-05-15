@@ -88,6 +88,8 @@
 #include "hhAnalysis/multilepton/interface/mySVfit4tauAuxFunctions.h" // getMeasuredTauLeptonType, getHadTauDecayMode
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h" // EventInfo
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfoReader.h" // EventInfoReader
+#include "tthAnalysis/HiggsToTauTau/interface/RecoVertex.h" // RecoVertex
+#include "tthAnalysis/HiggsToTauTau/interface/RecoVertexReader.h" // RecoVertexReader
 #include "hhAnalysis/multilepton/interface/EvtWeightRecorderHH.h" // EvtWeightRecorderHH
 
 #include "TauAnalysis/ClassicSVfit4tau/interface/ClassicSVfit4tau.h" // ClassicSVfit4tau
@@ -353,6 +355,7 @@ int main(int argc, char* argv[])
   std::string branchName_hadTaus = cfg_analyze.getParameter<std::string>("branchName_hadTaus");
   std::string branchName_jets = cfg_analyze.getParameter<std::string>("branchName_jets");
   std::string branchName_met = cfg_analyze.getParameter<std::string>("branchName_met");
+  std::string branchName_vertex = cfg_analyze.getParameter<std::string>("branchName_vertex");
 
   std::string branchName_genLeptons = cfg_analyze.getParameter<std::string>("branchName_genLeptons");
   std::string branchName_genHadTaus = cfg_analyze.getParameter<std::string>("branchName_genHadTaus");
@@ -424,6 +427,9 @@ int main(int argc, char* argv[])
   }
   inputTree -> registerReader(&eventInfoReader);
 
+  RecoVertexReader vertexReader(branchName_vertex);
+  inputTree -> registerReader(&vertexReader);
+
   ObjectMultiplicity objectMultiplicity;
   ObjectMultiplicityReader objectMultiplicityReader(&objectMultiplicity);
   if(useObjectMultiplicity)
@@ -487,6 +493,7 @@ int main(int argc, char* argv[])
     case kTight:    tauLevel = std::min(tauLevel, get_tau_id_wp_int(tightHadTauSelector.getSelector().get()));    break;
     default: assert(0);
   }
+  RecoHadTauSelectorECalCrack crackVetoHadTauFilter(era, -1, isDEBUG);
 
   RecoJetReader* jetReader = new RecoJetReader(era, isMC, branchName_jets, readGenObjects);
   jetReader->setPtMass_central_or_shift(jetPt_option);
@@ -772,6 +779,7 @@ int main(int argc, char* argv[])
     ">= 3 sel leptons",
     "<= 3 tight leptons",
     ">= 1 sel taus",
+    "tau crack veto",
     "fakeable lepton trigger match",
     "HLT filter matching",
     "m(ll) > 12 GeV",
@@ -1336,6 +1344,19 @@ int main(int argc, char* argv[])
 
     const RecoHadTau* selHadTau = selHadTaus[0];
     const hadTauGenMatchEntry& selHadTau_genMatch = getHadTauGenMatch(hadTauGenMatch_definitions, selHadTau);
+
+    RecoVertex vertex = vertexReader->read();
+    crackVetoHadTauFilter.set_vertex(vertex);
+    bool selHadTau_isInCrack = !crackVetoHadTauFilter(*selHadTau);
+    if ( selHadTau_isInCrack ) {
+      if ( run_lumi_eventSelector ) {
+	std::cout << "event " << eventInfo.str() << " FAILS tau crack veto." << std::endl;
+	printCollection("selHadTaus", selHadTaus);
+      }
+      continue;
+    }
+    cutFlowTable.update("tau crack veto", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms("tau crack veto", evtWeightRecorder.get(central_or_shift_main));
 
 //--- apply HLT filter
     if(apply_hlt_filter)
