@@ -1,4 +1,5 @@
 from tthAnalysis.HiggsToTauTau.configs.analyzeConfig import *
+from hhAnalysis.multilepton.common import is_nonresonant
 
 import re
 
@@ -32,6 +33,18 @@ class analyzeConfig_hh(analyzeConfig):
   def __init__(self, **kwargs):
     super(analyzeConfig_hh, self).__init__(**kwargs)
     self.signal_io = get_signal_per_masspoint(self.samples)
+
+  def get_samples_categories_HH(self):
+    sample_categories_HH = []
+    couplings = self.kl_weights + self.BM_weights
+    for sample_key, sample_info in self.samples.items():
+      if sample_key == 'sum_events':
+        continue
+      process_category = sample_info["sample_category"]
+      if sample_info["use_it"] and is_nonresonant(process_category, allow_nlo = False):
+        for coupling in couplings:
+          sample_categories_HH.append("{}{}".format(process_category, coupling))
+    return sample_categories_HH
 
   def createCfg_makePlots(self, jobOptions):
     """Fills the template of python configuration file for making control plots
