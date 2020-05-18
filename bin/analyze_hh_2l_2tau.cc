@@ -1701,6 +1701,7 @@ int main(int argc, char* argv[])
 
     std::vector<double> WeightBM; // weights to do histograms for BMs
     std::map<std::string, double> Weight_ktScan; // weights to do histograms
+    std::map<std::string, double> Weight_BMScan;
     double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
 
     if(apply_HH_rwgt)
@@ -1733,7 +1734,7 @@ int main(int argc, char* argv[])
           bench = Form("BM%s", std::to_string(bm_list).data() );
         }
         std::string name_BM = Form("weight_%s", bench.data() );
-        Weight_ktScan[name_BM] =  WeightBM[bm_list];
+        Weight_BMScan[name_BM] =  WeightBM[bm_list];
         if (isDEBUG) std::cout << "line = " << name_BM << "; Weight = " << WeightBM[bm_list] << '\n';
       }
     } else {
@@ -1745,7 +1746,7 @@ int main(int argc, char* argv[])
           bench = Form("BM%s", std::to_string(bm_list).data() );
         }
         std::string name_BM = Form("weight_%s", bench.data() );
-        Weight_ktScan[name_BM] =  1.0;
+        Weight_BMScan[name_BM] =  1.0;
       }
     }
 
@@ -2214,7 +2215,8 @@ int main(int argc, char* argv[])
           ("nElectron",                selElectrons.size())
           ("nMuon",                    selMuons.size())
           (rwgt_map, "weight")
-          (Weight_ktScan)
+          (Weight_BMScan)
+          (Weight_ktScan, "weight")
         .fill()
 	;
 
