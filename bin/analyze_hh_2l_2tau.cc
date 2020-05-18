@@ -476,14 +476,12 @@ int main(int argc, char* argv[])
   const size_t Nscan = evt_cat_strs.size();
   if (apply_HH_rwgt)
   {
-    std::cout << "Number of points being scanned = " << Nscan << '\n';
-    std::cout << "\n Weights booked = " << apply_HH_rwgt << '\n';
-    for (const std::string catcat : evt_cat_strs) {
-      std::cout << catcat << '\n';
-    }
-    for (const std::string catcat : BMS) {
-      std::cout << catcat << '\n';
-    }
+    std::cout << Nscan << " points being scanned: " << boost::join(evt_cat_strs, ", ") << '\n';
+    std::cout << "BMS points being scanned: " << boost::join(BMS, ", ") << '\n';
+  }
+  else
+  {
+    std::cout << "No HH reweighting applied: " << boost::join(evt_cat_strs, ", ") << '\n';
   }
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
@@ -2215,7 +2213,7 @@ int main(int argc, char* argv[])
           ("evtWeight",                evtWeightRecorder.get(central_or_shift_main))
           ("nElectron",                selElectrons.size())
           ("nMuon",                    selMuons.size())
-          (rwgt_map)
+          (rwgt_map, "weight")
           (Weight_ktScan)
         .fill()
 	;
