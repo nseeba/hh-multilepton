@@ -152,8 +152,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTZ", "DY", "Other", "VH", "TTH", "TH", "W", "TTWW", "ggH", "qqH"] 
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
-    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc", "flips_mc"]
-    #self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc", "flips_mc", "data_flips" ]
+    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc", "flips_mc"] + self.get_samples_categories_HH()
     self.inputFiles_hadd_stage1_6 = {}
     self.outputFile_hadd_stage1_6 = {}
     self.cfgFile_addFlips = os.path.join(self.template_dir, "addBackgroundLeptonFlips_cfg.py")
@@ -166,11 +165,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       if sample_category.startswith("signal"):
         self.prep_dcard_signals.append(sample_category)
     self.histogramDir_prep_dcard = "hh_2l_2tau_sumOS_Tight"
-    # self.histogramDir_prep_dcard_SS = "hh_2l_2tau_sumSS_Tight"
-    self.make_plots_backgrounds = ["DY", "ZZ", "WZ", "WW", "TT", "TTW", "TTZ", "Other", "VH", "TTH", "TH", "TTWW", "W" ] + [ "Convs", "data_fakes", "flips_mc" ] 
-    # self.make_plots_backgrounds = ["DY", "W", "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "Convs", "data_fakes" ]
-    # self.make_plots_backgrounds_SS = ["DY", "W", "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "Convs", "data_fakes", "data_flips" ]
-    # self.make_plots_backgrounds_OS = ["DY", "W", "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "Convs", "data_fakes"]
+    self.make_plots_backgrounds = ["DY", "ZZ", "WZ", "WW", "TT", "TTW", "TTZ", "Other", "VH", "TTH", "TH", "TTWW", "W" ] + [ "Convs", "data_fakes", "flips_mc" ]
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2l_2tau_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2l_2tau_cfg.py")
 

@@ -470,20 +470,18 @@ int main(int argc, char* argv[])
   const HHWeightInterface * HHWeight_calc = nullptr;
   if(apply_HH_rwgt)
   {
-    HHWeight_calc = new HHWeightInterface(hhWeight_cfg, true);
+    HHWeight_calc = new HHWeightInterface(hhWeight_cfg);
     evt_cat_strs = HHWeight_calc->get_scan_strs();
   }
   const size_t Nscan = evt_cat_strs.size();
   if (apply_HH_rwgt)
   {
-    std::cout << "Number of points being scanned = " << Nscan << '\n';
-    std::cout << "\n Weights booked = " << apply_HH_rwgt << '\n';
-    for (const std::string catcat : evt_cat_strs) {
-      std::cout << catcat << '\n';
-    }
-    for (const std::string catcat : BMS) {
-      std::cout << catcat << '\n';
-    }
+    std::cout << Nscan << " points being scanned: " << boost::join(evt_cat_strs, ", ") << '\n';
+    std::cout << "BMS points being scanned: " << boost::join(BMS, ", ") << '\n';
+  }
+  else
+  {
+    std::cout << "No HH reweighting applied: " << boost::join(evt_cat_strs, ", ") << '\n';
   }
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
@@ -1703,6 +1701,7 @@ int main(int argc, char* argv[])
 
     std::vector<double> WeightBM; // weights to do histograms for BMs
     std::map<std::string, double> Weight_ktScan; // weights to do histograms
+    std::map<std::string, double> Weight_BMScan;
     double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
 
     if(apply_HH_rwgt)
@@ -1735,7 +1734,7 @@ int main(int argc, char* argv[])
           bench = Form("BM%s", std::to_string(bm_list).data() );
         }
         std::string name_BM = Form("weight_%s", bench.data() );
-        Weight_ktScan[name_BM] =  WeightBM[bm_list];
+        Weight_BMScan[name_BM] =  WeightBM[bm_list];
         if (isDEBUG) std::cout << "line = " << name_BM << "; Weight = " << WeightBM[bm_list] << '\n';
       }
     } else {
@@ -1747,7 +1746,7 @@ int main(int argc, char* argv[])
           bench = Form("BM%s", std::to_string(bm_list).data() );
         }
         std::string name_BM = Form("weight_%s", bench.data() );
-        Weight_ktScan[name_BM] =  1.0;
+        Weight_BMScan[name_BM] =  1.0;
       }
     }
 
@@ -2215,8 +2214,9 @@ int main(int argc, char* argv[])
           ("evtWeight",                evtWeightRecorder.get(central_or_shift_main))
           ("nElectron",                selElectrons.size())
           ("nMuon",                    selMuons.size())
-          (rwgt_map)
-          (Weight_ktScan)
+          (rwgt_map, "weight")
+          (Weight_BMScan)
+          (Weight_ktScan, "weight")
         .fill()
 	;
 
