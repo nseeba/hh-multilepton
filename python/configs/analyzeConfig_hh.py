@@ -35,11 +35,8 @@ class analyzeConfig_hh(analyzeConfig):
     self.signal_io = get_signal_per_masspoint(self.samples)
 
     # CV: switch top pT reweighting to new parametrization given on slide 12 of the presentation by Dennis Roy in the Higgs PAG meeting on 12/05/2020:
-    #       https://indico.cern.ch/event/904971/contributions/3857701/attachments/2036949/3410728/TopPt_20.05.12.pdf 
-    #
-    # Warning: do not enable until we have new Ntuples !!
-    #
-    #self.topPtRwgtChoice = "HighPt"
+    #       https://indico.cern.ch/event/904971/contributions/3857701/attachments/2036949/3410728/TopPt_20.05.12.pdf
+    self.topPtRwgtChoice = "HighPt"
 
   def get_samples_categories_HH(self):
     sample_categories_HH = []
