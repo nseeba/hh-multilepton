@@ -1009,30 +1009,47 @@ int main(int argc, char* argv[])
       makeHistManager_cfg(process_string, Form("%s/sel/evtntuple", histogramDir.data()), era_string, central_or_shift_main)
     );
     bdt_filler -> register_variable<float_type>(
-      "lep1_pt", "lep1_conePt", "lep1_eta", "lep1_tth_mva", "mindr_lep1_jet", "mT_lep1", 
-      "lep2_pt", "lep2_conePt", "lep2_eta", "lep2_tth_mva", "mindr_lep2_jet", "mT_lep2",
-      "lep3_pt", "lep3_conePt", "lep3_eta", "lep3_tth_mva", "mindr_lep3_jet", "mT_lep3", 
-      "avg_dr_jet", "ptmiss",  "htmiss", "dr_leps",
-      "lumiScale", "genWeight", "evtWeight",
+      "lep1_pt", "lep1_conePt", "lep1_eta", "mindr_lep1_jet", "mT_MEtLep1",
+      "lep2_pt", "lep2_conePt", "lep2_eta", "mindr_lep2_jet", "mT_MEtLep2",
+      "lep3_pt", "lep3_conePt", "lep3_eta", "mindr_lep3_jet", "mT_MEtLep3",
+      //
+      "jet1_pt", "jet2_pt", "jet1plus2pt", "jet1_m", "jet2_m",
+      //
+      "avg_dr_jet", "dr_Wjj",
+      //
+      "dr_l12", "dr_l23", "dr_l13", "dr_lss", "dr_los_min", "dr_los_max",
+      //
+      "dr_WjjLepIdx3", "dr_Wjet1LepIdx3", "dr_Wjet2LepIdx3", "dr_LepIdx3WjetNear", "dr_LepIdx3WjetFar",
+      //
+      "met", "mht", "met_LD", "HT", "STMET",
+      //
+      "mSFOS2l", "m_jj", "diHiggsVisMass", "diHiggsMass", "mTMetLepton1", "mTMetLepton2",
+      //
       "lep1_genLepPt", "lep2_genLepPt", "lep3_genLepPt",
       "lep1_fake_prob", "lep2_fake_prob", "lep3_fake_prob",
-      "lep1_frWeight", "lep2_frWeight", "lep3_frWeight",  
-      //"mvaOutput_3l_ttV", "mvaOutput_3l_ttbar", "mvaDiscr_3l",
-      "mbb_loose", "mbb_medium",
-      "dr_lss", "dr_los1", "dr_los2",
-      "met", "mht", "met_LD", "HT", "STMET",
-      "mSFOS2l", "m_jj", "diHiggsVisMass", "diHiggsMass",
-      "mTMetLepton1", "mTMetLepton2",
-      "vbf_m_jj", "vbf_dEta_jj", "numSelJets_nonVBF",
-      "numAK4jets", "numAK8jets",
-      "jet1_pt", "jet2_pt", "jet1_m", "jet2_m",
-      "dr_WjetsLep3", "dr_Wjet1Lep3", "dr_Wjet2Lep3"
+      "lep1_frWeight", "lep2_frWeight", "lep3_frWeight",
+      //
+      "mT_LeptonIdx1_Met_Approach0", "mT_LeptonIdx2_Met_Approach0", "mT_LeptonIdx3_Met_Approach0",
+      "m_LeptonIdx1_LeptonIdx2_Approach0", "m_LeptonIdx2_LeptonIdx3_Approach0", "m_LeptonIdx1_LeptonIdx3_Approach0",
+      "dPhi_LeptonIdx1_LeptonIdx2_Approach0", "dPhi_LeptonIdx2_LeptonIdx3_Approach0", "dPhi_LeptonIdx1_LeptonIdx3_Approach0",
+      "dr_LeptonIdx1_LeptonIdx2_Approach0", "dr_LeptonIdx2_LeptonIdx3_Approach0", "dr_LeptonIdx1_LeptonIdx3_Approach0",
+      "m_LeptonIdx3_Jet1_Approach0", "dr_LeptonIdx3_Jet1_Approach0",
+      "m_LeptonIdx3_JetNear_Approach0", "dr_LeptonIdx3_JetNear_Approach0",
+      //
+      "mT_LeptonIdx1_Met_Approach2", "mT_LeptonIdx2_Met_Approach2", "mT_LeptonIdx3_Met_Approach2",
+      "m_LeptonIdx1_LeptonIdx2_Approach2", "m_LeptonIdx2_LeptonIdx3_Approach2", "m_LeptonIdx1_LeptonIdx3_Approach2",
+      "dPhi_LeptonIdx1_LeptonIdx2_Approach2", "dPhi_LeptonIdx2_LeptonIdx3_Approach2", "dPhi_LeptonIdx1_LeptonIdx3_Approach2",
+      "dr_LeptonIdx1_LeptonIdx2_Approach2", "dr_LeptonIdx2_LeptonIdx3_Approach2", "dr_LeptonIdx1_LeptonIdx3_Approach2",
+      "m_LeptonIdx3_Jet1_Approach2", "dr_LeptonIdx3_Jet1_Approach2",
+      "m_LeptonIdx3_JetNear_Approach2", "dr_LeptonIdx3_JetNear_Approach2",      
+      //
+      "lumiScale", "genWeight", "evtWeight"
 						);
     bdt_filler -> register_variable<int_type>(
-      "nJet", "nBJetLoose", "nBJetMedium", "nElectron", "nMuon",
+      "nElectron", "nMuon", "nLepton", "nJetAK4", "nBJetLoose", "nBJetMedium", "nJetAK8", "nJetAK8_wSelectorAK8_Wjj",
+      "sumLeptonCharge_3l", "sumLeptonCharge_FullSel", "numSameFlavor_OS_3l", "numSameFlavor_OS_FullPresel", 
       "lep1_isTight", "lep2_isTight", "lep3_isTight",
-      "sumLeptonCharge", "numSameFlavor_OS", "isVBF",
-      "isWjjBoosted","eventCategory"
+      "eventCategory"
 					      );
     bdt_filler -> bookTree(fs);
   }
@@ -3346,6 +3363,50 @@ int main(int argc, char* argv[])
 	("lep1_fake_prob",      prob_fake_lepton_lead)
 	("lep2_fake_prob",      prob_fake_lepton_sublead)
 	("lep3_fake_prob",      prob_fake_lepton_third)
+	//
+	("mT_LeptonIdx1_Met_Approach0", mT_LeptonIdx1_Met_Approach0)
+	("mT_LeptonIdx2_Met_Approach0", mT_LeptonIdx2_Met_Approach0)
+	("mT_LeptonIdx3_Met_Approach0", mT_LeptonIdx3_Met_Approach0)
+	//
+	("m_LeptonIdx1_LeptonIdx2_Approach0", m_LeptonIdx1_LeptonIdx2_Approach0)
+	("m_LeptonIdx2_LeptonIdx3_Approach0", m_LeptonIdx2_LeptonIdx3_Approach0)
+	("m_LeptonIdx1_LeptonIdx3_Approach0", m_LeptonIdx1_LeptonIdx3_Approach0)
+	//
+	("dPhi_LeptonIdx1_LeptonIdx2_Approach0", dPhi_LeptonIdx1_LeptonIdx2_Approach0)
+	("dPhi_LeptonIdx2_LeptonIdx3_Approach0", dPhi_LeptonIdx2_LeptonIdx3_Approach0)
+	("dPhi_LeptonIdx1_LeptonIdx3_Approach0", dPhi_LeptonIdx1_LeptonIdx3_Approach0)
+	//
+	("dr_LeptonIdx1_LeptonIdx2_Approach0", dr_LeptonIdx1_LeptonIdx2_Approach0)
+	("dr_LeptonIdx2_LeptonIdx3_Approach0", dr_LeptonIdx2_LeptonIdx3_Approach0)
+	("dr_LeptonIdx1_LeptonIdx3_Approach0", dr_LeptonIdx1_LeptonIdx3_Approach0)
+	//
+	("m_LeptonIdx3_Jet1_Approach0", m_LeptonIdx3_Jet1_Approach0)
+	("dr_LeptonIdx3_Jet1_Approach0", dr_LeptonIdx3_Jet1_Approach0)
+	//
+	("m_LeptonIdx3_JetNear_Approach0", m_LeptonIdx3_JetNear_Approach0)
+	("dr_LeptonIdx3_JetNear_Approach0", dr_LeptonIdx3_JetNear_Approach0)
+	//
+	("mT_LeptonIdx1_Met_Approach2", mT_LeptonIdx1_Met_Approach2)
+	("mT_LeptonIdx2_Met_Approach2", mT_LeptonIdx2_Met_Approach2)
+	("mT_LeptonIdx3_Met_Approach2", mT_LeptonIdx3_Met_Approach2)
+	//
+	("m_LeptonIdx1_LeptonIdx2_Approach2", m_LeptonIdx1_LeptonIdx2_Approach2)
+	("m_LeptonIdx2_LeptonIdx3_Approach2", m_LeptonIdx2_LeptonIdx3_Approach2)
+	("m_LeptonIdx1_LeptonIdx3_Approach2", m_LeptonIdx1_LeptonIdx3_Approach2)
+	//
+	("dPhi_LeptonIdx1_LeptonIdx2_Approach2", dPhi_LeptonIdx1_LeptonIdx2_Approach2)
+	("dPhi_LeptonIdx2_LeptonIdx3_Approach2", dPhi_LeptonIdx2_LeptonIdx3_Approach2)
+	("dPhi_LeptonIdx1_LeptonIdx3_Approach2", dPhi_LeptonIdx1_LeptonIdx3_Approach2)
+	//
+	("dr_LeptonIdx1_LeptonIdx2_Approach2", dr_LeptonIdx1_LeptonIdx2_Approach2)
+	("dr_LeptonIdx2_LeptonIdx3_Approach2", dr_LeptonIdx2_LeptonIdx3_Approach2)
+	("dr_LeptonIdx1_LeptonIdx3_Approach2", dr_LeptonIdx1_LeptonIdx3_Approach2)
+	//
+	("m_LeptonIdx3_Jet1_Approach2", m_LeptonIdx3_Jet1_Approach2)
+	("dr_LeptonIdx3_Jet1_Approach2", dr_LeptonIdx3_Jet1_Approach2)
+	//
+	("m_LeptonIdx3_JetNear_Approach2", m_LeptonIdx3_JetNear_Approach2)
+	("dr_LeptonIdx3_JetNear_Approach2", dr_LeptonIdx3_JetNear_Approach2)
 	//
 	("eventCategory",       eventCategory)
 	//

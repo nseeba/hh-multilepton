@@ -134,7 +134,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
 
     #self.nonfake_backgrounds = [ "TTH", "TTZ", "TTW", "TTWW", "TT", "DY", "W", "WW", "WZ", "ZZ", "VH", "TH"]
-    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH", "ggH", "qqH"]
+    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH", "ggH", "qqH", "TTWH", "TTZH"]
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ]
@@ -150,7 +150,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     self.histogramDir_prep_dcard = "hh_3l_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_3l_SS_Tight"
     #self.make_plots_backgrounds = [ "TTH", "TTZ", "TTW", "TTWW", "TT", "DY", "W", "WW", "WZ", "ZZ", "VH", "TH"] + [ "Convs", "data_fakes"]
-    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ] + [ "Convs", "data_fakes" ]
+    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH", "ggH", "qqH", "TTWH", "TTZH"] + [ "Convs", "data_fakes" ]
 
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_3l_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_3l_cfg.py") #TODO
