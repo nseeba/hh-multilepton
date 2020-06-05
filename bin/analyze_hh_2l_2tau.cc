@@ -89,6 +89,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/XGBInterface.h" // XGBInterface
 #include "tthAnalysis/HiggsToTauTau/interface/TMVAInterface.h" // TMVAInterface
 #include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface.h" // HHWeightInterface
+#include "tthAnalysis/HiggsToTauTau/interface/BM_list.h" // BMS
 #include "tthAnalysis/HiggsToTauTau/interface/TensorFlowInterface.h" // TensorFlowInterface
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2l_2tau.h" // EvtHistManager_hh_2l_2tau
@@ -211,7 +212,7 @@ int main(int argc, char* argv[])
   bool isMC_tH = process_string == "TH";
   bool isMC_EWK = process_string == "WZ" || process_string == "ZZ";
   bool isSignal = boost::starts_with(process_string, "signal_") && process_string.find("_hh_") != std::string::npos;
-  bool isMC_HH_nonres = boost::starts_with(process_string, "signal_ggf_nonresonant_");
+  bool isHH_rwgt_allowed = boost::starts_with(process_string, "signal_ggf_nonresonant_") && process_string.find("cHHH") == std::string::npos;
 
   std::string histogramDir = cfg_analyze.getParameter<std::string>("histogramDir");
   bool isMCClosure_e = histogramDir.find("mcClosure_e") != std::string::npos;
@@ -459,7 +460,7 @@ int main(int argc, char* argv[])
   std::cout << "Loaded " << inputTree->getFileCount() << " file(s)." << std::endl;
 
 //--- declare event-level variables
-  EventInfo eventInfo(isMC, isSignal, isMC_HH_nonres, apply_topPtReweighting);
+  EventInfo eventInfo(isMC, isSignal, isHH_rwgt_allowed, apply_topPtReweighting);
   const std::string default_cat_str = "default";
   std::vector<std::string> evt_cat_strs = { default_cat_str };
 
@@ -473,7 +474,15 @@ int main(int argc, char* argv[])
     evt_cat_strs = HHWeight_calc->get_scan_strs();
   }
   const size_t Nscan = evt_cat_strs.size();
-  std::cout << "Number of points being scanned = " << Nscan << '\n';
+  if (apply_HH_rwgt)
+  {
+    std::cout << Nscan << " points being scanned: " << boost::join(evt_cat_strs, ", ") << '\n';
+    std::cout << "BMS points being scanned: " << boost::join(BMS, ", ") << '\n';
+  }
+  else
+  {
+    std::cout << "No HH reweighting applied: " << boost::join(evt_cat_strs, ", ") << '\n';
+  }
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
@@ -870,6 +879,16 @@ int main(int argc, char* argv[])
     bdt_filler = new std::remove_pointer<decltype(bdt_filler)>::type(
       makeHistManager_cfg(process_string, Form("%s/sel/evtntuple", histogramDir.data()), era_string, central_or_shift_main)
     );
+    for(const std::string & evt_cat_str: BMS)
+    {
+      //Book BM weights
+      bdt_filler->register_variable<float_type>( Form("weight_%s", evt_cat_str.c_str()) );
+    }
+    for(const std::string & evt_cat_str: evt_cat_strs)
+    {
+      //Book Weight_klScan
+      bdt_filler->register_variable<float_type>(Form("weight_%s", evt_cat_str.c_str()) );
+    }
     bdt_filler->register_variable<float_type>(
       "lep1_pt", "lep1_conePt", "lep1_eta", "lep1_tth_mva", "mT_lep1", "lep1_phi",
       "lep2_pt", "lep2_conePt", "lep2_eta", "lep2_tth_mva", "mT_lep2", "lep2_phi",
@@ -965,6 +984,7 @@ int main(int argc, char* argv[])
                 << ") file (" << selectedEntries << " Entries selected)\n";
     }
     ++analyzedEntries;
+    //if (analyzedEntries > 1) break;
     histogram_analyzedEntries->Fill(0.);
 
     if ( isDEBUG ) {
@@ -1643,7 +1663,7 @@ int main(int argc, char* argv[])
       cutFlowTable.update("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
       cutFlowHistManager->fillHistograms("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
     }
-  
+
 
     if ( apply_met_filters ) {
       if ( !metFilterSelector(metFilters) ) {
@@ -1681,6 +1701,7 @@ int main(int argc, char* argv[])
 
     std::vector<double> WeightBM; // weights to do histograms for BMs
     std::map<std::string, double> Weight_ktScan; // weights to do histograms
+    std::map<std::string, double> Weight_BMScan;
     double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
 
     if(apply_HH_rwgt)
@@ -1703,6 +1724,29 @@ int main(int argc, char* argv[])
           std::cout << "line = " << bm_list << " " << evt_cat_strs[bm_list] << "; Weight = " <<  Weight_ktScan[evt_cat_strs[bm_list]] << '\n';
         }
         std::cout << '\n';
+      }
+
+      for(std::size_t bm_list = 0; bm_list < WeightBM.size() ; ++bm_list)
+      {
+        std::string bench;
+        if (bm_list == 0) bench = "SM";
+        else {
+          bench = Form("BM%s", std::to_string(bm_list).data() );
+        }
+        std::string name_BM = Form("weight_%s", bench.data() );
+        Weight_BMScan[name_BM] =  WeightBM[bm_list];
+        if (isDEBUG) std::cout << "line = " << name_BM << "; Weight = " << WeightBM[bm_list] << '\n';
+      }
+    } else {
+      for(std::size_t bm_list = 0; bm_list < BMS.size() ; ++bm_list)
+      {
+        std::string bench;
+        if (bm_list == 0) bench = "SM";
+        else {
+          bench = Form("BM%s", std::to_string(bm_list).data() );
+        }
+        std::string name_BM = Form("weight_%s", bench.data() );
+        Weight_BMScan[name_BM] =  1.0;
       }
     }
 
@@ -2076,6 +2120,20 @@ int main(int argc, char* argv[])
 
     if(bdt_filler)
     {
+      // do HH nonres weight
+      std::map<std::string, double> rwgt_map;
+      for(const std::string & evt_cat_str: evt_cat_strs)
+      {
+        if(apply_HH_rwgt)
+        {
+          rwgt_map[evt_cat_str] = Weight_ktScan[evt_cat_str];
+        }
+        else
+        {
+          rwgt_map[evt_cat_str] = evtWeightRecorder.get(central_or_shift_main);
+        }
+      }
+
       bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
 	  ("deltaEta_lep1_lep2", deltaEta_lep1_lep2)
 	  ("deltaEta_lep1_tau1", deltaEta_lep1_tau1)
@@ -2156,6 +2214,9 @@ int main(int argc, char* argv[])
           ("evtWeight",                evtWeightRecorder.get(central_or_shift_main))
           ("nElectron",                selElectrons.size())
           ("nMuon",                    selMuons.size())
+          (rwgt_map, "weight")
+          (Weight_BMScan)
+          (Weight_ktScan, "weight")
         .fill()
 	;
 

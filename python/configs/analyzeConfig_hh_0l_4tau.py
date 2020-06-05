@@ -96,6 +96,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
       template_dir          = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'multilepton', 'test', 'templates'),
       submission_cmd        = submission_cmd,
       use_dymumu_tau_fr     = True,
+      apply_nc_correction   = None,
     )
 
     self.hadTau_selections = [ "Tight", "Fakeable" ]
@@ -122,7 +123,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
 
     self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH", "ggH", "qqH"]
 
-    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "data_fakes", "fakes_mc" ]
+    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "data_fakes", "fakes_mc" ] + self.get_samples_categories_HH()
     self.prep_dcard_signals = []
     for sample_name, sample_info in self.samples.items():
       if not sample_info["use_it"]:

@@ -105,6 +105,7 @@ process.analyze_hh_3l_1tau = cms.PSet(
     branchName_hadTaus = cms.string('Tau'),
     branchName_jets = cms.string('Jet'),
     branchName_met = cms.string('MET'),
+    branchName_vertex = cms.string('PV'),
 
     branchName_muonGenMatch = cms.string('MuonGenMatch'),
     branchName_electronGenMatch = cms.string('ElectronGenMatch'),
@@ -142,7 +143,7 @@ process.analyze_hh_3l_1tau = cms.PSet(
     tHweights = cms.VPSet(),
     hhWeight_cfg = cms.PSet(
         denominator_file = cms.string(''),
-        klScan_file = cms.string('hhAnalysis/multilepton/data/kl_scan.dat'),
+        klScan_file = cms.string(''),
         ktScan_file = cms.string(''),
         coefFile = cms.string('HHStatAnalysis/AnalyticalModels/data/coefficientsByBin_extended_3M_costHHSim_19-4.txt'),
         histtitle = cms.string(''),
