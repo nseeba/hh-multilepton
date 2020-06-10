@@ -617,13 +617,13 @@ int main(int argc, char* argv[])
           Form("%s/sel/hadTaus", histogramDir.data()), era_string, central_or_shift, "allHistograms"));
         selHistManager->hadTaus_->bookHistograms(fs);
         selHistManager->leadHadTau_ = new HadTauHistManager(makeHistManager_cfg(process_and_genMatch,
-          Form("%s/sel/leadHadTau", histogramDir.data()), era_string, central_or_shift, "minimalHistograms", 0));
+          Form("%s/sel/leadHadTau", histogramDir.data()), era_string, central_or_shift, "minimalHistograms"));
         selHistManager->leadHadTau_->bookHistograms(fs);
         selHistManager->subleadHadTau_ = new HadTauHistManager(makeHistManager_cfg(process_and_genMatch,
-          Form("%s/sel/subleadHadTau", histogramDir.data()), era_string, central_or_shift, "minimalHistograms", 1));
+          Form("%s/sel/subleadHadTau", histogramDir.data()), era_string, central_or_shift, "minimalHistograms"));
         selHistManager->subleadHadTau_->bookHistograms(fs);
         selHistManager->thirdHadTau_ = new HadTauHistManager(makeHistManager_cfg(process_and_genMatch,
-          Form("%s/sel/thirdHadTau", histogramDir.data()), era_string, central_or_shift, "minimalHistograms", 2));
+          Form("%s/sel/thirdHadTau", histogramDir.data()), era_string, central_or_shift, "minimalHistograms"));
         selHistManager->thirdHadTau_->bookHistograms(fs);
         selHistManager->jets_ = new JetHistManager(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/jets", histogramDir.data()), era_string, central_or_shift, "allHistograms"));

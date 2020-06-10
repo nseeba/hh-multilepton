@@ -568,16 +568,16 @@ int main(int argc, char* argv[])
           Form("%s/sel/hadTaus", histogramDir.data()), era_string, central_or_shift, "allHistograms"));
         selHistManager->hadTaus_->bookHistograms(fs);
         selHistManager->leadHadTau_ = new HadTauHistManager(makeHistManager_cfg(process_and_genMatch,
-          Form("%s/sel/leadHadTau", histogramDir.data()), era_string, central_or_shift, "minimalHistograms", 0));
+          Form("%s/sel/leadHadTau", histogramDir.data()), era_string, central_or_shift, "minimalHistograms"));
         selHistManager->leadHadTau_->bookHistograms(fs);
         selHistManager->subleadHadTau_ = new HadTauHistManager(makeHistManager_cfg(process_and_genMatch,
-          Form("%s/sel/subleadHadTau", histogramDir.data()), era_string, central_or_shift, "minimalHistograms", 1));
+          Form("%s/sel/subleadHadTau", histogramDir.data()), era_string, central_or_shift, "minimalHistograms"));
         selHistManager->subleadHadTau_->bookHistograms(fs);
         selHistManager->thirdHadTau_ = new HadTauHistManager(makeHistManager_cfg(process_and_genMatch,
-          Form("%s/sel/thirdHadTau", histogramDir.data()), era_string, central_or_shift, "minimalHistograms", 2));
+          Form("%s/sel/thirdHadTau", histogramDir.data()), era_string, central_or_shift, "minimalHistograms"));
         selHistManager->thirdHadTau_->bookHistograms(fs);
         selHistManager->fourthHadTau_ = new HadTauHistManager(makeHistManager_cfg(process_and_genMatch,
-          Form("%s/sel/fourthHadTau", histogramDir.data()), era_string, central_or_shift, "minimalHistograms", 3));
+          Form("%s/sel/fourthHadTau", histogramDir.data()), era_string, central_or_shift, "minimalHistograms"));
         selHistManager->fourthHadTau_->bookHistograms(fs);
         selHistManager->jets_ = new JetHistManager(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/jets", histogramDir.data()), era_string, central_or_shift, "allHistograms"));
@@ -1302,7 +1302,7 @@ int main(int argc, char* argv[])
         {
           selHistManager->electrons_->fillHistograms(preselElectrons, evtWeight);
           selHistManager->muons_->fillHistograms(preselMuons, evtWeight);
-	  selHistManager->hadTaus_->fillHistograms({ selHadTau_lead, selHadTau_sublead }, evtWeight);
+	  selHistManager->hadTaus_->fillHistograms({ selHadTau_lead, selHadTau_sublead, selHadTau_third, selHadTau_fourth }, evtWeight);
 	  selHistManager->leadHadTau_->fillHistograms({ selHadTau_lead }, evtWeight);
 	  selHistManager->subleadHadTau_->fillHistograms({ selHadTau_sublead }, evtWeight);
 	  selHistManager->thirdHadTau_->fillHistograms({ selHadTau_third }, evtWeight);
