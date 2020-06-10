@@ -1594,7 +1594,7 @@ int main(int argc, char* argv[])
         {
           selHistManager->electrons_->fillHistograms(selElectrons, evtWeight);
           selHistManager->muons_->fillHistograms(selMuons, evtWeight);
-          selHistManager->hadTaus_->fillHistograms({ selHadTau_lead, selHadTau_sublead }, evtWeight);
+          selHistManager->hadTaus_->fillHistograms({ selHadTau_lead, selHadTau_sublead, selHadTau_third }, evtWeight);
           selHistManager->leadHadTau_->fillHistograms({ selHadTau_lead }, evtWeight);
           selHistManager->subleadHadTau_->fillHistograms({ selHadTau_sublead }, evtWeight);
           selHistManager->thirdHadTau_->fillHistograms({ selHadTau_third }, evtWeight);
