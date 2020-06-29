@@ -93,8 +93,10 @@ else:
   raise ValueError("Invalid choice for the sideband: %s" % sideband)
 
 hadTauWP_map = {
-  'dR03mva' : 'Loose',
-  'deepVSj' : 'Loose',
+  #'dR03mva' : 'Loose', #VLoose # VVLoose # Medium
+  #'deepVSj' : 'Loose',
+  'dR03mva' : 'Medium', #VLoose # VVLoose # Medium
+  'deepVSj' : 'Medium',
 }
 hadTau_selection = tau_id + hadTauWP_map[tau_id]
 
@@ -166,7 +168,14 @@ if __name__ == '__main__':
       "dihiggsVisMass"                    : {},
       "dihiggsMass"                       : {},
       "HT"                                : {},
-      "STMET"                             : {}
+      "STMET"                             : {},
+      "BDTOutput_1000"                    : {},
+      "BDTOutput_250"                    : {},
+      "BDTOutput_400"                    : {},
+      "BDTOutput_700"                    : {},
+      "BDTOutput_300"                    : {},
+      "BDTOutput_500"                    : {},
+      "BDTOutput_800"                    : {}
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,
