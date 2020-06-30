@@ -1505,25 +1505,25 @@ int main(int argc, char* argv[])
     // cutFlowTable.update("tau pt window", evtWeightRecorder.get(central_or_shift_main));
     // cutFlowHistManager->fillHistograms("tau pt window", evtWeightRecorder.get(central_or_shift_main));
 
-    // int triggerECalCrackVeto = -1;
-    // if((TMath::Abs(selHadTau->eta())>0)&&(TMath::Abs(selHadTau->eta())<0.018)){
-    //   triggerECalCrackVeto = 1;
-    // }
-    // else if((TMath::Abs(selHadTau->eta())>0.423)&&(TMath::Abs(selHadTau->eta())<0.461)){
-    //   triggerECalCrackVeto = 1;
-    // }
-    // else if((TMath::Abs(selHadTau->eta())>0.770)&&(TMath::Abs(selHadTau->eta())<0.806)){
-    //   triggerECalCrackVeto = 1;
-    // }
-    // else if((TMath::Abs(selHadTau->eta())>1.127)&&(TMath::Abs(selHadTau->eta())<1.163)){
-    //   triggerECalCrackVeto = 1;
-    // }
-    // else if((TMath::Abs(selHadTau->eta())>1.460)&&(TMath::Abs(selHadTau->eta())<1.558)){
-    //   triggerECalCrackVeto = 1;
-    // }
-    // else{
-    //   triggerECalCrackVeto = 0;
-    // }
+    int triggerECalCrackVeto = -1;
+    if((TMath::Abs(selHadTau->eta())>0)&&(TMath::Abs(selHadTau->eta())<0.018)){
+      triggerECalCrackVeto = 1;
+    }
+    else if((TMath::Abs(selHadTau->eta())>0.423)&&(TMath::Abs(selHadTau->eta())<0.461)){
+      triggerECalCrackVeto = 1;
+    }
+    else if((TMath::Abs(selHadTau->eta())>0.770)&&(TMath::Abs(selHadTau->eta())<0.806)){
+      triggerECalCrackVeto = 1;
+    }
+    else if((TMath::Abs(selHadTau->eta())>1.127)&&(TMath::Abs(selHadTau->eta())<1.163)){
+      triggerECalCrackVeto = 1;
+    }
+    else if((TMath::Abs(selHadTau->eta())>1.460)&&(TMath::Abs(selHadTau->eta())<1.558)){
+      triggerECalCrackVeto = 1;
+    }
+    else{
+      triggerECalCrackVeto = 0;
+    }
     //    if ( (triggerECalCrackVeto>0)||(selHadTau->id_mva(TauID::DeepTau2017v2VSe)<2)){
     if (selHadTau->id_mva(TauID::DeepTau2017v2VSe)<2){
       if ( run_lumi_eventSelector ) {
