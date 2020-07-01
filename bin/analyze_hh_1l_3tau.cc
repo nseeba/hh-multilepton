@@ -82,6 +82,8 @@
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
 #include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface.h" // HHWeightInterface
+#include "tthAnalysis/HiggsToTauTau/interface/NtupleFillerBDT.h" // NtupleFillerBDT
+#include "tthAnalysis/HiggsToTauTau/interface/BM_list.h" // BMS
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_1l_3tau.h" // EvtHistManager_hh_1l_3tau
 #include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
@@ -361,6 +363,8 @@ int main(int argc, char* argv[])
   bool redoGenMatching = cfg_analyze.getParameter<bool>("redoGenMatching");
   bool jetCleaningByIndex = cfg_analyze.getParameter<bool>("jetCleaningByIndex");
   bool genMatchingByIndex = cfg_analyze.getParameter<bool>("genMatchingByIndex");
+
+  const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
 
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
   std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
@@ -771,6 +775,39 @@ int main(int argc, char* argv[])
     }
   }
 
+  NtupleFillerBDT<float, int>* bdt_filler = nullptr;
+  typedef std::remove_pointer<decltype(bdt_filler)>::type::float_type float_type;
+  typedef std::remove_pointer<decltype(bdt_filler)>::type::int_type int_type;
+  if(selectBDT)
+  {
+    bdt_filler = new std::remove_pointer<decltype(bdt_filler)>::type(
+      makeHistManager_cfg(process_string, Form("%s/sel/evtntuple", histogramDir.data()), era_string, central_or_shift_main)
+    );
+    for(const std::string & evt_cat_str: BMS)
+    {
+      //Book BM weights
+      bdt_filler->register_variable<float_type>( Form("weight_%s", evt_cat_str.c_str()) );
+    }
+    for(const std::string & evt_cat_str: evt_cat_strs)
+    {
+      //Book Weight_klScan
+      bdt_filler->register_variable<float_type>(Form("weight_%s", evt_cat_str.c_str()) );
+    }
+    bdt_filler->register_variable<float_type>(
+      "lep_pt", "lep_conePt", "lep_eta", "lep_tth_mva", "lep_phi",
+      "tau1_pt", "tau1_eta", "tau1_raw", "tau1_phi",
+      "tau2_pt", "tau2_eta", "tau2_raw", "tau2_phi",
+      "tau3_pt", "tau3_eta", "tau3_raw", "tau3_phi",
+      "met", "mht", "met_LD", "HT", "STMET", "met_phi",
+      "diHiggsVisMass", "diHiggsMass",
+      "genWeight", "evtWeight"
+    );
+    bdt_filler->register_variable<int_type>(
+      "nJet", "nElectron", "nMuon"
+    );
+    bdt_filler->bookTree(fs);
+  }
+
   int analyzedEntries = 0;
   int selectedEntries = 0;
   double selectedEntries_weighted = 0.;
@@ -1069,9 +1106,9 @@ int main(int argc, char* argv[])
       assert(electronSelection != kLoose && muonSelection != kLoose);
       selMuons = selectObjects(muonSelection, preselMuons, fakeableMuons, tightMuons);
       selElectrons = selectObjects(electronSelection, preselElectrons, fakeableElectrons, tightElectrons);
-      const std::vector<const RecoLepton*> selLeptons_full = mergeLeptonCollections(selElectrons, selMuons, isHigherConePt);
-      selLeptons = getIntersection(fakeableLeptons, selLeptons_full, isHigherConePt);
     }
+    const std::vector<const RecoLepton*> selLeptons_full = mergeLeptonCollections(selElectrons, selMuons, isHigherConePt);
+    if(!(electronSelection == muonSelection)) selLeptons = getIntersection(fakeableLeptons, selLeptons_full, isHigherConePt);
 
     const std::vector<RecoHadTau> hadTaus = hadTauReader->read();
     const std::vector<const RecoHadTau*> hadTau_ptrs = convert_to_ptrs(hadTaus);
@@ -1100,8 +1137,8 @@ int main(int argc, char* argv[])
     const std::vector<RecoJet> jets = jetReader->read();
     const std::vector<const RecoJet*> jet_ptrs = convert_to_ptrs(jets);
     const std::vector<const RecoJet*> cleanedJets = jetCleaningByIndex ?
-      jetCleanerByIndex(jet_ptrs, fakeableLeptonsFull, fakeableHadTausFull) :
-      jetCleaner       (jet_ptrs, fakeableLeptonsFull, fakeableHadTausFull)
+      jetCleanerByIndex(jet_ptrs, selectBDT ? selLeptons_full : fakeableLeptonsFull, selectBDT ? selHadTaus : fakeableHadTausFull) :
+      jetCleaner       (jet_ptrs, selectBDT ? selLeptons_full : fakeableLeptonsFull, selectBDT ? selHadTaus : fakeableHadTausFull)
     ;
     const std::vector<const RecoJet*> selJets = jetSelector(cleanedJets, isHigherPt);
     const std::vector<const RecoJet*> selBJets_loose = jetSelectorBtagLoose(cleanedJets, isHigherPt);
@@ -1544,6 +1581,7 @@ int main(int argc, char* argv[])
 
     std::vector<double> WeightBM; // weights to do histograms for BMs
     std::map<std::string, double> Weight_ktScan; // weights to do histograms
+    std::map<std::string, double> Weight_BMScan;
     double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
 
     if(apply_HH_rwgt)
@@ -1566,6 +1604,29 @@ int main(int argc, char* argv[])
           std::cout << "line = " << bm_list << " " << evt_cat_strs[bm_list] << "; Weight = " <<  Weight_ktScan[evt_cat_strs[bm_list]] << '\n';
         }
         std::cout << '\n';
+      }
+
+      for(std::size_t bm_list = 0; bm_list < WeightBM.size() ; ++bm_list)
+      {
+        std::string bench;
+        if (bm_list == 0) bench = "SM";
+        else {
+          bench = Form("BM%s", std::to_string(bm_list).data() );
+        }
+        std::string name_BM = Form("weight_%s", bench.data() );
+        Weight_BMScan[name_BM] =  WeightBM[bm_list];
+        if (isDEBUG) std::cout << "line = " << name_BM << "; Weight = " << WeightBM[bm_list] << '\n';
+      }
+    } else {
+      for(std::size_t bm_list = 0; bm_list < BMS.size() ; ++bm_list)
+      {
+        std::string bench;
+        if (bm_list == 0) bench = "SM";
+        else {
+          bench = Form("BM%s", std::to_string(bm_list).data() );
+        }
+        std::string name_BM = Form("weight_%s", bench.data() );
+        Weight_BMScan[name_BM] =  1.0;
       }
     }
     
@@ -1719,6 +1780,61 @@ int main(int argc, char* argv[])
       (*selEventsFile) << eventInfo.run << ':' << eventInfo.lumi << ':' << eventInfo.event << '\n';
     }
 
+    if(bdt_filler)
+    {
+      // do HH nonres weight
+      std::map<std::string, double> rwgt_map;
+      for(const std::string & evt_cat_str: evt_cat_strs)
+      {
+        if(apply_HH_rwgt)
+        {
+          rwgt_map[evt_cat_str] = Weight_ktScan[evt_cat_str];
+        }
+        else
+        {
+          rwgt_map[evt_cat_str] = evtWeightRecorder.get(central_or_shift_main);
+        }
+      }
+
+      bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
+          ("tau1_pt",                  selHadTau_lead->pt())
+          ("tau1_eta",                 selHadTau_lead->eta())
+          ("tau1_phi",                 selHadTau_lead->phi())
+          ("tau1_raw",                 selHadTau_lead->raw_mva())
+          ("tau2_pt",                  selHadTau_sublead->pt())
+          ("tau2_eta",                 selHadTau_sublead->eta())
+          ("tau2_phi",                 selHadTau_lead->phi())
+          ("tau2_raw",                 selHadTau_sublead->raw_mva())
+          ("tau3_pt",                  selHadTau_third->pt())
+          ("tau3_eta",                 selHadTau_third->eta())
+          ("tau3_phi",                 selHadTau_third->phi())
+          ("tau3_raw",                 selHadTau_third->raw_mva())
+          ("lep_pt",                  selLepton->pt())
+          ("lep_conePt",              selLepton->cone_pt())
+          ("lep_eta",                 selLepton->eta())
+          ("lep_phi",                 selLepton->phi())
+          ("lep_tth_mva",             selLepton->mvaRawTTH())
+          ("met",                      met.pt())
+          ("met_phi",                  met.phi())
+          ("mht",                      mht_p4.pt())
+          ("met_LD",                   met_LD)
+          ("HT",                       HT)
+          ("STMET",                    STMET)
+          ("diHiggsVisMass",           dihiggsVisMass_sel)
+          ("diHiggsMass",              dihiggsMass)
+          ("nJet",                     selJets.size())
+          ("genWeight",                eventInfo.genWeight)
+          ("evtWeight",                evtWeightRecorder.get(central_or_shift_main))
+          ("nElectron",                selElectrons.size())
+          ("nMuon",                    selMuons.size())
+          (rwgt_map, "weight")
+          (Weight_BMScan)
+          (Weight_ktScan, "weight")
+        .fill()
+        ;
+
+    }
+
     ++selectedEntries;
     selectedEntries_weighted += evtWeightRecorder.get(central_or_shift_main);
     std::string process_and_genMatch = process_string;
@@ -1792,6 +1908,7 @@ int main(int argc, char* argv[])
   delete lheInfoReader;
   delete psWeightReader;
 
+  delete bdt_filler;
   for(auto & kv: genEvtHistManager_beforeCuts)
   {
     delete kv.second;

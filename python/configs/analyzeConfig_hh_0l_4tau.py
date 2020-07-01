@@ -142,6 +142,14 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
     self.use_nonnominal = use_nonnominal
     self.hlt_filter = hlt_filter
 
+  def set_BDT_training(self, hadTau_selection_relaxed):
+    """Run analysis with loose selection criteria for leptons and hadronic taus,
+       for the purpose of preparing event list files for BDT training.
+    """
+    self.hadTau_selections = [ "forBDTtraining" ]
+    self.hadTau_frWeights  = [ "disabled" ]
+    super(analyzeConfig_hh_0l_4tau, self).set_BDT_training(hadTau_selection_relaxed)
+
   def accept_systematics(self, central_or_shift, is_mc, hadTau_selection, hadTau_charge_selection, sample_info):
     if central_or_shift != "central":
       isFR_shape_shift = (central_or_shift in self.central_or_shifts_fr)
@@ -193,13 +201,13 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
       jobOptions['hadTauFakeRateWeight.applyFitFunction_sublead'] = False
       jobOptions['hadTauFakeRateWeight.applyFitFunction_third'] = False
       jobOptions['hadTauFakeRateWeight.applyFitFunction_fourth'] = False
-      if self.applyFakeRateWeights not in [ "4tau" ]:
+      if self.applyFakeRateWeights not in [ "4tau" ] and not self.isBDTtraining:
         # We want to preserve the same logic as running in SR and applying the FF method only to leptons [*]
         jobOptions['hadTauFakeRateWeight.applyFitFunction_lead'] = True
         jobOptions['hadTauFakeRateWeight.applyFitFunction_sublead'] = True
         jobOptions['hadTauFakeRateWeight.applyFitFunction_third'] = True
         jobOptions['hadTauFakeRateWeight.applyFitFunction_fourth'] = True
-    if jobOptions['hadTauSelection'].find("Tight") != -1 and self.applyFakeRateWeights not in [ "4tau" ]:
+    if jobOptions['hadTauSelection'].find("Tight") != -1 and self.applyFakeRateWeights not in [ "4tau" ] and not self.isBDTtraining:
       # [*] SR and applying the FF method only to leptons
       jobOptions['hadTauFakeRateWeight.applyGraph_lead'] = False # FR in MC for the leading tau
       jobOptions['hadTauFakeRateWeight.applyGraph_sublead'] = False
@@ -305,6 +313,15 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
 
     mcClosure_regex = re.compile('Fakeable_mcClosure_(?P<type>m|e|t)_wFakeRateWeights')
     for hadTau_selection in self.hadTau_selections:
+
+      if hadTau_selection == "forBDTtraining":
+        hadTauSelection = "Tight|%s" % self.hadTau_selection_relaxed
+      elif hadTau_selection == "Fakeable_mcClosure_t":
+        hadTauSelection = "Fakeable"
+        hadTauSelection = "|".join([hadTauSelection, self.hadTau_selection_part2])
+      else:
+        hadTauSelection = "|".join([hadTau_selection, self.hadTau_selection_part2])
+
       for hadTau_frWeight in self.hadTau_frWeights:
         if hadTau_frWeight == "enabled" and not hadTau_selection.startswith("Fakeable"):
           continue
@@ -363,13 +380,6 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
                   if hadTau_selection.find("Tight") == -1 \
                   else "disabled"
 
-                hadTauSelection = hadTau_selection
-                if self.applyFakeRateWeights == "4tau":
-                  hadTauSelection = "|".join([ hadTau_selection, self.hadTau_selection_part2 ])
-                if hadTau_selection == "Fakeable_mcClosure_t":
-                  hadTauSelection = "Fakeable"
-                  hadTauSelection = "|".join([hadTauSelection, self.hadTau_selection_part2])
-
                 self.jobOptions_analyze[key_analyze_job] = {
                   'ntupleFiles'              : ntupleFiles,
                   'cfgFile_modified'         : cfgFile_modified_path,
@@ -385,6 +395,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
                   'apply_hlt_filter'         : self.hlt_filter,
                   'useNonNominal'            : self.use_nonnominal,
                   'fillGenEvtHistograms'     : True,
+                  'selectBDT'                : self.isBDTtraining,
                 }
                 self.createCfg_analyze(self.jobOptions_analyze[key_analyze_job], sample_info, hadTau_selection)
 
@@ -398,7 +409,9 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
                 self.outputFile_hadd_stage1[key_hadd_stage1_job] = os.path.join(self.dirs[key_hadd_stage1_dir][DKEY_HIST],
                                                                                 "hadd_stage1_%s_%s_%s.root" % hadd_stage1_job_tuple)
 
-                
+            if self.isBDTtraining:
+              continue
+
             # add output files of hadd_stage1 to list of input files for hadd_stage1_5
             key_hadd_stage1_job = getKey(process_name, hadTau_selection_and_frWeight, hadTau_charge_selection)
             key_hadd_stage1_5_dir = getKey("hadd", hadTau_selection_and_frWeight, hadTau_charge_selection)
@@ -409,6 +422,9 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
             self.inputFiles_hadd_stage1_5[key_hadd_stage1_5_job].append(self.outputFile_hadd_stage1[key_hadd_stage1_job])
             self.outputFile_hadd_stage1_5[key_hadd_stage1_5_job] = os.path.join(self.dirs[key_hadd_stage1_5_dir][DKEY_HIST],
                                                                         "hadd_stage1_5_%s_%s.root" % hadd_stage1_5_job_tuple)
+
+          if self.isBDTtraining:
+            continue
 
           # sum fake background contributions for the total of all MC sample
           # input processes: TT_fake, TTW_fake, TTWW_fake, ...
@@ -475,6 +491,21 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
           self.inputFiles_hadd_stage2[key_hadd_stage2_job].append(self.outputFile_hadd_stage1_5[key_hadd_stage1_5_job])
           self.outputFile_hadd_stage2[key_hadd_stage2_job] = os.path.join(self.dirs[key_hadd_stage2_dir][DKEY_HIST],
                                                                           "hadd_stage2_%s_%s.root" % hadd_stage2_job_tuple)
+
+    if self.isBDTtraining:
+      if self.is_sbatch:
+        logging.info("Creating script for submitting '%s' jobs to batch system" % self.executable_analyze)
+        self.sbatchFile_analyze = os.path.join(self.dirs[DKEY_SCRIPTS], "sbatch_analyze_%s.py" % self.channel)
+        self.createScript_sbatch_analyze(self.executable_analyze, self.sbatchFile_analyze, self.jobOptions_analyze)
+      logging.info("Creating Makefile")
+      lines_makefile = []
+      self.addToMakefile_analyze(lines_makefile)
+      self.addToMakefile_hadd_stage1(lines_makefile)
+      self.targets.extend(self.phoniesToAdd)
+      self.addToMakefile_validate(lines_makefile)
+      self.createMakefile(lines_makefile)
+      logging.info("Done.")
+      return self.num_jobs
 
     logging.info("Creating configuration files to run 'addBackgroundFakes'")
     for hadTau_charge_selection in self.hadTau_charge_selections:

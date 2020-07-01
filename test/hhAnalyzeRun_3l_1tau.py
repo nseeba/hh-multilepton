@@ -106,16 +106,9 @@ elif mode == "forBDTtraining":
   if use_preselected:
     raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
 
-  # NB! use the same samples for the BDT training as we use in the analysis -- valid only if implement the 50-50 approach
+  # NB! use the same samples for the BDT training as we use in the analysis -- valid only if implementing the 50-50 approach
   samples = load_samples(era)
 
-  # Whitelist the samples that are relevant for the BDT training
-  whitelist = []
-  for sample_name, sample_info in samples.items():
-     if sample_name == 'sum_events':
-       continue
-     # uncomment the following line once we have the whitelist
-     #sample_info['use_it'] = (sample_info['process_name_specific'] in whitelist)
   hadTauWP_map_relaxed = {
     'dR03mva' : 'Loose',
     'deepVSj' : 'Loose',

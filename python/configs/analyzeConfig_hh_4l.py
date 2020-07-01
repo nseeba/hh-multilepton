@@ -137,6 +137,14 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
     self.use_nonnominal = use_nonnominal
     self.hlt_filter = hlt_filter
 
+  def set_BDT_training(self):
+    """Run analysis with loose selection criteria for leptons,
+       for the purpose of preparing event list files for BDT training.
+    """
+    self.lepton_selections = [ "forBDTtraining" ]
+    self.lepton_frWeights  = [ "disabled" ]
+    self.isBDTtraining     = True
+
   def accept_systematics(self, central_or_shift, is_mc, lepton_selection, leptonChargeSelection, sample_info):
     if central_or_shift != "central":
       isFR_shape_shift = (central_or_shift in self.central_or_shifts_fr)
@@ -275,7 +283,11 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
 
       electron_selection = lepton_selection
       muon_selection = lepton_selection
-      if lepton_selection == "Fakeable_mcClosure_e":
+
+      if lepton_selection == "forBDTtraining":
+        electron_selection = "Loose"
+        muon_selection = "Loose"
+      elif lepton_selection == "Fakeable_mcClosure_e":
         electron_selection = "Fakeable"
         muon_selection = "Tight"
       elif lepton_selection == "Fakeable_mcClosure_m":
@@ -356,6 +368,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                   'central_or_shifts_local'  : central_or_shifts_local,
                   'fillGenEvtHistograms'     : True,
                   'apply_hlt_filter'         : self.hlt_filter,
+                  'selectBDT'                : self.isBDTtraining,
                 }
                 self.createCfg_analyze(self.jobOptions_analyze[key_analyze_job], sample_info, lepton_selection)
 
@@ -369,8 +382,8 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                 self.outputFile_hadd_stage1[key_hadd_stage1_job] = os.path.join(self.dirs[key_hadd_stage1_dir][DKEY_HIST],
                                                                                 "hadd_stage1_%s_%s_%s.root" % hadd_stage1_job_tuple)
 
-            # if self.isBDTtraining or self.do_sync:
-            #   continue
+            if self.isBDTtraining:
+              continue
 
             # add output files of hadd_stage1 to list of input files for hadd_stage1_5
             key_hadd_stage1_job = getKey(process_name, lepton_selection_and_frWeight, leptonChargeSelection)
@@ -383,8 +396,8 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
             self.outputFile_hadd_stage1_5[key_hadd_stage1_5_job] = os.path.join(self.dirs[key_hadd_stage1_5_dir][DKEY_HIST],
                                                                         "hadd_stage1_5_%s_%s.root" % hadd_stage1_5_job_tuple)
 
-          # if self.isBDTtraining or self.do_sync:
-          #   continue
+          if self.isBDTtraining:
+            continue
 
           # sum fake background contributions for the total of all MC sample
           # input processes: TT_fake, TTW_fake, TTWW_fake, ...
@@ -473,6 +486,21 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
           self.inputFiles_hadd_stage2[key_hadd_stage2_job].append(self.outputFile_hadd_stage1_5[key_hadd_stage1_5_job])
           self.outputFile_hadd_stage2[key_hadd_stage2_job] = os.path.join(self.dirs[key_hadd_stage2_dir][DKEY_HIST],
                                                                           "hadd_stage2_%s_%s.root" % hadd_stage2_job_tuple)
+
+    if self.isBDTtraining:
+      if self.is_sbatch:
+        logging.info("Creating script for submitting '%s' jobs to batch system" % self.executable_analyze)
+        self.sbatchFile_analyze = os.path.join(self.dirs[DKEY_SCRIPTS], "sbatch_analyze_%s.py" % self.channel)
+        self.createScript_sbatch_analyze(self.executable_analyze, self.sbatchFile_analyze, self.jobOptions_analyze)
+      logging.info("Creating Makefile")
+      lines_makefile = []
+      self.addToMakefile_analyze(lines_makefile)
+      self.addToMakefile_hadd_stage1(lines_makefile)
+      self.targets.extend(self.phoniesToAdd)
+      self.addToMakefile_validate(lines_makefile)
+      self.createMakefile(lines_makefile)
+      logging.info("Done.")
+      return self.num_jobs
 
     logging.info("Creating configuration files to run 'addBackgroundFakes'")
     for leptonChargeSelection in self.leptonChargeSelections:

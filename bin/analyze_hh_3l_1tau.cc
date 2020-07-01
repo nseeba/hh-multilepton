@@ -95,6 +95,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
 #include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface.h" // HHWeightInterface
+#include "tthAnalysis/HiggsToTauTau/interface/BM_list.h" // BMS
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_3l_1tau.h" // EvtHistManager_hh_3l_1tau
 #include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
@@ -1748,6 +1749,7 @@ int main(int argc, char* argv[])
 
     std::vector<double> WeightBM; // weights to do histograms for BMs
     std::map<std::string, double> Weight_ktScan; // weights to do histograms
+    std::map<std::string, double> Weight_BMScan;
     double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
 
     if(apply_HH_rwgt)
@@ -1770,6 +1772,29 @@ int main(int argc, char* argv[])
           std::cout << "line = " << bm_list << " " << evt_cat_strs[bm_list] << "; Weight = " <<  Weight_ktScan[evt_cat_strs[bm_list]] << '\n';
         }
         std::cout << '\n';
+      }
+
+      for(std::size_t bm_list = 0; bm_list < WeightBM.size() ; ++bm_list)
+      {
+        std::string bench;
+        if (bm_list == 0) bench = "SM";
+        else {
+          bench = Form("BM%s", std::to_string(bm_list).data() );
+        }
+        std::string name_BM = Form("weight_%s", bench.data() );
+        Weight_BMScan[name_BM] =  WeightBM[bm_list];
+        if (isDEBUG) std::cout << "line = " << name_BM << "; Weight = " << WeightBM[bm_list] << '\n';
+      }
+    } else {
+      for(std::size_t bm_list = 0; bm_list < BMS.size() ; ++bm_list)
+      {
+        std::string bench;
+        if (bm_list == 0) bench = "SM";
+        else {
+          bench = Form("BM%s", std::to_string(bm_list).data() );
+        }
+        std::string name_BM = Form("weight_%s", bench.data() );
+        Weight_BMScan[name_BM] =  1.0;
       }
     }
             

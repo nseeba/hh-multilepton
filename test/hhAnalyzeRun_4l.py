@@ -12,7 +12,7 @@ import getpass
 
 # E.g.: ./test/hhAnalyzeRun_4l.py -v 2017Dec13 -m default -e 2017
 
-mode_choices     = [ 'default' ]
+mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full', 'internal' ] + systematics.an_opts_hh_multilepton
 systematics.full = systematics.an_hh_multilepton
 systematics.internal = systematics.an_internal_no_mem
@@ -99,6 +99,12 @@ hadTau_selection = tau_id + hadTauWP_map[tau_id]
 
 if mode == "default":
   samples = load_samples(era, suffix = "preselected" if use_preselected else "")
+elif mode == "forBDTtraining":
+  if use_preselected:
+    raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
+
+  # NB! use the same samples for the BDT training as we use in the analysis -- valid only if implementing the 50-50 approach
+  samples = load_samples(era)
 else:
   raise ValueError("Internal logic error")
 
