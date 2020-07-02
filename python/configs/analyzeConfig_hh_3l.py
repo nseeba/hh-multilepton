@@ -6,7 +6,7 @@ from tthAnalysis.HiggsToTauTau.analysisTools import initDict, getKey, create_cfg
 import sys
 
 def get_lepton_selection_and_frWeight(lepton_selection, lepton_frWeight):
-  lepton_selection_and_frWeight = lepton_selection
+  lepton_selection_and_frWeight = lepton_selection 
   if lepton_selection.startswith("Fakeable"):
     if lepton_frWeight == "enabled":
       lepton_selection_and_frWeight += "_wFakeRateWeights"
@@ -212,9 +212,15 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
       self.mcClosure_dir['%s_%s' % (lepton_selection, jobOptions['leptonChargeSelection'])] = jobOptions['histogramDir']
 
     self.set_leptonFakeRateWeightHistogramNames(jobOptions['central_or_shift'], lepton_selection)
-    jobOptions['leptonFakeRateWeight.inputFileName'] = self.leptonFakeRateWeight_inputFile
-    jobOptions['leptonFakeRateWeight.histogramName_e'] = self.leptonFakeRateWeight_histogramName_e
-    jobOptions['leptonFakeRateWeight.histogramName_mu'] = self.leptonFakeRateWeight_histogramName_mu
+    ## Original
+    #jobOptions['leptonFakeRateWeight.inputFileName'] = self.leptonFakeRateWeight_inputFile  
+    #jobOptions['leptonFakeRateWeight.histogramName_e'] = self.leptonFakeRateWeight_histogramName_e
+    #jobOptions['leptonFakeRateWeight.histogramName_mu'] = self.leptonFakeRateWeight_histogramName_mu
+    ## Edit Siddhesh for lepton fake-rates MC closure
+    jobOptions['leptonFakeRateWeight.inputFileName'] = "tthAnalysis/HiggsToTauTau/data/fakeRate_LeptonLooser_Ram/FR_lep_hh_lepLoose_Ram_20200626.root"
+    jobOptions['leptonFakeRateWeight.histogramName_e'] = "FR_mva080_el_data_comb"
+    jobOptions['leptonFakeRateWeight.histogramName_mu'] = "FR_mva085_mu_data_comb"
+    
 
     lines = super(analyzeConfig_hh_3l, self).createCfg_analyze(jobOptions, sample_info)
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
