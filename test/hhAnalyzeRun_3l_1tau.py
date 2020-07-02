@@ -106,8 +106,7 @@ elif mode == "forBDTtraining":
   if use_preselected:
     raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
 
-  # NB! use the same samples for the BDT training as we use in the analysis -- valid only if implementing the 50-50 approach
-  samples = load_samples(era)
+  samples = load_samples(era, suffix = "BDT")
 
   hadTauWP_map_relaxed = {
     'dR03mva' : 'Loose',
