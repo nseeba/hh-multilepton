@@ -1,7 +1,7 @@
 from hhAnalysis.multilepton.samples.hhAnalyzeSamples_2018 import samples_2018
 from tthAnalysis.HiggsToTauTau.common import load_samples_stitched
 
-samples_2018 = load_samples_stitched(samples_2018, '2018', load_dy = True, load_wjets = True) # load LO DY and W+jets
+samples_2018 = load_samples_stitched(samples_2018, '2018', ['dy_lo', 'wjets']) # load LO DY and W+jets
 
 for sample_name, sample_info in samples_2018.items():
   if sample_name == 'sum_events':
