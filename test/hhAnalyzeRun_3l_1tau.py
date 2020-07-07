@@ -93,8 +93,10 @@ else:
   raise ValueError("Invalid choice for the sideband: %s" % sideband)
 
 hadTauWP_map = {
-  'dR03mva' : 'Loose',
-  'deepVSj' : 'Loose',
+  #'dR03mva' : 'Loose', #VLoose # VVLoose # Medium
+  #'deepVSj' : 'Loose',
+  'dR03mva' : 'Medium', #VLoose # VVLoose # Medium
+  'deepVSj' : 'Medium',
 }
 hadTau_selection = tau_id + hadTauWP_map[tau_id]
 
@@ -104,16 +106,8 @@ elif mode == "forBDTtraining":
   if use_preselected:
     raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
 
-  # NB! use the same samples for the BDT training as we use in the analysis -- valid only if implement the 50-50 approach
-  samples = load_samples(era)
+  samples = load_samples(era, suffix = "BDT")
 
-  # Whitelist the samples that are relevant for the BDT training
-  whitelist = []
-  for sample_name, sample_info in samples.items():
-     if sample_name == 'sum_events':
-       continue
-     # uncomment the following line once we have the whitelist
-     #sample_info['use_it'] = (sample_info['process_name_specific'] in whitelist)
   hadTauWP_map_relaxed = {
     'dR03mva' : 'Loose',
     'deepVSj' : 'Loose',
@@ -166,7 +160,14 @@ if __name__ == '__main__':
       "dihiggsVisMass"                    : {},
       "dihiggsMass"                       : {},
       "HT"                                : {},
-      "STMET"                             : {}
+      "STMET"                             : {},
+      "BDTOutput_1000"                    : {},
+      "BDTOutput_250"                    : {},
+      "BDTOutput_400"                    : {},
+      "BDTOutput_700"                    : {},
+      "BDTOutput_300"                    : {},
+      "BDTOutput_500"                    : {},
+      "BDTOutput_800"                    : {}
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,

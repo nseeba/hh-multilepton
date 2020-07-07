@@ -112,7 +112,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     self.applyFakeRateWeights = applyFakeRateWeights
     self.leptonChargeSelections = leptonChargeSelections
     self.hadTau_charge_selections = hadTau_charge_selections
-    run_mcClosure = 'central' not in self.central_or_shifts or len(central_or_shifts) > 1 or self.do_sync
 
     self.lepton_genMatches = [ "2l2f0g0j", "2l1f0g0j", "2l0f0g0j", "1l1f1g0j", "1l1f0g1j", "1l0f1g0j", "1l0f0g1j", "0l0f2g0j", "0l0f1g1j", "0l0f0g2j" ]
     self.hadTau_genMatches = [ "2t0e0m0j", "1t1e0m0j", "1t0e1m0j", "1t0e0m1j", "0t2e0m0j", "0t1e1m0j", "0t1e0m1j", "0t0e2m0j", "0t0e1m1j", "0t0e0m2j" ]
@@ -122,20 +121,20 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     if self.applyFakeRateWeights == "4L":
       self.apply_leptonGenMatching = True
       self.apply_hadTauGenMatching = True
-      if run_mcClosure:
+      if self.run_mcClosure:
         self.lepton_and_hadTau_selections.extend([ "Fakeable_mcClosure_e", "Fakeable_mcClosure_m", "Fakeable_mcClosure_t" ])
       self.central_or_shifts_fr = systematics.FR_all
     elif applyFakeRateWeights == "2lepton":
       self.apply_leptonGenMatching = True
       self.apply_hadTauGenMatching = False
-      if run_mcClosure:
+      if self.run_mcClosure:
         self.lepton_and_hadTau_selections.extend([ "Fakeable_mcClosure_e", "Fakeable_mcClosure_m" ])
       # in this regime data-to-MC SFs of jet-to-tau FR are applied and therefore the relevant systematics have to be preserved
       self.central_or_shifts_fr = systematics.FR_all
     elif applyFakeRateWeights == "2tau":
       self.apply_leptonGenMatching = False
       self.apply_hadTauGenMatching = True
-      if run_mcClosure:
+      if self.run_mcClosure:
         self.lepton_and_hadTau_selections.extend([ "Fakeable_mcClosure_t" ])
       self.central_or_shifts_fr = systematics.FR_t
     else:

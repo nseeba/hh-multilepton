@@ -104,7 +104,9 @@ if mode == "default":
 elif mode == "forBDTtraining":
   if use_preselected:
     raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
-  samples = load_samples(era, suffix = "")
+
+  samples = load_samples(era, suffix = "BDT")
+
   hadTauWP_map_relaxed = {
     'dR03mva' : 'VLoose',
     'deepVSj' : 'VLoose',
@@ -136,9 +138,9 @@ if __name__ == '__main__':
     executable_analyze                    = "analyze_hh_2l_2tau",
     cfgFile_analyze                       = "analyze_hh_2l_2tau_cfg.py",
     samples                               = samples,
-    leptonChargeSelections                = [ "disabled", "OS", "SS"], ## Default. is just disabled 
+    leptonChargeSelections                = [ "disabled"], ## Default. is just disabled 
     hadTau_selection                      = hadTau_selection,
-    hadTau_charge_selections              = [ "disabled", "OS", "SS" ], ## Default. is just disabled 
+    hadTau_charge_selections              = [ "disabled"], ## Default. is just disabled 
     applyFakeRateWeights                  = "4L",
     chargeSumSelections                   = chargeSumSelections,
     central_or_shifts                     = central_or_shifts,
@@ -148,7 +150,7 @@ if __name__ == '__main__':
     era                                   = era,
     use_lumi                              = True,
     lumi                                  = lumi,
-    invert_ZbosonMassVeto                 = True,  ## Default is False
+    invert_ZbosonMassVeto                 = False,
     check_output_files                    = check_output_files,
     running_method                        = running_method,
     num_parallel_jobs                     = num_parallel_jobs,

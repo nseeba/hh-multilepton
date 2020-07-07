@@ -12,7 +12,7 @@ import getpass
 
 # E.g.: ./test/hhAnalyzeRun_0l_4tau.py -v 2017Dec13 -m default -e 2017
 
-mode_choices     = [ 'default' ]
+mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full', 'internal' ] + systematics.an_opts_hh_multilepton
 systematics.full = systematics.an_hh_multilepton
 systematics.internal = systematics.an_internal_no_mem
@@ -103,7 +103,19 @@ hadTau_selection = tau_id + hadTauWP_map[tau_id]
 
 if mode == "default":
   samples = load_samples(era, suffix = "preselected" if use_preselected else "")
-  applyFakeRateWeights = "4tau"
+elif mode == "forBDTtraining":
+  if use_preselected:
+    raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
+
+  samples = load_samples(era, suffix = "BDT")
+
+  hadTauWP_map_relaxed = {
+    'dR03mva' : 'VLoose',
+    'deepVSj' : 'VLoose',
+  }
+  if args.tau_id_wp:
+    tau_id = args.tau_id[:7]
+  hadTau_selection_relaxed = tau_id + hadTauWP_map_relaxed[tau_id]
 else:
   raise ValueError("Invalid mode: %s" % mode)
 
@@ -168,6 +180,9 @@ if __name__ == '__main__':
     use_home                              = use_home,
     submission_cmd                        = sys.argv,
   )
+
+  if mode.find("forBDTtraining") != -1:
+    analysis.set_BDT_training(hadTau_selection_relaxed)
 
   job_statistics = analysis.create()
   for job_type, num_jobs in job_statistics.items():
