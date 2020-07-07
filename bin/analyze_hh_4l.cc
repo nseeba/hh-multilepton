@@ -226,7 +226,7 @@ int main(int argc, char* argv[])
   delete hadTauSelection_parts;
 
   enum { kOS, kSS };
-  std::string chargeSumSelection_string = cfg_analyze.getParameter<std::string>("chargeSumSelection");
+  std::string chargeSumSelection_string = cfg_analyze.getParameter<std::string>("leptonChargeSelection");
   int chargeSumSelection = -1;
   if      ( chargeSumSelection_string == "OS" ) chargeSumSelection = kOS;
   else if ( chargeSumSelection_string == "SS" ) chargeSumSelection = kSS;
