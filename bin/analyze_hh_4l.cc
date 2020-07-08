@@ -79,6 +79,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface.h" // HHWeightInterface
 #include "tthAnalysis/HiggsToTauTau/interface/BM_list.h" // BMS
 #include "tthAnalysis/HiggsToTauTau/interface/NtupleFillerBDT.h" // NtupleFillerBDT
+#include "tthAnalysis/HiggsToTauTau/interface/BtagSFRatioFacility.h" // BtagSFRatioFacility
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_4l.h" // EvtHistManager_hh_4l
 #include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
@@ -225,7 +226,7 @@ int main(int argc, char* argv[])
   delete hadTauSelection_parts;
 
   enum { kOS, kSS };
-  std::string chargeSumSelection_string = cfg_analyze.getParameter<std::string>("chargeSumSelection");
+  std::string chargeSumSelection_string = cfg_analyze.getParameter<std::string>("leptonChargeSelection");
   int chargeSumSelection = -1;
   if      ( chargeSumSelection_string == "OS" ) chargeSumSelection = kOS;
   else if ( chargeSumSelection_string == "SS" ) chargeSumSelection = kSS;
@@ -246,6 +247,7 @@ int main(int argc, char* argv[])
   std::string apply_topPtReweighting_str = cfg_analyze.getParameter<std::string>("apply_topPtReweighting");
   bool apply_topPtReweighting = ! apply_topPtReweighting_str.empty();
   bool apply_l1PreFireWeight = cfg_analyze.getParameter<bool>("apply_l1PreFireWeight");
+  bool apply_btagSFRatio = cfg_analyze.getParameter<bool>("applyBtagSFRatio");
   bool apply_hlt_filter = cfg_analyze.getParameter<bool>("apply_hlt_filter");
   bool apply_met_filters = cfg_analyze.getParameter<bool>("apply_met_filters");
   edm::ParameterSet cfgMEtFilter = cfg_analyze.getParameter<edm::ParameterSet>("cfgMEtFilter");
@@ -318,6 +320,7 @@ int main(int argc, char* argv[])
   if ( applyFakeRateWeights == kFR_4lepton) {
     edm::ParameterSet cfg_leptonFakeRateWeight = cfg_analyze.getParameter<edm::ParameterSet>("leptonFakeRateWeight");
     cfg_leptonFakeRateWeight.addParameter<std::string>("era", era_string);
+    cfg_leptonFakeRateWeight.addParameter<std::vector<std::string>>("central_or_shifts", central_or_shifts_local);
     leptonFakeRateInterface = new LeptonFakeRateInterface(cfg_leptonFakeRateWeight);
   }
 
@@ -421,6 +424,13 @@ int main(int argc, char* argv[])
   {
     l1PreFiringWeightReader = new L1PreFiringWeightReader(era);
     inputTree->registerReader(l1PreFiringWeightReader);
+  }
+
+  BtagSFRatioFacility * btagSFRatioFacility = nullptr;
+  if(apply_btagSFRatio)
+  {
+    const edm::ParameterSet btagSFRatio = cfg_analyze.getParameterSet("btagSFRatio");
+    btagSFRatioFacility = new BtagSFRatioFacility(btagSFRatio);
   }
 
 //--- declare particle collections
@@ -1246,6 +1256,10 @@ int main(int argc, char* argv[])
 //   (using the method "Event reweighting using scale factors calculated with a tag and probe method",
 //    described on the BTV POG twiki https://twiki.cern.ch/twiki/bin/view/CMS/BTagShapeCalibration )
       evtWeightRecorder.record_btagWeight(selJets);
+      if(btagSFRatioFacility)
+      {
+        evtWeightRecorder.record_btagSFRatio(btagSFRatioFacility, selJets.size());
+      }
 
       if(isMC_EWK)
       {

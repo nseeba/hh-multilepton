@@ -103,20 +103,19 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
     self.lepton_and_hadTau_frWeights = [ "enabled", "disabled" ]
     self.hadTau_selection_part2 = hadTau_selection
     self.applyFakeRateWeights = applyFakeRateWeights
-    run_mcClosure = 'central' not in self.central_or_shifts or len(central_or_shifts) > 1 or self.do_sync
 
     self.apply_leptonGenMatching = None
     self.apply_hadTauGenMatching = None
     if self.applyFakeRateWeights == "4L":
       self.apply_leptonGenMatching = True
       self.apply_hadTauGenMatching = True
-      if run_mcClosure:
+      if self.run_mcClosure:
         self.lepton_and_hadTau_selections.extend([ "Fakeable_mcClosure_e", "Fakeable_mcClosure_m", "Fakeable_mcClosure_t" ])
       self.central_or_shifts_fr = systematics.FR_all
     elif applyFakeRateWeights == "3tau":
       self.apply_leptonGenMatching = False
       self.apply_hadTauGenMatching = True
-      if run_mcClosure:
+      if self.run_mcClosure:
         self.lepton_and_hadTau_selections.extend([ "Fakeable_mcClosure_t" ])
       self.central_or_shifts_fr = systematics.FR_t
     else:

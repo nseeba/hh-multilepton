@@ -103,12 +103,11 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
     self.hadTau_frWeights = [ "enabled", "disabled" ]
     self.hadTau_selection_part2 = hadTau_selection
     self.applyFakeRateWeights = applyFakeRateWeights
-    run_mcClosure = 'central' not in self.central_or_shifts or len(central_or_shifts) > 1 or self.do_sync
 
     self.apply_hadTauGenMatching = None
     if applyFakeRateWeights == "4tau":
       self.apply_hadTauGenMatching = True
-      if run_mcClosure:
+      if self.run_mcClosure:
         self.hadTau_selections.extend([ "Fakeable_mcClosure_t" ])
       self.central_or_shifts_fr = systematics.FR_t
     else:

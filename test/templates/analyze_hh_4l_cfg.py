@@ -60,7 +60,7 @@ process.analyze_hh_4l = cms.PSet(
     apply_leptonGenMatching = cms.bool(True),
     hadTauSelection = cms.string(''),
 
-    chargeSumSelection = cms.string(''),
+    leptonChargeSelection = cms.string(''),
 
     applyFakeRateWeights = cms.string(""),
     leptonFakeRateWeight = cms.PSet(

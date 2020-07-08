@@ -109,12 +109,11 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     self.lepton_frWeights = [ "enabled", "disabled" ]
     self.hadTauVeto_selection_part2 = hadTauVeto_selection
     self.applyFakeRateWeights = applyFakeRateWeights
-    run_mcClosure = 'central' not in self.central_or_shifts or len(central_or_shifts) > 1 or self.do_sync
 
     self.apply_leptonGenMatching = None
     if applyFakeRateWeights == "3lepton":
       self.apply_leptonGenMatching = True
-      if run_mcClosure:
+      if self.run_mcClosure:
         self.lepton_selections.extend([ "Fakeable_mcClosure_e", "Fakeable_mcClosure_m" ])
       self.central_or_shifts_fr = systematics.FRe_shape + systematics.FRm_shape
     else:
@@ -145,7 +144,6 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
       sample_category = sample_info["sample_category"]
       if sample_category.startswith("signal"):
         self.prep_dcard_signals.append(sample_category)
-    print"analyzeConfig_hh_3l::__init__: prep_dcard_signals:",self.prep_dcard_signals; sys.stdout.flush();
 
     self.histogramDir_prep_dcard = "hh_3l_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_3l_SS_Tight"
