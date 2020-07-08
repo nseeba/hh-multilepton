@@ -328,6 +328,8 @@ int main(int argc, char* argv[])
 
   GenMatchInterface genMatchInterface(3, apply_leptonGenMatching, false);
 
+  std::cout << "analyze_hh_3l:: Siddh here1" << std::endl;
+
   TString hadTauSelection_string = cfg_analyze.getParameter<std::string>("hadTauSelection").data();
   TObjArray* hadTauSelection_parts = hadTauSelection_string.Tokenize("|");
   assert(hadTauSelection_parts->GetEntries() >= 1);
@@ -342,6 +344,8 @@ int main(int argc, char* argv[])
   else throw cms::Exception("analyze_hh_3l")
     << "Invalid Configuration parameter 'leptonChargeSelection' = " << leptonChargeSelection_string << " !!\n";
 
+  std::cout << "analyze_hh_3l:: Siddh here2" << std::endl;
+  
   const int minNumJets = 1;
 
   bool isMC = cfg_analyze.getParameter<bool>("isMC");
@@ -362,7 +366,8 @@ int main(int argc, char* argv[])
   MEtFilterSelector metFilterSelector(cfgMEtFilter, isMC);
   const bool useNonNominal = cfg_analyze.getParameter<bool>("useNonNominal");
   const bool useNonNominal_jetmet = useNonNominal || ! isMC;
-
+  std::cout << "analyze_hh_3l:: Siddh here3" << std::endl;
+  
   if(! central_or_shifts_local.empty())
   {
     assert(central_or_shift_main == "central");
@@ -387,7 +392,8 @@ int main(int argc, char* argv[])
     eventWeightManager = new EvtWeightManager(additionalEvtWeight);
     eventWeightManager->set_central_or_shift(central_or_shift_main);
   }
-
+  std::cout << "analyze_hh_3l:: Siddh here4" << std::endl;
+  
   bool isDEBUG = cfg_analyze.getParameter<bool>("isDEBUG");
   if ( isDEBUG ) std::cout << "Warning: DEBUG mode enabled -> trigger selection will not be applied for data !!" << std::endl;
 
@@ -402,7 +408,8 @@ int main(int argc, char* argv[])
        " -> met_option      = " << met_option            << "\n"
        " -> jetPt_option    = " << jetPt_option          << '\n'
   ;
-
+  std::cout << "analyze_hh_3l:: Siddh here5" << std::endl;
+  
   edm::ParameterSet cfg_dataToMCcorrectionInterface;
   cfg_dataToMCcorrectionInterface.addParameter<std::string>("era", era_string);
   cfg_dataToMCcorrectionInterface.addParameter<std::string>("hadTauSelection", hadTauSelection_part2);
@@ -416,21 +423,25 @@ int main(int argc, char* argv[])
     case Era::k2018: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2018(cfg_dataToMCcorrectionInterface); break;
     default: throw cmsException("analyze_hh_3l", __LINE__) << "Invalid era = " << static_cast<int>(era);
   }
-
+  std::cout << "analyze_hh_3l:: Siddh here6" << std::endl;
   std::string applyFakeRateWeights_string = cfg_analyze.getParameter<std::string>("applyFakeRateWeights");
   int applyFakeRateWeights = -1;
   if      ( applyFakeRateWeights_string == "disabled" ) applyFakeRateWeights = kFR_disabled;
   else if ( applyFakeRateWeights_string == "3lepton"  ) applyFakeRateWeights = kFR_3lepton;
   else throw cms::Exception("analyze_hh_3l")
     << "Invalid Configuration parameter 'applyFakeRateWeights' = " << applyFakeRateWeights_string << " !!\n";
-
+  std::cout << "analyze_hh_3l:: Siddh here7  applyFakeRateWeights_string:" << applyFakeRateWeights_string  << ", applyFakeRateWeights: " << applyFakeRateWeights << ", kFR_3lepton: " << kFR_3lepton  << std::endl;
+  
   LeptonFakeRateInterface* leptonFakeRateInterface = 0;
   if ( applyFakeRateWeights == kFR_3lepton) {
     edm::ParameterSet cfg_leptonFakeRateWeight = cfg_analyze.getParameter<edm::ParameterSet>("leptonFakeRateWeight");
+    std::cout << "analyze_hh_3l:: Siddh here7_1 " << std::endl;
     cfg_leptonFakeRateWeight.addParameter<std::string>("era", era_string);
+    std::cout << "analyze_hh_3l:: Siddh here7_2 " << std::endl;
     leptonFakeRateInterface = new LeptonFakeRateInterface(cfg_leptonFakeRateWeight);
   }
-
+  std::cout << "analyze_hh_3l:: Siddh here8" << std::endl;
+  
   bool fillGenEvtHistograms = cfg_analyze.getParameter<bool>("fillGenEvtHistograms");
   edm::ParameterSet cfg_EvtYieldHistManager = cfg_analyze.getParameter<edm::ParameterSet>("cfgEvtYieldHistManager");
   
