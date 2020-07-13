@@ -14,3 +14,5 @@ for sample_name, sample_info in samples_2018.items():
     sample_info["use_it"] = 'TTZJets_LO' in process_name
   elif process_name.lower().startswith('ttw'):
     sample_info["use_it"] = 'TTWJets_LO' in process_name
+  elif process_name.startswith('WZTo3LNu'):
+    sample_info["use_it"] = process_name.startswith(('WZTo3LNu_powheg', 'WZTo3LNu_mllmin01'))
