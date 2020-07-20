@@ -109,6 +109,8 @@
 #include <assert.h> // assert
 #include <bits/stdc++.h> // finding max element
 
+#include "tthAnalysis/HiggsToTauTau/interface/mvaInputVariables.h" // for comp_*()
+
 #include <TMath.h>
 #include <Python.h>
 
