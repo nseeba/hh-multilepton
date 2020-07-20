@@ -107,6 +107,7 @@
 #include <cstdlib> // EXIT_SUCCESS, EXIT_FAILURE
 #include <fstream> // std::ofstream
 #include <assert.h> // assert
+#include <bits/stdc++.h> // finding max element
 
 #include <TMath.h>
 #include <Python.h>
@@ -1372,34 +1373,40 @@ int main(int argc, char* argv[])
     // Compute the BDT variables
 
     // Eta & Phi 
-    const double deltaEta_tau1_tau2 = (selHadTau_lead -> p4() - selHadTau_sublead -> p4()).eta();
-    const double deltaEta_tau1_tau3 = (selHadTau_lead -> p4() - selHadTau_third -> p4()).eta();
-    const double deltaEta_tau1_tau4 = (selHadTau_lead -> p4() - selHadTau_fourth -> p4()).eta();
-    const double deltaEta_tau2_tau3 = (selHadTau_sublead -> p4() - selHadTau_third -> p4()).eta();
-    const double deltaEta_tau2_tau4 = (selHadTau_sublead -> p4() - selHadTau_fourth -> p4()).eta();
-    const double deltaEta_tau3_tau4 = (selHadTau_third -> p4() - selHadTau_fourth -> p4()).eta();
-    const double deltaPhi_tau1_tau2 = (selHadTau_lead -> p4() - selHadTau_sublead -> p4()).phi();
-    const double deltaPhi_tau1_tau3 = (selHadTau_lead -> p4() - selHadTau_third -> p4()).phi();
-    const double deltaPhi_tau1_tau4 = (selHadTau_lead -> p4() - selHadTau_fourth -> p4()).phi();
-    const double deltaPhi_tau2_tau3 = (selHadTau_sublead -> p4() - selHadTau_third -> p4()).phi();
-    const double deltaPhi_tau2_tau4 = (selHadTau_sublead -> p4() - selHadTau_fourth -> p4()).phi();
-    const double deltaPhi_tau3_tau4 = (selHadTau_third -> p4() - selHadTau_fourth -> p4()).phi();
+    const double deltaEta_tau1_tau2 = (selHadTau_lead->p4() - selHadTau_sublead->p4()).eta();
+    const double deltaEta_tau1_tau3 = (selHadTau_lead->p4() - selHadTau_third->p4()).eta();
+    const double deltaEta_tau1_tau4 = (selHadTau_lead->p4() - selHadTau_fourth->p4()).eta();
+    const double deltaEta_tau2_tau3 = (selHadTau_sublead->p4() - selHadTau_third->p4()).eta();
+    const double deltaEta_tau2_tau4 = (selHadTau_sublead->p4() - selHadTau_fourth->p4()).eta();
+    const double deltaEta_tau3_tau4 = (selHadTau_third->p4() - selHadTau_fourth->p4()).eta();
+    const double deltaPhi_tau1_tau2 = (selHadTau_lead->p4() - selHadTau_sublead->p4()).phi();
+    const double deltaPhi_tau1_tau3 = (selHadTau_lead->p4() - selHadTau_third->p4()).phi();
+    const double deltaPhi_tau1_tau4 = (selHadTau_lead->p4() - selHadTau_fourth->p4()).phi();
+    const double deltaPhi_tau2_tau3 = (selHadTau_sublead->p4() - selHadTau_third->p4()).phi();
+    const double deltaPhi_tau2_tau4 = (selHadTau_sublead->p4() - selHadTau_fourth->p4()).phi();
+    const double deltaPhi_tau3_tau4 = (selHadTau_third->p4() - selHadTau_fourth->p4()).phi();
 
     // masses
-    const double m_tau1_tau2 = (selHadTau_lead -> p4() + selHadTau_sublead -> p4()).mass();
-    const double m_tau1_tau3 = (selHadTau_lead -> p4() + selHadTau_third -> p4()).mass();
-    const double m_tau1_tau4 = (selHadTau_lead -> p4() + selHadTau_fourth -> p4()).mass();
-    const double m_tau2_tau3 = (selHadTau_sublead -> p4() + selHadTau_third -> p4()).mass();
-    const double m_tau2_tau4 = (selHadTau_sublead -> p4() + selHadTau_fourth -> p4()).mass();
-    const double m_tau3_tau4 = (selHadTau_third -> p4() + selHadTau_fourth -> p4()).mass();
+    const double m_tau1_tau2 = (selHadTau_lead->p4() + selHadTau_sublead->p4()).mass();
+    const double m_tau1_tau3 = (selHadTau_lead->p4() + selHadTau_third->p4()).mass();
+    const double m_tau1_tau4 = (selHadTau_lead->p4() + selHadTau_fourth->p4()).mass();
+    const double m_tau2_tau3 = (selHadTau_sublead->p4() + selHadTau_third->p4()).mass();
+    const double m_tau2_tau4 = (selHadTau_sublead->p4() + selHadTau_fourth->p4()).mass();
+    const double m_tau3_tau4 = (selHadTau_third->p4() + selHadTau_fourth->p4()).mass();
 
     // deltaR-s
-    const double dr_tau1_tau2 = deltaR(selHadTau_lead -> p4() + selHadTau_sublead -> p4());
-    const double dr_tau1_tau3 = deltaR(selHadTau_lead -> p4() + selHadTau_third -> p4());
-    const double dr_tau1_tau4 = deltaR(selHadTau_lead -> p4() + selHadTau_fourth -> p4());
-    const double dr_tau2_tau3 = deltaR(selHadTau_sublead -> p4() + selHadTau_third -> p4());
-    const double dr_tau2_tau4 = deltaR(selHadTau_sublead -> p4() + selHadTau_fourth -> p4());
-    const double dr_tau3_tau4 = deltaR(selHadTau_third -> p4() + selHadTau_fourth -> p4());
+    const double dr_tau1_tau2 = deltaR(selHadTau_lead->p4() + selHadTau_sublead->p4());
+    const double dr_tau1_tau3 = deltaR(selHadTau_lead->p4() + selHadTau_third->p4());
+    const double dr_tau1_tau4 = deltaR(selHadTau_lead->p4() + selHadTau_fourth->p4());
+    const double dr_tau2_tau3 = deltaR(selHadTau_sublead->p4() + selHadTau_third->p4());
+    const double dr_tau2_tau4 = deltaR(selHadTau_sublead->p4() + selHadTau_fourth->p4());
+    const double dr_tau3_tau4 = deltaR(selHadTau_third->p4() + selHadTau_fourth->p4());
+
+    // tau_id
+    const int tau1_mva = selHadTau_lead->id_mva(TauID::DeepTau2017v2VSjet);
+    const int tau2_mva = selHadTau_sublead->id_mva(TauID::DeepTau2017v2VSjet);
+    const int tau3_mva = selHadTau_third->id_mva(TauID::DeepTau2017v2VSjet);
+    const int tau4_mva = selHadTau_fourth->id_mva(TauID::DeepTau2017v2VSjet);
 
     // Other
     const double avg_dr_jet = comp_avg_dr_jet(selJets);
@@ -1408,6 +1415,38 @@ int main(int argc, char* argv[])
     const std::vector<const RecoJet*> selBJets_btag_loose = jetSelectorBtagLoose(selJets_btag, isHigherPt);
     const std::vector<const RecoJet*> selBJets_btag_medium = jetSelectorBtagMedium(selJets_btag, isHigherPt);
     const double pt_HH_recoil = (selHadTau_lead->p4() + selHadTau_sublead->p4() + selHadTau_third->p4() + selHadTau_fourth->p4() - met.p4()).pt();
+
+
+    // calculate tau mass using 2 most tau-like taus with SVFit
+    std::vector<classic_svFit::MeasuredTauLepton> measuredTauLeptons;
+    classic_svFit::MeasuredTauLepton::kDecayType leg1Type = classic_svFit::MeasuredTauLepton::kTauToHadDecay;
+    // Find 2 most tau-like taus
+    std::vector<const RecoHadTau*> allTau = {selHadTau_lead, selHadTau_sublead, selHadTau_third, selHadTau_fourth};
+    std::vector<int> allTau_tauness = { tau1_mva, tau2_mva, tau3_mva, tau4_mva };
+    int most_tauLike_loc = std::distance(allTau_tauness.begin(), std::max_element(allTau_tauness.begin(), allTau_tauness.end()));
+    const RecoHadTau* mostTau = allTau.at(most_tauLike_loc);
+    allTau.erase(allTau.begin() + loc);
+    allTau_tauness.erase(allTau_tauness.begin() + loc);
+    int secondMost_tauLike_loc = std::distance(allTau_tauness.begin(), std::max_element(allTau_tauness.begin(), allTau_tauness.end()));
+    const RecoHadTau* secondMostTau = allTau.at(secondMost_tauLike_loc);
+
+
+    // Preparations for SVFit
+    double leg1Mass = mostTau->mass();
+    if ( leg1Mass < classic_svFit::chargedPionMass ) leg1Mass = classic_svFit::chargedPionMass;
+    if ( leg1Mass > 1.5                            ) leg1Mass = 1.5;
+    classic_svFit::MeasuredTauLepton::kDecayType leg2Type = classic_svFit::MeasuredTauLepton::kTauToHadDecay;
+    double leg2Mass = secondMostTau->mass();
+    if ( leg2Mass < classic_svFit::chargedPionMass ) leg2Mass = classic_svFit::chargedPionMass;
+    if ( leg2Mass > 1.5                            ) leg2Mass = 1.5;
+    measuredTauLeptons.push_back(classic_svFit::MeasuredTauLepton(leg1Type, mostTau->pt(), mostTau->eta(), mostTau->phi(), leg1Mass));
+    measuredTauLeptons.push_back(classic_svFit::MeasuredTauLepton(leg2Type, secondMostTau->pt(), secondMostTau->eta(), secondMostTau->phi(), leg2Mass));
+    ClassicSVfit svFitAlgo;
+    svFitAlgo.addLogM_dynamic(false);
+    svFitAlgo.addLogM_fixed(true, 5.);
+    svFitAlgo.integrate(measuredTauLeptons, met.p4().px(), met.p4().py(), met.cov());
+
+
 
 //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selHadTaus);
@@ -1557,10 +1596,10 @@ int main(int argc, char* argv[])
             ("tau4_eta",                 selHadTau_fourth->eta())
             ("tau4_phi",                 selHadTau_fourth->phi())
             ("tau4_raw",                 selHadTau_fourth->raw_mva())
-            ("tau1_mva",                 selHadTau_lead->id_mva(TauID::DeepTau2017v2VSjet))
-            ("tau2_mva",                 selHadTau_sublead->id_mva(TauID::DeepTau2017v2VSjet))
-            ("tau3_mva",                 selHadTau_third->id_mva(TauID::DeepTau2017v2VSjet))
-            ("tau4_mva",                 selHadTau_fourth->id_mva(TauID::DeepTau2017v2VSjet))
+            ("tau1_mva",                 tau1_mva)
+            ("tau2_mva",                 tau2_mva)
+            ("tau3_mva",                 tau3_mva)
+            ("tau4_mva",                 tau4_mva)
             ("diHiggsVisMass",           dihiggsVisMass_sel)
             ("diHiggsMass",              dihiggsMass)
             ("mTauTau",                  mTauTau)
