@@ -730,8 +730,8 @@ int main(int argc, char* argv[])
       "tau3_pt", "tau3_eta", "tau3_raw", "tau3_phi",
       "tau4_pt", "tau4_eta", "tau4_raw", "tau4_phi",
       "tau1_mva", "tau2_mva", "tau3_mva", "tau4_mva",
-      "diHiggsVisMass", "diHiggsMass", "mTauTauVis", "mTauTau", "ptTauTauVis",
-      "dr_taus", "avg_dr_jet", "genWeight", "evtWeight",
+      "diHiggsVisMass", "diHiggsMass", "mTauTau",
+      "avg_dr_jet", "genWeight", "evtWeight",
       "STMET", "HT", "met_LD", "mht", "met_phi", "met", "pt_HH_recoil",
       "deltaEta_tau1_tau2", "deltaEta_tau1_tau3", "deltaEta_tau1_tau4",
       "deltaEta_tau2_tau3", "deltaEta_tau2_tau4", "deltaEta_tau3_tau4",
@@ -1403,11 +1403,11 @@ int main(int argc, char* argv[])
 
     // Other
     const double avg_dr_jet = comp_avg_dr_jet(selJets);
-    const double ptTauTauVis_sel = (selHadTau_lead->p4() + selHadTau_sublead->p4()).pt();
     const std::vector<const RecoJet*> cleanedJets_wrt_leptons = jetCleaner(jet_ptrs, fakeableLeptons);
     const std::vector<const RecoJet*> selJets_btag = jetSelector(cleanedJets_wrt_leptons, isHigherCSV);
     const std::vector<const RecoJet*> selBJets_btag_loose = jetSelectorBtagLoose(selJets_btag, isHigherPt);
     const std::vector<const RecoJet*> selBJets_btag_medium = jetSelectorBtagMedium(selJets_btag, isHigherPt);
+    const double pt_HH_recoil = (selHadTau_lead->p4() + selHadTau_sublead->p4() + selHadTau_third->p4() + selHadTau_fourth->p4() - met.p4()).pt();
 
 //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selHadTaus);
@@ -1563,10 +1563,7 @@ int main(int argc, char* argv[])
             ("tau4_mva",                 selHadTau_fourth->id_mva(TauID::DeepTau2017v2VSjet))
             ("diHiggsVisMass",           dihiggsVisMass_sel)
             ("diHiggsMass",              dihiggsMass)
-            ("mTauTauVis",               mTauTauVis_sel)
             ("mTauTau",                  mTauTau)
-            ("ptTauTauVis",              ptTauTauVis_sel)
-            ("dr_taus",                  dr_taus)
             ("avg_dr_jet",               avg_dr_jet)
             ("genWeight",                eventInfo.genWeight)
             ("evtWeight",                evtWeightRecorder.get(central_or_shift_main))
