@@ -729,6 +729,7 @@ int main(int argc, char* argv[])
       "tau2_pt", "tau2_eta", "tau2_raw", "tau2_phi",
       "tau3_pt", "tau3_eta", "tau3_raw", "tau3_phi",
       "tau4_pt", "tau4_eta", "tau4_raw", "tau4_phi",
+      "tau1_mva", "tau2_mva", "tau3_mva", "tau4_mva",
       "diHiggsVisMass", "diHiggsMass", "mTauTauVis", "mTauTau", "ptTauTauVis",
       "dr_taus", "avg_dr_jet", "genWeight", "evtWeight",
       "STMET", "HT", "met_LD", "mht", "met_phi", "met", "pt_HH_recoil",
@@ -1267,11 +1268,11 @@ int main(int argc, char* argv[])
     if ( (hadTauChargeSelection == kOS && isCharge_hadTau_SS) ||
    (hadTauChargeSelection == kSS && isCharge_hadTau_OS) ) {
       if ( run_lumi_eventSelector ) {
-  std::cout << "event " << eventInfo.str() << " FAILS hadTau charge selection." << std::endl;
-  std::cout << " (leading selHadTau charge = " << selHadTau_lead->charge()
-      << ", subleading selHadTau charge = " << selHadTau_sublead->charge()
-      << ", third selHadTau charge = " << selHadTau_third->charge() 
-      << ", fourth selHadTau charge = " << selHadTau_fourth->charge() << ")" << std::endl;
+        std::cout << "event " << eventInfo.str() << " FAILS hadTau charge selection." << std::endl;
+        std::cout << " (leading selHadTau charge = " << selHadTau_lead->charge()
+        << ", subleading selHadTau charge = " << selHadTau_sublead->charge()
+        << ", third selHadTau charge = " << selHadTau_third->charge() 
+        << ", fourth selHadTau charge = " << selHadTau_fourth->charge() << ")" << std::endl;
       }
       continue;
     }
@@ -1500,12 +1501,12 @@ int main(int argc, char* argv[])
         if(! skipFilling)
         {
           selHistManager->evtYield_->fillHistograms(eventInfo, evtWeight);
-    selHistManager->weights_->fillHistograms("genWeight", eventInfo.genWeight);
-    selHistManager->weights_->fillHistograms("pileupWeight", evtWeightRecorder.get_puWeight(central_or_shift));
-    selHistManager->weights_->fillHistograms("data_to_MC_correction", evtWeightRecorder.get_data_to_MC_correction(central_or_shift));
-    selHistManager->weights_->fillHistograms("triggerWeight", evtWeightRecorder.get_sf_triggerEff(central_or_shift));
-    selHistManager->weights_->fillHistograms("hadTauEff", evtWeightRecorder.get_tauSF(central_or_shift));
-    selHistManager->weights_->fillHistograms("fakeRate", evtWeightRecorder.get_FR(central_or_shift));
+          selHistManager->weights_->fillHistograms("genWeight", eventInfo.genWeight);
+          selHistManager->weights_->fillHistograms("pileupWeight", evtWeightRecorder.get_puWeight(central_or_shift));
+          selHistManager->weights_->fillHistograms("data_to_MC_correction", evtWeightRecorder.get_data_to_MC_correction(central_or_shift));
+          selHistManager->weights_->fillHistograms("triggerWeight", evtWeightRecorder.get_sf_triggerEff(central_or_shift));
+          selHistManager->weights_->fillHistograms("hadTauEff", evtWeightRecorder.get_tauSF(central_or_shift));
+          selHistManager->weights_->fillHistograms("fakeRate", evtWeightRecorder.get_FR(central_or_shift));
         }
       }
 
@@ -1556,6 +1557,10 @@ int main(int argc, char* argv[])
             ("tau4_eta",                 selHadTau_fourth->eta())
             ("tau4_phi",                 selHadTau_fourth->phi())
             ("tau4_raw",                 selHadTau_fourth->raw_mva())
+            ("tau1_mva",                 selHadTau_lead->id_mva(TauID::DeepTau2017v2VSjet))
+            ("tau2_mva",                 selHadTau_sublead->id_mva(TauID::DeepTau2017v2VSjet))
+            ("tau3_mva",                 selHadTau_third->id_mva(TauID::DeepTau2017v2VSjet))
+            ("tau4_mva",                 selHadTau_fourth->id_mva(TauID::DeepTau2017v2VSjet))
             ("diHiggsVisMass",           dihiggsVisMass_sel)
             ("diHiggsMass",              dihiggsMass)
             ("mTauTauVis",               mTauTauVis_sel)
