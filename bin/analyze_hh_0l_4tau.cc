@@ -1397,12 +1397,12 @@ int main(int argc, char* argv[])
     const double m_tau3_tau4 = (selHadTau_third->p4() + selHadTau_fourth->p4()).mass();
 
     // deltaR-s
-    const double dr_tau1_tau2 = deltaR(selHadTau_lead->p4() + selHadTau_sublead->p4());
-    const double dr_tau1_tau3 = deltaR(selHadTau_lead->p4() + selHadTau_third->p4());
-    const double dr_tau1_tau4 = deltaR(selHadTau_lead->p4() + selHadTau_fourth->p4());
-    const double dr_tau2_tau3 = deltaR(selHadTau_sublead->p4() + selHadTau_third->p4());
-    const double dr_tau2_tau4 = deltaR(selHadTau_sublead->p4() + selHadTau_fourth->p4());
-    const double dr_tau3_tau4 = deltaR(selHadTau_third->p4() + selHadTau_fourth->p4());
+    const double dr_tau1_tau2 = deltaR(selHadTau_lead->p4(), selHadTau_sublead->p4());
+    const double dr_tau1_tau3 = deltaR(selHadTau_lead->p4(), selHadTau_third->p4());
+    const double dr_tau1_tau4 = deltaR(selHadTau_lead->p4(), selHadTau_fourth->p4());
+    const double dr_tau2_tau3 = deltaR(selHadTau_sublead->p4(), selHadTau_third->p4());
+    const double dr_tau2_tau4 = deltaR(selHadTau_sublead->p4(), selHadTau_fourth->p4());
+    const double dr_tau3_tau4 = deltaR(selHadTau_third->p4(), selHadTau_fourth->p4());
 
     // tau_id
     const int tau1_mva = selHadTau_lead->id_mva(TauID::DeepTau2017v2VSjet);
