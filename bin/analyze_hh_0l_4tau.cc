@@ -1425,8 +1425,8 @@ int main(int argc, char* argv[])
     std::vector<int> allTau_tauness = { tau1_mva, tau2_mva, tau3_mva, tau4_mva };
     int most_tauLike_loc = std::distance(allTau_tauness.begin(), std::max_element(allTau_tauness.begin(), allTau_tauness.end()));
     const RecoHadTau* mostTau = allTau.at(most_tauLike_loc);
-    allTau.erase(allTau.begin() + loc);
-    allTau_tauness.erase(allTau_tauness.begin() + loc);
+    allTau.erase(allTau.begin() + most_tauLike_loc);
+    allTau_tauness.erase(allTau_tauness.begin() + most_tauLike_loc);
     int secondMost_tauLike_loc = std::distance(allTau_tauness.begin(), std::max_element(allTau_tauness.begin(), allTau_tauness.end()));
     const RecoHadTau* secondMostTau = allTau.at(secondMost_tauLike_loc);
 
