@@ -1429,8 +1429,6 @@ int main(int argc, char* argv[])
     allTau_tauness.erase(allTau_tauness.begin() + most_tauLike_loc);
     int secondMost_tauLike_loc = std::distance(allTau_tauness.begin(), std::max_element(allTau_tauness.begin(), allTau_tauness.end()));
     const RecoHadTau* secondMostTau = allTau.at(secondMost_tauLike_loc);
-
-
     // Preparations for SVFit
     double leg1Mass = mostTau->mass();
     if ( leg1Mass < classic_svFit::chargedPionMass ) leg1Mass = classic_svFit::chargedPionMass;
@@ -1446,7 +1444,7 @@ int main(int argc, char* argv[])
     svFitAlgo.addLogM_fixed(true, 5.);
     svFitAlgo.integrate(measuredTauLeptons, met.p4().px(), met.p4().py(), met.cov());
 
-
+    const double mTauTau   = ( svFitAlgo.isValidSolution() ) ? static_cast<classic_svFit::HistogramAdapterDiTau*>(svFitAlgo.getHistogramAdapter())->getMass() : -1.;
 
 //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selHadTaus);
