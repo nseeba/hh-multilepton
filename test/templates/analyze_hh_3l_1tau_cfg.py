@@ -131,6 +131,16 @@ process.analyze_hh_3l_1tau = cms.PSet(
     apply_LHE_nom = cms.bool(False),
     useObjectMultiplicity = cms.bool(False),
 
+    ## "BDT .xml -> Odd train:Even test" to be used for even evt no.  
+    BDT_xml_FileName_even = cms.string("hhAnalysis/multilepton/data/3l_1tau_XGB_testVars_allMasses_evtLevelSUM_HH_3l_1tau_res_InputVars46_train_Even_train_Odd_test_looseLep.pkl"),
+
+    ## "BDT .xml -> Even train:Odd test" to be used for odd evt no.  
+    BDT_xml_FileName_odd = cms.string("hhAnalysis/multilepton/data/3l_1tau_XGB_testVars_allMasses_evtLevelSUM_HH_3l_1tau_res_InputVars46_train_Odd_train_Even_test_looseLep.pkl"),
+
+    fitFunctionFileName = cms.string('hhAnalysis/multilepton/data/TProfile_signal_fit_func_InputVar_AllMassTraining_v1_3l_1tau.root'),
+
+    gen_mHH = cms.vdouble(250,260,270,280,300,350,400,450,500,550,600,650,700,750,800,850,900,1000), ## Set the signal mass range used in the BDT .pkl/.xml/.pb files
+
     evtWeight = cms.PSet(
         apply = cms.bool(False),
         histogramFile = cms.string(''),

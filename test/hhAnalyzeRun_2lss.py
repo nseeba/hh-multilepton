@@ -91,6 +91,7 @@ if mode == "default":
 elif mode == "forBDTtraining":
   if use_preselected:
     raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
+
   samples = load_samples(era, suffix = "BDT")
 
 else:

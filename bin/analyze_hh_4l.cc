@@ -1,11 +1,16 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h" // edm::ParameterSet
-#include "FWCore/PythonParameterSet/interface/MakeParameterSets.h" // edm::readPSetsFrom()
 #include "FWCore/Utilities/interface/Exception.h" // cms::Exception
 #include "PhysicsTools/FWLite/interface/TFileService.h" // fwlite::TFileService
 #include "DataFormats/FWLite/interface/InputSource.h" // fwlite::InputSource
 #include "DataFormats/FWLite/interface/OutputFiles.h" // fwlite::OutputFiles
 #include "DataFormats/Math/interface/LorentzVector.h" // math::PtEtaPhiMLorentzVector
 #include "DataFormats/Math/interface/deltaR.h" // deltaR
+
+#if __has_include (<FWCore/ParameterSetReader/interface/ParameterSetReader.h>)
+#  include <FWCore/ParameterSetReader/interface/ParameterSetReader.h> // edm::readPSetsFrom()
+#else
+#  include <FWCore/PythonParameterSet/interface/MakeParameterSets.h> // edm::readPSetsFrom()
+#endif
 
 #include <TBenchmark.h> // TBenchmark
 #include <TString.h> // TString, Form
@@ -77,6 +82,9 @@
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
 #include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface.h" // HHWeightInterface
+#include "tthAnalysis/HiggsToTauTau/interface/BM_list.h" // BMS
+#include "tthAnalysis/HiggsToTauTau/interface/NtupleFillerBDT.h" // NtupleFillerBDT
+#include "tthAnalysis/HiggsToTauTau/interface/BtagSFRatioFacility.h" // BtagSFRatioFacility
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_4l.h" // EvtHistManager_hh_4l
 #include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
@@ -223,7 +231,7 @@ int main(int argc, char* argv[])
   delete hadTauSelection_parts;
 
   enum { kOS, kSS };
-  std::string chargeSumSelection_string = cfg_analyze.getParameter<std::string>("chargeSumSelection");
+  std::string chargeSumSelection_string = cfg_analyze.getParameter<std::string>("leptonChargeSelection");
   int chargeSumSelection = -1;
   if      ( chargeSumSelection_string == "OS" ) chargeSumSelection = kOS;
   else if ( chargeSumSelection_string == "SS" ) chargeSumSelection = kSS;
@@ -244,6 +252,7 @@ int main(int argc, char* argv[])
   std::string apply_topPtReweighting_str = cfg_analyze.getParameter<std::string>("apply_topPtReweighting");
   bool apply_topPtReweighting = ! apply_topPtReweighting_str.empty();
   bool apply_l1PreFireWeight = cfg_analyze.getParameter<bool>("apply_l1PreFireWeight");
+  bool apply_btagSFRatio = cfg_analyze.getParameter<bool>("applyBtagSFRatio");
   bool apply_hlt_filter = cfg_analyze.getParameter<bool>("apply_hlt_filter");
   bool apply_met_filters = cfg_analyze.getParameter<bool>("apply_met_filters");
   edm::ParameterSet cfgMEtFilter = cfg_analyze.getParameter<edm::ParameterSet>("cfgMEtFilter");
@@ -316,6 +325,7 @@ int main(int argc, char* argv[])
   if ( applyFakeRateWeights == kFR_4lepton) {
     edm::ParameterSet cfg_leptonFakeRateWeight = cfg_analyze.getParameter<edm::ParameterSet>("leptonFakeRateWeight");
     cfg_leptonFakeRateWeight.addParameter<std::string>("era", era_string);
+    cfg_leptonFakeRateWeight.addParameter<std::vector<std::string>>("central_or_shifts", central_or_shifts_local);
     leptonFakeRateInterface = new LeptonFakeRateInterface(cfg_leptonFakeRateWeight);
   }
 
@@ -341,6 +351,8 @@ int main(int argc, char* argv[])
   const bool redoGenMatching = cfg_analyze.getParameter<bool>("redoGenMatching");
   const bool jetCleaningByIndex = cfg_analyze.getParameter<bool>("jetCleaningByIndex");
   const bool genMatchingByIndex = cfg_analyze.getParameter<bool>("genMatchingByIndex");
+
+  const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
 
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
   std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
@@ -417,6 +429,13 @@ int main(int argc, char* argv[])
   {
     l1PreFiringWeightReader = new L1PreFiringWeightReader(era);
     inputTree->registerReader(l1PreFiringWeightReader);
+  }
+
+  BtagSFRatioFacility * btagSFRatioFacility = nullptr;
+  if(apply_btagSFRatio)
+  {
+    const edm::ParameterSet btagSFRatio = cfg_analyze.getParameterSet("btagSFRatio");
+    btagSFRatioFacility = new BtagSFRatioFacility(btagSFRatio);
   }
 
 //--- declare particle collections
@@ -676,6 +695,42 @@ int main(int argc, char* argv[])
         genEvtHistManager_afterCuts[central_or_shift]->bookHistograms(fs, eventWeightManager);
       }
     }
+  }
+
+  NtupleFillerBDT<float, int>* bdt_filler = nullptr;
+  typedef std::remove_pointer<decltype(bdt_filler)>::type::float_type float_type;
+  typedef std::remove_pointer<decltype(bdt_filler)>::type::int_type int_type;
+  if(selectBDT)
+  {
+    bdt_filler = new std::remove_pointer<decltype(bdt_filler)>::type(
+      makeHistManager_cfg(process_string, Form("%s/sel/evtntuple", histogramDir.data()), era_string, central_or_shift_main)
+    );
+    for(const std::string & evt_cat_str: BMS)
+    {
+      //Book BM weights
+      bdt_filler->register_variable<float_type>( Form("weight_%s", evt_cat_str.c_str()) );
+    }
+    for(const std::string & evt_cat_str: evt_cat_strs)
+    {
+      //Book Weight_klScan
+      bdt_filler->register_variable<float_type>(Form("weight_%s", evt_cat_str.c_str()) );
+    }
+    bdt_filler->register_variable<float_type>(
+      "lep1_pt", "lep1_conePt", "lep1_eta", "lep1_tth_mva", "lep1_phi",
+      "lep2_pt", "lep2_conePt", "lep2_eta", "lep2_tth_mva", "lep2_phi",
+      "lep3_pt", "lep3_conePt", "lep3_eta", "lep3_tth_mva", "lep3_phi",
+      "lep4_pt", "lep4_conePt", "lep4_eta", "lep4_tth_mva", "lep4_phi",
+      "met", "mht", "met_LD", "HT", "STMET", "met_phi",
+      "diHiggsVisMass", "diHiggsMass",
+      "genWeight", "evtWeight"
+    );
+    bdt_filler->register_variable<int_type>(
+      "nJet", "nBJet_loose", "nBJet_medium",
+      "lep1_isElectron", "lep1_charge", "lep2_isElectron", "lep2_charge",
+      "lep3_isElectron", "lep3_charge", "lep4_isElectron", "lep4_charge",
+      "nElectron", "nMuon"
+    );
+    bdt_filler->bookTree(fs);
   }
 
   int analyzedEntries = 0;
@@ -1025,9 +1080,9 @@ int main(int argc, char* argv[])
       assert(electronSelection != kLoose && muonSelection != kLoose);
       selMuons = selectObjects(muonSelection, preselMuons, fakeableMuons, tightMuons);
       selElectrons = selectObjects(electronSelection, preselElectrons, fakeableElectrons, tightElectrons);
-      const std::vector<const RecoLepton*> selLeptons_full = mergeLeptonCollections(selElectrons, selMuons, isHigherConePt);
-      selLeptons = getIntersection(fakeableLeptons, selLeptons_full, isHigherConePt);
     }
+    const std::vector<const RecoLepton*> selLeptons_full = mergeLeptonCollections(selElectrons, selMuons, isHigherConePt);
+    if(!(electronSelection == muonSelection)) selLeptons = getIntersection(fakeableLeptons, selLeptons_full, isHigherConePt);
 
     if(isDEBUG || run_lumi_eventSelector)
     {
@@ -1045,8 +1100,8 @@ int main(int argc, char* argv[])
     const std::vector<RecoJet> jets = jetReader->read();
     const std::vector<const RecoJet*> jet_ptrs = convert_to_ptrs(jets);
     const std::vector<const RecoJet*> cleanedJets = jetCleaningByIndex ?
-      jetCleanerByIndex(jet_ptrs, fakeableLeptonsFull, fakeableHadTaus) :
-      jetCleaner       (jet_ptrs, fakeableLeptonsFull, fakeableHadTaus)
+      jetCleanerByIndex(jet_ptrs, selectBDT ? selLeptons_full : fakeableLeptonsFull, fakeableHadTaus) :
+      jetCleaner       (jet_ptrs, selectBDT ? selLeptons_full : fakeableLeptonsFull, fakeableHadTaus)
     ;
     const std::vector<const RecoJet*> selJets = jetSelector(cleanedJets, isHigherPt);
     const std::vector<const RecoJet*> selBJets_loose = jetSelectorBtagLoose(cleanedJets, isHigherPt);
@@ -1206,6 +1261,10 @@ int main(int argc, char* argv[])
 //   (using the method "Event reweighting using scale factors calculated with a tag and probe method",
 //    described on the BTV POG twiki https://twiki.cern.ch/twiki/bin/view/CMS/BTagShapeCalibration )
       evtWeightRecorder.record_btagWeight(selJets);
+      if(btagSFRatioFacility)
+      {
+        evtWeightRecorder.record_btagSFRatio(btagSFRatioFacility, selJets.size());
+      }
 
       if(isMC_EWK)
       {
@@ -1412,6 +1471,7 @@ int main(int argc, char* argv[])
 
     std::vector<double> WeightBM; // weights to do histograms for BMs
     std::map<std::string, double> Weight_ktScan; // weights to do histograms
+    std::map<std::string, double> Weight_BMScan;
     double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
 
     if(apply_HH_rwgt)
@@ -1434,6 +1494,29 @@ int main(int argc, char* argv[])
           std::cout << "line = " << bm_list << " " << evt_cat_strs[bm_list] << "; Weight = " <<  Weight_ktScan[evt_cat_strs[bm_list]] << '\n';
         }
         std::cout << '\n';
+      }
+
+      for(std::size_t bm_list = 0; bm_list < WeightBM.size() ; ++bm_list)
+      {
+        std::string bench;
+        if (bm_list == 0) bench = "SM";
+        else {
+          bench = Form("BM%s", std::to_string(bm_list).data() );
+        }
+        std::string name_BM = Form("weight_%s", bench.data() );
+        Weight_BMScan[name_BM] =  WeightBM[bm_list];
+        if (isDEBUG) std::cout << "line = " << name_BM << "; Weight = " << WeightBM[bm_list] << '\n';
+      }
+    } else {
+      for(std::size_t bm_list = 0; bm_list < BMS.size() ; ++bm_list)
+      {
+        std::string bench;
+        if (bm_list == 0) bench = "SM";
+        else {
+          bench = Form("BM%s", std::to_string(bm_list).data() );
+        }
+        std::string name_BM = Form("weight_%s", bench.data() );
+        Weight_BMScan[name_BM] =  1.0;
       }
     }
             
@@ -1554,6 +1637,72 @@ int main(int argc, char* argv[])
 
     if ( selEventsFile ) {
       (*selEventsFile) << eventInfo.run << ':' << eventInfo.lumi << ':' << eventInfo.event << '\n';
+    }
+
+    if(bdt_filler)
+    {
+      // do HH nonres weight
+      std::map<std::string, double> rwgt_map;
+      for(const std::string & evt_cat_str: evt_cat_strs)
+      {
+        if(apply_HH_rwgt)
+        {
+          rwgt_map[evt_cat_str] = Weight_ktScan[evt_cat_str];
+        }
+        else
+        {
+          rwgt_map[evt_cat_str] = evtWeightRecorder.get(central_or_shift_main);
+        }
+      }
+
+      bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
+          ("lep1_pt",                  selLepton_lead->pt())
+          ("lep1_conePt",              selLepton_lead->cone_pt())
+          ("lep1_eta",                 selLepton_lead->eta())
+          ("lep1_phi",                 selLepton_lead->phi())
+          ("lep1_tth_mva",             selLepton_lead->mvaRawTTH())
+          ("lep2_pt",                  selLepton_sublead->pt())
+          ("lep2_conePt",              selLepton_sublead->cone_pt())
+          ("lep2_eta",                 selLepton_sublead->eta())
+          ("lep2_phi",                 selLepton_lead->phi())
+          ("lep2_tth_mva",             selLepton_sublead->mvaRawTTH())
+          ("lep3_pt",                  selLepton_third->pt())
+          ("lep3_conePt",              selLepton_third->cone_pt())
+          ("lep3_eta",                 selLepton_third->eta())
+          ("lep3_phi",                 selLepton_third->phi())
+          ("lep3_tth_mva",             selLepton_third->mvaRawTTH())
+          ("lep4_pt",                  selLepton_fourth->pt())
+          ("lep4_conePt",              selLepton_fourth->cone_pt())
+          ("lep4_eta",                 selLepton_fourth->eta())
+          ("lep4_phi",                 selLepton_fourth->phi())
+          ("lep4_tth_mva",             selLepton_fourth->mvaRawTTH())
+          ("met",                      met.pt())
+          ("met_phi",                  met.phi())
+          ("mht",                      mht_p4.pt())
+          ("met_LD",                   met_LD)
+          ("HT",                       HT)
+          ("STMET",                    STMET)
+          ("diHiggsVisMass",           dihiggsVisMass_sel)
+          ("diHiggsMass",              dihiggsMass)
+          ("nJet",                     selJets.size())
+          ("lep1_isElectron",          selLepton_lead_type == kElectron)
+          ("lep1_charge",              selLepton_lead->charge())
+          ("lep2_isElectron",          selLepton_sublead_type == kElectron)
+          ("lep2_charge",              selLepton_sublead->charge())
+          ("lep3_isElectron",          selLepton_third_type == kElectron)
+          ("lep3_charge",              selLepton_third->charge())
+          ("lep4_isElectron",          selLepton_fourth_type == kElectron)
+          ("lep4_charge",              selLepton_fourth->charge())
+          ("genWeight",                eventInfo.genWeight)
+          ("evtWeight",                evtWeightRecorder.get(central_or_shift_main))
+          ("nElectron",                selElectrons.size())
+          ("nMuon",                    selMuons.size())
+          (rwgt_map, "weight")
+          (Weight_BMScan)
+          (Weight_ktScan, "weight")
+        .fill()
+        ;
+
     }
 
     ++selectedEntries;    
