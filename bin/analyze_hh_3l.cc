@@ -347,7 +347,7 @@ int main(int argc, char* argv[])
 
   std::cout << "analyze_hh_3l:: Siddh here2" << std::endl;
   
-  const int minNumJets = 1;
+  //const int minNumJets = 1;
 
   bool isMC = cfg_analyze.getParameter<bool>("isMC");
   bool hasLHE = cfg_analyze.getParameter<bool>("hasLHE");
@@ -702,7 +702,8 @@ int main(int argc, char* argv[])
     inputTree->registerReader(genWJetReader);
   }
 
-  std::string mvaFileName_hh_3l_SUMBk_HH = "hhAnalysis/multilepton/data/3l_0tau_HH_XGB_noTopness_evtLevelSUM_HH_res_26Var.pkl";
+  //std::string mvaFileName_hh_3l_SUMBk_HH_pkl = "hhAnalysis/multilepton/data/3l_0tau_HH_XGB_noTopness_evtLevelSUM_HH_res_26Var.pkl"; 
+  std::string mvaFileName_hh_3l_SUMBk_HH_xml = "hhAnalysis/multilepton/data/3l_0tau_HH_XGB_noTopness_evtLevelSUM_HH_res_26Var.xml";
   std::vector<std::string> mvaInputs_hh_3l_SUMBk_HH = {
     "lep1_conePt", "lep1_eta", "mindr_lep1_jet", "mT_lep1",
     "lep2_conePt", "lep2_eta", "mindr_lep2_jet", "mT_lep2",
@@ -711,7 +712,9 @@ int main(int argc, char* argv[])
     "met_LD", "m_jj", "diHiggsMass", "mTMetLepton1", "mTMetLepton2",
     "nJet", "nElectron", "sumLeptonCharge", "numSameFlavor_OS"
   };
-  XGBInterface mva_xgb_hh_3l_SUMBk_HH(mvaFileName_hh_3l_SUMBk_HH, mvaInputs_hh_3l_SUMBk_HH);
+  //XGBInterface mva_xgb_hh_3l_SUMBk_HH(mvaFileName_hh_3l_SUMBk_HH_pkl, mvaInputs_hh_3l_SUMBk_HH);
+  TMVAInterface *mva_tmva_hh_3l_SUMBk_HH = new TMVAInterface(mvaFileName_hh_3l_SUMBk_HH_xml, mvaInputs_hh_3l_SUMBk_HH);
+  mva_tmva_hh_3l_SUMBk_HH->enableBDTTransform();
 
   bool selectBDT = ( cfg_analyze.exists("selectBDT") ) ? cfg_analyze.getParameter<bool>("selectBDT") : false;
 
@@ -1469,7 +1472,7 @@ int main(int argc, char* argv[])
     const std::vector<const RecoJet*> selJetsAK4 = jetSelectorAK4(cleanedJetsAK4, isHigherPt);
     const std::vector<const RecoJet*> selBJetsAK4_loose = jetSelectorAK4_bTagLoose(cleanedJetsAK4, isHigherPt);
     const std::vector<const RecoJet*> selBJetsAK4_medium = jetSelectorAK4_bTagMedium(cleanedJetsAK4, isHigherPt);
-    int numSelJetsPtGt40 = countHighPtObjects(selJetsAK4, 40.);
+    //int numSelJetsPtGt40 = countHighPtObjects(selJetsAK4, 40.);
     
     if(isDEBUG || run_lumi_eventSelector)
     {
@@ -2363,7 +2366,7 @@ int main(int argc, char* argv[])
     else if (isWjjHasOnly1j) eventCategory = 3;
     
     
-    int numSelJets_nonVBF = ( selJets_nonVBF.size() >= 1 ) ? selJets_nonVBF.size() : selJetsAK4.size();
+    //int numSelJets_nonVBF = ( selJets_nonVBF.size() >= 1 ) ? selJets_nonVBF.size() : selJetsAK4.size();
     
     //--- compute output of BDTs used to discriminate ttH vs. ttV and ttH vs. ttbar
     //    in 3l category of ttH multilepton analysis
@@ -2609,8 +2612,19 @@ int main(int argc, char* argv[])
       {"sumLeptonCharge",     sumLeptonCharge_3l},
       {"numSameFlavor_OS",    numSameFlavor_OS}
     };
-    const double mvaOutput_xgb_hh_3l_SUMBk_HH = mva_xgb_hh_3l_SUMBk_HH(mvaInputVariables_hh_3l_SUMBk_HH);
-
+    //const double mvaOutput_xgb_hh_3l_SUMBk_HH_1 = 100; //mva_xgb_hh_3l_SUMBk_HH(mvaInputVariables_hh_3l_SUMBk_HH);
+    const double mvaOutput_tmva_hh_3l_SUMBk_HH = (*mva_tmva_hh_3l_SUMBk_HH)(mvaInputVariables_hh_3l_SUMBk_HH);
+    const double mvaOutput_xgb_hh_3l_SUMBk_HH = mvaOutput_tmva_hh_3l_SUMBk_HH; // #### IMPORTANT ************
+    
+    /*
+    printf("mvaInputVariables_hh_3l_SUMBk_HH:: \n");
+    for (std::map<std::string, double>::const_iterator it=mvaInputVariables_hh_3l_SUMBk_HH.begin(); it != mvaInputVariables_hh_3l_SUMBk_HH.end(); it++) {
+      std::cout << "\t" << it->first << " \t\t  " << it->second << std::endl;      
+    }
+    std::cout << "mvaOutput_xgb_hh_3l_SUMBk_HH_1 " << mvaOutput_xgb_hh_3l_SUMBk_HH_1 << std::endl;
+    std::cout << "mvaOutput_tmva_hh_3l_SUMBk_HH " << mvaOutput_tmva_hh_3l_SUMBk_HH << std::endl;
+    std::cout << "mvaOutput_xgb_hh_3l_SUMBk_HH " << mvaOutput_xgb_hh_3l_SUMBk_HH << std::endl;
+    */
     
 //--- retrieve gen-matching flags    
     //std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons);
