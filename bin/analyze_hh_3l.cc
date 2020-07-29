@@ -1,16 +1,20 @@
 /*   versionL With AK8LS without H_WW_jj selector
  *   Date: 20200401
  */
- 
 
 #include "FWCore/ParameterSet/interface/ParameterSet.h" // edm::ParameterSet
-#include "FWCore/PythonParameterSet/interface/MakeParameterSets.h" // edm::readPSetsFrom()
 #include "FWCore/Utilities/interface/Exception.h" // cms::Exception
 #include "PhysicsTools/FWLite/interface/TFileService.h" // fwlite::TFileService
 #include "DataFormats/FWLite/interface/InputSource.h" // fwlite::InputSource
 #include "DataFormats/FWLite/interface/OutputFiles.h" // fwlite::OutputFiles
 #include "DataFormats/Math/interface/LorentzVector.h" // math::PtEtaPhiMLorentzVector
 #include "DataFormats/Math/interface/deltaR.h" // deltaR
+
+#if __has_include (<FWCore/ParameterSetReader/interface/ParameterSetReader.h>)
+#  include <FWCore/ParameterSetReader/interface/ParameterSetReader.h> // edm::readPSetsFrom()
+#else
+#  include <FWCore/PythonParameterSet/interface/MakeParameterSets.h> // edm::readPSetsFrom()
+#endif
 
 #include <TBenchmark.h> // TBenchmark
 #include <TString.h> // TString, Form
@@ -329,6 +333,8 @@ int main(int argc, char* argv[])
 
   GenMatchInterface genMatchInterface(3, apply_leptonGenMatching, false);
 
+  std::cout << "analyze_hh_3l:: Siddh here1" << std::endl;
+
   TString hadTauSelection_string = cfg_analyze.getParameter<std::string>("hadTauSelection").data();
   TObjArray* hadTauSelection_parts = hadTauSelection_string.Tokenize("|");
   assert(hadTauSelection_parts->GetEntries() >= 1);
@@ -343,7 +349,9 @@ int main(int argc, char* argv[])
   else throw cms::Exception("analyze_hh_3l")
     << "Invalid Configuration parameter 'leptonChargeSelection' = " << leptonChargeSelection_string << " !!\n";
 
-  const int minNumJets = 1;
+  std::cout << "analyze_hh_3l:: Siddh here2" << std::endl;
+  
+  //const int minNumJets = 1;
 
   bool isMC = cfg_analyze.getParameter<bool>("isMC");
   bool hasLHE = cfg_analyze.getParameter<bool>("hasLHE");
@@ -364,7 +372,8 @@ int main(int argc, char* argv[])
   MEtFilterSelector metFilterSelector(cfgMEtFilter, isMC);
   const bool useNonNominal = cfg_analyze.getParameter<bool>("useNonNominal");
   const bool useNonNominal_jetmet = useNonNominal || ! isMC;
-
+  std::cout << "analyze_hh_3l:: Siddh here3" << std::endl;
+  
   if(! central_or_shifts_local.empty())
   {
     assert(central_or_shift_main == "central");
@@ -389,7 +398,8 @@ int main(int argc, char* argv[])
     eventWeightManager = new EvtWeightManager(additionalEvtWeight);
     eventWeightManager->set_central_or_shift(central_or_shift_main);
   }
-
+  std::cout << "analyze_hh_3l:: Siddh here4" << std::endl;
+  
   bool isDEBUG = cfg_analyze.getParameter<bool>("isDEBUG");
   if ( isDEBUG ) std::cout << "Warning: DEBUG mode enabled -> trigger selection will not be applied for data !!" << std::endl;
 
@@ -404,7 +414,8 @@ int main(int argc, char* argv[])
        " -> met_option      = " << met_option            << "\n"
        " -> jetPt_option    = " << jetPt_option          << '\n'
   ;
-
+  std::cout << "analyze_hh_3l:: Siddh here5" << std::endl;
+  
   edm::ParameterSet cfg_dataToMCcorrectionInterface;
   cfg_dataToMCcorrectionInterface.addParameter<std::string>("era", era_string);
   cfg_dataToMCcorrectionInterface.addParameter<std::string>("hadTauSelection", hadTauSelection_part2);
@@ -418,22 +429,29 @@ int main(int argc, char* argv[])
     case Era::k2018: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2018(cfg_dataToMCcorrectionInterface); break;
     default: throw cmsException("analyze_hh_3l", __LINE__) << "Invalid era = " << static_cast<int>(era);
   }
-
+  std::cout << "analyze_hh_3l:: Siddh here6" << std::endl;
   std::string applyFakeRateWeights_string = cfg_analyze.getParameter<std::string>("applyFakeRateWeights");
   int applyFakeRateWeights = -1;
   if      ( applyFakeRateWeights_string == "disabled" ) applyFakeRateWeights = kFR_disabled;
   else if ( applyFakeRateWeights_string == "3lepton"  ) applyFakeRateWeights = kFR_3lepton;
   else throw cms::Exception("analyze_hh_3l")
     << "Invalid Configuration parameter 'applyFakeRateWeights' = " << applyFakeRateWeights_string << " !!\n";
-
+  std::cout << "analyze_hh_3l:: Siddh here7  applyFakeRateWeights_string:" << applyFakeRateWeights_string  << ", applyFakeRateWeights: " << applyFakeRateWeights << ", kFR_3lepton: " << kFR_3lepton  << std::endl;
+  
   LeptonFakeRateInterface* leptonFakeRateInterface = 0;
   if ( applyFakeRateWeights == kFR_3lepton) {
     edm::ParameterSet cfg_leptonFakeRateWeight = cfg_analyze.getParameter<edm::ParameterSet>("leptonFakeRateWeight");
+    std::cout << "analyze_hh_3l:: Siddh here7_1 " << std::endl;
     cfg_leptonFakeRateWeight.addParameter<std::string>("era", era_string);
+
+    std::cout << "analyze_hh_3l:: Siddh here7_2 " << std::endl;
+
     cfg_leptonFakeRateWeight.addParameter<std::vector<std::string>>("central_or_shifts", central_or_shifts_local);
+
     leptonFakeRateInterface = new LeptonFakeRateInterface(cfg_leptonFakeRateWeight);
   }
-
+  std::cout << "analyze_hh_3l:: Siddh here8" << std::endl;
+  
   bool fillGenEvtHistograms = cfg_analyze.getParameter<bool>("fillGenEvtHistograms");
   edm::ParameterSet cfg_EvtYieldHistManager = cfg_analyze.getParameter<edm::ParameterSet>("cfgEvtYieldHistManager");
   
@@ -688,7 +706,8 @@ int main(int argc, char* argv[])
     inputTree->registerReader(genWJetReader);
   }
 
-  std::string mvaFileName_hh_3l_SUMBk_HH = "hhAnalysis/multilepton/data/3l_0tau_HH_XGB_noTopness_evtLevelSUM_HH_res_26Var.pkl";
+  //std::string mvaFileName_hh_3l_SUMBk_HH_pkl = "hhAnalysis/multilepton/data/3l_0tau_HH_XGB_noTopness_evtLevelSUM_HH_res_26Var.pkl"; 
+  std::string mvaFileName_hh_3l_SUMBk_HH_xml = "hhAnalysis/multilepton/data/3l_0tau_HH_XGB_noTopness_evtLevelSUM_HH_res_26Var.xml";
   std::vector<std::string> mvaInputs_hh_3l_SUMBk_HH = {
     "lep1_conePt", "lep1_eta", "mindr_lep1_jet", "mT_lep1",
     "lep2_conePt", "lep2_eta", "mindr_lep2_jet", "mT_lep2",
@@ -697,7 +716,9 @@ int main(int argc, char* argv[])
     "met_LD", "m_jj", "diHiggsMass", "mTMetLepton1", "mTMetLepton2",
     "nJet", "nElectron", "sumLeptonCharge", "numSameFlavor_OS"
   };
-  XGBInterface mva_xgb_hh_3l_SUMBk_HH(mvaFileName_hh_3l_SUMBk_HH, mvaInputs_hh_3l_SUMBk_HH);
+  //XGBInterface mva_xgb_hh_3l_SUMBk_HH(mvaFileName_hh_3l_SUMBk_HH_pkl, mvaInputs_hh_3l_SUMBk_HH);
+  TMVAInterface *mva_tmva_hh_3l_SUMBk_HH = new TMVAInterface(mvaFileName_hh_3l_SUMBk_HH_xml, mvaInputs_hh_3l_SUMBk_HH);
+  mva_tmva_hh_3l_SUMBk_HH->enableBDTTransform();
 
   bool selectBDT = ( cfg_analyze.exists("selectBDT") ) ? cfg_analyze.getParameter<bool>("selectBDT") : false;
 
@@ -1455,7 +1476,7 @@ int main(int argc, char* argv[])
     const std::vector<const RecoJet*> selJetsAK4 = jetSelectorAK4(cleanedJetsAK4, isHigherPt);
     const std::vector<const RecoJet*> selBJetsAK4_loose = jetSelectorAK4_bTagLoose(cleanedJetsAK4, isHigherPt);
     const std::vector<const RecoJet*> selBJetsAK4_medium = jetSelectorAK4_bTagMedium(cleanedJetsAK4, isHigherPt);
-    int numSelJetsPtGt40 = countHighPtObjects(selJetsAK4, 40.);
+    //int numSelJetsPtGt40 = countHighPtObjects(selJetsAK4, 40.);
     
     if(isDEBUG || run_lumi_eventSelector)
     {
@@ -2349,7 +2370,7 @@ int main(int argc, char* argv[])
     else if (isWjjHasOnly1j) eventCategory = 3;
     
     
-    int numSelJets_nonVBF = ( selJets_nonVBF.size() >= 1 ) ? selJets_nonVBF.size() : selJetsAK4.size();
+    //int numSelJets_nonVBF = ( selJets_nonVBF.size() >= 1 ) ? selJets_nonVBF.size() : selJetsAK4.size();
     
     //--- compute output of BDTs used to discriminate ttH vs. ttV and ttH vs. ttbar
     //    in 3l category of ttH multilepton analysis
@@ -2595,8 +2616,19 @@ int main(int argc, char* argv[])
       {"sumLeptonCharge",     sumLeptonCharge_3l},
       {"numSameFlavor_OS",    numSameFlavor_OS}
     };
-    const double mvaOutput_xgb_hh_3l_SUMBk_HH = mva_xgb_hh_3l_SUMBk_HH(mvaInputVariables_hh_3l_SUMBk_HH);
-
+    //const double mvaOutput_xgb_hh_3l_SUMBk_HH_1 = 100; //mva_xgb_hh_3l_SUMBk_HH(mvaInputVariables_hh_3l_SUMBk_HH);
+    const double mvaOutput_tmva_hh_3l_SUMBk_HH = (*mva_tmva_hh_3l_SUMBk_HH)(mvaInputVariables_hh_3l_SUMBk_HH);
+    const double mvaOutput_xgb_hh_3l_SUMBk_HH = mvaOutput_tmva_hh_3l_SUMBk_HH; // #### IMPORTANT ************
+    
+    /*
+    printf("mvaInputVariables_hh_3l_SUMBk_HH:: \n");
+    for (std::map<std::string, double>::const_iterator it=mvaInputVariables_hh_3l_SUMBk_HH.begin(); it != mvaInputVariables_hh_3l_SUMBk_HH.end(); it++) {
+      std::cout << "\t" << it->first << " \t\t  " << it->second << std::endl;      
+    }
+    std::cout << "mvaOutput_xgb_hh_3l_SUMBk_HH_1 " << mvaOutput_xgb_hh_3l_SUMBk_HH_1 << std::endl;
+    std::cout << "mvaOutput_tmva_hh_3l_SUMBk_HH " << mvaOutput_tmva_hh_3l_SUMBk_HH << std::endl;
+    std::cout << "mvaOutput_xgb_hh_3l_SUMBk_HH " << mvaOutput_xgb_hh_3l_SUMBk_HH << std::endl;
+    */
     
 //--- retrieve gen-matching flags    
     //std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons);
