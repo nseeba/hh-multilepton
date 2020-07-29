@@ -100,6 +100,9 @@
 #include "TauAnalysis/ClassicSVfit4tau/interface/ClassicSVfit4tau.h" // ClassicSVfit4tau
 #include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h" // classic_svFit::MeasuredTauLepton
 #include "TauAnalysis/ClassicSVfit4tau/interface/svFitHistogramAdapter4tau.h" // HistogramAdapterDiHiggs, HistogramAdapterHiggs
+#include "TauAnalysis/ClassicSVfit/interface/svFitAuxFunctions.h" // aux functions
+#include "TauAnalysis/ClassicSVfit/interface/ClassicSVfit.h" // SVFit for 2 taus
+
 
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
 #include <boost/algorithm/string/predicate.hpp> // boost::starts_with()
@@ -112,6 +115,9 @@
 #include <cstdlib> // EXIT_SUCCESS, EXIT_FAILURE
 #include <fstream> // std::ofstream
 #include <assert.h> // assert
+#include <bits/stdc++.h> // finding max element
+
+#include "tthAnalysis/HiggsToTauTau/interface/mvaInputVariables.h" // for comp_*()
 
 #include <TMath.h>
 #include <Python.h>
@@ -734,12 +740,21 @@ int main(int argc, char* argv[])
       "tau2_pt", "tau2_eta", "tau2_raw", "tau2_phi",
       "tau3_pt", "tau3_eta", "tau3_raw", "tau3_phi",
       "tau4_pt", "tau4_eta", "tau4_raw", "tau4_phi",
-      "met", "met_phi", "mht", "met_LD", "HT", "STMET",
-      "diHiggsVisMass", "diHiggsMass",
-      "genWeight", "evtWeight"
+      "tau1_mva", "tau2_mva", "tau3_mva", "tau4_mva",
+      "diHiggsVisMass", "diHiggsMass", "mTauTau",
+      "avg_dr_jet", "genWeight", "evtWeight",
+      "STMET", "HT", "met_LD", "mht", "met_phi", "met", "pt_HH_recoil",
+      "deltaEta_tau1_tau2", "deltaEta_tau1_tau3", "deltaEta_tau1_tau4",
+      "deltaEta_tau2_tau3", "deltaEta_tau2_tau4", "deltaEta_tau3_tau4",
+      "deltaPhi_tau1_tau2", "deltaPhi_tau1_tau3", "deltaPhi_tau1_tau4",
+      "deltaPhi_tau2_tau3", "deltaPhi_tau2_tau4", "deltaPhi_tau3_tau4",
+      "dr_tau1_tau2", "dr_tau1_tau3", "dr_tau1_tau4",
+      "dr_tau2_tau3", "dr_tau2_tau4", "dr_tau3_tau4",
+      "m_tau1_tau2", "m_tau1_tau3", "m_tau1_tau4",
+      "m_tau2_tau3", "m_tau2_tau4", "m_tau3_tau4"
     );
     bdt_filler->register_variable<int_type>(
-      "nJet"
+      "nJet", "nBJet_loose", "nBJet_medium"
     );
     bdt_filler->bookTree(fs);
   }
@@ -918,8 +933,8 @@ int main(int argc, char* argv[])
     bool selTrigger_2tau = use_triggers_2tau && isTriggered_2tau;
     if ( !selTrigger_2tau ) {
       if ( run_lumi_eventSelector ) {
-	std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
-	std::cout << " (selTrigger_2tau = " << selTrigger_2tau << ")" << std::endl;
+  std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
+  std::cout << " (selTrigger_2tau = " << selTrigger_2tau << ")" << std::endl;
       }
       continue;
     }
@@ -1120,7 +1135,7 @@ int main(int argc, char* argv[])
     if(apply_hlt_filter)
     {
       const std::map<hltPathsE, bool> trigger_bits = {
-	{ hltPathsE::trigger_2tau, selTrigger_2tau },
+  { hltPathsE::trigger_2tau, selTrigger_2tau },
       };
       if(! hltFilter(trigger_bits, fakeableLeptons, fakeableHadTaus))
       {
@@ -1262,13 +1277,13 @@ int main(int argc, char* argv[])
     bool isCharge_hadTau_SS = sumHadTauCharge != 0;
     bool isCharge_hadTau_OS = sumHadTauCharge == 0;
     if ( (hadTauChargeSelection == kOS && isCharge_hadTau_SS) ||
-	 (hadTauChargeSelection == kSS && isCharge_hadTau_OS) ) {
+   (hadTauChargeSelection == kSS && isCharge_hadTau_OS) ) {
       if ( run_lumi_eventSelector ) {
-	std::cout << "event " << eventInfo.str() << " FAILS hadTau charge selection." << std::endl;
-	std::cout << " (leading selHadTau charge = " << selHadTau_lead->charge()
-		  << ", subleading selHadTau charge = " << selHadTau_sublead->charge()
-		  << ", third selHadTau charge = " << selHadTau_third->charge() 
-		  << ", fourth selHadTau charge = " << selHadTau_fourth->charge() << ")" << std::endl;
+        std::cout << "event " << eventInfo.str() << " FAILS hadTau charge selection." << std::endl;
+        std::cout << " (leading selHadTau charge = " << selHadTau_lead->charge()
+        << ", subleading selHadTau charge = " << selHadTau_sublead->charge()
+        << ", third selHadTau charge = " << selHadTau_third->charge() 
+        << ", fourth selHadTau charge = " << selHadTau_fourth->charge() << ")" << std::endl;
       }
       continue;
     }
@@ -1277,10 +1292,10 @@ int main(int argc, char* argv[])
 
     if ( apply_met_filters ) {
       if ( !metFilterSelector(metFilters) ) {
-	if ( run_lumi_eventSelector ) {
-	  std::cout << "event " << eventInfo.str() << " FAILS MEt filters." << std::endl;
-	}
-	continue;
+  if ( run_lumi_eventSelector ) {
+    std::cout << "event " << eventInfo.str() << " FAILS MEt filters." << std::endl;
+  }
+  continue;
       }
     }
     cutFlowTable.update("MEt filters", evtWeightRecorder.get(central_or_shift_main));
@@ -1295,10 +1310,10 @@ int main(int argc, char* argv[])
     }
     if ( failsSignalRegionVeto ) {
       if ( run_lumi_eventSelector ) {
-	std::cout << "event " << eventInfo.str() << " FAILS overlap w/ the SR: "
+  std::cout << "event " << eventInfo.str() << " FAILS overlap w/ the SR: "
                      "# tight taus = " << tightHadTaus.size() << " >= 3\n"
         ;
-	printCollection("tightHadTaus", tightHadTaus);
+  printCollection("tightHadTaus", tightHadTaus);
       }
       continue; // CV: avoid overlap with signal region
     }
@@ -1365,6 +1380,82 @@ int main(int argc, char* argv[])
     double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ? 
       svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
 
+    // Compute the BDT variables
+
+    // Eta & Phi 
+    const double deltaEta_tau1_tau2 = (selHadTau_lead->p4() - selHadTau_sublead->p4()).eta();
+    const double deltaEta_tau1_tau3 = (selHadTau_lead->p4() - selHadTau_third->p4()).eta();
+    const double deltaEta_tau1_tau4 = (selHadTau_lead->p4() - selHadTau_fourth->p4()).eta();
+    const double deltaEta_tau2_tau3 = (selHadTau_sublead->p4() - selHadTau_third->p4()).eta();
+    const double deltaEta_tau2_tau4 = (selHadTau_sublead->p4() - selHadTau_fourth->p4()).eta();
+    const double deltaEta_tau3_tau4 = (selHadTau_third->p4() - selHadTau_fourth->p4()).eta();
+    const double deltaPhi_tau1_tau2 = (selHadTau_lead->p4() - selHadTau_sublead->p4()).phi();
+    const double deltaPhi_tau1_tau3 = (selHadTau_lead->p4() - selHadTau_third->p4()).phi();
+    const double deltaPhi_tau1_tau4 = (selHadTau_lead->p4() - selHadTau_fourth->p4()).phi();
+    const double deltaPhi_tau2_tau3 = (selHadTau_sublead->p4() - selHadTau_third->p4()).phi();
+    const double deltaPhi_tau2_tau4 = (selHadTau_sublead->p4() - selHadTau_fourth->p4()).phi();
+    const double deltaPhi_tau3_tau4 = (selHadTau_third->p4() - selHadTau_fourth->p4()).phi();
+
+    // masses
+    const double m_tau1_tau2 = (selHadTau_lead->p4() + selHadTau_sublead->p4()).mass();
+    const double m_tau1_tau3 = (selHadTau_lead->p4() + selHadTau_third->p4()).mass();
+    const double m_tau1_tau4 = (selHadTau_lead->p4() + selHadTau_fourth->p4()).mass();
+    const double m_tau2_tau3 = (selHadTau_sublead->p4() + selHadTau_third->p4()).mass();
+    const double m_tau2_tau4 = (selHadTau_sublead->p4() + selHadTau_fourth->p4()).mass();
+    const double m_tau3_tau4 = (selHadTau_third->p4() + selHadTau_fourth->p4()).mass();
+
+    // deltaR-s
+    const double dr_tau1_tau2 = deltaR(selHadTau_lead->p4(), selHadTau_sublead->p4());
+    const double dr_tau1_tau3 = deltaR(selHadTau_lead->p4(), selHadTau_third->p4());
+    const double dr_tau1_tau4 = deltaR(selHadTau_lead->p4(), selHadTau_fourth->p4());
+    const double dr_tau2_tau3 = deltaR(selHadTau_sublead->p4(), selHadTau_third->p4());
+    const double dr_tau2_tau4 = deltaR(selHadTau_sublead->p4(), selHadTau_fourth->p4());
+    const double dr_tau3_tau4 = deltaR(selHadTau_third->p4(), selHadTau_fourth->p4());
+
+    // tau_id
+    const int tau1_mva = selHadTau_lead->id_mva(TauID::DeepTau2017v2VSjet);
+    const int tau2_mva = selHadTau_sublead->id_mva(TauID::DeepTau2017v2VSjet);
+    const int tau3_mva = selHadTau_third->id_mva(TauID::DeepTau2017v2VSjet);
+    const int tau4_mva = selHadTau_fourth->id_mva(TauID::DeepTau2017v2VSjet);
+
+    // Other
+    const double avg_dr_jet = comp_avg_dr_jet(selJets);
+    const std::vector<const RecoJet*> cleanedJets_wrt_leptons = jetCleaner(jet_ptrs, fakeableLeptons);
+    const std::vector<const RecoJet*> selJets_btag = jetSelector(cleanedJets_wrt_leptons, isHigherCSV);
+    const std::vector<const RecoJet*> selBJets_btag_loose = jetSelectorBtagLoose(selJets_btag, isHigherPt);
+    const std::vector<const RecoJet*> selBJets_btag_medium = jetSelectorBtagMedium(selJets_btag, isHigherPt);
+    const double pt_HH_recoil = (selHadTau_lead->p4() + selHadTau_sublead->p4() + selHadTau_third->p4() + selHadTau_fourth->p4() - met.p4()).pt();
+
+
+    // calculate tau mass using 2 most tau-like taus with SVFit
+    std::vector<classic_svFit::MeasuredTauLepton> measuredTauLeptons;
+    classic_svFit::MeasuredTauLepton::kDecayType leg1Type = classic_svFit::MeasuredTauLepton::kTauToHadDecay;
+    // Find 2 most tau-like taus
+    std::vector<const RecoHadTau*> allTau = {selHadTau_lead, selHadTau_sublead, selHadTau_third, selHadTau_fourth};
+    std::vector<int> allTau_tauness = { tau1_mva, tau2_mva, tau3_mva, tau4_mva };
+    int most_tauLike_loc = std::distance(allTau_tauness.begin(), std::max_element(allTau_tauness.begin(), allTau_tauness.end()));
+    const RecoHadTau* mostTau = allTau.at(most_tauLike_loc);
+    allTau.erase(allTau.begin() + most_tauLike_loc);
+    allTau_tauness.erase(allTau_tauness.begin() + most_tauLike_loc);
+    int secondMost_tauLike_loc = std::distance(allTau_tauness.begin(), std::max_element(allTau_tauness.begin(), allTau_tauness.end()));
+    const RecoHadTau* secondMostTau = allTau.at(secondMost_tauLike_loc);
+    // Preparations for SVFit
+    double leg1Mass = mostTau->mass();
+    if ( leg1Mass < classic_svFit::chargedPionMass ) leg1Mass = classic_svFit::chargedPionMass;
+    if ( leg1Mass > 1.5                            ) leg1Mass = 1.5;
+    classic_svFit::MeasuredTauLepton::kDecayType leg2Type = classic_svFit::MeasuredTauLepton::kTauToHadDecay;
+    double leg2Mass = secondMostTau->mass();
+    if ( leg2Mass < classic_svFit::chargedPionMass ) leg2Mass = classic_svFit::chargedPionMass;
+    if ( leg2Mass > 1.5                            ) leg2Mass = 1.5;
+    measuredTauLeptons.push_back(classic_svFit::MeasuredTauLepton(leg1Type, mostTau->pt(), mostTau->eta(), mostTau->phi(), leg1Mass));
+    measuredTauLeptons.push_back(classic_svFit::MeasuredTauLepton(leg2Type, secondMostTau->pt(), secondMostTau->eta(), secondMostTau->phi(), leg2Mass));
+    ClassicSVfit svFitAlgo;
+    svFitAlgo.addLogM_dynamic(false);
+    svFitAlgo.addLogM_fixed(true, 5.);
+    svFitAlgo.integrate(measuredTauLeptons, met.p4().px(), met.p4().py(), met.cov());
+
+    const double mTauTau   = ( svFitAlgo.isValidSolution() ) ? static_cast<classic_svFit::HistogramAdapterDiTau*>(svFitAlgo.getHistogramAdapter())->getMass() : -1.;
+
 //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selHadTaus);
 
@@ -1381,17 +1472,17 @@ int main(int argc, char* argv[])
         {
           selHistManager->electrons_->fillHistograms(preselElectrons, evtWeight);
           selHistManager->muons_->fillHistograms(preselMuons, evtWeight);
-	  selHistManager->hadTaus_->fillHistograms({ selHadTau_lead, selHadTau_sublead, selHadTau_third, selHadTau_fourth }, evtWeight);
-	  selHistManager->leadHadTau_->fillHistograms({ selHadTau_lead }, evtWeight);
-	  selHistManager->subleadHadTau_->fillHistograms({ selHadTau_sublead }, evtWeight);
-	  selHistManager->thirdHadTau_->fillHistograms({ selHadTau_third }, evtWeight);
-	  selHistManager->fourthHadTau_->fillHistograms({ selHadTau_fourth }, evtWeight);
-	  selHistManager->jets_->fillHistograms(selJets, evtWeight);
-	  selHistManager->BJets_loose_->fillHistograms(selBJets_loose, evtWeight);
-	  selHistManager->BJets_medium_->fillHistograms(selBJets_medium, evtWeight);
-	  selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
-	  selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
-	}
+          selHistManager->hadTaus_->fillHistograms({ selHadTau_lead, selHadTau_sublead, selHadTau_third, selHadTau_fourth }, evtWeight);
+          selHistManager->leadHadTau_->fillHistograms({ selHadTau_lead }, evtWeight);
+          selHistManager->subleadHadTau_->fillHistograms({ selHadTau_sublead }, evtWeight);
+          selHistManager->thirdHadTau_->fillHistograms({ selHadTau_third }, evtWeight);
+          selHistManager->fourthHadTau_->fillHistograms({ selHadTau_fourth }, evtWeight);
+          selHistManager->jets_->fillHistograms(selJets, evtWeight);
+          selHistManager->BJets_loose_->fillHistograms(selBJets_loose, evtWeight);
+          selHistManager->BJets_medium_->fillHistograms(selBJets_medium, evtWeight);
+          selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
+          selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
+        }
         std::map<std::string, double> rwgt_map;
         for(const std::string & evt_cat_str: evt_cat_strs)
         {
@@ -1457,12 +1548,12 @@ int main(int argc, char* argv[])
         if(! skipFilling)
         {
           selHistManager->evtYield_->fillHistograms(eventInfo, evtWeight);
-	  selHistManager->weights_->fillHistograms("genWeight", eventInfo.genWeight);
-	  selHistManager->weights_->fillHistograms("pileupWeight", evtWeightRecorder.get_puWeight(central_or_shift));
-	  selHistManager->weights_->fillHistograms("data_to_MC_correction", evtWeightRecorder.get_data_to_MC_correction(central_or_shift));
-	  selHistManager->weights_->fillHistograms("triggerWeight", evtWeightRecorder.get_sf_triggerEff(central_or_shift));
-	  selHistManager->weights_->fillHistograms("hadTauEff", evtWeightRecorder.get_tauSF(central_or_shift));
-	  selHistManager->weights_->fillHistograms("fakeRate", evtWeightRecorder.get_FR(central_or_shift));
+          selHistManager->weights_->fillHistograms("genWeight", eventInfo.genWeight);
+          selHistManager->weights_->fillHistograms("pileupWeight", evtWeightRecorder.get_puWeight(central_or_shift));
+          selHistManager->weights_->fillHistograms("data_to_MC_correction", evtWeightRecorder.get_data_to_MC_correction(central_or_shift));
+          selHistManager->weights_->fillHistograms("triggerWeight", evtWeightRecorder.get_sf_triggerEff(central_or_shift));
+          selHistManager->weights_->fillHistograms("hadTauEff", evtWeightRecorder.get_tauSF(central_or_shift));
+          selHistManager->weights_->fillHistograms("fakeRate", evtWeightRecorder.get_FR(central_or_shift));
         }
       }
 
@@ -1513,17 +1604,50 @@ int main(int argc, char* argv[])
             ("tau4_eta",                 selHadTau_fourth->eta())
             ("tau4_phi",                 selHadTau_fourth->phi())
             ("tau4_raw",                 selHadTau_fourth->raw_mva())
-            ("met",                      met.pt())
-            ("met_phi",                  met.phi())
-            ("mht",                      mht_p4.pt())
-            ("met_LD",                   met_LD)
-            ("HT",                       HT)
-            ("STMET",                    STMET)
+            ("tau1_mva",                 tau1_mva)
+            ("tau2_mva",                 tau2_mva)
+            ("tau3_mva",                 tau3_mva)
+            ("tau4_mva",                 tau4_mva)
             ("diHiggsVisMass",           dihiggsVisMass_sel)
             ("diHiggsMass",              dihiggsMass)
-            ("nJet",                     selJets.size())
+            ("mTauTau",                  mTauTau)
+            ("avg_dr_jet",               avg_dr_jet)
             ("genWeight",                eventInfo.genWeight)
             ("evtWeight",                evtWeightRecorder.get(central_or_shift_main))
+            ("STMET",                    STMET)
+            ("HT",                       HT)
+            ("met_LD",                   met_LD)
+            ("mht",                      mht_p4.pt())
+            ("met_phi",                  met.phi())
+            ("met",                      met.pt())
+            ("pt_HH_recoil",             pt_HH_recoil)
+            ("deltaEta_tau1_tau2",       deltaEta_tau1_tau2)
+            ("deltaEta_tau1_tau3",       deltaEta_tau1_tau3)
+            ("deltaEta_tau1_tau4",       deltaEta_tau1_tau4)
+            ("deltaEta_tau2_tau3",       deltaEta_tau2_tau3)
+            ("deltaEta_tau2_tau4",       deltaEta_tau2_tau4)
+            ("deltaEta_tau3_tau4",       deltaEta_tau3_tau4)
+            ("deltaPhi_tau1_tau2",       deltaPhi_tau1_tau2)
+            ("deltaPhi_tau1_tau3",       deltaPhi_tau1_tau3)
+            ("deltaPhi_tau1_tau4",       deltaPhi_tau1_tau4)
+            ("deltaPhi_tau2_tau3",       deltaPhi_tau2_tau3)
+            ("deltaPhi_tau2_tau4",       deltaPhi_tau2_tau4)
+            ("deltaPhi_tau3_tau4",       deltaPhi_tau3_tau4)
+            ("dr_tau1_tau2",             dr_tau1_tau2)
+            ("dr_tau1_tau3",             dr_tau1_tau3)
+            ("dr_tau1_tau4",             dr_tau1_tau4)
+            ("dr_tau2_tau3",             dr_tau2_tau3)
+            ("dr_tau2_tau4",             dr_tau2_tau4)
+            ("dr_tau3_tau4",             dr_tau3_tau4)
+            ("m_tau1_tau2",              m_tau1_tau2)
+            ("m_tau1_tau3",              m_tau1_tau3)
+            ("m_tau1_tau4",              m_tau1_tau4)
+            ("m_tau2_tau3",              m_tau2_tau3)
+            ("m_tau2_tau4",              m_tau2_tau4)
+            ("m_tau3_tau4",              m_tau3_tau4)
+            ("nJet",                     selJets.size())
+            ("nBJet_loose",              selBJets_btag_loose.size())
+            ("nBJet_medium",             selBJets_btag_medium.size())
             (rwgt_map, "weight")
             (Weight_BMScan)
             (Weight_ktScan, "weight")
