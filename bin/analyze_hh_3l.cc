@@ -574,20 +574,20 @@ int main(int argc, char* argv[])
   inputTree -> registerReader(muonReader);
   RecoMuonCollectionGenMatcher muonGenMatcher;
   RecoMuonCollectionSelectorLoose preselMuonSelector(era, -1, isDEBUG);
-  //RecoMuonCollectionSelectorFakeable fakeableMuonSelector(era, -1, isDEBUG);
-  //RecoMuonCollectionSelectorTight tightMuonSelector(era, -1, isDEBUG);
-  RecoMuonCollectionSelectorFakeable_hh_multilepton fakeableMuonSelector(era, -1, isDEBUG);
-  RecoMuonCollectionSelectorTight_hh_multilepton tightMuonSelector(era, -1, isDEBUG);
+  RecoMuonCollectionSelectorFakeable fakeableMuonSelector(era, -1, isDEBUG);
+  RecoMuonCollectionSelectorTight tightMuonSelector(era, -1, isDEBUG);
+  //RecoMuonCollectionSelectorFakeable_hh_multilepton fakeableMuonSelector(era, -1, isDEBUG);
+  //RecoMuonCollectionSelectorTight_hh_multilepton tightMuonSelector(era, -1, isDEBUG);
 
   RecoElectronReader* electronReader = new RecoElectronReader(era, branchName_electrons, isMC, readGenObjects);
   inputTree -> registerReader(electronReader);
   RecoElectronCollectionGenMatcher electronGenMatcher;
   RecoElectronCollectionCleaner electronCleaner(0.3, isDEBUG);
   RecoElectronCollectionSelectorLoose preselElectronSelector(era, -1, isDEBUG);
-  //RecoElectronCollectionSelectorFakeable fakeableElectronSelector(era, -1, isDEBUG);
-  //RecoElectronCollectionSelectorTight tightElectronSelector(era, -1, isDEBUG);
-  RecoElectronCollectionSelectorFakeable_hh_multilepton fakeableElectronSelector(era, -1, isDEBUG);
-  RecoElectronCollectionSelectorTight_hh_multilepton tightElectronSelector(era, -1, isDEBUG);
+  RecoElectronCollectionSelectorFakeable fakeableElectronSelector(era, -1, isDEBUG);
+  RecoElectronCollectionSelectorTight tightElectronSelector(era, -1, isDEBUG);
+  //RecoElectronCollectionSelectorFakeable_hh_multilepton fakeableElectronSelector(era, -1, isDEBUG);
+  //RecoElectronCollectionSelectorTight_hh_multilepton tightElectronSelector(era, -1, isDEBUG);
  
   RecoHadTauReader* hadTauReader = new RecoHadTauReader(era, branchName_hadTaus, isMC, readGenObjects);
   hadTauReader->setHadTauPt_central_or_shift(hadTauPt_option);
