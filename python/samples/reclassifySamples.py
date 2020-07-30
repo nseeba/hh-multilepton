@@ -48,7 +48,7 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None)
       sample_info["sample_category"] = "WZ"
     elif sample_name.startswith('/WWTo'):
       sample_info["sample_category"] = "WW"
-    elif sample_name.startswith('/DY') and sample_name.find('JetsToLL') != -1 and sample_name.find('JetsToLL') < 10:
+    elif sample_name.startswith('/DY'):
       sample_info["sample_category"] = "DY"
     elif sample_name.startswith('/W') and sample_name.find('JetsToLNu') != -1 and sample_name.find('JetsToLNu') < 10:
       sample_info["sample_category"] = "W"
