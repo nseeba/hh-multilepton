@@ -84,7 +84,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/TTreeWrapper.h" // TTreeWrapper
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
-#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface.h" // HHWeightInterface
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface_2.h" // HHWeightInterface
 #include "tthAnalysis/HiggsToTauTau/interface/NtupleFillerBDT.h" // NtupleFillerBDT
 #include "tthAnalysis/HiggsToTauTau/interface/BM_list.h" // BMS
 #include "tthAnalysis/HiggsToTauTau/interface/BtagSFRatioFacility.h" // BtagSFRatioFacility
@@ -369,19 +369,27 @@ int main(int argc, char* argv[])
   EventInfo eventInfo(isMC, isSignal, isHH_rwgt_allowed, apply_topPtReweighting);
   const std::string default_cat_str = "default";
   std::vector<std::string> evt_cat_strs = { default_cat_str };
+  std::vector<std::string> HHWeightNames;
 
 //--- HH scan
   const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
   const bool apply_HH_rwgt = eventInfo.is_hh_nonresonant() && hhWeight_cfg.getParameter<bool>("apply_rwgt");
-  const HHWeightInterface * HHWeight_calc = nullptr;
+  const HHWeightInterface_2 * HHWeight_calc = nullptr;
   if(apply_HH_rwgt)
   {
-    HHWeight_calc = new HHWeightInterface(hhWeight_cfg);
-    evt_cat_strs = HHWeight_calc->get_scan_strs();
+    HHWeight_calc = new HHWeightInterface_2(hhWeight_cfg);
+    evt_cat_strs = HHWeight_calc->get_bm_names();
+    HHWeightNames = HHWeight_calc->get_weight_names();
   }
   const size_t Nscan = evt_cat_strs.size();
   std::cout << "Number of points being scanned = " << Nscan << '\n';
-
+    if (apply_HH_rwgt)
+    {
+      std::cout << "\n Weights booked = " << apply_HH_rwgt << '\n';
+      for (const std::string catcat : evt_cat_strs) {
+	std::cout << catcat << '\n';
+      }
+    }
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
   {
@@ -725,16 +733,11 @@ int main(int argc, char* argv[])
     bdt_filler = new std::remove_pointer<decltype(bdt_filler)>::type(
       makeHistManager_cfg(process_string, Form("%s/sel/evtntuple", histogramDir.data()), era_string, central_or_shift_main)
     );
-    for(const std::string & evt_cat_str: BMS)
-    {
-      //Book BM weights
-      bdt_filler->register_variable<float_type>( Form("weight_%s", evt_cat_str.c_str()) );
-    }
-    for(const std::string & evt_cat_str: evt_cat_strs)
-    {
-      //Book Weight_klScan
-      bdt_filler->register_variable<float_type>(Form("weight_%s", evt_cat_str.c_str()) );
-    }
+    for(const std::string & evt_cat_str: HHWeightNames)
+      {
+    	if (!apply_HH_rwgt) continue;
+	bdt_filler->register_variable<float_type>(Form(evt_cat_str.c_str()));
+      }
     bdt_filler->register_variable<float_type>(
       "tau1_pt", "tau1_eta", "tau1_raw", "tau1_phi",
       "tau2_pt", "tau2_eta", "tau2_raw", "tau2_phi",
@@ -742,7 +745,7 @@ int main(int argc, char* argv[])
       "tau4_pt", "tau4_eta", "tau4_raw", "tau4_phi",
       "tau1_mva", "tau2_mva", "tau3_mva", "tau4_mva",
       "diHiggsVisMass", "diHiggsMass", "mTauTau",
-      "avg_dr_jet", "genWeight", "evtWeight",
+      "avg_dr_jet",
       "STMET", "HT", "met_LD", "mht", "met_phi", "met", "pt_HH_recoil",
       "deltaEta_tau1_tau2", "deltaEta_tau1_tau3", "deltaEta_tau1_tau4",
       "deltaEta_tau2_tau3", "deltaEta_tau2_tau4", "deltaEta_tau3_tau4",
@@ -751,7 +754,8 @@ int main(int argc, char* argv[])
       "dr_tau1_tau2", "dr_tau1_tau3", "dr_tau1_tau4",
       "dr_tau2_tau3", "dr_tau2_tau4", "dr_tau3_tau4",
       "m_tau1_tau2", "m_tau1_tau3", "m_tau1_tau4",
-      "m_tau2_tau3", "m_tau2_tau4", "m_tau3_tau4"
+      "m_tau2_tau3", "m_tau2_tau4", "m_tau3_tau4",
+      "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "hadTauEffSF", "data_to_MC_correction","FR_Weight", "hadTau1_frWeight", "hadTau2_frWeight", "hadTau3_frWeight", "hadTau4_frWeight" 
     );
     bdt_filler->register_variable<int_type>(
       "nJet", "nBJet_loose", "nBJet_medium"
@@ -1214,9 +1218,11 @@ int main(int argc, char* argv[])
       evtWeightRecorder.record_jetToTau_FR_sublead(jetToTauFakeRateInterface, selHadTau_sublead);
       evtWeightRecorder.record_jetToTau_FR_third(jetToTauFakeRateInterface, selHadTau_third);
       evtWeightRecorder.record_jetToTau_FR_fourth(jetToTauFakeRateInterface, selHadTau_fourth);
-      evtWeightRecorder.compute_FR_4tau(
-        passesTight_hadTau_lead, passesTight_hadTau_sublead, passesTight_hadTau_third, passesTight_hadTau_fourth
+      if(!selectBDT){
+	evtWeightRecorder.compute_FR_4tau(
+					  passesTight_hadTau_lead, passesTight_hadTau_sublead, passesTight_hadTau_third, passesTight_hadTau_fourth
       );
+      }
     }
 
     const bool failsLowMassVeto = isfailsLowMassVeto(preselLeptonsUncleaned);
@@ -1320,17 +1326,16 @@ int main(int argc, char* argv[])
     cutFlowTable.update("signal region veto", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("signal region veto", evtWeightRecorder.get(central_or_shift_main));
 
-    std::vector<double> WeightBM; // weights to do histograms for BMs
-    std::map<std::string, double> Weight_ktScan; // weights to do histograms
-    std::map<std::string, double> Weight_BMScan;
+    std::map<std::string, double> weightMapHH;
+    std::map<std::string, double> reWeightMapHH;
     double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
 
     if(apply_HH_rwgt)
     {
       assert(HHWeight_calc);
-      WeightBM = HHWeight_calc->getJHEPWeight(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
-      Weight_ktScan = HHWeight_calc->getScanWeight(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
-      HHWeight = WeightBM[0];
+      weightMapHH = HHWeight_calc->getWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+      reWeightMapHH = HHWeight_calc->getReWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+      HHWeight = reWeightMapHH["SM"];
       evtWeightRecorder.record_bm(HHWeight); // SM by default
 
       if(isDEBUG)
@@ -1339,35 +1344,13 @@ int main(int argc, char* argv[])
           "cost "             << eventInfo.gen_cosThetaStar << " : "
           "weight = "         << HHWeight                   << '\n'
           ;
-        std::cout << "Calculated " << Weight_ktScan.size() << " scan weights\n";
-        for(std::size_t bm_list = 0; bm_list < Weight_ktScan.size(); ++bm_list)
+	std::cout << "Calculated " << weightMapHH.size() << " scan weights\n";
+	for(const auto & kv: weightMapHH)
         {
-          std::cout << "line = " << bm_list << " " << evt_cat_strs[bm_list] << "; Weight = " <<  Weight_ktScan[evt_cat_strs[bm_list]] << '\n';
+          std::cout << "line = " <<kv.first << "; Weight = " <<  kv.second << '\n';
         }
-        std::cout << '\n';
-      }
 
-      for(std::size_t bm_list = 0; bm_list < WeightBM.size() ; ++bm_list)
-      {
-        std::string bench;
-        if (bm_list == 0) bench = "SM";
-        else {
-          bench = Form("BM%s", std::to_string(bm_list).data() );
-        }
-        std::string name_BM = Form("weight_%s", bench.data() );
-        Weight_BMScan[name_BM] =  WeightBM[bm_list];
-        if (isDEBUG) std::cout << "line = " << name_BM << "; Weight = " << WeightBM[bm_list] << '\n';
-      }
-    } else {
-      for(std::size_t bm_list = 0; bm_list < BMS.size() ; ++bm_list)
-      {
-        std::string bench;
-        if (bm_list == 0) bench = "SM";
-        else {
-          bench = Form("BM%s", std::to_string(bm_list).data() );
-        }
-        std::string name_BM = Form("weight_%s", bench.data() );
-        Weight_BMScan[name_BM] =  1.0;
+        std::cout << '\n';
       }
     }
     
@@ -1483,23 +1466,7 @@ int main(int argc, char* argv[])
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
         }
-        std::map<std::string, double> rwgt_map;
-        for(const std::string & evt_cat_str: evt_cat_strs)
-        {
-          if(skipFilling && evt_cat_str != default_cat_str)
-          {
-            continue;
-          }
-          if(apply_HH_rwgt)
-          {
-            rwgt_map[evt_cat_str] = evtWeight * Weight_ktScan[evt_cat_str] / HHWeight;
-          }
-          else
-          {
-            rwgt_map[evt_cat_str] = evtWeight;
-          }
-        }
-        for(const auto & kv: rwgt_map)
+  	for(const auto & kv: reWeightMapHH)
         {
           selHistManager->evt_[kv.first]->fillHistograms(
             preselElectrons.size(),
@@ -1573,19 +1540,30 @@ int main(int argc, char* argv[])
 
       if(bdt_filler)
       {
-        // do HH nonres weight
-        std::map<std::string, double> rwgt_map;
-        for(const std::string & evt_cat_str: evt_cat_strs)
-        {
-          if(apply_HH_rwgt)
-          {
-            rwgt_map[evt_cat_str] = Weight_ktScan[evt_cat_str];
-          }
-          else
-          {
-            rwgt_map[evt_cat_str] = evtWeightRecorder.get(central_or_shift_main);
-          }
-        }
+	double hadTau1_genPt = 0.;
+	if(selHadTau_lead->genHadTau()) hadTau1_genPt =  selHadTau_lead->genHadTau()->pt();
+	else if ( selHadTau_lead->genLepton()) hadTau1_genPt =  selHadTau_lead->genLepton()->pt();
+
+	double hadTau2_genPt = 0.;
+	if(selHadTau_sublead->genHadTau()) hadTau2_genPt =  selHadTau_sublead->genHadTau()->pt();
+	else if ( selHadTau_sublead->genLepton()) hadTau2_genPt =  selHadTau_sublead->genLepton()->pt();
+	double hadTau3_genPt = 0.;
+	if(selHadTau_third->genHadTau()) hadTau3_genPt =  selHadTau_third->genHadTau()->pt();
+	else if ( selHadTau_third->genLepton()) hadTau3_genPt =  selHadTau_third->genLepton()->pt();
+
+	double hadTau4_genPt = 0.;
+	if(selHadTau_fourth->genHadTau()) hadTau4_genPt =  selHadTau_fourth->genHadTau()->pt();
+	else if ( selHadTau_fourth->genLepton()) hadTau4_genPt =  selHadTau_fourth->genLepton()->pt();
+	double prob_fake_tau_lead = evtWeightRecorder.get_jetToTau_FR_lead(central_or_shift_main);
+	double prob_fake_tau_sublead = evtWeightRecorder.get_jetToTau_FR_sublead(central_or_shift_main);
+	double prob_fake_tau_third = evtWeightRecorder.get_jetToTau_FR_third(central_or_shift_main);
+	double prob_fake_tau_fourth = evtWeightRecorder.get_jetToTau_FR_fourth(central_or_shift_main);
+	double evtWeight_BDT = evtWeightRecorder.get(central_or_shift_main);
+	double hadTau1_frWeight = hadTau1_genPt > 0 ? 1.0 : prob_fake_tau_lead;
+	double hadTau2_frWeight = hadTau2_genPt > 0 ? 1.0 : prob_fake_tau_sublead;
+	double hadTau3_frWeight = hadTau3_genPt > 0 ? 1.0 : prob_fake_tau_third;
+	double hadTau4_frWeight = hadTau4_genPt > 0 ? 1.0 : prob_fake_tau_fourth;
+	evtWeight_BDT *= hadTau1_frWeight*hadTau2_frWeight*hadTau3_frWeight*hadTau4_frWeight;
 
         bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
             ("tau1_pt",                  selHadTau_lead->pt())
@@ -1612,8 +1590,6 @@ int main(int argc, char* argv[])
             ("diHiggsMass",              dihiggsMass)
             ("mTauTau",                  mTauTau)
             ("avg_dr_jet",               avg_dr_jet)
-            ("genWeight",                eventInfo.genWeight)
-            ("evtWeight",                evtWeightRecorder.get(central_or_shift_main))
             ("STMET",                    STMET)
             ("HT",                       HT)
             ("met_LD",                   met_LD)
@@ -1648,9 +1624,20 @@ int main(int argc, char* argv[])
             ("nJet",                     selJets.size())
             ("nBJet_loose",              selBJets_btag_loose.size())
             ("nBJet_medium",             selBJets_btag_medium.size())
-            (rwgt_map, "weight")
-            (Weight_BMScan)
-            (Weight_ktScan, "weight")
+	    ("hadTau1_frWeight",       hadTau1_frWeight)
+	    ("hadTau2_frWeight",       hadTau2_frWeight)
+	    ("hadTau3_frWeight",       hadTau3_frWeight)
+	    ("hadTau4_frWeight",       hadTau4_frWeight)
+	    ("genWeight" , eventInfo.genWeight)
+	    ("lheWeight" , evtWeightRecorder.get_lheScaleWeight(central_or_shift_main))
+	    ("pileupWeight", evtWeightRecorder.get_puWeight(central_or_shift_main))
+	    ("triggerWeight", evtWeightRecorder.get_sf_triggerEff(central_or_shift_main))
+	    ("btagWeight", evtWeightRecorder.get_btag(central_or_shift_main))
+	    ("hadTauEffSF", evtWeightRecorder.get_tauSF(central_or_shift_main))
+	    ("data_to_MC_correction", evtWeightRecorder.get_data_to_MC_correction(central_or_shift_main))
+	    ("FR_Weight", evtWeightRecorder.get_FR(central_or_shift_main))
+	    ("evtWeight",           evtWeight_BDT)
+	    (weightMapHH)
           .fill()
           ;
 

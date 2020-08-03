@@ -40,7 +40,7 @@ class analyzeConfig_hh(analyzeConfig):
 
   def get_samples_categories_HH(self):
     sample_categories_HH = []
-    couplings = self.kl_weights + self.BM_weights
+    couplings = self.kl_weights + self.BM_weights + self.kt_weights + self.c2_weights
     for sample_key, sample_info in self.samples.items():
       if sample_key == 'sum_events':
         continue

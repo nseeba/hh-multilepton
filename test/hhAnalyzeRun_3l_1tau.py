@@ -109,8 +109,8 @@ elif mode == "forBDTtraining":
   samples = load_samples(era, suffix = "BDT")
 
   hadTauWP_map_relaxed = {
-    'dR03mva' : 'Loose',
-    'deepVSj' : 'Loose',
+    'dR03mva' : 'VVVLoose',
+    'deepVSj' : 'VVVLoose',
   }
   if args.tau_id_wp:
     tau_id = args.tau_id[:7]
@@ -167,7 +167,20 @@ if __name__ == '__main__':
       "BDTOutput_700"                    : {},
       "BDTOutput_300"                    : {},
       "BDTOutput_500"                    : {},
-      "BDTOutput_800"                    : {}
+      "BDTOutput_800"                    : {},
+      "BDTOutput_nonRes_SM"              : {},
+      "BDTOutput_nonRes_BM1"             : {},
+      "BDTOutput_nonRes_BM2"             : {},
+      "BDTOutput_nonRes_BM3"             : {},
+      "BDTOutput_nonRes_BM4"             : {},
+      "BDTOutput_nonRes_BM5"             : {},
+      "BDTOutput_nonRes_BM6"             : {},
+      "BDTOutput_nonRes_BM7"             : {},
+      "BDTOutput_nonRes_BM8"             : {},
+      "BDTOutput_nonRes_BM9"             : {},
+      "BDTOutput_nonRes_BM10"            : {},
+      "BDTOutput_nonRes_BM11"            : {},
+      "BDTOutput_nonRes_BM12"            : {},
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,
