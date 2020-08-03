@@ -1,5 +1,5 @@
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_3l_1tau.h"
-
+//#include "tthAnalysis/HiggsToTauTau/interface/BM_list.h" // BMS
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow(), fillWithOverFlow2d()
 
 EvtHistManager_hh_3l_1tau::EvtHistManager_hh_3l_1tau(const edm::ParameterSet & cfg)
@@ -87,6 +87,14 @@ EvtHistManager_hh_3l_1tau::EvtHistManager_hh_3l_1tau(const edm::ParameterSet & c
     central_or_shiftOptions_[labels_[i]] = { "*" }; 
     //central_or_shiftOptions_[XGB_labels_[i]] = { "*" }; 
   }
+  std::vector<std::string> BMS = { "SM", "BM1", "BM2", "BM3", "BM4", "BM5", "BM6", "BM7", "BM8", "BM9", "BM10", "BM11", "BM12" };
+  for(unsigned int i=0; i<BMS.size(); i++){ // Loop over different nodes
+    std::string key_final = "BDTOutput_nonRes_" + BMS[i];
+    labels_nonRes_.push_back(key_final);
+  }
+  for(unsigned int i=0;i < labels_nonRes_.size();i++){
+    central_or_shiftOptions_[labels_nonRes_[i]] = { "*" }; 
+  }
 }
 
 const TH1 *
@@ -120,6 +128,10 @@ EvtHistManager_hh_3l_1tau::bookHistograms(TFileDirectory & dir)
   for(unsigned int i=0;i < labels_.size();i++){
     TH1* histogram_BDT_output = book1D(dir, labels_[i], labels_[i], 100, 0., 1.); 
     histogram_Map_BDTOutput_SUM_.insert(std::make_pair(labels_[i], histogram_BDT_output));
+  }
+  for(unsigned int i=0;i < labels_nonRes_.size();i++){
+    TH1* histogram_BDT_output = book1D(dir, labels_nonRes_[i], labels_nonRes_[i], 100, 0., 1.); 
+    histogram_Map_BDTOutput_nonRes_SUM_.insert(std::make_pair(labels_nonRes_[i], histogram_BDT_output));
   }
   //  for(unsigned int j=0;j < XGB_labels_.size();j++){
   //  TH1* histogram_XGB_output = book1D(dir, XGB_labels_[j], XGB_labels_[j], 100, 0., 1.); 
@@ -243,11 +255,11 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
 					  double tau_antiElectron_matched,
 					  double tau_antiElectron_unmatched,
 					  std::map<std::string, double> & BDTOutput_SUM_Map,
+					  std::map<std::string, double> & BDTOutput_nonRes_SUM_Map,
 					  unsigned int evt_number					 
 )
 {
   const double evtWeightErr = 0.;
-
   fillWithOverFlow(histogram_numElectrons_,    numElectrons,        evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_numMuons_,        numMuons,            evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_numHadTaus_,      numHadTaus,          evtWeight,     evtWeightErr);
@@ -322,9 +334,11 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
   }else{ // EVEN EVENT NUMBER CASE                                                                                                                                                                   
     fillWithOverFlow(histogram_EventNumber_,  1., evtWeight, evtWeightErr);     
   }      
-
   for(unsigned int i=0;i < labels_.size();i++){
     fillWithOverFlow(histogram_Map_BDTOutput_SUM_[labels_[i]], BDTOutput_SUM_Map[labels_[i]], evtWeight, evtWeightErr);
+  }
+  for(unsigned int i=0;i < labels_nonRes_.size();i++){
+    fillWithOverFlow(histogram_Map_BDTOutput_nonRes_SUM_[labels_nonRes_[i]], BDTOutput_nonRes_SUM_Map[labels_nonRes_[i]], evtWeight, evtWeightErr);
   }
 
   //for(unsigned int i=0;i < XGB_labels_.size();i++){

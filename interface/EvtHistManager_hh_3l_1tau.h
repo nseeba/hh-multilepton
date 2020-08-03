@@ -94,6 +94,7 @@ public:
 		 double tau_antiElectron_matched,
 		 double tau_antiElectron_unmatched,
 		 std::map<std::string, double>& BDTOutput_SUM_Map,
+		 std::map<std::string, double>& BDTOutput_nonRes_SUM_Map,
 		 //std::map<std::string, double>& XGBOutput_SUM_Map,
 		 unsigned int evt_number
 );
@@ -170,9 +171,11 @@ public:
   TH1 * histogram_tau_antiElectron_unmatched_;
   TH1 * histogram_EventNumber_;
   std::map<std::string, TH1*> histogram_Map_BDTOutput_SUM_;
+  std::map<std::string, TH1*> histogram_Map_BDTOutput_nonRes_SUM_;
   //std::map<std::string, TH1*> histogram_Map_XGBOutput_SUM_;
    
   std::vector<string> labels_;
+  std::vector<string> labels_nonRes_;
   //std::vector<string> XGB_labels_;
   
 };
