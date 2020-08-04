@@ -293,6 +293,16 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
         electron_selection = "Tight"
         muon_selection = "Fakeable"
 
+      if "forBDTtraining" in lepton_selection:
+        electron_selection = "Loose"
+        muon_selection = "Loose"
+      elif lepton_selection == "Fakeable_mcClosure_e":
+        electron_selection = "Fakeable"
+        muon_selection = "Tight"
+      elif lepton_selection == "Fakeable_mcClosure_m":
+        electron_selection = "Tight"
+        muon_selection = "Fakeable"
+
       for lepton_frWeight in self.lepton_frWeights:
         if lepton_frWeight == "enabled" and not lepton_selection.startswith("Fakeable"):
           continue
@@ -348,7 +358,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                                      if self.select_rle_output else ""
                 histogramFile_path = os.path.join(self.dirs[key_analyze_dir][DKEY_HIST], "analyze_%s_%s_%s_%s_%i.root" % analyze_job_tuple)
                 applyFakeRateWeights = self.applyFakeRateWeights \
-                  if lepton_selection.find("Tight") == -1 \
+                  if self.isBDTtraining or lepton_selection.find("Tight") == -1 \
                   else "disabled"
 
                 self.jobOptions_analyze[key_analyze_job] = {
@@ -366,6 +376,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
                   'central_or_shift'         : central_or_shift,
                   'central_or_shifts_local'  : central_or_shifts_local,
                   'fillGenEvtHistograms'     : True,
+		          'selectBDT'                : self.isBDTtraining,
                   'apply_hlt_filter'         : self.hlt_filter,
                   'selectBDT'                : self.isBDTtraining,
                 }
