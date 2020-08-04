@@ -818,7 +818,7 @@ int main(int argc, char* argv[])
       "met", "mht", "met_LD", "HT", "STMET", "met_phi",
       "diHiggsVisMass", "diHiggsMass",
        "lep1_frWeight", "hadTau1_frWeight",  "hadTau2_frWeight",  "hadTau3_frWeight",
-        "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "hadTauEffSF", "data_to_MC_correction","FR_Weight"
+      "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "hadTauEffSF", "data_to_MC_correction","FR_Weight", "evtWeight"
     );
     bdt_filler->register_variable<int_type>(
       "nJet", "nElectron", "nMuon"

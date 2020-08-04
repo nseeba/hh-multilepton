@@ -755,7 +755,7 @@ int main(int argc, char* argv[])
       "dr_tau2_tau3", "dr_tau2_tau4", "dr_tau3_tau4",
       "m_tau1_tau2", "m_tau1_tau3", "m_tau1_tau4",
       "m_tau2_tau3", "m_tau2_tau4", "m_tau3_tau4",
-      "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "hadTauEffSF", "data_to_MC_correction","FR_Weight", "hadTau1_frWeight", "hadTau2_frWeight", "hadTau3_frWeight", "hadTau4_frWeight" 
+      "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "hadTauEffSF", "data_to_MC_correction","FR_Weight", "hadTau1_frWeight", "hadTau2_frWeight", "hadTau3_frWeight", "hadTau4_frWeight", "evtWeight" 
     );
     bdt_filler->register_variable<int_type>(
       "nJet", "nBJet_loose", "nBJet_medium"

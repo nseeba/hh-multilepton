@@ -1088,7 +1088,8 @@ int main(int argc, char* argv[])
       "m_LeptonIdx3_Jet1_Approach2", "dr_LeptonIdx3_Jet1_Approach2",
       "m_LeptonIdx3_JetNear_Approach2", "dr_LeptonIdx3_JetNear_Approach2",      
       //
-      "lumiScale", "genWeight", "evtWeight", "lheWeight", "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "data_to_MC_correction", "FR_Weight"
+      "lumiScale", "genWeight", "evtWeight", "lheWeight", "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "data_to_MC_correction", "FR_Weight",
+      "lep1_frWeight","lep2_frWeight","lep3_frWeight"
 						);
     bdt_filler -> register_variable<int_type>(
       "nElectron", "nMuon", "nLepton", "nJetAK4", "nBJetLoose", "nBJetMedium", "nJetAK8", "nJetAK8_wSelectorAK8_Wjj",

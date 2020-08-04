@@ -919,7 +919,8 @@ int main(int argc, char* argv[])
       "deltaEta_lep1_lep2", "deltaEta_lep1_tau1", "deltaEta_lep1_tau2", "deltaEta_lep2_tau1", "deltaEta_lep2_tau2", "deltaEta_tau1_tau2",
       "deltaPhi_lep1_lep2", "deltaPhi_lep1_tau1", "deltaPhi_lep1_tau2", "deltaPhi_lep2_tau1", "deltaPhi_lep2_tau2", "deltaPhi_tau1_tau2",
       "dr_lep1_tau1_tau2_min", "dr_lep1_tau1_tau2_max", "dr_lep2_tau1_tau2_min", "dr_lep2_tau1_tau2_max",
-      "dr_lep_tau_min_OS", "dr_lep_tau_min_SS",       "lep1_frWeight", "lep2_frWeight", "hadTau1_frWeight",  "hadTau2_frWeight",       "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "hadTauEffSF", "data_to_MC_correction","FR_Weight" 
+      "dr_lep_tau_min_OS", "dr_lep_tau_min_SS","lep1_frWeight", "lep2_frWeight", "hadTau1_frWeight",  "hadTau2_frWeight", "evtWeight",
+      "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "hadTauEffSF", "data_to_MC_correction","FR_Weight" 
     );
     bdt_filler->register_variable<int_type>(
       "nJet", "nBJet_loose", "nBJet_medium",

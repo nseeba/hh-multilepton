@@ -863,7 +863,7 @@ int main(int argc, char* argv[])
       "pT_llMEt", "Smin_llMEt",
       "vbf_m_jj", "vbf_dEta_jj",
       "THWeight", "mhh_gen", "costS_gen",
-      "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "data_to_MC_correction","FR_Weight", "lep1_frWeight", "lep2_frWeight"
+      "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "data_to_MC_correction","FR_Weight", "lep1_frWeight", "lep2_frWeight", "evtWeight"
     );
     bdt_filler->register_variable<int_type>(
       "BM", "nJet", "nJet_vbf", "isVBF", "nLep"
