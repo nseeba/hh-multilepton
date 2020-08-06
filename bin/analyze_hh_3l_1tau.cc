@@ -348,6 +348,7 @@ int main(int argc, char* argv[])
   }
 
   bool isDEBUG = cfg_analyze.getParameter<bool>("isDEBUG");
+  isDEBUG = true;
   if ( isDEBUG ) std::cout << "Warning: DEBUG mode enabled -> trigger selection will not be applied for data !!" << std::endl;
 
   checkOptionValidity(central_or_shift_main, isMC);
@@ -2020,7 +2021,7 @@ int main(int argc, char* argv[])
       //HHWeight = WeightBM[0];
       weightMapHH = HHWeight_calc->getWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
       reWeightMapHH = HHWeight_calc->getReWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
-      HHWeight = reWeightMapHH["SM"];
+      HHWeight = weightMapHH["Weight_SM"];
       evtWeightRecorder.record_bm(HHWeight); // SM by default
 
       if(isDEBUG)
@@ -2036,6 +2037,11 @@ int main(int argc, char* argv[])
         // }
 	std::cout << "Calculated " << weightMapHH.size() << " scan weights\n";
 	for(const auto & kv: weightMapHH)
+        {
+          std::cout << "line = " <<kv.first << "; Weight = " <<  kv.second << '\n';
+        }
+	std::cout << "Calculated " << reWeightMapHH.size() << " scan reweights\n";
+	for(const auto & kv:reWeightMapHH)
         {
           std::cout << "line = " <<kv.first << "; Weight = " <<  kv.second << '\n';
         }
