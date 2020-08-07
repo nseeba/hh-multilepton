@@ -348,7 +348,6 @@ int main(int argc, char* argv[])
   }
 
   bool isDEBUG = cfg_analyze.getParameter<bool>("isDEBUG");
-  isDEBUG = true;
   if ( isDEBUG ) std::cout << "Warning: DEBUG mode enabled -> trigger selection will not be applied for data !!" << std::endl;
 
   checkOptionValidity(central_or_shift_main, isMC);
