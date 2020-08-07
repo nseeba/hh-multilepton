@@ -2717,7 +2717,7 @@ int main(int argc, char* argv[])
     std::cout << "evtWeightRecorder.get_jetToLepton_FR_sublead(central_or_shift_main): " << evtWeightRecorder.get_jetToLepton_FR_sublead(central_or_shift_main) <<  std::endl;
     std::cout << "evtWeightRecorder.get_jetToLepton_FR_third(central_or_shift_main): " << evtWeightRecorder.get_jetToLepton_FR_third(central_or_shift_main) <<  std::endl;
     */
-    //prob_fake_lepton_lead = prob_fake_lepton_sublead = prob_fake_lepton_third = -1.;
+    prob_fake_lepton_lead = prob_fake_lepton_sublead = prob_fake_lepton_third = -1.;
     
     for(const std::string & central_or_shift: central_or_shifts_local)
     {
