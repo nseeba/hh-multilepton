@@ -137,6 +137,10 @@ process.analyze_hh_3l_1tau = cms.PSet(
     ## "BDT .xml -> Even train:Odd test" to be used for odd evt no.  
     BDT_xml_FileName_odd = cms.string("hhAnalysis/multilepton/data/3l_1tau_XGB_testVars_allMasses_evtLevelSUM_HH_3l_1tau_res_InputVars46_train_Odd_train_Even_test_looseLep.pkl"),
 
+    BDT_nonRes_xml_FileName_even = cms.string("hhAnalysis/multilepton/data/3l_1tau_nonRes_XGB_testVars_allNodes_evtLevelSUM_HH_3l_1tau_nonres_InputVars19_train_Odd_train_Even_test.pkl"),
+    BDT_nonRes_xml_FileName_odd = cms.string("hhAnalysis/multilepton/data/3l_1tau_nonRes_XGB_testVars_allNodes_evtLevelSUM_HH_3l_1tau_nonres_InputVars19_train_Even_train_Odd_test.pkl"),
+
+
     fitFunctionFileName = cms.string('hhAnalysis/multilepton/data/TProfile_signal_fit_func_InputVar_AllMassTraining_v1_3l_1tau.root'),
 
     gen_mHH = cms.vdouble(250,260,270,280,300,350,400,450,500,550,600,650,700,750,800,850,900,1000), ## Set the signal mass range used in the BDT .pkl/.xml/.pb files
@@ -155,6 +159,9 @@ process.analyze_hh_3l_1tau = cms.PSet(
         denominator_file = cms.string(''),
         klScan_file = cms.string(''),
         ktScan_file = cms.string(''),
+        c2Scan_file = cms.string(''),
+        cgScan_file = cms.string(''),
+        c2gScan_file = cms.string(''),
         coefFile = cms.string('HHStatAnalysis/AnalyticalModels/data/coefficientsByBin_extended_3M_costHHSim_19-4.txt'),
         histtitle = cms.string(''),
         isDEBUG = cms.bool(False),
