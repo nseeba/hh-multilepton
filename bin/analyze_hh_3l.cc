@@ -156,7 +156,7 @@ void printWjj(const std::vector<const RecoJetAK8*>& jets_ak8, const RecoJetColle
   for ( size_t idxWBoson = 0; idxWBoson < genWBosons.size(); ++idxWBoson ) {
     const GenParticle& genWBoson = genWBosons[idxWBoson];
     std::cout << " genWBoson #" << idxWBoson << ": pT = " << genWBoson.pt() << ", eta = " << genWBoson.eta() << ", phi = " << genWBoson.phi() << std::endl;   
-  }
+  } 
   std::cout << "#genWJets = " << genWJets.size() << std::endl;  
   for ( size_t idxWJet = 0; idxWJet < genWJets.size(); ++idxWJet ) {
     const GenParticle& genWJet = genWJets[idxWJet];
@@ -731,6 +731,7 @@ int main(int argc, char* argv[])
     "hh_WjjBoosted", "hh_WjjResolved", "hh_WjjHasOnly1j",
     //"hh_3lneg", "hh_3lpos",
     //"hh_3l_nonVBF", "hh_3l_VBF"
+    "hh_3e", "hh_3mu", "hh_2e1mu", "hh_1e2mu",
   };
 
   bool skipHHDecayModeHistograms = true;
@@ -2287,7 +2288,16 @@ int main(int argc, char* argv[])
       cutFlowHistManager->fillHistograms("After all cuts: evt category isWjjHasOnly1j", evtWeightRecorder.get(central_or_shift_main));
     }
     
- 
+
+    int nEle_3selLep = 0, nMu_3selLep = 0;
+    for (size_t i=0; i<3; i++) {
+      //std::cout << "lep pdgId: " << selLeptons[i]->pdgId() << std::endl;
+      if (abs(selLeptons[i]->pdgId()) == 11) nEle_3selLep++;
+      if (abs(selLeptons[i]->pdgId()) == 13) nMu_3selLep++;
+    }
+    //std::cout << "nEle_3selLep: " << nEle_3selLep << ",  nMu_3selLep: " << nMu_3selLep << std::endl;
+    
+    
 
     // SS: Yet to implement this for hh->wwww
     double dihiggsVisMass_sel = -1., dihiggsMass = -1.;
@@ -2655,11 +2665,18 @@ int main(int argc, char* argv[])
     std::vector<std::string> evtCategories;		
     if      (isWjjBoosted)   evtCategories.push_back("hh_WjjBoosted");
     else if (isWjjResolved)  evtCategories.push_back("hh_WjjResolved");
-    else if (isWjjHasOnly1j) evtCategories.push_back("hh_WjjHasOnly1j");
+    else if (isWjjHasOnly1j) evtCategories.push_back("hh_WjjHasOnly1j");    
     /*if      ( sumLeptonCharge_3l < 0 ) evtCategories.push_back("hh_3lneg");
     else if ( sumLeptonCharge_3l > 0 ) evtCategories.push_back("hh_3lpos");
     if (isVBF) evtCategories.push_back("hh_3l_VBF");	 
     else       evtCategories.push_back("hh_3l_nonVBF");*/
+    if      (nEle_3selLep == 3 && nMu_3selLep == 0) evtCategories.push_back("hh_3e");
+    else if (nEle_3selLep == 2 && nMu_3selLep == 1) evtCategories.push_back("hh_2e1mu");
+    else if (nEle_3selLep == 1 && nMu_3selLep == 2) evtCategories.push_back("hh_1e2mu");
+    else if (nEle_3selLep == 0 && nMu_3selLep == 3) evtCategories.push_back("hh_3mu");
+    else {
+      printf("Invalid event category\t\t nEle_3selLep %d, nMu_3selLep %d",nEle_3selLep,nMu_3selLep);
+    }
     sTmp123 += Form(" isVBF: %i, ",(int)isVBF);
 
     double lep1_genLepPt = ( selLepton_lead->genLepton()    ) ? selLepton_lead->genLepton()->pt()    : 0.;
@@ -2668,13 +2685,19 @@ int main(int argc, char* argv[])
 
     //FR weights for bdt ntuple
     double prob_fake_lepton_lead, prob_fake_lepton_sublead, prob_fake_lepton_third;
-    /* // Run-time error: weights_FR_lepton_lead_.empty()
+    /*
+    // Run-time error: weights_FR_lepton_lead_.empty()
+    //std::cout << "Siddh here12_4" << std::endl;
     double prob_fake_lepton_lead = evtWeightRecorder.get_jetToLepton_FR_lead(central_or_shift_main) ? evtWeightRecorder.get_jetToLepton_FR_lead(central_or_shift_main) : -1;
     //std::cout << "Siddh here12_5" << std::endl;
     double prob_fake_lepton_sublead = evtWeightRecorder.get_jetToLepton_FR_sublead(central_or_shift_main) ? evtWeightRecorder.get_jetToLepton_FR_sublead(central_or_shift_main) : -1;
     //std::cout << "Siddh here12_6" << std::endl;
     double prob_fake_lepton_third = evtWeightRecorder.get_jetToLepton_FR_third(central_or_shift_main) ? evtWeightRecorder.get_jetToLepton_FR_third(central_or_shift_main) : -1;
-    std::cout << "Siddh here13" << std::endl;
+    //std::cout << "Siddh here13" << std::endl;
+    
+    std::cout << "evtWeightRecorder.get_jetToLepton_FR_lead(central_or_shift_main): " << evtWeightRecorder.get_jetToLepton_FR_lead(central_or_shift_main) <<  std::endl;
+    std::cout << "evtWeightRecorder.get_jetToLepton_FR_sublead(central_or_shift_main): " << evtWeightRecorder.get_jetToLepton_FR_sublead(central_or_shift_main) <<  std::endl;
+    std::cout << "evtWeightRecorder.get_jetToLepton_FR_third(central_or_shift_main): " << evtWeightRecorder.get_jetToLepton_FR_third(central_or_shift_main) <<  std::endl;
     */
     prob_fake_lepton_lead = prob_fake_lepton_sublead = prob_fake_lepton_third = -1.;
     
@@ -3319,11 +3342,15 @@ int main(int argc, char* argv[])
       double lep1_genLepPt = ( selLepton_lead->genLepton()    ) ? selLepton_lead->genLepton()->pt()    : 0.;
       double lep2_genLepPt = ( selLepton_sublead->genLepton() ) ? selLepton_sublead->genLepton()->pt() : 0.;
       double lep3_genLepPt = ( selLepton_third->genLepton()   ) ? selLepton_third->genLepton()->pt()   : 0.;
-      
+      */
       //FR weights for bdt ntuple
-      double prob_fake_lepton_lead = evtWeightRecorder.get_jetToLepton_FR_lead(central_or_shift_main);
-      double prob_fake_lepton_sublead = evtWeightRecorder.get_jetToLepton_FR_sublead(central_or_shift_main);
-      double prob_fake_lepton_third = evtWeightRecorder.get_jetToLepton_FR_third(central_or_shift_main);
+      prob_fake_lepton_lead = evtWeightRecorder.get_jetToLepton_FR_lead(central_or_shift_main);
+      prob_fake_lepton_sublead = evtWeightRecorder.get_jetToLepton_FR_sublead(central_or_shift_main);
+      prob_fake_lepton_third = evtWeightRecorder.get_jetToLepton_FR_third(central_or_shift_main);
+      /*
+      std::cout << "evtWeightRecorder.get_jetToLepton_FR_lead(central_or_shift_main): " << evtWeightRecorder.get_jetToLepton_FR_lead(central_or_shift_main) <<  std::endl;
+      std::cout << "evtWeightRecorder.get_jetToLepton_FR_sublead(central_or_shift_main): " << evtWeightRecorder.get_jetToLepton_FR_sublead(central_or_shift_main) <<  std::endl;
+      std::cout << "evtWeightRecorder.get_jetToLepton_FR_third(central_or_shift_main): " << evtWeightRecorder.get_jetToLepton_FR_third(central_or_shift_main) <<  std::endl;
       */
       
       bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })

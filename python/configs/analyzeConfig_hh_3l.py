@@ -165,6 +165,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
       "hh_WjjBoosted", "hh_WjjResolved", "hh_WjjHasOnly1j",
       #"hh_3lneg", "hh_3lpos",
       #"hh_3l_nonVBF", "hh_3l_VBF"
+      "hh_3e", "hh_3mu", "hh_2e1mu", "hh_1e2mu",
     ]
 
     self.category_inclusive = "hh_3l"
