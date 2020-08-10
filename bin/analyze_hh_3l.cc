@@ -2276,7 +2276,7 @@ int main(int argc, char* argv[])
       evtWeightRecorder.record_bm(HHWeight); // SM by default
 
       if(isDEBUG)
-      {
+      { 
         std::cout << "mhh = " << eventInfo.gen_mHH          << " : "
           "cost "             << eventInfo.gen_cosThetaStar << " : "
           "weight = "         << HHWeight                   << '\n'
@@ -2288,6 +2288,16 @@ int main(int argc, char* argv[])
         }
 
         std::cout << '\n';
+      }
+    } else {
+      for(const std::string & evt_cat_str: evt_cat_strs) {
+	if(evt_cat_str != default_cat_str)
+	  {
+	    continue;
+	  }
+	
+	reWeightMapHH[evt_cat_str] = evtWeightRecorder.get(central_or_shift_main);
+	//std::cout << "\t evt_cat_str: " << evt_cat_str << ", reWeightMapHH: " << reWeightMapHH[evt_cat_str] << std::endl;
       }
     }
 
@@ -2677,7 +2687,7 @@ int main(int argc, char* argv[])
     
 //--- retrieve gen-matching flags    
     //std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons);
-    
+    //std::cout << "siddh here 10" << std::endl;
     
 //--- fill histograms with events passing final selection
     std::vector<std::string> evtCategories;		
@@ -2696,7 +2706,7 @@ int main(int argc, char* argv[])
       printf("Invalid event category\t\t nEle_3selLep %d, nMu_3selLep %d",nEle_3selLep,nMu_3selLep);
     }
     sTmp123 += Form(" isVBF: %i, ",(int)isVBF);
-
+    
     double lep1_genLepPt = ( selLepton_lead->genLepton()    ) ? selLepton_lead->genLepton()->pt()    : 0.;
     double lep2_genLepPt = ( selLepton_sublead->genLepton() ) ? selLepton_sublead->genLepton()->pt() : 0.;
     double lep3_genLepPt = ( selLepton_third->genLepton()   ) ? selLepton_third->genLepton()->pt()   : 0.;
@@ -2743,6 +2753,8 @@ int main(int argc, char* argv[])
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
         }
+	
+	
 	for(const auto & kv: reWeightMapHH)
         {
 	  //std::cout << "\t kv: " << kv.first << std::endl;
@@ -3500,6 +3512,7 @@ int main(int argc, char* argv[])
 	;
     }
 
+        
     ++selectedEntries;
     selectedEntries_weighted += evtWeightRecorder.get(central_or_shift_main);
     std::string process_and_genMatch = process_string;
