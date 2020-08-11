@@ -83,4 +83,9 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None)
     if sample_name.startswith(('/TGJets', '/TTGJets', '/WGTo', '/ZGTo')):
       sample_info["sample_category"] = "XGamma"
 
+    if sample_info["process_name_specific"] in [ "signal_ggf_nonresonant_node_4_hh_4v", "signal_ggf_nonresonant_node_5_hh_4v" ] and \
+       "RunIIFall17MiniAODv2" in sample_name:
+      # temporary, see https://github.com/HEP-KBFI/hh-multilepton/issues/13
+      sample_info["use_it"] = False
+
   return samples
