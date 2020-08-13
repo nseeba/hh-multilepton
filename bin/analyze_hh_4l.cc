@@ -230,6 +230,9 @@ int main(int argc, char* argv[])
   std::string hadTauSelection_part2 = ( hadTauSelection_parts->GetEntries() == 2 ) ? (dynamic_cast<TObjString*>(hadTauSelection_parts->At(1)))->GetString().Data() : "";
   delete hadTauSelection_parts;
 
+  const double lep_mva_cut_mu = cfg_analyze.getParameter<double>("lep_mva_cut_mu");
+  const double lep_mva_cut_e  = cfg_analyze.getParameter<double>("lep_mva_cut_e");
+
   enum { kOS, kSS };
   std::string leptonChargeSelection_string = cfg_analyze.getParameter<std::string>("leptonChargeSelection");
   int leptonChargeSelection = -1;
@@ -455,6 +458,7 @@ int main(int argc, char* argv[])
   RecoMuonCollectionSelectorLoose preselMuonSelector(era, -1, isDEBUG);
   RecoMuonCollectionSelectorFakeable fakeableMuonSelector(era, -1, isDEBUG);
   RecoMuonCollectionSelectorTight tightMuonSelector(era, -1, isDEBUG);
+  muonReader->set_mvaTTH_wp(lep_mva_cut_mu);
 
   RecoElectronReader* electronReader = new RecoElectronReader(era, branchName_electrons, isMC, readGenObjects);
   inputTree -> registerReader(electronReader);
@@ -463,6 +467,7 @@ int main(int argc, char* argv[])
   RecoElectronCollectionSelectorLoose preselElectronSelector(era, -1, isDEBUG);
   RecoElectronCollectionSelectorFakeable fakeableElectronSelector(era, -1, isDEBUG);
   RecoElectronCollectionSelectorTight tightElectronSelector(era, -1, isDEBUG);
+  electronReader->set_mvaTTH_wp(lep_mva_cut_e);
 
   RecoHadTauReader* hadTauReader = new RecoHadTauReader(era, branchName_hadTaus, isMC, readGenObjects);
   hadTauReader->setHadTauPt_central_or_shift(hadTauPt_option);

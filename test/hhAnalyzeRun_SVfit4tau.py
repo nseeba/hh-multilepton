@@ -12,6 +12,7 @@ import getpass
 
 parser = tthAnalyzeParser()
 parser.add_tau_id()
+parser.add_lep_mva_wp(default_wp = 'default') # alternative: hh_multilepton
 parser.add_jet_cleaning()
 parser.add_gen_matching()
 args = parser.parse_args()
@@ -24,12 +25,13 @@ no_exec              = args.no_exec
 auto_exec            = args.auto_exec
 check_output_files   = not args.not_check_input_files
 debug                = args.debug
+lep_mva_wp           = args.lep_mva_wp
 sample_filter        = args.filter
 num_parallel_jobs    = args.num_parallel_jobs
 running_method       = args.running_method
 tau_id               = args.tau_id
 jet_cleaning         = args.jet_cleaning
-gen_matching      = args.gen_matching
+gen_matching         = args.gen_matching
 
 # Use the arguments
 max_job_resubmission = 3;
@@ -73,6 +75,7 @@ if __name__ == '__main__':
     SVfit4tau_logM_wMassConstraint_VAMP         = [ 0. ],
     modes                           = [ "rec", "gen", "gen_smeared" ],
     central_or_shifts               = central_or_shift,
+    lep_mva_wp                      = lep_mva_wp,
     jet_cleaning_by_index           = jet_cleaning_by_index,
     gen_matching_by_index           = gen_matching_by_index,
     max_files_per_job               = max_files_per_job,

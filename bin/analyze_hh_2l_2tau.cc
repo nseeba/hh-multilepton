@@ -289,6 +289,9 @@ int main(int argc, char* argv[])
   const TauID tauId = TauID_PyMap.at(hadTauSelection_part2.substr(0, 7));
   int tauLevel = get_tau_id_wp_int(hadTauSelection_part2);
 
+  const double lep_mva_cut_mu = cfg_analyze.getParameter<double>("lep_mva_cut_mu");
+  const double lep_mva_cut_e  = cfg_analyze.getParameter<double>("lep_mva_cut_e");
+
   bool apply_hadTauGenMatching = cfg_analyze.getParameter<bool>("apply_hadTauGenMatching");
   std::vector<hadTauGenMatchEntry> hadTauGenMatch_definitions = getHadTauGenMatch_definitions_2tau(true);
   std::cout << "hadTauGenMatch_definitions:" << std::endl;
@@ -548,6 +551,7 @@ int main(int argc, char* argv[])
   RecoMuonCollectionSelectorLoose preselMuonSelector(era, -1, isDEBUG);
   RecoMuonCollectionSelectorFakeable fakeableMuonSelector(era, -1, isDEBUG);
   RecoMuonCollectionSelectorTight tightMuonSelector(era, -1, isDEBUG);
+  muonReader->set_mvaTTH_wp(lep_mva_cut_mu);
 
   RecoElectronReader* electronReader = new RecoElectronReader(era, branchName_electrons, isMC, readGenObjects);
   inputTree->registerReader(electronReader);
@@ -556,6 +560,7 @@ int main(int argc, char* argv[])
   RecoElectronCollectionSelectorLoose preselElectronSelector(era, -1, isDEBUG);
   RecoElectronCollectionSelectorFakeable fakeableElectronSelector(era, -1, isDEBUG);
   RecoElectronCollectionSelectorTight tightElectronSelector(era, -1, isDEBUG);
+  electronReader->set_mvaTTH_wp(lep_mva_cut_e);
 
   RecoHadTauReader* hadTauReader = new RecoHadTauReader(era, branchName_hadTaus, isMC, readGenObjects);
   hadTauReader->setHadTauPt_central_or_shift(hadTauPt_option);
