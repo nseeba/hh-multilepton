@@ -771,7 +771,7 @@ int main(int argc, char* argv[])
       "pt_secondTauHPair_m", "pt_secondTauHPair_dr", "pt_secondTauHPair_dPhi",
       "pt_secondTauHPair_dEta", "pt_secondTauHPair_pt", "dr_secondTauHPair_m",
       "dr_secondTauHPair_dr", "dr_secondTauHPair_dPhi", "dr_secondTauHPair_dEta",
-      "dr_secondTauHPair_pt", "max_pt_pair_pt", "min_dr_pair_dr"
+      "dr_secondTauHPair_pt", "max_pt_pair_pt", "min_dr_pair_dr",
       "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight",
       "hadTauEffSF", "data_to_MC_correction","FR_Weight", "hadTau1_frWeight", "hadTau2_frWeight",
       "hadTau3_frWeight", "hadTau4_frWeight", "evtWeight"
