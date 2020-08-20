@@ -49,6 +49,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
         applyFakeRateWeights,
         leptonChargeSelections,
         central_or_shifts,
+        lep_mva_wp,
         jet_cleaning_by_index,
         gen_matching_by_index,
         max_files_per_job,
@@ -93,6 +94,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
       num_parallel_jobs         = num_parallel_jobs,
       histograms_to_fit         = histograms_to_fit,
       triggers                  = [ '1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '1e2mu', '2e1mu' ],
+      lep_mva_wp                = lep_mva_wp,
       executable_prep_dcard     = executable_prep_dcard,
       executable_add_syst_dcard = executable_add_syst_dcard,
       do_sync                   = do_sync,
@@ -133,7 +135,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
 
     #self.nonfake_backgrounds = [ "TTH", "TTZ", "TTW", "TTWW", "TT", "DY", "W", "WW", "WZ", "ZZ", "VH", "TH"]
-    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH", "ggH", "qqH"]
+    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH", "ggH", "qqH", "TTWH", "TTZH"]
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ] + self.get_samples_categories_HH()
@@ -148,7 +150,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     self.histogramDir_prep_dcard = "hh_3l_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_3l_SS_Tight"
     #self.make_plots_backgrounds = [ "TTH", "TTZ", "TTW", "TTWW", "TT", "DY", "W", "WW", "WZ", "ZZ", "VH", "TH"] + [ "Convs", "data_fakes"]
-    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH" ] + [ "Convs", "data_fakes" ]
+    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH", "ggH", "qqH", "TTWH", "TTZH"] + [ "Convs", "data_fakes" ]
 
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_3l_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_3l_cfg.py") #TODO
@@ -165,6 +167,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
       "hh_WjjBoosted", "hh_WjjResolved", "hh_WjjHasOnly1j",
       #"hh_3lneg", "hh_3lpos",
       #"hh_3l_nonVBF", "hh_3l_VBF"
+      "hh_3e", "hh_3mu", "hh_2e1mu", "hh_1e2mu",
     ]
 
     self.category_inclusive = "hh_3l"
@@ -211,13 +214,13 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
 
     self.set_leptonFakeRateWeightHistogramNames(jobOptions['central_or_shift'], lepton_selection)
     ## Original
-    #jobOptions['leptonFakeRateWeight.inputFileName'] = self.leptonFakeRateWeight_inputFile  
-    #jobOptions['leptonFakeRateWeight.histogramName_e'] = self.leptonFakeRateWeight_histogramName_e
-    #jobOptions['leptonFakeRateWeight.histogramName_mu'] = self.leptonFakeRateWeight_histogramName_mu
+    jobOptions['leptonFakeRateWeight.inputFileName'] = self.leptonFakeRateWeight_inputFile  
+    jobOptions['leptonFakeRateWeight.histogramName_e'] = self.leptonFakeRateWeight_histogramName_e
+    jobOptions['leptonFakeRateWeight.histogramName_mu'] = self.leptonFakeRateWeight_histogramName_mu
     ## Edit Siddhesh for lepton fake-rates MC closure
-    jobOptions['leptonFakeRateWeight.inputFileName'] = "tthAnalysis/HiggsToTauTau/data/fakeRate_LeptonLooser_Ram/FR_lep_hh_lepLoose_Ram_20200626.root"
-    jobOptions['leptonFakeRateWeight.histogramName_e'] = "FR_mva080_el_data_comb"
-    jobOptions['leptonFakeRateWeight.histogramName_mu'] = "FR_mva085_mu_data_comb"
+    #jobOptions['leptonFakeRateWeight.inputFileName'] = "tthAnalysis/HiggsToTauTau/data/fakeRate_LeptonLooser_Ram/FR_lep_hh_lepLoose_Ram_20200626.root"
+    #jobOptions['leptonFakeRateWeight.histogramName_e'] = "FR_mva080_el_data_comb"
+    #jobOptions['leptonFakeRateWeight.histogramName_mu'] = "FR_mva085_mu_data_comb"
     
 
     lines = super(analyzeConfig_hh_3l, self).createCfg_analyze(jobOptions, sample_info)

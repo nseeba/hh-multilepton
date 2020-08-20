@@ -21,7 +21,9 @@ parser = tthAnalyzeParser()
 parser.add_modes(mode_choices)
 parser.add_sys(sys_choices)
 parser.add_preselect()
+parser.add_lep_mva_wp(default_wp = 'default') # alternative: hh_multilepton
 parser.add_nonnominal()
+parser.add_tau_id_wp()
 parser.add_hlt_filter()
 parser.add_files_per_job()
 parser.add_use_home()
@@ -51,6 +53,7 @@ systematics_label = args.systematics
 use_preselected   = args.use_preselected
 use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
+lep_mva_wp        = args.lep_mva_wp
 files_per_job     = args.files_per_job
 use_home          = args.use_home
 sideband          = args.sideband
@@ -108,7 +111,14 @@ elif mode == "forBDTtraining":
 else:
   raise ValueError("Internal logic error")
 
+hadTauWP_veto_map = {
+  'dR03mva' : 'Loose',
+  'deepVSj' : 'Loose',
+}
+hadTau_selection_veto = tau_id + hadTauWP_veto_map[tau_id]
+
 for sample_name, sample_info in samples.items():
+  if sample_name == 'sum_events': continue
   if sample_name.startswith('/Tau/Run'):
     sample_info["use_it"] = False
 
@@ -133,6 +143,7 @@ if __name__ == '__main__':
     applyFakeRateWeights                  = "4lepton",
     leptonChargeSelections                = leptonChargeSelections,
     central_or_shifts                     = central_or_shifts,
+    lep_mva_wp                            = lep_mva_wp,
     jet_cleaning_by_index                 = jet_cleaning_by_index,
     gen_matching_by_index                 = gen_matching_by_index,
     max_files_per_job                     = files_per_job,
@@ -160,6 +171,10 @@ if __name__ == '__main__':
     use_home                              = use_home,
     submission_cmd                        = sys.argv,
   )
+
+  if mode == "forBDTtraining":
+    analysis.set_BDT_training()
+    #analysis.set_BDT_training(hadTau_selection_relaxed)
 
   job_statistics = analysis.create()
   for job_type, num_jobs in job_statistics.items():

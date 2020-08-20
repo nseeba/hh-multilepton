@@ -258,6 +258,9 @@ int main(int argc, char* argv[])
     << "Invalid Configuration parameter 'hadTauSelection' = " << hadTauSelection_string << " !!\n";
   std::string hadTauSelection_part2 = ( hadTauSelection_parts->GetEntries() == 2 ) ? (dynamic_cast<TObjString*>(hadTauSelection_parts->At(1)))->GetString().Data() : "";
   delete hadTauSelection_parts;
+
+  const double lep_mva_cut_mu = cfg_analyze.getParameter<double>("lep_mva_cut_mu");
+  const double lep_mva_cut_e  = cfg_analyze.getParameter<double>("lep_mva_cut_e");
  
   edm::ParameterSet cfgSVfit4tau = cfg_analyze.getParameter<edm::ParameterSet>("SVfit4tau");
   vdouble logM_wMassConstraint_MarkovChain = cfgSVfit4tau.getParameter<vdouble>("logM_wMassConstraint_MarkovChain");
@@ -357,6 +360,7 @@ int main(int argc, char* argv[])
   RecoMuonCollectionSelectorLoose preselMuonSelector(era);
   RecoMuonCollectionSelectorFakeable fakeableMuonSelector(era);
   RecoMuonCollectionSelectorTight tightMuonSelector(era);
+  muonReader->set_mvaTTH_wp(lep_mva_cut_mu);
 
   RecoElectronReader* electronReader = new RecoElectronReader(era, branchName_electrons, isMC, readGenObjects);
   inputTree->registerReader(electronReader);
@@ -365,6 +369,7 @@ int main(int argc, char* argv[])
   RecoElectronCollectionSelectorLoose preselElectronSelector(era);
   RecoElectronCollectionSelectorFakeable fakeableElectronSelector(era);
   RecoElectronCollectionSelectorTight tightElectronSelector(era);
+  electronReader->set_mvaTTH_wp(lep_mva_cut_e);
 
   RecoHadTauReader* hadTauReader = new RecoHadTauReader(era, branchName_hadTaus, isMC, readGenObjects);
   hadTauReader->setHadTauPt_central_or_shift(hadTauPt_option);

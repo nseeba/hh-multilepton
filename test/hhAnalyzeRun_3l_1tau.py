@@ -21,6 +21,7 @@ parser = tthAnalyzeParser()
 parser.add_modes(mode_choices)
 parser.add_sys(sys_choices)
 parser.add_preselect()
+parser.add_lep_mva_wp(default_wp = 'default') # alternative: hh_multilepton
 parser.add_nonnominal()
 parser.add_tau_id_wp()
 parser.add_hlt_filter()
@@ -52,6 +53,7 @@ systematics_label = args.systematics
 use_preselected   = args.use_preselected
 use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
+lep_mva_wp        = args.lep_mva_wp
 files_per_job     = args.files_per_job
 use_home          = args.use_home
 sideband          = args.sideband
@@ -109,8 +111,8 @@ elif mode == "forBDTtraining":
   samples = load_samples(era, suffix = "BDT")
 
   hadTauWP_map_relaxed = {
-    'dR03mva' : 'Loose',
-    'deepVSj' : 'Loose',
+    'dR03mva' : 'VVVLoose',
+    'deepVSj' : 'VVVLoose',
   }
   if args.tau_id_wp:
     tau_id = args.tau_id[:7]
@@ -143,6 +145,7 @@ if __name__ == '__main__':
     applyFakeRateWeights                  = "4L",
     chargeSumSelections                   = chargeSumSelections,
     central_or_shifts                     = central_or_shifts,
+    lep_mva_wp                            = lep_mva_wp,
     jet_cleaning_by_index                 = jet_cleaning_by_index,
     gen_matching_by_index                 = gen_matching_by_index,
     max_files_per_job                     = files_per_job,
@@ -167,7 +170,20 @@ if __name__ == '__main__':
       "BDTOutput_700"                    : {},
       "BDTOutput_300"                    : {},
       "BDTOutput_500"                    : {},
-      "BDTOutput_800"                    : {}
+      "BDTOutput_800"                    : {},
+      "BDTOutput_nonRes_SM"              : {},
+      "BDTOutput_nonRes_BM1"             : {},
+      "BDTOutput_nonRes_BM2"             : {},
+      "BDTOutput_nonRes_BM3"             : {},
+      "BDTOutput_nonRes_BM4"             : {},
+      "BDTOutput_nonRes_BM5"             : {},
+      "BDTOutput_nonRes_BM6"             : {},
+      "BDTOutput_nonRes_BM7"             : {},
+      "BDTOutput_nonRes_BM8"             : {},
+      "BDTOutput_nonRes_BM9"             : {},
+      "BDTOutput_nonRes_BM10"            : {},
+      "BDTOutput_nonRes_BM11"            : {},
+      "BDTOutput_nonRes_BM12"            : {},
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,
