@@ -17,6 +17,16 @@ EvtHistManager_hh_1l_3tau::EvtHistManager_hh_1l_3tau(const edm::ParameterSet & c
   central_or_shiftOptions_["HT"] = { "central" };
   central_or_shiftOptions_["STMET"] = { "central" };
   central_or_shiftOptions_["EventCounter"] = { "*" };
+  central_or_shiftOptions_["antiE_tau1_OS_matched"] = { "central" };
+  central_or_shiftOptions_["antiE_tau1_OS_unmatched"] = { "central" };
+  central_or_shiftOptions_["antiE_tau2_OS_matched"] = { "central" };
+  central_or_shiftOptions_["antiE_tau2_OS_unmatched"] = { "central" };
+  central_or_shiftOptions_["antiE_tau3_OS_matched"] = { "central" };
+  central_or_shiftOptions_["antiE_tau3_OS_unmatched"] = { "central" };
+  central_or_shiftOptions_["m_OS_etau_closestToZ"] = { "central" };
+  central_or_shiftOptions_["eta_OS_etau1"] = { "central" };
+  central_or_shiftOptions_["eta_OS_etau2"] = { "central" };
+  central_or_shiftOptions_["eta_OS_etau3"] = { "central" };
 }
 
 const TH1 *
@@ -43,6 +53,17 @@ EvtHistManager_hh_1l_3tau::bookHistograms(TFileDirectory & dir)
   histogram_STMET_           = book1D(dir, "STMET",           "STMET",           150,  0., 1500.);
 
   histogram_EventCounter_    = book1D(dir, "EventCounter",    "EventCounter",      1, -0.5,  +0.5);
+  
+  histogram_antiE_tau1_OS_matched_   = book1D(dir, "antiE_tau1_OS_matched",   "antiE_tau1_OS_matched", 11, -2.5, 8.5);
+  histogram_antiE_tau1_OS_unmatched_ = book1D(dir, "antiE_tau1_OS_unmatched", "antiE_tau1_OS_unmatched", 11, -2.5, 8.5);
+  histogram_antiE_tau2_OS_matched_   = book1D(dir, "antiE_tau2_OS_matched",   "antiE_tau2_OS_matched", 11, -2.5, 8.5);
+  histogram_antiE_tau2_OS_unmatched_ = book1D(dir, "antiE_tau2_OS_unmatched", "antiE_tau2_OS_unmatched", 11, -2.5, 8.5);
+  histogram_antiE_tau3_OS_matched_   = book1D(dir, "antiE_tau3_OS_matched",   "antiE_tau3_OS_matched", 11, -2.5, 8.5);
+  histogram_antiE_tau3_OS_unmatched_ = book1D(dir, "antiE_tau3_OS_unmatched", "antiE_tau3_OS_unmatched", 11, -2.5, 8.5);
+  histogram_m_OS_etau_closestToZ_ = book1D(dir, "m_OS_etau_closestToZ", "m_OS_etau_closestToZ", 100, 0.,200);
+  histogram_eta_OS_etau1_ = book1D(dir, "eta_OS_etau1", "eta_OS_etau1", 46, -2.3, 2.3);
+  histogram_eta_OS_etau2_ = book1D(dir, "eta_OS_etau2", "eta_OS_etau2", 46, -2.3, 2.3);
+  histogram_eta_OS_etau3_ = book1D(dir, "eta_OS_etau3", "eta_OS_etau3", 46, -2.3, 2.3);
 }
 
 void
@@ -57,7 +78,18 @@ EvtHistManager_hh_1l_3tau::fillHistograms(int numElectrons,
 					  double dihiggsMass,
 					  double HT,
 					  double STMET,
-					  double evtWeight)
+					  double evtWeight,
+					  double antiE_tau1_OS_matched,
+					  double antiE_tau1_OS_unmatched,
+					  double antiE_tau2_OS_matched,
+					  double antiE_tau2_OS_unmatched,
+					  double antiE_tau3_OS_matched,
+					  double antiE_tau3_OS_unmatched,
+					  double m_OS_etau_closestToZ,
+					  double eta_OS_etau1,
+					  double eta_OS_etau2,
+					  double eta_OS_etau3
+					  )
 {
   const double evtWeightErr = 0.;
 
@@ -78,4 +110,17 @@ EvtHistManager_hh_1l_3tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_STMET_,           STMET,           evtWeight, evtWeightErr);
   
   fillWithOverFlow(histogram_EventCounter_,    0.,              evtWeight, evtWeightErr);
+
+  fillWithOverFlow(histogram_antiE_tau1_OS_matched_,   antiE_tau1_OS_matched,   evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_antiE_tau1_OS_unmatched_, antiE_tau1_OS_unmatched, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_antiE_tau2_OS_matched_,   antiE_tau2_OS_matched,   evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_antiE_tau2_OS_unmatched_, antiE_tau2_OS_unmatched, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_antiE_tau3_OS_matched_,   antiE_tau3_OS_matched,   evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_antiE_tau3_OS_unmatched_, antiE_tau3_OS_unmatched, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_m_OS_etau_closestToZ_, m_OS_etau_closestToZ, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_eta_OS_etau1_, eta_OS_etau1, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_eta_OS_etau2_, eta_OS_etau2, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_eta_OS_etau3_, eta_OS_etau3, evtWeight, evtWeightErr);
+
+
 }
