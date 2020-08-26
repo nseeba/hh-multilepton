@@ -338,6 +338,10 @@ int main(int argc, char* argv[])
 
   const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
 
+  std::string BDTFileName_even  = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_even");
+  std::string BDTFileName_odd   = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_odd");
+  std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
+
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
   std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
   RunLumiEventSelector* run_lumi_eventSelector = 0;
@@ -390,7 +394,7 @@ int main(int argc, char* argv[])
     {
       std::cout << "\n Weights booked = " << apply_HH_rwgt << '\n';
       for (const std::string catcat : evt_cat_strs) {
-	std::cout << catcat << '\n';
+        std::cout << catcat << '\n';
       }
     }
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
@@ -548,6 +552,29 @@ int main(int argc, char* argv[])
     psWeightReader = new PSWeightReader(hasPS, apply_LHE_nom);
     inputTree -> registerReader(psWeightReader);
   }
+
+  std::vector<std::string> BDTInputVariables_SUM =
+    {
+      "m_tau1_tau2",
+      "dr_secondTauHPair_dr",
+      "gen_mHH",
+      "dr_bestTauHPair_m",
+      "avg_dr_jet",
+      "met",
+      "diHiggsMass",
+      "tau2_pt",
+      "mTauTau",
+      "mht"
+    }; // These are the preliminary optimized trainvars for res_spin0
+
+  assert(fitFunctionFileName != "");
+  //XGBInterface* XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, fitFunctionFileName,  BDTInputVariables_SUM);
+
+  TMVAInterface* BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, fitFunctionFileName);
+  BDT_SUM->enableBDTTransform();
+
+  std::map<std::string, double> BDTInputs_SUM;
+
 
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
   std::ostream* selEventsFile = ( selEventsFileName_output != "" ) ? new std::ofstream(selEventsFileName_output.data(), std::ios::out) : 0;
@@ -740,8 +767,8 @@ int main(int argc, char* argv[])
     );
     for(const std::string & evt_cat_str: HHWeightNames)
       {
-    	if (!apply_HH_rwgt) continue;
-	bdt_filler->register_variable<float_type>(Form(evt_cat_str.c_str()));
+        if (!apply_HH_rwgt) continue;
+        bdt_filler->register_variable<float_type>(Form(evt_cat_str.c_str()));
       }
     bdt_filler->register_variable<float_type>(
       "tau1_pt", "tau1_eta", "tau1_raw", "tau1_phi",
@@ -760,14 +787,28 @@ int main(int argc, char* argv[])
       "dr_tau2_tau3", "dr_tau2_tau4", "dr_tau3_tau4",
       "m_tau1_tau2", "m_tau1_tau3", "m_tau1_tau4",
       "m_tau2_tau3", "m_tau2_tau4", "m_tau3_tau4",
-      "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "hadTauEffSF", "data_to_MC_correction","FR_Weight", "hadTau1_frWeight", "hadTau2_frWeight", "hadTau3_frWeight", "hadTau4_frWeight", "evtWeight" 
+      "Zee_bestTauHPair_m", "Zee_bestTauHPair_dr", "Zee_bestTauHPair_dPhi",
+      "Zee_bestTauHPair_dEta", "Zee_bestTauHPair_pt", "mostZeeLike",
+      "pt_bestTauHPair_m", "pt_bestTauHPair_dr", "pt_bestTauHPair_dPhi",
+      "pt_bestTauHPair_dEta", "pt_bestTauHPair_pt", "dr_bestTauHPair_m",
+      "dr_bestTauHPair_dr", "dr_bestTauHPair_dPhi", "dr_bestTauHPair_dEta",
+      "dr_bestTauHPair_pt",
+      "Zee_secondTauHPair_m", "Zee_secondTauHPair_dr", "Zee_secondTauHPair_dPhi",
+      "Zee_secondTauHPair_dEta", "Zee_secondTauHPair_pt",
+      "pt_secondTauHPair_m", "pt_secondTauHPair_dr", "pt_secondTauHPair_dPhi",
+      "pt_secondTauHPair_dEta", "pt_secondTauHPair_pt", "dr_secondTauHPair_m",
+      "dr_secondTauHPair_dr", "dr_secondTauHPair_dPhi", "dr_secondTauHPair_dEta",
+      "dr_secondTauHPair_pt", "max_pt_pair_pt", "min_dr_pair_dr",
+      "genWeight", "lheWeight", "pileupWeight", "triggerWeight", "btagWeight",
+      "hadTauEffSF", "data_to_MC_correction", "FR_Weight", "hadTau1_frWeight", "hadTau2_frWeight",
+      "hadTau3_frWeight", "hadTau4_frWeight", "evtWeight"
     );
     bdt_filler->register_variable<int_type>(
       "nJet", "nBJet_loose", "nBJet_medium"
     );
     bdt_filler->bookTree(fs);
   }
-  
+
   int analyzedEntries = 0;
   int selectedEntries = 0;
   double selectedEntries_weighted = 0.;
@@ -1224,9 +1265,9 @@ int main(int argc, char* argv[])
       evtWeightRecorder.record_jetToTau_FR_third(jetToTauFakeRateInterface, selHadTau_third);
       evtWeightRecorder.record_jetToTau_FR_fourth(jetToTauFakeRateInterface, selHadTau_fourth);
       if(!selectBDT){
-	evtWeightRecorder.compute_FR_4tau(
-					  passesTight_hadTau_lead, passesTight_hadTau_sublead, passesTight_hadTau_third, passesTight_hadTau_fourth
-      );
+        evtWeightRecorder.compute_FR_4tau(
+          passesTight_hadTau_lead, passesTight_hadTau_sublead, passesTight_hadTau_third, passesTight_hadTau_fourth
+        );
       }
     }
 
@@ -1349,8 +1390,8 @@ int main(int argc, char* argv[])
           "cost "             << eventInfo.gen_cosThetaStar << " : "
           "weight = "         << HHWeight                   << '\n'
           ;
-	std::cout << "Calculated " << weightMapHH.size() << " scan weights\n";
-	for(const auto & kv: weightMapHH)
+        std::cout << "Calculated " << weightMapHH.size() << " scan weights\n";
+        for(const auto & kv: weightMapHH)
         {
           std::cout << "line = " <<kv.first << "; Weight = " <<  kv.second << '\n';
         }
@@ -1441,8 +1482,338 @@ int main(int argc, char* argv[])
     svFitAlgo.addLogM_dynamic(false);
     svFitAlgo.addLogM_fixed(true, 5.);
     svFitAlgo.integrate(measuredTauLeptons, met.p4().px(), met.p4().py(), met.cov());
-
     const double mTauTau   = ( svFitAlgo.isValidSolution() ) ? static_cast<classic_svFit::HistogramAdapterDiTau*>(svFitAlgo.getHistogramAdapter())->getMass() : -1.;
+
+
+/* Smart pairing cases: deltaR, pt, similarity to Higgs, similarity to DY */
+
+    const RecoHadTau* caseOnePairOne_lead;
+    const RecoHadTau* caseOnePairOne_sublead;
+    double caseOnePairOne_dr;
+    double caseOnePairOne_pt;
+    const RecoHadTau* caseOnePairTwo_lead;
+    const RecoHadTau* caseOnePairTwo_sublead;
+    double caseOnePairTwo_dr;
+    double caseOnePairTwo_pt;
+
+
+    const RecoHadTau* caseTwoPairOne_lead;
+    const RecoHadTau* caseTwoPairOne_sublead;
+    double caseTwoPairOne_dr;
+    double caseTwoPairOne_pt;
+    const RecoHadTau* caseTwoPairTwo_lead;
+    const RecoHadTau* caseTwoPairTwo_sublead;
+    double caseTwoPairTwo_dr;
+    double caseTwoPairTwo_pt;
+
+    double Zee_bestTauHPair_m;
+    double Zee_bestTauHPair_dr;
+    double Zee_bestTauHPair_dPhi;
+    double Zee_bestTauHPair_dEta;
+    double Zee_bestTauHPair_pt;
+    double pt_bestTauHPair_m;
+    double pt_bestTauHPair_dr;
+    double pt_bestTauHPair_dPhi;
+    double pt_bestTauHPair_dEta;
+    double pt_bestTauHPair_pt;
+    double dR_bestTauHPair_m;
+    double dR_bestTauHPair_dr;
+    double dR_bestTauHPair_dPhi;
+    double dR_bestTauHPair_dEta;
+    double dR_bestTauHPair_pt;
+    double Zee_secondTauHPair_m;
+    double Zee_secondTauHPair_dr;
+    double Zee_secondTauHPair_dPhi;
+    double Zee_secondTauHPair_dEta;
+    double Zee_secondTauHPair_pt;
+    double pt_secondTauHPair_m;
+    double pt_secondTauHPair_dr;
+    double pt_secondTauHPair_dPhi;
+    double pt_secondTauHPair_dEta;
+    double pt_secondTauHPair_pt;
+    double dR_secondTauHPair_m;
+    double dR_secondTauHPair_dr;
+    double dR_secondTauHPair_dPhi;
+    double dR_secondTauHPair_dEta;
+    double dR_secondTauHPair_pt;
+
+    if ( selHadTau_lead->charge() * selHadTau_sublead->charge() < 0 ){
+        caseOnePairOne_lead = selHadTau_lead;
+        caseOnePairOne_sublead = selHadTau_sublead;
+        caseOnePairTwo_lead = selHadTau_third;
+        caseOnePairTwo_sublead = selHadTau_fourth;
+        if ( selHadTau_lead->charge() * selHadTau_third->charge() < 0 ){
+            caseTwoPairOne_lead = selHadTau_lead;
+            caseTwoPairOne_sublead = selHadTau_third;
+            caseTwoPairTwo_lead = selHadTau_sublead;
+            caseTwoPairTwo_sublead = selHadTau_fourth;
+        } else {
+            caseTwoPairOne_lead = selHadTau_lead;
+            caseTwoPairOne_sublead = selHadTau_fourth;
+            caseTwoPairTwo_lead = selHadTau_sublead;
+            caseTwoPairTwo_sublead = selHadTau_third;
+        }
+    } else {
+        caseOnePairOne_lead = selHadTau_lead;
+        caseOnePairOne_sublead = selHadTau_third;
+        caseOnePairTwo_lead = selHadTau_sublead;
+        caseOnePairTwo_sublead = selHadTau_fourth;
+        caseTwoPairOne_lead = selHadTau_lead;
+        caseTwoPairOne_sublead = selHadTau_fourth;
+        caseTwoPairTwo_lead = selHadTau_sublead;
+        caseTwoPairTwo_sublead = selHadTau_third;
+    }
+
+    caseOnePairOne_dr = deltaR(caseOnePairOne_lead->p4(), caseOnePairOne_sublead->p4());
+    caseOnePairTwo_dr = deltaR(caseOnePairTwo_lead->p4(), caseOnePairTwo_sublead->p4());
+    caseTwoPairOne_dr = deltaR(caseTwoPairOne_lead->p4(), caseTwoPairOne_sublead->p4());
+    caseTwoPairTwo_dr = deltaR(caseTwoPairTwo_lead->p4(), caseTwoPairTwo_sublead->p4());
+
+    caseOnePairOne_pt = (caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).pt();
+    caseOnePairTwo_pt = (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).pt();
+    caseTwoPairOne_pt = (caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).pt();
+    caseTwoPairTwo_pt = (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).pt();
+
+/* Pair choices made, so that one of the pairs has the smallest deltaR and that the mass of at least one of the pair is roughly 125GeV */
+    const double min_dR = std::min(std::min(caseOnePairOne_dr, caseOnePairTwo_dr), std::min(caseTwoPairOne_dr, caseTwoPairTwo_dr));
+    if (min_dR == caseOnePairOne_dr || min_dR == caseOnePairTwo_dr){
+        if ((caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).mass() - 125 < 10 || (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).mass() - 125 < 10){
+            if (caseOnePairOne_dr < caseOnePairTwo_dr){
+                dR_bestTauHPair_m = (caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).mass();
+                dR_bestTauHPair_dr = deltaR(caseOnePairOne_lead->p4(), caseOnePairOne_sublead->p4());
+                dR_bestTauHPair_dPhi = (caseOnePairOne_lead->p4() - caseOnePairOne_sublead->p4()).phi();
+                dR_bestTauHPair_dEta = (caseOnePairOne_lead->p4() - caseOnePairOne_sublead->p4()).eta();
+                dR_bestTauHPair_pt = (caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).pt();
+
+                dR_secondTauHPair_m = (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).mass();
+                dR_secondTauHPair_dr = deltaR(caseOnePairTwo_lead->p4(), caseOnePairTwo_sublead->p4());
+                dR_secondTauHPair_dPhi = (caseOnePairTwo_lead->p4() - caseOnePairTwo_sublead->p4()).phi();
+                dR_secondTauHPair_dEta = (caseOnePairTwo_lead->p4() - caseOnePairTwo_sublead->p4()).eta();
+                dR_secondTauHPair_pt = (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).pt();
+            } else {
+                dR_bestTauHPair_m = (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).mass();
+                dR_bestTauHPair_dr = deltaR(caseOnePairTwo_lead->p4(), caseOnePairTwo_sublead->p4());
+                dR_bestTauHPair_dPhi = (caseOnePairTwo_lead->p4() - caseOnePairTwo_sublead->p4()).phi();
+                dR_bestTauHPair_dEta = (caseOnePairTwo_lead->p4() - caseOnePairTwo_sublead->p4()).eta();
+                dR_bestTauHPair_pt = (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).pt();
+
+                dR_secondTauHPair_m = (caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).mass();
+                dR_secondTauHPair_dr = deltaR(caseOnePairOne_lead->p4(), caseOnePairOne_sublead->p4());
+                dR_secondTauHPair_dPhi = (caseOnePairOne_lead->p4() - caseOnePairOne_sublead->p4()).phi();
+                dR_secondTauHPair_dEta = (caseOnePairOne_lead->p4() - caseOnePairOne_sublead->p4()).eta();
+                dR_secondTauHPair_pt = (caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).pt();
+            }
+        } else {
+            dR_bestTauHPair_m = 0;
+            dR_bestTauHPair_dr = 0;
+            dR_bestTauHPair_dPhi = 0;
+            dR_bestTauHPair_dEta = 0;
+            dR_bestTauHPair_pt = 0;
+
+            dR_secondTauHPair_m = 0;
+            dR_secondTauHPair_dr = 0;
+            dR_secondTauHPair_dPhi = 0;
+            dR_secondTauHPair_dEta = 0;
+            dR_secondTauHPair_pt = 0;
+        }
+    } else{
+        if ((caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).mass() - 125 < 10 || (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).mass() - 125 < 10){
+            if (caseTwoPairOne_dr < caseTwoPairTwo_dr){
+                dR_bestTauHPair_m = (caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).mass();
+                dR_bestTauHPair_dr = deltaR(caseTwoPairOne_lead->p4(), caseTwoPairOne_sublead->p4());
+                dR_bestTauHPair_dPhi = (caseTwoPairOne_lead->p4() - caseTwoPairOne_sublead->p4()).phi();
+                dR_bestTauHPair_dEta = (caseTwoPairOne_lead->p4() - caseTwoPairOne_sublead->p4()).eta();
+                dR_bestTauHPair_pt = (caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).pt();
+
+                dR_secondTauHPair_m = (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).mass();
+                dR_secondTauHPair_dr = deltaR(caseTwoPairTwo_lead->p4(), caseTwoPairTwo_sublead->p4());
+                dR_secondTauHPair_dPhi = (caseTwoPairTwo_lead->p4() - caseTwoPairTwo_sublead->p4()).phi();
+                dR_secondTauHPair_dEta = (caseTwoPairTwo_lead->p4() - caseTwoPairTwo_sublead->p4()).eta();
+                dR_secondTauHPair_pt = (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).pt();
+            } else {
+                dR_bestTauHPair_m = (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).mass();
+                dR_bestTauHPair_dr = deltaR(caseTwoPairTwo_lead->p4(), caseTwoPairTwo_sublead->p4());
+                dR_bestTauHPair_dPhi = (caseTwoPairTwo_lead->p4() - caseTwoPairTwo_sublead->p4()).phi();
+                dR_bestTauHPair_dEta = (caseTwoPairTwo_lead->p4() - caseTwoPairTwo_sublead->p4()).eta();
+                dR_bestTauHPair_pt = (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).pt();
+
+                dR_secondTauHPair_m = (caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).mass();
+                dR_secondTauHPair_dr = deltaR(caseTwoPairOne_lead->p4(), caseTwoPairOne_sublead->p4());
+                dR_secondTauHPair_dPhi = (caseTwoPairOne_lead->p4() - caseTwoPairOne_sublead->p4()).phi();
+                dR_secondTauHPair_dEta = (caseTwoPairOne_lead->p4() - caseTwoPairOne_sublead->p4()).eta();
+                dR_secondTauHPair_pt = (caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).pt();
+            }
+        } else {
+            dR_bestTauHPair_m = 0;
+            dR_bestTauHPair_dr = 0;
+            dR_bestTauHPair_dPhi = 0;
+            dR_bestTauHPair_dEta = 0;
+            dR_bestTauHPair_pt = 0;
+
+            dR_secondTauHPair_m = 0;
+            dR_secondTauHPair_dr = 0;
+            dR_secondTauHPair_dPhi = 0;
+            dR_secondTauHPair_dEta = 0;
+            dR_secondTauHPair_pt = 0;
+        }
+    }
+
+/* Choices based on best deltaR pair end */
+
+
+
+/* Pair choices made, so that one of the pairs has the biggest pt and that the mass of at least one of the pair is roughly 125GeV */
+    double max_pt = std::max(std::max(caseOnePairOne_pt, caseOnePairTwo_pt), std::max(caseTwoPairOne_pt, caseTwoPairTwo_pt));
+    if (max_pt == caseOnePairOne_pt || max_pt == caseOnePairTwo_pt){
+        if ((caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).mass() - 125 < 10 || (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).mass() - 125 < 10){
+            if (caseOnePairOne_dr > caseOnePairTwo_dr){
+                pt_bestTauHPair_m = (caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).mass();
+                pt_bestTauHPair_dr = deltaR(caseOnePairOne_lead->p4(), caseOnePairOne_sublead->p4());
+                pt_bestTauHPair_dPhi = (caseOnePairOne_lead->p4() - caseOnePairOne_sublead->p4()).phi();
+                pt_bestTauHPair_dEta = (caseOnePairOne_lead->p4() - caseOnePairOne_sublead->p4()).eta();
+                pt_bestTauHPair_pt = (caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).pt();
+
+                pt_secondTauHPair_m = (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).mass();
+                pt_secondTauHPair_dr = deltaR(caseOnePairTwo_lead->p4(), caseOnePairTwo_sublead->p4());
+                pt_secondTauHPair_dPhi = (caseOnePairTwo_lead->p4() - caseOnePairTwo_sublead->p4()).phi();
+                pt_secondTauHPair_dEta = (caseOnePairTwo_lead->p4() - caseOnePairTwo_sublead->p4()).eta();
+                pt_secondTauHPair_pt = (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).pt();
+            } else {
+                pt_bestTauHPair_m = (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).mass();
+                pt_bestTauHPair_dr = deltaR(caseOnePairTwo_lead->p4(), caseOnePairTwo_sublead->p4());
+                pt_bestTauHPair_dPhi = (caseOnePairTwo_lead->p4() - caseOnePairTwo_sublead->p4()).phi();
+                pt_bestTauHPair_dEta = (caseOnePairTwo_lead->p4() - caseOnePairTwo_sublead->p4()).eta();
+                pt_bestTauHPair_pt = (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).pt();
+
+                pt_secondTauHPair_m = (caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).mass();
+                pt_secondTauHPair_dr = deltaR(caseOnePairOne_lead->p4(), caseOnePairOne_sublead->p4());
+                pt_secondTauHPair_dPhi = (caseOnePairOne_lead->p4() - caseOnePairOne_sublead->p4()).phi();
+                pt_secondTauHPair_dEta = (caseOnePairOne_lead->p4() - caseOnePairOne_sublead->p4()).eta();
+                pt_secondTauHPair_pt = (caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).pt();
+            }
+        } else {
+            pt_bestTauHPair_m = 0;
+            pt_bestTauHPair_dr = 0;
+            pt_bestTauHPair_dPhi = 0;
+            pt_bestTauHPair_dEta = 0;
+            pt_bestTauHPair_pt = 0;
+
+            pt_secondTauHPair_m = 0;
+            pt_secondTauHPair_dr = 0;
+            pt_secondTauHPair_dPhi = 0;
+            pt_secondTauHPair_dEta = 0;
+            pt_secondTauHPair_pt = 0;
+        }
+    } else{
+        if ((caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).mass() - 125 < 10 || (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).mass() - 125 < 10){
+            if (caseTwoPairOne_pt > caseTwoPairTwo_pt){
+                pt_bestTauHPair_m = (caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).mass();
+                pt_bestTauHPair_dr = deltaR(caseTwoPairOne_lead->p4(), caseTwoPairOne_sublead->p4());
+                pt_bestTauHPair_dPhi = (caseTwoPairOne_lead->p4() - caseTwoPairOne_sublead->p4()).phi();
+                pt_bestTauHPair_dEta = (caseTwoPairOne_lead->p4() - caseTwoPairOne_sublead->p4()).eta();
+                pt_bestTauHPair_pt = (caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).pt();
+
+                pt_secondTauHPair_m = (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).mass();
+                pt_secondTauHPair_dr = deltaR(caseTwoPairTwo_lead->p4(), caseTwoPairTwo_sublead->p4());
+                pt_secondTauHPair_dPhi = (caseTwoPairTwo_lead->p4() - caseTwoPairTwo_sublead->p4()).phi();
+                pt_secondTauHPair_dEta = (caseTwoPairTwo_lead->p4() - caseTwoPairTwo_sublead->p4()).eta();
+                pt_secondTauHPair_pt = (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).pt();
+            } else {
+                pt_bestTauHPair_m = (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).mass();
+                pt_bestTauHPair_dr = deltaR(caseTwoPairTwo_lead->p4(), caseTwoPairTwo_sublead->p4());
+                pt_bestTauHPair_dPhi = (caseTwoPairTwo_lead->p4() - caseTwoPairTwo_sublead->p4()).phi();
+                pt_bestTauHPair_dEta = (caseTwoPairTwo_lead->p4() - caseTwoPairTwo_sublead->p4()).eta();
+                pt_bestTauHPair_pt = (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).pt();
+
+                pt_secondTauHPair_m = (caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).mass();
+                pt_secondTauHPair_dr = deltaR(caseTwoPairOne_lead->p4(), caseTwoPairOne_sublead->p4());
+                pt_secondTauHPair_dPhi = (caseTwoPairOne_lead->p4() - caseTwoPairOne_sublead->p4()).phi();
+                pt_secondTauHPair_dEta = (caseTwoPairOne_lead->p4() - caseTwoPairOne_sublead->p4()).eta();
+                pt_secondTauHPair_pt = (caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).pt();
+            }
+        } else {
+            pt_bestTauHPair_m = 0;
+            pt_bestTauHPair_dr = 0;
+            pt_bestTauHPair_dPhi = 0;
+            pt_bestTauHPair_dEta = 0;
+            pt_bestTauHPair_pt = 0;
+
+            pt_secondTauHPair_m = 0;
+            pt_secondTauHPair_dr = 0;
+            pt_secondTauHPair_dPhi = 0;
+            pt_secondTauHPair_dEta = 0;
+            pt_secondTauHPair_pt = 0;
+        }
+    }
+
+/* Choices based on biggest pt pair end */
+
+
+/* Find Z->ee like events */
+
+
+    const double caseOnePairOne_massZee = (caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).mass() - 90;
+    const double caseOnePairTwo_massZee = (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).mass() - 90;
+    const double caseTwoPairOne_massZee = (caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).mass() - 90;
+    const double caseTwoPairTwo_massZee = (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).mass() - 90;
+
+    const double mostZeeLike = std::min(std::min(caseOnePairOne_massZee, caseOnePairTwo_massZee), std::min(caseTwoPairOne_massZee, caseTwoPairTwo_dr));
+
+    if (mostZeeLike == caseOnePairOne_massZee || mostZeeLike == caseOnePairTwo_massZee){
+        if (caseOnePairOne_massZee < caseOnePairTwo_massZee){
+            Zee_bestTauHPair_m = (caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).mass();
+            Zee_bestTauHPair_dr = deltaR(caseOnePairOne_lead->p4(), caseOnePairOne_sublead->p4());
+            Zee_bestTauHPair_dPhi = (caseOnePairOne_lead->p4() - caseOnePairOne_sublead->p4()).phi();
+            Zee_bestTauHPair_dEta = (caseOnePairOne_lead->p4() - caseOnePairOne_sublead->p4()).eta();
+            Zee_bestTauHPair_pt = (caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).pt();
+
+            Zee_secondTauHPair_m = (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).mass();
+            Zee_secondTauHPair_dr = deltaR(caseOnePairTwo_lead->p4(), caseOnePairTwo_sublead->p4());
+            Zee_secondTauHPair_dPhi = (caseOnePairTwo_lead->p4() - caseOnePairTwo_sublead->p4()).phi();
+            Zee_secondTauHPair_dEta = (caseOnePairTwo_lead->p4() - caseOnePairTwo_sublead->p4()).eta();
+            Zee_secondTauHPair_pt = (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).pt();
+        } else {
+            Zee_bestTauHPair_m = (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).mass();
+            Zee_bestTauHPair_dr = deltaR(caseOnePairTwo_lead->p4(), caseOnePairTwo_sublead->p4());
+            Zee_bestTauHPair_dPhi = (caseOnePairTwo_lead->p4() - caseOnePairTwo_sublead->p4()).phi();
+            Zee_bestTauHPair_dEta = (caseOnePairTwo_lead->p4() - caseOnePairTwo_sublead->p4()).eta();
+            Zee_bestTauHPair_pt = (caseOnePairTwo_lead->p4() + caseOnePairTwo_sublead->p4()).pt();
+
+            Zee_secondTauHPair_m = (caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).mass();
+            Zee_secondTauHPair_dr = deltaR(caseOnePairOne_lead->p4(), caseOnePairOne_sublead->p4());
+            Zee_secondTauHPair_dPhi = (caseOnePairOne_lead->p4() - caseOnePairOne_sublead->p4()).phi();
+            Zee_secondTauHPair_dEta = (caseOnePairOne_lead->p4() - caseOnePairOne_sublead->p4()).eta();
+            Zee_secondTauHPair_pt = (caseOnePairOne_lead->p4() + caseOnePairOne_sublead->p4()).pt();
+            }
+    } else {
+        if (caseTwoPairOne_massZee < caseTwoPairTwo_massZee){
+            Zee_bestTauHPair_m = (caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).mass();
+            Zee_bestTauHPair_dr = deltaR(caseTwoPairOne_lead->p4(), caseTwoPairOne_sublead->p4());
+            Zee_bestTauHPair_dPhi = (caseTwoPairOne_lead->p4() - caseTwoPairOne_sublead->p4()).phi();
+            Zee_bestTauHPair_dEta = (caseTwoPairOne_lead->p4() - caseTwoPairOne_sublead->p4()).eta();
+            Zee_bestTauHPair_pt = (caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).pt();
+
+            Zee_secondTauHPair_m = (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).mass();
+            Zee_secondTauHPair_dr = deltaR(caseTwoPairTwo_lead->p4(), caseTwoPairTwo_sublead->p4());
+            Zee_secondTauHPair_dPhi = (caseTwoPairTwo_lead->p4() - caseTwoPairTwo_sublead->p4()).phi();
+            Zee_secondTauHPair_dEta = (caseTwoPairTwo_lead->p4() - caseTwoPairTwo_sublead->p4()).eta();
+            Zee_secondTauHPair_pt = (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).pt();
+        } else {
+            Zee_bestTauHPair_m = (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).mass();
+            Zee_bestTauHPair_dr = deltaR(caseTwoPairTwo_lead->p4(), caseTwoPairTwo_sublead->p4());
+            Zee_bestTauHPair_dPhi = (caseTwoPairTwo_lead->p4() - caseTwoPairTwo_sublead->p4()).phi();
+            Zee_bestTauHPair_dEta = (caseTwoPairTwo_lead->p4() - caseTwoPairTwo_sublead->p4()).eta();
+            Zee_bestTauHPair_pt = (caseTwoPairTwo_lead->p4() + caseTwoPairTwo_sublead->p4()).pt();
+
+            Zee_secondTauHPair_m = (caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).mass();
+            Zee_secondTauHPair_dr = deltaR(caseTwoPairOne_lead->p4(), caseTwoPairOne_sublead->p4());
+            Zee_secondTauHPair_dPhi = (caseTwoPairOne_lead->p4() - caseTwoPairOne_sublead->p4()).phi();
+            Zee_secondTauHPair_dEta = (caseTwoPairOne_lead->p4() - caseTwoPairOne_sublead->p4()).eta();
+            Zee_secondTauHPair_pt = (caseTwoPairOne_lead->p4() + caseTwoPairOne_sublead->p4()).pt();
+        }
+    }
+
+
 
 //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selHadTaus);
@@ -1471,7 +1842,7 @@ int main(int argc, char* argv[])
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
         }
-  	for(const auto & kv: reWeightMapHH)
+        for(const auto & kv: reWeightMapHH)
         {
           selHistManager->evt_[kv.first]->fillHistograms(
             preselElectrons.size(),
@@ -1545,30 +1916,30 @@ int main(int argc, char* argv[])
 
       if(bdt_filler)
       {
-	double hadTau1_genPt = 0.;
-	if(selHadTau_lead->genHadTau()) hadTau1_genPt =  selHadTau_lead->genHadTau()->pt();
-	else if ( selHadTau_lead->genLepton()) hadTau1_genPt =  selHadTau_lead->genLepton()->pt();
+        double hadTau1_genPt = 0.;
+        if(selHadTau_lead->genHadTau()) hadTau1_genPt =  selHadTau_lead->genHadTau()->pt();
+        else if ( selHadTau_lead->genLepton()) hadTau1_genPt =  selHadTau_lead->genLepton()->pt();
 
-	double hadTau2_genPt = 0.;
-	if(selHadTau_sublead->genHadTau()) hadTau2_genPt =  selHadTau_sublead->genHadTau()->pt();
-	else if ( selHadTau_sublead->genLepton()) hadTau2_genPt =  selHadTau_sublead->genLepton()->pt();
-	double hadTau3_genPt = 0.;
-	if(selHadTau_third->genHadTau()) hadTau3_genPt =  selHadTau_third->genHadTau()->pt();
-	else if ( selHadTau_third->genLepton()) hadTau3_genPt =  selHadTau_third->genLepton()->pt();
+        double hadTau2_genPt = 0.;
+        if(selHadTau_sublead->genHadTau()) hadTau2_genPt =  selHadTau_sublead->genHadTau()->pt();
+        else if ( selHadTau_sublead->genLepton()) hadTau2_genPt =  selHadTau_sublead->genLepton()->pt();
+        double hadTau3_genPt = 0.;
+        if(selHadTau_third->genHadTau()) hadTau3_genPt =  selHadTau_third->genHadTau()->pt();
+        else if ( selHadTau_third->genLepton()) hadTau3_genPt =  selHadTau_third->genLepton()->pt();
 
-	double hadTau4_genPt = 0.;
-	if(selHadTau_fourth->genHadTau()) hadTau4_genPt =  selHadTau_fourth->genHadTau()->pt();
-	else if ( selHadTau_fourth->genLepton()) hadTau4_genPt =  selHadTau_fourth->genLepton()->pt();
-	double prob_fake_tau_lead = evtWeightRecorder.get_jetToTau_FR_lead(central_or_shift_main);
-	double prob_fake_tau_sublead = evtWeightRecorder.get_jetToTau_FR_sublead(central_or_shift_main);
-	double prob_fake_tau_third = evtWeightRecorder.get_jetToTau_FR_third(central_or_shift_main);
-	double prob_fake_tau_fourth = evtWeightRecorder.get_jetToTau_FR_fourth(central_or_shift_main);
-	double evtWeight_BDT = evtWeightRecorder.get(central_or_shift_main);
-	double hadTau1_frWeight = hadTau1_genPt > 0 ? 1.0 : prob_fake_tau_lead;
-	double hadTau2_frWeight = hadTau2_genPt > 0 ? 1.0 : prob_fake_tau_sublead;
-	double hadTau3_frWeight = hadTau3_genPt > 0 ? 1.0 : prob_fake_tau_third;
-	double hadTau4_frWeight = hadTau4_genPt > 0 ? 1.0 : prob_fake_tau_fourth;
-	evtWeight_BDT *= hadTau1_frWeight*hadTau2_frWeight*hadTau3_frWeight*hadTau4_frWeight;
+        double hadTau4_genPt = 0.;
+        if(selHadTau_fourth->genHadTau()) hadTau4_genPt =  selHadTau_fourth->genHadTau()->pt();
+        else if ( selHadTau_fourth->genLepton()) hadTau4_genPt =  selHadTau_fourth->genLepton()->pt();
+        double prob_fake_tau_lead = evtWeightRecorder.get_jetToTau_FR_lead(central_or_shift_main);
+        double prob_fake_tau_sublead = evtWeightRecorder.get_jetToTau_FR_sublead(central_or_shift_main);
+        double prob_fake_tau_third = evtWeightRecorder.get_jetToTau_FR_third(central_or_shift_main);
+        double prob_fake_tau_fourth = evtWeightRecorder.get_jetToTau_FR_fourth(central_or_shift_main);
+        double evtWeight_BDT = evtWeightRecorder.get(central_or_shift_main);
+        double hadTau1_frWeight = hadTau1_genPt > 0 ? 1.0 : prob_fake_tau_lead;
+        double hadTau2_frWeight = hadTau2_genPt > 0 ? 1.0 : prob_fake_tau_sublead;
+        double hadTau3_frWeight = hadTau3_genPt > 0 ? 1.0 : prob_fake_tau_third;
+        double hadTau4_frWeight = hadTau4_genPt > 0 ? 1.0 : prob_fake_tau_fourth;
+        evtWeight_BDT *= hadTau1_frWeight*hadTau2_frWeight*hadTau3_frWeight*hadTau4_frWeight;
 
         bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
             ("tau1_pt",                  selHadTau_lead->pt())
@@ -1626,23 +1997,56 @@ int main(int argc, char* argv[])
             ("m_tau2_tau3",              m_tau2_tau3)
             ("m_tau2_tau4",              m_tau2_tau4)
             ("m_tau3_tau4",              m_tau3_tau4)
+            ("Zee_bestTauHPair_m",       Zee_bestTauHPair_m)
+            ("Zee_bestTauHPair_dr",      Zee_bestTauHPair_dr)
+            ("Zee_bestTauHPair_dPhi",    Zee_bestTauHPair_dPhi)
+            ("Zee_bestTauHPair_dEta",    Zee_bestTauHPair_dEta)
+            ("Zee_bestTauHPair_pt",      Zee_bestTauHPair_pt)
+            ("mostZeeLike",              mostZeeLike)
+            ("pt_bestTauHPair_m",        pt_bestTauHPair_m)
+            ("pt_bestTauHPair_dr",       pt_bestTauHPair_dr)
+            ("pt_bestTauHPair_dPhi",     pt_bestTauHPair_dPhi)
+            ("pt_bestTauHPair_dEta",     pt_bestTauHPair_dEta)
+            ("pt_bestTauHPair_pt",       pt_bestTauHPair_pt)
+            ("Zee_secondTauHPair_m",     Zee_secondTauHPair_m)
+            ("Zee_secondTauHPair_dr",    Zee_secondTauHPair_dr)
+            ("Zee_secondTauHPair_dPhi",  Zee_secondTauHPair_dPhi)
+            ("Zee_secondTauHPair_dEta",  Zee_secondTauHPair_dEta)
+            ("Zee_secondTauHPair_pt",    Zee_secondTauHPair_pt)
+            ("dr_bestTauHPair_m",        dR_bestTauHPair_m)
+            ("dr_bestTauHPair_dr",       dR_bestTauHPair_dr)
+            ("dr_bestTauHPair_dPhi",     dR_bestTauHPair_dPhi)
+            ("dr_bestTauHPair_dEta",     dR_bestTauHPair_dEta)
+            ("dr_bestTauHPair_pt",       dR_bestTauHPair_pt)
+            ("pt_secondTauHPair_m",      pt_secondTauHPair_m)
+            ("pt_secondTauHPair_dr",     pt_secondTauHPair_dr)
+            ("pt_secondTauHPair_dPhi",   pt_secondTauHPair_dPhi)
+            ("pt_secondTauHPair_dEta",   pt_secondTauHPair_dEta)
+            ("pt_secondTauHPair_pt",     pt_secondTauHPair_pt)
+            ("dr_secondTauHPair_m",      dR_secondTauHPair_m)
+            ("dr_secondTauHPair_dr",     dR_secondTauHPair_dr)
+            ("dr_secondTauHPair_dPhi",   dR_secondTauHPair_dPhi)
+            ("dr_secondTauHPair_dEta",   dR_secondTauHPair_dEta)
+            ("dr_secondTauHPair_pt",     dR_secondTauHPair_pt)
+            ("max_pt_pair_pt",           max_pt)
+            ("min_dr_pair_dr",           min_dR)
             ("nJet",                     selJets.size())
             ("nBJet_loose",              selBJets_btag_loose.size())
             ("nBJet_medium",             selBJets_btag_medium.size())
-	    ("hadTau1_frWeight",       hadTau1_frWeight)
-	    ("hadTau2_frWeight",       hadTau2_frWeight)
-	    ("hadTau3_frWeight",       hadTau3_frWeight)
-	    ("hadTau4_frWeight",       hadTau4_frWeight)
-	    ("genWeight" , eventInfo.genWeight)
-	    ("lheWeight" , evtWeightRecorder.get_lheScaleWeight(central_or_shift_main))
-	    ("pileupWeight", evtWeightRecorder.get_puWeight(central_or_shift_main))
-	    ("triggerWeight", evtWeightRecorder.get_sf_triggerEff(central_or_shift_main))
-	    ("btagWeight", evtWeightRecorder.get_btag(central_or_shift_main))
-	    ("hadTauEffSF", evtWeightRecorder.get_tauSF(central_or_shift_main))
-	    ("data_to_MC_correction", evtWeightRecorder.get_data_to_MC_correction(central_or_shift_main))
-	    ("FR_Weight", evtWeightRecorder.get_FR(central_or_shift_main))
-	    ("evtWeight",           evtWeight_BDT)
-	    (weightMapHH)
+            ("hadTau1_frWeight",       hadTau1_frWeight)
+            ("hadTau2_frWeight",       hadTau2_frWeight)
+            ("hadTau3_frWeight",       hadTau3_frWeight)
+            ("hadTau4_frWeight",       hadTau4_frWeight)
+            ("genWeight", eventInfo.genWeight)
+            ("lheWeight", evtWeightRecorder.get_lheScaleWeight(central_or_shift_main))
+            ("pileupWeight", evtWeightRecorder.get_puWeight(central_or_shift_main))
+            ("triggerWeight", evtWeightRecorder.get_sf_triggerEff(central_or_shift_main))
+            ("btagWeight", evtWeightRecorder.get_btag(central_or_shift_main))
+            ("hadTauEffSF", evtWeightRecorder.get_tauSF(central_or_shift_main))
+            ("data_to_MC_correction", evtWeightRecorder.get_data_to_MC_correction(central_or_shift_main))
+            ("FR_Weight", evtWeightRecorder.get_FR(central_or_shift_main))
+            ("evtWeight",           evtWeight_BDT)
+            (weightMapHH)
           .fill()
           ;
 
