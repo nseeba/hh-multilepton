@@ -338,9 +338,9 @@ int main(int argc, char* argv[])
 
   const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
 
-  std::string BDTFileName_even  = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_even");
-  std::string BDTFileName_odd   = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_odd");
-  std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
+  // std::string BDTFileName_even  = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_even");
+  // std::string BDTFileName_odd   = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_odd");
+  // std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
 
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
   std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
@@ -553,27 +553,27 @@ int main(int argc, char* argv[])
     inputTree -> registerReader(psWeightReader);
   }
 
-  std::vector<std::string> BDTInputVariables_SUM =
-    {
-      "m_tau1_tau2",
-      "dr_secondTauHPair_dr",
-      "gen_mHH",
-      "dr_bestTauHPair_m",
-      "avg_dr_jet",
-      "met",
-      "diHiggsMass",
-      "tau2_pt",
-      "mTauTau",
-      "mht"
-    }; // These are the preliminary optimized trainvars for res_spin0
+  // std::vector<std::string> BDTInputVariables_SUM =
+  //   {
+  //     "m_tau1_tau2",
+  //     "dr_secondTauHPair_dr",
+  //     "gen_mHH",
+  //     "dr_bestTauHPair_m",
+  //     "avg_dr_jet",
+  //     "met",
+  //     "diHiggsMass",
+  //     "tau2_pt",q
+  //     "mTauTau",
+  //     "mht"
+  //   }; // These are the preliminary optimized trainvars for res_spin0
 
-  assert(fitFunctionFileName != "");
-  //XGBInterface* XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, fitFunctionFileName,  BDTInputVariables_SUM);
+  // assert(fitFunctionFileName != "");q
+  // //XGBInterface* XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, fitFunctionFileName,  BDTInputVariables_SUM);
 
-  TMVAInterface* BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, fitFunctionFileName);
-  BDT_SUM->enableBDTTransform();
+  // TMVAInterface* BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, fitFunctionFileName);
+  // BDT_SUM->enableBDTTransform();
 
-  std::map<std::string, double> BDTInputs_SUM;
+  // std::map<std::string, double> BDTInputs_SUM;
 
 
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
