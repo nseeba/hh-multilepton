@@ -118,9 +118,39 @@
 #include <TMath.h>
 #include <Python.h>
 
+/*
+edm::ParameterSet
+makeHistManager_cfg(const std::string & process,
+                    const std::string & category,
+                    const std::string & era,
+                    const std::string & central_or_shift,
+		    const std::vector<double> & gen_mHH,
+                    int idx = -1)
+{
+  edm::ParameterSet cfg = makeHistManager_cfg(process, category, era, central_or_shift, idx);
+  cfg.addParameter<std::vector<double>>("gen_mHH", gen_mHH);
+  return cfg;
+}
+
+edm::ParameterSet
+makeHistManager_cfg(const std::string & process,
+                    const std::string & category,
+                    const std::string & era,
+                    const std::string & central_or_shift,
+		    const std::vector<double> & gen_mHH,
+                    const std::string & option,
+                    int idx = -1)
+{
+  edm::ParameterSet cfg = makeHistManager_cfg(process, category, era, central_or_shift, gen_mHH, idx);
+  cfg.addParameter<std::string>("option", option);
+  return cfg;
+}
+*/
+
 typedef math::PtEtaPhiMLorentzVector LV;
 typedef std::vector<std::string> vstring;
 typedef std::vector<double> vdouble;
+
 
 enum { k1e, k1mu };
 enum { kFR_disabled, kFR_4L, kFR_3tau };
@@ -616,6 +646,7 @@ int main(int argc, char* argv[])
     std::map<std::string, std::map<std::string, EvtHistManager_hh_1l_3tau*>> evt_in_categories_;
     std::map<std::string, std::map<std::string, SVfit4tauHistManager_MarkovChain*>> svFit4tau_woMassConstraint_in_categories_;
     std::map<std::string, std::map<std::string, SVfit4tauHistManager_MarkovChain*>> svFit4tau_wMassConstraint_in_categories_;
+    
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
@@ -624,6 +655,7 @@ int main(int argc, char* argv[])
   std::map<std::string, GenEvtHistManager*> genEvtHistManager_afterCuts;
   std::map<std::string, LHEInfoHistManager*> lheInfoHistManager;
   std::map<std::string, std::map<int, selHistManagerType*>> selHistManagers;
+
   for(const std::string & central_or_shift: central_or_shifts_local)
   {
     const bool skipBooking = central_or_shift != central_or_shift_main;
@@ -733,6 +765,8 @@ int main(int argc, char* argv[])
         }
       }
 
+
+      
       vstring categories_evt = {
         "1e_3tau", "1mu_3tau"
       };
@@ -741,9 +775,10 @@ int main(int argc, char* argv[])
         TString histogramDir_category = histogramDir.data();
         histogramDir_category.ReplaceAll("1l_3tau", category.data());
 
-        for(const std::string & evt_cat_str: evt_cat_strs)
+	for(const std::string & evt_cat_str: evt_cat_strs)
         {
-          if(skipBooking && evt_cat_str != default_cat_str)
+
+	  if(skipBooking && evt_cat_str != default_cat_str)
           {
             continue;
           }
@@ -755,6 +790,7 @@ int main(int argc, char* argv[])
           const std::string process_and_genMatchName = boost::replace_all_copy(
             process_and_genMatch, process_string, process_string_new
           );
+	  
           selHistManager->evt_in_categories_[evt_cat_str][category] = new EvtHistManager_hh_1l_3tau(makeHistManager_cfg(process_and_genMatchName,
             Form("%s/sel/evt", histogramDir_category.Data()), era_string, central_or_shift));
           selHistManager->evt_in_categories_[evt_cat_str][category]->bookHistograms(fs);
@@ -764,8 +800,9 @@ int main(int argc, char* argv[])
           selHistManager->svFit4tau_wMassConstraint_in_categories_[evt_cat_str][category] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatchName,
             Form("%s/sel/svFit4tau_wMassConstraint", histogramDir_category.Data()), era_string, central_or_shift));
           selHistManager->svFit4tau_wMassConstraint_in_categories_[evt_cat_str][category]->bookHistograms(fs);
-        }
       }
+
+      
       if(! skipBooking)
       {
         edm::ParameterSet cfg_EvtYieldHistManager_sel = makeHistManager_cfg(process_and_genMatch,
@@ -1429,11 +1466,17 @@ int main(int argc, char* argv[])
       evtWeightRecorder.record_muToTauFakeRate(dataToMCcorrectionInterface);
     }
 
-    evtWeightRecorder.record_jetToLepton_FR_lead(leptonFakeRateInterface, selLepton);
-    evtWeightRecorder.record_jetToTau_FR_lead(jetToTauFakeRateInterface, selHadTau_lead);
-    evtWeightRecorder.record_jetToTau_FR_sublead(jetToTauFakeRateInterface, selHadTau_sublead);
-    evtWeightRecorder.record_jetToTau_FR_third(jetToTauFakeRateInterface, selHadTau_third);
-    
+    if(leptonFakeRateInterface)
+      {
+	evtWeightRecorder.record_jetToLepton_FR_lead(leptonFakeRateInterface, selLepton);
+      }
+    if(jetToTauFakeRateInterface)
+      {
+	evtWeightRecorder.record_jetToTau_FR_lead(jetToTauFakeRateInterface, selHadTau_lead);
+	evtWeightRecorder.record_jetToTau_FR_sublead(jetToTauFakeRateInterface, selHadTau_sublead);
+	evtWeightRecorder.record_jetToTau_FR_third(jetToTauFakeRateInterface, selHadTau_third);
+      }
+
     if(!selectBDT){    
       if(applyFakeRateWeights == kFR_4L)
 	{
@@ -1643,6 +1686,69 @@ int main(int argc, char* argv[])
 //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons, selHadTaus);
 
+
+//--- additional event variables (for add. plots)
+
+    //variable a: anti-e discriminator for two taus that have opp. charge to electron 
+
+    //variable b: visible mass of the electron and one of the taus; pick the tau that has opp. charge
+    //          and has combined mass closest to mz= 91.2 GeV
+
+    //variable c: eta distribution of the two taus that have opposite charge to the electron
+    double antiE_tau1_OS_matched = -2;
+    double antiE_tau1_OS_unmatched = -2;
+    double antiE_tau2_OS_matched = -2;
+    double antiE_tau2_OS_unmatched = -2;
+    double antiE_tau3_OS_matched = -2;
+    double antiE_tau3_OS_unmatched = -2;
+    
+    double m_OS_etau_closestToZ = -1;
+    
+    double eta_OS_etau1 = -5;
+    double eta_OS_etau2 = -5;
+    double eta_OS_etau3 = -5;
+
+    
+    if (selElectrons.size()>=1){
+
+      if(selHadTau_lead->charge() != selLepton->charge()){
+	eta_OS_etau1 = selHadTau_lead->eta();
+	if(TMath::Abs(getHadTau_genPdgId(selHadTau_lead))==11){
+	  antiE_tau1_OS_matched = selHadTau_lead->id_mva(TauID::DeepTau2017v2VSe);
+	}
+	else {
+	  antiE_tau1_OS_unmatched = selHadTau_lead->id_mva(TauID::DeepTau2017v2VSe);
+	}
+      }
+      else if(selHadTau_sublead->charge() != selLepton->charge()){
+	eta_OS_etau2 = selHadTau_sublead->eta();
+	if(TMath::Abs(getHadTau_genPdgId(selHadTau_sublead))==11){
+	  antiE_tau2_OS_matched = selHadTau_sublead->id_mva(TauID::DeepTau2017v2VSe);
+	}
+	else{
+	  antiE_tau2_OS_unmatched = selHadTau_sublead->id_mva(TauID::DeepTau2017v2VSe);
+	}
+      }
+      else if(selHadTau_third->charge() != selLepton->charge()){
+	eta_OS_etau3 = selHadTau_third->eta();
+	if(TMath::Abs(getHadTau_genPdgId(selHadTau_third))==11){
+	  antiE_tau3_OS_matched = selHadTau_third->id_mva(TauID::DeepTau2017v2VSe);
+	}
+	else{
+	  antiE_tau3_OS_unmatched = selHadTau_third->id_mva(TauID::DeepTau2017v2VSe);
+	}
+      }
+    
+      for(unsigned int i=0; i<selHadTaus.size(); i++) {
+	if ((selLepton->charge() != selHadTaus[i]->charge())){
+	  double m_Z_temp = (selLepton->p4()+selHadTaus[i]->p4()).mass();
+	  if ( ( (m_OS_etau_closestToZ == -1) || (TMath::Abs(m_OS_etau_closestToZ-91.2)>TMath::Abs(m_Z_temp-91.2))) ){
+	    m_OS_etau_closestToZ = m_Z_temp;
+	  }
+	}
+      }
+    }
+    
 //--- fill histograms with events passing final selection
     for(const std::string & central_or_shift: central_or_shifts_local)
     {
@@ -1665,6 +1771,7 @@ int main(int argc, char* argv[])
           selHistManager->BJets_medium_->fillHistograms(selBJets_medium, evtWeight);
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
+	  
         }
 	for(const auto & kv: reWeightMapHH)
         {
@@ -1680,7 +1787,17 @@ int main(int argc, char* argv[])
             dihiggsMass,
             HT,
             STMET,
-            kv.second
+            kv.second,
+	    antiE_tau1_OS_matched,
+	    antiE_tau1_OS_unmatched,
+	    antiE_tau2_OS_matched,
+	    antiE_tau2_OS_unmatched,
+	    antiE_tau3_OS_matched,
+	    antiE_tau3_OS_unmatched,
+	    m_OS_etau_closestToZ,
+	    eta_OS_etau1,
+	    eta_OS_etau2,
+	    eta_OS_etau3
           );
           selHistManager->svFit4tau_woMassConstraint_[kv.first]->fillHistograms(svFit4tauResults_woMassConstraint, kv.second);
           selHistManager->svFit4tau_wMassConstraint_[kv.first]->fillHistograms(svFit4tauResults_wMassConstraint, kv.second);
@@ -1700,7 +1817,17 @@ int main(int argc, char* argv[])
                 dihiggsMass,
                 HT,
                 STMET,
-                kv.second
+                kv.second,
+		antiE_tau1_OS_matched,
+		antiE_tau1_OS_unmatched,
+		antiE_tau2_OS_matched,
+		antiE_tau2_OS_unmatched,
+		antiE_tau3_OS_matched,
+		antiE_tau3_OS_unmatched,
+		m_OS_etau_closestToZ,
+		eta_OS_etau1,
+		eta_OS_etau2,
+		eta_OS_etau3
               );
               selHistManager->svFit4tau_woMassConstraint_in_decayModes_[kv.first][decayModeStr]->fillHistograms(svFit4tauResults_woMassConstraint, kv.second);
               selHistManager->svFit4tau_wMassConstraint_in_decayModes_[kv.first][decayModeStr]->fillHistograms(svFit4tauResults_wMassConstraint, kv.second);
@@ -1739,7 +1866,17 @@ int main(int argc, char* argv[])
             dihiggsMass,
             HT,
             STMET,
-            kv.second
+            kv.second,
+	    antiE_tau1_OS_matched,
+	    antiE_tau1_OS_unmatched,
+	    antiE_tau2_OS_matched,
+	    antiE_tau2_OS_unmatched,
+	    antiE_tau3_OS_matched,
+	    antiE_tau3_OS_unmatched,
+	    m_OS_etau_closestToZ,
+	    eta_OS_etau1,
+	    eta_OS_etau2,
+	    eta_OS_etau3
           );
           selHistManager->svFit4tau_woMassConstraint_in_categories_[kv.first][category]->fillHistograms(svFit4tauResults_woMassConstraint, kv.second);
           selHistManager->svFit4tau_wMassConstraint_in_categories_[kv.first][category]->fillHistograms(svFit4tauResults_wMassConstraint, kv.second);

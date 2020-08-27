@@ -27,7 +27,7 @@ public:
   fillHistograms(int numElectrons,
                  int numMuons,
                  int numHadTaus,
-                 int numJets,
+		 int numJets,
 		 int numJetsPtGt40,
                  int numBJets_loose,
                  int numBJets_medium,
@@ -35,7 +35,18 @@ public:
 		 double dihiggsMass,
 		 double HT,
 		 double STMET,
-                 double evtWeight);
+                 double evtWeight,
+		 double antiE_tau1_OS_matched,
+		 double antiE_tau1_OS_unmatched,
+		 double antiE_tau2_OS_matched,
+		 double antiE_tau2_OS_unmatched,
+		 double antiE_tau3_OS_matched,
+		 double antiE_tau3_OS_unmatched,
+		 double m_OS_etau_closestToZ,
+		 double eta_OS_etau1,
+		 double eta_OS_etau2,
+		 double eta_OS_etau3
+		 );
 
   const TH1 *
   getHistogram_EventCounter() const;
@@ -56,6 +67,17 @@ public:
   TH1 * histogram_STMET_;
   
   TH1 * histogram_EventCounter_;
+
+  TH1 * histogram_antiE_tau1_OS_matched_;
+  TH1 * histogram_antiE_tau1_OS_unmatched_;
+  TH1 * histogram_antiE_tau2_OS_matched_;
+  TH1 * histogram_antiE_tau2_OS_unmatched_;
+  TH1 * histogram_antiE_tau3_OS_matched_;
+  TH1 * histogram_antiE_tau3_OS_unmatched_;
+  TH1 * histogram_m_OS_etau_closestToZ_;
+  TH1 * histogram_eta_OS_etau1_;
+  TH1 * histogram_eta_OS_etau2_;
+  TH1 * histogram_eta_OS_etau3_;
 };
 
 #endif
