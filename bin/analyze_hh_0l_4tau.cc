@@ -27,6 +27,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/ObjectMultiplicity.h" // ObjectMultiplicity
 #include "tthAnalysis/HiggsToTauTau/interface/TrigObj.h" // TrigObj
 #include "tthAnalysis/HiggsToTauTau/interface/JetToTauFakeRateInterface.h" // JetToTauFakeRateInterface
+#include "tthAnalysis/HiggsToTauTau/interface/jetToTauFakeRateAuxFunctions.h" // getTrigMatchingOption
 #include "tthAnalysis/HiggsToTauTau/interface/RecoElectronReader.h" // RecoElectronReader
 #include "tthAnalysis/HiggsToTauTau/interface/RecoMuonReader.h" // RecoMuonReader
 #include "tthAnalysis/HiggsToTauTau/interface/RecoHadTauReader.h" // RecoHadTauReader
@@ -305,11 +306,30 @@ int main(int argc, char* argv[])
   else throw cms::Exception("analyze_hh_0l_4tau")
     << "Invalid Configuration parameter 'applyFakeRateWeights' = " << applyFakeRateWeights_string << " !!\n";
 
-  JetToTauFakeRateInterface* jetToTauFakeRateInterface = 0;
+  JetToTauFakeRateInterface* jetToTauFakeRateInterface_passesTrigger = nullptr;
+  JetToTauFakeRateInterface* jetToTauFakeRateInterface_failsTrigger  = nullptr;
+  // CV: ditau trigger uses medium isolation (tight charged isolation) 
+  //     for both tau legs in 2016 data-taking period (2017 and 2018 data-taking periods)
+  std::string trigMatching_passesTrigger, trigMatching_failsTrigger;
+  int filterBit_passesTrigger = 0;
+  if ( era == Era::k2016 )
+  {
+    trigMatching_passesTrigger = "passesTriggerMatchingMediumIso";
+    trigMatching_failsTrigger  = "failsTriggerMatchingMediumIso";
+    filterBit_passesTrigger = getTrigMatchingOption_2016(trigMatching_passesTrigger);
+  }
+  else if ( era == Era::k2017 || era == Era::k2018 )
+  {
+    trigMatching_passesTrigger = "passesTriggerMatchingTightChargedIso";
+    trigMatching_failsTrigger  = "failsTriggerMatchingTightChargedIso";
+    filterBit_passesTrigger = getTrigMatchingOption_2017and2018(trigMatching_passesTrigger);
+  }
+  else throw cmsException("analyze_hh_0l_4tau", __LINE__) << "Invalid era = " << static_cast<int>(era);
   if ( applyFakeRateWeights == kFR_4tau ) {
     edm::ParameterSet cfg_hadTauFakeRateWeight = cfg_analyze.getParameter<edm::ParameterSet>("hadTauFakeRateWeight");
     cfg_hadTauFakeRateWeight.addParameter<std::string>("hadTauSelection", hadTauSelection_part2);
-    jetToTauFakeRateInterface = new JetToTauFakeRateInterface(cfg_hadTauFakeRateWeight);
+    jetToTauFakeRateInterface_passesTrigger = new JetToTauFakeRateInterface(cfg_hadTauFakeRateWeight, trigMatching_passesTrigger);
+    jetToTauFakeRateInterface_failsTrigger  = new JetToTauFakeRateInterface(cfg_hadTauFakeRateWeight, trigMatching_failsTrigger);
   }
 
   bool fillGenEvtHistograms = cfg_analyze.getParameter<bool>("fillGenEvtHistograms");
@@ -1253,21 +1273,31 @@ int main(int argc, char* argv[])
       evtWeightRecorder.record_muToTauFakeRate(dataToMCcorrectionInterface);
     }
 
+    JetToTauFakeRateInterface* jetToTauFakeRateInterface_lead    = nullptr;
+    JetToTauFakeRateInterface* jetToTauFakeRateInterface_sublead = nullptr;
+    JetToTauFakeRateInterface* jetToTauFakeRateInterface_third   = nullptr;
+    JetToTauFakeRateInterface* jetToTauFakeRateInterface_fourth  = nullptr;
     if(applyFakeRateWeights == kFR_4tau)
     {
-      bool passesTight_hadTau_lead = isMatched(*selHadTau_lead, tightHadTausFull);
-      bool passesTight_hadTau_sublead = isMatched(*selHadTau_sublead, tightHadTausFull);
-      bool passesTight_hadTau_third = isMatched(*selHadTau_third, tightHadTausFull);
-      bool passesTight_hadTau_fourth = isMatched(*selHadTau_fourth, tightHadTausFull);
-
-      evtWeightRecorder.record_jetToTau_FR_lead(jetToTauFakeRateInterface, selHadTau_lead);
-      evtWeightRecorder.record_jetToTau_FR_sublead(jetToTauFakeRateInterface, selHadTau_sublead);
-      evtWeightRecorder.record_jetToTau_FR_third(jetToTauFakeRateInterface, selHadTau_third);
-      evtWeightRecorder.record_jetToTau_FR_fourth(jetToTauFakeRateInterface, selHadTau_fourth);
+      if ( hltFilter(*selHadTau_lead,    filterBit_passesTrigger, era) ) jetToTauFakeRateInterface_lead    = jetToTauFakeRateInterface_passesTrigger;
+      else                                                               jetToTauFakeRateInterface_lead    = jetToTauFakeRateInterface_failsTrigger;
+      if ( hltFilter(*selHadTau_sublead, filterBit_passesTrigger, era) ) jetToTauFakeRateInterface_sublead = jetToTauFakeRateInterface_passesTrigger;
+      else                                                               jetToTauFakeRateInterface_sublead = jetToTauFakeRateInterface_failsTrigger;
+      if ( hltFilter(*selHadTau_third,   filterBit_passesTrigger, era) ) jetToTauFakeRateInterface_third   = jetToTauFakeRateInterface_passesTrigger;
+      else                                                               jetToTauFakeRateInterface_third   = jetToTauFakeRateInterface_failsTrigger;
+      if ( hltFilter(*selHadTau_fourth,  filterBit_passesTrigger, era) ) jetToTauFakeRateInterface_fourth  = jetToTauFakeRateInterface_passesTrigger;
+      else                                                               jetToTauFakeRateInterface_fourth  = jetToTauFakeRateInterface_failsTrigger;
+      assert(jetToTauFakeRateInterface_lead && jetToTauFakeRateInterface_sublead && jetToTauFakeRateInterface_third && jetToTauFakeRateInterface_fourth);
+      evtWeightRecorder.record_jetToTau_FR_lead(jetToTauFakeRateInterface_lead, selHadTau_lead);
+      evtWeightRecorder.record_jetToTau_FR_sublead(jetToTauFakeRateInterface_sublead, selHadTau_sublead);
+      evtWeightRecorder.record_jetToTau_FR_third(jetToTauFakeRateInterface_third, selHadTau_third);
+      evtWeightRecorder.record_jetToTau_FR_fourth(jetToTauFakeRateInterface_fourth, selHadTau_fourth);
       if(!selectBDT){
-        evtWeightRecorder.compute_FR_4tau(
-          passesTight_hadTau_lead, passesTight_hadTau_sublead, passesTight_hadTau_third, passesTight_hadTau_fourth
-        );
+        bool passesTight_hadTau_lead    = isMatched(*selHadTau_lead, tightHadTausFull);
+        bool passesTight_hadTau_sublead = isMatched(*selHadTau_sublead, tightHadTausFull);
+        bool passesTight_hadTau_third   = isMatched(*selHadTau_third, tightHadTausFull);
+        bool passesTight_hadTau_fourth  = isMatched(*selHadTau_fourth, tightHadTausFull);
+        evtWeightRecorder.compute_FR_4tau(passesTight_hadTau_lead, passesTight_hadTau_sublead, passesTight_hadTau_third, passesTight_hadTau_fourth);
       }
     }
 
@@ -2103,7 +2133,8 @@ int main(int argc, char* argv[])
   delete dataToMCcorrectionInterface;
   delete dataToMCcorrectionInterface_hh_0l_4tau_trigger;
 
-  delete jetToTauFakeRateInterface;
+  delete jetToTauFakeRateInterface_passesTrigger;
+  delete jetToTauFakeRateInterface_failsTrigger;
 
   delete run_lumi_eventSelector;
 
