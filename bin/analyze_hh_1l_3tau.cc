@@ -819,8 +819,6 @@ int main(int argc, char* argv[])
           }
         }
       }
-
-
       
       vstring categories_evt = {
         "1e_3tau", "1mu_3tau"
@@ -1554,7 +1552,7 @@ int main(int argc, char* argv[])
       assert(jetToTauFakeRateInterface_lead && jetToTauFakeRateInterface_sublead && jetToTauFakeRateInterface_third);
       evtWeightRecorder.record_jetToTau_FR_lead(jetToTauFakeRateInterface_lead, selHadTau_lead);
       evtWeightRecorder.record_jetToTau_FR_sublead(jetToTauFakeRateInterface_sublead, selHadTau_sublead);
-      evtWeightRecorder.record_jetToTau_FR_sublead(jetToTauFakeRateInterface_third, selHadTau_third);
+      evtWeightRecorder.record_jetToTau_FR_third(jetToTauFakeRateInterface_third, selHadTau_third);
     }
     if(leptonFakeRateInterface)
     {
