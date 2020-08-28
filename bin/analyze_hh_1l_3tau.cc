@@ -800,6 +800,7 @@ int main(int argc, char* argv[])
           selHistManager->svFit4tau_wMassConstraint_in_categories_[evt_cat_str][category] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatchName,
             Form("%s/sel/svFit4tau_wMassConstraint", histogramDir_category.Data()), era_string, central_or_shift));
           selHistManager->svFit4tau_wMassConstraint_in_categories_[evt_cat_str][category]->bookHistograms(fs);
+        }
       }
 
       
