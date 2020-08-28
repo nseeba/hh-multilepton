@@ -12,6 +12,9 @@
 
 #include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h" // HistManagerBase
 
+#include "tthAnalysis/HiggsToTauTau/interface/RecoLepton.h"      // RecoLepton
+#include "tthAnalysis/HiggsToTauTau/interface/RecoHadTau.h"      // RecoHadTau
+
 class EvtHistManager_hh_1l_3tau
   : public HistManagerBase
 {
@@ -35,18 +38,16 @@ public:
 		 double dihiggsMass,
 		 double HT,
 		 double STMET,
-                 double evtWeight,
-		 double antiE_tau1_OS_matched,
-		 double antiE_tau1_OS_unmatched,
-		 double antiE_tau2_OS_matched,
-		 double antiE_tau2_OS_unmatched,
-		 double antiE_tau3_OS_matched,
-		 double antiE_tau3_OS_unmatched,
-		 double m_OS_etau_closestToZ,
-		 double eta_OS_etau1,
-		 double eta_OS_etau2,
-		 double eta_OS_etau3
-		 );
+                 const RecoLepton* selLepton,
+                 const RecoHadTau* selHadTau_lead,
+                 const RecoHadTau* selHadTau_sublead,
+                 const RecoHadTau* selHadTau_third,
+                 int numTightLeptons,    
+                 int numFakeableHadTaus_passingElecVeto,
+                 int numTightHadTaus,
+                 int numTightHadTaus_passingElecVeto,
+                 bool isMC,
+		 double evtWeight);
 
   const TH1 *
   getHistogram_EventCounter() const;
@@ -68,16 +69,31 @@ public:
   
   TH1 * histogram_EventCounter_;
 
-  TH1 * histogram_antiE_tau1_OS_matched_;
-  TH1 * histogram_antiE_tau1_OS_unmatched_;
-  TH1 * histogram_antiE_tau2_OS_matched_;
-  TH1 * histogram_antiE_tau2_OS_unmatched_;
-  TH1 * histogram_antiE_tau3_OS_matched_;
-  TH1 * histogram_antiE_tau3_OS_unmatched_;
-  TH1 * histogram_m_OS_etau_closestToZ_;
-  TH1 * histogram_eta_OS_etau1_;
-  TH1 * histogram_eta_OS_etau2_;
-  TH1 * histogram_eta_OS_etau3_;
+  // CV: plots specific to 1e+3tau category
+  TH1 * histogram_1e3tau_tau1_OS_antiE_OS_matched_;
+  TH1 * histogram_1e3tau_tau1_OS_antiE_OS_unmatched_;
+  TH1 * histogram_1e3tau_tau2_OS_antiE_OS_matched_;
+  TH1 * histogram_1e3tau_tau2_OS_antiE_OS_unmatched_;
+  TH1 * histogram_1e3tau_tau3_OS_antiE_OS_matched_;
+  TH1 * histogram_1e3tau_tau3_OS_antiE_OS_unmatched_;
+  TH1 * histogram_1e3tau_mass_etau_OS_closestToZ_;
+  TH1 * histogram_1e3tau_tau1_OS_eta_;
+  TH1 * histogram_1e3tau_tau2_OS_eta_;
+  TH1 * histogram_1e3tau_tau3_OS_eta_;
+  TH1 * histogram_1e3tau_numTightLeptons_;
+  TH1 * histogram_1e3tau_numFakeableTaus_passingElecVeto_;
+  TH1 * histogram_1e3tau_numTightTaus_;
+  TH1 * histogram_1e3tau_numTightTaus_passingElecVeto_;
+  TH1 * histogram_1e3tau_numTightLeptons_and_Taus_;
+  TH1 * histogram_1e3tau_evtWeight_;
+
+  // CV: plots specific to 1mu+3tau category
+  TH1 * histogram_1mu3tau_numTightLeptons_;
+  TH1 * histogram_1mu3tau_numFakeableTaus_passingElecVeto_;
+  TH1 * histogram_1mu3tau_numTightTaus_;
+  TH1 * histogram_1mu3tau_numTightTaus_passingElecVeto_;
+  TH1 * histogram_1mu3tau_numTightLeptons_and_Taus_;
+  TH1 * histogram_1mu3tau_evtWeight_;
 };
 
 #endif
