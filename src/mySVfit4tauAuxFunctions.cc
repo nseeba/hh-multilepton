@@ -6,27 +6,36 @@
 
 #include "TauAnalysis/ClassicSVfit4tau/interface/ClassicSVfit4tau.h" // ClassicSVfit4tau
 #include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h" // classic_svFit::MeasuredTauLepton
+#include "TauAnalysis/ClassicSVfit/interface/svFitAuxFunctions.h" // classic_svFit::electronMass, classic_svFit::muonMass, classic_svFit::chargedPionMass
 
 #include <TMatrixD.h> // TMatrixD
 
 #include <algorithm> // std::sort()
+#include <assert.h>  // assert()
 
 classic_svFit::MeasuredTauLepton
 makeMeasuredTauLepton(const Particle::LorentzVector & measuredTauP4,
                       int measuredTauType,
                       int measuredHadTauDecayMode)
 {
-  if(measuredTauType == classic_svFit::MeasuredTauLepton::kTauToElecDecay ||
-     measuredTauType == classic_svFit::MeasuredTauLepton::kTauToMuDecay    )
+  if ( measuredTauType == classic_svFit::MeasuredTauLepton::kTauToElecDecay ||
+       measuredTauType == classic_svFit::MeasuredTauLepton::kTauToMuDecay   )
   {
+    double measuredTau_mass = 0.;
+    if      ( measuredTauType == classic_svFit::MeasuredTauLepton::kTauToElecDecay ) measuredTau_mass = classic_svFit::electronMass;
+    else if ( measuredTauType == classic_svFit::MeasuredTauLepton::kTauToMuDecay   ) measuredTau_mass = classic_svFit::muonMass;
+    else assert(0);
     return classic_svFit::MeasuredTauLepton(
-      measuredTauType, measuredTauP4.pt(), measuredTauP4.eta(), measuredTauP4.phi(), measuredTauP4.mass()
+      measuredTauType, measuredTauP4.pt(), measuredTauP4.eta(), measuredTauP4.phi(), measuredTau_mass
     );
   }
   else
   {
+    double measuredTau_mass = measuredTauP4.mass();
+    if ( measuredTau_mass < classic_svFit::chargedPionMass ) measuredTau_mass = classic_svFit::chargedPionMass;
+    if ( measuredTau_mass > 1.5                            ) measuredTau_mass = 1.5; // CV: mass of visible tau decay products rarely exceed 1.5 GeV
     return classic_svFit::MeasuredTauLepton(
-      measuredTauType, measuredTauP4.pt(), measuredTauP4.eta(), measuredTauP4.phi(), measuredTauP4.mass(), measuredHadTauDecayMode
+      measuredTauType, measuredTauP4.pt(), measuredTauP4.eta(), measuredTauP4.phi(), measuredTau_mass, measuredHadTauDecayMode
     );
   }
 }
@@ -168,7 +177,7 @@ compSVfit4tau(const ChargedParticle & measuredTau1_,
           if ( !(measuredTau1->pt() > measuredTau3->pt()) ) continue;
 
           const Particle::LorentzVector measuredTau1P4 = measuredTau1->p4();
-          const int  measuredTau1Type = getMeasuredTauLeptonType(*measuredTau1);
+          const int measuredTau1Type = getMeasuredTauLeptonType(*measuredTau1);
           const int measuredHadTau1DecayMode = getHadTauDecayMode(*measuredTau1);
           const Particle::LorentzVector measuredTau2P4 = measuredTau2->p4();
           const int measuredTau2Type = getMeasuredTauLeptonType(*measuredTau2);
