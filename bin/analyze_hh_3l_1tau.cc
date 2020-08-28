@@ -1721,7 +1721,6 @@ int main(int argc, char* argv[])
     cutFlowTable.update(">= 1 sel taus", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms(">= 1 sel taus", evtWeightRecorder.get(central_or_shift_main));
 
-
     const RecoHadTau* selHadTau = selHadTaus[0];
     const hadTauGenMatchEntry& selHadTau_genMatch = getHadTauGenMatch(hadTauGenMatch_definitions, selHadTau);
 
@@ -1737,7 +1736,6 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update("tau crack veto", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("tau crack veto", evtWeightRecorder.get(central_or_shift_main));
-
 
     // debug data_fakes
     //double minTauPt = 20;
