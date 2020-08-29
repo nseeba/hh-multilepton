@@ -17,17 +17,29 @@ EvtHistManager_hh_1l_3tau::EvtHistManager_hh_1l_3tau(const edm::ParameterSet & c
   central_or_shiftOptions_["dihiggsMass"] = { "central" };
   central_or_shiftOptions_["HT"] = { "central" };
   central_or_shiftOptions_["STMET"] = { "central" };
+  central_or_shiftOptions_["1e3tau_tau1_OS_eta"] = { "central" };
+  central_or_shiftOptions_["1e3tau_tau1_OS_antiE_matched"] = { "central" };
+  central_or_shiftOptions_["1e3tau_tau1_OS_antiE_unmatched"] = { "central" };
+  central_or_shiftOptions_["1e3tau_tau2_OS_eta"] = { "central" };
+  central_or_shiftOptions_["1e3tau_tau2_OS_antiE_matched"] = { "central" };
+  central_or_shiftOptions_["1e3tau_tau2_OS_antiE_unmatched"] = { "central" };
+  central_or_shiftOptions_["1e3tau_tau3_OS_eta"] = { "central" };
+  central_or_shiftOptions_["1e3tau_tau3_OS_antiE_matched"] = { "central" };
+  central_or_shiftOptions_["1e3tau_tau3_OS_antiE_unmatched"] = { "central" };
+  central_or_shiftOptions_["1e3tau_mass_etau_OS_closestToZ"] = { "central" };
+  central_or_shiftOptions_["1e3tau_numTightLeptons"] = { "central" };
+  central_or_shiftOptions_["1e3tau_numFakeableTaus_passingElecVeto"] = { "central" };
+  central_or_shiftOptions_["1e3tau_numTightTaus"] = { "central" };
+  central_or_shiftOptions_["1e3tau_numTightTaus_passingElecVeto"] = { "central" };
+  central_or_shiftOptions_["1e3tau_numTightLeptons_and_Taus"] = { "central" };
+  central_or_shiftOptions_["1e3tau_evtWeight"] = { "central" };
+  central_or_shiftOptions_["1mu3tau_numTightLeptons"] = { "central" };
+  central_or_shiftOptions_["1mu3tau_numFakeableTaus_passingElecVeto"] = { "central" };
+  central_or_shiftOptions_["1mu3tau_numTightTaus"] = { "central" };
+  central_or_shiftOptions_["1mu3tau_numTightTaus_passingElecVeto"] = { "central" };
+  central_or_shiftOptions_["1mu3tau_numTightLeptons_and_Taus"] = { "central" };
+  central_or_shiftOptions_["1mu3tau_evtWeight"] = { "central" };
   central_or_shiftOptions_["EventCounter"] = { "*" };
-  central_or_shiftOptions_["antiE_tau1_OS_matched"] = { "central" };
-  central_or_shiftOptions_["antiE_tau1_OS_unmatched"] = { "central" };
-  central_or_shiftOptions_["antiE_tau2_OS_matched"] = { "central" };
-  central_or_shiftOptions_["antiE_tau2_OS_unmatched"] = { "central" };
-  central_or_shiftOptions_["antiE_tau3_OS_matched"] = { "central" };
-  central_or_shiftOptions_["antiE_tau3_OS_unmatched"] = { "central" };
-  central_or_shiftOptions_["m_OS_etau_closestToZ"] = { "central" };
-  central_or_shiftOptions_["eta_OS_etau1"] = { "central" };
-  central_or_shiftOptions_["eta_OS_etau2"] = { "central" };
-  central_or_shiftOptions_["eta_OS_etau3"] = { "central" };
 }
 
 const TH1 *
