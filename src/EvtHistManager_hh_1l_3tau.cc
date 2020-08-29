@@ -69,7 +69,7 @@ EvtHistManager_hh_1l_3tau::bookHistograms(TFileDirectory & dir)
   histogram_1e3tau_tau1_OS_eta_                      = book1D(dir, "1e3tau_tau1_OS_eta",                      "1e3tau_tau1_OS_eta",                     46, -2.3,  +2.3);
   histogram_1e3tau_tau1_OS_antiE_OS_matched_         = book1D(dir, "1e3tau_tau1_OS_antiE_matched",            "1e3tau_tau1_OS_antiE_matched",           11, -2.5,   8.5);
   histogram_1e3tau_tau1_OS_antiE_OS_unmatched_       = book1D(dir, "1e3tau_tau1_OS_antiE_unmatched",          "1e3tau_tau1_OS_antiE_unmatched",         11, -2.5,   8.5);
-  histogram_1e3tau_tau1_OS_eta_                      = book1D(dir, "1e3tau_tau2_OS_eta",                      "1e3tau_tau2_OS_eta",                     46, -2.3,  +2.3);
+  histogram_1e3tau_tau2_OS_eta_                      = book1D(dir, "1e3tau_tau2_OS_eta",                      "1e3tau_tau2_OS_eta",                     46, -2.3,  +2.3);
   histogram_1e3tau_tau2_OS_antiE_OS_matched_         = book1D(dir, "1e3tau_tau2_OS_antiE_matched",            "1e3tau_tau2_OS_antiE_matched",           11, -2.5,   8.5);
   histogram_1e3tau_tau2_OS_antiE_OS_unmatched_       = book1D(dir, "1e3tau_tau2_OS_antiE_unmatched",          "1e3tau_tau2_OS_antiE_unmatched",         11, -2.5,   8.5); 
   histogram_1e3tau_tau3_OS_eta_                      = book1D(dir, "1e3tau_tau3_OS_eta",                      "1e3tau_tau3_OS_eta",                     46, -2.3,  +2.3);
