@@ -228,9 +228,9 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
 
   //---------------------------------------------------------------------------   
   //SB: W+jets added to Other
-  assert(histogramOther && histogramOther_density && histogramW && histogramW_density); 
-  histogramOther->Add(histogramW);                                                      
-  histogramOther_density->Add(histogramW_density);                                      
+  // assert(histogramOther && histogramOther_density && histogramW && histogramW_density); 
+  //  histogramOther->Add(histogramW);                                                      
+  // histogramOther_density->Add(histogramW_density);                                      
   //---------------------------------------------------------------------------   
 
   TCanvas* canvas = new TCanvas("canvas", "", canvasSizeX, canvasSizeY);

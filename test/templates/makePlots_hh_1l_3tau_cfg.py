@@ -39,4 +39,56 @@ process.makePlots.distributions.extend([
         xAxisTitle = cms.string('third #tau_{h} #eta'),
         yAxisTitle = cms.string('dN/d#eta')
     ),
+    # CV: additional plots specific to 1e+3tau category
+    cms.PSet(
+        histogramName = cms.string("sel/evt/$PROCESS/1e3tau_numTightLeptons"),
+        xAxisTitle = cms.string("Multiplicity of tight leptons"),
+        yAxisTitle = cms.string("Events")
+    ),
+    cms.PSet(
+        histogramName = cms.string("sel/evt/$PROCESS/1e3tau_numFakeableTaus_passingElecVeto"),
+        xAxisTitle = cms.string("Multiplicity of fakeable taus passing anti-e veto"),
+        yAxisTitle = cms.string("Events")
+    ),
+    cms.PSet(
+        histogramName = cms.string("sel/evt/$PROCESS/1e3tau_numTightTaus"),
+        xAxisTitle = cms.string("Multiplicity of tight taus"),
+        yAxisTitle = cms.string("Events")
+    ),
+    cms.PSet(
+        histogramName = cms.string("sel/evt/$PROCESS/1e3tau_numTightTaus_passingElecVeto"),
+        xAxisTitle = cms.string("Multiplicity of tight taus passing anti-e veto"),
+        yAxisTitle = cms.string("Events")
+    ),
+    cms.PSet(
+        histogramName = cms.string("sel/evt/$PROCESS/1e3tau_numTightLeptons_and_Taus"),
+        xAxisTitle = cms.string("Multiplicity of tight leptons + taus"),
+        yAxisTitle = cms.string("Events")
+    ),
+    # CV: additional plots specific to 1mu+3tau category
+    cms.PSet(
+        histogramName = cms.string("sel/evt/$PROCESS/1mu3tau_numTightLeptons"),
+        xAxisTitle = cms.string("Multiplicity of tight leptons"),
+        yAxisTitle = cms.string("Events")
+    ),
+    cms.PSet(
+        histogramName = cms.string("sel/evt/$PROCESS/1mu3tau_numFakeableTaus_passingElecVeto"),
+        xAxisTitle = cms.string("Multiplicity of fakeable taus passing anti-e veto"),
+        yAxisTitle = cms.string("Events")
+    ),
+    cms.PSet(
+        histogramName = cms.string("sel/evt/$PROCESS/1mu3tau_numTightTaus"),
+        xAxisTitle = cms.string("Multiplicity of tight taus"),
+        yAxisTitle = cms.string("Events")
+    ),
+    cms.PSet(
+        histogramName = cms.string("sel/evt/$PROCESS/1mu3tau_numTightTaus_passingElecVeto"),
+        xAxisTitle = cms.string("Multiplicity of tight taus passing anti-e veto"),
+        yAxisTitle = cms.string("Events")
+    ),
+    cms.PSet(
+        histogramName = cms.string("sel/evt/$PROCESS/1mu3tau_numTightLeptons_and_Taus"),
+        xAxisTitle = cms.string("Multiplicity of tight leptons + taus"),
+        yAxisTitle = cms.string("Events")
+    )
 ])

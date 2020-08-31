@@ -28,6 +28,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/TrigObj.h" // TrigObj
 #include "tthAnalysis/HiggsToTauTau/interface/LeptonFakeRateInterface.h" // LeptonFakeRateInterface
 #include "tthAnalysis/HiggsToTauTau/interface/JetToTauFakeRateInterface.h" // JetToTauFakeRateInterface
+#include "tthAnalysis/HiggsToTauTau/interface/jetToTauFakeRateAuxFunctions.h" // getTrigMatchingOption
 #include "tthAnalysis/HiggsToTauTau/interface/RecoElectronReader.h" // RecoElectronReader
 #include "tthAnalysis/HiggsToTauTau/interface/RecoMuonReader.h" // RecoMuonReader
 #include "tthAnalysis/HiggsToTauTau/interface/RecoHadTauReader.h" // RecoHadTauReader
@@ -54,6 +55,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/RecoMuonCollectionSelectorTight.h" // RecoMuonCollectionSelectorTight
 #include "tthAnalysis/HiggsToTauTau/interface/RecoHadTauCollectionSelectorFakeable.h" // RecoHadTauCollectionSelectorFakeable
 #include "tthAnalysis/HiggsToTauTau/interface/RecoHadTauCollectionSelectorTight.h" // RecoHadTauCollectionSelectorTight
+#include "tthAnalysis/HiggsToTauTau/interface/RecoHadTauCollectionSelectorECalCrack.h" // RecoHadTauCollectionSelectorECalCrack
 #include "tthAnalysis/HiggsToTauTau/interface/RecoJetCollectionSelector.h" // RecoJetCollectionSelector
 #include "tthAnalysis/HiggsToTauTau/interface/RecoJetCollectionSelectorBtag.h" // RecoJetCollectionSelectorBtagLoose, RecoJetCollectionSelectorBtagMedium
 #include "tthAnalysis/HiggsToTauTau/interface/RunLumiEventSelector.h" // RunLumiEventSelector
@@ -97,6 +99,8 @@
 #include "hhAnalysis/multilepton/interface/mySVfit4tauAuxFunctions.h" // getMeasuredTauLeptonType, getHadTauDecayMode
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h" // EventInfo
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfoReader.h" // EventInfoReader
+#include "tthAnalysis/HiggsToTauTau/interface/RecoVertex.h" // RecoVertex
+#include "tthAnalysis/HiggsToTauTau/interface/RecoVertexReader.h" // RecoVertexReader
 #include "hhAnalysis/multilepton/interface/EvtWeightRecorderHH.h" // EvtWeightRecorderHH
 
 #include "TauAnalysis/ClassicSVfit4tau/interface/ClassicSVfit4tau.h" // ClassicSVfit4tau
@@ -118,9 +122,39 @@
 #include <TMath.h>
 #include <Python.h>
 
+/*
+edm::ParameterSet
+makeHistManager_cfg(const std::string & process,
+                    const std::string & category,
+                    const std::string & era,
+                    const std::string & central_or_shift,
+		    const std::vector<double> & gen_mHH,
+                    int idx = -1)
+{
+  edm::ParameterSet cfg = makeHistManager_cfg(process, category, era, central_or_shift, idx);
+  cfg.addParameter<std::vector<double>>("gen_mHH", gen_mHH);
+  return cfg;
+}
+
+edm::ParameterSet
+makeHistManager_cfg(const std::string & process,
+                    const std::string & category,
+                    const std::string & era,
+                    const std::string & central_or_shift,
+		    const std::vector<double> & gen_mHH,
+                    const std::string & option,
+                    int idx = -1)
+{
+  edm::ParameterSet cfg = makeHistManager_cfg(process, category, era, central_or_shift, gen_mHH, idx);
+  cfg.addParameter<std::string>("option", option);
+  return cfg;
+}
+*/
+
 typedef math::PtEtaPhiMLorentzVector LV;
 typedef std::vector<std::string> vstring;
 typedef std::vector<double> vdouble;
+
 
 enum { k1e, k1mu };
 enum { kFR_disabled, kFR_4L, kFR_3tau };
@@ -344,11 +378,53 @@ int main(int argc, char* argv[])
     leptonFakeRateInterface = new LeptonFakeRateInterface(cfg_leptonFakeRateWeight);
   }
 
-  JetToTauFakeRateInterface* jetToTauFakeRateInterface = 0;
+  JetToTauFakeRateInterface* jetToTauFakeRateInterface_withoutTrigger       = nullptr;
+  JetToTauFakeRateInterface* jetToTauFakeRateInterface_1l1tau_passesTrigger = nullptr;
+  JetToTauFakeRateInterface* jetToTauFakeRateInterface_1l1tau_failsTrigger  = nullptr;
+  JetToTauFakeRateInterface* jetToTauFakeRateInterface_2tau_passesTrigger   = nullptr;
+  JetToTauFakeRateInterface* jetToTauFakeRateInterface_2tau_failsTrigger    = nullptr;
+  // CV: e+tau and mu+tau cross-triggers use loose isolation (loose charged isolation) 
+  //     for tau leg in 2016 data-taking period (2017 and 2018 data-taking periods)
+  std::string trigMatching_1l1tau_passesTrigger, trigMatching_1l1tau_failsTrigger;
+  int filterBit_1l1tau_passesTrigger = 0;
+  if ( era == Era::k2016 )
+  {
+    trigMatching_1l1tau_passesTrigger = "passesTriggerMatchingLooseIso";
+    trigMatching_1l1tau_failsTrigger  = "failsTriggerMatchingLooseIso";
+    filterBit_1l1tau_passesTrigger = getTrigMatchingOption_2016(trigMatching_1l1tau_passesTrigger);
+  }
+  else if ( era == Era::k2017 || era == Era::k2018 )
+  {
+    trigMatching_1l1tau_passesTrigger = "passesTriggerMatchingLooseChargedIso";
+    trigMatching_1l1tau_failsTrigger  = "failsTriggerMatchingLooseChargedIso";
+    filterBit_1l1tau_passesTrigger = getTrigMatchingOption_2017and2018(trigMatching_1l1tau_passesTrigger);
+  }
+  else throw cmsException("analyze_hh_1l_3tau", __LINE__) << "Invalid era = " << static_cast<int>(era);
+  // CV: ditau trigger uses medium isolation (tight charged isolation) 
+  //     for both tau legs in 2016 data-taking period (2017 and 2018 data-taking periods)
+  std::string trigMatching_2tau_passesTrigger, trigMatching_2tau_failsTrigger;
+  int filterBit_2tau_passesTrigger = 0;
+  if ( era == Era::k2016 )
+  {
+    trigMatching_2tau_passesTrigger = "passesTriggerMatchingMediumIso";
+    trigMatching_2tau_failsTrigger  = "failsTriggerMatchingMediumIso";
+    filterBit_2tau_passesTrigger = getTrigMatchingOption_2016(trigMatching_2tau_passesTrigger);
+  }
+  else if ( era == Era::k2017 || era == Era::k2018 )
+  {
+    trigMatching_2tau_passesTrigger = "passesTriggerMatchingTightChargedIso";
+    trigMatching_2tau_failsTrigger  = "failsTriggerMatchingTightChargedIso";
+    filterBit_2tau_passesTrigger = getTrigMatchingOption_2017and2018(trigMatching_2tau_passesTrigger);
+  }
+  else throw cmsException("analyze_hh_1l_3tau", __LINE__) << "Invalid era = " << static_cast<int>(era);
   if ( applyFakeRateWeights == kFR_4L || applyFakeRateWeights == kFR_3tau ) {
     edm::ParameterSet cfg_hadTauFakeRateWeight = cfg_analyze.getParameter<edm::ParameterSet>("hadTauFakeRateWeight");
     cfg_hadTauFakeRateWeight.addParameter<std::string>("hadTauSelection", hadTauSelection_part2);
-    jetToTauFakeRateInterface = new JetToTauFakeRateInterface(cfg_hadTauFakeRateWeight);
+    jetToTauFakeRateInterface_withoutTrigger       = new JetToTauFakeRateInterface(cfg_hadTauFakeRateWeight, "withoutTriggerMatching");
+    jetToTauFakeRateInterface_1l1tau_passesTrigger = new JetToTauFakeRateInterface(cfg_hadTauFakeRateWeight, trigMatching_1l1tau_passesTrigger);
+    jetToTauFakeRateInterface_1l1tau_failsTrigger  = new JetToTauFakeRateInterface(cfg_hadTauFakeRateWeight, trigMatching_1l1tau_failsTrigger);
+    jetToTauFakeRateInterface_2tau_passesTrigger   = new JetToTauFakeRateInterface(cfg_hadTauFakeRateWeight, trigMatching_2tau_passesTrigger);
+    jetToTauFakeRateInterface_2tau_failsTrigger    = new JetToTauFakeRateInterface(cfg_hadTauFakeRateWeight, trigMatching_2tau_failsTrigger);
   }
 
   bool fillGenEvtHistograms = cfg_analyze.getParameter<bool>("fillGenEvtHistograms");
@@ -359,6 +435,7 @@ int main(int argc, char* argv[])
   std::string branchName_hadTaus = cfg_analyze.getParameter<std::string>("branchName_hadTaus");
   std::string branchName_jets = cfg_analyze.getParameter<std::string>("branchName_jets");
   std::string branchName_met = cfg_analyze.getParameter<std::string>("branchName_met");
+  std::string branchName_vertex = cfg_analyze.getParameter<std::string>("branchName_vertex");
   std::string branchName_trigObjs = cfg_analyze.getParameter<std::string>("branchName_trigObjs");
 
   std::string branchName_genLeptons = cfg_analyze.getParameter<std::string>("branchName_genLeptons");
@@ -445,6 +522,9 @@ int main(int argc, char* argv[])
   }
   inputTree -> registerReader(&eventInfoReader);
 
+  RecoVertexReader vertexReader(branchName_vertex);
+  inputTree -> registerReader(&vertexReader);
+
   ObjectMultiplicity objectMultiplicity;
   ObjectMultiplicityReader objectMultiplicityReader(&objectMultiplicity);
   if(useObjectMultiplicity)
@@ -510,6 +590,11 @@ int main(int argc, char* argv[])
   tightHadTauSelector.set(hadTauSelection_part2);
   tightHadTauSelector.set_min_antiElectron(hadTauSelection_antiElectron);
   tightHadTauSelector.set_min_antiMuon(hadTauSelection_antiMuon);
+  RecoHadTauCollectionSelectorFakeable antiElectronHadTauSelector(era, -1, isDEBUG);
+  antiElectronHadTauSelector.set_if_looser(hadTauSelection_part2);
+  antiElectronHadTauSelector.set_min_antiElectron(2);
+  antiElectronHadTauSelector.set_min_antiMuon(hadTauSelection_antiMuon);
+  RecoHadTauCollectionSelectorECalCrack crackVetoHadTauSelector(era, -1, isDEBUG);
   switch(hadTauSelection)
   {
     case kFakeable: tauLevel = std::min(tauLevel, get_tau_id_wp_int(fakeableHadTauSelector.getSelector().get())); break;
@@ -616,6 +701,7 @@ int main(int argc, char* argv[])
     std::map<std::string, std::map<std::string, EvtHistManager_hh_1l_3tau*>> evt_in_categories_;
     std::map<std::string, std::map<std::string, SVfit4tauHistManager_MarkovChain*>> svFit4tau_woMassConstraint_in_categories_;
     std::map<std::string, std::map<std::string, SVfit4tauHistManager_MarkovChain*>> svFit4tau_wMassConstraint_in_categories_;
+    
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
@@ -624,6 +710,7 @@ int main(int argc, char* argv[])
   std::map<std::string, GenEvtHistManager*> genEvtHistManager_afterCuts;
   std::map<std::string, LHEInfoHistManager*> lheInfoHistManager;
   std::map<std::string, std::map<int, selHistManagerType*>> selHistManagers;
+
   for(const std::string & central_or_shift: central_or_shifts_local)
   {
     const bool skipBooking = central_or_shift != central_or_shift_main;
@@ -732,7 +819,7 @@ int main(int argc, char* argv[])
           }
         }
       }
-
+      
       vstring categories_evt = {
         "1e_3tau", "1mu_3tau"
       };
@@ -741,9 +828,10 @@ int main(int argc, char* argv[])
         TString histogramDir_category = histogramDir.data();
         histogramDir_category.ReplaceAll("1l_3tau", category.data());
 
-        for(const std::string & evt_cat_str: evt_cat_strs)
+	for(const std::string & evt_cat_str: evt_cat_strs)
         {
-          if(skipBooking && evt_cat_str != default_cat_str)
+
+	  if(skipBooking && evt_cat_str != default_cat_str)
           {
             continue;
           }
@@ -755,6 +843,7 @@ int main(int argc, char* argv[])
           const std::string process_and_genMatchName = boost::replace_all_copy(
             process_and_genMatch, process_string, process_string_new
           );
+	  
           selHistManager->evt_in_categories_[evt_cat_str][category] = new EvtHistManager_hh_1l_3tau(makeHistManager_cfg(process_and_genMatchName,
             Form("%s/sel/evt", histogramDir_category.Data()), era_string, central_or_shift));
           selHistManager->evt_in_categories_[evt_cat_str][category]->bookHistograms(fs);
@@ -766,6 +855,8 @@ int main(int argc, char* argv[])
           selHistManager->svFit4tau_wMassConstraint_in_categories_[evt_cat_str][category]->bookHistograms(fs);
         }
       }
+
+      
       if(! skipBooking)
       {
         edm::ParameterSet cfg_EvtYieldHistManager_sel = makeHistManager_cfg(process_and_genMatch,
@@ -1429,31 +1520,61 @@ int main(int argc, char* argv[])
       evtWeightRecorder.record_muToTauFakeRate(dataToMCcorrectionInterface);
     }
 
-    evtWeightRecorder.record_jetToLepton_FR_lead(leptonFakeRateInterface, selLepton);
-    evtWeightRecorder.record_jetToTau_FR_lead(jetToTauFakeRateInterface, selHadTau_lead);
-    evtWeightRecorder.record_jetToTau_FR_sublead(jetToTauFakeRateInterface, selHadTau_sublead);
-    evtWeightRecorder.record_jetToTau_FR_third(jetToTauFakeRateInterface, selHadTau_third);
-    
+    JetToTauFakeRateInterface* jetToTauFakeRateInterface_lead    = nullptr;
+    JetToTauFakeRateInterface* jetToTauFakeRateInterface_sublead = nullptr;
+    JetToTauFakeRateInterface* jetToTauFakeRateInterface_third   = nullptr;
+    if ( applyFakeRateWeights == kFR_4L || applyFakeRateWeights == kFR_3tau )
+    {
+      if ( selTrigger_1e || selTrigger_1mu )
+      {
+        jetToTauFakeRateInterface_lead    = jetToTauFakeRateInterface_withoutTrigger;
+        jetToTauFakeRateInterface_sublead = jetToTauFakeRateInterface_withoutTrigger;
+        jetToTauFakeRateInterface_third   = jetToTauFakeRateInterface_withoutTrigger;
+      }
+      else if ( selTrigger_1e1tau || selTrigger_1mu1tau )
+      {
+        if ( hltFilter(*selHadTau_lead,    filterBit_1l1tau_passesTrigger, era) ) jetToTauFakeRateInterface_lead    = jetToTauFakeRateInterface_1l1tau_passesTrigger;
+        else                                                                      jetToTauFakeRateInterface_lead    = jetToTauFakeRateInterface_1l1tau_failsTrigger;
+        if ( hltFilter(*selHadTau_sublead, filterBit_1l1tau_passesTrigger, era) ) jetToTauFakeRateInterface_sublead = jetToTauFakeRateInterface_1l1tau_passesTrigger;
+        else                                                                      jetToTauFakeRateInterface_sublead = jetToTauFakeRateInterface_1l1tau_failsTrigger;
+        if ( hltFilter(*selHadTau_third,   filterBit_1l1tau_passesTrigger, era) ) jetToTauFakeRateInterface_third   = jetToTauFakeRateInterface_1l1tau_passesTrigger;
+        else                                                                      jetToTauFakeRateInterface_third   = jetToTauFakeRateInterface_1l1tau_failsTrigger;
+      }
+      else
+      {
+        if ( hltFilter(*selHadTau_lead,    filterBit_2tau_passesTrigger, era)   ) jetToTauFakeRateInterface_lead    = jetToTauFakeRateInterface_2tau_passesTrigger;
+        else                                                                      jetToTauFakeRateInterface_lead    = jetToTauFakeRateInterface_2tau_failsTrigger;
+        if ( hltFilter(*selHadTau_sublead, filterBit_2tau_passesTrigger, era)   ) jetToTauFakeRateInterface_sublead = jetToTauFakeRateInterface_2tau_passesTrigger;
+        else                                                                      jetToTauFakeRateInterface_sublead = jetToTauFakeRateInterface_2tau_failsTrigger;
+        if ( hltFilter(*selHadTau_third,   filterBit_2tau_passesTrigger, era)   ) jetToTauFakeRateInterface_third   = jetToTauFakeRateInterface_2tau_passesTrigger;
+        else                                                                      jetToTauFakeRateInterface_third   = jetToTauFakeRateInterface_2tau_failsTrigger;
+      }
+      assert(jetToTauFakeRateInterface_lead && jetToTauFakeRateInterface_sublead && jetToTauFakeRateInterface_third);
+      evtWeightRecorder.record_jetToTau_FR_lead(jetToTauFakeRateInterface_lead, selHadTau_lead);
+      evtWeightRecorder.record_jetToTau_FR_sublead(jetToTauFakeRateInterface_sublead, selHadTau_sublead);
+      evtWeightRecorder.record_jetToTau_FR_third(jetToTauFakeRateInterface_third, selHadTau_third);
+    }
+    if(leptonFakeRateInterface)
+    {
+      evtWeightRecorder.record_jetToLepton_FR_lead(leptonFakeRateInterface, selLepton);
+    }
+
     if(!selectBDT){    
       if(applyFakeRateWeights == kFR_4L)
-	{
-	  bool passesTight_lepton = isMatched(*selLepton, tightElectrons) || isMatched(*selLepton, tightMuons);
-	  bool passesTight_hadTau_lead = isMatched(*selHadTau_lead, tightHadTausFull);
-	  bool passesTight_hadTau_sublead = isMatched(*selHadTau_sublead, tightHadTausFull);
-	  bool passesTight_hadTau_third = isMatched(*selHadTau_third, tightHadTausFull);
-	  evtWeightRecorder.compute_FR_1l3tau(
-					      passesTight_lepton, passesTight_hadTau_lead, passesTight_hadTau_sublead, passesTight_hadTau_third
-					      );
-	}
+      {
+        bool passesTight_lepton = isMatched(*selLepton, tightElectrons) || isMatched(*selLepton, tightMuons);
+	bool passesTight_hadTau_lead = isMatched(*selHadTau_lead, tightHadTausFull);
+	bool passesTight_hadTau_sublead = isMatched(*selHadTau_sublead, tightHadTausFull);
+	bool passesTight_hadTau_third = isMatched(*selHadTau_third, tightHadTausFull);
+	evtWeightRecorder.compute_FR_1l3tau(passesTight_lepton, passesTight_hadTau_lead, passesTight_hadTau_sublead, passesTight_hadTau_third);
+      }
       else if(applyFakeRateWeights == kFR_3tau)
-	{
-	  bool passesTight_hadTau_lead = isMatched(*selHadTau_lead, tightHadTausFull);
-	  bool passesTight_hadTau_sublead = isMatched(*selHadTau_sublead, tightHadTausFull);
-	  bool passesTight_hadTau_third = isMatched(*selHadTau_third, tightHadTausFull);
-	  evtWeightRecorder.compute_FR_3tau(
-					    passesTight_hadTau_lead, passesTight_hadTau_sublead, passesTight_hadTau_third
-					    );
-	}
+      {
+	bool passesTight_hadTau_lead = isMatched(*selHadTau_lead, tightHadTausFull);
+	bool passesTight_hadTau_sublead = isMatched(*selHadTau_sublead, tightHadTausFull);
+	bool passesTight_hadTau_third = isMatched(*selHadTau_third, tightHadTausFull);
+	evtWeightRecorder.compute_FR_3tau(passesTight_hadTau_lead, passesTight_hadTau_sublead, passesTight_hadTau_third);
+      }
     }
 
     // CV: apply data/MC ratio for jet->tau fake-rates in case data-driven "fake" background estimation is applied to leptons only
@@ -1461,17 +1582,17 @@ int main(int argc, char* argv[])
     {
       if(! (selHadTau_lead->genHadTau() || selHadTau_lead->genLepton()))
       {
-        evtWeightRecorder.record_jetToTau_SF_lead(jetToTauFakeRateInterface, selHadTau_lead);
+        evtWeightRecorder.record_jetToTau_SF_lead(jetToTauFakeRateInterface_lead, selHadTau_lead);
       }
       
       if(! (selHadTau_sublead->genHadTau() || selHadTau_sublead->genLepton()))
       {
-        evtWeightRecorder.record_jetToTau_SF_sublead(jetToTauFakeRateInterface, selHadTau_sublead);
+        evtWeightRecorder.record_jetToTau_SF_sublead(jetToTauFakeRateInterface_sublead, selHadTau_sublead);
       }
 
       if(! (selHadTau_third->genHadTau() || selHadTau_third->genLepton()))
       {
-        evtWeightRecorder.record_jetToTau_SF_third(jetToTauFakeRateInterface, selHadTau_third);
+        evtWeightRecorder.record_jetToTau_SF_third(jetToTauFakeRateInterface_third, selHadTau_third);
       }
     }
 
@@ -1643,6 +1764,14 @@ int main(int argc, char* argv[])
 //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons, selHadTaus);
 
+//--- apply additional tau selection criteria against electrons
+    RecoVertex vertex = vertexReader.read();
+    crackVetoHadTauSelector.getSelector().set_vertex(vertex);
+    const std::vector<const RecoHadTau*> fakeableHadTaus_passingECalCrack = crackVetoHadTauSelector(fakeableHadTaus, isHigherPt);
+    const std::vector<const RecoHadTau*> fakeableHadTaus_passingElecVeto  = antiElectronHadTauSelector(fakeableHadTaus_passingECalCrack, isHigherPt);
+    const std::vector<const RecoHadTau*> tightHadTaus_passingECalCrack    = crackVetoHadTauSelector(tightHadTaus, isHigherPt);
+    const std::vector<const RecoHadTau*> tightHadTaus_passingElecVeto     = antiElectronHadTauSelector(tightHadTaus_passingECalCrack, isHigherPt);
+
 //--- fill histograms with events passing final selection
     for(const std::string & central_or_shift: central_or_shifts_local)
     {
@@ -1665,6 +1794,7 @@ int main(int argc, char* argv[])
           selHistManager->BJets_medium_->fillHistograms(selBJets_medium, evtWeight);
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
+	  
         }
 	for(const auto & kv: reWeightMapHH)
         {
@@ -1680,8 +1810,16 @@ int main(int argc, char* argv[])
             dihiggsMass,
             HT,
             STMET,
-            kv.second
-          );
+            selLepton,
+            selHadTau_lead,
+            selHadTau_sublead,
+            selHadTau_third,
+            tightLeptons.size(),
+            fakeableHadTaus_passingElecVeto.size(),
+            tightHadTaus.size(),
+            tightHadTaus_passingElecVeto.size(),
+            isMC,
+            kv.second);
           selHistManager->svFit4tau_woMassConstraint_[kv.first]->fillHistograms(svFit4tauResults_woMassConstraint, kv.second);
           selHistManager->svFit4tau_wMassConstraint_[kv.first]->fillHistograms(svFit4tauResults_wMassConstraint, kv.second);
 
@@ -1700,8 +1838,16 @@ int main(int argc, char* argv[])
                 dihiggsMass,
                 HT,
                 STMET,
-                kv.second
-              );
+                selLepton,
+                selHadTau_lead,
+                selHadTau_sublead,
+                selHadTau_third,
+                tightLeptons.size(),
+                fakeableHadTaus_passingElecVeto.size(),
+                tightHadTaus.size(),
+                tightHadTaus_passingElecVeto.size(),
+                isMC,
+                kv.second);
               selHistManager->svFit4tau_woMassConstraint_in_decayModes_[kv.first][decayModeStr]->fillHistograms(svFit4tauResults_woMassConstraint, kv.second);
               selHistManager->svFit4tau_wMassConstraint_in_decayModes_[kv.first][decayModeStr]->fillHistograms(svFit4tauResults_wMassConstraint, kv.second);
             }
@@ -1739,8 +1885,16 @@ int main(int argc, char* argv[])
             dihiggsMass,
             HT,
             STMET,
-            kv.second
-          );
+            selLepton,
+            selHadTau_lead,
+            selHadTau_sublead,
+            selHadTau_third,
+            tightLeptons.size(),
+            fakeableHadTaus_passingElecVeto.size(),
+            tightHadTaus.size(),
+            tightHadTaus_passingElecVeto.size(),
+            isMC,
+            kv.second);
           selHistManager->svFit4tau_woMassConstraint_in_categories_[kv.first][category]->fillHistograms(svFit4tauResults_woMassConstraint, kv.second);
           selHistManager->svFit4tau_wMassConstraint_in_categories_[kv.first][category]->fillHistograms(svFit4tauResults_wMassConstraint, kv.second);
         }
@@ -1780,7 +1934,6 @@ int main(int argc, char* argv[])
       if(selHadTau_third->genHadTau()) hadTau3_genPt =  selHadTau_third->genHadTau()->pt();
       else if ( selHadTau_third->genLepton()) hadTau3_genPt =  selHadTau_third->genLepton()->pt();
 
-      
       //FR weights for bdt ntuple
       double prob_fake_lepton_lead = evtWeightRecorder.get_jetToLepton_FR_lead(central_or_shift_main);
       double prob_fake_tau_lead = evtWeightRecorder.get_jetToTau_FR_lead(central_or_shift_main);
@@ -1896,7 +2049,11 @@ int main(int argc, char* argv[])
   delete dataToMCcorrectionInterface_hh_1l_3tau_trigger;
 
   delete leptonFakeRateInterface;
-  delete jetToTauFakeRateInterface;
+  delete jetToTauFakeRateInterface_withoutTrigger;
+  delete jetToTauFakeRateInterface_1l1tau_passesTrigger;
+  delete jetToTauFakeRateInterface_1l1tau_failsTrigger;
+  delete jetToTauFakeRateInterface_2tau_passesTrigger;
+  delete jetToTauFakeRateInterface_2tau_failsTrigger;
 
   delete run_lumi_eventSelector;
 
