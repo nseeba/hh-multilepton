@@ -177,50 +177,6 @@ struct HadTauHistManagerWrapper_eta
   double etaMax_;
 };
 
-/*
-std::map<std::string, double>InitializeInputVarMap(std::map<std::string, double>& AllVars_Map, 
-						   std::vector<std::string>& BDTInputVariables)
-{
-  std::map<std::string, double> BDTInputs_SUM;
-  for(unsigned int i = 0; i < BDTInputVariables.size(); i++){
-    //std::cout<<"Filling Map for Input Var.: " << BDTInputVariables[i] << " with value " << AllVars_Map[BDTInputVariables[i]] << std::endl;
-    BDTInputs_SUM[BDTInputVariables[i]] = AllVars_Map[BDTInputVariables[i]];
-  }
-  return BDTInputs_SUM;
-}
-
-std::map<std::string, double>CreateBDTOutputMap(std::vector<double>& gen_mHH, 
-						TMVAInterface* BDT_SUM,
-						std::map<std::string, double>& BDTInputs_SUM, 
-						std::string label = "",
-						int event_number = -1)
-{
-  std::map<std::string, double> BDTOutput_SUM_Map;
-  for(unsigned int i=0; i<gen_mHH.size(); i++){ // Loop over signal masses
-    BDTInputs_SUM["gen_mHH"] = gen_mHH[i];
-    unsigned int mass_int = (int)gen_mHH[i]; // Conversion from double to unsigned int
-    std::string key = "";                                                                                                                                                                                                                                                    
-    ostringstream temp;                                                                                                                                                                                                                                                      
-    temp << mass_int;                                                                                                                                                                                                                                                        
-    key = temp.str(); // Conversion from unsigned int to string  
-    std::string key_final = "BDTOutput_" + key; 
-
-    if(!label.empty()){ // Spin hypothesis
-      std::string Label = "_" + label;
-      key_final += Label;
-    }
-    
-    if(event_number != -1){ // Odd Even method
-      BDTOutput_SUM_Map.insert( std::make_pair(key_final, (*BDT_SUM)(BDTInputs_SUM, event_number)) );
-    }else{ // Same BDT for all events
-      BDTOutput_SUM_Map.insert( std::make_pair(key_final, (*BDT_SUM)(BDTInputs_SUM)) );
-    }
-  }
-  return BDTOutput_SUM_Map;
-}
-*/
-
-
 /**
  * @brief Produce datacard and control plots for 2l_2tau category of HH "multilepton" (HH->WWWW,WWtt,tttt) analysis.
  */
