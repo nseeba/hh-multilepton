@@ -26,27 +26,27 @@ EvtHistManager_hh_2l_2tau::EvtHistManager_hh_2l_2tau(const edm::ParameterSet & c
   central_or_shiftOptions_["STMET"] = { "central" };
   central_or_shiftOptions_["EventCounter"] = { "*" };
   central_or_shiftOptions_["EventNumber"] = { "*" };
-  // central_or_shiftOptions_["BDTOutput_SUM_gen_mHH_400"] = { "*" };
   std::vector<double> gen_mHH = cfg.getParameter<std::vector<double>>("gen_mHH");
 
   for(unsigned int i=0;i<gen_mHH.size();i++){
-    unsigned int mass_int = (int)gen_mHH[i]; // Conversion from double to unsigned int                                                                                                                                                                                
+    unsigned int mass_int = (int)gen_mHH[i]; // Conversion from double to unsigned int                                                                                                    
     std::string key = "";
-    ostringstream temp;
+    std::ostringstream temp;
     temp << mass_int;
-    key = temp.str(); // Conversion from unsigned int to string                                                                                                                                                                                                             
+    key = temp.str(); // Conversion from unsigned int to string                                                                                                                          
+                                                                                   
     std::string key_final = "BDTOutput_" + key; // For the TMVAInterface
-    labels_.push_back(key_final);
-
-    //std::string XGB_key_final = "BDTOutput_" + key + "_pkl"; // For the XGBInterface
-    std::string XGB_key_final = "NNOutput_" + key;             // For the TensorFlowInterface
-    XGB_labels_.push_back(XGB_key_final);
+    std::string key_final_spin2 = key_final + "_hypo_spin2";
+    std::string key_final_spin0 = key_final + "_hypo_spin0";
+    labels_spin2_.push_back(key_final_spin2);
+    labels_spin0_.push_back(key_final_spin0);
   }
 
-  for(unsigned int i=0;i < labels_.size();i++){
-    central_or_shiftOptions_[labels_[i]] = { "*" }; 
-    central_or_shiftOptions_[XGB_labels_[i]] = { "*" }; 
+  for(unsigned int i=0;i < labels_spin2_.size();i++){
+    central_or_shiftOptions_[labels_spin2_[i]] = { "*" };
+    central_or_shiftOptions_[labels_spin0_[i]] = { "*" };
   }
+
 }
 
 const TH1 *
@@ -76,17 +76,16 @@ EvtHistManager_hh_2l_2tau::bookHistograms(TFileDirectory & dir)
   histogram_EventNumber_      = book1D(dir, "EventNumber",     "EventNumber",      2, 0., 2.0);
   histogram_EventNumber_->GetXaxis()->SetBinLabel(1,"Odd");
   histogram_EventNumber_->GetXaxis()->SetBinLabel(2,"Even");
-  // histogram_BDTOutput_SUM_gen_mHH_400_    = book1D(dir, "BDTOutput_SUM_gen_mHH_400",    "BDTOutput_SUM_gen_mHH_400",    100,  0.,    1.);
-  for(unsigned int i=0;i < labels_.size();i++){
-    TH1* histogram_BDT_output = book1D(dir, labels_[i], labels_[i], 100, 0., 1.); 
-    histogram_Map_BDTOutput_SUM_.insert(std::make_pair(labels_[i], histogram_BDT_output));
+
+  for(unsigned int i=0;i < labels_spin2_.size();i++){ 
+    TH1* histogram_BDT_output_spin2 = book1D(dir, labels_spin2_[i], labels_spin2_[i], 100, 0., 1.); 
+    histogram_Map_BDTOutput_SUM_spin2_.insert(std::make_pair(labels_spin2_[i], histogram_BDT_output_spin2)); 
   }
 
-  for(unsigned int j=0;j < XGB_labels_.size();j++){
-    TH1* histogram_XGB_output = book1D(dir, XGB_labels_[j], XGB_labels_[j], 100, 0., 1.); 
-    histogram_Map_XGBOutput_SUM_.insert(std::make_pair(XGB_labels_[j], histogram_XGB_output));
+  for(unsigned int i=0;i < labels_spin0_.size();i++){ 
+    TH1* histogram_BDT_output_spin0 = book1D(dir, labels_spin0_[i], labels_spin0_[i], 100, 0., 1.); 
+    histogram_Map_BDTOutput_SUM_spin0_.insert(std::make_pair(labels_spin0_[i], histogram_BDT_output_spin0)); 
   }
-
 }
 
 void
@@ -104,9 +103,8 @@ EvtHistManager_hh_2l_2tau::fillHistograms(int numElectrons,
 					  double dihiggsMass,
 					  double HT,
 					  double STMET,
-					  // double BDTOutput_SUM_gen_mHH_400,
-					  std::map<std::string, double> & BDTOutput_SUM_Map,
-					  std::map<std::string, double> & XGBOutput_SUM_Map,
+					  std::map<std::string, double> & BDTOutput_SUM_Map_spin2,
+					  std::map<std::string, double> & BDTOutput_SUM_Map_spin0,
 					  unsigned int evt_number,
 					  double evtWeight)
 {
@@ -129,18 +127,18 @@ EvtHistManager_hh_2l_2tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_HT_,               HT,               evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_STMET_,            STMET,            evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_EventCounter_,  0., evtWeight, evtWeightErr);
-  if(evt_number % 2){// ODD EVENT NUMBER CASE                                                                                                                                                    
+
+  if(evt_number % 2){// Odd Event Number case
     fillWithOverFlow(histogram_EventNumber_,  0., evtWeight, evtWeightErr);                                                                                                                         
-  }else{ // EVEN EVENT NUMBER CASE                                                                                                                                                                   
+  }else{ // Even Event Number case                                                                                                                                                        
     fillWithOverFlow(histogram_EventNumber_,  1., evtWeight, evtWeightErr);     
   }      
 
-  for(unsigned int i=0;i < labels_.size();i++){
-    fillWithOverFlow(histogram_Map_BDTOutput_SUM_[labels_[i]], BDTOutput_SUM_Map[labels_[i]], evtWeight, evtWeightErr);
+  for(unsigned int i=0;i < labels_spin2_.size();i++){
+    fillWithOverFlow(histogram_Map_BDTOutput_SUM_spin2_[labels_spin2_[i]], BDTOutput_SUM_Map_spin2[labels_spin2_[i]], evtWeight, evtWeightErr);
   }
 
-  for(unsigned int i=0;i < XGB_labels_.size();i++){
-    fillWithOverFlow(histogram_Map_XGBOutput_SUM_[XGB_labels_[i]], XGBOutput_SUM_Map[XGB_labels_[i]], evtWeight, evtWeightErr);
+  for(unsigned int i=0;i < labels_spin0_.size();i++){
+    fillWithOverFlow(histogram_Map_BDTOutput_SUM_spin0_[labels_spin0_[i]], BDTOutput_SUM_Map_spin0[labels_spin0_[i]], evtWeight, evtWeightErr);
   }
-
 }

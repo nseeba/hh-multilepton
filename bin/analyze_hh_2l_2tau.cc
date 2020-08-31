@@ -177,6 +177,48 @@ struct HadTauHistManagerWrapper_eta
   double etaMax_;
 };
 
+/*
+std::map<std::string, double>InitializeInputVarMap(std::map<std::string, double>& AllVars_Map, 
+						   std::vector<std::string>& BDTInputVariables)
+{
+  std::map<std::string, double> BDTInputs_SUM;
+  for(unsigned int i = 0; i < BDTInputVariables.size(); i++){
+    //std::cout<<"Filling Map for Input Var.: " << BDTInputVariables[i] << " with value " << AllVars_Map[BDTInputVariables[i]] << std::endl;
+    BDTInputs_SUM[BDTInputVariables[i]] = AllVars_Map[BDTInputVariables[i]];
+  }
+  return BDTInputs_SUM;
+}
+
+std::map<std::string, double>CreateBDTOutputMap(std::vector<double>& gen_mHH, 
+						TMVAInterface* BDT_SUM,
+						std::map<std::string, double>& BDTInputs_SUM, 
+						std::string label = "",
+						int event_number = -1)
+{
+  std::map<std::string, double> BDTOutput_SUM_Map;
+  for(unsigned int i=0; i<gen_mHH.size(); i++){ // Loop over signal masses
+    BDTInputs_SUM["gen_mHH"] = gen_mHH[i];
+    unsigned int mass_int = (int)gen_mHH[i]; // Conversion from double to unsigned int
+    std::string key = "";                                                                                                                                                                                                                                                    
+    ostringstream temp;                                                                                                                                                                                                                                                      
+    temp << mass_int;                                                                                                                                                                                                                                                        
+    key = temp.str(); // Conversion from unsigned int to string  
+    std::string key_final = "BDTOutput_" + key; 
+
+    if(!label.empty()){ // Spin hypothesis
+      std::string Label = "_" + label;
+      key_final += Label;
+    }
+    
+    if(event_number != -1){ // Odd Even method
+      BDTOutput_SUM_Map.insert( std::make_pair(key_final, (*BDT_SUM)(BDTInputs_SUM, event_number)) );
+    }else{ // Same BDT for all events
+      BDTOutput_SUM_Map.insert( std::make_pair(key_final, (*BDT_SUM)(BDTInputs_SUM)) );
+    }
+  }
+  return BDTOutput_SUM_Map;
+}
+*/
 
 
 /**
@@ -436,14 +478,26 @@ int main(int argc, char* argv[])
 
   const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
 
-  std::string BDTFileName_even  = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_even");
-  std::string BDTFileName_odd   = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_odd");
+  const edm::ParameterSet mvaInfo_res = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_res");
   std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
-  //std::string BDTFileName_even_pkl  = cfg_analyze.getParameter<std::string>("pkl_FileName_even");
-  //std::string BDTFileName_odd_pkl   = cfg_analyze.getParameter<std::string>("pkl_FileName_odd");
-  std::string NNFileName_even_pb  = cfg_analyze.getParameter<std::string>("pb_FileName_even");
-  std::string NNFileName_odd_pb   = cfg_analyze.getParameter<std::string>("pb_FileName_odd");
-  std::string fitFunctionFileName = cfg_analyze.getParameter<std::string>("fitFunctionFileName");
+  std::string BDTFileName_even_spin2  = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_even_spin2");
+  std::string BDTFileName_odd_spin2   = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_odd_spin2");
+  std::string fitFunctionFileName_spin2 = mvaInfo_res.getParameter<std::string>("fitFunctionFileName_spin2");
+  std::vector<std::string> BDTInputVariables_SUM_spin2 = mvaInfo_res.getParameter<std::vector<std::string>>("inputVars_spin2");
+  std::string BDTFileName_even_spin0  = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_even_spin0");
+  std::string BDTFileName_odd_spin0   = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_odd_spin0");
+  std::string fitFunctionFileName_spin0 = mvaInfo_res.getParameter<std::string>("fitFunctionFileName_spin0");
+  std::vector<std::string> BDTInputVariables_SUM_spin0 = mvaInfo_res.getParameter<std::vector<std::string>>("inputVars_spin0");
+
+  assert(fitFunctionFileName_spin2 != "");
+  assert(fitFunctionFileName_spin0 != "");
+  TMVAInterface* BDT_SUM_spin2 = new TMVAInterface(BDTFileName_odd_spin2, BDTFileName_even_spin2, BDTInputVariables_SUM_spin2, fitFunctionFileName_spin2);
+  BDT_SUM_spin2->enableBDTTransform();
+  TMVAInterface* BDT_SUM_spin0 = new TMVAInterface(BDTFileName_odd_spin0, BDTFileName_even_spin0, BDTInputVariables_SUM_spin0, fitFunctionFileName_spin0);
+  BDT_SUM_spin0->enableBDTTransform();
+  std::map<std::string, double> AllVars_Map;
+  std::map<std::string, double> BDTOutput_SUM_Map_spin2;
+  std::map<std::string, double> BDTOutput_SUM_Map_spin0;
 
 
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
@@ -478,6 +532,8 @@ int main(int argc, char* argv[])
 
 //--- HH scan
   const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
+  //std::cout << " eventInfo.is_hh_nonresonant() " << eventInfo.is_hh_nonresonant() << std::endl;
+  //std::cout << " hhWeight_cfg.getParameter<bool>(apply_rwgt) " << hhWeight_cfg.getParameter<bool>("apply_rwgt") << std::endl;
   const bool apply_HH_rwgt = eventInfo.is_hh_nonresonant() && hhWeight_cfg.getParameter<bool>("apply_rwgt");
   const HHWeightInterface_2 * HHWeight_calc = nullptr;
   if(apply_HH_rwgt)
@@ -499,6 +555,9 @@ int main(int argc, char* argv[])
   {
     std::cout << "No HH reweighting applied: " << boost::join(evt_cat_strs, ", ") << '\n';
   }
+
+
+  std::cout<< "evt_cat_strs.size() " << evt_cat_strs.size() << std::endl;
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
@@ -660,44 +719,6 @@ int main(int argc, char* argv[])
     inputTree -> registerReader(psWeightReader);
   }
 
-  std::vector<std::string> BDTInputVariables_SUM =
-    {
-      "diHiggsMass",
-      "diHiggsVisMass",
-      "tau1_pt",
-      "nBJet_medium",
-      "gen_mHH",
-      "nElectron",
-      "dr_lep_tau_min_SS",
-      "met_LD",
-      "tau2_pt",
-      "dr_lep_tau_min_OS"
-    }; // Need to adapt to different mass training modes: all, low and High (Currently this is for all mass traning)
-
-
-  std::vector<std::string> NNInputVariables_SUM =
-    {
-      "diHiggsMass",
-      "diHiggsVisMass",
-      "tau1_pt",
-      "nBJet_medium",
-      "gen_mHH",
-      "nElectron",
-      "dr_lep_tau_min_SS",
-      "met_LD",
-      "tau2_pt",
-      "dr_lep_tau_min_OS"
-    }; // this is for the dumb training
-
-  assert(fitFunctionFileName != "");
-  //XGBInterface* XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, fitFunctionFileName,  BDTInputVariables_SUM);
-
-  TMVAInterface* BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, fitFunctionFileName);
-  BDT_SUM->enableBDTTransform();
-
-  TensorFlowInterface* NN_SUM = new TensorFlowInterface(NNFileName_odd_pb, NNInputVariables_SUM, {}, NNFileName_even_pb, fitFunctionFileName);
-
-  std::map<std::string, double> BDTInputs_SUM;
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
   std::ostream* selEventsFile = ( selEventsFileName_output != "" ) ? new std::ofstream(selEventsFileName_output.data(), std::ios::out) : 0;
   std::cout << "selEventsFileName_output = " << selEventsFileName_output << std::endl;
@@ -1726,7 +1747,7 @@ int main(int argc, char* argv[])
     std::map<std::string, double> weightMapHH;
     std::map<std::string, double> reWeightMapHH;
     double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
-
+    
     if(apply_HH_rwgt)
     {
       assert(HHWeight_calc);
@@ -1749,7 +1770,19 @@ int main(int argc, char* argv[])
 
         std::cout << '\n';
       }
+    } else { // Siddesh lines
+      for(const std::string & evt_cat_str: evt_cat_strs) {
+	if(evt_cat_str != default_cat_str)
+	  {
+	    continue;
+	  }
+	
+	reWeightMapHH[evt_cat_str] = evtWeightRecorder.get(central_or_shift_main);
+	std::cout << "\t evt_cat_str: " << evt_cat_str << ", reWeightMapHH: " << reWeightMapHH[evt_cat_str] << std::endl;
+      }
     }
+
+    std::cout<<"reWeightMapHH.size() " << reWeightMapHH.size() << std::endl;
 
     const Particle::LorentzVector tautau_p4 = selHadTau_lead->p4() + selHadTau_sublead->p4();
     const double mTauTauVis_sel = tautau_p4.mass();
@@ -1767,6 +1800,7 @@ int main(int argc, char* argv[])
       *selLepton_lead, *selLepton_sublead, *selHadTau_lead, *selHadTau_sublead, met, chargeSumSelection_string, rnd, 125., 2.);
 
     double dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selHadTau_lead->p4() + selHadTau_sublead->p4()).mass();
+    
     double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ?
       svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
 
@@ -1825,62 +1859,142 @@ int main(int argc, char* argv[])
     const RecoJet * selBJet_lead    = selJets_btag.size() > 0 ? selJets_btag.at(0) : nullptr;
     const RecoJet * selBJet_sublead = selJets_btag.size() > 1 ? selJets_btag.at(1) : nullptr;
 
-    //--- compute variables BDTs used to discriminate in the .xml files
-    BDTInputs_SUM["diHiggsMass"]          = dihiggsMass;
-    BDTInputs_SUM["diHiggsVisMass"]       = dihiggsVisMass_sel;
-    BDTInputs_SUM["tau1_pt"]              = selHadTau_lead->pt();
-    BDTInputs_SUM["nBJet_medium"]         = selBJets_btag_medium.size();
-    BDTInputs_SUM["gen_mHH"]              = 250.; // setting a Dummy value which will be reset depending on mass hypothesis
-    BDTInputs_SUM["nElectron"]            = selElectrons.size();
-    BDTInputs_SUM["dr_lep_tau_min_SS"]    = dr_lep_tau_min_SS;
-    BDTInputs_SUM["met_LD"]               = met_LD;
-    BDTInputs_SUM["tau2_pt"]              = selHadTau_sublead->pt();
-    BDTInputs_SUM["dr_lep_tau_min_OS"]    = dr_lep_tau_min_OS;
-    if ( isDEBUG ) {
-      std::cout << "Input variables ";
-      for (auto elem : BDTInputs_SUM ) std::cout << elem.first << " " << elem.second << "\n";
-      std::cout << std::endl;
+    //--- reconstruct mass of tau-pair using SVfit algorithm
+    //
+    //    NOTE: SVfit needs to be run after all event selection cuts are applied,
+    //          because the algorithm takes O(1 second per event) to run
+    //
+    std::vector<classic_svFit::MeasuredTauLepton> measuredTauLeptons;
+    classic_svFit::MeasuredTauLepton::kDecayType leg1Type = classic_svFit::MeasuredTauLepton::kTauToHadDecay;
+    double leg1Mass = selHadTau_lead->mass();
+    if ( leg1Mass < classic_svFit::chargedPionMass ) leg1Mass = classic_svFit::chargedPionMass;
+    if ( leg1Mass > 1.5                            ) leg1Mass = 1.5;
+    classic_svFit::MeasuredTauLepton::kDecayType leg2Type = classic_svFit::MeasuredTauLepton::kTauToHadDecay;
+    double leg2Mass = selHadTau_sublead->mass();
+    if ( leg2Mass < classic_svFit::chargedPionMass ) leg2Mass = classic_svFit::chargedPionMass;
+    if ( leg2Mass > 1.5                            ) leg2Mass = 1.5;
+    measuredTauLeptons.push_back(classic_svFit::MeasuredTauLepton(leg1Type, selHadTau_lead->pt(), selHadTau_lead->eta(), selHadTau_lead->phi(), leg1Mass));
+    measuredTauLeptons.push_back(classic_svFit::MeasuredTauLepton(leg2Type, selHadTau_sublead->pt(), selHadTau_sublead->eta(), selHadTau_sublead->phi(), leg2Mass));
+    ClassicSVfit svFitAlgo;
+    svFitAlgo.addLogM_dynamic(false);
+    svFitAlgo.addLogM_fixed(true, 5.);
+    svFitAlgo.integrate(measuredTauLeptons, met.p4().px(), met.p4().py(), met.cov());
+
+
+    // pre-compute BDT variables-2
+    //double mTauTau = -1.; // CV: temporarily comment-out the following line, to make code compile with "old" and "new" version of ClassicSVfit
+    const double mTauTau   = ( svFitAlgo.isValidSolution() ) ? static_cast<classic_svFit::HistogramAdapterDiTau*>(svFitAlgo.getHistogramAdapter())->getMass() : -1.;
+    Topness topness_publishedChi2(Topness::kPublishedChi2);
+    if(selBJet_lead && selBJet_sublead)
+    {
+      topness_publishedChi2.fit(
+        selLepton_lead->p4(), selLepton_sublead->p4(),
+        selBJet_lead->p4(),   selBJet_sublead->p4(),
+        met.p4().px(),        met.p4().py()
+      );
     }
-
-    const std::map<std::string, double> mvaInputsValues = {
-      {"diHiggsMass", dihiggsMass},
-      {"diHiggsVisMass", dihiggsVisMass_sel},
-      {"tau1_pt",  selHadTau_lead->pt()},
-      {"nBJet_medium", selBJets_btag_medium.size()},
-      {"gen_mHH",       250.}, // setting a Dummy value which will be reset depending on mass hypothesis
-      {"nElectron", selElectrons.size()},
-      {"dr_lep_tau_min_SS", dr_lep_tau_min_SS},
-      {"met_LD",           met_LD},
-      {"tau2_pt", selHadTau_sublead->pt()},
-      {"dr_lep_tau_min_OS", dr_lep_tau_min_OS}
-    };
-
-    if ( isDEBUG ) {
-      std::cout << "Input variables ";
-      for (auto elem : mvaInputsValues ) std::cout << elem.first << " " << elem.second << "\n";
-      std::cout << std::endl;
+    const double logTopness_publishedChi2 =
+      topness_publishedChi2.isValidSolution() ? topness_publishedChi2.logTopness() : -99.;
+    
+    Topness topness_fixedChi2(Topness::kFixedChi2);
+    if(selBJet_lead && selBJet_sublead)
+    {
+      topness_fixedChi2.fit(
+        selLepton_lead->p4(), selLepton_sublead->p4(),
+        selBJet_lead->p4(),   selBJet_sublead->p4(),
+        met.p4().px(),        met.p4().py()
+      );
     }
+    const double logTopness_fixedChi2 =
+      topness_fixedChi2.isValidSolution() ? topness_fixedChi2.logTopness() : -99.;
+    
 
-    std::map<std::string, double> BDTOutput_SUM_Map;
-    //std::map<std::string, double> XGBOutput_SUM_Map;
-    std::map<std::string, double> NNOutput_SUM_Map;
+    //-----------Filling Map with all BDT Training Variables-----------
+    AllVars_Map["deltaEta_lep1_lep2"] = deltaEta_lep1_lep2;
+    AllVars_Map["deltaEta_lep1_tau1"] = deltaEta_lep1_tau1;
+    AllVars_Map["deltaEta_lep1_tau2"] = deltaEta_lep1_tau2;
+    AllVars_Map["deltaEta_lep2_tau1"] = deltaEta_lep2_tau1;
+    AllVars_Map["deltaEta_lep2_tau2"] = deltaEta_lep2_tau2;
+    AllVars_Map["deltaEta_tau1_tau2"] = deltaEta_tau1_tau2;
+    AllVars_Map["deltaPhi_lep1_lep2"] = deltaPhi_lep1_lep2;
+    AllVars_Map["deltaPhi_lep1_tau1"] = deltaPhi_lep1_tau1;
+    AllVars_Map["deltaPhi_lep1_tau2"] = deltaPhi_lep1_tau2;
+    AllVars_Map["deltaPhi_lep2_tau1"] = deltaPhi_lep2_tau1;
+    AllVars_Map["deltaPhi_lep2_tau2"] = deltaPhi_lep2_tau2;
+    AllVars_Map["deltaPhi_tau1_tau2"] = deltaPhi_tau1_tau2;
+    AllVars_Map["dr_lep1_tau1_tau2_min"] = dr_lep1_tau1_tau2_min;
+    AllVars_Map["dr_lep1_tau1_tau2_max"] = dr_lep1_tau1_tau2_max;
+    AllVars_Map["dr_lep2_tau1_tau2_min"] = dr_lep2_tau1_tau2_min;
+    AllVars_Map["dr_lep2_tau1_tau2_max"] = dr_lep2_tau1_tau2_max;
+    AllVars_Map["dr_lep_tau_min_OS"] = dr_lep_tau_min_OS;
+    AllVars_Map["dr_lep_tau_min_SS"] = dr_lep_tau_min_SS;
+    AllVars_Map["pt_HH_recoil"] = pt_HH_recoil;
+    AllVars_Map["lep1_pt"] = selLepton_lead->pt();
+    AllVars_Map["lep1_conePt"] = selLepton_lead->cone_pt();
+    AllVars_Map["lep1_eta"] = selLepton_lead->eta();
+    AllVars_Map["lep1_phi"] = selLepton_lead->phi();
+    AllVars_Map["lep1_tth_mva"] = selLepton_lead->mvaRawTTH();
+    AllVars_Map["mT_lep1"] = mT_lep1;
+    AllVars_Map["lep2_pt"] = selLepton_sublead->pt();
+    AllVars_Map["lep2_conePt"] = selLepton_sublead->cone_pt();
+    AllVars_Map["lep2_eta"] = selLepton_sublead->eta();
+    AllVars_Map["lep2_phi"] = selLepton_lead->phi();
+    AllVars_Map["lep2_tth_mva"] = selLepton_sublead->mvaRawTTH();
+    AllVars_Map["mT_lep2"] = mT_lep2;
+    AllVars_Map["tau1_pt"] = selHadTau_lead->pt();
+    AllVars_Map["tau1_eta"] = selHadTau_lead->eta();
+    AllVars_Map["tau1_phi"] = selHadTau_lead->phi();
+    AllVars_Map["tau1_mva"] = selHadTau_lead->id_mva(TauID::MVAoldDMdR032017v2);
+    AllVars_Map["tau2_pt"] = selHadTau_sublead->pt();
+    AllVars_Map["tau2_eta"] = selHadTau_sublead->eta();
+    AllVars_Map["tau2_phi"] = selHadTau_lead->phi();
+    AllVars_Map["tau2_mva"] = selHadTau_sublead->id_mva(TauID::MVAoldDMdR032017v2);
+    AllVars_Map["dr_lep1_tau1"] = dr_lep1_tau1;
+    AllVars_Map["dr_lep2_tau1"] = dr_lep2_tau1;
+    AllVars_Map["dr_lep1_tau2"] = dr_lep1_tau2;
+    AllVars_Map["dr_lep2_tau2"] = dr_lep2_tau2;
+    AllVars_Map["m_lep1_tau1"] = m_lep1_tau1;
+    AllVars_Map["m_lep2_tau1"] = m_lep2_tau1;
+    AllVars_Map["m_lep1_tau2"] = m_lep1_tau2;
+    AllVars_Map["m_lep2_tau2"] = m_lep2_tau2;
+    AllVars_Map["dr_leps"] = dr_leps;
+    AllVars_Map["dr_taus"] = dr_taus;
+    AllVars_Map["avg_dr_jet"] = avg_dr_jet;
+    AllVars_Map["met"] = met.pt();
+    AllVars_Map["met_phi"] = met.phi();
+    AllVars_Map["mht"] = mht_p4.pt();
+    AllVars_Map["met_LD"] = met_LD;
+    AllVars_Map["HT"] = HT;
+    AllVars_Map["STMET"] = STMET;
+    AllVars_Map["m_ll"] = ll_p4.mass();
+    AllVars_Map["pT_ll"] = ll_p4.pt();
+    AllVars_Map["pT_llMEt"] = (ll_p4 + met.p4()).pt();
+    AllVars_Map["Smin_llMEt"] = Smin_llMEt;
+    AllVars_Map["Smin_lltautau"] = Smin_lltautau;
+    AllVars_Map["mTauTauVis"] = mTauTauVis_sel;
+    AllVars_Map["mTauTau"] = mTauTau;
+    AllVars_Map["ptTauTauVis"] = ptTauTauVis_sel;
+    AllVars_Map["diHiggsVisMass"] = dihiggsVisMass_sel;
+    AllVars_Map["diHiggsMass"] = dihiggsMass;
+    AllVars_Map["logTopness_publishedChi2"] = logTopness_publishedChi2;
+    AllVars_Map["logTopness_fixedChi2"] = logTopness_fixedChi2;
+    AllVars_Map["nJet"] = selJets.size();
+    AllVars_Map["nElectron"] = selElectrons.size();
+    AllVars_Map["nMuon"] = selMuons.size();
+    AllVars_Map["nBJet_loose"] = selBJets_btag_loose.size();
+    AllVars_Map["nBJet_medium"] = selBJets_btag_medium.size();
+    AllVars_Map["lep1_isElectron"] = selLepton_lead_type == kElectron;
+    AllVars_Map["lep1_charge"] = selLepton_lead->charge();
+    AllVars_Map["lep2_isElectron"] = selLepton_sublead_type == kElectron;
+    AllVars_Map["lep2_charge"] = selLepton_sublead->charge();
+    AllVars_Map["gen_mHH"] = 250.; // setting a Dummy value which will be reset depending on mass hypothesis 
 
-    for(unsigned int i=0; i<gen_mHH.size(); i++){ // Loop over signal masses
-      BDTInputs_SUM["gen_mHH"] = gen_mHH[i];
-      unsigned int mass_int = (int)gen_mHH[i]; // Conversion from double to unsigned int
-      std::string key = "";
-      ostringstream temp;
-      temp << mass_int;
-      key = temp.str(); // Conversion from unsigned int to string
-      std::string key_final = "BDTOutput_" + key;
-      BDTOutput_SUM_Map.insert( std::make_pair(key_final, (*BDT_SUM)(BDTInputs_SUM, eventInfo.event)) );
+    std::map<std::string, double> BDTInputs_SUM_spin2 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin2);
+    std::map<std::string, double> BDTInputs_SUM_spin0 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin0);
 
-      //std::string XGB_key_final = "BDTOutput_" + key + "_pkl";
-      //XGBOutput_SUM_Map.insert( std::make_pair(XGB_key_final, (*XGB_SUM)(BDTInputs_SUM, eventInfo.event)) );
-
-      std::string NN_key_final = "NNOutput_" + key;
-      NNOutput_SUM_Map.insert( std::make_pair(NN_key_final, (*NN_SUM)(mvaInputsValues, eventInfo.event)["output"]) );
-    }
+    BDTOutput_SUM_Map_spin2 = CreateBDTOutputMap(gen_mHH, BDT_SUM_spin2, BDTInputs_SUM_spin2, "hypo_spin2", eventInfo.event);
+    BDTOutput_SUM_Map_spin0 = CreateBDTOutputMap(gen_mHH, BDT_SUM_spin0, BDTInputs_SUM_spin0, "hypo_spin0", eventInfo.event);
+    // -------------------------------
 
 //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons, selHadTaus);
@@ -1949,32 +2063,30 @@ int main(int argc, char* argv[])
           } else assert(0);
         } else assert(0);
 
-	
-       	for(const auto & kv: reWeightMapHH)
-	  {
-          selHistManager->evt_[kv.first]->fillHistograms(
-            selElectrons.size(),
-            selMuons.size(),
-            selHadTaus.size(),
-            selJets.size(),
-            numSelJetsPtGt40,
-            selBJets_loose.size(),
-            selBJets_medium.size(),
-            mTauTauVis_sel,
-            leptonPairCharge_sel,
-            hadTauPairCharge_sel,
-            dihiggsVisMass_sel,
-            dihiggsMass,
-            HT,
-            STMET,
-            BDTOutput_SUM_Map,
-            //XGBOutput_SUM_Map,
-	    NNOutput_SUM_Map,
-            eventInfo.event,
-            kv.second
-          );
-          selHistManager->svFit4tau_wMassConstraint_[kv.first]->fillHistograms(svFit4tauResults_wMassConstraint, kv.second);
-        }
+	for(const auto & kv: reWeightMapHH)
+	  { 
+	    selHistManager->evt_[kv.first]->fillHistograms(
+							   selElectrons.size(),
+							   selMuons.size(),
+							   selHadTaus.size(),
+							   selJets.size(),
+							   numSelJetsPtGt40,
+							   selBJets_loose.size(),
+							   selBJets_medium.size(),
+							   mTauTauVis_sel,
+							   leptonPairCharge_sel,
+							   hadTauPairCharge_sel,
+							   dihiggsVisMass_sel,
+							   dihiggsMass,
+							   HT,
+							   STMET,
+							   BDTOutput_SUM_Map_spin2,
+							   BDTOutput_SUM_Map_spin0,
+							   eventInfo.event,
+							   kv.second
+							   );
+	    selHistManager->svFit4tau_wMassConstraint_[kv.first]->fillHistograms(svFit4tauResults_wMassConstraint, kv.second);
+	  } 
         if(isMC && ! skipFilling)
         {
           selHistManager->genEvtHistManager_afterCuts_->fillHistograms(
@@ -2001,50 +2113,49 @@ int main(int argc, char* argv[])
         {
           double evtWeight_chargeFlip = 1.;
           if ( category.find("_wChargeFlipWeights") != std::string::npos )
-          {
-            double prob_chargeMisId_lead = prob_chargeMisId(era, getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta());
-            double prob_chargeMisId_sublead = prob_chargeMisId(era, getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
-            evtWeight_chargeFlip *= ( prob_chargeMisId_lead + prob_chargeMisId_sublead);
-          }
-	for(const auto & kv: reWeightMapHH)
-          {
-            double evtWeight_category = kv.second * evtWeight_chargeFlip;
-            if ( category.find("_wChargeFlipWeights") != std::string::npos )
-            {
-              double prob_chargeMisId_lead = prob_chargeMisId(era, getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta());
-              double prob_chargeMisId_sublead = prob_chargeMisId(era, getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
-              evtWeight_category *= ( prob_chargeMisId_lead + prob_chargeMisId_sublead);
-            }
-            if(selHistManager->evt_in_categories_.find(category) != selHistManager->evt_in_categories_.end())
-            {
-              selHistManager->evt_in_categories_[kv.first][category]->fillHistograms(
-                selElectrons.size(),
-                selMuons.size(),
-                selHadTaus.size(),
-                selJets.size(),
-                numSelJetsPtGt40,
-                selBJets_loose.size(),
-                selBJets_medium.size(),
-                mTauTauVis_sel,
-                leptonPairCharge_sel,
-                hadTauPairCharge_sel,
-                dihiggsVisMass_sel,
-                dihiggsMass,
-                HT,
-                STMET,
-                BDTOutput_SUM_Map,
-                //XGBOutput_SUM_Map,
-		NNOutput_SUM_Map,
-                eventInfo.event,
-                evtWeight_category
-              );
-              selHistManager->svFit4tau_wMassConstraint_in_categories_[kv.first][category]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight_category);
-            }
-          }
+	    {
+	      double prob_chargeMisId_lead = prob_chargeMisId(era, getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta());
+	      double prob_chargeMisId_sublead = prob_chargeMisId(era, getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
+	      evtWeight_chargeFlip *= ( prob_chargeMisId_lead + prob_chargeMisId_sublead);
+	    }
+	  for(const auto & kv: reWeightMapHH)
+	    {
+	      double evtWeight_category = kv.second * evtWeight_chargeFlip;
+	      if ( category.find("_wChargeFlipWeights") != std::string::npos )
+		{
+		  double prob_chargeMisId_lead = prob_chargeMisId(era, getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta());
+		  double prob_chargeMisId_sublead = prob_chargeMisId(era, getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
+		  evtWeight_category *= ( prob_chargeMisId_lead + prob_chargeMisId_sublead);
+		}
+	      if(selHistManager->evt_in_categories_.find(category) != selHistManager->evt_in_categories_.end())
+		{
+		  selHistManager->evt_in_categories_[kv.first][category]->fillHistograms(
+											 selElectrons.size(),
+											 selMuons.size(),
+											 selHadTaus.size(),
+											 selJets.size(),
+											 numSelJetsPtGt40,
+											 selBJets_loose.size(),
+											 selBJets_medium.size(),
+											 mTauTauVis_sel,
+											 leptonPairCharge_sel,
+											 hadTauPairCharge_sel,
+											 dihiggsVisMass_sel,
+											 dihiggsMass,
+											 HT,
+											 STMET,
+											 BDTOutput_SUM_Map_spin2,
+											 BDTOutput_SUM_Map_spin0,
+											 eventInfo.event,
+											 evtWeight_category
+											 );
+		  selHistManager->svFit4tau_wMassConstraint_in_categories_[kv.first][category]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight_category);
+		}
+	    }
           if(isMC && ! skipFilling)
-          {
-            selHistManager->lheInfoHistManager_afterCuts_in_categories_[category]->fillHistograms(*lheInfoReader, evtWeight * evtWeight_chargeFlip);
-          }
+	    {
+	      selHistManager->lheInfoHistManager_afterCuts_in_categories_[category]->fillHistograms(*lheInfoReader, evtWeight * evtWeight_chargeFlip);
+	    }
         }
       }
     }
@@ -2052,58 +2163,10 @@ int main(int argc, char* argv[])
     if ( selEventsFile ) {
       (*selEventsFile) << eventInfo.run << ':' << eventInfo.lumi << ':' << eventInfo.event << '\n';
     }
-
-    //--- reconstruct mass of tau-pair using SVfit algorithm
-    //
-    //    NOTE: SVfit needs to be run after all event selection cuts are applied,
-    //          because the algorithm takes O(1 second per event) to run
-    //
-    std::vector<classic_svFit::MeasuredTauLepton> measuredTauLeptons;
-    classic_svFit::MeasuredTauLepton::kDecayType leg1Type = classic_svFit::MeasuredTauLepton::kTauToHadDecay;
-    double leg1Mass = selHadTau_lead->mass();
-    if ( leg1Mass < classic_svFit::chargedPionMass ) leg1Mass = classic_svFit::chargedPionMass;
-    if ( leg1Mass > 1.5                            ) leg1Mass = 1.5;
-    classic_svFit::MeasuredTauLepton::kDecayType leg2Type = classic_svFit::MeasuredTauLepton::kTauToHadDecay;
-    double leg2Mass = selHadTau_sublead->mass();
-    if ( leg2Mass < classic_svFit::chargedPionMass ) leg2Mass = classic_svFit::chargedPionMass;
-    if ( leg2Mass > 1.5                            ) leg2Mass = 1.5;
-    measuredTauLeptons.push_back(classic_svFit::MeasuredTauLepton(leg1Type, selHadTau_lead->pt(), selHadTau_lead->eta(), selHadTau_lead->phi(), leg1Mass));
-    measuredTauLeptons.push_back(classic_svFit::MeasuredTauLepton(leg2Type, selHadTau_sublead->pt(), selHadTau_sublead->eta(), selHadTau_sublead->phi(), leg2Mass));
-    ClassicSVfit svFitAlgo;
-    svFitAlgo.addLogM_dynamic(false);
-    svFitAlgo.addLogM_fixed(true, 5.);
-    svFitAlgo.integrate(measuredTauLeptons, met.p4().px(), met.p4().py(), met.cov());
+//--------------Histogram filling section ends ------
 
 
-    // pre-compute BDT variables-2
-    //double mTauTau = -1.; // CV: temporarily comment-out the following line, to make code compile with "old" and "new" version of ClassicSVfit
-    const double mTauTau   = ( svFitAlgo.isValidSolution() ) ? static_cast<classic_svFit::HistogramAdapterDiTau*>(svFitAlgo.getHistogramAdapter())->getMass() : -1.;
-
-    Topness topness_publishedChi2(Topness::kPublishedChi2);
-    if(selBJet_lead && selBJet_sublead)
-    {
-      topness_publishedChi2.fit(
-        selLepton_lead->p4(), selLepton_sublead->p4(),
-        selBJet_lead->p4(),   selBJet_sublead->p4(),
-        met.p4().px(),        met.p4().py()
-      );
-    }
-    const double logTopness_publishedChi2 =
-      topness_publishedChi2.isValidSolution() ? topness_publishedChi2.logTopness() : -99.
-    ;
-    Topness topness_fixedChi2(Topness::kFixedChi2);
-    if(selBJet_lead && selBJet_sublead)
-    {
-      topness_fixedChi2.fit(
-        selLepton_lead->p4(), selLepton_sublead->p4(),
-        selBJet_lead->p4(),   selBJet_sublead->p4(),
-        met.p4().px(),        met.p4().py()
-      );
-    }
-    const double logTopness_fixedChi2 =
-      topness_fixedChi2.isValidSolution() ? topness_fixedChi2.logTopness() : -99.
-    ;
-
+// --------- bdt filler section begins    
     if(bdt_filler)
     {
       double lep1_genLepPt = ( selLepton_lead->genLepton()    ) ? selLepton_lead->genLepton()->pt()    : 0.;
@@ -2223,6 +2286,7 @@ int main(int argc, char* argv[])
 	;
 
     }
+// --------- bdt filler section ends    
 
     ++selectedEntries;
     selectedEntries_weighted += evtWeightRecorder.get(central_or_shift_main);

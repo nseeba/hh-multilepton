@@ -1,9 +1,6 @@
 #ifndef hhAnalysis_multilepton_EvtHistManager_hh_2l_2tau_h
 #define hhAnalysis_multilepton_EvtHistManager_hh_2l_2tau_h
 
-
-
-
 /** \class EvtHistManager_hh_2l_2tau
  *
  * Book and fill histograms for event-level quantities in the 2l+2tau_h category 
@@ -49,10 +46,8 @@ public:
 		 double dihiggsMass,
 		 double HT,
 		 double STMET,
-		 //double BDTOutput_SUM_gen_mHH_400,
-		 // const std::vector<double> & BDTOutput_SUM,
-		 std::map<std::string, double>& BDTOutput_SUM_Map,
-		 std::map<std::string, double>& XGBOutput_SUM_Map,
+		 std::map<std::string, double>& BDTOutput_SUM_Map_spin2,
+		 std::map<std::string, double>& BDTOutput_SUM_Map_spin0,
 		 unsigned int evt_number,
                  double evtWeight);
 
@@ -81,13 +76,11 @@ public:
   TH1 * histogram_STMET_;
   TH1 * histogram_EventCounter_;
   TH1 * histogram_EventNumber_;
-  // TH1 * histogram_BDTOutput_SUM_gen_mHH_400_;
-  std::map<std::string, TH1*> histogram_Map_BDTOutput_SUM_;
-  std::map<std::string, TH1*> histogram_Map_XGBOutput_SUM_;
-   
-  std::vector<string> labels_;
-  std::vector<string> XGB_labels_;
-  
+  std::map<std::string, TH1*> histogram_Map_BDTOutput_SUM_spin2_;
+  std::map<std::string, TH1*> histogram_Map_BDTOutput_SUM_spin0_;
+
+  std::vector<string> labels_spin2_;
+  std::vector<string> labels_spin0_;
 };
 
 #endif
