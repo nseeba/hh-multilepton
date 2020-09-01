@@ -4,7 +4,7 @@ from hhAnalysis.multilepton.configs.analyzeConfig_hh_1l_3tau import analyzeConfi
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics, get_lumi
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
-from tthAnalysis.HiggsToTauTau.common import logging, load_samples_hh_multilepton as load_samples
+from tthAnalysis.HiggsToTauTau.common import logging, load_samples_hh_multilepton as load_samples, load_samples_stitched
 
 import os
 import sys
@@ -28,6 +28,7 @@ parser.add_tau_id_wp()
 parser.add_hlt_filter()
 parser.add_files_per_job()
 parser.add_use_home()
+parser.add_stitched([ 'dy_nlo' ])
 parser.add_jet_cleaning()
 parser.add_gen_matching()
 parser.add_sideband()
@@ -58,6 +59,7 @@ hlt_filter        = args.hlt_filter
 lep_mva_wp        = args.lep_mva_wp
 files_per_job     = args.files_per_job
 use_home          = args.use_home
+use_stitched      = args.use_stitched
 sideband          = args.sideband
 tau_id            = args.tau_id
 jet_cleaning      = args.jet_cleaning
@@ -120,6 +122,8 @@ elif mode == "forBDTtraining":
   hadTau_selection_relaxed = tau_id + hadTauWP_map_relaxed[tau_id]
 else:
   raise ValueError("Invalid mode: %s" % mode)
+
+samples = load_samples_stitched(samples, era, use_stitched)
 
 for sample_name, sample_info in samples.items():
   if sample_name == 'sum_events': continue
