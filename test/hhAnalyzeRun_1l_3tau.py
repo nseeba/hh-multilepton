@@ -123,8 +123,6 @@ else:
 
 for sample_name, sample_info in samples.items():
   if sample_name == 'sum_events': continue
-  if sample_info["type"] == "mc":
-    sample_info["triggers"] = [ "2tau" ]
   if sample_name.startswith(("/DoubleEG/", "/DoubleMuon/", "/MuonEG/")):
     sample_info["use_it"] = False
   elif sample_name.startswith("/Tau/"):
