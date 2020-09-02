@@ -28,7 +28,6 @@ parser.add_tau_id_wp()
 parser.add_hlt_filter()
 parser.add_files_per_job()
 parser.add_use_home()
-parser.add_stitched([ 'dy_nlo' ])
 parser.add_jet_cleaning()
 parser.add_gen_matching()
 parser.add_sideband()
@@ -59,7 +58,6 @@ hlt_filter        = args.hlt_filter
 lep_mva_wp        = args.lep_mva_wp
 files_per_job     = args.files_per_job
 use_home          = args.use_home
-use_stitched      = args.use_stitched
 sideband          = args.sideband
 tau_id            = args.tau_id
 jet_cleaning      = args.jet_cleaning
@@ -107,11 +105,13 @@ hadTau_selection = tau_id + hadTauWP_map[tau_id]
 
 if mode == "default":
   samples = load_samples(era, suffix = "preselected" if use_preselected else "")
+  samples = load_samples_stitched(samples, era, [ 'dy_nlo' ])
 elif mode == "forBDTtraining":
   if use_preselected:
     raise ValueError("Producing Ntuples for BDT training from preselected Ntuples makes no sense!")
 
   samples = load_samples(era, suffix = "BDT")
+  samples = load_samples_stitched(samples, era, [ 'dy_lo' ])
 
   hadTauWP_map_relaxed = {
     'dR03mva' : 'VLoose',
@@ -122,8 +122,6 @@ elif mode == "forBDTtraining":
   hadTau_selection_relaxed = tau_id + hadTauWP_map_relaxed[tau_id]
 else:
   raise ValueError("Invalid mode: %s" % mode)
-
-samples = load_samples_stitched(samples, era, use_stitched)
 
 for sample_name, sample_info in samples.items():
   if sample_name == 'sum_events': continue
