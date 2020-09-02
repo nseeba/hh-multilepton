@@ -1777,7 +1777,7 @@ int main(int argc, char* argv[])
     const double m_lep2_tau1 = (selLepton_sublead->p4() + selHadTau_lead->p4()).mass();
     const double m_lep1_tau2 = (selLepton_lead->p4() + selHadTau_sublead->p4()).mass();
     const double m_lep2_tau2 = (selLepton_sublead->p4() + selHadTau_sublead->p4()).mass();
-    const double pt_HH_recoil = (selLepton_lead->p4() + selLepton_sublead->p4() + selHadTau_lead->p4() + selHadTau_sublead->p4() - met.p4()).pt();
+    const double pt_HH_recoil = (selLepton_lead->p4() + selLepton_sublead->p4() + selHadTau_lead->p4() + selHadTau_sublead->p4() + met.p4()).pt();
     const double mT_lep1 = comp_MT_met(selLepton_lead, met.pt(), met.phi());
     const double mT_lep2 = comp_MT_met(selLepton_sublead, met.pt(), met.phi());
     const double dr_lep1_tau1 = deltaR(selLepton_lead->p4(),    selHadTau_lead->p4());
