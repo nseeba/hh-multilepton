@@ -2009,7 +2009,7 @@ int main(int argc, char* argv[])
               dphi_tau_tau_OS_pair1 = dphi_tau_tau_OS;
               dphi_HHvis1           = dphi_HHvis;
             }
-            else if ( dphi_lep_tau_OS_pair1 == -1. && dphi_tau_tau_OS_pair1 == -1. ) 
+            else if ( dphi_lep_tau_OS_pair2 == -1. && dphi_tau_tau_OS_pair2 == -1. ) 
             {
               dphi_lep_tau_OS_pair2 = dphi_lep_tau_OS;
               dphi_tau_tau_OS_pair2 = dphi_tau_tau_OS;
