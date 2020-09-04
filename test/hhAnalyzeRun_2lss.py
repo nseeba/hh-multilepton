@@ -4,7 +4,7 @@ from hhAnalysis.multilepton.configs.analyzeConfig_hh_2lss import analyzeConfig_h
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics, get_lumi
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
-from tthAnalysis.HiggsToTauTau.common import logging, load_samples_hh_multilepton as load_samples
+from tthAnalysis.HiggsToTauTau.common import logging, load_samples_hh_multilepton as load_samples, load_samples_stitched
 
 import os
 import sys
