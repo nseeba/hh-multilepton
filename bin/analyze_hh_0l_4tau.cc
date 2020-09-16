@@ -403,9 +403,9 @@ int main(int argc, char* argv[])
   assert(fitFunctionFileName_spin2 != "");
   assert(fitFunctionFileName_spin0 != "");
   TMVAInterface* BDT_SUM_spin2 = new TMVAInterface(BDTFileName_odd_spin2, BDTFileName_even_spin2, BDTInputVariables_SUM_spin2, fitFunctionFileName_spin2);
-  BDT_SUM_spin2->enableBDTTransform();
+  BDT_SUM_spin2->disableBDTTransform();
   TMVAInterface* BDT_SUM_spin0 = new TMVAInterface(BDTFileName_odd_spin0, BDTFileName_even_spin0, BDTInputVariables_SUM_spin0, fitFunctionFileName_spin0);
-  BDT_SUM_spin0->enableBDTTransform();
+  BDT_SUM_spin0->disableBDTTransform();
   std::map<std::string, double> AllVars_Map;
   std::map<std::string, double> BDTOutput_SUM_Map_spin2;
   std::map<std::string, double> BDTOutput_SUM_Map_spin0;
@@ -1992,11 +1992,11 @@ int main(int argc, char* argv[])
     AllVars_Map["nBJet_medium"] =  selBJets_btag_medium.size();
     AllVars_Map["gen_mHH"] = 250.; // setting a Dummy value which will be reset depending on mass hypothesis 
 
-    std::map<std::string, double> BDTInputs_SUM_spin2 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin2);
-    std::map<std::string, double> BDTInputs_SUM_spin0 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin0);
+    std::map<std::string, double> BDTInputs_SUM_spin2 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin2, false);
+    std::map<std::string, double> BDTInputs_SUM_spin0 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin0, false);
 
-    BDTOutput_SUM_Map_spin2 = CreateBDTOutputMap(gen_mHH, BDT_SUM_spin2, BDTInputs_SUM_spin2, "hypo_spin2", eventInfo.event);
-    BDTOutput_SUM_Map_spin0 = CreateBDTOutputMap(gen_mHH, BDT_SUM_spin0, BDTInputs_SUM_spin0, "hypo_spin0", eventInfo.event);
+    BDTOutput_SUM_Map_spin2 = CreateBDTOutputMap(gen_mHH, BDT_SUM_spin2, BDTInputs_SUM_spin2, eventInfo.event, false, "_hypo_spin2");
+    BDTOutput_SUM_Map_spin0 = CreateBDTOutputMap(gen_mHH, BDT_SUM_spin0, BDTInputs_SUM_spin0, eventInfo.event, false, "_hypo_spin0");
     // -------------------------------
 
 
