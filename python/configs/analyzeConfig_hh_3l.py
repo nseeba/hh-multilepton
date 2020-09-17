@@ -50,6 +50,13 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
         leptonChargeSelections,
         central_or_shifts,
         lep_mva_wp,
+        lep_fakeable_pog_wp_mu_tmp1,
+        lep_fakeable_nearDeepJet_wp_mu_tmp1,
+        lep_fakeable_jetRelIso_cut_mu_tmp1,
+        lep_fakeable_pog_wp_e_tmp1,
+        lep_fakeable_nearDeepJet_wp_e_tmp1,
+        lep_fakeable_jetRelIso_cut_e_tmp1,
+        lep_FR_file_tmp1,
         jet_cleaning_by_index,
         gen_matching_by_index,
         max_files_per_job,
@@ -95,6 +102,12 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
       histograms_to_fit         = histograms_to_fit,
       triggers                  = [ '1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '1e2mu', '2e1mu' ],
       lep_mva_wp                = lep_mva_wp,
+      lep_fakeable_pog_wp_mu_tmp1           = lep_fakeable_pog_wp_mu_tmp1,
+      lep_fakeable_nearDeepJet_wp_mu_tmp1   = lep_fakeable_nearDeepJet_wp_mu_tmp1,
+      lep_fakeable_jetRelIso_cut_mu_tmp1    = lep_fakeable_jetRelIso_cut_mu_tmp1,
+      lep_fakeable_pog_wp_e_tmp1            = lep_fakeable_pog_wp_e_tmp1,    
+      lep_fakeable_nearDeepJet_wp_e_tmp1    = lep_fakeable_nearDeepJet_wp_e_tmp1,
+      lep_fakeable_jetRelIso_cut_e_tmp1     = lep_fakeable_jetRelIso_cut_e_tmp1,                              
       executable_prep_dcard     = executable_prep_dcard,
       executable_add_syst_dcard = executable_add_syst_dcard,
       do_sync                   = do_sync,
@@ -174,6 +187,8 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     if self.category_inclusive not in self.categories:
       self.categories.append(self.category_inclusive)
 
+    self.lep_FR_file_tmp1 = lep_FR_file_tmp1
+
   def set_BDT_training(self):
     """Run analysis with loose selection criteria for leptons,
        for the purpose of preparing event list files for BDT training.
@@ -218,9 +233,11 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     jobOptions['leptonFakeRateWeight.histogramName_e'] = self.leptonFakeRateWeight_histogramName_e
     jobOptions['leptonFakeRateWeight.histogramName_mu'] = self.leptonFakeRateWeight_histogramName_mu
     ## Edit Siddhesh for lepton fake-rates MC closure
-    #jobOptions['leptonFakeRateWeight.inputFileName'] = "tthAnalysis/HiggsToTauTau/data/fakeRate_LeptonLooser_Ram/FR_lep_hh_lepLoose_Ram_20200626.root"
-    #jobOptions['leptonFakeRateWeight.histogramName_e'] = "FR_mva080_el_data_comb"
-    #jobOptions['leptonFakeRateWeight.histogramName_mu'] = "FR_mva085_mu_data_comb"
+    jobOptions['leptonFakeRateWeight.inputFileName']    = "hhAnalysis/multilepton/data/FR_lep_hh_multilepton_mva_2017_KBFI_2020Sep14_20200914_LooserLeptonFR_1.root"
+    if self.lep_FR_file_tmp1 != "":
+      jobOptions['leptonFakeRateWeight.inputFileName']    = "hhAnalysis/multilepton/data/%s" % (str(self.lep_FR_file_tmp1))
+    jobOptions['leptonFakeRateWeight.histogramName_e']  = "FR_mva030_el_data_comb_QCD_fakes"
+    jobOptions['leptonFakeRateWeight.histogramName_mu'] = "FR_mva050_mu_data_comb_QCD_fakes"
     
 
     lines = super(analyzeConfig_hh_3l, self).createCfg_analyze(jobOptions, sample_info)

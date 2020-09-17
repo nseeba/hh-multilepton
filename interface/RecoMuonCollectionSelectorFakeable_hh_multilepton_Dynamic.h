@@ -1,15 +1,15 @@
-#ifndef tthAnalysis_HiggsToTauTau_RecoMuonCollectionSelectorFakeable_hh_multilepton_h
-#define tthAnalysis_HiggsToTauTau_RecoMuonCollectionSelectorFakeable_hh_multilepton_h
+#ifndef tthAnalysis_HiggsToTauTau_RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic_h
+#define tthAnalysis_HiggsToTauTau_RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic_h
 
 #include "tthAnalysis/HiggsToTauTau/interface/ParticleCollectionSelector.h" // ParticleCollectionSelector
 #include "tthAnalysis/HiggsToTauTau/interface/RecoMuon.h"                   // RecoMuon
 #include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h"       // Era
 
-class RecoMuonSelectorFakeable_hh_multilepton
+class RecoMuonSelectorFakeable_hh_multilepton_Dynamic
 {
 public:
   explicit
-  RecoMuonSelectorFakeable_hh_multilepton(Era era,
+  RecoMuonSelectorFakeable_hh_multilepton_Dynamic(Era era,
                            int index = -1,
                            bool debug = false,
                            bool set_selection_flags = true);
@@ -25,6 +25,11 @@ public:
 
   void set_assocJetBtag(bool flag);
 
+  void set_POGID(std::string pog_wp);
+  void set_jetBtagCSV_ID_forFakeable(std::string sjetBtagCSV_ID_forFakeable);
+  void set_jetRelIso_cut(double jetRelIso_cut);
+  void print_fakeable_consitions();
+  
   /**
    * @brief Get cut thresholds
    */
@@ -54,12 +59,13 @@ protected:
   const Double_t max_relIso_;     ///< upper cut threshold on relative isolation
   const Double_t max_sip3d_;      ///< upper cut threshold on significance of IP
   const bool apply_looseIdPOG_;   ///< apply (True) or do not apply (False) loose PFMuon id selection
-  const bool apply_mediumIdPOG_;  ///< apply (True) or do not apply (False) medium PFMuon id selection
+  bool apply_mediumIdPOG_;  ///< apply (True) or do not apply (False) medium PFMuon id selection
 
-  const Double_t min_jetPtRatio_; ///< lower cut on ratio of lepton pT to pT of nearby jet
-  const Double_t min_jetBtagCSV_forFakeable_; ///< lower cut threshold on b-tagging discriminator value of nearby jet
-  const Double_t max_jetBtagCSV_forFakeable_; ///< upper cut threshold on b-tagging discriminator value of nearby jet
+  Double_t min_jetPtRatio_; ///< lower cut on ratio of lepton pT to pT of nearby jet
+  Double_t min_jetBtagCSV_forFakeable_; ///< lower cut threshold on b-tagging discriminator value of nearby jet
+  Double_t max_jetBtagCSV_forFakeable_; ///< upper cut threshold on b-tagging discriminator value of nearby jet
   const Double_t max_jetBtagCSV_forTight_; ///< upper cut threshold on b-tagging discriminator value of nearby jet
+  std::string  jetBtagCSV_ID_forFakeable_; // method/WP for Deep Jet of nearby jet
 //-------------------------------------------------------------------------------
   const Double_t smoothBtagCut_minPt_;
   const Double_t smoothBtagCut_maxPt_;
@@ -71,17 +77,23 @@ protected:
   smoothBtagCut(double assocJet_pt) const;
 };
 
-class RecoMuonCollectionSelectorFakeable_hh_multilepton
-  : public ParticleCollectionSelector<RecoMuon, RecoMuonSelectorFakeable_hh_multilepton>
+class RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic
+  : public ParticleCollectionSelector<RecoMuon, RecoMuonSelectorFakeable_hh_multilepton_Dynamic>
 {
 public:
   explicit
-  RecoMuonCollectionSelectorFakeable_hh_multilepton(Era era,
+  RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic(Era era,
                                      int index = -1,
                                      bool debug = false,
                                      bool set_selection_flags = true);
-  ~RecoMuonCollectionSelectorFakeable_hh_multilepton() {}
+  ~RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic() {}
+
+  void set_POGID(std::string pog_wp);
+  void set_jetBtagCSV_ID_forFakeable(std::string sjetBtagCSV_ID_forFakeable);
+  void set_jetRelIso_cut(double jetRelIso_cut);
+  void print_fakeable_consitions();
+  
 };
 
-#endif // tthAnalysis_HiggsToTauTau_RecoMuonCollectionSelectorFakeable_hh_multilepton_h
+#endif // tthAnalysis_HiggsToTauTau_RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic_h
 

@@ -110,6 +110,8 @@
 
 #include "hhAnalysis/multilepton/interface/RecoElectronCollectionSelectorFakeable_hh_multilepton.h" // RecoElectronCollectionSelectorFakeable
 #include "hhAnalysis/multilepton/interface/RecoMuonCollectionSelectorFakeable_hh_multilepton.h" // RecoMuonCollectionSelectorFakeable
+#include "hhAnalysis/multilepton/interface/RecoElectronCollectionSelectorFakeable_hh_multilepton_Dynamic.h" // RecoElectronCollectionSelectorFakeable
+#include "hhAnalysis/multilepton/interface/RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic.h" // RecoMuonCollectionSelectorFakeable
 
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
 #include <boost/algorithm/string/predicate.hpp> // boost::starts_with()
@@ -341,6 +343,25 @@ int main(int argc, char* argv[])
 
   const double lep_mva_cut_mu = cfg_analyze.getParameter<double>("lep_mva_cut_mu");
   const double lep_mva_cut_e  = cfg_analyze.getParameter<double>("lep_mva_cut_e");
+  /*
+  const std::string lep_fakeable_pog_wp_mu_tmp1         = cfg_analyze.getParameter<std::string>("lep_fakeable_pog_wp_mu_tmp1");
+  const std::string lep_fakeable_nearDeepJet_wp_mu_tmp1 = cfg_analyze.getParameter<std::string>("lep_fakeable_nearDeepJet_wp_mu_tmp1");
+  const double      lep_fakeable_jetRelIso_cut_mu_tmp1  = cfg_analyze.getParameter<double>("lep_fakeable_jetRelIso_cut_mu_tmp1");
+  
+  const std::string lep_fakeable_pog_wp_e_tmp1          = cfg_analyze.getParameter<std::string>("lep_fakeable_pog_wp_e_tmp1");
+  const std::string lep_fakeable_nearDeepJet_wp_e_tmp1  = cfg_analyze.getParameter<std::string>("lep_fakeable_nearDeepJet_wp_e_tmp1");
+  const double      lep_fakeable_jetRelIso_cut_e_tmp1   = cfg_analyze.getParameter<double>("lep_fakeable_jetRelIso_cut_e_tmp1");
+  std::cout << "lep_mva_cut_mu: " << lep_mva_cut_mu
+	    << ",  lep_fakeable_pog_wp_mu_tmp1: " << lep_fakeable_pog_wp_mu_tmp1
+	    << ",  lep_fakeable_nearDeepJet_wp_mu_tmp1: " << lep_fakeable_nearDeepJet_wp_mu_tmp1
+	    << ",  lep_fakeable_jetRelIso_cut_mu_tmp1: " << lep_fakeable_jetRelIso_cut_mu_tmp1
+	    << std::endl;
+  std::cout << "lep_mva_cut_e: " << lep_mva_cut_e
+	    << ",  lep_fakeable_pog_wp_e_tmp1: " << lep_fakeable_pog_wp_e_tmp1
+	    << ",  lep_fakeable_nearDeepJet_wp_e_tmp1: " << lep_fakeable_nearDeepJet_wp_e_tmp1
+	    << ",  lep_fakeable_jetRelIso_cut_e_tmp1: " << lep_fakeable_jetRelIso_cut_e_tmp1
+	    << std::endl;
+  */
 
   enum { kOS, kSS };
   std::string leptonChargeSelection_string = cfg_analyze.getParameter<std::string>("leptonChargeSelection");
@@ -586,6 +607,11 @@ int main(int argc, char* argv[])
   RecoMuonCollectionSelectorLoose preselMuonSelector(era, -1, isDEBUG);
   //RecoMuonCollectionSelectorFakeable fakeableMuonSelector(era, -1, isDEBUG);
   RecoMuonCollectionSelectorFakeable_hh_multilepton fakeableMuonSelector(era, -1, isDEBUG);
+  /*RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic fakeableMuonSelector(era, -1, isDEBUG);
+  fakeableMuonSelector.set_POGID(lep_fakeable_pog_wp_mu_tmp1);
+  fakeableMuonSelector.set_jetBtagCSV_ID_forFakeable(lep_fakeable_nearDeepJet_wp_mu_tmp1);
+  fakeableMuonSelector.set_jetRelIso_cut(lep_fakeable_jetRelIso_cut_mu_tmp1);
+  fakeableMuonSelector.print_fakeable_consitions(); */ 
   RecoMuonCollectionSelectorTight tightMuonSelector(era, -1, isDEBUG);
   muonReader->set_mvaTTH_wp(lep_mva_cut_mu);
 
@@ -596,6 +622,11 @@ int main(int argc, char* argv[])
   RecoElectronCollectionSelectorLoose preselElectronSelector(era, -1, isDEBUG);
   //RecoElectronCollectionSelectorFakeable fakeableElectronSelector(era, -1, isDEBUG);
   RecoElectronCollectionSelectorFakeable_hh_multilepton fakeableElectronSelector(era, -1, isDEBUG);
+  /*RecoElectronCollectionSelectorFakeable_hh_multilepton_Dynamic fakeableElectronSelector(era, -1, isDEBUG);
+  fakeableElectronSelector.set_POGID_forFakeable(lep_fakeable_pog_wp_e_tmp1);
+  fakeableElectronSelector.set_jetBtagCSV_ID_forFakeable(lep_fakeable_nearDeepJet_wp_e_tmp1);
+  fakeableElectronSelector.set_jetRelIso_cut(lep_fakeable_jetRelIso_cut_e_tmp1);
+  fakeableElectronSelector.print_fakeable_consitions(); */ 
   RecoElectronCollectionSelectorTight tightElectronSelector(era, -1, isDEBUG);
   electronReader->set_mvaTTH_wp(lep_mva_cut_e);
  
@@ -1702,6 +1733,9 @@ int main(int argc, char* argv[])
       if(electronSelection == kFakeable && muonSelection == kFakeable)
       {
         evtWeightRecorder.record_leptonSF(dataToMCcorrectionInterface->getSF_leptonID_and_Iso_fakeable_to_loose());
+	if ( run_lumi_eventSelector ) {
+	  std::cout << "electronSelection == kFakeable && muonSelection == kFakeable:  dataToMCcorrectionInterface->getSF_leptonID_and_Iso_fakeable_to_loose(): " << dataToMCcorrectionInterface->getSF_leptonID_and_Iso_fakeable_to_loose() << std::endl;
+	}
       }
       else if(electronSelection >= kFakeable && muonSelection >= kFakeable)
       {
@@ -2249,8 +2283,19 @@ int main(int argc, char* argv[])
     if ( isMCClosure_e || isMCClosure_m ) {
       bool applySignalRegionVeto = (isMCClosure_e && countFakeElectrons(selLeptons) >= 1) || (isMCClosure_m && countFakeMuons(selLeptons) >= 1);
       if ( applySignalRegionVeto && tightLeptons.size() >= 3 ) failsSignalRegionVeto = true;
+      std::cout << "applySignalRegionVeto: " << applySignalRegionVeto << std::endl; 
     } else if ( electronSelection == kFakeable || muonSelection == kFakeable ) {
       if ( tightLeptons.size() >= 3 ) failsSignalRegionVeto = true;
+    }
+    if ( run_lumi_eventSelector ) {
+      std::cout << "isMCClosure_e: " << isMCClosure_e << ", isMCClosure_m: " << isMCClosure_m
+		<< ", countFakeElectrons(selLeptons): " << countFakeElectrons(selLeptons)
+		<< ", countFakeMuons(selLeptons): " << countFakeMuons(selLeptons)
+		<< ", tightLeptons.size(): " << tightLeptons.size()
+		<< ", electronSelection: " << electronSelection
+		<< ", muonSelection: " << muonSelection
+		<< ", failsSignalRegionVeto: " << failsSignalRegionVeto
+		<< std::endl;
     }
     if ( failsSignalRegionVeto ) {
       if ( run_lumi_eventSelector ) {
@@ -2263,6 +2308,11 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update("signal region veto", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("signal region veto", evtWeightRecorder.get(central_or_shift_main));
+
+    if ( run_lumi_eventSelector ) {
+      std::cout << "hereSiddh:: " << eventInfo << "\t genMatchIdx_0: " << genMatchIdx_0;
+      std::cout << "\nevtWeightRecorder: " << evtWeightRecorder << std::endl; 
+    }
 
     std::map<std::string, double> weightMapHH;
     std::map<std::string, double> reWeightMapHH;
@@ -2719,6 +2769,12 @@ int main(int argc, char* argv[])
       printf("Invalid event category\t\t nEle_3selLep %d, nMu_3selLep %d",nEle_3selLep,nMu_3selLep);
     }
     sTmp123 += Form(" isVBF: %i, ",(int)isVBF);
+
+    if ( run_lumi_eventSelector ) {
+      std::cout << "evtCategories: ";
+      for (size_t i=0; i<evtCategories.size(); i++) std::cout << evtCategories[i] << ",  ";
+      std::cout << std::endl;
+    }
     
     double lep1_genLepPt = ( selLepton_lead->genLepton()    ) ? selLepton_lead->genLepton()->pt()    : 0.;
     double lep2_genLepPt = ( selLepton_sublead->genLepton() ) ? selLepton_sublead->genLepton()->pt() : 0.;
