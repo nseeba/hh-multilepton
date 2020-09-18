@@ -19,10 +19,9 @@ RecoMuonSelectorFakeable_hh_multilepton::RecoMuonSelectorFakeable_hh_multilepton
   , max_sip3d_(8.) // L
   , apply_looseIdPOG_(true) // L
   , apply_mediumIdPOG_(false) // L
-  , min_jetPtRatio_(2. / 3) // F
-  , min_jetBtagCSV_forFakeable_(get_BtagWP(era_, Btag::kDeepJet, BtagWP::kMedium)) // F
-  , max_jetBtagCSV_forFakeable_(get_BtagWP(era_, Btag::kDeepJet, BtagWP::kTight)) // F
-  , max_jetBtagCSV_forTight_(get_BtagWP(era_, Btag::kDeepJet, BtagWP::kMedium)) // F
+  , min_jetPtRatio_(1.0 / (1.0 + 0.8)) // F  // 2 / 3 default
+  , min_jetBtagCSV_(get_BtagWP(era_, Btag::kDeepJet, BtagWP::kLoose)) // F
+  , max_jetBtagCSV_(get_BtagWP(era_, Btag::kDeepJet, BtagWP::kMedium)) // F
   , smoothBtagCut_minPt_(20.)
   , smoothBtagCut_maxPt_(45.)
   , smoothBtagCut_ptDiff_(smoothBtagCut_maxPt_ - smoothBtagCut_minPt_)
@@ -167,15 +166,13 @@ RecoMuonSelectorFakeable_hh_multilepton::operator()(const RecoMuon & muon) const
     }
     return false;
   }
-  if (muon.mvaRawTTH() > muon.mvaRawTTH_cut()) {
-    if(muon.jetBtagCSV(useAssocJetBtag_) > max_jetBtagCSV_forTight_)
+  if(muon.jetBtagCSV(useAssocJetBtag_) > max_jetBtagCSV_)
+  {
+    if(debug_)
     {
-      if(debug_)
-      {
-	std::cout << "FAILS jetBtagCSV = " << muon.jetBtagCSV(useAssocJetBtag_) << " <= " << max_jetBtagCSV_forTight_ << " fakeable cut\n";
-      }
-      return false;
+      std::cout << "FAILS jetBtagCSV = " << muon.jetBtagCSV(useAssocJetBtag_) << " <= " << max_jetBtagCSV_ << " fakeable cut\n";
     }
+    return false;
   }
 
   if(muon.mvaRawTTH() <= muon.mvaRawTTH_cut())
@@ -216,7 +213,7 @@ double
 RecoMuonSelectorFakeable_hh_multilepton::smoothBtagCut(double assocJet_pt) const
 {
   const double ptInterp = std::min(1., std::max(0., assocJet_pt - smoothBtagCut_minPt_) / smoothBtagCut_ptDiff_);
-  return ptInterp * min_jetBtagCSV_forFakeable_ + (1. - ptInterp) * max_jetBtagCSV_forFakeable_;
+  return ptInterp * min_jetBtagCSV_ + (1. - ptInterp) * max_jetBtagCSV_;
 }
 
 RecoMuonCollectionSelectorFakeable_hh_multilepton::RecoMuonCollectionSelectorFakeable_hh_multilepton(Era era,

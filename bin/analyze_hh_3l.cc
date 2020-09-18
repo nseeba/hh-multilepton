@@ -343,7 +343,7 @@ int main(int argc, char* argv[])
 
   const double lep_mva_cut_mu = cfg_analyze.getParameter<double>("lep_mva_cut_mu");
   const double lep_mva_cut_e  = cfg_analyze.getParameter<double>("lep_mva_cut_e");
-  /*
+  
   const std::string lep_fakeable_pog_wp_mu_tmp1         = cfg_analyze.getParameter<std::string>("lep_fakeable_pog_wp_mu_tmp1");
   const std::string lep_fakeable_nearDeepJet_wp_mu_tmp1 = cfg_analyze.getParameter<std::string>("lep_fakeable_nearDeepJet_wp_mu_tmp1");
   const double      lep_fakeable_jetRelIso_cut_mu_tmp1  = cfg_analyze.getParameter<double>("lep_fakeable_jetRelIso_cut_mu_tmp1");
@@ -361,7 +361,7 @@ int main(int argc, char* argv[])
 	    << ",  lep_fakeable_nearDeepJet_wp_e_tmp1: " << lep_fakeable_nearDeepJet_wp_e_tmp1
 	    << ",  lep_fakeable_jetRelIso_cut_e_tmp1: " << lep_fakeable_jetRelIso_cut_e_tmp1
 	    << std::endl;
-  */
+  
 
   enum { kOS, kSS };
   std::string leptonChargeSelection_string = cfg_analyze.getParameter<std::string>("leptonChargeSelection");
@@ -606,12 +606,12 @@ int main(int argc, char* argv[])
   RecoMuonCollectionGenMatcher muonGenMatcher;
   RecoMuonCollectionSelectorLoose preselMuonSelector(era, -1, isDEBUG);
   //RecoMuonCollectionSelectorFakeable fakeableMuonSelector(era, -1, isDEBUG);
-  RecoMuonCollectionSelectorFakeable_hh_multilepton fakeableMuonSelector(era, -1, isDEBUG);
-  /*RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic fakeableMuonSelector(era, -1, isDEBUG);
+  //RecoMuonCollectionSelectorFakeable_hh_multilepton fakeableMuonSelector(era, -1, isDEBUG);
+  RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic fakeableMuonSelector(era, -1, isDEBUG);
   fakeableMuonSelector.set_POGID(lep_fakeable_pog_wp_mu_tmp1);
   fakeableMuonSelector.set_jetBtagCSV_ID_forFakeable(lep_fakeable_nearDeepJet_wp_mu_tmp1);
   fakeableMuonSelector.set_jetRelIso_cut(lep_fakeable_jetRelIso_cut_mu_tmp1);
-  fakeableMuonSelector.print_fakeable_consitions(); */ 
+  fakeableMuonSelector.print_fakeable_consitions(); 
   RecoMuonCollectionSelectorTight tightMuonSelector(era, -1, isDEBUG);
   muonReader->set_mvaTTH_wp(lep_mva_cut_mu);
 
@@ -621,12 +621,12 @@ int main(int argc, char* argv[])
   RecoElectronCollectionCleaner electronCleaner(0.3, isDEBUG);
   RecoElectronCollectionSelectorLoose preselElectronSelector(era, -1, isDEBUG);
   //RecoElectronCollectionSelectorFakeable fakeableElectronSelector(era, -1, isDEBUG);
-  RecoElectronCollectionSelectorFakeable_hh_multilepton fakeableElectronSelector(era, -1, isDEBUG);
-  /*RecoElectronCollectionSelectorFakeable_hh_multilepton_Dynamic fakeableElectronSelector(era, -1, isDEBUG);
+  //RecoElectronCollectionSelectorFakeable_hh_multilepton fakeableElectronSelector(era, -1, isDEBUG);
+  RecoElectronCollectionSelectorFakeable_hh_multilepton_Dynamic fakeableElectronSelector(era, -1, isDEBUG);
   fakeableElectronSelector.set_POGID_forFakeable(lep_fakeable_pog_wp_e_tmp1);
   fakeableElectronSelector.set_jetBtagCSV_ID_forFakeable(lep_fakeable_nearDeepJet_wp_e_tmp1);
   fakeableElectronSelector.set_jetRelIso_cut(lep_fakeable_jetRelIso_cut_e_tmp1);
-  fakeableElectronSelector.print_fakeable_consitions(); */ 
+  fakeableElectronSelector.print_fakeable_consitions();  
   RecoElectronCollectionSelectorTight tightElectronSelector(era, -1, isDEBUG);
   electronReader->set_mvaTTH_wp(lep_mva_cut_e);
  
@@ -1744,7 +1744,7 @@ int main(int argc, char* argv[])
         // 2) electron selection is relaxed to fakeable and muon selection is kept as tight -> corresponds to MC closure w/ relaxed e selection
         // 3) muon selection is relaxed to fakeable and electron selection is kept as tight -> corresponds to MC closure w/ relaxed mu selection
         // we allow (2) and (3) so that the MC closure regions would more compatible w/ the SR (1) in comparison
-        evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface);
+        evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface); // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TEST ONLY
       }
     }
 
@@ -2274,7 +2274,7 @@ int main(int argc, char* argv[])
       std::cout << "event " << eventInfo.str() << " FAILS MEt filters." << std::endl;
 	}
 	continue;
-      }
+      } 
     }
     cutFlowTable.update("MEt filters", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("MEt filters", evtWeightRecorder.get(central_or_shift_main));
@@ -2283,7 +2283,7 @@ int main(int argc, char* argv[])
     if ( isMCClosure_e || isMCClosure_m ) {
       bool applySignalRegionVeto = (isMCClosure_e && countFakeElectrons(selLeptons) >= 1) || (isMCClosure_m && countFakeMuons(selLeptons) >= 1);
       if ( applySignalRegionVeto && tightLeptons.size() >= 3 ) failsSignalRegionVeto = true;
-      std::cout << "applySignalRegionVeto: " << applySignalRegionVeto << std::endl; 
+      //std::cout << "applySignalRegionVeto: " << applySignalRegionVeto << std::endl; 
     } else if ( electronSelection == kFakeable || muonSelection == kFakeable ) {
       if ( tightLeptons.size() >= 3 ) failsSignalRegionVeto = true;
     }
@@ -2314,6 +2314,51 @@ int main(int argc, char* argv[])
       std::cout << "\nevtWeightRecorder: " << evtWeightRecorder << std::endl; 
     }
 
+    int nEle_3selLep = 0, nMu_3selLep = 0;
+    for (size_t i=0; i<3; i++) {
+      //std::cout << "lep pdgId: " << selLeptons[i]->pdgId() << std::endl;
+      if (abs(selLeptons[i]->pdgId()) == 11) nEle_3selLep++;
+      if (abs(selLeptons[i]->pdgId()) == 13) nMu_3selLep++;
+    }
+    //std::cout << "nEle_3selLep: " << nEle_3selLep << ",  nMu_3selLep: " << nMu_3selLep << std::endl;
+  
+    std::vector<std::string> evtCategories;		
+    if      (isWjjBoosted)   evtCategories.push_back("hh_WjjBoosted");
+    else if (isWjjResolved)  evtCategories.push_back("hh_WjjResolved");
+    else if (isWjjHasOnly1j) evtCategories.push_back("hh_WjjHasOnly1j");    
+    /*if      ( sumLeptonCharge_3l < 0 ) evtCategories.push_back("hh_3lneg");
+    else if ( sumLeptonCharge_3l > 0 ) evtCategories.push_back("hh_3lpos");
+    if (isVBF) evtCategories.push_back("hh_3l_VBF");	 
+    else       evtCategories.push_back("hh_3l_nonVBF");*/
+    if      (nEle_3selLep == 3 && nMu_3selLep == 0) evtCategories.push_back("hh_3e");
+    else if (nEle_3selLep == 2 && nMu_3selLep == 1) evtCategories.push_back("hh_2e1mu");
+    else if (nEle_3selLep == 1 && nMu_3selLep == 2) evtCategories.push_back("hh_1e2mu");
+    else if (nEle_3selLep == 0 && nMu_3selLep == 3) evtCategories.push_back("hh_3mu");
+    else {
+      printf("Invalid event category\t\t nEle_3selLep %d, nMu_3selLep %d",nEle_3selLep,nMu_3selLep);
+    }
+    //sTmp123 += Form(" isVBF: %i, ",(int)isVBF);
+
+    if ( run_lumi_eventSelector ) {
+      std::cout << "evtCategories: ";
+      for (size_t i=0; i<evtCategories.size(); i++) std::cout << evtCategories[i] << ",  ";
+      std::cout << std::endl;
+    }
+
+    for (size_t i=0; i<evtCategories.size(); i++) {
+      if (evtCategories[i].compare("hh_3e")    == 0 ||
+	  evtCategories[i].compare("hh_2e1mu") == 0 ||
+	  evtCategories[i].compare("hh_1e2mu") == 0 ||
+	  evtCategories[i].compare("hh_3mu")   == 0  ) {
+	if (genMatchIdx_0 == 0) {
+	  cutFlowTable.update(Form("signal region veto,  %s ,  genMatchIdx %d",evtCategories[i].data(),genMatchIdx_0), evtWeightRecorder.get(central_or_shift_main));
+	}
+      } 
+    }
+    if (genMatchIdx_0 == 0) {
+      cutFlowTable.update(Form("signal region veto,  3l ,  genMatchIdx %d",genMatchIdx_0), evtWeightRecorder.get(central_or_shift_main));
+    }
+    
     std::map<std::string, double> weightMapHH;
     std::map<std::string, double> reWeightMapHH;
     double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
@@ -2380,13 +2425,6 @@ int main(int argc, char* argv[])
     }
     
 
-    int nEle_3selLep = 0, nMu_3selLep = 0;
-    for (size_t i=0; i<3; i++) {
-      //std::cout << "lep pdgId: " << selLeptons[i]->pdgId() << std::endl;
-      if (abs(selLeptons[i]->pdgId()) == 11) nEle_3selLep++;
-      if (abs(selLeptons[i]->pdgId()) == 13) nMu_3selLep++;
-    }
-    //std::cout << "nEle_3selLep: " << nEle_3selLep << ",  nMu_3selLep: " << nMu_3selLep << std::endl;
     
     
 
@@ -2587,7 +2625,7 @@ int main(int argc, char* argv[])
     // just to avoid 'variables defined but not used' error
     TString sTmp123 = Form("selLepton1_H_WW_ll pt: %f,  selLepton2_H_WW_ll: %f,  vbf_dEta_jj: %f",selLepton1_H_WW_ll->pt(),selLepton2_H_WW_ll->pt(), vbf_dEta_jj);
     sTmp123 += "";
-
+    sTmp123 += Form(" isVBF: %i, ",(int)isVBF); 
 
     // Variables using lepton1/2/3 indexed following Approach-0
     const RecoLepton* selLepton_H_WW_ljj_Approach0 = selLepton_H_WW_ljj;
@@ -2753,29 +2791,7 @@ int main(int argc, char* argv[])
     //std::cout << "siddh here 10" << std::endl;
     
 //--- fill histograms with events passing final selection
-    std::vector<std::string> evtCategories;		
-    if      (isWjjBoosted)   evtCategories.push_back("hh_WjjBoosted");
-    else if (isWjjResolved)  evtCategories.push_back("hh_WjjResolved");
-    else if (isWjjHasOnly1j) evtCategories.push_back("hh_WjjHasOnly1j");    
-    /*if      ( sumLeptonCharge_3l < 0 ) evtCategories.push_back("hh_3lneg");
-    else if ( sumLeptonCharge_3l > 0 ) evtCategories.push_back("hh_3lpos");
-    if (isVBF) evtCategories.push_back("hh_3l_VBF");	 
-    else       evtCategories.push_back("hh_3l_nonVBF");*/
-    if      (nEle_3selLep == 3 && nMu_3selLep == 0) evtCategories.push_back("hh_3e");
-    else if (nEle_3selLep == 2 && nMu_3selLep == 1) evtCategories.push_back("hh_2e1mu");
-    else if (nEle_3selLep == 1 && nMu_3selLep == 2) evtCategories.push_back("hh_1e2mu");
-    else if (nEle_3selLep == 0 && nMu_3selLep == 3) evtCategories.push_back("hh_3mu");
-    else {
-      printf("Invalid event category\t\t nEle_3selLep %d, nMu_3selLep %d",nEle_3selLep,nMu_3selLep);
-    }
-    sTmp123 += Form(" isVBF: %i, ",(int)isVBF);
-
-    if ( run_lumi_eventSelector ) {
-      std::cout << "evtCategories: ";
-      for (size_t i=0; i<evtCategories.size(); i++) std::cout << evtCategories[i] << ",  ";
-      std::cout << std::endl;
-    }
-    
+     
     double lep1_genLepPt = ( selLepton_lead->genLepton()    ) ? selLepton_lead->genLepton()->pt()    : 0.;
     double lep2_genLepPt = ( selLepton_sublead->genLepton() ) ? selLepton_sublead->genLepton()->pt() : 0.;
     double lep3_genLepPt = ( selLepton_third->genLepton()   ) ? selLepton_third->genLepton()->pt()   : 0.;
