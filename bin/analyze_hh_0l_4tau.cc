@@ -123,6 +123,36 @@
 #include <TMath.h>
 #include <Python.h>
 
+
+edm::ParameterSet
+makeHistManager_cfg(const std::string & process,
+                    const std::string & category,
+                    const std::string & era,
+                    const std::string & central_or_shift,
+                    const std::vector<double> & gen_mHH,
+                    int idx = -1)
+{
+  edm::ParameterSet cfg = makeHistManager_cfg(process, category, era, central_or_shift, idx);
+  cfg.addParameter<std::vector<double>>("gen_mHH", gen_mHH);
+  return cfg;
+}
+
+edm::ParameterSet
+makeHistManager_cfg(const std::string & process,
+                    const std::string & category,
+                    const std::string & era,
+                    const std::string & central_or_shift,
+                    const std::vector<double> & gen_mHH,
+                    const std::string & option,
+                    int idx = -1)
+{
+  edm::ParameterSet cfg = makeHistManager_cfg(process, category, era, central_or_shift, gen_mHH, idx);
+  cfg.addParameter<std::string>("option", option);
+  return cfg;
+}
+
+
+
 typedef math::PtEtaPhiMLorentzVector LV;
 typedef std::vector<std::string> vstring;
 typedef std::vector<double> vdouble;
@@ -358,9 +388,28 @@ int main(int argc, char* argv[])
 
   const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
 
-  // std::string BDTFileName_even  = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_even");
-  // std::string BDTFileName_odd   = cfg_analyze.getParameter<std::string>("BDT_xml_FileName_odd");
-  // std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
+  const edm::ParameterSet mvaInfo_res = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_res");
+  std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
+  std::string BDTFileName_even_spin2  = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_even_spin2");
+  std::string BDTFileName_odd_spin2   = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_odd_spin2");
+  std::string fitFunctionFileName_spin2 = mvaInfo_res.getParameter<std::string>("fitFunctionFileName_spin2");
+  std::vector<std::string> BDTInputVariables_SUM_spin2 = mvaInfo_res.getParameter<std::vector<std::string>>("inputVars_spin2");
+  std::string BDTFileName_even_spin0  = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_even_spin0");
+  std::string BDTFileName_odd_spin0   = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_odd_spin0");
+  std::string fitFunctionFileName_spin0 = mvaInfo_res.getParameter<std::string>("fitFunctionFileName_spin0");
+  std::vector<std::string> BDTInputVariables_SUM_spin0 = mvaInfo_res.getParameter<std::vector<std::string>>("inputVars_spin0");
+
+
+  assert(fitFunctionFileName_spin2 != "");
+  assert(fitFunctionFileName_spin0 != "");
+  TMVAInterface* BDT_SUM_spin2 = new TMVAInterface(BDTFileName_odd_spin2, BDTFileName_even_spin2, BDTInputVariables_SUM_spin2, fitFunctionFileName_spin2);
+  BDT_SUM_spin2->disableBDTTransform();
+  TMVAInterface* BDT_SUM_spin0 = new TMVAInterface(BDTFileName_odd_spin0, BDTFileName_even_spin0, BDTInputVariables_SUM_spin0, fitFunctionFileName_spin0);
+  BDT_SUM_spin0->disableBDTTransform();
+  std::map<std::string, double> AllVars_Map;
+  std::map<std::string, double> BDTOutput_SUM_Map_spin2;
+  std::map<std::string, double> BDTOutput_SUM_Map_spin0;
+
 
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
   std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
@@ -578,31 +627,11 @@ int main(int argc, char* argv[])
     inputTree -> registerReader(psWeightReader);
   }
 
-  // std::vector<std::string> BDTInputVariables_SUM =
-  //   {
-  //     "m_tau1_tau2",
-  //     "dr_secondTauHPair_dr",
-  //     "gen_mHH",
-  //     "dr_bestTauHPair_m",
-  //     "avg_dr_jet",
-  //     "met",
-  //     "diHiggsMass",
-  //     "tau2_pt",q
-  //     "mTauTau",
-  //     "mht"
-  //   }; // These are the preliminary optimized trainvars for res_spin0
-
-  // assert(fitFunctionFileName != "");q
-  // //XGBInterface* XGB_SUM = new XGBInterface(BDTFileName_odd_pkl, BDTFileName_even_pkl, fitFunctionFileName,  BDTInputVariables_SUM);
-
-  // TMVAInterface* BDT_SUM = new TMVAInterface(BDTFileName_odd, BDTFileName_even, BDTInputVariables_SUM, fitFunctionFileName);
-  // BDT_SUM->enableBDTTransform();
-
-  // std::map<std::string, double> BDTInputs_SUM;
 
 
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
   std::ostream* selEventsFile = ( selEventsFileName_output != "" ) ? new std::ofstream(selEventsFileName_output.data(), std::ios::out) : 0;
+  std::cout << "selEventsFileName_output = " << selEventsFileName_output << std::endl;
 
 //--- declare histograms
   struct selHistManagerType
@@ -701,7 +730,7 @@ int main(int argc, char* argv[])
         );
 
         selHistManager->evt_[evt_cat_str] = new EvtHistManager_hh_0l_4tau(makeHistManager_cfg(process_and_genMatchName,
-          Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
+          Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift, gen_mHH));
         selHistManager->evt_[evt_cat_str]->bookHistograms(fs);
         selHistManager->svFit4tau_woMassConstraint_[evt_cat_str] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatchName,
           Form("%s/sel/svFit4tau_woMassConstraint", histogramDir.data()), era_string, central_or_shift));
@@ -734,7 +763,7 @@ int main(int argc, char* argv[])
             );
 
             selHistManager->evt_in_decayModes_[evt_cat_str][decayMode_evt] = new EvtHistManager_hh_0l_4tau(makeHistManager_cfg(decayMode_and_genMatchName,
-              Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
+              Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift, gen_mHH));
             selHistManager->evt_in_decayModes_[evt_cat_str][decayMode_evt]->bookHistograms(fs);
             selHistManager->svFit4tau_woMassConstraint_in_decayModes_[evt_cat_str][decayMode_evt] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(decayMode_and_genMatchName,
               Form("%s/sel/svFit4tau_woMassConstraint", histogramDir.data()), era_string, central_or_shift));
@@ -1510,7 +1539,7 @@ int main(int argc, char* argv[])
     const std::vector<const RecoJet*> selJets_btag = jetSelector(cleanedJets_wrt_leptons, isHigherCSV);
     const std::vector<const RecoJet*> selBJets_btag_loose = jetSelectorBtagLoose(selJets_btag, isHigherPt);
     const std::vector<const RecoJet*> selBJets_btag_medium = jetSelectorBtagMedium(selJets_btag, isHigherPt);
-    const double pt_HH_recoil = (selHadTau_lead->p4() + selHadTau_sublead->p4() + selHadTau_third->p4() + selHadTau_fourth->p4() - met.p4()).pt();
+    const double pt_HH_recoil = (selHadTau_lead->p4() + selHadTau_sublead->p4() + selHadTau_third->p4() + selHadTau_fourth->p4() + met.p4()).pt();
 
 
     // calculate tau mass using 2 most tau-like taus with SVFit
@@ -1870,6 +1899,105 @@ int main(int argc, char* argv[])
         }
     }
 
+    AllVars_Map["tau1_pt"] =  selHadTau_lead->pt();
+    AllVars_Map["tau1_eta"] = selHadTau_lead->eta();
+    AllVars_Map["tau1_phi"] = selHadTau_lead->phi();
+    AllVars_Map["tau1_raw"] = selHadTau_lead->raw_mva();
+    AllVars_Map["tau2_pt"] = selHadTau_sublead->pt();
+    AllVars_Map["tau2_eta"] =  selHadTau_sublead->eta();
+    AllVars_Map["tau2_phi"] = selHadTau_lead->phi();
+    AllVars_Map["tau2_raw"] = selHadTau_sublead->raw_mva();
+    AllVars_Map["tau3_pt"] = selHadTau_third->pt();
+    AllVars_Map["tau3_eta"] = selHadTau_third->eta();
+    AllVars_Map["tau3_phi"] = selHadTau_third->phi();
+    AllVars_Map["tau3_raw"] = selHadTau_third->raw_mva();
+    AllVars_Map["tau4_pt"] = selHadTau_fourth->pt();
+    AllVars_Map["tau4_eta"] = selHadTau_fourth->eta();
+    AllVars_Map["tau4_phi"] = selHadTau_fourth->phi();
+    AllVars_Map["tau4_raw"] = selHadTau_fourth->raw_mva();
+    AllVars_Map["tau1_mva"] = tau1_mva;
+    AllVars_Map["tau2_mva"] = tau2_mva;
+    AllVars_Map["tau3_mva"] = tau3_mva;
+    AllVars_Map["tau4_mva"] = tau4_mva;
+    AllVars_Map["diHiggsVisMass"] = dihiggsVisMass_sel;
+    AllVars_Map["diHiggsMass"] = dihiggsMass;
+    AllVars_Map["mTauTau"] = mTauTau;
+    AllVars_Map["avg_dr_jet"] = avg_dr_jet;
+    AllVars_Map["STMET"] = STMET;
+    AllVars_Map["HT"] = HT;
+    AllVars_Map["met_LD"] = met_LD;
+    AllVars_Map["mht"] = mht_p4.pt();
+    AllVars_Map["met_phi"] = met.phi();
+    AllVars_Map["met"] = met.pt();
+    AllVars_Map["pt_HH_recoil"] = pt_HH_recoil;
+    AllVars_Map["deltaEta_tau1_tau2"] = deltaEta_tau1_tau2;
+    AllVars_Map["deltaEta_tau1_tau3"] = deltaEta_tau1_tau3;
+    AllVars_Map["deltaEta_tau1_tau4"] = deltaEta_tau1_tau4;
+    AllVars_Map["deltaEta_tau2_tau3"] = deltaEta_tau2_tau3;
+    AllVars_Map["deltaEta_tau2_tau4"] = deltaEta_tau2_tau4;
+    AllVars_Map["deltaEta_tau3_tau4"] = deltaEta_tau3_tau4;
+    AllVars_Map["deltaPhi_tau1_tau2"] = deltaPhi_tau1_tau2;
+    AllVars_Map["deltaPhi_tau1_tau3"] = deltaPhi_tau1_tau3;
+    AllVars_Map["deltaPhi_tau1_tau4"] = deltaPhi_tau1_tau4;
+    AllVars_Map["deltaPhi_tau2_tau3"] = deltaPhi_tau2_tau3;
+    AllVars_Map["deltaPhi_tau2_tau4"] = deltaPhi_tau2_tau4;
+    AllVars_Map["deltaPhi_tau3_tau4"] = deltaPhi_tau3_tau4;
+    AllVars_Map["dr_tau1_tau2"] = dr_tau1_tau2;
+    AllVars_Map["dr_tau1_tau3"] = dr_tau1_tau3;
+    AllVars_Map["dr_tau1_tau4"] = dr_tau1_tau4;
+    AllVars_Map["dr_tau2_tau3"] = dr_tau2_tau3;
+    AllVars_Map["dr_tau2_tau4"] = dr_tau2_tau4;
+    AllVars_Map["dr_tau3_tau4"] = dr_tau3_tau4;
+    AllVars_Map["m_tau1_tau2"] = m_tau1_tau2;
+    AllVars_Map["m_tau1_tau3"] = m_tau1_tau3;
+    AllVars_Map["m_tau1_tau4"] = m_tau1_tau4;
+    AllVars_Map["m_tau2_tau3"] = m_tau2_tau3;
+    AllVars_Map["m_tau2_tau4"] = m_tau2_tau4;
+    AllVars_Map["m_tau3_tau4"] = m_tau3_tau4;
+    AllVars_Map["Zee_bestTauHPair_m"] = Zee_bestTauHPair_m;
+    AllVars_Map["Zee_bestTauHPair_dr"] = Zee_bestTauHPair_dr;
+    AllVars_Map["Zee_bestTauHPair_dPhi"] = Zee_bestTauHPair_dPhi;
+    AllVars_Map["Zee_bestTauHPair_dEta"] = Zee_bestTauHPair_dEta;
+    AllVars_Map["Zee_bestTauHPair_pt"] = Zee_bestTauHPair_pt;
+    AllVars_Map["mostZeeLike"] = mostZeeLike;
+    AllVars_Map["pt_bestTauHPair_m"] = pt_bestTauHPair_m;
+    AllVars_Map["pt_bestTauHPair_dr"] = pt_bestTauHPair_dr;
+    AllVars_Map["pt_bestTauHPair_dPhi"] = pt_bestTauHPair_dPhi;
+    AllVars_Map["pt_bestTauHPair_dEta"] = pt_bestTauHPair_dEta;
+    AllVars_Map["pt_bestTauHPair_pt"] = pt_bestTauHPair_pt;
+    AllVars_Map["Zee_secondTauHPair_m"] = Zee_secondTauHPair_m;
+    AllVars_Map["Zee_secondTauHPair_dr"] = Zee_secondTauHPair_dr;
+    AllVars_Map["Zee_secondTauHPair_dPhi"] = Zee_secondTauHPair_dPhi;
+    AllVars_Map["Zee_secondTauHPair_dEta"] = Zee_secondTauHPair_dEta;
+    AllVars_Map["Zee_secondTauHPair_pt"] = Zee_secondTauHPair_pt;
+    AllVars_Map["dr_bestTauHPair_m"] = dR_bestTauHPair_m;
+    AllVars_Map["dr_bestTauHPair_dr"] = dR_bestTauHPair_dr;
+    AllVars_Map["dr_bestTauHPair_dPhi"] = dR_bestTauHPair_dPhi;
+    AllVars_Map["dr_bestTauHPair_dEta"] = dR_bestTauHPair_dEta;
+    AllVars_Map["dr_bestTauHPair_pt"] = dR_bestTauHPair_pt;
+    AllVars_Map["pt_secondTauHPair_m"] = pt_secondTauHPair_m;
+    AllVars_Map["pt_secondTauHPair_dr"] = pt_secondTauHPair_dr;
+    AllVars_Map["pt_secondTauHPair_dPhi"] = pt_secondTauHPair_dPhi;
+    AllVars_Map["pt_secondTauHPair_dEta"] = pt_secondTauHPair_dEta;
+    AllVars_Map["pt_secondTauHPair_pt"] = pt_secondTauHPair_pt;
+    AllVars_Map["dr_secondTauHPair_m"] = dR_secondTauHPair_m;
+    AllVars_Map["dr_secondTauHPair_dr"] = dR_secondTauHPair_dr;
+    AllVars_Map["dr_secondTauHPair_dPhi"] = dR_secondTauHPair_dPhi;
+    AllVars_Map["dr_secondTauHPair_dEta"] = dR_secondTauHPair_dEta;
+    AllVars_Map["dr_secondTauHPair_pt"] = dR_secondTauHPair_pt;
+    AllVars_Map["max_pt_pair_pt"] = max_pt;
+    AllVars_Map["min_dr_pair_dr"] = min_dR;
+    AllVars_Map["nJet"] = selJets.size();
+    AllVars_Map["nBJet_loose"] = selBJets_btag_loose.size();
+    AllVars_Map["nBJet_medium"] =  selBJets_btag_medium.size();
+    AllVars_Map["gen_mHH"] = 250.; // setting a Dummy value which will be reset depending on mass hypothesis 
+
+    std::map<std::string, double> BDTInputs_SUM_spin2 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin2, false);
+    std::map<std::string, double> BDTInputs_SUM_spin0 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin0, false);
+
+    BDTOutput_SUM_Map_spin2 = CreateBDTOutputMap(gen_mHH, BDT_SUM_spin2, BDTInputs_SUM_spin2, eventInfo.event, false, "_hypo_spin2");
+    BDTOutput_SUM_Map_spin0 = CreateBDTOutputMap(gen_mHH, BDT_SUM_spin0, BDTInputs_SUM_spin0, eventInfo.event, false, "_hypo_spin0");
+    // -------------------------------
 
 
 //--- retrieve gen-matching flags
@@ -1913,6 +2041,9 @@ int main(int argc, char* argv[])
             dihiggsMass,
             HT,
             STMET,
+            BDTOutput_SUM_Map_spin2,
+            BDTOutput_SUM_Map_spin0,
+            eventInfo.event,
             kv.second
           );
           selHistManager->svFit4tau_woMassConstraint_[kv.first]->fillHistograms(svFit4tauResults_woMassConstraint, kv.second);
@@ -1933,6 +2064,9 @@ int main(int argc, char* argv[])
                 dihiggsMass,
                 HT,
                 STMET,
+                BDTOutput_SUM_Map_spin2,
+                BDTOutput_SUM_Map_spin0,
+                eventInfo.event,
                 kv.second
               );
               selHistManager->svFit4tau_woMassConstraint_in_decayModes_[kv.first][decayModeStr]->fillHistograms(
