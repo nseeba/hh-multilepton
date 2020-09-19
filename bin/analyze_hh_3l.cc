@@ -343,7 +343,7 @@ int main(int argc, char* argv[])
 
   const double lep_mva_cut_mu = cfg_analyze.getParameter<double>("lep_mva_cut_mu");
   const double lep_mva_cut_e  = cfg_analyze.getParameter<double>("lep_mva_cut_e");
-  
+  /*
   const std::string lep_fakeable_pog_wp_mu_tmp1         = cfg_analyze.getParameter<std::string>("lep_fakeable_pog_wp_mu_tmp1");
   const std::string lep_fakeable_nearDeepJet_wp_mu_tmp1 = cfg_analyze.getParameter<std::string>("lep_fakeable_nearDeepJet_wp_mu_tmp1");
   const double      lep_fakeable_jetRelIso_cut_mu_tmp1  = cfg_analyze.getParameter<double>("lep_fakeable_jetRelIso_cut_mu_tmp1");
@@ -361,7 +361,7 @@ int main(int argc, char* argv[])
 	    << ",  lep_fakeable_nearDeepJet_wp_e_tmp1: " << lep_fakeable_nearDeepJet_wp_e_tmp1
 	    << ",  lep_fakeable_jetRelIso_cut_e_tmp1: " << lep_fakeable_jetRelIso_cut_e_tmp1
 	    << std::endl;
-  
+  */
 
   enum { kOS, kSS };
   std::string leptonChargeSelection_string = cfg_analyze.getParameter<std::string>("leptonChargeSelection");
@@ -606,12 +606,12 @@ int main(int argc, char* argv[])
   RecoMuonCollectionGenMatcher muonGenMatcher;
   RecoMuonCollectionSelectorLoose preselMuonSelector(era, -1, isDEBUG);
   //RecoMuonCollectionSelectorFakeable fakeableMuonSelector(era, -1, isDEBUG);
-  //RecoMuonCollectionSelectorFakeable_hh_multilepton fakeableMuonSelector(era, -1, isDEBUG);
-  RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic fakeableMuonSelector(era, -1, isDEBUG);
+  RecoMuonCollectionSelectorFakeable_hh_multilepton fakeableMuonSelector(era, -1, isDEBUG);
+  /*RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic fakeableMuonSelector(era, -1, isDEBUG);
   fakeableMuonSelector.set_POGID(lep_fakeable_pog_wp_mu_tmp1);
   fakeableMuonSelector.set_jetBtagCSV_ID_forFakeable(lep_fakeable_nearDeepJet_wp_mu_tmp1);
   fakeableMuonSelector.set_jetRelIso_cut(lep_fakeable_jetRelIso_cut_mu_tmp1);
-  fakeableMuonSelector.print_fakeable_consitions(); 
+  fakeableMuonSelector.print_fakeable_consitions();*/ 
   RecoMuonCollectionSelectorTight tightMuonSelector(era, -1, isDEBUG);
   muonReader->set_mvaTTH_wp(lep_mva_cut_mu);
 
@@ -621,12 +621,12 @@ int main(int argc, char* argv[])
   RecoElectronCollectionCleaner electronCleaner(0.3, isDEBUG);
   RecoElectronCollectionSelectorLoose preselElectronSelector(era, -1, isDEBUG);
   //RecoElectronCollectionSelectorFakeable fakeableElectronSelector(era, -1, isDEBUG);
-  //RecoElectronCollectionSelectorFakeable_hh_multilepton fakeableElectronSelector(era, -1, isDEBUG);
-  RecoElectronCollectionSelectorFakeable_hh_multilepton_Dynamic fakeableElectronSelector(era, -1, isDEBUG);
+  RecoElectronCollectionSelectorFakeable_hh_multilepton fakeableElectronSelector(era, -1, isDEBUG);
+  /*RecoElectronCollectionSelectorFakeable_hh_multilepton_Dynamic fakeableElectronSelector(era, -1, isDEBUG);
   fakeableElectronSelector.set_POGID_forFakeable(lep_fakeable_pog_wp_e_tmp1);
   fakeableElectronSelector.set_jetBtagCSV_ID_forFakeable(lep_fakeable_nearDeepJet_wp_e_tmp1);
   fakeableElectronSelector.set_jetRelIso_cut(lep_fakeable_jetRelIso_cut_e_tmp1);
-  fakeableElectronSelector.print_fakeable_consitions();  
+  fakeableElectronSelector.print_fakeable_consitions(); */ 
   RecoElectronCollectionSelectorTight tightElectronSelector(era, -1, isDEBUG);
   electronReader->set_mvaTTH_wp(lep_mva_cut_e);
  
@@ -2356,6 +2356,10 @@ int main(int argc, char* argv[])
     if (genMatchIdx_0 == 0) {
       cutFlowTable.update(Form("signal region veto,  3l ,  genMatchIdx %d",genMatchIdx_0), evtWeightRecorder.get(central_or_shift_main));
     }
+    //printf("nselLeptons: %zu, tightLeptons: %zu, fakeableLeptons %zu, tightLeptonsFull %zu, fakeableLeptonsFull %zu \n",selLeptons.size(),tightLeptons.size(),fakeableLeptons.size(),tightLeptonsFull.size(),fakeableLeptonsFull.size());
+    if (fakeableLeptonsFull.size() > 3) {
+      cutFlowTable.update(Form("pass all selection, nakeableLeptonsFull > 3, genMatchIdx %d",genMatchIdx_0), evtWeightRecorder.get(central_or_shift_main));
+    }
     
     std::map<std::string, double> weightMapHH;
     std::map<std::string, double> reWeightMapHH;
@@ -2423,14 +2427,6 @@ int main(int argc, char* argv[])
     }
     
 
-
-    int nEle_3selLep = 0, nMu_3selLep = 0;
-    for (size_t i=0; i<3; i++) {
-      //std::cout << "lep pdgId: " << selLeptons[i]->pdgId() << std::endl;
-      if (abs(selLeptons[i]->pdgId()) == 11) nEle_3selLep++;
-      if (abs(selLeptons[i]->pdgId()) == 13) nMu_3selLep++;
-    }
-    //std::cout << "nEle_3selLep: " << nEle_3selLep << ",  nMu_3selLep: " << nMu_3selLep << std::endl;
 
 
 
