@@ -1278,23 +1278,8 @@ int main(int argc, char* argv[])
         evtWeightRecorder.record_ewk_bjet(selBJets_medium);
       }
 
-      int selHadTau_lead_genPdgId = getHadTau_genPdgId(selHadTau_lead);
-      int selHadTau_sublead_genPdgId = getHadTau_genPdgId(selHadTau_sublead);
-      int selHadTau_third_genPdgId = getHadTau_genPdgId(selHadTau_third);
-      int selHadTau_fourth_genPdgId = getHadTau_genPdgId(selHadTau_fourth);
-
-      dataToMCcorrectionInterface->setHadTaus(
-        selHadTau_lead_genPdgId, selHadTau_lead->pt(), selHadTau_lead->eta(), 
-        selHadTau_sublead_genPdgId, selHadTau_sublead->pt(), selHadTau_sublead->eta(), 
-        selHadTau_third_genPdgId, selHadTau_third->pt(), selHadTau_third->eta(), 
-        selHadTau_fourth_genPdgId, selHadTau_fourth->pt(), selHadTau_fourth->eta()
-      );
-      dataToMCcorrectionInterface_hh_0l_4tau_trigger->setHadTaus(
-        selHadTau_lead->pt(),    selHadTau_lead->eta(),    selHadTau_lead->phi(),    selHadTau_lead->decayMode(),
-        selHadTau_sublead->pt(), selHadTau_sublead->eta(), selHadTau_sublead->phi(), selHadTau_sublead->decayMode(),
-        selHadTau_third->pt(),   selHadTau_third->eta(),   selHadTau_third->phi(),   selHadTau_third->decayMode(),
-        selHadTau_fourth->pt(),  selHadTau_fourth->eta(),  selHadTau_fourth->phi(),  selHadTau_fourth->decayMode()
-      );
+      dataToMCcorrectionInterface->setHadTaus({ selHadTau_lead, selHadTau_sublead, selHadTau_third, selHadTau_fourth });
+      dataToMCcorrectionInterface_hh_0l_4tau_trigger->setHadTaus(selHadTau_lead, selHadTau_sublead, selHadTau_third,selHadTau_fourth);
       dataToMCcorrectionInterface_hh_0l_4tau_trigger->setTriggerBits(isTriggered_2tau);
 
 //--- apply data/MC corrections for trigger efficiency
