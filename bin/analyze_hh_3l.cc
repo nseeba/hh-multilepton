@@ -3613,6 +3613,10 @@ int main(int argc, char* argv[])
 	  selectedEntries_weighted_byDecayModeType[central_or_shift][decayMode_and_genMatch] += evtWeightRecorder.get(central_or_shift);
 	}
     }
+    if(isDEBUG)
+    {
+      std::cout << evtWeightRecorder << '\n';
+    }
   }
 
   std::cout << "max num. Entries = " << inputTree -> getCumulativeMaxEventCount()
