@@ -4100,11 +4100,7 @@ int main(int argc, char* argv[])
 	      evtWeightRecorder.record_ewk_bjet(selBJetsAK4_medium);
 	    }
 
-	  dataToMCcorrectionInterface->setLeptons(
-						  selLepton_lead_type, selLepton_lead->pt(), selLepton_lead->cone_pt(), selLepton_lead->eta(),
-						  selLepton_sublead_type, selLepton_sublead->pt(), selLepton_sublead->cone_pt(), selLepton_sublead->eta(),
-						  selLepton_third_type, selLepton_third->pt(), selLepton_third->cone_pt(), selLepton_third->eta()
-						  );
+          dataToMCcorrectionInterface->setLeptons({ selLepton_lead, selLepton_sublead, selLepton_third });
 
 	  //--- apply data/MC corrections for trigger efficiency
 	  evtWeightRecorder.record_leptonTriggerEff(dataToMCcorrectionInterface);
@@ -4116,7 +4112,7 @@ int main(int argc, char* argv[])
 	  //    to also pass the tight identification and isolation criteria
 	  if(electronSelection == kFakeable && muonSelection == kFakeable)
 	    {
-	      evtWeightRecorder.record_leptonSF(dataToMCcorrectionInterface->getSF_leptonID_and_Iso_fakeable_to_loose());
+              evtWeightRecorder.record_leptonSF(dataToMCcorrectionInterface->getSF_leptonID_and_Iso_looseToFakeable());
 	    }
 	  else if(electronSelection >= kFakeable && muonSelection >= kFakeable)
 	    {
@@ -5575,6 +5571,10 @@ int main(int argc, char* argv[])
 	  {
 	    selectedEntries_weighted_byDecayModeType[central_or_shift][decayMode_and_genMatch] += evtWeightRecorder.get(central_or_shift);
 	  }
+      }
+      if(isDEBUG)
+      {
+        std::cout << evtWeightRecorder << '\n';
       }
     }
 
