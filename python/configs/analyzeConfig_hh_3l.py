@@ -233,11 +233,13 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     jobOptions['leptonFakeRateWeight.histogramName_e'] = self.leptonFakeRateWeight_histogramName_e
     jobOptions['leptonFakeRateWeight.histogramName_mu'] = self.leptonFakeRateWeight_histogramName_mu
     ## Edit Siddhesh for lepton fake-rates MC closure
-    jobOptions['leptonFakeRateWeight.inputFileName']    = "hhAnalysis/multilepton/data/FR_lep_hh_multilepton_mva_2017_KBFI_2020Sep14_20200914_LooserLeptonFR_1.root"
-    if self.lep_FR_file_tmp1 != "":
+    #jobOptions['leptonFakeRateWeight.inputFileName']    = "hhAnalysis/multilepton/data/FR_lep_hh_multilepton_mva_2017_KBFI_2020Sep14_20200914_LooserLeptonFR_1.root"
+    if self.lep_FR_file_tmp1 != "" and self.lep_FR_file_tmp1 != "FR_lep_tmp.root":
       jobOptions['leptonFakeRateWeight.inputFileName']    = "hhAnalysis/multilepton/data/%s" % (str(self.lep_FR_file_tmp1))
-    jobOptions['leptonFakeRateWeight.histogramName_e']  = "FR_mva030_el_data_comb_QCD_fakes"
-    jobOptions['leptonFakeRateWeight.histogramName_mu'] = "FR_mva050_mu_data_comb_QCD_fakes"
+    #jobOptions['leptonFakeRateWeight.histogramName_e']  = "FR_mva030_el_data_comb_QCD_fakes"
+    #jobOptions['leptonFakeRateWeight.histogramName_mu'] = "FR_mva050_mu_data_comb_QCD_fakes"
+    #jobOptions['leptonFakeRateWeight.histogramName_e']  = "FR_mva080_el_QCD_NC"
+    #jobOptions['leptonFakeRateWeight.histogramName_mu'] = "FR_mva085_mu_QCD"
     
 
     lines = super(analyzeConfig_hh_3l, self).createCfg_analyze(jobOptions, sample_info)
