@@ -110,8 +110,6 @@
 
 #include "hhAnalysis/multilepton/interface/RecoElectronCollectionSelectorFakeable_hh_multilepton.h" // RecoElectronCollectionSelectorFakeable
 #include "hhAnalysis/multilepton/interface/RecoMuonCollectionSelectorFakeable_hh_multilepton.h" // RecoMuonCollectionSelectorFakeable
-#include "hhAnalysis/multilepton/interface/RecoElectronCollectionSelectorFakeable_hh_multilepton_Dynamic.h" // RecoElectronCollectionSelectorFakeable
-#include "hhAnalysis/multilepton/interface/RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic.h" // RecoMuonCollectionSelectorFakeable
 
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
 #include <boost/algorithm/string/predicate.hpp> // boost::starts_with()
@@ -343,24 +341,6 @@ int main(int argc, char* argv[])
 
   const double lep_mva_cut_mu = cfg_analyze.getParameter<double>("lep_mva_cut_mu");
   const double lep_mva_cut_e  = cfg_analyze.getParameter<double>("lep_mva_cut_e");
-  
-  const std::string lep_fakeable_pog_wp_mu_tmp1         = cfg_analyze.getParameter<std::string>("lep_fakeable_pog_wp_mu_tmp1");
-  const std::string lep_fakeable_nearDeepJet_wp_mu_tmp1 = cfg_analyze.getParameter<std::string>("lep_fakeable_nearDeepJet_wp_mu_tmp1");
-  const double      lep_fakeable_jetRelIso_cut_mu_tmp1  = cfg_analyze.getParameter<double>("lep_fakeable_jetRelIso_cut_mu_tmp1");
-  
-  const std::string lep_fakeable_pog_wp_e_tmp1          = cfg_analyze.getParameter<std::string>("lep_fakeable_pog_wp_e_tmp1");
-  const std::string lep_fakeable_nearDeepJet_wp_e_tmp1  = cfg_analyze.getParameter<std::string>("lep_fakeable_nearDeepJet_wp_e_tmp1");
-  const double      lep_fakeable_jetRelIso_cut_e_tmp1   = cfg_analyze.getParameter<double>("lep_fakeable_jetRelIso_cut_e_tmp1");
-  std::cout << "lep_mva_cut_mu: " << lep_mva_cut_mu
-	    << ",  lep_fakeable_pog_wp_mu_tmp1: " << lep_fakeable_pog_wp_mu_tmp1
-	    << ",  lep_fakeable_nearDeepJet_wp_mu_tmp1: " << lep_fakeable_nearDeepJet_wp_mu_tmp1
-	    << ",  lep_fakeable_jetRelIso_cut_mu_tmp1: " << lep_fakeable_jetRelIso_cut_mu_tmp1
-	    << std::endl;
-  std::cout << "lep_mva_cut_e: " << lep_mva_cut_e
-	    << ",  lep_fakeable_pog_wp_e_tmp1: " << lep_fakeable_pog_wp_e_tmp1
-	    << ",  lep_fakeable_nearDeepJet_wp_e_tmp1: " << lep_fakeable_nearDeepJet_wp_e_tmp1
-	    << ",  lep_fakeable_jetRelIso_cut_e_tmp1: " << lep_fakeable_jetRelIso_cut_e_tmp1
-	    << std::endl;
   
 
   enum { kOS, kSS };
@@ -606,12 +586,7 @@ int main(int argc, char* argv[])
   RecoMuonCollectionGenMatcher muonGenMatcher;
   RecoMuonCollectionSelectorLoose preselMuonSelector(era, -1, isDEBUG);
   //RecoMuonCollectionSelectorFakeable fakeableMuonSelector(era, -1, isDEBUG);
-  //RecoMuonCollectionSelectorFakeable_hh_multilepton fakeableMuonSelector(era, -1, isDEBUG);
-  RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic fakeableMuonSelector(era, -1, isDEBUG);
-  fakeableMuonSelector.set_POGID(lep_fakeable_pog_wp_mu_tmp1);
-  fakeableMuonSelector.set_jetBtagCSV_ID_forFakeable(lep_fakeable_nearDeepJet_wp_mu_tmp1);
-  fakeableMuonSelector.set_jetRelIso_cut(lep_fakeable_jetRelIso_cut_mu_tmp1);
-  fakeableMuonSelector.print_fakeable_consitions();
+  RecoMuonCollectionSelectorFakeable_hh_multilepton fakeableMuonSelector(era, -1, isDEBUG);
   RecoMuonCollectionSelectorTight tightMuonSelector(era, -1, isDEBUG);
   muonReader->set_mvaTTH_wp(lep_mva_cut_mu);
 
@@ -621,12 +596,7 @@ int main(int argc, char* argv[])
   RecoElectronCollectionCleaner electronCleaner(0.3, isDEBUG);
   RecoElectronCollectionSelectorLoose preselElectronSelector(era, -1, isDEBUG);
   //RecoElectronCollectionSelectorFakeable fakeableElectronSelector(era, -1, isDEBUG);
-  //RecoElectronCollectionSelectorFakeable_hh_multilepton fakeableElectronSelector(era, -1, isDEBUG);
-  RecoElectronCollectionSelectorFakeable_hh_multilepton_Dynamic fakeableElectronSelector(era, -1, isDEBUG);
-  fakeableElectronSelector.set_POGID_forFakeable(lep_fakeable_pog_wp_e_tmp1);
-  fakeableElectronSelector.set_jetBtagCSV_ID_forFakeable(lep_fakeable_nearDeepJet_wp_e_tmp1);
-  fakeableElectronSelector.set_jetRelIso_cut(lep_fakeable_jetRelIso_cut_e_tmp1);
-  fakeableElectronSelector.print_fakeable_consitions();   
+  RecoElectronCollectionSelectorFakeable_hh_multilepton fakeableElectronSelector(era, -1, isDEBUG);
   RecoElectronCollectionSelectorTight tightElectronSelector(era, -1, isDEBUG);
   electronReader->set_mvaTTH_wp(lep_mva_cut_e);
  
