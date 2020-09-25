@@ -104,6 +104,8 @@
 #include "TauAnalysis/ClassicSVfit/interface/svFitAuxFunctions.h" // aux functions
 #include "TauAnalysis/ClassicSVfit/interface/ClassicSVfit.h" // SVFit for 2 taus
 
+#include "hhAnalysis/multilepton/interface/RecoElectronCollectionSelectorFakeable_hh_multilepton.h" 
+#include "hhAnalysis/multilepton/interface/RecoMuonCollectionSelectorFakeable_hh_multilepton.h" 
 
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
 #include <boost/algorithm/string/predicate.hpp> // boost::starts_with()
@@ -521,7 +523,8 @@ int main(int argc, char* argv[])
   inputTree -> registerReader(muonReader);
   RecoMuonCollectionGenMatcher muonGenMatcher;
   RecoMuonCollectionSelectorLoose preselMuonSelector(era, -1, isDEBUG);
-  RecoMuonCollectionSelectorFakeable fakeableMuonSelector(era, -1, isDEBUG);
+  //RecoMuonCollectionSelectorFakeable fakeableMuonSelector(era, -1, isDEBUG);
+  RecoMuonCollectionSelectorFakeable_hh_multilepton fakeableMuonSelector(era, -1, isDEBUG);
   RecoMuonCollectionSelectorTight tightMuonSelector(era, -1, isDEBUG);
   muonReader->set_mvaTTH_wp(lep_mva_cut_mu);
 
@@ -530,7 +533,8 @@ int main(int argc, char* argv[])
   RecoElectronCollectionGenMatcher electronGenMatcher;
   RecoElectronCollectionCleaner electronCleaner(0.3, isDEBUG);
   RecoElectronCollectionSelectorLoose preselElectronSelector(era, -1, isDEBUG);
-  RecoElectronCollectionSelectorFakeable fakeableElectronSelector(era, -1, isDEBUG);
+  //RecoElectronCollectionSelectorFakeable fakeableElectronSelector(era, -1, isDEBUG);
+  RecoElectronCollectionSelectorFakeable_hh_multilepton fakeableElectronSelector(era, -1, isDEBUG);
   RecoElectronCollectionSelectorTight tightElectronSelector(era, -1, isDEBUG);
   electronReader->set_mvaTTH_wp(lep_mva_cut_e);
 
