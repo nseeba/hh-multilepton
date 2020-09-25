@@ -152,11 +152,11 @@ class analyzeConfig_ttctrl_fakes(analyzeConfig_hh):
     self.hlt_filter = hlt_filter
 
     self.categories = [
-      "ttctrl_fakes",
-      "hh_2ess_3j",   "hh_2ess_3j_vbf",   "hh_2ess_3j_nonvbf",   "hh_2muss_3j",   "hh_2muss_3j_vbf",   "hh_2muss_3j_nonvbf",   "hh_1e1muss_3j",   "hh_1e1muss_3j_vbf",   "hh_1e1muss_3j_nonvbf",
-      "hh_2ess_ge3j", "hh_2ess_ge3j_vbf", "hh_2ess_ge3j_nonvbf", "hh_2muss_ge3j", "hh_2muss_ge3j_vbf", "hh_2muss_ge3j_nonvbf", "hh_1e1muss_ge3j", "hh_1e1muss_ge3j_vbf", "hh_1e1muss_ge3j_nonvbf",
-      "hh_2ess_ge4j", "hh_2ess_ge4j_vbf", "hh_2ess_ge4j_nonvbf", "hh_2muss_ge4j", "hh_2muss_ge4j_vbf", "hh_2muss_ge4j_nonvbf", "hh_1e1muss_ge4j", "hh_1e1muss_ge4j_vbf", "hh_1e1muss_ge4j_nonvbf" ]
-    self.category_inclusive = "ttctrl_fakes"
+      "ttctrl_fakes_2ess", "ttctrl_fakes_2muss", "ttctrl_fakes_1e1muss",
+    ]
+    self.category_inclusive = "ttctrl_fakes_2lss"
+    if self.category_inclusive not in self.categories:
+      self.categories.append(self.category_inclusive)
 
   def set_BDT_training(self):
     """Run analysis for the purpose of preparing event list files for BDT training.

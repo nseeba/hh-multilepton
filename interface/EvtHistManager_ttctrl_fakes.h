@@ -38,7 +38,12 @@ public:
 		 double muonPairMass,
 		 double leptonPairCharge,
 		 double HT,
-		 double STMET,
+		 double STMET,//
+		 double dR_ll,
+		 double mT_met_lepLead,
+		 double mT_met_lepSublead,
+		 double mT_met_lep_max,
+		 double mT_met_lep_min,
 		 //double BDTOutput_SUM,
 		 double BDTOutput_SUM_gen_mHH_400,
 		 double BDTOutput_SUM_gen_mHH_700,
@@ -60,7 +65,12 @@ public:
   TH1 * histogram_muonPairMass_;
   TH1 * histogram_leptonPairCharge_;
   TH1 * histogram_HT_;
-  TH1 * histogram_STMET_;
+  TH1 * histogram_STMET_;  //
+  TH1 * histogram_dR_ll_;
+  TH1 * histogram_mT_met_lepLead_;
+  TH1 * histogram_mT_met_lepSublead_;
+  TH1 * histogram_mT_met_lep_max_;
+  TH1 * histogram_mT_met_lep_min_;
   //TH1 * histogram_BDTOutput_SUM_;
   TH1 * histogram_BDTOutput_SUM_gen_mHH_400_;
   TH1 * histogram_BDTOutput_SUM_gen_mHH_700_;
