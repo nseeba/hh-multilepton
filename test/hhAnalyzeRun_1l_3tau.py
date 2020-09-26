@@ -99,7 +99,8 @@ else:
 
 hadTauWP_map = {
   'dR03mva' : 'Loose',
-  'deepVSj' : 'VLoose', # CV: use for datacard production
+  ##'deepVSj' : 'VLoose', # CV: use for datacard production
+  'deepVSj' : 'Loose',
 }
 hadTau_selection = tau_id + hadTauWP_map[tau_id]
 
