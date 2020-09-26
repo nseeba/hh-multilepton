@@ -110,8 +110,6 @@
 
 #include "hhAnalysis/multilepton/interface/RecoElectronCollectionSelectorFakeable_hh_multilepton.h" // RecoElectronCollectionSelectorFakeable
 #include "hhAnalysis/multilepton/interface/RecoMuonCollectionSelectorFakeable_hh_multilepton.h" // RecoMuonCollectionSelectorFakeable
-#include "hhAnalysis/multilepton/interface/RecoElectronCollectionSelectorFakeable_hh_multilepton_Dynamic.h" // RecoElectronCollectionSelectorFakeable
-#include "hhAnalysis/multilepton/interface/RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic.h" // RecoMuonCollectionSelectorFakeable
 
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
 #include <boost/algorithm/string/predicate.hpp> // boost::starts_with()
@@ -343,25 +341,7 @@ int main(int argc, char* argv[])
 
   const double lep_mva_cut_mu = cfg_analyze.getParameter<double>("lep_mva_cut_mu");
   const double lep_mva_cut_e  = cfg_analyze.getParameter<double>("lep_mva_cut_e");
-  /*
-  const std::string lep_fakeable_pog_wp_mu_tmp1         = cfg_analyze.getParameter<std::string>("lep_fakeable_pog_wp_mu_tmp1");
-  const std::string lep_fakeable_nearDeepJet_wp_mu_tmp1 = cfg_analyze.getParameter<std::string>("lep_fakeable_nearDeepJet_wp_mu_tmp1");
-  const double      lep_fakeable_jetRelIso_cut_mu_tmp1  = cfg_analyze.getParameter<double>("lep_fakeable_jetRelIso_cut_mu_tmp1");
   
-  const std::string lep_fakeable_pog_wp_e_tmp1          = cfg_analyze.getParameter<std::string>("lep_fakeable_pog_wp_e_tmp1");
-  const std::string lep_fakeable_nearDeepJet_wp_e_tmp1  = cfg_analyze.getParameter<std::string>("lep_fakeable_nearDeepJet_wp_e_tmp1");
-  const double      lep_fakeable_jetRelIso_cut_e_tmp1   = cfg_analyze.getParameter<double>("lep_fakeable_jetRelIso_cut_e_tmp1");
-  std::cout << "lep_mva_cut_mu: " << lep_mva_cut_mu
-	    << ",  lep_fakeable_pog_wp_mu_tmp1: " << lep_fakeable_pog_wp_mu_tmp1
-	    << ",  lep_fakeable_nearDeepJet_wp_mu_tmp1: " << lep_fakeable_nearDeepJet_wp_mu_tmp1
-	    << ",  lep_fakeable_jetRelIso_cut_mu_tmp1: " << lep_fakeable_jetRelIso_cut_mu_tmp1
-	    << std::endl;
-  std::cout << "lep_mva_cut_e: " << lep_mva_cut_e
-	    << ",  lep_fakeable_pog_wp_e_tmp1: " << lep_fakeable_pog_wp_e_tmp1
-	    << ",  lep_fakeable_nearDeepJet_wp_e_tmp1: " << lep_fakeable_nearDeepJet_wp_e_tmp1
-	    << ",  lep_fakeable_jetRelIso_cut_e_tmp1: " << lep_fakeable_jetRelIso_cut_e_tmp1
-	    << std::endl;
-  */
 
   enum { kOS, kSS };
   std::string leptonChargeSelection_string = cfg_analyze.getParameter<std::string>("leptonChargeSelection");
@@ -443,6 +423,7 @@ int main(int argc, char* argv[])
   cfg_dataToMCcorrectionInterface.addParameter<std::string>("hadTauSelection", hadTauSelection_part2);
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiElectron", hadTauSelection_antiElectron);
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiMuon", hadTauSelection_antiMuon);
+  //cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG","True");
   Data_to_MC_CorrectionInterface_Base * dataToMCcorrectionInterface = nullptr;
   switch(era)
   {
@@ -526,11 +507,10 @@ int main(int argc, char* argv[])
 
   fwlite::OutputFiles outputFile(cfg);
   fwlite::TFileService fs = fwlite::TFileService(outputFile.file().data());
-
   TTreeWrapper * inputTree = new TTreeWrapper(treeName.data(), inputFiles.files(), maxEvents);
 
   std::cout << "Loaded " << inputTree -> getFileCount() << " file(s).\n";
-
+  
 //--- declare event-level variables
   EventInfo eventInfo(isMC, isSignal, isHH_rwgt_allowed, apply_topPtReweighting);
   const std::string default_cat_str = "default";
@@ -607,11 +587,6 @@ int main(int argc, char* argv[])
   RecoMuonCollectionSelectorLoose preselMuonSelector(era, -1, isDEBUG);
   //RecoMuonCollectionSelectorFakeable fakeableMuonSelector(era, -1, isDEBUG);
   RecoMuonCollectionSelectorFakeable_hh_multilepton fakeableMuonSelector(era, -1, isDEBUG);
-  /*RecoMuonCollectionSelectorFakeable_hh_multilepton_Dynamic fakeableMuonSelector(era, -1, isDEBUG);
-  fakeableMuonSelector.set_POGID(lep_fakeable_pog_wp_mu_tmp1);
-  fakeableMuonSelector.set_jetBtagCSV_ID_forFakeable(lep_fakeable_nearDeepJet_wp_mu_tmp1);
-  fakeableMuonSelector.set_jetRelIso_cut(lep_fakeable_jetRelIso_cut_mu_tmp1);
-  fakeableMuonSelector.print_fakeable_consitions();*/ 
   RecoMuonCollectionSelectorTight tightMuonSelector(era, -1, isDEBUG);
   muonReader->set_mvaTTH_wp(lep_mva_cut_mu);
 
@@ -622,11 +597,6 @@ int main(int argc, char* argv[])
   RecoElectronCollectionSelectorLoose preselElectronSelector(era, -1, isDEBUG);
   //RecoElectronCollectionSelectorFakeable fakeableElectronSelector(era, -1, isDEBUG);
   RecoElectronCollectionSelectorFakeable_hh_multilepton fakeableElectronSelector(era, -1, isDEBUG);
-  /*RecoElectronCollectionSelectorFakeable_hh_multilepton_Dynamic fakeableElectronSelector(era, -1, isDEBUG);
-  fakeableElectronSelector.set_POGID_forFakeable(lep_fakeable_pog_wp_e_tmp1);
-  fakeableElectronSelector.set_jetBtagCSV_ID_forFakeable(lep_fakeable_nearDeepJet_wp_e_tmp1);
-  fakeableElectronSelector.set_jetRelIso_cut(lep_fakeable_jetRelIso_cut_e_tmp1);
-  fakeableElectronSelector.print_fakeable_consitions(); */ 
   RecoElectronCollectionSelectorTight tightElectronSelector(era, -1, isDEBUG);
   electronReader->set_mvaTTH_wp(lep_mva_cut_e);
  
@@ -1372,7 +1342,7 @@ int main(int argc, char* argv[])
       continue;
     }
     
-//--- rank triggers by priority and ignore triggers of lower priority if a trigger of higher priority has fired for given event;
+//--- rank triggers by priority and ignore triggers of lower priority if a trigger of higher priority has fired for given event; 
 //    the triggers are ranked by primary dataset (PD).
 //    The ranking of the PDs is as follows: DoubleMuon, MuonEG, DoubleEG, SingleMuon, SingleElectron
 // CV: see https://cmssdt.cern.ch/lxr/source/HLTrigger/Configuration/python/HLT_GRun_cff.py?v=CMSSW_8_0_24 for association of triggers paths to PD
@@ -1719,11 +1689,13 @@ int main(int argc, char* argv[])
 //--- apply data/MC corrections for efficiencies for lepton to pass loose identification and isolation criteria
       evtWeightRecorder.record_leptonIDSF_recoToLoose(dataToMCcorrectionInterface);
 
+      //std::cout << "Siddh_leptonIDSF:  " << eventInfo << std::endl; 
 //--- apply data/MC corrections for efficiencies of leptons passing the loose identification and isolation criteria
 //    to also pass the tight identification and isolation criteria
       if(electronSelection == kFakeable && muonSelection == kFakeable)
       {
-        evtWeightRecorder.record_leptonSF(dataToMCcorrectionInterface->getSF_leptonID_and_Iso_looseToFakeable());
+        //evtWeightRecorder.record_leptonSF(dataToMCcorrectionInterface->getSF_leptonID_and_Iso_looseToFakeable());
+	evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface); 
 	if ( run_lumi_eventSelector ) {
 	  std::cout << "electronSelection == kFakeable && muonSelection == kFakeable:  dataToMCcorrectionInterface->getSF_leptonID_and_Iso_looseToFakeable(): " << dataToMCcorrectionInterface->getSF_leptonID_and_Iso_looseToFakeable() << std::endl;
 	}
@@ -1735,7 +1707,7 @@ int main(int argc, char* argv[])
         // 2) electron selection is relaxed to fakeable and muon selection is kept as tight -> corresponds to MC closure w/ relaxed e selection
         // 3) muon selection is relaxed to fakeable and electron selection is kept as tight -> corresponds to MC closure w/ relaxed mu selection
         // we allow (2) and (3) so that the MC closure regions would more compatible w/ the SR (1) in comparison
-        evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface); // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TEST ONLY
+        evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface); // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TEST ONLY 
       }
     }
 
