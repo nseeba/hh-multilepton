@@ -1,6 +1,6 @@
 from collections import OrderedDict as OD
 
-# file generated at 2020-09-21 12:59:58 with the following command:
+# file generated at 2020-09-27 20:18:26 with the following command:
 # find_samples.py -V -i ../../tthAnalysis/NanoAOD/test/datasets/txt/datasets_hh_multilepton_mc_2017_RunIIFall17MiniAODv2.txt -m python/samples/metaDict_2017_hh.py -s ../../tthAnalysis/NanoAOD/test/datasets/txt/sum_datasets_hh_multilepton_2017_RunIIFall17MiniAODv2.txt -c python/samples/sampleLocations_2017_nanoAOD_hh_multilepton.txt
 
 meta_dictionary = OD()
@@ -15,9 +15,9 @@ sum_events = {
   ("signal_ggf_spin2_1000_hh_2v2t", "signal_ggf_spin2_1000_hh_2v2t_PSWeights"),
   ("signal_ggf_spin0_1000_hh_4v", "signal_ggf_spin0_1000_hh_4v_PSWeights"),
   ("signal_ggf_spin2_1000_hh_4v", "signal_ggf_spin2_1000_hh_4v_PSWeights"),
-  ("signal_ggf_nonresonant_node_sm_hh_4v", "signal_ggf_nonresonant_node_sm_hh_4v_private", "signal_ggf_nonresonant_node_1_hh_4v", "signal_ggf_nonresonant_node_1_hh_4v_private", "signal_ggf_nonresonant_node_2_hh_4v", "signal_ggf_nonresonant_node_3_hh_4v", "signal_ggf_nonresonant_node_4_hh_4v", "signal_ggf_nonresonant_node_5_hh_4v", "signal_ggf_nonresonant_node_6_hh_4v", "signal_ggf_nonresonant_node_7_hh_4v", "signal_ggf_nonresonant_node_7_hh_4v_private", "signal_ggf_nonresonant_node_8_hh_4v", "signal_ggf_nonresonant_node_9_hh_4v", "signal_ggf_nonresonant_node_10_hh_4v", "signal_ggf_nonresonant_node_11_hh_4v", "signal_ggf_nonresonant_node_12_hh_4v"),
-  ("signal_ggf_nonresonant_node_sm_hh_2v2t", "signal_ggf_nonresonant_node_sm_hh_2v2t_private", "signal_ggf_nonresonant_node_1_hh_2v2t", "signal_ggf_nonresonant_node_1_hh_2v2t_private", "signal_ggf_nonresonant_node_2_hh_2v2t", "signal_ggf_nonresonant_node_3_hh_2v2t", "signal_ggf_nonresonant_node_4_hh_2v2t", "signal_ggf_nonresonant_node_5_hh_2v2t", "signal_ggf_nonresonant_node_6_hh_2v2t", "signal_ggf_nonresonant_node_7_hh_2v2t", "signal_ggf_nonresonant_node_7_hh_2v2t_private", "signal_ggf_nonresonant_node_8_hh_2v2t", "signal_ggf_nonresonant_node_9_hh_2v2t", "signal_ggf_nonresonant_node_10_hh_2v2t", "signal_ggf_nonresonant_node_11_hh_2v2t", "signal_ggf_nonresonant_node_12_hh_2v2t"),
-  ("signal_ggf_nonresonant_node_sm_hh_4t", "signal_ggf_nonresonant_node_sm_hh_4t_private", "signal_ggf_nonresonant_node_1_hh_4t", "signal_ggf_nonresonant_node_1_hh_4t_private", "signal_ggf_nonresonant_node_2_hh_4t", "signal_ggf_nonresonant_node_3_hh_4t", "signal_ggf_nonresonant_node_4_hh_4t", "signal_ggf_nonresonant_node_5_hh_4t", "signal_ggf_nonresonant_node_6_hh_4t", "signal_ggf_nonresonant_node_7_hh_4t", "signal_ggf_nonresonant_node_7_hh_4t_private", "signal_ggf_nonresonant_node_8_hh_4t", "signal_ggf_nonresonant_node_9_hh_4t", "signal_ggf_nonresonant_node_10_hh_4t", "signal_ggf_nonresonant_node_11_hh_4t", "signal_ggf_nonresonant_node_12_hh_4t"),
+  ("signal_ggf_nonresonant_node_sm_hh_4v", "signal_ggf_nonresonant_node_sm_hh_4v_private", "signal_ggf_nonresonant_node_1_hh_4v", "signal_ggf_nonresonant_node_1_hh_4v_private", "signal_ggf_nonresonant_node_2_hh_4v", "signal_ggf_nonresonant_node_3_hh_4v", "signal_ggf_nonresonant_node_4_hh_4v", "signal_ggf_nonresonant_node_4_hh_4v_private", "signal_ggf_nonresonant_node_5_hh_4v", "signal_ggf_nonresonant_node_6_hh_4v", "signal_ggf_nonresonant_node_7_hh_4v", "signal_ggf_nonresonant_node_7_hh_4v_private", "signal_ggf_nonresonant_node_8_hh_4v", "signal_ggf_nonresonant_node_9_hh_4v", "signal_ggf_nonresonant_node_10_hh_4v", "signal_ggf_nonresonant_node_11_hh_4v", "signal_ggf_nonresonant_node_12_hh_4v", "signal_ggf_nonresonant_node_12_hh_4v_private"),
+  ("signal_ggf_nonresonant_node_sm_hh_2v2t", "signal_ggf_nonresonant_node_sm_hh_2v2t_private", "signal_ggf_nonresonant_node_1_hh_2v2t", "signal_ggf_nonresonant_node_1_hh_2v2t_private", "signal_ggf_nonresonant_node_2_hh_2v2t", "signal_ggf_nonresonant_node_3_hh_2v2t", "signal_ggf_nonresonant_node_4_hh_2v2t", "signal_ggf_nonresonant_node_4_hh_2v2t_private", "signal_ggf_nonresonant_node_5_hh_2v2t", "signal_ggf_nonresonant_node_6_hh_2v2t", "signal_ggf_nonresonant_node_7_hh_2v2t", "signal_ggf_nonresonant_node_7_hh_2v2t_private", "signal_ggf_nonresonant_node_8_hh_2v2t", "signal_ggf_nonresonant_node_9_hh_2v2t", "signal_ggf_nonresonant_node_10_hh_2v2t", "signal_ggf_nonresonant_node_11_hh_2v2t", "signal_ggf_nonresonant_node_12_hh_2v2t", "signal_ggf_nonresonant_node_12_hh_2v2t_private"),
+  ("signal_ggf_nonresonant_node_sm_hh_4t", "signal_ggf_nonresonant_node_sm_hh_4t_private", "signal_ggf_nonresonant_node_1_hh_4t", "signal_ggf_nonresonant_node_1_hh_4t_private", "signal_ggf_nonresonant_node_2_hh_4t", "signal_ggf_nonresonant_node_3_hh_4t", "signal_ggf_nonresonant_node_4_hh_4t", "signal_ggf_nonresonant_node_4_hh_4t_private", "signal_ggf_nonresonant_node_5_hh_4t", "signal_ggf_nonresonant_node_6_hh_4t", "signal_ggf_nonresonant_node_7_hh_4t", "signal_ggf_nonresonant_node_7_hh_4t_private", "signal_ggf_nonresonant_node_8_hh_4t", "signal_ggf_nonresonant_node_9_hh_4t", "signal_ggf_nonresonant_node_10_hh_4t", "signal_ggf_nonresonant_node_11_hh_4t", "signal_ggf_nonresonant_node_12_hh_4t", "signal_ggf_nonresonant_node_12_hh_4t_private"),
 }
 
 
@@ -1630,7 +1630,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-1250_narrow_TuneCP5_PSWeights_13TeV-m
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: PRODUCTION; size: 5.03GB; nevents: 79.00k; release: 9_4_7; last modified: 2020-09-16 11:00:53"),
+  ("comment",               "status: VALID; size: 5.03GB; nevents: 79.00k; release: 9_4_7; last modified: 2020-09-23 10:51:55"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-1500_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM"] =  OD([
@@ -1984,6 +1984,19 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-1500_narrow_TuneCP5_PSWeights_1
   ("comment",               "status: VALID; size: 7.25GB; nevents: 100.00k; release: 9_4_7; last modified: 2020-09-13 10:48:02"),
 ])
 
+meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-1750_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
+  ("crab_string",           ""),
+  ("sample_category",       "signal_ggf_spin2_1750_hh_wwww"),
+  ("process_name_specific", "signal_ggf_spin2_1750_hh_4v"),
+  ("nof_db_events",         97000),
+  ("nof_db_files",          14),
+  ("fsize_db",              6392184600),
+  ("xsection",              0.057547),
+  ("use_it",                True),
+  ("genWeight",             True),
+  ("comment",               "status: VALID; size: 6.39GB; nevents: 97.00k; release: 9_4_7; last modified: 2020-09-24 03:22:11"),
+])
+
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-2000_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
   ("crab_string",           ""),
   ("sample_category",       "signal_ggf_spin2_2000_hh_wwww"),
@@ -2170,13 +2183,13 @@ meta_dictionary["/GluGluToHHTo4Tau_node_10_TuneCP5_PSWeights_13TeV-madgraph-pyth
   ("crab_string",           ""),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_10_hh_4t"),
-  ("nof_db_events",         224000),
-  ("nof_db_files",          6),
-  ("fsize_db",              11521226462),
+  ("nof_db_events",         386000),
+  ("nof_db_files",          19),
+  ("fsize_db",              19949920750),
   ("xsection",              0.003934),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: PRODUCTION; size: 11.52GB; nevents: 224.00k; release: 9_4_7; last modified: 2020-09-07 12:51:49"),
+  ("comment",               "status: VALID; size: 19.95GB; nevents: 386.00k; release: 9_4_7; last modified: 2020-09-27 17:11:51"),
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_11_TuneCP5_PSWeights_13TeV-madgraph-pythia8_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
@@ -2274,13 +2287,13 @@ meta_dictionary["/GluGluToHHTo2V2tau_node_1_TuneCP5_PSWeights_13TeV-madgraph-pyt
   ("crab_string",           ""),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_1_hh_2v2t"),
-  ("nof_db_events",         3586949),
-  ("nof_db_files",          67),
-  ("fsize_db",              188906604074),
+  ("nof_db_events",         3859942),
+  ("nof_db_files",          86),
+  ("fsize_db",              203407106593),
   ("xsection",              0.030092),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: PRODUCTION; size: 188.91GB; nevents: 3.59M; release: 9_4_7; last modified: 2020-09-05 09:51:16"),
+  ("comment",               "status: VALID; size: 203.41GB; nevents: 3.86M; release: 9_4_7; last modified: 2020-09-23 12:27:04"),
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_2_13TeV-madgraph_correctedcfg/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"] =  OD([
@@ -2846,16 +2859,17 @@ meta_dictionary["/GluGluToHHTo4V_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythi
 # signal_ggf_spin2_1000_hh_wwww:           131.00k
 # signal_ggf_spin2_1250_hh_wwww:           64.00k
 # signal_ggf_spin2_1500_hh_wwww:           100.00k
+# signal_ggf_spin2_1750_hh_wwww:           97.00k
 # signal_ggf_spin2_2000_hh_wwww:           44.00k
 # signal_ggf_spin2_2500_hh_wwww:           100.00k
 # signal_ggf_spin2_3000_hh_wwww:           100.00k
 # signal_vbf_nonresonant_1_1_1_hh_tttt:    384.00k
-# signal_ggf_nonresonant_hh_tttt:          4.97M
+# signal_ggf_nonresonant_hh_tttt:          5.13M
 # signal_ggf_nonresonant_cHHH0_hh_tttt:    993.80k
 # signal_ggf_nonresonant_cHHH1_hh_tttt:    973.20k
 # signal_ggf_nonresonant_cHHH2p45_hh_tttt: 1.00M
 # signal_ggf_nonresonant_cHHH5_hh_tttt:    991.20k
-# signal_ggf_nonresonant_hh_wwtt:          8.31M
+# signal_ggf_nonresonant_hh_wwtt:          8.58M
 # signal_ggf_nonresonant_cHHH0_hh_wwtt:    400.00k
 # signal_ggf_nonresonant_cHHH1_hh_wwtt:    400.00k
 # signal_ggf_nonresonant_cHHH2p45_hh_wwtt: 390.70k
