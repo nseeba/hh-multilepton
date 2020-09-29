@@ -586,44 +586,36 @@ int main(int argc, char* argv[])
   std::string BDTFileName_odd_nonres   = mvaInfo_nonres.getParameter<std::string>("BDT_xml_FileName_odd_nonres");
   std::vector<std::string> BDTInputVariables_SUM_nonres = mvaInfo_nonres.getParameter<std::vector<std::string>>("inputVars_nonres"); // Include all Input Var.s except BM indices
 
-  std::cout<< "I AM HERE 1" << std::endl;
   assert(BDTFileName_odd_spin2 != "");
   assert(BDTFileName_even_spin2 != "");
   assert(fitFunctionFileName_spin2 != "");
   assert(BDTInputVariables_SUM_spin2.size() != 0);
-  //TMVAInterface* BDT_SUM_spin2 = new TMVAInterface(BDTFileName_odd_spin2, BDTFileName_even_spin2, BDTInputVariables_SUM_spin2, fitFunctionFileName_spin2);
+  TMVAInterface* BDT_SUM_spin2 = new TMVAInterface(BDTFileName_odd_spin2, BDTFileName_even_spin2, BDTInputVariables_SUM_spin2, fitFunctionFileName_spin2);
   //BDT_SUM_spin2->disableBDTTransform();
-  //BDT_SUM_spin2->enableBDTTransform();
-  XGBInterface* BDT_SUM_spin2 = new XGBInterface(BDTFileName_odd_spin2, BDTFileName_even_spin2, fitFunctionFileName_spin2, BDTInputVariables_SUM_spin2);
+  BDT_SUM_spin2->enableBDTTransform();
+  //XGBInterface* BDT_SUM_spin2 = new XGBInterface(BDTFileName_odd_spin2, BDTFileName_even_spin2, fitFunctionFileName_spin2, BDTInputVariables_SUM_spin2);
   std::map<std::string, double> BDTOutput_SUM_Map_spin2;
-
-  std::cout<< "I AM HERE 2" << std::endl;
 
   assert(BDTFileName_odd_spin0 != "");
   assert(BDTFileName_even_spin0 != "");
   assert(fitFunctionFileName_spin0 != "");
   assert(BDTInputVariables_SUM_spin0.size() != 0);
-  //TMVAInterface* BDT_SUM_spin0 = new TMVAInterface(BDTFileName_odd_spin0, BDTFileName_even_spin0, BDTInputVariables_SUM_spin0, fitFunctionFileName_spin0);
+  TMVAInterface* BDT_SUM_spin0 = new TMVAInterface(BDTFileName_odd_spin0, BDTFileName_even_spin0, BDTInputVariables_SUM_spin0, fitFunctionFileName_spin0);
   //BDT_SUM_spin0->disableBDTTransform();
-  //BDT_SUM_spin0->enableBDTTransform();
-  XGBInterface* BDT_SUM_spin0 = new XGBInterface(BDTFileName_odd_spin0, BDTFileName_even_spin0, fitFunctionFileName_spin0, BDTInputVariables_SUM_spin0);
+  BDT_SUM_spin0->enableBDTTransform();
+  //XGBInterface* BDT_SUM_spin0 = new XGBInterface(BDTFileName_odd_spin0, BDTFileName_even_spin0, fitFunctionFileName_spin0, BDTInputVariables_SUM_spin0);
   std::map<std::string, double> BDTOutput_SUM_Map_spin0;
-
-  std::cout<< "I AM HERE 3" << std::endl;
 
   assert(BDTFileName_odd_nonres != "");
   assert(BDTFileName_even_nonres != "");
   assert(BDTInputVariables_SUM_nonres.size() != 0);
-  //TMVAInterface* BDT_SUM_nonres = new TMVAInterface(BDTFileName_odd_nonres, BDTFileName_even_nonres, BDTInputVariables_SUM_nonres);
+  TMVAInterface* BDT_SUM_nonres = new TMVAInterface(BDTFileName_odd_nonres, BDTFileName_even_nonres, BDTInputVariables_SUM_nonres);
   //BDT_SUM_nonres->disableBDTTransform();
-  //BDT_SUM_nonres->enableBDTTransform();
-  XGBInterface* BDT_SUM_nonres = new XGBInterface(BDTFileName_odd_nonres, BDTFileName_even_nonres, BDTInputVariables_SUM_nonres);
+  BDT_SUM_nonres->enableBDTTransform();
+  //XGBinterface* BDT_SUM_nonres = new XGBInterface(BDTFileName_odd_nonres, BDTFileName_even_nonres, BDTInputVariables_SUM_nonres);
   std::map<std::string, double> BDTOutput_SUM_Map_nonres;
 
-
   std::map<std::string, double> AllVars_Map;
-
-  std::cout<< "I AM HERE 4" << std::endl;
 
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
   std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
@@ -1710,18 +1702,14 @@ int main(int argc, char* argv[])
         evtWeightRecorder.record_ewk_bjet(selBJets_medium);
       }
 
-      std::cout<< "I AM HERE 4a"<< std::endl;
       dataToMCcorrectionInterface->setLeptons({ selLepton_lead, selLepton_sublead });
 
-      std::cout<< "I AM HERE 4b"<< std::endl;
 //--- apply data/MC corrections for trigger efficiency
       evtWeightRecorder.record_leptonTriggerEff(dataToMCcorrectionInterface);
 
-      std::cout<< "I AM HERE 4c"<< std::endl;
 //--- apply data/MC corrections for efficiencies for lepton to pass loose identification and isolation criteria
       evtWeightRecorder.record_leptonIDSF_recoToLoose(dataToMCcorrectionInterface);
       
-      std::cout<< "I AM HERE 4d"<< std::endl;
 //--- apply data/MC corrections for efficiencies of leptons passing the loose identification and isolation criteria
 //    to also pass the tight identification and isolation criteria
       if(electronSelection == kFakeable && muonSelection == kFakeable)
@@ -1738,17 +1726,14 @@ int main(int argc, char* argv[])
         evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface);
       }
 
-      std::cout<< "I AM HERE 4e1"<< std::endl;
 //--- apply data/MC corrections for hadronic tau identification efficiency
 //    and for e->tau and mu->tau misidentification rates
       dataToMCcorrectionInterface->setHadTaus({ selHadTau_lead, selHadTau_sublead });
-      std::cout<< "I AM HERE 4e2"<< std::endl;
       evtWeightRecorder.record_hadTauID_and_Iso(dataToMCcorrectionInterface);
       evtWeightRecorder.record_eToTauFakeRate(dataToMCcorrectionInterface);
       evtWeightRecorder.record_muToTauFakeRate(dataToMCcorrectionInterface);
     }
 
-    std::cout<< "I AM HERE 4f"<< std::endl;
     bool passesTight_lepton_lead = isMatched(*selLepton_lead, tightElectrons) || isMatched(*selLepton_lead, tightMuons);
     bool passesTight_hadTau_lead = isMatched(*selHadTau_lead, tightHadTausFull);
     bool passesTight_lepton_sublead = isMatched(*selLepton_sublead, tightElectrons) || isMatched(*selLepton_sublead, tightMuons);
@@ -2194,7 +2179,6 @@ int main(int argc, char* argv[])
     AllVars_Map["dR_BP2_SS"] = dR_BP2_SS;
     AllVars_Map["gen_mHH"] = 250.; // setting a Dummy value which will be reset depending on mass hypothesis 
     
-    std::cout<< "I AM HERE 5" << std::endl;
     std::map<std::string, double> BDTInputs_SUM_spin2 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin2, false);
     std::map<std::string, double> BDTInputs_SUM_spin0 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin0, false);
     std::map<std::string, double> BDTInputs_SUM_nonres = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_nonres, true); // Include all Input Var.s except BM indices
@@ -2202,7 +2186,6 @@ int main(int argc, char* argv[])
     BDTOutput_SUM_Map_spin2 = CreateBDTOutputMap(gen_mHH, BDT_SUM_spin2, BDTInputs_SUM_spin2, eventInfo.event, false, "_hypo_spin2");
     BDTOutput_SUM_Map_spin0 = CreateBDTOutputMap(gen_mHH, BDT_SUM_spin0, BDTInputs_SUM_spin0, eventInfo.event, false, "_hypo_spin0");
     BDTOutput_SUM_Map_nonres = CreateBDTOutputMap(nonRes_BMs, BDT_SUM_nonres, BDTInputs_SUM_nonres, eventInfo.event, true, "");
-    std::cout<< "I AM HERE 6" << std::endl;
     // -------------------------------
 
 //--- retrieve gen-matching flags
