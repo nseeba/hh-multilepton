@@ -295,11 +295,11 @@ int main(int argc, char* argv[])
 
   enum { kOS, kSS };
   std::string chargeSumSelection_string = cfg_analyze.getParameter<std::string>("chargeSumSelection");
-  int chargeSumSelection = -1;
-  if      ( chargeSumSelection_string == "OS" ) chargeSumSelection = kOS;
-  else if ( chargeSumSelection_string == "SS" ) chargeSumSelection = kSS;
-  else throw cms::Exception("analyze_hh_3l_1tau")
-    << "Invalid Configuration parameter 'chargeSumSelection' = " << chargeSumSelection_string << " !!\n";
+  // int chargeSumSelection = -1;
+  // if      ( chargeSumSelection_string == "OS" ) chargeSumSelection = kOS;
+  // else if ( chargeSumSelection_string == "SS" ) chargeSumSelection = kSS;
+  // else throw cms::Exception("analyze_hh_3l_1tau")
+  //   << "Invalid Configuration parameter 'chargeSumSelection' = " << chargeSumSelection_string << " !!\n";
   TRandom3 rnd; // used to randomly kill one of three possible combination of measuredTauLeptons into pairs in case chargeSumSelection is "SS" or "disabled",
                 // to ensure that exactly two possible combination of measuredTauLeptons are considered, regardless of chargeSumSelection
 
@@ -660,7 +660,7 @@ int main(int argc, char* argv[])
     inputTree -> registerReader(psWeightReader);
   }
 
-  //BDT definitions 
+  //BDT definitions
   std::vector<std::string> BDTInputVariables_SUM =
     {
       "gen_mHH", "mT_nonZlepMET", "mT_SSlephigh", "mT_SSleplow", "mT_SSlepdR", "met_LD", "HT", "diHiggsVisMass", "diHiggsMass", "dR_ltau_minltaupair", "dEta_ltau_minltaupair", "pT_ltau_minltaupair", "m_ltau_minltaupair", "dR_ll_minltaupair", "dEta_ll_minltaupair", "pT_ll_minltaupair", "m_ll_minltaupair", "dR_ltau_minllpair", "dEta_ltau_minllpair", "pT_ltau_minllpair", "m_ltau_minllpair", "dR_ll_minllpair", "dEta_ll_minllpair", "pT_ll_minllpair", "m_ll_minllpair", "mllOS_closestToZ", "SVFit_h1_visMass", "SVFit_h2_visMass", "SVFit_h1_pT", "SVFit_h2_pT", "SVFit_hh_deltaR", "SVFit_hh_deltaEta", "SVFit_hh_pT", "nSFOS", "dR_smartpair1", "dEta_smartpair1", "m_smartpair1", "pT_smartpair1", "pTSum_smartpair1", "dR_smartpair2", "dEta_smartpair2", "m_smartpair2", "pT_smartpair2", "pTSum_smartpair2", "mZ_tau", "nElectron"
@@ -670,6 +670,7 @@ int main(int argc, char* argv[])
     {
 "pTSum_smartpair_ll", "m_smartpair_ll", "diHiggsVisMass", "met_LD", "dR_smartpair_ltau", "mllOS_closestToZ", "pTDiff_smartpair_ll", "HT", "mT_SSlephigh", "m_smartpair_ltau", "pTSum_smartpair_ltau", "dR_smartpair_ll", "nSFOS", "diHiggsMass", "nElectron", "pTDiff_smartpair_ltau", "mT_SSleplow", "mZ_tau", "nodeX"
     }; 
+
   assert(fitFunctionFileName != "");
   XGBInterface* BDT_nonRes_SUM = new XGBInterface(BDTFileName_nonRes_odd, BDTFileName_nonRes_even, BDTInputVariables_nonRes_SUM);
   XGBInterface* BDT_SUM = new XGBInterface(BDTFileName_odd, BDTFileName_even, fitFunctionFileName, BDTInputVariables_SUM);
@@ -799,7 +800,6 @@ int main(int argc, char* argv[])
               Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), era_string, central_or_shift));
             selHistManager->svFit4tau_wMassConstraint_in_decayModes_[evt_cat_str][decayMode_evt]->bookHistograms(fs);
           }
-
          }
       }
 
@@ -855,7 +855,7 @@ int main(int argc, char* argv[])
 	bdt_filler->register_variable<float_type>(Form(evt_cat_str.c_str()));
       }
     bdt_filler->register_variable<float_type>(
-      "lep1_pt", "lep1_conePt", "lep1_eta", "lep1_tth_mva",
+      "lep1_pt", "lep1_conePt", "lep1_eta", "lep1_tth_mva", 
       "mT_lep1", "lep1_phi",
       "lep2_pt", "lep2_conePt", "lep2_eta", "lep2_tth_mva",
       "mT_lep2", "lep2_phi",
@@ -1683,9 +1683,8 @@ int main(int argc, char* argv[])
     cutFlowTable.update("sel lepton charge", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("sel lepton charge", evtWeightRecorder.get(central_or_shift_main));
 
-    bool isCharge_SS = sumLeptonCharge*selHadTau->charge() > 0.;
     bool isCharge_OS = sumLeptonCharge*selHadTau->charge() < 0.;
-    if ( (chargeSumSelection == kOS && isCharge_SS) || (chargeSumSelection == kSS && isCharge_OS) ) {
+    if ( isCharge_OS ) {
       if ( run_lumi_eventSelector ) {
     std::cout << "event " << eventInfo.str() << " FAILS lepton+tau charge selection." << std::endl;
 	std::cout << " (leading selLepton charge = " << selLepton_lead->charge()
@@ -1697,16 +1696,6 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update("sel lepton+tau charge", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("sel lepton+tau charge", evtWeightRecorder.get(central_or_shift_main));
-    // Z-veto (or invertedinverted) 
-    const bool failsZbosonMassVeto = isfailsZbosonMassVeto(preselLeptonsFull);
-    if ( failsZbosonMassVeto ) {
-      if ( run_lumi_eventSelector ) {
-    	std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
-      }
-      continue;
-    }
-    cutFlowTable.update("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
-    cutFlowHistManager->fillHistograms("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
 
     if ( apply_met_filters ) {
       if ( !metFilterSelector(metFilters) ) {
@@ -1773,7 +1762,7 @@ int main(int argc, char* argv[])
     
         std::cout << '\n';
       }
-    }     
+    } 
     for(const std::string & central_or_shift: central_or_shifts_local)
     {
       const double evtWeight = evtWeightRecorder.get(central_or_shift);
@@ -2299,7 +2288,6 @@ int main(int argc, char* argv[])
       for (auto elem : BDTInputs_nonRes_SUM ) std::cout << elem.first << " " << elem.second << "\n";
       std::cout << std::endl;
     }
-
 
     std::map<std::string, double> BDTOutput_SUM_Map;
     std::map<std::string, double> BDTOutput_nonRes_SUM_Map;
