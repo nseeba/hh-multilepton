@@ -99,6 +99,7 @@ EvtHistManager_hh_3l_1tau::EvtHistManager_hh_3l_1tau(const edm::ParameterSet & c
   central_or_shiftOptions_["mZ_tau"] = { "central" };
   central_or_shiftOptions_["dPhi_nonZlMET"] = { "central" };
   central_or_shiftOptions_["mindPhiLepMET"] = { "central" };
+  central_or_shiftOptions_["pT4l"] = { "central" };
   std::vector<double> gen_mHH = cfg.getParameter<std::vector<double>>("gen_mHH");
 
 
@@ -248,6 +249,7 @@ EvtHistManager_hh_3l_1tau::bookHistograms(TFileDirectory & dir)
   histogram_mZ_tau_= book1D(dir, "mZ_tau",                     "mZ_tau",          25,  0.,250);
   histogram_dPhi_nonZlMET_= book1D(dir, "dPhi_nonZlMET",                     "dPhi_nonZlMET",          35,  -3.5,3.5);  
   histogram_mindPhiLepMET_= book1D(dir, "mindPhiLepMET",                     "mindPhiLepMET",          35,  -3.5,3.5);
+  histogram_mindPhiLepMET_= book1D(dir, "pT4l",                     "pT4l",          25,  0.,250);
 }
 
 void
@@ -341,6 +343,7 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
 					  double mZ_tau,
 					  double dPhi_nonZlMET,
 					  double mindPhiLepMET,
+					  double pT4l,
 					  std::map<std::string, double> & BDTOutput_SUM_Map,
 					  std::map<std::string, double> & BDTOutput_nonRes_SUM_Map,
 					  unsigned int evt_number					 
@@ -443,6 +446,7 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_mZ_tau_, mZ_tau, evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_dPhi_nonZlMET_, dPhi_nonZlMET, evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_mindPhiLepMET_, mindPhiLepMET, evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_pT4l_, pT4l, evtWeight,     evtWeightErr);
 
   fillWithOverFlow(histogram_EventCounter_,  0., evtWeight, evtWeightErr);
   if(evt_number % 2){// ODD EVENT NUMBER CASE                                                                                                                                                    
