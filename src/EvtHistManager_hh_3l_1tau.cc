@@ -249,7 +249,7 @@ EvtHistManager_hh_3l_1tau::bookHistograms(TFileDirectory & dir)
   histogram_mZ_tau_= book1D(dir, "mZ_tau",                     "mZ_tau",          25,  0.,250);
   histogram_dPhi_nonZlMET_= book1D(dir, "dPhi_nonZlMET",                     "dPhi_nonZlMET",          35,  -3.5,3.5);  
   histogram_mindPhiLepMET_= book1D(dir, "mindPhiLepMET",                     "mindPhiLepMET",          35,  -3.5,3.5);
-  histogram_mindPhiLepMET_= book1D(dir, "pT4l",                     "pT4l",          25,  0.,250);
+  histogram_pT4l_= book1D(dir, "pT4l",                     "pT4l",          25,  0.,250);
 }
 
 void
