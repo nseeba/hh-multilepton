@@ -448,7 +448,6 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_mindPhiLepMET_, mindPhiLepMET, evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_pT4l_, pT4l, evtWeight,     evtWeightErr);
 
-  fillWithOverFlow(histogram_EventCounter_,  0., evtWeight, evtWeightErr);
   if(evt_number % 2){// ODD EVENT NUMBER CASE                                                                                                                                                    
     fillWithOverFlow(histogram_EventNumber_,  0., evtWeight, evtWeightErr);                                                                                                                         
   }else{ // EVEN EVENT NUMBER CASE                                                                                                                                                                   
