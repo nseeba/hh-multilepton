@@ -4,13 +4,14 @@ from hhAnalysis.multilepton.configs.analyzeConfig_hh_1l_3tau import analyzeConfi
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics, get_lumi
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
-from tthAnalysis.HiggsToTauTau.common import logging, load_samples_hh_multilepton as load_samples, load_samples_stitched
-
+from tthAnalysis.HiggsToTauTau.common import logging
+from tthAnalysis.HiggsToTauTau.common import load_samples_hh_multilepton as load_samples
+from tthAnalysis.HiggsToTauTau.common import load_samples_stitched
 import os
 import sys
 import getpass
 
-# E.g.: ./test/hhAnalyzeRun_1l_3tau.py -v 2017Dec13 -m default -e 2017
+# E.g.: ./test/hhAnalyzeRun_1l_3tau.py -v 2017Dec13 -m default -e 2017 -t deepVSj
 
 mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full', 'internal' ] + systematics.an_opts_hh_multilepton
@@ -171,11 +172,10 @@ if __name__ == '__main__':
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
     histograms_to_fit                     = {
       "EventCounter"                      : {},
-      "numJets"                           : {},
-      "dihiggsVisMass"                    : {},
       "dihiggsMass"                       : {},
-      "HT"                                : {},
-      "STMET"                             : {}
+      "BDTOutput_300_hypo_spin0"          : {},
+      "BDTOutput_SM"                      : {},
+      "BDTOutput_BM1"                     : {},
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,
