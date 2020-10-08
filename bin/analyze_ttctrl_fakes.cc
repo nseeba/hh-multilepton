@@ -101,6 +101,9 @@
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfoReader.h" // EventInfoReader
 #include "hhAnalysis/multilepton/interface/EvtWeightRecorderHH.h" // EvtWeightRecorderHH
 
+#include "hhAnalysis/multilepton/interface/RecoElectronCollectionSelectorFakeable_hh_multilepton.h" // RecoElectronCollectionSelectorFakeable
+#include "hhAnalysis/multilepton/interface/RecoMuonCollectionSelectorFakeable_hh_multilepton.h" // RecoMuonCollectionSelectorFakeable
+
 #include <boost/math/special_functions/sign.hpp> // boost::math::sign()
 #include <boost/algorithm/string/predicate.hpp> // boost::starts_with()
 #include <boost/algorithm/string/replace.hpp> // boost::replace_all_copy()
@@ -112,6 +115,8 @@
 #include <cstdlib> // EXIT_SUCCESS, EXIT_FAILURE
 #include <fstream> // std::ofstream
 #include <assert.h> // assert
+
+const int printLevel = 0;
 
 typedef math::PtEtaPhiMLorentzVector LV;
 typedef std::vector<std::string> vstring;
@@ -306,6 +311,12 @@ int main(int argc, char* argv[])
 
   const double lep_mva_cut_mu = cfg_analyze.getParameter<double>("lep_mva_cut_mu");
   const double lep_mva_cut_e  = cfg_analyze.getParameter<double>("lep_mva_cut_e");
+  const double lep_mva_cut_mu_ttH = 0.85;
+  const double lep_mva_cut_e_ttH  = 0.80;
+  const bool   isLeptonSelection_ttH = (abs(lep_mva_cut_mu - lep_mva_cut_mu_ttH) < 1e-6 &&
+					abs(lep_mva_cut_e  - lep_mva_cut_e_ttH)  < 1e-6) ?  true : false;
+  printf("lep_mva_cut_mu %g, lep_mva_cut_e %g, \t\t lep_mva_cut_mu_ttH %g, lep_mva_cut_e_ttH %g, \t\t isLeptonSelection_ttH %d \n",
+	 lep_mva_cut_mu,lep_mva_cut_e, lep_mva_cut_mu_ttH,lep_mva_cut_e_ttH, isLeptonSelection_ttH);
 
   //const int minNumJets = cfg_analyze.getParameter<int>("minNumJets");
   //std::cout << "minNumJets = " << minNumJets << '\n';
@@ -534,7 +545,8 @@ int main(int argc, char* argv[])
   inputTree->registerReader(muonReader);
   RecoMuonCollectionGenMatcher muonGenMatcher;
   RecoMuonCollectionSelectorLoose preselMuonSelector(era, -1, isDEBUG);
-  RecoMuonCollectionSelectorFakeable fakeableMuonSelector(era, -1, isDEBUG);
+  RecoMuonCollectionSelectorFakeable fakeableMuonSelector_ttH(era, -1, isDEBUG);
+  RecoMuonCollectionSelectorFakeable_hh_multilepton fakeableMuonSelector_hh_multilepton(era, -1, isDEBUG);
   RecoMuonCollectionSelectorTight tightMuonSelector(era, -1, isDEBUG);
   muonReader->set_mvaTTH_wp(lep_mva_cut_mu);
 
@@ -543,7 +555,8 @@ int main(int argc, char* argv[])
   RecoElectronCollectionGenMatcher electronGenMatcher;
   RecoElectronCollectionCleaner electronCleaner(0.3, isDEBUG);
   RecoElectronCollectionSelectorLoose preselElectronSelector(era, -1, isDEBUG);
-  RecoElectronCollectionSelectorFakeable fakeableElectronSelector(era, -1, isDEBUG);
+  RecoElectronCollectionSelectorFakeable fakeableElectronSelector_ttH(era, -1, isDEBUG);
+  RecoElectronCollectionSelectorFakeable_hh_multilepton fakeableElectronSelector_hh_multilepton(era, -1, isDEBUG);
   RecoElectronCollectionSelectorTight tightElectronSelector(era, -1, isDEBUG);
   electronReader->set_mvaTTH_wp(lep_mva_cut_e);
 
@@ -895,7 +908,7 @@ int main(int argc, char* argv[])
   const edm::ParameterSet cutFlowTableCfg = makeHistManager_cfg(
     process_string, Form("%s/sel/cutFlow", histogramDir.data()), era_string, central_or_shift_main
   );
-    const std::vector<std::string> cuts = {
+  const std::vector<std::string> cuts = {
     "run:ls:event selection",
     "object multiplicity",
     "trigger",
@@ -1144,11 +1157,13 @@ int main(int argc, char* argv[])
 	 (selTrigger_1e    && !apply_offline_e_trigger_cuts_1e)    ||
 	 (selTrigger_1mu   && !apply_offline_e_trigger_cuts_1mu)   ||
 	 (selTrigger_2mu   && !apply_offline_e_trigger_cuts_2mu)  ) {
-      fakeableElectronSelector.disable_offline_e_trigger_cuts();
+      if (isLeptonSelection_ttH) fakeableElectronSelector_ttH.disable_offline_e_trigger_cuts();
+      else   	                 fakeableElectronSelector_hh_multilepton.disable_offline_e_trigger_cuts();
       tightElectronSelector.disable_offline_e_trigger_cuts();
     } else {
-      tightElectronSelector.enable_offline_e_trigger_cuts();
-      fakeableElectronSelector.enable_offline_e_trigger_cuts();
+      if (isLeptonSelection_ttH) fakeableElectronSelector_ttH.enable_offline_e_trigger_cuts();
+      else                       fakeableElectronSelector_hh_multilepton.enable_offline_e_trigger_cuts();
+      tightElectronSelector.enable_offline_e_trigger_cuts();   
     }
 
 //--- build collections of electrons, muons and hadronic taus;
@@ -1157,7 +1172,9 @@ int main(int argc, char* argv[])
     const std::vector<const RecoMuon*> muon_ptrs = convert_to_ptrs(muons);
     const std::vector<const RecoMuon*> cleanedMuons = muon_ptrs; // CV: no cleaning needed for muons, as they have the highest priority in the overlap removal
     const std::vector<const RecoMuon*> preselMuons = preselMuonSelector(cleanedMuons, isHigherConePt);
-    const std::vector<const RecoMuon*> fakeableMuons = fakeableMuonSelector(preselMuons, isHigherConePt);
+    const std::vector<const RecoMuon*> fakeableMuons = isLeptonSelection_ttH ?
+      fakeableMuonSelector_ttH(preselMuons, isHigherConePt) :
+      fakeableMuonSelector_hh_multilepton(preselMuons, isHigherConePt);
     const std::vector<const RecoMuon*> tightMuons = tightMuonSelector(fakeableMuons, isHigherConePt);
     if(isDEBUG || run_lumi_eventSelector)
     {
@@ -1171,7 +1188,9 @@ int main(int argc, char* argv[])
     const std::vector<const RecoElectron*> cleanedElectrons = electronCleaner(electron_ptrs, preselMuons);
     const std::vector<const RecoElectron*> preselElectrons = preselElectronSelector(cleanedElectrons, isHigherConePt);
     const std::vector<const RecoElectron*> preselElectronsUncleaned = preselElectronSelector(electron_ptrs, isHigherConePt);
-    const std::vector<const RecoElectron*> fakeableElectrons = fakeableElectronSelector(preselElectrons, isHigherConePt);
+    const std::vector<const RecoElectron*> fakeableElectrons = isLeptonSelection_ttH ?
+      fakeableElectronSelector_ttH(preselElectrons, isHigherConePt) :
+      fakeableElectronSelector_hh_multilepton(preselElectrons, isHigherConePt);
     const std::vector<const RecoElectron*> tightElectrons = tightElectronSelector(fakeableElectrons, isHigherConePt);
     if(isDEBUG || run_lumi_eventSelector)
     {
@@ -1537,8 +1556,18 @@ int main(int argc, char* argv[])
       if(electronSelection >= kFakeable && muonSelection >= kFakeable)
       {
         // apply looseToTight SF to leptons matched to generator-level prompt leptons and passing Tight selection conditions
-        evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface, false);
+	if (isLeptonSelection_ttH)
+	{
+	  dataToMCcorrectionInterface->disableLooseToTightLeptonSFCorrection();
+	} else
+	{
+	  dataToMCcorrectionInterface->enableLooseToTightLeptonSFCorrection();
+	} 
+        evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface);
       }
+
+
+      
     }
 
     if(applyFakeRateWeights == kFR_2lepton)
@@ -1909,11 +1938,13 @@ int main(int argc, char* argv[])
     else {
       printf("Invalid event category\t\t nEle_2selLep %d, nMu_2selLep %d",nEle_2selLep,nMu_2selLep);
     }
-    printf("nEle_2selLep: %d, nMu_2selLep: %d \t \n",nEle_2selLep,nMu_2selLep);
-    std::cout << "evtCategories: ";
-    for (size_t i=0; i<evtCategories.size(); i++) std::cout << evtCategories[i] << ",  ";
-    std::cout << std::endl;
-
+    if (printLevel > 5)
+    {
+      printf("nEle_2selLep: %d, nMu_2selLep: %d \t \n",nEle_2selLep,nMu_2selLep);
+      std::cout << "evtCategories: ";
+      for (size_t i=0; i<evtCategories.size(); i++) std::cout << evtCategories[i] << ",  ";
+      std::cout << std::endl;
+    }
     // compute signal extraction observables
     double dihiggsVisMass_sel = (selJetP4 + selLepton_lead->p4() + selLepton_sublead->p4()).mass();
     double dihiggsMass_wMet_sel = (selJetP4 + selLepton_lead->p4() + selLepton_sublead->p4() + met.p4()).mass();
@@ -1933,7 +1964,7 @@ int main(int argc, char* argv[])
     double mT_met_lepLead = comp_MT_met(selLepton_lead, met.pt(), met.phi());
     double mT_met_lepSublead = comp_MT_met(selLepton_sublead, met.pt(), met.phi());
     double mT_met_lep_max, mT_met_lep_min;
-    if (mT_met_lepLead > mT_met_lepSublead) {
+    if (mT_met_lepLead > mT_met_lepSublead) { 
       mT_met_lep_max = mT_met_lepLead;
       mT_met_lep_min = mT_met_lepSublead;
     } else {

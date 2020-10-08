@@ -284,7 +284,10 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   yAxis_top->SetTitleSize(0.065);
   yAxis_top->SetLabelSize(0.05);
   yAxis_top->SetTickLength(0.04);  
-  
+
+  /*std::cout << "legendPosX " << legendPosX << ", legendPosY " << legendPosY
+    << ", legendSizeX " << legendSizeX << ", legendSizeY " << legendSizeY << "\n";*/
+
   TLegend* legend = new TLegend(legendPosX, legendPosY, legendPosX + legendSizeX, legendPosY + legendSizeY, NULL, "brNDC");
   legend->SetFillStyle(0);
   legend->SetBorderSize(0);

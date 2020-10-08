@@ -5,7 +5,7 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h" // edm::ParameterSet
 #include "FWCore/Utilities/interface/Exception.h" // cms::Exception
 #include "PhysicsTools/FWLite/interface/TFileService.h" // fwlite::TFileService
-#include "DataFormats/FWLite/interface/InputSource.h" // fwlite::InputSource
+#include "DataFormats/FWLite/interface/InputSource.h" // fwlite::InputSource  
 #include "DataFormats/FWLite/interface/OutputFiles.h" // fwlite::OutputFiles
 #include "DataFormats/Math/interface/LorentzVector.h" // math::PtEtaPhiMLorentzVector
 #include "DataFormats/Math/interface/deltaR.h" // deltaR
@@ -904,6 +904,8 @@ int main(int argc, char* argv[])
   std::map<std::string, LHEInfoHistManager*> lheInfoHistManager;
   std::map<std::string, std::map<int, selHistManagerType*>> selHistManagers;
 
+  std::map<int, TH1*> hm_2lSFOS_0;
+
   std::map<int, TH1*> hMEt_All_0 ;
   std::map<int, TH1*> hHt_All_0;
   std::map<int, TH1*> hMEt_LD_All_0;
@@ -1197,6 +1199,8 @@ int main(int argc, char* argv[])
 	    //TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_string.data()));
 	    //TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_and_genMatch.data()));
 	    TFileDirectory subD1   = fs.mkdir(Form("%s/sel/study/%s", histogramDir.data(),process_and_genMatch.data()));
+	    hm_2lSFOS_0[idxLepton]        = subD1.make<TH1D>("hm_2lSFOS_0", "hm_2lSFOS_0", 200, 0.,200.);
+
 	    hMEt_All_0[idxLepton]        = subD1.make<TH1D>("hMEt_All_0", "hMEt_All_0", 200, 0.,500.);
 	    hHt_All_0[idxLepton]         = subD1.make<TH1D>("hHt_All_0", "hHt_All_0", 200, 0.,500.);
 	    hMEt_LD_All_0[idxLepton]     = subD1.make<TH1D>("hMEt_LD_All_0", "hMEt_LD_All_0", 200, 0.,500.);
@@ -1573,8 +1577,35 @@ int main(int argc, char* argv[])
 				   genHadTaus.size());      
       }
 
+      printf("\nngenHiggs: %lu, ngenW: %lu, ngenLep: %lu, ngenNu: %lu, ngenJet: %lu, ngenWjets: %lu, \t\t ngenHadTaus: %lu  \n\n\n",
+				   genHiggses.size(),genWBosons.size(),genLeptons.size(),genNeutrinos.size(),genJets.size(),genWJets.size(),
+				   genHadTaus.size()); 
 
 
+      if (1==1)
+      {
+	//printCollection("genLeptons", genLeptons);
+	//printf("genLeptons %zu \n",genLeptons.size());
+	for (size_t iLep1=0; iLep1 < genLeptons.size(); iLep1++)
+	{
+	  for (size_t iLep2=iLep1+1; iLep2 < genLeptons.size(); iLep2++)
+	  {
+	    if ( ! (genLeptons[iLep1].pdgId() == -1* genLeptons[iLep2].pdgId())  ) continue;
+
+	    if ( ! (abs(deltaR(genLeptons[iLep1].p4(), genLeptons[iLep2].p4())) < 0.5)) continue;
+
+	    double m_2lSFOS = (genLeptons[iLep1].p4() + genLeptons[iLep2].p4()).mass();
+	    //printf("m_2lSFOS %g \n",m_2lSFOS);
+	    hm_2lSFOS_0[2]->Fill(m_2lSFOS);
+	  }
+	}
+
+	  
+	continue;
+      }
+      
+      
+      
       std::vector<GenParticle *> genHiggses_Copy1;
       std::vector<GenParticle *> genWBosons_Copy1;
       std::vector<GenParticle *> genWJets_Copy1;
