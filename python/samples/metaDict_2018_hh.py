@@ -1,6 +1,6 @@
 from collections import OrderedDict as OD
 
-# file generated at 2020-10-07 00:09:30 with the following command:
+# file generated at 2020-10-11 14:33:31 with the following command:
 # find_samples.py -V -i ../../tthAnalysis/NanoAOD/test/datasets/txt/datasets_hh_multilepton_mc_2018_RunIIAutumn18MiniAOD.txt -m python/samples/metaDict_2018_hh.py -s ../../tthAnalysis/NanoAOD/test/datasets/txt/sum_datasets_hh_multilepton_2018_RunIIAutumn18MiniAOD.txt -c python/samples/sampleLocations_2018_nanoAOD_hh_multilepton.txt
 
 meta_dictionary = OD()
@@ -2888,6 +2888,19 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-1500_narrow_TuneCP5_PSWeights_13TeV-m
   ("comment",               "status: VALID; size: 6.02GB; nevents: 100.00k; release: 10_2_5; last modified: 2020-09-16 03:15:42"),
 ])
 
+meta_dictionary["/GluGluToRadionToHHTo4V_M-1750_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM"] =  OD([
+  ("crab_string",           ""),
+  ("sample_category",       "signal_ggf_spin0_1750_hh_wwww"),
+  ("process_name_specific", "signal_ggf_spin0_1750_hh_4v_PSWeights"),
+  ("nof_db_events",         100000),
+  ("nof_db_files",          9),
+  ("fsize_db",              6492547817),
+  ("xsection",              0.057547),
+  ("use_it",                True),
+  ("genWeight",             True),
+  ("comment",               "status: VALID; size: 6.49GB; nevents: 100.00k; release: 10_2_5; last modified: 2020-10-08 20:50:44"),
+])
+
 meta_dictionary["/GluGluToRadionToHHTo4V_M-2000_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM"] =  OD([
   ("crab_string",           ""),
   ("sample_category",       "signal_ggf_spin0_2000_hh_wwww"),
@@ -3327,7 +3340,7 @@ meta_dictionary["/VBFHHTo4T_CV_1_5_C2V_1_C3_1_dipoleRecoilOff-TuneCP5_PSweights_
   ("xsection",              0.0002595228),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: PRODUCTION; size: 21.56GB; nevents: 375.00k; release: 10_2_5; last modified: 2020-09-29 08:58:42"),
+  ("comment",               "status: VALID; size: 21.56GB; nevents: 375.00k; release: 10_2_5; last modified: 2020-10-11 06:58:34"),
 ])
 
 meta_dictionary["/VBFHHTo4T_CV_1_C2V_0_C3_1_dipoleRecoilOff-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] =  OD([
@@ -4411,6 +4424,7 @@ meta_dictionary["/GluGluToHHTo4V_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythi
 # signal_ggf_spin0_1000_hh_wwww:           400.00k
 # signal_ggf_spin0_1250_hh_wwww:           100.00k
 # signal_ggf_spin0_1500_hh_wwww:           100.00k
+# signal_ggf_spin0_1750_hh_wwww:           100.00k
 # signal_ggf_spin0_2000_hh_wwww:           100.00k
 # signal_ggf_spin0_2500_hh_wwww:           100.00k
 # signal_ggf_spin0_3000_hh_wwww:           100.00k
