@@ -10,7 +10,7 @@ import os
 import sys
 import getpass
 
-# E.g.: ./test/hhAnalyzeRun_0l_4tau.py -v 2017Dec13 -m default -e 2017
+# E.g.: ./test/hhAnalyzeRun_0l_4tau.py -v 2017Dec13 -m default -e 2017 -t deepVSj
 
 mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full', 'internal' ] + systematics.an_opts_hh_multilepton
@@ -20,7 +20,7 @@ systematics.internal = systematics.an_internal_no_mem
 parser = tthAnalyzeParser()
 parser.add_modes(mode_choices)
 parser.add_sys(sys_choices)
-parser.add_preselect()
+parser.add_preselect(use_preselected = False)
 parser.add_rle_select()
 parser.add_lep_mva_wp(default_wp = 'hh_multilepton') # alternative: hh_multilepton
 parser.add_nonnominal()
@@ -174,11 +174,8 @@ if __name__ == '__main__':
       "EventCounter"                      : {},
       "dihiggsMass"                       : {},
       "BDTOutput_300_hypo_spin0"          : {},
-      "BDTOutput_500_hypo_spin0"          : {},
-      "BDTOutput_800_hypo_spin0"          : {},
-      "BDTOutput_300_hypo_spin2"          : {},
-      "BDTOutput_500_hypo_spin2"          : {},
-      "BDTOutput_800_hypo_spin2"          : {}
+      "BDTOutput_SM"                      : {},
+      "BDTOutput_BM1"                     : {},
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,
