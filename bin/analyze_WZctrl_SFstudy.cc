@@ -716,8 +716,7 @@ int main(int argc, char* argv[])
 
   if(isMC)
   {
-    //if(! readGenObjects)
-    if(1==1)
+    if(! readGenObjects)
     {
       genLeptonReader = new GenLeptonReader(branchName_genLeptons);
       inputTree -> registerReader(genLeptonReader);
@@ -794,12 +793,12 @@ int main(int argc, char* argv[])
   vstring categories_evt = {
     "WZctrl_3e", "WZctrl_3mu", "WZctrl_2e1mu", "WZctrl_1e2mu",
     "WZctrl_2lSFOS_plus_mu", "WZctrl_2lSFOS_plus_e",
-    "WZctrl_3l_woLeptonSF",
+/*    "WZctrl_3l_woLeptonSF",
     "WZctrl_3e_woLeptonSF", "WZctrl_3mu_woLeptonSF", "WZctrl_2e1mu_woLeptonSF", "WZctrl_1e2mu_woLeptonSF",
     "WZctrl_2lSFOS_plus_mu_woLeptonSF", "WZctrl_2lSFOS_plus_e_woLeptonSF",      
     "WZctrl_3l_woLeptonSFCor",
     "WZctrl_3e_woLeptonSFCor", "WZctrl_3mu_woLeptonSFCor", "WZctrl_2e1mu_woLeptonSFCor", "WZctrl_1e2mu_woLeptonSFCor",
-    "WZctrl_2lSFOS_plus_mu_woLeptonSFCor", "WZctrl_2lSFOS_plus_e_woLeptonSFCor",      
+    "WZctrl_2lSFOS_plus_mu_woLeptonSFCor", "WZctrl_2lSFOS_plus_e_woLeptonSFCor",     */ 
   };
 
   bool skipHHDecayModeHistograms = true;
@@ -1029,7 +1028,7 @@ int main(int argc, char* argv[])
         }
       }
 
-      if(! skipBooking)
+      if(! skipBooking || 1==1)
       {
         edm::ParameterSet cfg_EvtYieldHistManager_sel = makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/evtYield", histogramDir.data()), era_string, central_or_shift);
@@ -1181,7 +1180,6 @@ int main(int argc, char* argv[])
     process_string, Form("%s/sel/cutFlow", histogramDir.data()), era_string, central_or_shift_main
   );
   
-
   const std::vector<std::string> cuts = {
     "run:ls:event selection",
     "object multiplicity",
@@ -1199,16 +1197,14 @@ int main(int argc, char* argv[])
     "sel lepton charge",
     "m(ll) > 12 GeV",
     "invert Z-boson mass veto",
-    "invert Z-boson mass veto in selLeptons",
+    //"invert Z-boson mass veto in selLeptons",
     "H->ZZ*->4l veto",
     "met LD",
     "MEt filters",
+    ">=2 jets",
     "signal region veto",
     "signal region veto; 2lSFOS_plus_mu",
     "signal region veto; 2lSFOS_plus_e",
-    "signal region veto; woLeptonSF event weight",
-    "signal region veto; 2lSFOS_plus_mu; woLeptonSF event weight",
-    "signal region veto; 2lSFOS_plus_e; woLeptonSF event weight"
  };
   CutFlowTableHistManager * cutFlowHistManager = new CutFlowTableHistManager(cutFlowTableCfg, cuts);
   cutFlowHistManager->bookHistograms(fs);
@@ -1278,7 +1274,7 @@ int main(int argc, char* argv[])
     std::vector<GenParticle> electronGenMatch;
     std::vector<GenParticle> hadTauGenMatch;
     std::vector<GenParticle> jetGenMatch;
-    std::cout << "isMC: " << isMC << ", fillGenEvtHistograms: "<< fillGenEvtHistograms << std::endl;
+    
     if(isMC && fillGenEvtHistograms)
     {
       if(genLeptonReader)
@@ -1360,26 +1356,6 @@ int main(int argc, char* argv[])
       }
     }
 
-    if (1==1)
-    {
-      printf("genLeptons %zu \n",genLeptons.size());
-      for (size_t iLep1=0; iLep1 < genLeptons.size(); iLep1++)
-      {
-	for (size_t iLep2=iLep1+1; iLep2 < genLeptons.size(); iLep2++)
-	{
-	  if ( ! (genLeptons[iLep1].pdgId() == -1* genLeptons[iLep2].pdgId())  ) continue;
-
-	  double m_2lSFOS = (genLeptons[iLep1].p4() + genLeptons[iLep2].p4()).mass();
-	  printf("m_2lSFOS %g \n",m_2lSFOS);
-	  hm_2lSFOS_0[2]->Fill(m_2lSFOS);
-	}
-      }
-
-	  
-
-    }
-
-    continue;
     
     bool isTriggered_1e = hltPaths_isTriggered(triggers_1e, triggerWhiteList, eventInfo, isMC, isDEBUG);
     bool isTriggered_1mu = hltPaths_isTriggered(triggers_1mu, triggerWhiteList, eventInfo, isMC, isDEBUG);
@@ -1845,17 +1821,22 @@ int main(int argc, char* argv[])
 //--- apply data/MC corrections for efficiencies for lepton to pass loose identification and isolation criteria
       evtWeightRecorder.record_leptonIDSF_recoToLoose(dataToMCcorrectionInterface);
 
-      /*
+      
 //--- apply data/MC corrections for efficiencies of leptons passing the loose identification and isolation criteria
 //    to also pass the tight identification and isolation criteria
       if(electronSelection >= kFakeable && muonSelection >= kFakeable)
       {
         // apply looseToTight SF to leptons matched to generator-level prompt leptons and passing Tight selection conditions
-	if (useLeptonSF_LooseToTight) { // <<<<<<<<<<<<<<<<<<<<<<<< TEMPORARY for check
+	if (isLeptonSelection_ttH)
+	{
+	  dataToMCcorrectionInterface->disableLooseToTightLeptonSFCorrection();
+	} else
+	{
+	  dataToMCcorrectionInterface->enableLooseToTightLeptonSFCorrection();
+	} 
         evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface);
-	}
       }
-      */
+      
     }
 
     if(applyFakeRateWeights == kFR_3lepton)
@@ -1870,12 +1851,12 @@ int main(int argc, char* argv[])
       evtWeightRecorder.compute_FR_3l(passesTight_lepton_lead, passesTight_lepton_sublead, passesTight_lepton_third);
       }
     }
-
+    
     EvtWeightRecorderHH evtWeightRecorder_woLeptonSF = EvtWeightRecorderHH();
     evtWeightRecorder_woLeptonSF = evtWeightRecorder;
     EvtWeightRecorderHH evtWeightRecorder_woLeptonSFCor = EvtWeightRecorderHH();
     evtWeightRecorder_woLeptonSFCor = evtWeightRecorder;
-
+    /*
     if(isMC)
     {
 //--- apply data/MC corrections for efficiencies of leptons passing the loose identification and isolation criteria
@@ -1890,7 +1871,7 @@ int main(int argc, char* argv[])
         evtWeightRecorder_woLeptonSFCor.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface);	
       }
     }
-
+    */
 
     // require exactly three leptons passing tight selection criteria, to avoid overlap with 4l channel
     if ( !(tightLeptonsFull.size() <= 3) ) {
@@ -2240,7 +2221,7 @@ int main(int argc, char* argv[])
     cutFlowTable.update("invert Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("invert Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
 
-
+/*
     failsZbosonMassVeto = isfailsZbosonMassVeto(selLeptons); // true if found SFOS lepton pair within Z mass window
     if ( ! failsZbosonMassVeto ) {
       if ( isDEBUG || run_lumi_eventSelector ) {
@@ -2250,7 +2231,7 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update("invert Z-boson mass veto in selLeptons", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("invert Z-boson mass veto in selLeptons", evtWeightRecorder.get(central_or_shift_main));
-    
+*/    
 
     // Check: isfailsHtoZZVeto     
     const bool failsHtoZZVeto = isfailsHtoZZVeto(preselLeptonsFull);
@@ -2286,10 +2267,10 @@ int main(int argc, char* argv[])
     }
     
     double met_LD_cut = 0.;
-    /*if      ( selJetsAK4.size() >= 4 ) met_LD_cut = -1.; // MET LD cut not applied
+    if      ( selJetsAK4.size() >= 4 ) met_LD_cut = -1.; // MET LD cut not applied
     else if ( isSameFlavor_OS_FO     ) met_LD_cut = 45.;
-    else                               met_LD_cut = 30.;*/
-    met_LD_cut = 45.;    
+    else                               met_LD_cut = 30.;
+    //met_LD_cut = 45.;    
     if ( met_LD_cut > 0 && met_LD < met_LD_cut ) {
       if ( isDEBUG || run_lumi_eventSelector ) {
     std::cout << "event " << eventInfo.str() << " FAILS MET LD selection." << std::endl;
@@ -2324,6 +2305,24 @@ int main(int argc, char* argv[])
     cutFlowTable.update("MEt filters", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("MEt filters", evtWeightRecorder.get(central_or_shift_main));
 
+
+    if ( ! (selJetsAK4.size() >= 2)) {
+      if ( isDEBUG || run_lumi_eventSelector ) {
+	std::cout << "event " << eventInfo.str() << " FAILS  >=2 jets"
+        ;
+	printCollection("selJetsAK4", selJetsAK4);
+      }
+      continue; // CV: avoid overlap with signal region
+    }
+    cutFlowTable.update(">=2 jets", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms(">=2 jets", evtWeightRecorder.get(central_or_shift_main));
+    //cutFlowTable.update(">=2 jets; woLeptonSF event weight", evtWeightRecorder_woLeptonSF.get(central_or_shift_main));
+    //cutFlowTable.update(">=2 jets; woLeptonSFCor event weight", evtWeightRecorder_woLeptonSFCor.get(central_or_shift_main));
+    
+
+
+    
+
     bool failsSignalRegionVeto = false;
     if ( isMCClosure_e || isMCClosure_m ) {
       bool applySignalRegionVeto = (isMCClosure_e && countFakeElectrons(selLeptons) >= 1) || (isMCClosure_m && countFakeMuons(selLeptons) >= 1);
@@ -2357,8 +2356,8 @@ int main(int argc, char* argv[])
     if ( isDEBUG || run_lumi_eventSelector ) {
       std::cout << "hereSiddh:: " << eventInfo << "\t genMatchIdx_0: " << genMatchIdx_0;
       std::cout << "\nevtWeightRecorder: " << evtWeightRecorder << "\n";
-      std::cout << "\nevtWeightRecorde_woLeptonSF: " << evtWeightRecorder_woLeptonSF << "\n";
-      std::cout << "\nevtWeightRecorde_woLeptonSFCor: " << evtWeightRecorder_woLeptonSFCor << "\n";
+      //std::cout << "\nevtWeightRecorde_woLeptonSF: " << evtWeightRecorder_woLeptonSF << "\n";
+      //std::cout << "\nevtWeightRecorde_woLeptonSFCor: " << evtWeightRecorder_woLeptonSFCor << "\n";
 
       printCollection("fakeableLeptonsFull", fakeableLeptonsFull);
       printCollection("tightLeptonsFull", tightLeptonsFull);
@@ -2411,8 +2410,8 @@ int main(int argc, char* argv[])
     double lepton3_eta = selLepton_lepton3 ? selLepton_lepton3->eta() : -10;
     
     std::vector<std::string> evtCategories;
-    evtCategories.push_back("WZctrl_3l_woLeptonSF");
-    evtCategories.push_back("WZctrl_3l_woLeptonSFCor");
+    //evtCategories.push_back("WZctrl_3l_woLeptonSF");
+    //evtCategories.push_back("WZctrl_3l_woLeptonSFCor");
     if      (nEle_3selLep == 3 && nMu_3selLep == 0) evtCategories.push_back("WZctrl_3e");
     else if (nEle_3selLep == 2 && nMu_3selLep == 1) evtCategories.push_back("WZctrl_2e1mu");
     else if (nEle_3selLep == 1 && nMu_3selLep == 2) evtCategories.push_back("WZctrl_1e2mu");
@@ -2422,7 +2421,7 @@ int main(int argc, char* argv[])
     }
     if      (selLepton_lepton3 && selLepton_lepton3->is_muon())     evtCategories.push_back("WZctrl_2lSFOS_plus_mu");
     else if (selLepton_lepton3 && selLepton_lepton3->is_electron()) evtCategories.push_back("WZctrl_2lSFOS_plus_e");
-
+    /*
     // evtCategories _woLeptonSF
     if      (nEle_3selLep == 3 && nMu_3selLep == 0) evtCategories.push_back("WZctrl_3e_woLeptonSF");
     else if (nEle_3selLep == 2 && nMu_3selLep == 1) evtCategories.push_back("WZctrl_2e1mu_woLeptonSF");
@@ -2445,7 +2444,7 @@ int main(int argc, char* argv[])
     }
     if      (selLepton_lepton3 && selLepton_lepton3->is_muon())     evtCategories.push_back("WZctrl_2lSFOS_plus_mu_woLeptonSFCor");
     else if (selLepton_lepton3 && selLepton_lepton3->is_electron()) evtCategories.push_back("WZctrl_2lSFOS_plus_e_woLeptonSFCor");
-    
+    */
     //sTmp123 += Form(" isVBF: %i, ",(int)isVBF);
 
     if ( isDEBUG || run_lumi_eventSelector || printLevel > 5) {
@@ -2459,7 +2458,7 @@ int main(int argc, char* argv[])
     if (selLepton_lepton3 && selLepton_lepton3->is_electron()) 
       cutFlowTable.update("signal region veto; 2lSFOS_plus_e", evtWeightRecorder.get(central_or_shift_main));
 
-
+    /*
     cutFlowTable.update("signal region veto; woLeptonSF event weight", evtWeightRecorder_woLeptonSF.get(central_or_shift_main));
     if (selLepton_lepton3 && selLepton_lepton3->is_muon())
       cutFlowTable.update("signal region veto; 2lSFOS_plus_mu; woLeptonSF event weight", evtWeightRecorder_woLeptonSF.get(central_or_shift_main));
@@ -2472,29 +2471,18 @@ int main(int argc, char* argv[])
       cutFlowTable.update("signal region veto; 2lSFOS_plus_mu; woLeptonSFCor event weight", evtWeightRecorder_woLeptonSFCor.get(central_or_shift_main));
     if (selLepton_lepton3 && selLepton_lepton3->is_electron())
       cutFlowTable.update("signal region veto; 2lSFOS_plus_e; woLeptonSFCor event weight", evtWeightRecorder_woLeptonSFCor.get(central_or_shift_main));
-
+    */
     if ( ! selLepton_lepton3)
       cutFlowTable.update("signal region veto; selLepton_lepton3=0", evtWeightRecorder.get(central_or_shift_main));
 
 
 
-    if ( ! (selJetsAK4.size() >= 2)) {
-      if ( isDEBUG || run_lumi_eventSelector ) {
-	std::cout << "event " << eventInfo.str() << " FAILS  >=2 jets"
-        ;
-	printCollection("selJetsAK4", selJetsAK4);
-      }
-      continue; // CV: avoid overlap with signal region
-    }
-    cutFlowTable.update(">=2 jets", evtWeightRecorder.get(central_or_shift_main));
-    cutFlowTable.update(">=2 jets; woLeptonSF event weight", evtWeightRecorder_woLeptonSF.get(central_or_shift_main));
-    cutFlowTable.update(">=2 jets; woLeptonSFCor event weight", evtWeightRecorder_woLeptonSFCor.get(central_or_shift_main));
 
     
     std::map<std::string, double> weightMapHH;
     std::map<std::string, double> reWeightMapHH;
-    std::map<std::string, double> reWeightMapHH_woLeptonSF;
-    std::map<std::string, double> reWeightMapHH_woLeptonSFCor;
+    //std::map<std::string, double> reWeightMapHH_woLeptonSF;
+    //std::map<std::string, double> reWeightMapHH_woLeptonSFCor;
     double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
 
     if(apply_HH_rwgt)
@@ -2504,8 +2492,8 @@ int main(int argc, char* argv[])
       reWeightMapHH = HHWeight_calc->getReWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
       HHWeight = weightMapHH["Weight_SM"];
       evtWeightRecorder.record_bm(HHWeight); // SM by default
-      reWeightMapHH_woLeptonSF    = reWeightMapHH;
-      reWeightMapHH_woLeptonSFCor = reWeightMapHH;
+      //reWeightMapHH_woLeptonSF    = reWeightMapHH;
+      //reWeightMapHH_woLeptonSFCor = reWeightMapHH;
       
       if(isDEBUG)
       { 
@@ -2536,13 +2524,13 @@ int main(int argc, char* argv[])
 	if(apply_HH_rwgt)
 	{
 	  reWeightMapHH[evt_cat_str] *= evtWeight;
-	  reWeightMapHH_woLeptonSF[evt_cat_str] *= evtWeightRecorder_woLeptonSF.get(central_or_shift);
+	  //reWeightMapHH_woLeptonSF[evt_cat_str] *= evtWeightRecorder_woLeptonSF.get(central_or_shift);
 	}
 	else
 	{
 	  reWeightMapHH[evt_cat_str] = evtWeight;
-	  reWeightMapHH_woLeptonSF[evt_cat_str]    = evtWeightRecorder_woLeptonSF.get(central_or_shift);
-	  reWeightMapHH_woLeptonSFCor[evt_cat_str] = evtWeightRecorder_woLeptonSFCor.get(central_or_shift);
+	  //reWeightMapHH_woLeptonSF[evt_cat_str]    = evtWeightRecorder_woLeptonSF.get(central_or_shift);
+	  //reWeightMapHH_woLeptonSFCor[evt_cat_str] = evtWeightRecorder_woLeptonSFCor.get(central_or_shift);
 	}
       }
     }
@@ -3277,7 +3265,7 @@ int main(int argc, char* argv[])
 	  {
 	    std::cout << "\t category: " << category << "\n";
 	  }
-
+	  /*
 	  std::map<std::string, double> reWeightMapHH_toUse;
 	  if (category.find("_woLeptonSFCor") != std::string::npos)
 	  {
@@ -3292,7 +3280,7 @@ int main(int argc, char* argv[])
 	    evtWeight           = evtWeightRecorder.get(central_or_shift);
 	    reWeightMapHH_toUse = reWeightMapHH;
 	  }
-	  
+	  */
 
           ElectronHistManager* selHistManager_electrons_category = selHistManager->electrons_in_categories_[category];
           if ( selHistManager_electrons_category ) {
@@ -3302,7 +3290,8 @@ int main(int argc, char* argv[])
           if ( selHistManager_muons_category ) {
             selHistManager_muons_category->fillHistograms(selMuons, evtWeight);
           }
-	  for(const auto & kv: reWeightMapHH_toUse)
+	  //for(const auto & kv: reWeightMapHH_toUse)
+	  for(const auto & kv: reWeightMapHH)
           {
 	    if (printLevel > 5)
 	    {
@@ -3599,7 +3588,7 @@ int main(int argc, char* argv[])
         }
 	
 
-        if(! skipFilling)
+        if(! skipFilling || 1==1)
         {
 	  evtWeight = evtWeightRecorder.get(central_or_shift);
 	  

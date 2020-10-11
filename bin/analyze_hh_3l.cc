@@ -341,7 +341,7 @@ int main(int argc, char* argv[])
 
   const double lep_mva_cut_mu = cfg_analyze.getParameter<double>("lep_mva_cut_mu");
   const double lep_mva_cut_e  = cfg_analyze.getParameter<double>("lep_mva_cut_e");
-  
+ 
 
   enum { kOS, kSS };
   std::string leptonChargeSelection_string = cfg_analyze.getParameter<std::string>("leptonChargeSelection");
@@ -1694,6 +1694,16 @@ int main(int argc, char* argv[])
       if(electronSelection >= kFakeable && muonSelection >= kFakeable)
       {
         // apply looseToTight SF to leptons matched to generator-level prompt leptons and passing Tight selection conditions
+	/*if (isLeptonSelection_ttH)
+	{
+	  dataToMCcorrectionInterface->disableLooseToTightLeptonSFCorrection();
+	} else
+	{
+	  dataToMCcorrectionInterface->enableLooseToTightLeptonSFCorrection();
+	  }*/
+	dataToMCcorrectionInterface->enableLooseToTightLeptonSFCorrection();
+
+	
         evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface);
       }
     }

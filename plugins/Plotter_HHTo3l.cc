@@ -14,6 +14,15 @@
 
 //bool isDataBlinded = true; // added by Siddhesh
 
+std::string
+printfHistoIntegral(TH1 *h)
+{
+  double n, en;
+  n = h->IntegralAndError(1, h->GetNbinsX(), en);
+  printf("  nEvents: %f +- %f",n,en);
+  return "";
+}
+
 Plotter_HHTo3l::Plotter_HHTo3l(const TFile* inputFile, const edm::ParameterSet& cfg)
   : Plotter(inputFile, cfg)
 {
@@ -43,8 +52,9 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
 {
   std::cout << "<Plotter_HHTo3l::makePlot>:" << std::endl;
   std::cout << " outputFileName = " << outputFileName << std::endl;
-
-
+  std::cout << " divideByBinWidth: " << divideByBinWidth << std::endl;
+ 
+  
   TH1* histogramData_density = 0;
   if ( histogramData ) {
     if  ( divideByBinWidth ) {
@@ -54,6 +64,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
       histogramData_density = (TH1*)histogramData->Clone(histogramNameData_density.data());
     }
   }
+
   
   TH1* histogramData_blinded_density = 0;
   if ( histogramData_blinded ) {
@@ -99,13 +110,26 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   TH1* histogramTTH_density = 0;
   TH1* histogramTH = 0;
   TH1* histogramTH_density = 0;
+  TH1* histogramggH = 0;
+  TH1* histogramggH_density = 0;
+  TH1* histogramqqH = 0;
+  TH1* histogramqqH_density = 0;
+  TH1* histogramTTWH = 0;
+  TH1* histogramTTWH_density = 0;
+  TH1* histogramTTZH = 0;
+  TH1* histogramTTZH_density = 0;
+  
   for ( std::vector<histogramEntryType*>::iterator histogramBackground_entry = histogramsBackground.begin();
 	histogramBackground_entry != histogramsBackground.end(); ++histogramBackground_entry ) {
     std::string histogramNameBackground = Form("%s_", (*histogramBackground_entry)->histogram_->GetName());
     
     TH1* histogramBackground = (TH1*)(*histogramBackground_entry)->histogram_->Clone(histogramNameBackground.data());
     const std::string& process = (*histogramBackground_entry)->process_;
-    std::cout << "process = " << process << ": histogramBackground = " << histogramBackground << std::endl;
+    double n, en;
+    n = histogramBackground->IntegralAndError(1, histogramBackground->GetNbinsX(), en);
+    std::cout << "process = " << process << ": histogramBackground = " << histogramBackground->GetName()
+	      << " nEvents: " << n << " +- " << en
+	      << std::endl;
     //printHistogram(histogramBackground);
     checkCompatibleBinning(histogramBackground, histogramData);
     TH1* histogramBackground_density ;
@@ -115,7 +139,19 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
       std::string histogramNameBackground_density = Form("%s_NotDivided", histogramBackground->GetName());
       histogramBackground_density = (TH1*)histogramBackground->Clone(histogramNameBackground_density.data());
     }
-    if ( process.find("TTWW") != std::string::npos ) {
+    if ( process.find("ggH") != std::string::npos ) {
+      histogramggH = histogramBackground;
+      histogramggH_density = histogramBackground_density;
+    } else if ( process.find("qqH") != std::string::npos ) {
+      histogramqqH = histogramBackground;
+      histogramqqH_density = histogramBackground_density;
+    } else if ( process.find("TTWH") != std::string::npos ) {
+      histogramTTWH = histogramBackground;
+      histogramTTWH_density = histogramBackground_density;
+    } else if ( process.find("TTZH") != std::string::npos ) {
+      histogramTTZH = histogramBackground;
+      histogramTTZH_density = histogramBackground_density;
+    } else if ( process.find("TTWW") != std::string::npos ) {
       histogramTTWW = histogramBackground;
       histogramTTWW_density = histogramBackground_density;
     } else if ( process.find("TTW") != std::string::npos ) {
@@ -165,6 +201,37 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
       histogramFlips_density = histogramBackground_density;
     }
     histogramsBackground_density.push_back(histogramBackground_density);
+  }
+
+  if (1==1)
+  {
+    std::cout << "\nhistogramDY" << printfHistoIntegral(histogramDY) << ", \t " << printfHistoIntegral(histogramDY_density)
+	      << "\nhistogramW" << printfHistoIntegral(histogramW) << ", \t " << printfHistoIntegral(histogramW_density)
+	      << "\nhistogramZZ" << printfHistoIntegral(histogramZZ) << ", \t " << printfHistoIntegral(histogramZZ_density)
+	      << "\nhistogramWZ" << printfHistoIntegral(histogramWZ) << ", \t " << printfHistoIntegral(histogramWZ_density)
+	      << "\nhistogramWW" << printfHistoIntegral(histogramWW) << ", \t " << printfHistoIntegral(histogramWW_density)
+	      << "\nhistogramTT" << printfHistoIntegral(histogramTT) << ", \t " << printfHistoIntegral(histogramTT_density)
+	      << "\nhistogramTTW" << printfHistoIntegral(histogramTTW) << ", \t " << printfHistoIntegral(histogramTTW_density)
+	      << "\nhistogramTTWW" << printfHistoIntegral(histogramTTWW) << ", \t " << printfHistoIntegral(histogramTTWW_density)
+	      << "\nhistogramTTZ" << printfHistoIntegral(histogramTTZ) << ", \t " << printfHistoIntegral(histogramTTZ_density)
+	      << "\nhistogramOther" << printfHistoIntegral(histogramOther) << ", \t " << printfHistoIntegral(histogramOther_density)
+	      << "\nhistogramVH" << printfHistoIntegral(histogramVH) << ", \t " << printfHistoIntegral(histogramVH_density)
+	      << "\nhistogramTTH" << printfHistoIntegral(histogramTTH) << ", \t " << printfHistoIntegral(histogramTTH_density)
+	      << "\nhistogramTH" << printfHistoIntegral(histogramTH) << ", \t " << printfHistoIntegral(histogramTH_density)
+	      << "\nhistogramggH" << printfHistoIntegral(histogramggH) << ", \t " << printfHistoIntegral(histogramggH_density)
+	      << "\nhistogramqqH" << printfHistoIntegral(histogramqqH) << ", \t " << printfHistoIntegral(histogramqqH_density)
+	      << "\nhistogramTTWH" << printfHistoIntegral(histogramTTWH) << ", \t " << printfHistoIntegral(histogramTTWH_density)
+	      << "\nhistogramTTZH" << printfHistoIntegral(histogramTTZH) << ", \t " << printfHistoIntegral(histogramTTZH_density)
+	      << "\nhistogramConversions" << printfHistoIntegral(histogramConversions) << ", \t " << printfHistoIntegral(histogramConversions_density)
+	      << "\nhistogramFakes" << printfHistoIntegral(histogramFakes) << ", \t " << printfHistoIntegral(histogramFakes_density)	      
+	      << "\nhistogramData" << printfHistoIntegral(histogramData) << ", \t " << printfHistoIntegral(histogramData_density)
+      /*<< "" << printfHistoIntegral() << ", \t " << printfHistoIntegral()
+	      << "" << printfHistoIntegral() << ", \t " << printfHistoIntegral()
+	      << "" << printfHistoIntegral() << ", \t " << printfHistoIntegral()
+	      << "" << printfHistoIntegral() << ", \t " << printfHistoIntegral()
+      
+	      << "" << printfHistoIntegral() << ", \t " << printfHistoIntegral()*/
+	      << std::endl;
   }
   
   TH1* histogramSignal_density = 0;
@@ -398,6 +465,10 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   const int color_TTH         = 923; // gray
   const int color_TT          = 606; // light magenta
   const int color_TTWW        = 404; // dark yellow/green
+  const int color_ggH         = 592; // light blue
+  const int color_qqH         = 624; // light red
+  const int color_TTWH        = 424; // light cyan
+  const int color_TTZH        = 922; //  lioght gray
   const int color_Signal      = 2; // black
 
   const std::string legendEntry_WZ          = "WZ";
@@ -414,7 +485,10 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   const std::string legendEntry_TTH         = "TTH";
   const std::string legendEntry_TT          = "TT";
   const std::string legendEntry_TTWW        = "TTWW";
-
+  const std::string legendEntry_ggH         = "ggH";
+  const std::string legendEntry_qqH         = "qqH";
+  const std::string legendEntry_TTWH        = "TTWH";
+  const std::string legendEntry_TTZH        = "TTZH";
   
   
   std::vector<TH1*> histogramsForStack_density;
@@ -550,6 +624,34 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     histogramsForStack_density.push_back(histogramTTWW_density);
     legend->AddEntry(histogramTTWW_density, legendEntry_TTWW.data(), "f");
   } 
+  if ( histogramggH_density ) {
+    histogramggH_density->SetFillColor(color_ggH);
+    histogramggH_density->SetLineColor(color_ggH);
+    histogramggH_density->SetFillStyle(3005); // strips  from top lepft to bottom right
+    histogramsForStack_density.push_back(histogramggH_density);
+    legend->AddEntry(histogramggH_density, legendEntry_ggH.data(), "f");
+  } 
+  if ( histogramqqH_density ) {
+    histogramqqH_density->SetFillColor(color_qqH);
+    histogramqqH_density->SetLineColor(color_qqH);
+    histogramqqH_density->SetFillStyle(3144); // cross strips
+    histogramsForStack_density.push_back(histogramqqH_density);
+    legend->AddEntry(histogramqqH_density, legendEntry_qqH.data(), "f");
+  } 
+  if ( histogramTTWH_density ) {
+    histogramTTWH_density->SetFillColor(color_TTWH);
+    histogramTTWH_density->SetLineColor(color_TTWH);
+    histogramTTWH_density->SetFillStyle(3020); // 
+    histogramsForStack_density.push_back(histogramTTWH_density);
+    legend->AddEntry(histogramTTWH_density, legendEntry_TTWH.data(), "f");
+  } 
+  if ( histogramTTZH_density ) {
+    histogramTTZH_density->SetFillColor(color_TTZH);
+    histogramTTZH_density->SetLineColor(color_TTZH);
+    histogramTTWH_density->SetFillStyle(3003); //
+    histogramsForStack_density.push_back(histogramTTZH_density);
+    legend->AddEntry(histogramTTZH_density, legendEntry_TTZH.data(), "f");
+  } 
 
   
 
@@ -591,6 +693,10 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     if ( histogramTTH_density         ) sumBinContents += histogramTTH_density->GetBinContent(iBin);
     if ( histogramTT_density          ) sumBinContents += histogramTT_density->GetBinContent(iBin);
     if ( histogramTTWW_density        ) sumBinContents += histogramTTWW_density->GetBinContent(iBin);
+    if ( histogramggH_density         ) sumBinContents += histogramggH_density->GetBinContent(iBin);
+    if ( histogramqqH_density         ) sumBinContents += histogramqqH_density->GetBinContent(iBin);
+    if ( histogramTTWH_density        ) sumBinContents += histogramTTWH_density->GetBinContent(iBin);
+    if ( histogramTTZH_density        ) sumBinContents += histogramTTZH_density->GetBinContent(iBin);
     if ( histogramFlips_density       ) sumBinContents += histogramFlips_density->GetBinContent(iBin);
      
     if ( histogramUncertainty_density ) histogramUncertainty_density->SetBinContent(iBin, sumBinContents);
@@ -712,13 +818,19 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     if ( histogramTTH         ) histogramSum->Add(histogramTTH);
     if ( histogramTT          ) histogramSum->Add(histogramTT);
     if ( histogramTTWW        ) histogramSum->Add(histogramTTWW);
+    if ( histogramggH         ) histogramSum->Add(histogramggH);
+    if ( histogramqqH         ) histogramSum->Add(histogramqqH);
+    if ( histogramTTWH        ) histogramSum->Add(histogramTTWH);
+    if ( histogramTTZH        ) histogramSum->Add(histogramTTZH);    
     if ( histogramFlips       ) histogramSum->Add(histogramFlips);
     
+    std::cout << "for ratio: data: " << printfHistoIntegral(histogramData) << ",  MC: " << printfHistoIntegral(histogramSum) << std::endl;
     histogramRatio = (TH1*)histogramData->Clone("histogramRatio");
     histogramRatio->Reset();
     if ( !histogramRatio->GetSumw2N() ) histogramRatio->Sumw2();
     checkCompatibleBinning(histogramRatio, histogramSum);
     histogramRatio->Divide(histogramData, histogramSum);
+    std::cout << "Before histogramRatio: " << printfHistoIntegral(histogramRatio) << std::endl;
     int numBins_bottom = histogramRatio->GetNbinsX();
     for ( int iBin = 1; iBin <= numBins_bottom; ++iBin ) {
       double binContent = histogramRatio->GetBinContent(iBin);
@@ -726,6 +838,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
       else histogramRatio->SetBinContent(iBin, -10.);
       //std::cout << " bin #" << iBin << " (x = " << histogramRatio->GetBinCenter(iBin) << "): ratio = " << histogramRatio->GetBinContent(iBin) << std::endl;
     }
+    std::cout << "After histogramRatio: " << printfHistoIntegral(histogramRatio) << std::endl;
     
     histogramRatio->SetTitle("");
     histogramRatio->SetStats(false);

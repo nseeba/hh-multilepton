@@ -172,12 +172,12 @@ class analyzeConfig_WZctrl_SFstudy(analyzeConfig_hh):
     self.categories = [
       "WZctrl_3e", "WZctrl_3mu", "WZctrl_2e1mu", "WZctrl_1e2mu",
       "WZctrl_2lSFOS_plus_mu", "WZctrl_2lSFOS_plus_e",
-      "WZctrl_3l_woLeptonSF",
-      "WZctrl_3e_woLeptonSF", "WZctrl_3mu_woLeptonSF", "WZctrl_2e1mu_woLeptonSF", "WZctrl_1e2mu_woLeptonSF",
-      "WZctrl_2lSFOS_plus_mu_woLeptonSF", "WZctrl_2lSFOS_plus_e_woLeptonSF",      
-      "WZctrl_3l_woLeptonSFCor",
-      "WZctrl_3e_woLeptonSFCor", "WZctrl_3mu_woLeptonSFCor", "WZctrl_2e1mu_woLeptonSFCor", "WZctrl_1e2mu_woLeptonSFCor",
-      "WZctrl_2lSFOS_plus_mu_woLeptonSFCor", "WZctrl_2lSFOS_plus_e_woLeptonSFCor",      
+      #"WZctrl_3l_woLeptonSF",
+      #"WZctrl_3e_woLeptonSF", "WZctrl_3mu_woLeptonSF", "WZctrl_2e1mu_woLeptonSF", "WZctrl_1e2mu_woLeptonSF",
+      #"WZctrl_2lSFOS_plus_mu_woLeptonSF", "WZctrl_2lSFOS_plus_e_woLeptonSF",      
+      #"WZctrl_3l_woLeptonSFCor",
+      #"WZctrl_3e_woLeptonSFCor", "WZctrl_3mu_woLeptonSFCor", "WZctrl_2e1mu_woLeptonSFCor", "WZctrl_1e2mu_woLeptonSFCor",
+      #"WZctrl_2lSFOS_plus_mu_woLeptonSFCor", "WZctrl_2lSFOS_plus_e_woLeptonSFCor",      
     ]
 
     self.category_inclusive = "WZctrl_3l"
