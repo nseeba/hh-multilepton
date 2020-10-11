@@ -10,7 +10,8 @@ import os
 import sys
 import getpass
 
-# E.g.: ./test/hhAnalyzeRun_hh_2l_2tau.py -v 2017Dec13 -m default -e 2017
+# E.g: ./test/hhAnalyzeRun_2l_2tau.py -v 2020Sep29_2017_w2017TweakedHyperParaxmls -m default -t deepVSj -p True --sideband disabled -e 2017
+
 
 mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full', 'internal' ] + systematics.an_opts_hh_multilepton
@@ -97,7 +98,7 @@ else:
 
 hadTauWP_map = {
   'dR03mva' : 'Medium',
-  'deepVSj' : 'Medium',
+  'deepVSj' : 'Medium', ## CV: To be used for datacard production
 }
 hadTau_selection = tau_id + hadTauWP_map[tau_id]
 
@@ -114,7 +115,7 @@ elif mode == "forBDTtraining":
 
   hadTauWP_map_relaxed = {
     'dR03mva' : 'VLoose',
-    'deepVSj' : 'VLoose',
+    'deepVSj' : 'VVVLoose', ## CV: To be used for BDT Training
   }
   if args.tau_id_wp:
     tau_id = args.tau_id[:7]

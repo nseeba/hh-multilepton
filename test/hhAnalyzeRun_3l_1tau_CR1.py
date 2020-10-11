@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 
-from hhAnalysis.multilepton.configs.analyzeConfig_hh_0l_4tau import analyzeConfig_hh_0l_4tau
+from hhAnalysis.multilepton.configs.analyzeConfig_hh_3l_1tau import analyzeConfig_hh_3l_1tau
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics, get_lumi
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
-from tthAnalysis.HiggsToTauTau.common import logging, load_samples_hh_multilepton as load_samples
-from tthAnalysis.HiggsToTauTau.common import load_samples_stitched
+from tthAnalysis.HiggsToTauTau.common import logging, load_samples_hh_multilepton as load_samples, load_samples_stitched
+
 import os
 import sys
 import getpass
 
-# E.g.: ./test/hhAnalyzeRun_0l_4tau.py -v 2017Dec13 -m default -e 2017 -t deepVSj
+# E.g.: ./test/tthAnalyzeRun_hh_3l_1tau.py -v 2017Dec13 -m default -e 2017
 
 mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full', 'internal' ] + systematics.an_opts_hh_multilepton
@@ -21,7 +21,6 @@ parser = tthAnalyzeParser()
 parser.add_modes(mode_choices)
 parser.add_sys(sys_choices)
 parser.add_preselect()
-parser.add_rle_select()
 parser.add_lep_mva_wp(default_wp = 'hh_multilepton') # alternative: hh_multilepton
 parser.add_nonnominal()
 parser.add_tau_id_wp()
@@ -52,7 +51,6 @@ running_method     = args.running_method
 mode              = args.mode
 systematics_label = args.systematics
 use_preselected   = args.use_preselected
-rle_select        = os.path.expanduser(args.rle_select)
 use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
 lep_mva_wp        = args.lep_mva_wp
@@ -74,8 +72,8 @@ if split_trigger_sys == 'yes':
     del systematics.internal[systematics.internal.index(trigger_sys)]
     del systematics.full[systematics.full.index(trigger_sys)]
 if split_trigger_sys in [ 'yes', 'both' ]:
-  systematics.internal.extend(systematics.triggerSF_0l2tau)
-  systematics.full.extend(systematics.triggerSF_0l2tau)
+  systematics.internal.extend(systematics.triggerSF_3l)
+  systematics.full.extend(systematics.triggerSF_3l)
 
 # Use the arguments
 central_or_shifts = []
@@ -83,22 +81,23 @@ for systematic_label in systematics_label:
   for central_or_shift in getattr(systematics, systematic_label):
     if central_or_shift not in central_or_shifts:
       central_or_shifts.append(central_or_shift)
-do_sync = mode.startswith('sync')
 lumi = get_lumi(era)
 jet_cleaning_by_index = (jet_cleaning == 'by_index')
 gen_matching_by_index = (gen_matching == 'by_index')
 
 if sideband == 'disabled':
-  hadTau_charge_selections = [ "OS" ]
+  chargeSumSelections = [ "OS" ]
 elif sideband == 'enabled':
-  hadTau_charge_selections = [ "OS", "SS" ]
+  chargeSumSelections = [ "OS", "SS" ]
 elif sideband == 'only':
-  hadTau_charge_selections = [ "SS" ]
+  chargeSumSelections = [ "SS" ]
 else:
   raise ValueError("Invalid choice for the sideband: %s" % sideband)
 
 hadTauWP_map = {
-  'dR03mva' : 'Loose',
+  #'dR03mva' : 'Loose', #VLoose # VVLoose # Medium
+  #'deepVSj' : 'Loose',
+  'dR03mva' : 'Medium', #VLoose # VVLoose # Medium
   'deepVSj' : 'Medium',
 }
 hadTau_selection = tau_id + hadTauWP_map[tau_id]
@@ -113,25 +112,15 @@ elif mode == "forBDTtraining":
   samples = load_samples(era, suffix = "BDT")
   samples = load_samples_stitched(samples, era, [ 'dy_lo' ])
 
-
   hadTauWP_map_relaxed = {
-    'dR03mva' : 'VLoose',
+    'dR03mva' : 'VVVLoose',
     'deepVSj' : 'VVVLoose',
   }
   if args.tau_id_wp:
     tau_id = args.tau_id[:7]
   hadTau_selection_relaxed = tau_id + hadTauWP_map_relaxed[tau_id]
 else:
-  raise ValueError("Invalid mode: %s" % mode)
-
-for sample_name, sample_info in samples.items():
-  if sample_name == 'sum_events': continue
-  if sample_info["type"] == "mc":
-    sample_info["triggers"] = [ "2tau" ]
-  if sample_name.startswith(("/DoubleEG/", "/DoubleMuon/", "/MuonEG/", "/SingleElectron/", "/SingleMuon/")):
-    sample_info["use_it"] = False
-  elif sample_name.startswith("/Tau/"):
-    sample_info["use_it"] = True
+  raise ValueError("Internal logic error")
 
 if __name__ == '__main__':
   logging.info(
@@ -148,15 +137,15 @@ if __name__ == '__main__':
     logging.info("Changing tau ID working point: %s -> %s" % (hadTau_selection, args.tau_id_wp))
     hadTau_selection = args.tau_id_wp
 
-  analysis = analyzeConfig_hh_0l_4tau(
+  analysis = analyzeConfig_hh_3l_1tau(
     configDir = os.path.join("/home",       getpass.getuser(), "hhAnalysis", era, version),
     outputDir = os.path.join("/hdfs/local", getpass.getuser(), "hhAnalysis", era, version),
-    executable_analyze                    = "analyze_hh_0l_4tau",
-    cfgFile_analyze                       = "analyze_hh_0l_4tau_cfg.py",
+    executable_analyze                    = "analyze_hh_3l_1tau_CR1",
+    cfgFile_analyze                       = "analyze_hh_3l_1tau_cfg.py",
     samples                               = samples,
     hadTau_selection                      = hadTau_selection,
-    applyFakeRateWeights                  = "4tau",
-    hadTau_charge_selections              = hadTau_charge_selections,
+    applyFakeRateWeights                  = "4L",
+    chargeSumSelections                   = chargeSumSelections,
     central_or_shifts                     = central_or_shifts,
     lep_mva_wp                            = lep_mva_wp,
     jet_cleaning_by_index                 = jet_cleaning_by_index,
@@ -172,10 +161,31 @@ if __name__ == '__main__':
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
     histograms_to_fit                     = {
       "EventCounter"                      : {},
+      "numJets"                           : {},
+      "dihiggsVisMass"                    : {},
       "dihiggsMass"                       : {},
-      "BDTOutput_300_hypo_spin0"          : {},
-      "BDTOutput_SM"                      : {},
-      "BDTOutput_BM1"                     : {},
+      "HT"                                : {},
+      "STMET"                             : {},
+      "BDTOutput_1000"                    : {},
+      "BDTOutput_250"                    : {},
+      "BDTOutput_400"                    : {},
+      "BDTOutput_700"                    : {},
+      "BDTOutput_300"                    : {},
+      "BDTOutput_500"                    : {},
+      "BDTOutput_800"                    : {},
+      "BDTOutput_nonRes_SM"              : {},
+      "BDTOutput_nonRes_BM1"             : {},
+      "BDTOutput_nonRes_BM2"             : {},
+      "BDTOutput_nonRes_BM3"             : {},
+      "BDTOutput_nonRes_BM4"             : {},
+      "BDTOutput_nonRes_BM5"             : {},
+      "BDTOutput_nonRes_BM6"             : {},
+      "BDTOutput_nonRes_BM7"             : {},
+      "BDTOutput_nonRes_BM8"             : {},
+      "BDTOutput_nonRes_BM9"             : {},
+      "BDTOutput_nonRes_BM10"            : {},
+      "BDTOutput_nonRes_BM11"            : {},
+      "BDTOutput_nonRes_BM12"            : {},
     },
     select_rle_output                     = True,
     dry_run                               = dry_run,

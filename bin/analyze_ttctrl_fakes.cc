@@ -311,12 +311,15 @@ int main(int argc, char* argv[])
 
   const double lep_mva_cut_mu = cfg_analyze.getParameter<double>("lep_mva_cut_mu");
   const double lep_mva_cut_e  = cfg_analyze.getParameter<double>("lep_mva_cut_e");
+  const std::string lep_mva_wp = cfg_analyze.getParameter<std::string>("lep_mva_wp");
+
   const double lep_mva_cut_mu_ttH = 0.85;
   const double lep_mva_cut_e_ttH  = 0.80;
   const bool   isLeptonSelection_ttH = (abs(lep_mva_cut_mu - lep_mva_cut_mu_ttH) < 1e-6 &&
 					abs(lep_mva_cut_e  - lep_mva_cut_e_ttH)  < 1e-6) ?  true : false;
   printf("lep_mva_cut_mu %g, lep_mva_cut_e %g, \t\t lep_mva_cut_mu_ttH %g, lep_mva_cut_e_ttH %g, \t\t isLeptonSelection_ttH %d \n",
 	 lep_mva_cut_mu,lep_mva_cut_e, lep_mva_cut_mu_ttH,lep_mva_cut_e_ttH, isLeptonSelection_ttH);
+
 
   //const int minNumJets = cfg_analyze.getParameter<int>("minNumJets");
   //std::cout << "minNumJets = " << minNumJets << '\n';
@@ -387,6 +390,7 @@ int main(int argc, char* argv[])
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiElectron", hadTauSelection_antiElectron);
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiMuon", hadTauSelection_antiMuon);
   cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", isDEBUG);
+  cfg_dataToMCcorrectionInterface.addParameter<std::string>("lep_mva_wp", lep_mva_wp);
   Data_to_MC_CorrectionInterface_Base * dataToMCcorrectionInterface = nullptr;
   switch(era)
   {
