@@ -882,7 +882,7 @@ int main(int argc, char* argv[])
       "mllOS_closestToZ",
       "SVFit_h1_visMass","SVFit_h2_visMass", "SVFit_h1_pT", "SVFit_h2_pT", "SVFit_hh_deltaPhi", "SVFit_hh_deltaR", "SVFit_hh_deltaEta",  "SVFit_hh_pT", "SVFit_hh_cosTheta",
       //"genHiggs1_pt", "genHiggs1_eta","genHiggs1_phi","genHiggs2_pt","genHiggs2_eta","genHiggs2_phi", "genDiHiggs_pt","genDiHiggs_eta","genDiHiggs_phi","genDiHiggs_M","genDiHiggs_dR","genDiHiggs_dPhi","genDiHiggs_dEta","genDiHiggs_cosTheta",
-      "nSFOS", "dR_smartpair1", "dEta_smartpair1", "dPhi_smartpair1", "m_smartpair1", "pT_smartpair1", "pTSum_smartpair1", "dR_smartpair2", "dEta_smartpair2", "dPhi_smartpair2", "m_smartpair2", "pT_smartpair2", "pTSum_smartpair2", "dR_smartpair_ltau", "dEta_smartpair_ltau", "dPhi_smartpair_ltau", "m_smartpair_ltau", "pT_smartpair_ltau", "pTSum_smartpair_ltau", "dR_smartpair_ll", "dEta_smartpair_ll", "dPhi_smartpair_ll", "m_smartpair_ll", "pT_smartpair_ll", "pTSum_smartpair_ll", "mZ_tau", "dPhi_nonZlMET", "mindPhiLepMET", "pTDiff_smartpair1", "pTDiff_smartpair2","pTDiff_smartpair_ltau", "pTDiff_smartpair_ll", "SVFit_Z1_visMass","SVFit_Z2_visMass", "pT4l",
+      "nSFOS", "dR_smartpair1", "dEta_smartpair1", "dPhi_smartpair1", "m_smartpair1", "pT_smartpair1", "pTSum_smartpair1", "dR_smartpair2", "dEta_smartpair2", "dPhi_smartpair2", "m_smartpair2", "pT_smartpair2", "pTSum_smartpair2", "dR_smartpair_ltau", "dEta_smartpair_ltau", "dPhi_smartpair_ltau", "m_smartpair_ltau", "pT_smartpair_ltau", "pTSum_smartpair_ltau", "dR_smartpair_ll", "dEta_smartpair_ll", "dPhi_smartpair_ll", "m_smartpair_ll", "pT_smartpair_ll", "pTSum_smartpair_ll", "mZ_tau", "dPhi_nonZlMET", "mindPhiLepMET", "pTDiff_smartpair1", "pTDiff_smartpair2","pTDiff_smartpair_ltau", "pTDiff_smartpair_ll", "SVFit_Z1_visMass","SVFit_Z2_visMass", "pT4l", "pT4l_par", "pT4l_ort", "met_par", "met_ort", "maxdZ_lep", "maxdXY_lep",
       "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "hadTauEffSF", "data_to_MC_correction","FR_Weight"
      );
     bdt_filler->register_variable<int_type>(
@@ -2171,7 +2171,30 @@ int main(int argc, char* argv[])
 
     double mlll = (selLepton_lead->p4()+selLepton_sublead->p4()+selLepton_third->p4()).mass();
     double mAll = (selLepton_lead->p4()+selLepton_sublead->p4()+selLepton_third->p4()+ selHadTau->p4()).mass();
-    double pT4l = (selLepton_lead->p4()+selLepton_sublead->p4()+selLepton_third->p4()+ selHadTau->p4()).pt(); 
+    //    double pT4l = (selLepton_lead->p4()+selLepton_sublead->p4()+selLepton_third->p4()+ selHadTau->p4()).pt(); 
+    TLorentzVector allLep = lep1LV+lep2LV+lep3LV+tau1LV;
+
+    Particle::LorentzVector p4l = selLepton_lead->p4()+selLepton_sublead->p4()+selLepton_third->p4()+selHadTau->p4();
+    TVector3 pt4lVetor(p4l.px(),p4l.py(),0);
+    TVector3 metVector(met.p4().px(),met.p4().py(),0);
+    TVector3 hadTVector = -metVector-pt4lVetor;
+    TVector3 hadTVectorNorm = hadTVector.Unit();
+    double pT4l = p4l.pt();
+    double pT4l_par = pt4lVetor.Dot(hadTVectorNorm);
+    double pT4l_ort = pt4lVetor.Perp(hadTVectorNorm);
+    //double MET = met.pt();
+    double met_par = metVector.Dot(hadTVectorNorm);
+    double met_ort = metVector.Perp(hadTVectorNorm);
+
+    // TLorentzVector hadMET = metLV-lep1LV-lep2LV-lep3LV-tau1LV;
+    // double pT4l_par = allLep.Vect().Perp(hadMET.Vect().Unit());
+    // double pT4l_ort = allLep.Vect().Perp(hadMET.Vect().Orthogonal().Unit());
+    // double met_par = metLV.Vect().Perp(hadMET.Vect().Unit());
+    // double met_ort = metLV.Vect().Perp(hadMET.Vect().Orthogonal().Unit());
+    double maxdZ_lep = TMath::Max(TMath::Abs(selLepton_lead->dz()),TMath::Abs(selLepton_sublead->dz()));
+    maxdZ_lep = TMath::Max(maxdZ_lep,TMath::Abs(selLepton_third->dz()));
+    double maxdXY_lep = TMath::Max(TMath::Abs(selLepton_lead->dxy()),TMath::Abs(selLepton_sublead->dxy()));
+    maxdXY_lep = TMath::Max(maxdXY_lep,TMath::Abs(selLepton_third->dxy()));
     // tau pt debugging
     double m_OS_etau_closestToZ = -1;
     double m_etau_closestToZ = -1;
@@ -2858,6 +2881,12 @@ int main(int argc, char* argv[])
 	("lep2_charge",             selLepton_sublead->charge())
 	("lep3_charge",             selLepton_third->charge())
 	("pT4l",                    pT4l)
+	("pT4l_par",                pT4l_par)
+	("pT4l_ort",                pT4l_ort)
+	("met_par",                 met_par)
+	("met_ort",                met_ort)
+	("maxdZ_lep",               maxdZ_lep)
+	("maxdXY_lep",              maxdXY_lep)
 	(weightMapHH)
         .fill()
       ;
