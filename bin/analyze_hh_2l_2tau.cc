@@ -1074,7 +1074,8 @@ int main(int argc, char* argv[])
     bdt_filler->register_variable<int_type>(
       "nJet", "nBJet_loose", "nBJet_medium",
       "lep1_isElectron", "lep1_charge", "lep2_isElectron", "lep2_charge",
-      "nElectron", "nMuon", "sum_lep_charge"
+      "nElectron", "nMuon", "sum_lep_charge",
+      "dilept_charge","ditau_charge","N_SFOS_lep_pair"
     );
     bdt_filler->bookTree(fs);
   }
@@ -1912,6 +1913,19 @@ int main(int argc, char* argv[])
     bool isCharge_lepton_OS = selLepton_lead->charge()*selLepton_sublead->charge() < 0;
 
 
+    const int dilept_charge = selLepton_lead->charge()*selLepton_sublead->charge();
+    const int ditau_charge = selHadTau_lead->charge()*selHadTau_sublead->charge();  
+
+    int N_SFOS_lep_pair_counter = -1;
+    if( ( ((selLepton_lead_type == kElectron) && (selLepton_sublead_type == kElectron)) 
+	  || ((selLepton_lead_type == kMuon) && (selLepton_sublead_type == kMuon)) ) 
+	&& isCharge_lepton_OS ){
+      N_SFOS_lep_pair_counter = 1; 
+    }else{
+      N_SFOS_lep_pair_counter = 0;
+    }
+    const int N_SFOS_lep_pair = N_SFOS_lep_pair_counter;
+
     std::vector<SVfit4tauResult> svFit4tauResults_woMassConstraint = compSVfit4tau(
       *selLepton_lead, *selLepton_sublead, *selHadTau_lead, *selHadTau_sublead, met, chargeSumSelection_string, rnd,  -1., 2.);
     std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4tau(
@@ -2171,6 +2185,9 @@ int main(int argc, char* argv[])
     AllVars_Map["dR_BP1_SS"] = dR_BP1_SS;
     AllVars_Map["dR_BP2_OS"] = dR_BP2_OS;
     AllVars_Map["dR_BP2_SS"] = dR_BP2_SS;
+    AllVars_Map["dilept_charge"] = dilept_charge;
+    AllVars_Map["ditau_charge"] = ditau_charge;
+    AllVars_Map["N_SFOS_lep_pair"] = N_SFOS_lep_pair;
     AllVars_Map["gen_mHH"] = 250.; // setting a Dummy value which will be reset depending on mass hypothesis 
     
     std::map<std::string, double> BDTInputs_SUM_spin2 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin2, false);
@@ -2481,6 +2498,9 @@ int main(int argc, char* argv[])
 	  ("dR_BP1_SS", dR_BP1_SS)
 	  ("dR_BP2_OS", dR_BP2_OS)
 	  ("dR_BP2_SS", dR_BP2_SS)
+	  ("dilept_charge", dilept_charge)
+	  ("ditau_charge", ditau_charge)
+	  ("N_SFOS_lep_pair", N_SFOS_lep_pair)
 	  (weightMapHH)
         .fill()
 	;
