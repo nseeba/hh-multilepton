@@ -20,7 +20,7 @@
 #include "TLorentzVector.h"
 
 #include "tthAnalysis/HiggsToTauTau/interface/TMVAInterface.h" // TMVAInterface
-#include "tthAnalysis/HiggsToTauTau/interface/XGBInterface.h" // XGBInterface
+//#include "tthAnalysis/HiggsToTauTau/interface/XGBInterface.h" // XGBInterface
 #include "tthAnalysis/HiggsToTauTau/interface/mvaAuxFunctions.h" // check_mvaInputs, get_mvaInputVariables
 #include "tthAnalysis/HiggsToTauTau/interface/mvaInputVariables.h" // auxiliary functions for computing input variables of the MVA used for signal extraction in the 3l category
 
@@ -285,6 +285,7 @@ int main(int argc, char* argv[])
 
   const double lep_mva_cut_mu = cfg_analyze.getParameter<double>("lep_mva_cut_mu");
   const double lep_mva_cut_e  = cfg_analyze.getParameter<double>("lep_mva_cut_e");
+  const std::string lep_mva_wp = cfg_analyze.getParameter<std::string>("lep_mva_wp");
 
   bool apply_hadTauGenMatching = cfg_analyze.getParameter<bool>("apply_hadTauGenMatching");
   std::vector<hadTauGenMatchEntry> hadTauGenMatch_definitions = getHadTauGenMatch_definitions_1tau(true);
@@ -369,6 +370,7 @@ int main(int argc, char* argv[])
   cfg_dataToMCcorrectionInterface.addParameter<std::string>("hadTauSelection", hadTauSelection_part2);
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiElectron", hadTauSelection_antiElectron);
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiMuon", hadTauSelection_antiMuon);
+  cfg_dataToMCcorrectionInterface.addParameter<std::string>("lep_mva_wp", lep_mva_wp);
   Data_to_MC_CorrectionInterface_Base * dataToMCcorrectionInterface = nullptr;
   switch(era)
   {
@@ -484,6 +486,11 @@ int main(int argc, char* argv[])
 	std::cout << catcat << '\n';
       }
     }
+  else
+  {
+    std::cout << "No HH reweighting applied: " << boost::join(evt_cat_strs, ", ") << '\n';
+  }
+
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
@@ -672,8 +679,8 @@ int main(int argc, char* argv[])
     }; 
 
   assert(fitFunctionFileName != "");
-  XGBInterface* BDT_nonRes_SUM = new XGBInterface(BDTFileName_nonRes_odd, BDTFileName_nonRes_even, BDTInputVariables_nonRes_SUM);
-  XGBInterface* BDT_SUM = new XGBInterface(BDTFileName_odd, BDTFileName_even, fitFunctionFileName, BDTInputVariables_SUM);
+  //XGBInterface* BDT_nonRes_SUM = new XGBInterface(BDTFileName_nonRes_odd, BDTFileName_nonRes_even, BDTInputVariables_nonRes_SUM);
+  //XGBInterface* BDT_SUM = new XGBInterface(BDTFileName_odd, BDTFileName_even, fitFunctionFileName, BDTInputVariables_SUM);
 
   std::map<std::string, double> BDTInputs_SUM;
   std::map<std::string, double> BDTInputs_nonRes_SUM;
@@ -877,7 +884,7 @@ int main(int argc, char* argv[])
       "mllOS_closestToZ",
       "SVFit_h1_visMass","SVFit_h2_visMass", "SVFit_h1_pT", "SVFit_h2_pT", "SVFit_hh_deltaPhi", "SVFit_hh_deltaR", "SVFit_hh_deltaEta",  "SVFit_hh_pT", "SVFit_hh_cosTheta",
       //"genHiggs1_pt", "genHiggs1_eta","genHiggs1_phi","genHiggs2_pt","genHiggs2_eta","genHiggs2_phi", "genDiHiggs_pt","genDiHiggs_eta","genDiHiggs_phi","genDiHiggs_M","genDiHiggs_dR","genDiHiggs_dPhi","genDiHiggs_dEta","genDiHiggs_cosTheta",
-      "nSFOS", "dR_smartpair1", "dEta_smartpair1", "dPhi_smartpair1", "m_smartpair1", "pT_smartpair1", "pTSum_smartpair1", "dR_smartpair2", "dEta_smartpair2", "dPhi_smartpair2", "m_smartpair2", "pT_smartpair2", "pTSum_smartpair2", "dR_smartpair_ltau", "dEta_smartpair_ltau", "dPhi_smartpair_ltau", "m_smartpair_ltau", "pT_smartpair_ltau", "pTSum_smartpair_ltau", "dR_smartpair_ll", "dEta_smartpair_ll", "dPhi_smartpair_ll", "m_smartpair_ll", "pT_smartpair_ll", "pTSum_smartpair_ll", "mZ_tau", "dPhi_nonZlMET", "mindPhiLepMET", "pTDiff_smartpair1", "pTDiff_smartpair2","pTDiff_smartpair_ltau", "pTDiff_smartpair_ll", "SVFit_Z1_visMass","SVFit_Z2_visMass",
+      "nSFOS", "dR_smartpair1", "dEta_smartpair1", "dPhi_smartpair1", "m_smartpair1", "pT_smartpair1", "pTSum_smartpair1", "dR_smartpair2", "dEta_smartpair2", "dPhi_smartpair2", "m_smartpair2", "pT_smartpair2", "pTSum_smartpair2", "dR_smartpair_ltau", "dEta_smartpair_ltau", "dPhi_smartpair_ltau", "m_smartpair_ltau", "pT_smartpair_ltau", "pTSum_smartpair_ltau", "dR_smartpair_ll", "dEta_smartpair_ll", "dPhi_smartpair_ll", "m_smartpair_ll", "pT_smartpair_ll", "pTSum_smartpair_ll", "mZ_tau", "dPhi_nonZlMET", "mindPhiLepMET", "pTDiff_smartpair1", "pTDiff_smartpair2","pTDiff_smartpair_ltau", "pTDiff_smartpair_ll", "SVFit_Z1_visMass","SVFit_Z2_visMass", "pT4l",
       "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "hadTauEffSF", "data_to_MC_correction","FR_Weight"
      );
     bdt_filler->register_variable<int_type>(
@@ -2155,6 +2162,8 @@ int main(int argc, char* argv[])
 
     double mlll = (selLepton_lead->p4()+selLepton_sublead->p4()+selLepton_third->p4()).mass();
     double mAll = (selLepton_lead->p4()+selLepton_sublead->p4()+selLepton_third->p4()+ selHadTau->p4()).mass();
+    double pT4l = (selLepton_lead->p4()+selLepton_sublead->p4()+selLepton_third->p4()+ selHadTau->p4()).pt(); 
+
     // tau pt debugging
     double m_OS_etau_closestToZ = -1;
     double m_etau_closestToZ = -1;
@@ -2292,12 +2301,14 @@ int main(int argc, char* argv[])
       temp << mass_int;
       key = temp.str(); // Conversion from unsigned int to string
       std::string key_final = "BDTOutput_" + key;
-      BDTOutput_SUM_Map.insert( std::make_pair(key_final, (*BDT_SUM)(BDTInputs_SUM, eventInfo.event)) );
+      //BDTOutput_SUM_Map.insert( std::make_pair(key_final, (*BDT_SUM)(BDTInputs_SUM, eventInfo.event)) );
+      BDTOutput_SUM_Map.insert( std::make_pair(key_final, 1.) );
     }
     for(unsigned int i=0; i<BMS.size(); i++){ // Loop over different nodes
       BDTInputs_nonRes_SUM["nodeX"] = i;
       std::string key_final = "BDTOutput_nonRes_" + BMS[i];
-      BDTOutput_nonRes_SUM_Map.insert( std::make_pair(key_final, (*BDT_nonRes_SUM)(BDTInputs_nonRes_SUM, eventInfo.event)) );
+      //BDTOutput_nonRes_SUM_Map.insert( std::make_pair(key_final, (*BDT_nonRes_SUM)(BDTInputs_nonRes_SUM, eventInfo.event)) );
+      BDTOutput_nonRes_SUM_Map.insert( std::make_pair(key_final, 1.) );
     }
     //--- fill histograms with events passing final selection
     for(const std::string & central_or_shift: central_or_shifts_local)
@@ -2413,6 +2424,7 @@ int main(int argc, char* argv[])
 	    mZ_tau,
 	    dPhi_nonZlMET,
 	    mindPhiLepMET,
+	    pT4l,
 	    BDTOutput_SUM_Map,
 	    BDTOutput_nonRes_SUM_Map,
 	    eventInfo.event
@@ -2516,6 +2528,7 @@ int main(int argc, char* argv[])
 		mZ_tau,
 		dPhi_nonZlMET,
 		mindPhiLepMET,
+		pT4l,
 		BDTOutput_SUM_Map,
 		BDTOutput_nonRes_SUM_Map,
 		eventInfo.event
@@ -2832,6 +2845,10 @@ int main(int argc, char* argv[])
 	("lep1_isElectron",         lep1_isElectron)
 	("lep2_isElectron",         lep2_isElectron)
 	("lep3_isElectron",         lep3_isElectron)
+	("lep1_charge",             selLepton_lead->charge())
+	("lep2_charge",             selLepton_sublead->charge())
+	("lep3_charge",             selLepton_third->charge())
+	("pT4l",                    pT4l)
 	(weightMapHH)
         .fill()
       ;

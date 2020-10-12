@@ -3,6 +3,10 @@
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow(), fillWithOverFlow2d()
 #include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h"  // z_mass
 
+#include <string>
+#include <sstream>
+#include <map>
+
 EvtHistManager_hh_1l_3tau::EvtHistManager_hh_1l_3tau(const edm::ParameterSet & cfg)
   : HistManagerBase(cfg)
 {
@@ -40,6 +44,52 @@ EvtHistManager_hh_1l_3tau::EvtHistManager_hh_1l_3tau(const edm::ParameterSet & c
   central_or_shiftOptions_["1mu3tau_numTightLeptons_and_Taus"] = { "central" };
   central_or_shiftOptions_["1mu3tau_evtWeight"] = { "central" };
   central_or_shiftOptions_["EventCounter"] = { "*" };
+  central_or_shiftOptions_["EventNumber"] = { "*" };
+  std::vector<double> gen_mHH = cfg.getParameter<std::vector<double>>("gen_mHH");
+  std::vector<double> nonRes_BMs = cfg.getParameter<std::vector<double>>("nonRes_BMs");
+
+  for(unsigned int i=0;i<gen_mHH.size();i++){ // Loop over signal masses (Resonant case)
+    unsigned int mass_int = (int)gen_mHH[i]; // Conversion from double to unsigned int
+    std::string key = "";
+    std::ostringstream temp;
+    temp << mass_int;
+    key = temp.str(); // Conversion from unsigned int to string
+
+    std::string key_final = "BDTOutput_" + key; // For the TMVAInterface
+    std::string key_final_spin2 = key_final + "_hypo_spin2";
+    std::string key_final_spin0 = key_final + "_hypo_spin0";
+    labels_spin2_.push_back(key_final_spin2);
+    labels_spin0_.push_back(key_final_spin0);
+  }
+
+  for(unsigned int i=0;i<nonRes_BMs.size();i++){ // Loop over BM indices (Non Resonant case)
+    std::string key_final = "";
+    if(nonRes_BMs[i] == 0){ // For SM
+      key_final = "BDTOutput_SM"; // For the TMVAInterface
+    }else{
+      unsigned int bm_index_int = (int)nonRes_BMs[i]; // Conversion from double to unsigned int
+      std::string key = "";
+      std::ostringstream temp;
+      temp << bm_index_int;
+      key = temp.str(); // Conversion from unsigned int to string
+      key_final = "BDTOutput_BM" + key; // For the TMVAInterface
+    }
+    std::string key_final_nonres = key_final;
+    labels_nonres_.push_back(key_final_nonres);
+  }
+
+  for(unsigned int i=0;i < labels_spin2_.size();i++){
+    central_or_shiftOptions_[labels_spin2_[i]] = { "*" };
+  }
+
+  for(unsigned int i=0;i < labels_spin0_.size();i++){
+    central_or_shiftOptions_[labels_spin0_[i]] = { "*" };
+  }
+
+  for(unsigned int i=0;i < labels_nonres_.size();i++){
+    central_or_shiftOptions_[labels_nonres_[i]] = { "*" };
+  }
+
 }
 
 const TH1 *
@@ -58,10 +108,8 @@ EvtHistManager_hh_1l_3tau::bookHistograms(TFileDirectory & dir)
   histogram_numJetsPtGt40_   = book1D(dir, "numJetsPtGt40",   "numJetsPtGt40",    20, -0.5, +19.5);
   histogram_numBJets_loose_  = book1D(dir, "numBJets_loose",  "numBJets_loose",   10, -0.5,  +9.5);
   histogram_numBJets_medium_ = book1D(dir, "numBJets_medium", "numBJets_medium",  10, -0.5,  +9.5);
-
   histogram_dihiggsVisMass_  = book1D(dir, "dihiggsVisMass",  "dihiggsVisMass",  150,  0., 1500.);
   histogram_dihiggsMass_     = book1D(dir, "dihiggsMass",     "dihiggsMass",     150,  0., 1500.);
-
   histogram_HT_              = book1D(dir, "HT",              "HT",              150,  0., 1500.);
   histogram_STMET_           = book1D(dir, "STMET",           "STMET",           150,  0., 1500.);
 
@@ -91,7 +139,24 @@ EvtHistManager_hh_1l_3tau::bookHistograms(TFileDirectory & dir)
   histogram_1mu3tau_numTightLeptons_and_Taus_        = book1D(dir, "1mu3tau_numTightLeptons_and_Taus",        "1mu3tau_numTightLeptons_and_Taus",        5, -0.5,   4.5);
   histogram_1mu3tau_evtWeight_                       = book1D(dir, "1mu3tau_evtWeight",                       "1mu3tau_evtWeight",                     200, -1.,   +1.);
 
-  histogram_EventCounter_ = book1D(dir, "EventCounter", "EventCounter", 1, -0.5, +0.5);
+  histogram_EventCounter_                            = book1D(dir, "EventCounter", "EventCounter", 1, -0.5, +0.5);
+
+  for(unsigned int i=0;i < labels_spin2_.size();i++){ 
+    TH1* histogram_BDT_output_spin2 = book1D(dir, labels_spin2_[i], labels_spin2_[i], 100, 0., 1.); 
+    histogram_Map_BDTOutput_SUM_spin2_.insert(std::make_pair(labels_spin2_[i], histogram_BDT_output_spin2)); 
+  }
+
+  for(unsigned int i=0;i < labels_spin0_.size();i++){ 
+    TH1* histogram_BDT_output_spin0 = book1D(dir, labels_spin0_[i], labels_spin0_[i], 100, 0., 1.); 
+    histogram_Map_BDTOutput_SUM_spin0_.insert(std::make_pair(labels_spin0_[i], histogram_BDT_output_spin0)); 
+  }
+
+  for(unsigned int i=0;i < labels_nonres_.size();i++){ 
+    TH1* histogram_BDT_output_nonres = book1D(dir, labels_nonres_[i], labels_nonres_[i], 100, 0., 1.); 
+    histogram_Map_BDTOutput_SUM_nonres_.insert(std::make_pair(labels_nonres_[i], histogram_BDT_output_nonres)); 
+  }
+
+
 }
 
 namespace
@@ -117,27 +182,32 @@ namespace
 }
 
 void
-EvtHistManager_hh_1l_3tau::fillHistograms(int numElectrons,
-					  int numMuons,
-					  int numHadTaus,
-					  int numJets,
-					  int numJetsPtGt40,
-					  int numBJets_loose,
-					  int numBJets_medium,
-					  double dihiggsVisMass,
-					  double dihiggsMass,
-					  double HT,
-					  double STMET,
-                                          const RecoLepton* selLepton,
-                                          const RecoHadTau* selHadTau_lead,
-                                          const RecoHadTau* selHadTau_sublead,
-                                          const RecoHadTau* selHadTau_third,
-                                          int numTightLeptons,    
-                                          int numFakeableHadTaus_passingElecVeto,
-                                          int numTightHadTaus,
-                                          int numTightHadTaus_passingElecVeto,
-                                          bool isMC,
-					  double evtWeight)
+EvtHistManager_hh_1l_3tau::fillHistograms(
+        int numElectrons,
+        int numMuons,
+        int numHadTaus,
+        int numJets,
+        int numJetsPtGt40,
+        int numBJets_loose,
+        int numBJets_medium,
+        double dihiggsVisMass,
+        double dihiggsMass,
+        double HT,
+        double STMET,
+        std::map<std::string, double> & BDTOutput_SUM_Map_spin2,
+        std::map<std::string, double> & BDTOutput_SUM_Map_spin0,
+        std::map<std::string, double> & BDTOutput_SUM_Map_nonres,
+        const RecoLepton* selLepton,
+        const RecoHadTau* selHadTau_lead,
+        const RecoHadTau* selHadTau_sublead,
+        const RecoHadTau* selHadTau_third,
+        int numTightLeptons,
+        int numFakeableHadTaus_passingElecVeto,
+        int numTightHadTaus,
+        int numTightHadTaus_passingElecVeto,
+        bool isMC,
+        double evtWeight
+)
 {
   const double evtWeightErr = 0.;
 
@@ -175,7 +245,7 @@ EvtHistManager_hh_1l_3tau::fillHistograms(int numElectrons,
       if ( selHadTau->charge()*selLepton->charge() < 0. )
       {
         double mass_etau = (selLepton->p4() + selHadTau->p4()).mass();
-	if ( mass_etau_OS_closestToZ == -1. || TMath::Abs(mass_etau - z_mass) < TMath::Abs(mass_etau_OS_closestToZ - z_mass) )
+      if ( mass_etau_OS_closestToZ == -1. || TMath::Abs(mass_etau - z_mass) < TMath::Abs(mass_etau_OS_closestToZ - z_mass) )
         {
           mass_etau_OS_closestToZ = mass_etau;
         }
@@ -187,24 +257,36 @@ EvtHistManager_hh_1l_3tau::fillHistograms(int numElectrons,
     fillWithOverFlow(histogram_1e3tau_numTightTaus_,                     numTightHadTaus,                      evtWeight, evtWeightErr);
     fillWithOverFlow(histogram_1e3tau_numTightTaus_passingElecVeto_,     numTightHadTaus_passingElecVeto,      evtWeight, evtWeightErr);
     fillWithOverFlow(histogram_1e3tau_numTightLeptons_and_Taus_,         numTightLeptons + numTightHadTaus,    evtWeight, evtWeightErr);
-    if ( !isMC ) 
+    if ( !isMC )
     {
       fillWithOverFlow(histogram_1e3tau_evtWeight_,                      evtWeight,                            evtWeight, evtWeightErr);
     }
   }
   
-  if ( selLepton->is_muon() ) 
+  if ( selLepton->is_muon() )
   {
     fillWithOverFlow(histogram_1mu3tau_numTightLeptons_,                 numTightLeptons,                      evtWeight, evtWeightErr);
     fillWithOverFlow(histogram_1mu3tau_numFakeableTaus_passingElecVeto_, numFakeableHadTaus_passingElecVeto,   evtWeight, evtWeightErr);
     fillWithOverFlow(histogram_1mu3tau_numTightTaus_,                    numTightHadTaus,                      evtWeight, evtWeightErr);
     fillWithOverFlow(histogram_1mu3tau_numTightTaus_passingElecVeto_,    numTightHadTaus_passingElecVeto,      evtWeight, evtWeightErr);
     fillWithOverFlow(histogram_1mu3tau_numTightLeptons_and_Taus_,        numTightLeptons + numTightHadTaus,    evtWeight, evtWeightErr);
-    if ( !isMC ) 
+    if ( !isMC )
     {
       fillWithOverFlow(histogram_1mu3tau_evtWeight_,                     evtWeight,                            evtWeight, evtWeightErr);
     }
   }
   
   fillWithOverFlow(histogram_EventCounter_, 0., evtWeight, evtWeightErr);
+
+  for(unsigned int i=0;i < labels_spin2_.size();i++){
+    fillWithOverFlow(histogram_Map_BDTOutput_SUM_spin2_[labels_spin2_[i]], BDTOutput_SUM_Map_spin2[labels_spin2_[i]], evtWeight, evtWeightErr);
+  }
+
+  for(unsigned int i=0;i < labels_spin0_.size();i++){
+    fillWithOverFlow(histogram_Map_BDTOutput_SUM_spin0_[labels_spin0_[i]], BDTOutput_SUM_Map_spin0[labels_spin0_[i]], evtWeight, evtWeightErr);
+  }
+
+ for(unsigned int i=0;i < labels_nonres_.size();i++){
+    fillWithOverFlow(histogram_Map_BDTOutput_SUM_nonres_[labels_nonres_[i]], BDTOutput_SUM_Map_nonres[labels_nonres_[i]], evtWeight, evtWeightErr);
+  }
 }

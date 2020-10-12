@@ -121,7 +121,7 @@ public:
 		 double mZ_tau,
 		 double dPhi_nonZlMET,
 		 double mindPhiLepMET,
-
+		 double pT4l,
 		 std::map<std::string, double>& BDTOutput_SUM_Map,
 		 std::map<std::string, double>& BDTOutput_nonRes_SUM_Map,
 		 //std::map<std::string, double>& XGBOutput_SUM_Map,
@@ -226,7 +226,7 @@ public:
   TH1 * histogram_mZ_tau_;
   TH1 * histogram_dPhi_nonZlMET_;
   TH1 * histogram_mindPhiLepMET_;
-
+  TH1 * histogram_pT4l_;
   TH1 * histogram_EventNumber_;
   std::map<std::string, TH1*> histogram_Map_BDTOutput_SUM_;
   std::map<std::string, TH1*> histogram_Map_BDTOutput_nonRes_SUM_;
