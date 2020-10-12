@@ -1702,9 +1702,9 @@ int main(int argc, char* argv[])
 	} else
 	{
 	  dataToMCcorrectionInterface->enableLooseToTightLeptonSFCorrection();
-	  }*/
+	  }
 	dataToMCcorrectionInterface->enableLooseToTightLeptonSFCorrection();
-
+	*/
 	
         evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface);
       }

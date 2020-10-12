@@ -27,6 +27,11 @@ EvtHistManager_ttctrl_fakes::EvtHistManager_ttctrl_fakes(const edm::ParameterSet
   central_or_shiftOptions_["BDTOutput_SUM_gen_mHH_400"] = { "*" };
   central_or_shiftOptions_["BDTOutput_SUM_gen_mHH_700"] = { "*" };
   central_or_shiftOptions_["EventCounter"] = { "*" };
+  
+  central_or_shiftOptions_["histogram_electronFR_sum_"] = { "central" };
+  central_or_shiftOptions_["histogram_electronFR_nEntries_"] = { "central" };
+  central_or_shiftOptions_["histogram_muonFR_sum_"] = { "central" };
+  central_or_shiftOptions_["histogram_muonFR_nEntries_"] = { "central" };
 }
 
 const TH1 *
@@ -61,6 +66,13 @@ EvtHistManager_ttctrl_fakes::bookHistograms(TFileDirectory & dir)
   histogram_BDTOutput_SUM_gen_mHH_400_    = book1D(dir, "BDTOutput_SUM_gen_mHH_400",    "BDTOutput_SUM_gen_mHH_400",    100,  0.,    1.);
   histogram_BDTOutput_SUM_gen_mHH_700_    = book1D(dir, "BDTOutput_SUM_gen_mHH_700",    "BDTOutput_SUM_gen_mHH_700",    100,  0.,    1.);
   histogram_EventCounter_     = book1D(dir, "EventCounter",     "EventCounter",       1, -0.5,  +0.5);
+
+  histogram_electronFR_sum_      = book1D(dir, "electronFR_sum_",        "electronFR_sum_",        1, -0.5,  +0.5);
+  histogram_electronFR_nEntries_ = book1D(dir, "electronFR_nEntries_",   "electronFR_nEntries_",   1, -0.5,  +0.5);
+  histogram_muonFR_sum_          = book1D(dir, "muonFR_sum_",            "muonFR_sum_",            1, -0.5,  +0.5);
+  histogram_muonFR_nEntries_     = book1D(dir, "muonFR_nEntries_",       "muonFR_nEntries_",       1, -0.5,  +0.5);
+  histogram_electronFR_sum_->SetBinContent(1, 0.);
+  histogram_muonFR_sum_->SetBinContent(1, 0.);
 }
 
 void
@@ -115,4 +127,28 @@ EvtHistManager_ttctrl_fakes::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_BDTOutput_SUM_gen_mHH_400_,    BDTOutput_SUM_gen_mHH_400,    evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_BDTOutput_SUM_gen_mHH_700_,    BDTOutput_SUM_gen_mHH_700,    evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_EventCounter_,     0.,               evtWeight, evtWeightErr);
+}
+
+
+void
+EvtHistManager_ttctrl_fakes::fillHistograms_avgLeptonFR(int    leptonPdgId,
+							double leptonFR_thisEvt)
+{
+  if (abs(leptonFR_thisEvt - (-99999.)) < 1e-6) return;
+
+  double leptonFR_sum;
+  if (leptonPdgId == 11)
+  {
+    leptonFR_sum  = histogram_electronFR_sum_->GetBinContent(1);
+    leptonFR_sum += leptonFR_thisEvt;
+    histogram_electronFR_sum_->SetBinContent(1, leptonFR_sum);
+    fillWithOverFlow(histogram_electronFR_nEntries_,     0.,               1, 0);
+  }
+  else if (leptonPdgId == 13)
+  {
+    leptonFR_sum  = histogram_muonFR_sum_->GetBinContent(1);
+    leptonFR_sum += leptonFR_thisEvt;
+    histogram_muonFR_sum_->SetBinContent(1, leptonFR_sum);
+    fillWithOverFlow(histogram_muonFR_nEntries_,     0.,               1, 0);
+  }
 }

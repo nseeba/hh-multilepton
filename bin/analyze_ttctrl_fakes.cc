@@ -116,7 +116,7 @@
 #include <fstream> // std::ofstream
 #include <assert.h> // assert
 
-const int printLevel = 0;
+const int printLevel = 6;
 
 typedef math::PtEtaPhiMLorentzVector LV;
 typedef std::vector<std::string> vstring;
@@ -311,15 +311,12 @@ int main(int argc, char* argv[])
 
   const double lep_mva_cut_mu = cfg_analyze.getParameter<double>("lep_mva_cut_mu");
   const double lep_mva_cut_e  = cfg_analyze.getParameter<double>("lep_mva_cut_e");
-  const std::string lep_mva_wp = cfg_analyze.getParameter<std::string>("lep_mva_wp");
-
   const double lep_mva_cut_mu_ttH = 0.85;
   const double lep_mva_cut_e_ttH  = 0.80;
   const bool   isLeptonSelection_ttH = (abs(lep_mva_cut_mu - lep_mva_cut_mu_ttH) < 1e-6 &&
 					abs(lep_mva_cut_e  - lep_mva_cut_e_ttH)  < 1e-6) ?  true : false;
   printf("lep_mva_cut_mu %g, lep_mva_cut_e %g, \t\t lep_mva_cut_mu_ttH %g, lep_mva_cut_e_ttH %g, \t\t isLeptonSelection_ttH %d \n",
 	 lep_mva_cut_mu,lep_mva_cut_e, lep_mva_cut_mu_ttH,lep_mva_cut_e_ttH, isLeptonSelection_ttH);
-
 
   //const int minNumJets = cfg_analyze.getParameter<int>("minNumJets");
   //std::cout << "minNumJets = " << minNumJets << '\n';
@@ -390,7 +387,6 @@ int main(int argc, char* argv[])
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiElectron", hadTauSelection_antiElectron);
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiMuon", hadTauSelection_antiMuon);
   cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", isDEBUG);
-  cfg_dataToMCcorrectionInterface.addParameter<std::string>("lep_mva_wp", lep_mva_wp);
   Data_to_MC_CorrectionInterface_Base * dataToMCcorrectionInterface = nullptr;
   switch(era)
   {
@@ -931,7 +927,7 @@ int main(int argc, char* argv[])
     "sel lepton-pair SS/OS charge",
     "Z-boson mass veto",
     "H->ZZ*->4l veto",
-    "met LD",
+    "met LD", // met_LD > 30
     "MEt filters",
     "2 fakeable leptons",
     "signal region veto",
@@ -1560,13 +1556,13 @@ int main(int argc, char* argv[])
       if(electronSelection >= kFakeable && muonSelection >= kFakeable)
       {
         // apply looseToTight SF to leptons matched to generator-level prompt leptons and passing Tight selection conditions
-	if (isLeptonSelection_ttH)
+	/*if (isLeptonSelection_ttH)
 	{
 	  dataToMCcorrectionInterface->disableLooseToTightLeptonSFCorrection();
 	} else
 	{
 	  dataToMCcorrectionInterface->enableLooseToTightLeptonSFCorrection();
-	} 
+	  }*/ 
         evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface);
       }
 
@@ -1929,6 +1925,54 @@ int main(int argc, char* argv[])
 	}
       }
     }
+
+    double FR_leadNonpromptLepton    = -99999.;
+    int    pdgId_leadNonpromptLepton = 0;
+    
+    if (isMC)
+    {
+      for (int i=0; i < 2; i++)
+      {
+	// check for non-prompt leptons
+	if (selLeptons[i]->genLepton() || selLeptons[i]->genHadTau() || selLeptons[i]->genPhoton())
+	  continue;
+
+	const int leptonPdgId = std::abs(selLeptons[i]->pdgId());
+	const double leptonPt = selLeptons[i]->cone_pt();
+	const double leptonAbsEta = selLeptons[i]->absEta();
+
+	const int jetToLeptonFakeRate_option = getJetToLeptonFR_option(central_or_shift_main);
+	
+	if (leptonPdgId == 11)
+	{
+	  int jetToLeptonFakeRate_option_e = jetToLeptonFakeRate_option;
+	  FR_leadNonpromptLepton = leptonFakeRateInterface->getWeight_e(
+	    leptonPt, leptonAbsEta, jetToLeptonFakeRate_option_e
+	    );
+	  pdgId_leadNonpromptLepton = leptonPdgId;
+	}
+	else if (leptonPdgId == 13)
+	{
+	  int jetToLeptonFakeRate_option_m = jetToLeptonFakeRate_option;
+	  FR_leadNonpromptLepton = leptonFakeRateInterface->getWeight_mu(
+	    leptonPt, leptonAbsEta, jetToLeptonFakeRate_option_m
+	    );
+	  pdgId_leadNonpromptLepton = leptonPdgId;
+	}
+	else
+	{
+	  throw cmsException("analyze_ttctrl_fakes", __LINE__) << "Invalid PDG ID: " << leptonPdgId;
+	}
+
+	if (printLevel > 5)
+	{
+	  printf("leptonPdgId %d, leptonPt %g, leptonAbsEta %g, jetToLeptonFakeRate_option %d, FR_leadNonpromptLepton %g \n",leptonPdgId,leptonPt,leptonAbsEta, jetToLeptonFakeRate_option, FR_leadNonpromptLepton);
+	}
+
+	break;
+      }
+      
+    }
     
     int nEle_2selLep = 0, nMu_2selLep = 0;
     for (int i=0; i < 2; i++) {
@@ -2060,6 +2104,7 @@ int main(int argc, char* argv[])
             BDTOutput_SUM[1],
             kv.second
           );
+	  selHistManager->evt_[kv.first]->fillHistograms_avgLeptonFR(pdgId_leadNonpromptLepton, FR_leadNonpromptLepton);
         }
 
         if(! skipFilling)
@@ -2101,6 +2146,7 @@ int main(int argc, char* argv[])
               BDTOutput_SUM[1],
               kv.second
             );
+	    selHistManager->evt_in_categories_[kv.first][category]->fillHistograms_avgLeptonFR(pdgId_leadNonpromptLepton, FR_leadNonpromptLepton);
           }
         }
       } 

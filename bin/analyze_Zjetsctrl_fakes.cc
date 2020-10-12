@@ -1707,13 +1707,13 @@ int main(int argc, char* argv[])
       if(electronSelection >= kFakeable && muonSelection >= kFakeable)
       {
         // apply looseToTight SF to leptons matched to generator-level prompt leptons and passing Tight selection conditions
-	if (isLeptonSelection_ttH)
+	/*if (isLeptonSelection_ttH)
 	{
 	  dataToMCcorrectionInterface->disableLooseToTightLeptonSFCorrection();
 	} else
 	{
 	  dataToMCcorrectionInterface->enableLooseToTightLeptonSFCorrection();
-	}
+	  }*/
         evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface);
       }
 

@@ -52,6 +52,10 @@ public:
   const TH1 *
   getHistogram_EventCounter() const;
 
+  void
+  fillHistograms_avgLeptonFR(int    leptonPdgId,
+			     double leptonFR_thisEvt);
+
  private:
   TH1 * histogram_numElectrons_;
   TH1 * histogram_numMuons_;
@@ -75,6 +79,12 @@ public:
   TH1 * histogram_BDTOutput_SUM_gen_mHH_400_;
   TH1 * histogram_BDTOutput_SUM_gen_mHH_700_;
   TH1 * histogram_EventCounter_;
+
+  TH1 * histogram_electronFR_sum_;
+  TH1 * histogram_electronFR_nEntries_;
+  TH1 * histogram_muonFR_sum_;
+  TH1 * histogram_muonFR_nEntries_;
+  
 };
 
 #endif
