@@ -122,7 +122,8 @@ void dumpEventYields_Stage2_1l_3tau()
   //std::string inputFilePath = "/hdfs/local/acwarden/hhAnalysis/2017/2020July8_VLoose/histograms/hh_1l_3tau/";
   //  std::string inputFilePath = "/hdfs/local/acwarden/hhAnalysis/2017/2020June11_Med/histograms/hh_1l_3tau/";
   //  std::string inputFilePath = "/hdfs/local/acwarden/hhAnalysis/2017/2020June19_VVLoose/histograms/hh_1l_3tau/";
-  std::string inputFilePath = "/hdfs/local/acwarden/hhAnalysis/2017/2020Jul19_VL_addplots/histograms/hh_1l_3tau/";
+  //std::string inputFilePath = "/hdfs/local/acwarden/hhAnalysis/2017/2020Jul19_VL_addplots/histograms/hh_1l_3tau/";
+  std::string inputFilePath = "/hdfs/local/veelken/hhAnalysis/2017/2020Sep01/histograms/hh_1l_3tau/";
   // SS file paths 
   //  std::string inputFilePath = "/hdfs/local/acwarden/hhAnalysis/2017/2020June22_SS_L/histograms/hh_1l_3tau/";
 
@@ -144,16 +145,22 @@ void dumpEventYields_Stage2_1l_3tau()
   //  inputFileNames["hh_1l_3tau"] = "Tight_SS/hadd/hadd_stage2_Tight_SS.root";
   //inputFileNames["hh_1e_3tau"] = "Fakeable_wFakeRateWeights_OS/hadd/hadd_stage2_Fakeable_wFakeRateWeights_OS.root";
   //inputFileNames["hh_1mu_3tau"] = "Fakeable_wFakeRateWeights_OS/hadd/hadd_stage2_Fakeable_wFakeRateWeights_OS.root";
-  inputFileNames["hh_1e_3tau"] = "Tight_OS/hadd/hadd_stage2_Tight_OS.root";
+  //inputFileNames["hh_1e_3tau"] = "Tight_OS/hadd/hadd_stage2_Tight_OS.root";
   //inputFileNames["hh_1mu_3tau"] = "Tight_OS/hadd/hadd_stage2_Tight_OS.root";
+  inputFileNames["hh_1e_3tau"] = "Tight_OS/hadd/hadd_stage2_Tight_OS.root";
+  //inputFileNames["hh_1e_3tau"] = "Fakeable_wFakeRateWeights_OS/hadd/hadd_stage2_Fakeable_wFakeRateWeights_OS.root";
   
   std::map<std::string, std::string> directories; // key = channel
   //  directories["hh_1l_3tau"] = "hh_1l_3tau_OS_Tight/sel/evt";
   //directories["hh_1l_3tau"] = "hh_1l_3tau_SS_Tight/sel/evt";
   //directories["hh_1e_3tau"] = "hh_1e_3tau_OS_Fakeable_wFakeRateWeights/sel/evt";
   //directories["hh_1mu_3tau"] = "hh_1mu_3tau_OS_Fakeable_wFakeRateWeights/sel/evt";
-  directories["hh_1e_3tau"] = "hh_1e_3tau_OS_Tight/sel/evt";
+  //directories["hh_1e_3tau"] = "hh_1e_3tau_OS_Tight/sel/evt";
   //directories["hh_1mu_3tau"] = "hh_1mu_3tau_OS_Tight/sel/evt";
+  directories["hh_1e_3tau"] = "hh_1l_3tau_OS_Tight/sel/evt";
+  //directories["hh_1e_3tau"] = "hh_1l_3tau_OS_Fakeable_wFakeRateWeights/sel/evt";
+  //directories["hh_1e_3tau"] = "hh_1e_3tau_OS_Fakeable_wFakeRateWeights/sel/evt";
+  //directories["hh_1e_3tau"] = "hh_1mu_3tau_OS_Fakeable_wFakeRateWeights/sel/evt";
   
   std::map<std::string, vstring> signal_processes; // key = channel
   /*  signal_processes["hh_1l_3tau"].push_back("signal_ggf_spin0_400_hh_tttt");
