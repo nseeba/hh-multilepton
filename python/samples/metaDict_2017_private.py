@@ -13,7 +13,7 @@ sum_events = {
 
 
 meta_dictionary["/GluGluToHHTo4Tau_node_SM_13TeV/RunIIFall17MiniAODv2/USER"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2020Oct12_GluGluToHHTo4Tau_node_SM_13TeV__RunIIFall17MiniAODv2"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_sm_hh_4t_private"),
   ("nof_db_events",         1000000),
@@ -26,7 +26,7 @@ meta_dictionary["/GluGluToHHTo4Tau_node_SM_13TeV/RunIIFall17MiniAODv2/USER"] =  
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_1_TuneCP5_PSWeights_13TeV/RunIIFall17MiniAODv2/USER"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2020Oct12_GluGluToHHTo4Tau_node_1_TuneCP5_PSWeights_13TeV__RunIIFall17MiniAODv2"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_1_hh_4t_private"),
   ("nof_db_events",         1000000),
@@ -39,7 +39,7 @@ meta_dictionary["/GluGluToHHTo4Tau_node_1_TuneCP5_PSWeights_13TeV/RunIIFall17Min
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_4_13TeV/RunIIFall17MiniAODv2/USER"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2020Oct12_GluGluToHHTo4Tau_node_4_13TeV__RunIIFall17MiniAODv2"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_4_hh_4t_private"),
   ("nof_db_events",         1000000),
@@ -52,7 +52,7 @@ meta_dictionary["/GluGluToHHTo4Tau_node_4_13TeV/RunIIFall17MiniAODv2/USER"] =  O
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_7_13TeV/RunIIFall17MiniAODv2/USER"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2020Oct12_GluGluToHHTo4Tau_node_7_13TeV__RunIIFall17MiniAODv2"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_7_hh_4t_private"),
   ("nof_db_events",         1000000),
@@ -65,7 +65,7 @@ meta_dictionary["/GluGluToHHTo4Tau_node_7_13TeV/RunIIFall17MiniAODv2/USER"] =  O
 ])
 
 meta_dictionary["/GluGluToHHTo4Tau_node_12_13TeV/RunIIFall17MiniAODv2/USER"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2020Oct12_GluGluToHHTo4Tau_node_12_13TeV__RunIIFall17MiniAODv2"),
   ("sample_category",       "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_12_hh_4t_private"),
   ("nof_db_events",         1000000),
@@ -78,7 +78,7 @@ meta_dictionary["/GluGluToHHTo4Tau_node_12_13TeV/RunIIFall17MiniAODv2/USER"] =  
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_SM_13TeV/RunIIFall17MiniAODv2/USER"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2020Oct12_GluGluToHHTo2V2Tau_node_SM_13TeV__RunIIFall17MiniAODv2"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_sm_hh_2v2t_private"),
   ("nof_db_events",         999997),
@@ -91,7 +91,7 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_SM_13TeV/RunIIFall17MiniAODv2/USER"] =
 ])
 
 meta_dictionary["/GluGluToHHTo2V2tau_node_1_TuneCP5_PSWeights_13TeV/RunIIFall17MiniAODv2/USER"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2020Oct12_GluGluToHHTo2V2tau_node_1_TuneCP5_PSWeights_13TeV__RunIIFall17MiniAODv2"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_1_hh_2v2t_private"),
   ("nof_db_events",         999998),
@@ -104,7 +104,7 @@ meta_dictionary["/GluGluToHHTo2V2tau_node_1_TuneCP5_PSWeights_13TeV/RunIIFall17M
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_4_13TeV/RunIIFall17MiniAODv2/USER"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2020Oct12_GluGluToHHTo2V2Tau_node_4_13TeV__RunIIFall17MiniAODv2"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_4_hh_2v2t_private"),
   ("nof_db_events",         999998),
@@ -117,7 +117,7 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_4_13TeV/RunIIFall17MiniAODv2/USER"] = 
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_7_13TeV/RunIIFall17MiniAODv2/USER"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2020Oct12_GluGluToHHTo2V2Tau_node_7_13TeV__RunIIFall17MiniAODv2"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_7_hh_2v2t_private"),
   ("nof_db_events",         999998),
@@ -130,7 +130,7 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_7_13TeV/RunIIFall17MiniAODv2/USER"] = 
 ])
 
 meta_dictionary["/GluGluToHHTo2V2Tau_node_12_13TeV/RunIIFall17MiniAODv2/USER"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2020Oct12_GluGluToHHTo2V2Tau_node_12_13TeV__RunIIFall17MiniAODv2"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific", "signal_ggf_nonresonant_node_12_hh_2v2t_private"),
   ("nof_db_events",         999996),
@@ -143,7 +143,7 @@ meta_dictionary["/GluGluToHHTo2V2Tau_node_12_13TeV/RunIIFall17MiniAODv2/USER"] =
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_SM_13TeV/RunIIFall17MiniAODv2/USER"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2020Oct12_GluGluToHHTo4V_node_SM_13TeV__RunIIFall17MiniAODv2"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_sm_hh_4v_private"),
   ("nof_db_events",         1000000),
@@ -169,7 +169,7 @@ meta_dictionary["/GluGluToHHTo4V_node_1_TuneCP5_PSWeights_13TeV/RunIIFall17MiniA
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_4_13TeV/RunIIFall17MiniAODv2/USER"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2020Oct12_GluGluToHHTo4V_node_4_13TeV__RunIIFall17MiniAODv2"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_4_hh_4v_private"),
   ("nof_db_events",         999997),
@@ -182,7 +182,7 @@ meta_dictionary["/GluGluToHHTo4V_node_4_13TeV/RunIIFall17MiniAODv2/USER"] =  OD(
 ])
 
 meta_dictionary["/GluGluToHHTo4V_node_7_13TeV/RunIIFall17MiniAODv2/USER"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2020Oct12_GluGluToHHTo4V_node_7_13TeV__RunIIFall17MiniAODv2"),
   ("sample_category",       "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific", "signal_ggf_nonresonant_node_7_hh_4v_private"),
   ("nof_db_events",         999999),

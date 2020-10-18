@@ -100,8 +100,8 @@ else:
 
 hadTauWP_map = {
   'dR03mva' : 'Loose',
-  ##'deepVSj' : 'VLoose', # CV: use for datacard production
-  'deepVSj' : 'Loose',
+  ##'deepVSj' : 'Loose', # CV: use for datacard production
+  'deepVSj' : 'Medium', # CV: use for datacard production
 }
 hadTau_selection = tau_id + hadTauWP_map[tau_id]
 
@@ -117,7 +117,6 @@ elif mode == "forBDTtraining":
 
   hadTauWP_map_relaxed = {
     'dR03mva' : 'VLoose',
-    #'deepVSj' : 'VLoose', # CV: use for datacard production
     'deepVSj' : 'VVVLoose', # CV: use for BDT training
   }
   if args.tau_id_wp:
