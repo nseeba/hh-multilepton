@@ -20,9 +20,10 @@ systematics.internal = systematics.an_internal_no_mem
 parser = tthAnalyzeParser()
 parser.add_modes(mode_choices)
 parser.add_sys(sys_choices)
-parser.add_preselect()
+parser.add_preselect(use_preselected = False)
 parser.add_rle_select()
 parser.add_lep_mva_wp(default_wp = 'hh_multilepton') # alternative: hh_multilepton
+parser.add_disableFRwgts()
 parser.add_nonnominal()
 parser.add_hlt_filter()
 parser.add_files_per_job()
@@ -55,6 +56,7 @@ rle_select        = os.path.expanduser(args.rle_select)
 use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
 lep_mva_wp        = args.lep_mva_wp
+disableFRwgts     = args.disableFRwgts
 files_per_job     = args.files_per_job
 use_home          = args.use_home
 sideband          = args.sideband
@@ -142,6 +144,7 @@ if __name__ == '__main__':
     leptonChargeSelections                = leptonChargeSelections,
     central_or_shifts                     = central_or_shifts,
     lep_mva_wp                            = lep_mva_wp,
+    disableFRwgts                         = disableFRwgts,
     jet_cleaning_by_index                 = jet_cleaning_by_index,
     gen_matching_by_index                 = gen_matching_by_index,
     max_files_per_job                     = files_per_job,

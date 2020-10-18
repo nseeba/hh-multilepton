@@ -24,135 +24,185 @@ class EvtHistManager_Zjetsctrl_fakes
   bookHistograms(TFileDirectory & dir) override;
 
   void
-    fillHistograms(
-		   int numElectrons,
-		   int numMuons,
-		   int numLeptons,
-		   int sumLeptonCharge_3l,
-		   int sumLeptonCharge_FullSel,
-		   int numSameFlavor_OS_3l,
-		   int numSameFlavor_OS_FullPresel,
-		   int nJetAK4,
-		   int nBJetLoose,
-		   int nBJetMedium,
-		   int nJetAK8,
-		   int nJetAK8_wSelectorAK8_Wjj,
-		   //
-		   double lep1_pt,
-		   double lep1_conePt,
-		   double lep1_eta,
-		   double mindr_lep1_jet,
-		   double mT_MEtLep1,
-		   //
-		   double lep2_pt,
-		   double lep2_conePt,
-		   double lep2_eta,
-		   double mindr_lep2_jet,
-		   double mT_MEtLep2,
-		   //
-		   double lep3_pt,
-		   double lep3_conePt,
-		   double lep3_eta,
-		   double mindr_lep3_jet,
-		   double mT_MEtLep3,
-		   //
-		   double jet1_pt,
-		   double jet2_pt,
-		   double jet1plus2pt,
-		   double jet1_m,
-		   double jet2_m,
-		   //
-		   double avg_dr_jet,
-		   double dr_Wjj,
-		   //
-		   double dr_l12,
-		   double dr_l23,
-		   double dr_l13,
-		   double dr_lss,
-		   double dr_los_min,
-		   double dr_los_max,
-		   //
-		   double dr_WjjLepIdx3,
-		   double dr_Wjet1LepIdx3,
-		   double dr_Wjet2LepIdx3,
-		   double dr_LepIdx3WjetNear,
-		   double dr_LepIdx3WjetFar,
-		   //
-		   double met,
-		   double mht,
-		   double met_LD,
-		   double HT,
-		   double STMET,
-		   //
-		   double mSFOS2l,
-		   double WTojjMass,
-		   double dihiggsVisMass_sel,
-		   double dihiggsMass,
-		   double mTMetLepton1,
-		   double mTMetLepton2,
-		   //
-		   double lep1_isTight,
-		   double lep2_isTight,
-		   double lep3_isTight,
-		   //
-		   double lep1_genLepPt,
-		   double lep2_genLepPt,
-		   double lep3_genLepPt,
-		   double lep1_frWeight,
-		   double lep2_frWeight,
-		   double lep3_frWeight,
-		   double lep1_fake_prob,
-		   double lep2_fake_prob,
-		   double lep3_fake_prob,
-		   //
-		   double mT_LeptonIdx1_Met_Approach0,
-		   double mT_LeptonIdx2_Met_Approach0,
-		   double mT_LeptonIdx3_Met_Approach0,
-		   //
-		   double m_LeptonIdx1_LeptonIdx2_Approach0,
-		   double m_LeptonIdx2_LeptonIdx3_Approach0,
-		   double m_LeptonIdx1_LeptonIdx3_Approach0,
-		   //
-		   double dPhi_LeptonIdx1_LeptonIdx2_Approach0,
-		   double dPhi_LeptonIdx2_LeptonIdx3_Approach0,
-		   double dPhi_LeptonIdx1_LeptonIdx3_Approach0,
-		   //
-		   double dr_LeptonIdx1_LeptonIdx2_Approach0,
-		   double dr_LeptonIdx2_LeptonIdx3_Approach0,
-		   double dr_LeptonIdx1_LeptonIdx3_Approach0,
-		   //
-		   double m_LeptonIdx3_Jet1_Approach0,
-		   double dr_LeptonIdx3_Jet1_Approach0,
-		   //
-		   double m_LeptonIdx3_JetNear_Approach0,
-		   double dr_LeptonIdx3_JetNear_Approach0,
-		   //
-		   double mT_LeptonIdx1_Met_Approach2,
-		   double mT_LeptonIdx2_Met_Approach2,
-		   double mT_LeptonIdx3_Met_Approach2,
-		   //
-		   double m_LeptonIdx1_LeptonIdx2_Approach2,
-		   double m_LeptonIdx2_LeptonIdx3_Approach2,
-		   double m_LeptonIdx1_LeptonIdx3_Approach2,
-		   //
-		   double dPhi_LeptonIdx1_LeptonIdx2_Approach2,
-		   double dPhi_LeptonIdx2_LeptonIdx3_Approach2,
-		   double dPhi_LeptonIdx1_LeptonIdx3_Approach2,
-		   //
-		   double dr_LeptonIdx1_LeptonIdx2_Approach2,
-		   double dr_LeptonIdx2_LeptonIdx3_Approach2,
-		   double dr_LeptonIdx1_LeptonIdx3_Approach2,
-		   //
-		   double m_LeptonIdx3_Jet1_Approach2,
-		   double dr_LeptonIdx3_Jet1_Approach2,
-		   //
-		   double m_LeptonIdx3_JetNear_Approach2,
-		   double dr_LeptonIdx3_JetNear_Approach2,
-		   //
-		   int eventCategory,
-		   //
-		   double mvaOutput_xgb_Zjetsctrl_fakes_SUMBk_HH,
-		   double evtWeight);
+  fillHistograms(
+    int numElectrons,
+    int numMuons,
+    int numLeptons,
+    int sumLeptonCharge_3l,
+    int sumLeptonCharge_FullSel,
+    int numSameFlavor_OS_3l,
+    int numSameFlavor_OS_FullPresel,
+    int nJetAK4,
+    int nBJetLoose,
+    int nBJetMedium,
+    int nJetAK8,
+    int nJetAK8_wSelectorAK8_Wjj,
+    //
+    double lep1_pt,
+    double lep1_conePt,
+    double lep1_eta,
+    double mindr_lep1_jet,
+    double mT_MEtLep1,
+    //
+    double lep2_pt,
+    double lep2_conePt,
+    double lep2_eta,
+    double mindr_lep2_jet,
+    double mT_MEtLep2,
+    //
+    double lep3_pt,
+    double lep3_conePt,
+    double lep3_eta,
+    double mindr_lep3_jet,
+    double mT_MEtLep3,
+    //
+    double jet1_pt,
+    double jet2_pt,
+    double jet1plus2pt,
+    double jet1_m,
+    double jet2_m,
+    //
+    double avg_dr_jet,
+    double dr_Wjj,
+    //
+    double dr_l12,
+    double dr_l23,
+    double dr_l13,
+    double dr_lss,
+    double dr_los_min,
+    double dr_los_max,
+    //
+    double dr_WjjLepIdx3,
+    double dr_Wjet1LepIdx3,
+    double dr_Wjet2LepIdx3,
+    double dr_LepIdx3WjetNear,
+    double dr_LepIdx3WjetFar,
+    //
+    double met,
+    double mht,
+    double met_LD,
+    double HT,
+    double STMET,
+    //
+    double mSFOS2l,
+    double WTojjMass,
+    double dihiggsVisMass_sel,
+    double dihiggsMass,
+    double mTMetLepton1,
+    double mTMetLepton2,
+    //
+    double lep1_isTight,
+    double lep2_isTight,
+    double lep3_isTight,
+    //
+    double lep1_genLepPt,
+    double lep2_genLepPt,
+    double lep3_genLepPt,
+    double lep1_frWeight,
+    double lep2_frWeight,
+    double lep3_frWeight,
+    double lep1_fake_prob,
+    double lep2_fake_prob,
+    double lep3_fake_prob,
+    //
+    double mT_LeptonIdx1_Met_Approach0,
+    double mT_LeptonIdx2_Met_Approach0,
+    double mT_LeptonIdx3_Met_Approach0,
+    //
+    double m_LeptonIdx1_LeptonIdx2_Approach0,
+    double m_LeptonIdx2_LeptonIdx3_Approach0,
+    double m_LeptonIdx1_LeptonIdx3_Approach0,
+    //
+    double dPhi_LeptonIdx1_LeptonIdx2_Approach0,
+    double dPhi_LeptonIdx2_LeptonIdx3_Approach0,
+    double dPhi_LeptonIdx1_LeptonIdx3_Approach0,
+    //
+    double dr_LeptonIdx1_LeptonIdx2_Approach0,
+    double dr_LeptonIdx2_LeptonIdx3_Approach0,
+    double dr_LeptonIdx1_LeptonIdx3_Approach0,
+    //
+    double m_LeptonIdx3_Jet1_Approach0,
+    double dr_LeptonIdx3_Jet1_Approach0,
+    //
+    double m_LeptonIdx3_JetNear_Approach0,
+    double dr_LeptonIdx3_JetNear_Approach0,
+    //
+    double mT_LeptonIdx1_Met_Approach2,
+    double mT_LeptonIdx2_Met_Approach2,
+    double mT_LeptonIdx3_Met_Approach2,
+    //
+    double m_LeptonIdx1_LeptonIdx2_Approach2,
+    double m_LeptonIdx2_LeptonIdx3_Approach2,
+    double m_LeptonIdx1_LeptonIdx3_Approach2,
+    //
+    double dPhi_LeptonIdx1_LeptonIdx2_Approach2,
+    double dPhi_LeptonIdx2_LeptonIdx3_Approach2,
+    double dPhi_LeptonIdx1_LeptonIdx3_Approach2,
+    //
+    double dr_LeptonIdx1_LeptonIdx2_Approach2,
+    double dr_LeptonIdx2_LeptonIdx3_Approach2,
+    double dr_LeptonIdx1_LeptonIdx3_Approach2,
+    //
+    double m_LeptonIdx3_Jet1_Approach2,
+    double dr_LeptonIdx3_Jet1_Approach2,
+    //
+    double m_LeptonIdx3_JetNear_Approach2,
+    double dr_LeptonIdx3_JetNear_Approach2,
+    //
+    int eventCategory,
+    //
+    double mvaOutput_xgb_Zjetsctrl_fakes_SUMBk_HH,
+    //
+    double pt_eFakeable_lead,
+    double cone_pt_eFakeable_lead,
+    double eta_eFakeable_lead,
+    //
+    double pt_eFakeable_sublead,
+    double cone_pt_eFakeable_sublead,
+    double eta_eFakeable_sublead,
+    // 
+    double pt_eFakeable_third,
+    double cone_pt_eFakeable_third,
+    double eta_eFakeable_third,
+    // 
+    double pt_muFakeable_lead,
+    double cone_pt_muFakeable_lead,
+    double eta_muFakeable_lead,
+    // 
+    double pt_muFakeable_sublead,
+    double cone_pt_muFakeable_sublead,
+    double eta_muFakeable_sublead,
+    // 
+    double pt_muFakeable_third,
+    double cone_pt_muFakeable_third,
+    double eta_muFakeable_third,
+
+    //  tight
+    double pt_eTight_lead,
+    double cone_pt_eTight_lead,
+    double eta_eTight_lead,
+    // 
+    double pt_eTight_sublead,
+    double cone_pt_eTight_sublead,
+    double eta_eTight_sublead,
+    // 
+    double pt_eTight_third,
+    double cone_pt_eTight_third,
+    double eta_eTight_third,
+    // 
+    double pt_muTight_lead,
+    double cone_pt_muTight_lead,
+    double eta_muTight_lead,
+    // 
+    double pt_muTight_sublead,
+    double cone_pt_muTight_sublead,
+    double eta_muTight_sublead,
+    // 
+    double pt_muTight_third,
+    double cone_pt_muTight_third,
+    double eta_muTight_third,
+    //
+    double evtWeight);
 
   
   const TH1 *
@@ -288,6 +338,57 @@ class EvtHistManager_Zjetsctrl_fakes
   TH1 * hmvaOutput_xgb_Zjetsctrl_fakes_SUMBk_HH_;
   //  
   TH1 * hEventCounter_;
+
+  //
+  TH1 * histogram_pt_eFakeable_lead_;
+  TH1 * histogram_cone_pt_eFakeable_lead_;
+  TH1 * histogram_eta_eFakeable_lead_;
+  //
+  TH1 * histogram_pt_eFakeable_sublead_;
+  TH1 * histogram_cone_pt_eFakeable_sublead_;
+  TH1 * histogram_eta_eFakeable_sublead_;
+  // 
+  TH1 * histogram_pt_eFakeable_third_;
+  TH1 * histogram_cone_pt_eFakeable_third_;
+  TH1 * histogram_eta_eFakeable_third_;
+  // 
+  TH1 * histogram_pt_muFakeable_lead_;
+  TH1 * histogram_cone_pt_muFakeable_lead_;
+  TH1 * histogram_eta_muFakeable_lead_;
+  // 
+  TH1 * histogram_pt_muFakeable_sublead_;
+  TH1 * histogram_cone_pt_muFakeable_sublead_;
+  TH1 * histogram_eta_muFakeable_sublead_;
+  // 
+  TH1 * histogram_pt_muFakeable_third_;
+  TH1 * histogram_cone_pt_muFakeable_third_;
+  TH1 * histogram_eta_muFakeable_third_;
+
+  //  tight
+  TH1 * histogram_pt_eTight_lead_;
+  TH1 * histogram_cone_pt_eTight_lead_;
+  TH1 * histogram_eta_eTight_lead_;
+  // 
+  TH1 * histogram_pt_eTight_sublead_;
+  TH1 * histogram_cone_pt_eTight_sublead_;
+  TH1 * histogram_eta_eTight_sublead_;
+  // 
+  TH1 * histogram_pt_eTight_third_;
+  TH1 * histogram_cone_pt_eTight_third_;
+  TH1 * histogram_eta_eTight_third_;
+  // 
+  TH1 * histogram_pt_muTight_lead_;
+  TH1 * histogram_cone_pt_muTight_lead_;
+  TH1 * histogram_eta_muTight_lead_;
+  // 
+  TH1 * histogram_pt_muTight_sublead_;
+  TH1 * histogram_cone_pt_muTight_sublead_;
+  TH1 * histogram_eta_muTight_sublead_;
+  // 
+  TH1 * histogram_pt_muTight_third_;
+  TH1 * histogram_cone_pt_muTight_third_;
+  TH1 * histogram_eta_muTight_third_;
+  
 };
 
 #endif

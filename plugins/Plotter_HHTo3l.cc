@@ -12,6 +12,7 @@
 #include <TStyle.h>
 #include <TROOT.h> // gROOT (needed to (re)define colors)
 
+const int printLevel = 0;
 //bool isDataBlinded = true; // added by Siddhesh
 
 std::string
@@ -26,10 +27,8 @@ printfHistoIntegral(TH1 *h)
 Plotter_HHTo3l::Plotter_HHTo3l(const TFile* inputFile, const edm::ParameterSet& cfg)
   : Plotter(inputFile, cfg)
 {
-  std::cout << "Plotter_HHTo3l::Plotter_HHTo3l:: here1" << std::endl;
   scaleSignal_ = cfg.getParameter<double>("scaleSignal");
   legendEntrySignal_ = cfg.getParameter<std::string>("legendEntrySignal");
-  std::cout << "Plotter_HHTo3l::Plotter_HHTo3l:: here2 \t scaleSignal: " << scaleSignal_ << std::endl;
 }
  
 Plotter_HHTo3l::~Plotter_HHTo3l()
@@ -50,9 +49,9 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
 			  bool isRebinned, 
 			  bool divideByBinWidth)
 {
-  std::cout << "<Plotter_HHTo3l::makePlot>:" << std::endl;
-  std::cout << " outputFileName = " << outputFileName << std::endl;
-  std::cout << " divideByBinWidth: " << divideByBinWidth << std::endl;
+  std::cout << "<Plotter_HHTo3l::makePlot>:";
+  std::cout << " outputFileName = " << outputFileName << "\n";
+  //std::cout << " divideByBinWidth: " << divideByBinWidth << std::endl;
  
   
   TH1* histogramData_density = 0;
@@ -127,9 +126,12 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     const std::string& process = (*histogramBackground_entry)->process_;
     double n, en;
     n = histogramBackground->IntegralAndError(1, histogramBackground->GetNbinsX(), en);
-    std::cout << "process = " << process << ": histogramBackground = " << histogramBackground->GetName()
-	      << " nEvents: " << n << " +- " << en
-	      << std::endl;
+    if (printLevel > 0)
+    {
+      std::cout << "process = " << process << ": histogramBackground = " << histogramBackground->GetName()
+		<< " nEvents: " << n << " +- " << en
+		<< std::endl;
+    }
     //printHistogram(histogramBackground);
     checkCompatibleBinning(histogramBackground, histogramData);
     TH1* histogramBackground_density ;
@@ -203,7 +205,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     histogramsBackground_density.push_back(histogramBackground_density);
   }
 
-  if (1==1)
+  if (printLevel > 4)
   {
     std::cout << "\nhistogramDY" << printfHistoIntegral(histogramDY) << ", \t " << printfHistoIntegral(histogramDY_density)
 	      << "\nhistogramW" << printfHistoIntegral(histogramW) << ", \t " << printfHistoIntegral(histogramW_density)
@@ -223,7 +225,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
 	      << "\nhistogramTTWH" << printfHistoIntegral(histogramTTWH) << ", \t " << printfHistoIntegral(histogramTTWH_density)
 	      << "\nhistogramTTZH" << printfHistoIntegral(histogramTTZH) << ", \t " << printfHistoIntegral(histogramTTZH_density)
 	      << "\nhistogramConversions" << printfHistoIntegral(histogramConversions) << ", \t " << printfHistoIntegral(histogramConversions_density)
-	      << "\nhistogramFakes" << printfHistoIntegral(histogramFakes) << ", \t " << printfHistoIntegral(histogramFakes_density)	      
+	      << "\nhistogramFakes" << printfHistoIntegral(histogramFakes) << ", \t " << printfHistoIntegral(histogramFakes_density)
 	      << "\nhistogramData" << printfHistoIntegral(histogramData) << ", \t " << printfHistoIntegral(histogramData_density)
       /*<< "" << printfHistoIntegral() << ", \t " << printfHistoIntegral()
 	      << "" << printfHistoIntegral() << ", \t " << printfHistoIntegral()
@@ -361,8 +363,9 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   legend->SetFillColor(10);
   legend->SetTextSize(legendTextSize);
   legend->SetNColumns(2);
-  
-  printf("Plotter_HHTo3l:: Before  yMin: %f,  yMax: %f\n",yMin,yMax);
+
+  if (printLevel > 4)
+    printf("Plotter_HHTo3l:: Before  yMin: %f,  yMax: %f\n",yMin,yMax);
   if ( !(yMin >= 0. && yMax > yMin) ) {
     for ( int i = 0; i < 3; ++i ) {
       TH1* histogram_i = nullptr;
@@ -387,7 +390,8 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
       }
     }
   }
-  printf("Plotter_HHTo3l:: After  yMin: %f,  yMax: %f\n",yMin,yMax);
+  if (printLevel > 4)
+    printf("Plotter_HHTo3l:: After  yMin: %f,  yMax: %f\n",yMin,yMax);
   
   if ( histogramData_blinded_density ) {
     histogramData_blinded_density->SetTitle("");
@@ -469,8 +473,9 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   const int color_qqH         = 624; // light red
   const int color_TTWH        = 424; // light cyan
   const int color_TTZH        = 922; //  lioght gray
-  const int color_Signal      = 2; // black
-
+  const int color_Signal      =   2; // red
+  const int color_Flips       = 810; // orange
+  
   const std::string legendEntry_WZ          = "WZ";
   const std::string legendEntry_Fakes       = "Fakes";
   const std::string legendEntry_DY          = "DY";
@@ -489,7 +494,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   const std::string legendEntry_qqH         = "qqH";
   const std::string legendEntry_TTWH        = "TTWH";
   const std::string legendEntry_TTZH        = "TTZH";
-  
+  const std::string legendEntry_Flips       = "Flips";
   
   std::vector<TH1*> histogramsForStack_density;
   /*
@@ -652,7 +657,14 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     histogramsForStack_density.push_back(histogramTTZH_density);
     legend->AddEntry(histogramTTZH_density, legendEntry_TTZH.data(), "f");
   } 
-
+  if ( histogramFlips_density ) {
+    histogramFlips_density->SetFillColor(color_Flips);
+    histogramFlips_density->SetLineColor(color_Flips);
+    histogramFlips_density->SetFillStyle(3018); //
+    histogramsForStack_density.push_back(histogramFlips_density);
+    legend->AddEntry(histogramFlips_density, legendEntry_Flips.data(), "f");
+  } 
+  
   
 
   
@@ -823,14 +835,16 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     if ( histogramTTWH        ) histogramSum->Add(histogramTTWH);
     if ( histogramTTZH        ) histogramSum->Add(histogramTTZH);    
     if ( histogramFlips       ) histogramSum->Add(histogramFlips);
-    
-    std::cout << "for ratio: data: " << printfHistoIntegral(histogramData) << ",  MC: " << printfHistoIntegral(histogramSum) << std::endl;
+
+    if (printLevel > 4)
+      std::cout << "for ratio: data: " << printfHistoIntegral(histogramData) << ",  MC: " << printfHistoIntegral(histogramSum) << std::endl;
     histogramRatio = (TH1*)histogramData->Clone("histogramRatio");
     histogramRatio->Reset();
     if ( !histogramRatio->GetSumw2N() ) histogramRatio->Sumw2();
     checkCompatibleBinning(histogramRatio, histogramSum);
     histogramRatio->Divide(histogramData, histogramSum);
-    std::cout << "Before histogramRatio: " << printfHistoIntegral(histogramRatio) << std::endl;
+    if (printLevel > 4)
+      std::cout << "Before histogramRatio: " << printfHistoIntegral(histogramRatio) << std::endl;
     int numBins_bottom = histogramRatio->GetNbinsX();
     for ( int iBin = 1; iBin <= numBins_bottom; ++iBin ) {
       double binContent = histogramRatio->GetBinContent(iBin);
@@ -838,7 +852,8 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
       else histogramRatio->SetBinContent(iBin, -10.);
       //std::cout << " bin #" << iBin << " (x = " << histogramRatio->GetBinCenter(iBin) << "): ratio = " << histogramRatio->GetBinContent(iBin) << std::endl;
     }
-    std::cout << "After histogramRatio: " << printfHistoIntegral(histogramRatio) << std::endl;
+    if (printLevel > 2)
+      std::cout << "After histogramRatio: " << printfHistoIntegral(histogramRatio) << std::endl;
     
     histogramRatio->SetTitle("");
     histogramRatio->SetStats(false);

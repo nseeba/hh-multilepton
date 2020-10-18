@@ -468,7 +468,9 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
             self.inputFiles_hadd_stage1_5[key_hadd_stage1_5_job].append(self.outputFile_hadd_stage1[key_hadd_stage1_job])
             self.outputFile_hadd_stage1_5[key_hadd_stage1_5_job] = os.path.join(self.dirs[key_hadd_stage1_5_dir][DKEY_HIST],
                                                                         "hadd_stage1_5_%s_%s.root" % hadd_stage1_5_job_tuple)
-
+            logging.info("Siddh: key_hadd_stage1_job {}, key_hadd_stage1_5_dir {}, hadd_stage1_5_job_tuple {}, key_hadd_stage1_5_job {}, self.outputFile_hadd_stage1_5[key_hadd_stage1_5_job] {}".format(\
+              key_hadd_stage1_job, key_hadd_stage1_5_dir, hadd_stage1_5_job_tuple, key_hadd_stage1_5_job, self.outputFile_hadd_stage1_5[key_hadd_stage1_5_job]))
+          
           if self.isBDTtraining or self.do_sync:
             continue
 
@@ -484,6 +486,8 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
           processes_input = []
           for sample_category in sample_categories:
             processes_input.append("%s_fake" % sample_category)
+          logging.info("Siddh: key_hadd_stage1_5_job {}, key_addBackgrounds_dir {}, addBackgrounds_job_fakes_tuple {}, key_addBackgrounds_job_fakes {}".format(\
+            key_hadd_stage1_5_job, key_addBackgrounds_dir, addBackgrounds_job_fakes_tuple, key_addBackgrounds_job_fakes))            
           self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_fakes] = {
             'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5_job],
             'cfgFile_modified' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_CFGS], "addBackgrounds_%s_%s_%s_cfg.py" % addBackgrounds_job_fakes_tuple),

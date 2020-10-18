@@ -47,6 +47,39 @@ public:
 		 //double BDTOutput_SUM,
 		 double BDTOutput_SUM_gen_mHH_400,
 		 double BDTOutput_SUM_gen_mHH_700,
+		 //
+		 double pt_eTight_lead,
+		 double cone_pt_eTight_lead,
+		 double eta_eTight_lead,
+		 //
+		 double pt_eTight_sublead,
+		 double cone_pt_eTight_sublead,
+		 double eta_eTight_sublead,
+		 //
+		 double pt_muTight_lead,
+		 double cone_pt_muTight_lead,
+		 double eta_muTight_lead,
+		 //
+		 double pt_muTight_sublead,
+		 double cone_pt_muTight_sublead,
+		 double eta_muTight_sublead,	  	    
+		 //
+		 double pt_eFakeable_lead,
+		 double cone_pt_eFakeable_lead,
+		 double eta_eFakeable_lead,
+		 //
+		 double pt_eFakeable_sublead,
+		 double cone_pt_eFakeable_sublead,
+		 double eta_eFakeable_sublead,
+		 //
+		 double pt_muFakeable_lead,
+		 double cone_pt_muFakeable_lead,
+		 double eta_muFakeable_lead,
+		 //
+		 double pt_muFakeable_sublead,
+		 double cone_pt_muFakeable_sublead,
+		 double eta_muFakeable_sublead,
+		 //
                  double evtWeight);
 
   const TH1 *
@@ -80,6 +113,38 @@ public:
   TH1 * histogram_BDTOutput_SUM_gen_mHH_700_;
   TH1 * histogram_EventCounter_;
 
+  TH1 * histogram_pt_eTight_lead_;
+  TH1 * histogram_cone_pt_eTight_lead_;
+  TH1 * histogram_eta_eTight_lead_;
+  //
+  TH1 * histogram_pt_eTight_sublead_;
+  TH1 * histogram_cone_pt_eTight_sublead_;
+  TH1 * histogram_eta_eTight_sublead_;
+  //
+  TH1 * histogram_pt_muTight_lead_;
+  TH1 * histogram_cone_pt_muTight_lead_;
+  TH1 * histogram_eta_muTight_lead_;
+  //
+  TH1 * histogram_pt_muTight_sublead_;
+  TH1 * histogram_cone_pt_muTight_sublead_;
+  TH1 * histogram_eta_muTight_sublead_;	  	    
+  //
+  TH1 * histogram_pt_eFakeable_lead_;
+  TH1 * histogram_cone_pt_eFakeable_lead_;
+  TH1 * histogram_eta_eFakeable_lead_;
+  //
+  TH1 * histogram_pt_eFakeable_sublead_;
+  TH1 * histogram_cone_pt_eFakeable_sublead_;
+  TH1 * histogram_eta_eFakeable_sublead_;
+  //
+  TH1 * histogram_pt_muFakeable_lead_;
+  TH1 * histogram_cone_pt_muFakeable_lead_;
+  TH1 * histogram_eta_muFakeable_lead_;
+  //
+  TH1 * histogram_pt_muFakeable_sublead_;
+  TH1 * histogram_cone_pt_muFakeable_sublead_;
+  TH1 * histogram_eta_muFakeable_sublead_;
+  
   TH1 * histogram_electronFR_sum_;
   TH1 * histogram_electronFR_nEntries_;
   TH1 * histogram_muonFR_sum_;

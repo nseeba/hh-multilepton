@@ -50,6 +50,7 @@ class analyzeConfig_Zjetsctrl_fakes(analyzeConfig_hh):
         leptonChargeSelections,
         central_or_shifts,
         lep_mva_wp,
+        disableFRwgts,       
         jet_cleaning_by_index,
         gen_matching_by_index,
         max_files_per_job,
@@ -94,7 +95,8 @@ class analyzeConfig_Zjetsctrl_fakes(analyzeConfig_hh):
       num_parallel_jobs         = num_parallel_jobs,
       histograms_to_fit         = histograms_to_fit,
       triggers                  = [ '1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '1e2mu', '2e1mu' ],
-      lep_mva_wp                = lep_mva_wp,                           
+      lep_mva_wp                = lep_mva_wp,
+      disableFRwgts             = disableFRwgts,                        
       executable_prep_dcard     = executable_prep_dcard,
       executable_add_syst_dcard = executable_add_syst_dcard,
       do_sync                   = do_sync,
@@ -165,7 +167,12 @@ class analyzeConfig_Zjetsctrl_fakes(analyzeConfig_hh):
 
     self.categories = [
       "Zjetsctrl_3e", "Zjetsctrl_2e1mu", "Zjetsctrl_1e2mu", "Zjetsctrl_3mu",
-      "Zjetsctrl_2lSFOS_plus_mu", "Zjetsctrl_2lSFOS_plus_e"
+      "Zjetsctrl_2lSFOS_plus_mu", "Zjetsctrl_2lSFOS_plus_e",
+      #"Zjetsctrl_2lT_eF", "Zjetsctrl_2lT_muF",
+      "Zjetsctrl_2eT_0muT_1eF_0muF", "Zjetsctrl_1eT_0muT_2eF_0muF", "Zjetsctrl_0eT_0muT_3eF_0muF", # 3e
+      "Zjetsctrl_2eT_0muT_0eF_1muF", "Zjetsctrl_1eT_1muT_1eF_0muF", "Zjetsctrl_0eT_1muT_2eF_0muF", "Zjetsctrl_1eT_0muT_1eF_1muF", "Zjetsctrl_0eT_0muT_2eF_1muF",  # 2e1mu 
+      "Zjetsctrl_0eT_2muT_1eF_0muF", "Zjetsctrl_1eT_1muT_0eF_1muF", "Zjetsctrl_1eT_0muT_0eF_2muF", "Zjetsctrl_0eT_1muT_1eF_1muF", "Zjetsctrl_0eT_0muT_1eF_2muF", # 1e2mu 
+      "Zjetsctrl_0eT_2muT_0eF_1muF", "Zjetsctrl_0eT_1muT_0eF_2muF", "Zjetsctrl_0eT_0muT_0eF_3muF", # 3mu
     ]
 
     self.category_inclusive = "Zjetsctrl_3l"

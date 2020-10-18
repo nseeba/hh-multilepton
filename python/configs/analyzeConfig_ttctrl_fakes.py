@@ -47,6 +47,8 @@ class analyzeConfig_ttctrl_fakes(analyzeConfig_hh):
         applyFakeRateWeights,
         central_or_shifts,
         lep_mva_wp,
+        disableFRwgts,
+        disableLeptonTightChargeCut,       
         jet_cleaning_by_index,
         gen_matching_by_index,
         max_files_per_job,
@@ -91,6 +93,8 @@ class analyzeConfig_ttctrl_fakes(analyzeConfig_hh):
       histograms_to_fit         = histograms_to_fit,
       triggers                  = [ '1e', '1mu', '2e', '2mu', '1e1mu' ],
       lep_mva_wp                = lep_mva_wp,
+      disableFRwgts             = disableFRwgts,
+      disableLeptonTightChargeCut =  disableLeptonTightChargeCut,                       
       verbose                   = verbose,
       dry_run                   = dry_run,
       isDebug                   = isDebug,
@@ -153,6 +157,11 @@ class analyzeConfig_ttctrl_fakes(analyzeConfig_hh):
 
     self.categories = [
       "ttctrl_fakes_2ess", "ttctrl_fakes_2muss", "ttctrl_fakes_1e1muss",
+      #"ttctrl_fakes_lT_eF", "ttctrl_fakes_lT_muF",
+      #"ttctrl_fakes_1eT_0muT_1eF_0muF", "ttctrl_fakes_0eT_0muT_2eF_0muF", "ttctrl_fakes_0eT_1muT_0eF_1muF",  "ttctrl_fakes_0eT_0muT_0eF_2muF",
+      "ttctrl_fakes_1eT_0muT_1eF_0muF", "ttctrl_fakes_0eT_0muT_2eF_0muF", # 2e
+      "ttctrl_fakes_1eT_0muT_0eF_1muF", "ttctrl_fakes_0eT_1muT_1eF_0muF", "ttctrl_fakes_0eT_0muT_1eF_1muF", # 1e1mu
+      "ttctrl_fakes_0eT_1muT_0eF_1muF", "ttctrl_fakes_0eT_0muT_0eF_2muF", # 2mu
     ]
     self.category_inclusive = "ttctrl_fakes_2lss"
     if self.category_inclusive not in self.categories:

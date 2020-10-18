@@ -118,6 +118,9 @@
 
 const int printLevel = 6;
 
+
+const double kNullDouble = -99999.0;
+
 typedef math::PtEtaPhiMLorentzVector LV;
 typedef std::vector<std::string> vstring;
 typedef std::vector<double> vdouble;
@@ -311,6 +314,7 @@ int main(int argc, char* argv[])
 
   const double lep_mva_cut_mu = cfg_analyze.getParameter<double>("lep_mva_cut_mu");
   const double lep_mva_cut_e  = cfg_analyze.getParameter<double>("lep_mva_cut_e");
+  const std::string lep_mva_wp = cfg_analyze.exists("lep_mva_wp") ? cfg_analyze.getParameter<std::string>("lep_mva_wp") : "";
   const double lep_mva_cut_mu_ttH = 0.85;
   const double lep_mva_cut_e_ttH  = 0.80;
   const bool   isLeptonSelection_ttH = (abs(lep_mva_cut_mu - lep_mva_cut_mu_ttH) < 1e-6 &&
@@ -318,6 +322,14 @@ int main(int argc, char* argv[])
   printf("lep_mva_cut_mu %g, lep_mva_cut_e %g, \t\t lep_mva_cut_mu_ttH %g, lep_mva_cut_e_ttH %g, \t\t isLeptonSelection_ttH %d \n",
 	 lep_mva_cut_mu,lep_mva_cut_e, lep_mva_cut_mu_ttH,lep_mva_cut_e_ttH, isLeptonSelection_ttH);
 
+  const bool disableFRwgts = cfg_analyze.exists("disableFRwgts") ? cfg_analyze.getParameter<bool>("disableFRwgts") : false;
+  printf("disableFRwgts %d\n",disableFRwgts);
+
+  
+  const bool disableLeptonTightChargeCut = cfg_analyze.exists("disableLeptonTightChargeCut") ? cfg_analyze.getParameter<bool>("disableLeptonTightChargeCut") : false;
+  printf("disableLeptonTightChargeCut %d\n",disableLeptonTightChargeCut);
+
+  
   //const int minNumJets = cfg_analyze.getParameter<int>("minNumJets");
   //std::cout << "minNumJets = " << minNumJets << '\n';
 
@@ -386,7 +398,9 @@ int main(int argc, char* argv[])
   cfg_dataToMCcorrectionInterface.addParameter<std::string>("hadTauSelection", hadTauSelection_part2);
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiElectron", hadTauSelection_antiElectron);
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiMuon", hadTauSelection_antiMuon);
-  cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", isDEBUG);
+  //cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", isDEBUG);
+  cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", true);
+  if (cfg_analyze.exists("lep_mva_wp")) cfg_dataToMCcorrectionInterface.addParameter<std::string>("lep_mva_wp", lep_mva_wp);
   Data_to_MC_CorrectionInterface_Base * dataToMCcorrectionInterface = nullptr;
   switch(era)
   {
@@ -723,6 +737,17 @@ int main(int argc, char* argv[])
   std::map<std::string, GenEvtHistManager*> genEvtHistManager_afterCuts;
   std::map<std::string, LHEInfoHistManager*> lheInfoHistManager;
   std::map<std::string, std::map<int, selHistManagerType*>> selHistManagers;
+
+  vstring categories_evt = {
+    "ttctrl_fakes_2ess", "ttctrl_fakes_2muss", "ttctrl_fakes_1e1muss",
+    //"ttctrl_fakes_lT_eF", "ttctrl_fakes_lT_muF",
+    //"ttctrl_fakes_1eT_0muT_1eF_0muF", "ttctrl_fakes_0eT_0muT_2eF_0muF", "ttctrl_fakes_0eT_1muT_0eF_1muF",  "ttctrl_fakes_0eT_0muT_0eF_2muF",
+    "ttctrl_fakes_1eT_0muT_1eF_0muF", "ttctrl_fakes_0eT_0muT_2eF_0muF", // 2e
+    "ttctrl_fakes_1eT_0muT_0eF_1muF", "ttctrl_fakes_0eT_1muT_1eF_0muF", "ttctrl_fakes_0eT_0muT_1eF_1muF", // 1e1mu
+    "ttctrl_fakes_0eT_1muT_0eF_1muF", "ttctrl_fakes_0eT_0muT_0eF_2muF", // 2mu
+  };
+
+  
   for(const std::string & central_or_shift: central_or_shifts_local)
   {
     const bool skipBooking = central_or_shift != central_or_shift_main;
@@ -735,7 +760,8 @@ int main(int argc, char* argv[])
       int idxLepton = genMatchDefinition->getIdx();
 
       selHistManagerType* selHistManager = new selHistManagerType();
-      if(! skipBooking)
+      //if(! skipBooking)
+      if (1==0)
       {
         selHistManager->electrons_ = new ElectronHistManager(makeHistManager_cfg(process_and_genMatch,
             Form("%s/sel/electrons", histogramDir.data()), era_string, central_or_shift, "allHistograms"));
@@ -797,9 +823,6 @@ int main(int argc, char* argv[])
         "2ess_ge3j", "2ess_ge3j_vbf", "2ess_ge3j_nonvbf", "2muss_ge3j", "2muss_ge3j_vbf", "2muss_ge3j_nonvbf", "1e1muss_ge3j", "1e1muss_ge3j_vbf", "1e1muss_ge3j_nonvbf",
         "2ess_ge4j", "2ess_ge4j_vbf", "2ess_ge4j_nonvbf", "2muss_ge4j", "2muss_ge4j_vbf", "2muss_ge4j_nonvbf", "1e1muss_ge4j", "1e1muss_ge4j_vbf", "1e1muss_ge4j_nonvbf",
 	};*/
-      vstring categories_evt = {
-          "ttctrl_fakes_2ess", "ttctrl_fakes_2muss", "ttctrl_fakes_1e1muss",
-      };
       
       for(const std::string & category: categories_evt)
       {
@@ -934,6 +957,14 @@ int main(int argc, char* argv[])
   };
   CutFlowTableHistManager * cutFlowHistManager = new CutFlowTableHistManager(cutFlowTableCfg, cuts);
   cutFlowHistManager->bookHistograms(fs);
+
+
+  double FR_leadNonpromptElectron_sum = 0.;
+  int    FR_leadNonpromptElectron_nEntires = 0;
+  double FR_leadNonpromptMuon_sum = 0.;
+  int    FR_leadNonpromptMuon_nEntires = 0;
+
+  
   while ( inputTree->hasNextEvent() && (! run_lumi_eventSelector || (run_lumi_eventSelector && ! run_lumi_eventSelector -> areWeDone())) ) {
     if(inputTree -> canReport(reportEvery))
     {
@@ -1562,15 +1593,17 @@ int main(int argc, char* argv[])
 	} else
 	{
 	  dataToMCcorrectionInterface->enableLooseToTightLeptonSFCorrection();
-	  }*/ 
-        evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface);
+	  }*/
+	bool woTightCharge = disableLeptonTightChargeCut;
+        evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface, woTightCharge);
       }
 
 
       
     }
 
-    if(applyFakeRateWeights == kFR_2lepton)
+    //if(applyFakeRateWeights == kFR_2lepton)
+    if(applyFakeRateWeights == kFR_2lepton && (! disableFRwgts))
     {
       bool passesTight_lepton_lead = isMatched(*selLepton_lead, tightElectrons) || isMatched(*selLepton_lead, tightMuons);
       bool passesTight_lepton_sublead = isMatched(*selLepton_sublead, tightElectrons) || isMatched(*selLepton_sublead, tightMuons);
@@ -1631,7 +1664,7 @@ int main(int argc, char* argv[])
 	  }
       }
     }
-    if ( failsTightChargeCut ) {
+    if ( failsTightChargeCut && ( ! disableLeptonTightChargeCut)) {
       if ( run_lumi_eventSelector ) {
 	std::cout << "event " << eventInfo.str() << " FAILS tight lepton charge requirement." << std::endl;
       }
@@ -1929,7 +1962,7 @@ int main(int argc, char* argv[])
     double FR_leadNonpromptLepton    = -99999.;
     int    pdgId_leadNonpromptLepton = 0;
     
-    if (isMC)
+    if (isMC && 1==0)
     {
       for (int i=0; i < 2; i++)
       {
@@ -1942,6 +1975,15 @@ int main(int argc, char* argv[])
 	const double leptonAbsEta = selLeptons[i]->absEta();
 
 	const int jetToLeptonFakeRate_option = getJetToLeptonFR_option(central_or_shift_main);
+
+	if (printLevel > 5)
+	{
+	  printf("before leptonPdgId %d, leptonPt %g, leptonAbsEta %g, jetToLeptonFakeRate_option %d, FR_leadNonpromptLepton %g \n",leptonPdgId,leptonPt,leptonAbsEta, jetToLeptonFakeRate_option, FR_leadNonpromptLepton);
+	  std::cout << std::endl;
+	}
+
+	if ( ! (leptonPt > 15 && leptonPt < 100) )
+	  continue;
 	
 	if (leptonPdgId == 11)
 	{
@@ -1950,6 +1992,8 @@ int main(int argc, char* argv[])
 	    leptonPt, leptonAbsEta, jetToLeptonFakeRate_option_e
 	    );
 	  pdgId_leadNonpromptLepton = leptonPdgId;
+	  FR_leadNonpromptElectron_sum += FR_leadNonpromptLepton;
+	  FR_leadNonpromptElectron_nEntires++;
 	}
 	else if (leptonPdgId == 13)
 	{
@@ -1958,6 +2002,8 @@ int main(int argc, char* argv[])
 	    leptonPt, leptonAbsEta, jetToLeptonFakeRate_option_m
 	    );
 	  pdgId_leadNonpromptLepton = leptonPdgId;
+	  FR_leadNonpromptMuon_sum += FR_leadNonpromptLepton;
+	  FR_leadNonpromptMuon_nEntires++;
 	}
 	else
 	{
@@ -1967,6 +2013,9 @@ int main(int argc, char* argv[])
 	if (printLevel > 5)
 	{
 	  printf("leptonPdgId %d, leptonPt %g, leptonAbsEta %g, jetToLeptonFakeRate_option %d, FR_leadNonpromptLepton %g \n",leptonPdgId,leptonPt,leptonAbsEta, jetToLeptonFakeRate_option, FR_leadNonpromptLepton);
+	  printf("FR_leadNonpromptElectron_sum %g, FR_leadNonpromptElectron_nEntires %d,   FR_leadNonpromptMuon_sum %g, FR_leadNonpromptMuon_nEntires %d \n",
+		 FR_leadNonpromptElectron_sum, FR_leadNonpromptElectron_nEntires,
+		 FR_leadNonpromptMuon_sum, FR_leadNonpromptMuon_nEntires);
 	}
 
 	break;
@@ -1986,13 +2035,173 @@ int main(int argc, char* argv[])
     else {
       printf("Invalid event category\t\t nEle_2selLep %d, nMu_2selLep %d",nEle_2selLep,nMu_2selLep);
     }
-    if (printLevel > 5)
+    if (printLevel > 5 && 1==0)
     {
       printf("nEle_2selLep: %d, nMu_2selLep: %d \t \n",nEle_2selLep,nMu_2selLep);
       std::cout << "evtCategories: ";
       for (size_t i=0; i<evtCategories.size(); i++) std::cout << evtCategories[i] << ",  ";
       std::cout << std::endl;
     }
+
+    /*
+    double pt_eFakeable_cat_lT_eF        = -99999.0;
+    double cone_pt_eFakeable_cat_lT_eF   = -99999.0;
+    double eta_eFakeable_cat_lT_eF       = -99999.0;
+    //
+    double pt_muFakeable_cat_lT_muF      = -99999.0;
+    double cone_pt_muFakeable_cat_lT_muF = -99999.0;
+    double eta_muFakeable_cat_lT_muF     = -99999.0;
+    */
+    
+    std::vector<const RecoLepton*> selLeptons_Fakeable;
+    std::vector<const RecoLepton*> selElectrons_Fakeable;
+    std::vector<const RecoLepton*> selMuons_Fakeable;
+    std::vector<const RecoLepton*> selLeptons_Tight;
+    std::vector<const RecoLepton*> selElectrons_Tight;
+    std::vector<const RecoLepton*> selMuons_Tight;
+
+
+    
+    if (1==1)
+    {
+      bool passesTight_lepton_lead = isMatched(*selLepton_lead, tightElectrons) || isMatched(*selLepton_lead, tightMuons);
+      bool passesTight_lepton_sublead = isMatched(*selLepton_sublead, tightElectrons) || isMatched(*selLepton_sublead, tightMuons);
+
+
+      if (passesTight_lepton_lead)
+      {
+	selLeptons_Tight.push_back(selLepton_lead);
+	if      (selLepton_lead->is_electron()) selElectrons_Tight.push_back(selLepton_lead);
+	else if (selLepton_lead->is_muon())     selMuons_Tight.push_back(selLepton_lead);
+      }	
+      else
+      {
+	selLeptons_Fakeable.push_back(selLepton_lead);
+	if      (selLepton_lead->is_electron()) selElectrons_Fakeable.push_back(selLepton_lead);
+	else if (selLepton_lead->is_muon())     selMuons_Fakeable.push_back(selLepton_lead);
+      }
+
+      if (passesTight_lepton_sublead)
+      {
+	selLeptons_Tight.push_back(selLepton_sublead);
+	if      (selLepton_sublead->is_electron()) selElectrons_Tight.push_back(selLepton_sublead);
+	else if (selLepton_sublead->is_muon())     selMuons_Tight.push_back(selLepton_sublead);	
+      }
+      else
+      {
+	selLeptons_Fakeable.push_back(selLepton_sublead);
+	if      (selLepton_sublead->is_electron()) selElectrons_Fakeable.push_back(selLepton_sublead);
+	else if (selLepton_sublead->is_muon())     selMuons_Fakeable.push_back(selLepton_sublead);
+      }
+
+      /*
+      if (selLeptons_Tight.size() == 1 && selLeptons_Fakeable.size() == 1)
+      {
+	if (selLeptons_Fakeable[0]->is_electron())
+	{
+	  pt_eFakeable_cat_lT_eF = selLeptons_Fakeable[0]->pt();
+	  cone_pt_eFakeable_cat_lT_eF = selLeptons_Fakeable[0]->cone_pt();
+	  eta_eFakeable_cat_lT_eF = selLeptons_Fakeable[0]->eta();
+	  evtCategories.push_back("ttctrl_fakes_lT_eF");
+	}
+	else if (selLeptons_Fakeable[0]->is_muon())
+	{
+	  pt_muFakeable_cat_lT_muF = selLeptons_Fakeable[0]->pt();
+	  cone_pt_muFakeable_cat_lT_muF = selLeptons_Fakeable[0]->cone_pt();
+	  eta_muFakeable_cat_lT_muF = selLeptons_Fakeable[0]->eta();
+	  evtCategories.push_back("ttctrl_fakes_lT_muF");	  
+	}
+      }
+
+      if (printLevel > 5)
+      {
+	printf("selLeptons_Tight: %zu, selLeptons_Fakeable: %zu, %s:  e: %g, %g, %g,  mu: %g, %g, %g \n",
+	       selLeptons_Tight.size(), selLeptons_Fakeable.size(), evtCategories.back().c_str(),
+	       pt_eFakeable_cat_lT_eF,cone_pt_eFakeable_cat_lT_eF,eta_eFakeable_cat_lT_eF,
+	       pt_muFakeable_cat_lT_muF,cone_pt_muFakeable_cat_lT_muF,eta_muFakeable_cat_lT_muF);
+      }
+      */
+
+      /*
+      if      (selElectrons_Tight.size() == 1 && selMuons_Tight.size() == 0 && selElectrons_Fakeable.size() == 1 && selMuons_Fakeable.size() == 0) evtCategories.push_back("ttctrl_fakes_1eT_0muT_1eF_0muF");
+      else if (selElectrons_Tight.size() == 0 && selMuons_Tight.size() == 0 && selElectrons_Fakeable.size() == 2 && selMuons_Fakeable.size() == 0) evtCategories.push_back("ttctrl_fakes_0eT_0muT_2eF_0muF");
+      else if (selElectrons_Tight.size() == 0 && selMuons_Tight.size() == 1 && selElectrons_Fakeable.size() == 0 && selMuons_Fakeable.size() == 1) evtCategories.push_back("ttctrl_fakes_0eT_1muT_0eF_1muF");
+      else if (selElectrons_Tight.size() == 0 && selMuons_Tight.size() == 0 && selElectrons_Fakeable.size() == 0 && selMuons_Fakeable.size() == 2) evtCategories.push_back("ttctrl_fakes_0eT_0muT_0eF_2muF");
+      */
+      
+      if ( ! (passesTight_lepton_lead && passesTight_lepton_sublead) )
+      {
+	std::string sEvtCat = Form("ttctrl_fakes_%zueT_%zumuT_%zueF_%zumuF",
+				   selElectrons_Tight.size(),selMuons_Tight.size(),
+				   selElectrons_Fakeable.size(),selMuons_Fakeable.size());
+	
+	if ( std::find(categories_evt.begin(), categories_evt.end(), sEvtCat) != categories_evt.end() )
+	{
+	  evtCategories.push_back(sEvtCat);
+	} else {
+	  throw cmsException("analyze_ttctrl_fakes", __LINE__) << "Invalid event category " << sEvtCat << "\n";
+	}
+	  
+      }
+      
+    }
+    
+
+    // fakeable-no-Tight e, mu
+    double pt_eFakeable_lead            = selElectrons_Fakeable.size() > 0 ? selElectrons_Fakeable[0]->pt() : kNullDouble;
+    double cone_pt_eFakeable_lead       = selElectrons_Fakeable.size() > 0 ? selElectrons_Fakeable[0]->cone_pt() : kNullDouble;
+    double eta_eFakeable_lead           = selElectrons_Fakeable.size() > 0 ? selElectrons_Fakeable[0]->eta() : kNullDouble;
+    //
+    double pt_eFakeable_sublead         = selElectrons_Fakeable.size() > 1 ? selElectrons_Fakeable[1]->pt() : kNullDouble;
+    double cone_pt_eFakeable_sublead    = selElectrons_Fakeable.size() > 1 ? selElectrons_Fakeable[1]->cone_pt() : kNullDouble;
+    double eta_eFakeable_sublead        = selElectrons_Fakeable.size() > 1 ? selElectrons_Fakeable[1]->eta() : kNullDouble;
+    //
+    double pt_muFakeable_lead           = selMuons_Fakeable.size() > 0 ? selMuons_Fakeable[0]->pt() : kNullDouble;
+    double cone_pt_muFakeable_lead      = selMuons_Fakeable.size() > 0 ? selMuons_Fakeable[0]->cone_pt() : kNullDouble;
+    double eta_muFakeable_lead          = selMuons_Fakeable.size() > 0 ? selMuons_Fakeable[0]->eta() : kNullDouble;
+    //
+    double pt_muFakeable_sublead        = selMuons_Fakeable.size() > 1 ? selMuons_Fakeable[1]->pt() : kNullDouble;
+    double cone_pt_muFakeable_sublead   = selMuons_Fakeable.size() > 1 ? selMuons_Fakeable[1]->cone_pt() : kNullDouble;
+    double eta_muFakeable_sublead       = selMuons_Fakeable.size() > 1 ? selMuons_Fakeable[1]->eta() : kNullDouble;
+
+    // tight
+    double pt_eTight_lead            = selElectrons_Tight.size() > 0 ? selElectrons_Tight[0]->pt() : kNullDouble;
+    double cone_pt_eTight_lead       = selElectrons_Tight.size() > 0 ? selElectrons_Tight[0]->cone_pt() : kNullDouble;
+    double eta_eTight_lead           = selElectrons_Tight.size() > 0 ? selElectrons_Tight[0]->eta() : kNullDouble;
+    //
+    double pt_eTight_sublead         = selElectrons_Tight.size() > 1 ? selElectrons_Tight[1]->pt() : kNullDouble;
+    double cone_pt_eTight_sublead    = selElectrons_Tight.size() > 1 ? selElectrons_Tight[1]->cone_pt() : kNullDouble;
+    double eta_eTight_sublead        = selElectrons_Tight.size() > 1 ? selElectrons_Tight[1]->eta() : kNullDouble;
+    //
+    double pt_muTight_lead           = selMuons_Tight.size() > 0 ? selMuons_Tight[0]->pt() : kNullDouble;
+    double cone_pt_muTight_lead      = selMuons_Tight.size() > 0 ? selMuons_Tight[0]->cone_pt() : kNullDouble;
+    double eta_muTight_lead          = selMuons_Tight.size() > 0 ? selMuons_Tight[0]->eta() : kNullDouble;
+    //
+    double pt_muTight_sublead        = selMuons_Tight.size() > 1 ? selMuons_Tight[1]->pt() : kNullDouble;
+    double cone_pt_muTight_sublead   = selMuons_Tight.size() > 1 ? selMuons_Tight[1]->cone_pt() : kNullDouble;
+    double eta_muTight_sublead       = selMuons_Tight.size() > 1 ? selMuons_Tight[1]->eta() : kNullDouble;
+
+
+      if (printLevel > 5)
+      {
+	printf("EvtCategories: ");
+	for (size_t i=0; i<evtCategories.size(); i++) printf("  %s, ",evtCategories[i].c_str());
+	printf("\nselLeptons_Tight %zu, selLeptons_Fakeable %zu,  selElectrons_Tight %zu, selMuons_Tight %zu, selElectrons_Fakeable %zu, selMuons_Fakeable %zu \n",
+	       selLeptons_Tight.size(),selLeptons_Fakeable.size(),
+	       selElectrons_Tight.size(),selMuons_Tight.size(),selElectrons_Fakeable.size(),selMuons_Fakeable.size());
+	printf("eTight: lead %g, %g, %g, sublead %g, %g, %g \n",
+	       pt_eTight_lead,cone_pt_eTight_lead,eta_eTight_lead,pt_eTight_sublead,cone_pt_eTight_sublead,eta_eTight_sublead);
+	printf("muTight: lead %g, %g, %g, sublead %g, %g, %g \n",
+	       pt_muTight_lead,cone_pt_muTight_lead,eta_muTight_lead,pt_muTight_sublead,cone_pt_muTight_sublead,eta_muTight_sublead);
+	printf("eFakeable: lead %g, %g, %g, sublead %g, %g, %g \n",
+	       pt_eFakeable_lead,cone_pt_eFakeable_lead,eta_eFakeable_lead,pt_eFakeable_sublead,cone_pt_eFakeable_sublead,eta_eFakeable_sublead);
+	printf("muFakeable: lead %g, %g, %g, sublead %g, %g, %g \n",
+	       pt_muFakeable_lead,cone_pt_muFakeable_lead,eta_muFakeable_lead,pt_muFakeable_sublead,cone_pt_muFakeable_sublead,eta_muFakeable_sublead);
+
+	std::cout << "evtWeightRecorder: " << evtWeightRecorder << "\n";
+      }
+    
+    
     // compute signal extraction observables
     double dihiggsVisMass_sel = (selJetP4 + selLepton_lead->p4() + selLepton_sublead->p4()).mass();
     double dihiggsMass_wMet_sel = (selJetP4 + selLepton_lead->p4() + selLepton_sublead->p4() + met.p4()).mass();
@@ -2053,7 +2262,8 @@ int main(int argc, char* argv[])
       {
         selHistManagerType* selHistManager = selHistManagers[central_or_shift][genMatch->getIdx()];
         assert(selHistManager);
-        if(! skipFilling)
+        //if(! skipFilling)
+	if (1==0)
         {
           selHistManager->electrons_->fillHistograms(selElectrons, evtWeight);
           if ( selElectrons.size() >= 1 ) {
@@ -2102,6 +2312,39 @@ int main(int argc, char* argv[])
             //BDTOutput_SUM,
             BDTOutput_SUM[0],
             BDTOutput_SUM[1],
+	    //
+	    pt_eTight_lead,
+	    cone_pt_eTight_lead,
+	    eta_eTight_lead,
+	    //
+	    pt_eTight_sublead,
+	    cone_pt_eTight_sublead,
+	    eta_eTight_sublead,
+	    //
+	    pt_muTight_lead,
+	    cone_pt_muTight_lead,
+	    eta_muTight_lead,
+	    //
+	    pt_muTight_sublead,
+	    cone_pt_muTight_sublead,
+	    eta_muTight_sublead,	  	    
+	    //
+	    pt_eFakeable_lead,
+	    cone_pt_eFakeable_lead,
+	    eta_eFakeable_lead,
+	    //
+	    pt_eFakeable_sublead,
+	    cone_pt_eFakeable_sublead,
+	    eta_eFakeable_sublead,
+	    //
+	    pt_muFakeable_lead,
+	    cone_pt_muFakeable_lead,
+	    eta_muFakeable_lead,
+	    //
+	    pt_muFakeable_sublead,
+	    cone_pt_muFakeable_sublead,
+	    eta_muFakeable_sublead,
+	    //
             kv.second
           );
 	  selHistManager->evt_[kv.first]->fillHistograms_avgLeptonFR(pdgId_leadNonpromptLepton, FR_leadNonpromptLepton);
@@ -2144,6 +2387,39 @@ int main(int argc, char* argv[])
 	      mT_met_lep_min,
               BDTOutput_SUM[0],
               BDTOutput_SUM[1],
+	      //
+	      pt_eTight_lead,
+	      cone_pt_eTight_lead,
+	      eta_eTight_lead,
+	      //
+	      pt_eTight_sublead,
+	      cone_pt_eTight_sublead,
+	      eta_eTight_sublead,
+	      //
+	      pt_muTight_lead,
+	      cone_pt_muTight_lead,
+	      eta_muTight_lead,
+	      //
+	      pt_muTight_sublead,
+	      cone_pt_muTight_sublead,
+	      eta_muTight_sublead,	  	    
+	      //
+	      pt_eFakeable_lead,
+	      cone_pt_eFakeable_lead,
+	      eta_eFakeable_lead,
+	      //
+	      pt_eFakeable_sublead,
+	      cone_pt_eFakeable_sublead,
+	      eta_eFakeable_sublead,
+	      //
+	      pt_muFakeable_lead,
+	      cone_pt_muFakeable_lead,
+	      eta_muFakeable_lead,
+	      //
+	      pt_muFakeable_sublead,
+	      cone_pt_muFakeable_sublead,
+	      eta_muFakeable_sublead,
+	      //
               kv.second
             );
 	    selHistManager->evt_in_categories_[kv.first][category]->fillHistograms_avgLeptonFR(pdgId_leadNonpromptLepton, FR_leadNonpromptLepton);
@@ -2271,6 +2547,14 @@ int main(int argc, char* argv[])
     }
   }
   std::cout << std::endl;
+
+  double avgFR_electron = FR_leadNonpromptElectron_nEntires>0 ? FR_leadNonpromptElectron_sum / FR_leadNonpromptElectron_nEntires : 0;
+  double avgFR_muon     = FR_leadNonpromptMuon_nEntires > 0 ? FR_leadNonpromptMuon_sum / FR_leadNonpromptMuon_nEntires : 0;
+  printf("FR_leadNonpromptElectron_sum %g, FR_leadNonpromptElectron_nEntires %d,   FR_leadNonpromptMuon_sum %g, FR_leadNonpromptMuon_nEntires %d., \t  avgFR_electron %g, avgFR_muon %g \n",
+	 FR_leadNonpromptElectron_sum, FR_leadNonpromptElectron_nEntires,
+	 FR_leadNonpromptMuon_sum, FR_leadNonpromptMuon_nEntires,
+	 avgFR_electron,avgFR_muon);
+  
 
 //--- manually write histograms to output file
   fs.file().cd();
