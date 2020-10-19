@@ -1,6 +1,6 @@
 from collections import OrderedDict as OD
 
-# file generated at 2020-10-17 18:12:53 with the following command:
+# file generated at 2020-10-19 13:54:29 with the following command:
 # find_samples.py -V -i ../../tthAnalysis/NanoAOD/test/datasets/txt/datasets_hh_multilepton_mc_2018_RunIIAutumn18MiniAOD.txt -m python/samples/metaDict_2018_hh.py -s ../../tthAnalysis/NanoAOD/test/datasets/txt/sum_datasets_hh_multilepton_2018_RunIIAutumn18MiniAOD.txt -c python/samples/sampleLocations_2018_nanoAOD_hh_multilepton.txt
 
 meta_dictionary = OD()
@@ -2824,7 +2824,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-800_narrow_TuneCP5_PSWeights_13TeV-ma
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-850_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2018_2020Oct17_GluGluToRadionToHHTo4V_M-850_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1"),
   ("sample_category",       "signal_ggf_spin0_850_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin0_850_hh_4v"),
   ("nof_db_events",         399996),
@@ -2833,7 +2833,7 @@ meta_dictionary["/GluGluToRadionToHHTo4V_M-850_narrow_TuneCP5_PSWeights_13TeV-ma
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 24.10GB; nevents: 400.00k; release: 10_2_5; last modified: 2020-09-11 22:56:25"),
+  ("comment",               "100.0%; status: VALID; size: 24.10GB; nevents: 400.00k; release: 10_2_5; last modified: 2020-09-11 22:56:25"),
 ])
 
 meta_dictionary["/GluGluToRadionToHHTo4V_M-900_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] =  OD([
@@ -3123,7 +3123,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-700_narrow_TuneCP5_PSWeights_13
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-750_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2018_2020Oct17_GluGluToBulkGravitonToHHTo4V_M-750_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v"),
   ("sample_category",       "signal_ggf_spin2_750_hh_wwww"),
   ("process_name_specific", "signal_ggf_spin2_750_hh_4v"),
   ("nof_db_events",         399998),
@@ -3132,7 +3132,7 @@ meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-750_narrow_TuneCP5_PSWeights_13
   ("xsection",              0.057547),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 23.38GB; nevents: 400.00k; release: 10_2_5; last modified: 2020-09-13 20:40:41"),
+  ("comment",               "100.0%; status: VALID; size: 23.38GB; nevents: 400.00k; release: 10_2_5; last modified: 2020-09-13 20:40:41"),
 ])
 
 meta_dictionary["/GluGluToBulkGravitonToHHTo4V_M-800_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM"] =  OD([
