@@ -116,9 +116,7 @@
 #include <fstream> // std::ofstream
 #include <assert.h> // assert
 
-const int printLevel = 6;
-
-
+const int printLevel = 0;
 const double kNullDouble = -99999.0;
 
 typedef math::PtEtaPhiMLorentzVector LV;
@@ -398,8 +396,7 @@ int main(int argc, char* argv[])
   cfg_dataToMCcorrectionInterface.addParameter<std::string>("hadTauSelection", hadTauSelection_part2);
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiElectron", hadTauSelection_antiElectron);
   cfg_dataToMCcorrectionInterface.addParameter<int>("hadTauSelection_antiMuon", hadTauSelection_antiMuon);
-  //cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", isDEBUG);
-  cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", true);
+  cfg_dataToMCcorrectionInterface.addParameter<bool>("isDEBUG", isDEBUG);
   if (cfg_analyze.exists("lep_mva_wp")) cfg_dataToMCcorrectionInterface.addParameter<std::string>("lep_mva_wp", lep_mva_wp);
   Data_to_MC_CorrectionInterface_Base * dataToMCcorrectionInterface = nullptr;
   switch(era)
@@ -941,13 +938,13 @@ int main(int argc, char* argv[])
     "object multiplicity",
     "trigger",
     ">= 2 presel leptons",
-    "presel lepton trigger match",
     "3 or 4 jets",
     "1 medium b-jet",
     "sel tau veto",
     ">= 2 sel leptons",
     "<= 2 tight leptons",
-    "fakeable lepton trigger match",
+    "trigger & fakeable lepton flavor matching",
+    "trigger & dataset matching",
     "HLT filter matching",
     "m(ll) > 12 GeV",
     "lead lepton pT > 25 GeV && sublead lepton pT > 15 GeV",
@@ -1133,57 +1130,6 @@ int main(int argc, char* argv[])
 		  << ", selTrigger_1e1mu = " << selTrigger_1e1mu << ")" << std::endl;
       }
       continue;
-    }
-
-//--- rank triggers by priority and ignore triggers of lower priority if a trigger of higher priority has fired for given event;
-//    the ranking of the triggers is as follows: 2mu, 1e1mu, 2e, 1mu, 1e
-// CV: this logic is necessary to avoid that the same event is selected multiple times when processing different primary datasets
-    if ( !isMC && !isDEBUG ) {
-      if ( selTrigger_1e && (isTriggered_1mu || isTriggered_2mu || isTriggered_1e1mu) ) {
-	if ( run_lumi_eventSelector ) {
-          std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
-	  std::cout << " (selTrigger_1e = " << selTrigger_1e
-		    << ", isTriggered_1mu = " << isTriggered_1mu
-		    << ", isTriggered_2mu = " << isTriggered_2mu
-		    << ", isTriggered_1e1mu = " << isTriggered_1e1mu << ")" << std::endl;
-	}
-	continue;
-      }
-      if ( selTrigger_1e && isTriggered_2e && era != Era::k2018 ) {
-        if ( run_lumi_eventSelector ) {
-          std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
-          std::cout << " (selTrigger_1e = " << selTrigger_1e
-                    << ", isTriggered_2e = " << isTriggered_2e << ")" << std::endl;
-        }
-        continue;
-      }
-      if ( selTrigger_2e && (isTriggered_2mu || isTriggered_1e1mu) ) {
-	if ( run_lumi_eventSelector ) {
-      std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
-	  std::cout << " (selTrigger_2e = " << selTrigger_2e
-		    << ", isTriggered_2mu = " << isTriggered_2mu
-		    << ", isTriggered_1e1mu = " << isTriggered_1e1mu << ")" << std::endl;
-	}
-	continue;
-      }
-      if ( selTrigger_1mu && (isTriggered_2e || isTriggered_2mu || isTriggered_1e1mu) ) {
-	if ( run_lumi_eventSelector ) {
-      std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
-	  std::cout << " (selTrigger_1mu = " << selTrigger_1mu
-		    << ", isTriggered_2e = " << isTriggered_2e
-		    << ", isTriggered_2mu = " << isTriggered_2mu
-		    << ", isTriggered_1e1mu = " << isTriggered_1e1mu << ")" << std::endl;
-	}
-	continue;
-      }
-      if ( selTrigger_1e1mu && isTriggered_2mu ) {
-	if ( run_lumi_eventSelector ) {
-      std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
-	  std::cout << " (selTrigger_1e1mu = " << selTrigger_1e1mu
-		    << ", isTriggered_2mu = " << isTriggered_2mu << ")" << std::endl;
-	}
-	continue;
-      }
     }
     cutFlowTable.update("trigger", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("trigger", evtWeightRecorder.get(central_or_shift_main));
@@ -1408,24 +1354,6 @@ int main(int argc, char* argv[])
     cutFlowTable.update(">= 2 presel leptons", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms(">= 2 presel leptons", evtWeightRecorder.get(central_or_shift_main));
 
-    // require that trigger paths match event category (with event category based on preselLeptons)
-    if ( !((preselElectrons.size() >= 2 &&                            (selTrigger_2e    || selTrigger_1e                  )) ||
-	   (preselElectrons.size() >= 1 && preselMuons.size() >= 1 && (selTrigger_1e1mu || selTrigger_1mu || selTrigger_1e)) ||
-	   (                               preselMuons.size() >= 2 && (selTrigger_2mu   || selTrigger_1mu                 ))) ) {
-      if ( run_lumi_eventSelector ) {
-        std::cout << "event " << eventInfo.str() << " FAILS trigger selection for given preselLepton multiplicity." << std::endl;
-	std::cout << " (#preselElectrons = " << preselElectrons.size()
-		  << ", #preselMuons = " << preselMuons.size()
-		  << ", selTrigger_2mu = " << selTrigger_2mu
-		  << ", selTrigger_1e1mu = " << selTrigger_1e1mu
-		  << ", selTrigger_2e = " << selTrigger_2e
-		  << ", selTrigger_1mu = " << selTrigger_1mu
-		  << ", selTrigger_1e = " << selTrigger_1e << ")" << std::endl;
-      }
-      continue;
-    }
-    cutFlowTable.update("presel lepton trigger match", evtWeightRecorder.get(central_or_shift_main));
-    cutFlowHistManager->fillHistograms("presel lepton trigger match", evtWeightRecorder.get(central_or_shift_main));
 
     // apply requirement on jets (incl. b-tagged jets) and hadronic taus on preselection level
     if ( !( selJets.size() == 3 || selJets.size() == 4) ) {
@@ -1521,24 +1449,93 @@ int main(int argc, char* argv[])
 
 
     
-    // require that trigger paths match event category (with event category based on fakeableLeptons)
+// require that trigger paths match lepton flavor (for fakeable leptons)
     if ( !((fakeableElectrons.size() >= 2 &&                              (selTrigger_2e    || selTrigger_1e                  )) ||
-	   (fakeableElectrons.size() >= 1 && fakeableMuons.size() >= 1 && (selTrigger_1e1mu || selTrigger_1mu || selTrigger_1e)) ||
-	   (                                 fakeableMuons.size() >= 2 && (selTrigger_2mu   || selTrigger_1mu                 ))) ) {
+           (fakeableElectrons.size() >= 1 && fakeableMuons.size() >= 1 && (selTrigger_1e1mu || selTrigger_1mu || selTrigger_1e)) ||
+           (                                 fakeableMuons.size() >= 2 && (selTrigger_2mu   || selTrigger_1mu                 ))) ) {
       if ( run_lumi_eventSelector ) {
-    std::cout << "event " << eventInfo.str() << " FAILS trigger selection for given fakeableLepton multiplicity." << std::endl;
-	std::cout << " (#fakeableElectrons = " << fakeableElectrons.size()
-		  << ", #fakeableMuons = " << fakeableMuons.size()
-		  << ", selTrigger_2mu = " << selTrigger_2mu
-		  << ", selTrigger_1e1mu = " << selTrigger_1e1mu
-		  << ", selTrigger_2e = " << selTrigger_2e
-		  << ", selTrigger_1mu = " << selTrigger_1mu
-		  << ", selTrigger_1e = " << selTrigger_1e << ")" << std::endl;
+        std::cout << "event " << eventInfo.str() << " FAILS trigger selection for given fakeableLepton multiplicity." << std::endl;
+        std::cout << " (#fakeableElectrons = " << fakeableElectrons.size()
+                  << ", #fakeableMuons = " << fakeableMuons.size()
+                  << ", selTrigger_2mu = " << selTrigger_2mu
+                  << ", selTrigger_1e1mu = " << selTrigger_1e1mu
+                  << ", selTrigger_2e = " << selTrigger_2e
+                  << ", selTrigger_1mu = " << selTrigger_1mu
+                  << ", selTrigger_1e = " << selTrigger_1e << ")" << std::endl;
       }
       continue;
     }
-    cutFlowTable.update("fakeable lepton trigger match", evtWeightRecorder.get(central_or_shift_main));
-    cutFlowHistManager->fillHistograms("fakeable lepton trigger match", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowTable.update("trigger & fakeable lepton flavor matching", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms("trigger & fakeable lepton flavor matching", evtWeightRecorder.get(central_or_shift_main));
+
+    // Require that trigger paths match primary datasets,
+    // to avoid that the same event is selected multiple times when processing different primary datasets (PD).
+    // In case the same event passes the triggers paths for more than one primary datasets,
+    // the event is selected in the PD of highest priority only. 
+    // The ranking of the PDs is as follows: DoubleMuon, MuonEG, DoubleEG, SingleMuon, SingleElectron
+    if ( !isMC && !isDEBUG ) 
+    {
+      //bool isTriggered_SingleElectron = isTriggered_1e && fakeableElectrons.size() >= 1;
+      bool isTriggered_SingleMuon = isTriggered_1mu && fakeableMuons.size() >= 1;
+      bool isTriggered_DoubleEG = isTriggered_2e && fakeableElectrons.size() >= 2;
+      bool isTriggered_DoubleMuon = isTriggered_2mu && fakeableMuons.size() >= 2;
+      bool isTriggered_MuonEG = isTriggered_1e1mu && fakeableElectrons.size() >= 1 && fakeableMuons.size() >= 1;
+
+      bool selTrigger_SingleElectron = selTrigger_1e;
+      bool selTrigger_SingleMuon = selTrigger_1mu;
+      bool selTrigger_DoubleEG = selTrigger_2e;
+      //bool selTrigger_DoubleMuon = selTrigger_2mu;
+      bool selTrigger_MuonEG = selTrigger_1e1mu;
+
+      if ( selTrigger_SingleElectron && (isTriggered_SingleMuon || isTriggered_DoubleMuon || isTriggered_MuonEG) ) {
+	if ( run_lumi_eventSelector ) {
+          std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
+	  std::cout << " (selTrigger_SingleElectron = " << selTrigger_SingleElectron
+		    << ", isTriggered_SingleMuon = " << isTriggered_SingleMuon
+		    << ", isTriggered_DoubleMuon = " << isTriggered_DoubleMuon
+		    << ", isTriggered_MuonEG = " << isTriggered_MuonEG << ")" << std::endl;
+	}
+	continue;
+      }
+      if ( selTrigger_SingleElectron && isTriggered_DoubleEG && era != Era::k2018 ) {
+        if ( run_lumi_eventSelector ) {
+          std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
+          std::cout << " (selTrigger_SingleElectron = " << selTrigger_SingleElectron
+                    << ", isTriggered_DoubleEG = " << isTriggered_DoubleEG << ")" << std::endl;
+        }
+        continue;
+      }
+      if ( selTrigger_DoubleEG && (isTriggered_DoubleMuon || isTriggered_MuonEG) ) {
+	if ( run_lumi_eventSelector ) {
+          std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
+	  std::cout << " (selTrigger_DoubleEG = " << selTrigger_DoubleEG
+		    << ", isTriggered_DoubleMuon = " << isTriggered_DoubleMuon
+		    << ", isTriggered_MuonEG = " << isTriggered_MuonEG << ")" << std::endl;
+	}
+	continue;
+      }
+      if ( selTrigger_SingleMuon && (isTriggered_DoubleEG || isTriggered_DoubleMuon || isTriggered_MuonEG) ) {
+	if ( run_lumi_eventSelector ) {
+          std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
+	  std::cout << " (selTrigger_SingleMuon = " << selTrigger_SingleMuon
+		    << ", isTriggered_DoubleEG = " << isTriggered_DoubleEG
+		    << ", isTriggered_DoubleMuon = " << isTriggered_DoubleMuon
+		    << ", isTriggered_MuonEG = " << isTriggered_MuonEG << ")" << std::endl;
+	}
+	continue;
+      }
+      if ( selTrigger_MuonEG && isTriggered_DoubleMuon ) {
+	if ( run_lumi_eventSelector ) {
+          std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
+	  std::cout << " (selTrigger_MuonEG = " << selTrigger_MuonEG
+		    << ", isTriggered_DoubleMuon = " << isTriggered_DoubleMuon << ")" << std::endl;
+	}
+	continue;
+      }
+    }              
+    cutFlowTable.update("trigger & dataset matching", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms("trigger & dataset matching", evtWeightRecorder.get(central_or_shift_main));
+    
 
 //--- apply HLT filter
     if(apply_hlt_filter)
