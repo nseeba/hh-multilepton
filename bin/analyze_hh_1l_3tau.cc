@@ -1394,6 +1394,7 @@ int main(int argc, char* argv[])
     cutFlowTable.update(">= 1 presel lepton", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms(">= 1 presel lepton", evtWeightRecorder.get(central_or_shift_main));
 
+
     // require presence of at least three hadronic taus passing fakeable preselection criteria
     // (do not veto events with more than three fakeable selected hadronic tau candidates,
     //  as sample of hadronic tau candidates passing fakeable preselection criteria contains significant contamination from jets)
@@ -1484,23 +1485,23 @@ int main(int argc, char* argv[])
       bool selTrigger_Tau = selTrigger_2tau;
 
       if ( selTrigger_SingleElectron && isTriggered_SingleMuon ) {
-	if ( run_lumi_eventSelector ) {
+      if ( run_lumi_eventSelector ) {
           std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
-	  std::cout << " (selTrigger_SingleElectron = " << selTrigger_SingleElectron
-		    << ", isTriggered_SingleMuon = " << isTriggered_SingleMuon << ")" << std::endl;
-	}
-	continue;
+        std::cout << " (selTrigger_SingleElectron = " << selTrigger_SingleElectron
+              << ", isTriggered_SingleMuon = " << isTriggered_SingleMuon << ")" << std::endl;
+      }
+      continue;
       }
       if ( selTrigger_Tau && (isTriggered_SingleMuon || isTriggered_SingleElectron) ) {
-	if ( run_lumi_eventSelector ) {
+      if ( run_lumi_eventSelector ) {
           std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
-	  std::cout << " (selTrigger_Tau = " << selTrigger_Tau
-		    << ", isTriggered_SingleMuon = " << isTriggered_SingleMuon
-		    << ", isTriggered_SingleElectron = " << isTriggered_SingleElectron << ")" << std::endl;
-	}
-	continue;
+        std::cout << " (selTrigger_Tau = " << selTrigger_Tau
+              << ", isTriggered_SingleMuon = " << isTriggered_SingleMuon
+              << ", isTriggered_SingleElectron = " << isTriggered_SingleElectron << ")" << std::endl;
       }
-    }              
+      continue;
+      }
+    }
     cutFlowTable.update("trigger & dataset matching", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("trigger & dataset matching", evtWeightRecorder.get(central_or_shift_main));
 
@@ -1610,7 +1611,7 @@ int main(int argc, char* argv[])
       evtWeightRecorder.record_jetToLepton_FR_lead(leptonFakeRateInterface, selLepton);
     }
 
-    if(!selectBDT){    
+    if(!selectBDT){
       if(applyFakeRateWeights == kFR_4L)
       {
         bool passesTight_lepton = isMatched(*selLepton, tightElectrons) || isMatched(*selLepton, tightMuons);
@@ -1833,20 +1834,19 @@ int main(int argc, char* argv[])
           "cost "             << eventInfo.gen_cosThetaStar << " : "
           "weight = "         << HHWeight                   << '\n'
           ;
-	std::cout << "Calculated " << weightMapHH.size() << " scan weights\n";
-	for(const auto & kv: weightMapHH)
+        std::cout << "Calculated " << weightMapHH.size() << " scan weights\n";
+        for(const auto & kv: weightMapHH)
         {
           std::cout << "line = " <<kv.first << "; Weight = " <<  kv.second << '\n';
         }
-	std::cout << "Calculated " << reWeightMapHH_base.size() << " scan reweights\n";
-	for(const auto & kv:reWeightMapHH_base)
+        std::cout << "Calculated " << reWeightMapHH_base.size() << " scan reweights\n";
+        for(const auto & kv:reWeightMapHH_base)
         {
           std::cout << "line = " <<kv.first << "; Weight = " <<  kv.second << '\n';
         }
-    
         std::cout << '\n';
       }
-    }     
+    }
     for(const std::string & central_or_shift: central_or_shifts_local)
     {
       reWeightMapsHH[central_or_shift] = reWeightMapHH_base;
@@ -1854,18 +1854,18 @@ int main(int argc, char* argv[])
       const bool skipFilling = central_or_shift != central_or_shift_main;
       for(const std::string & evt_cat_str: evt_cat_strs)
       {
-	if(skipFilling && evt_cat_str != default_cat_str)
-	{
-	  continue;
-	}
-	if(apply_HH_rwgt)
-	{
-	  reWeightMapsHH[central_or_shift][evt_cat_str] *= evtWeight;
-	}
-	else
-	{
-	  reWeightMapsHH[central_or_shift][evt_cat_str] = evtWeight;
-	}
+        if(skipFilling && evt_cat_str != default_cat_str)
+        {
+          continue;
+        }
+        if(apply_HH_rwgt)
+        {
+          reWeightMapsHH[central_or_shift][evt_cat_str] *= evtWeight;
+        }
+        else
+        {
+          reWeightMapsHH[central_or_shift][evt_cat_str] = evtWeight;
+        }
       }
     }
     
@@ -2020,6 +2020,7 @@ int main(int argc, char* argv[])
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
         }
+
         for(const auto & kv: reWeightMapsHH[central_or_shift])
         {
           selHistManager->evt_[kv.first]->fillHistograms(
