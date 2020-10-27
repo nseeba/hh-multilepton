@@ -1,6 +1,6 @@
 from collections import OrderedDict as OD
 
-# file generated at 2020-10-19 13:54:29 with the following command:
+# file generated at 2020-10-23 11:01:00 with the following command:
 # find_samples.py -V -i ../../tthAnalysis/NanoAOD/test/datasets/txt/datasets_hh_multilepton_mc_2018_RunIIAutumn18MiniAOD.txt -m python/samples/metaDict_2018_hh.py -s ../../tthAnalysis/NanoAOD/test/datasets/txt/sum_datasets_hh_multilepton_2018_RunIIAutumn18MiniAOD.txt -c python/samples/sampleLocations_2018_nanoAOD_hh_multilepton.txt
 
 meta_dictionary = OD()
@@ -3461,7 +3461,7 @@ meta_dictionary["/VBFHHTo4V_CV_1_C2V_1_C3_1_dipoleRecoilOff-TuneCP5_PSweights_13
 ])
 
 meta_dictionary["/VBFHHTo4V_CV_1_C2V_1_C3_2_dipoleRecoilOff-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2018_2020Oct21_VBFHHTo4V_CV_1_C2V_1_C3_2_dipoleRecoilOff-TuneCP5_PSweights_13TeV-madgraph-pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v"),
   ("sample_category",       "signal_vbf_nonresonant_1_1_2_hh_wwww"),
   ("process_name_specific", "signal_vbf_nonresonant_1_1_2_hh_4v_dipoleRecoilOff"),
   ("nof_db_events",         387999),
@@ -3470,11 +3470,11 @@ meta_dictionary["/VBFHHTo4V_CV_1_C2V_1_C3_2_dipoleRecoilOff-TuneCP5_PSweights_13
   ("xsection",              8.18177e-05),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 23.31GB; nevents: 388.00k; release: 10_2_5; last modified: 2020-09-29 08:02:50"),
+  ("comment",               "100.0%; status: VALID; size: 23.31GB; nevents: 388.00k; release: 10_2_5; last modified: 2020-09-29 08:02:50"),
 ])
 
 meta_dictionary["/VBFHHTo4V_CV_1_C2V_1_C3_0_dipoleRecoilOff-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2018_2020Oct21_VBFHHTo4V_CV_1_C2V_1_C3_0_dipoleRecoilOff-TuneCP5_PSweights_13TeV-madgraph-pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v"),
   ("sample_category",       "signal_vbf_nonresonant_1_1_0_hh_wwww"),
   ("process_name_specific", "signal_vbf_nonresonant_1_1_0_hh_4v_dipoleRecoilOff"),
   ("nof_db_events",         399997),
@@ -3483,7 +3483,7 @@ meta_dictionary["/VBFHHTo4V_CV_1_C2V_1_C3_0_dipoleRecoilOff-TuneCP5_PSweights_13
   ("xsection",              0.00026503),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: VALID; size: 23.82GB; nevents: 400.00k; release: 10_2_5; last modified: 2020-09-27 08:13:55"),
+  ("comment",               "100.0%; status: VALID; size: 23.82GB; nevents: 400.00k; release: 10_2_5; last modified: 2020-09-27 08:13:55"),
 ])
 
 meta_dictionary["/VBFHHTo4V_CV_1_C2V_2_C3_1_dipoleRecoilOff-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] =  OD([
