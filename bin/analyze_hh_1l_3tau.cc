@@ -94,6 +94,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/BM_list.h" // BMS
 #include "tthAnalysis/HiggsToTauTau/interface/BtagSFRatioFacility.h" // BtagSFRatioFacility
 #include "tthAnalysis/HiggsToTauTau/interface/mvaInputVariables.h" // comp_avg_dr_jet, comp_MT_met
+#include "tthAnalysis/HiggsToTauTau/interface/generalAuxFunctions.h" // format_vstring
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_1l_3tau.h" // EvtHistManager_hh_1l_3tau
 #include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
@@ -778,7 +779,6 @@ int main(int argc, char* argv[])
   std::map<std::string, GenEvtHistManager*> genEvtHistManager_afterCuts;
   std::map<std::string, LHEInfoHistManager*> lheInfoHistManager;
   std::map<std::string, std::map<int, selHistManagerType*>> selHistManagers;
-
   for(const std::string & central_or_shift: central_or_shifts_local)
   {
     const bool skipBooking = central_or_shift != central_or_shift_main;
@@ -863,7 +863,7 @@ int main(int argc, char* argv[])
 
           for(const std::string & evt_cat_str: evt_cat_strs)
           {
-            if(skipBooking && evt_cat_str != default_cat_str)
+            if((skipBooking && !apply_HH_rwgt) && evt_cat_str != default_cat_str)
             {
               continue;
             }
@@ -874,7 +874,6 @@ int main(int argc, char* argv[])
             const std::string decayMode_and_genMatchName = boost::replace_all_copy(
               decayMode_and_genMatch, process_string, process_string_new
             );
-
             selHistManager->evt_in_decayModes_[evt_cat_str][decayMode_evt] = new EvtHistManager_hh_1l_3tau(makeHistManager_cfg(decayMode_and_genMatchName,
               Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift, gen_mHH, nonRes_BMs));
             selHistManager->evt_in_decayModes_[evt_cat_str][decayMode_evt]->bookHistograms(fs);
@@ -898,7 +897,7 @@ int main(int argc, char* argv[])
 
         for(const std::string & evt_cat_str: evt_cat_strs)
         {
-          if(skipBooking && evt_cat_str != default_cat_str)
+          if((skipBooking && !apply_HH_rwgt) && evt_cat_str != default_cat_str)
           {
             continue;
           }
