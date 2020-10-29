@@ -1614,8 +1614,8 @@ int main(int argc, char* argv[])
       continue;
     }
     if ( leptonChargeSelection == kOS ) {
-      double prob_chargeMisId_lead = prob_chargeMisId(era, getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta());
-      double prob_chargeMisId_sublead = prob_chargeMisId(era, getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
+      double prob_chargeMisId_lead = prob_chargeMisId(era, getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta(), lep_mva_wp);
+      double prob_chargeMisId_sublead = prob_chargeMisId(era, getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta(), lep_mva_wp);
       evtWeightRecorder.record_chargeMisIdProb(prob_chargeMisId_lead + prob_chargeMisId_sublead);
 
       // Karl: reject the event, if the applied probability of charge misidentification is 0;
