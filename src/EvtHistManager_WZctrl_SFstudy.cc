@@ -3,6 +3,8 @@
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow(), getLogWeight()
 #include "tthAnalysis/HiggsToTauTau/interface/cmsException.h" // cmsException()
 
+const bool skipBookingAdditionalHistos = true;
+
 EvtHistManager_WZctrl_SFstudy::EvtHistManager_WZctrl_SFstudy(const edm::ParameterSet & cfg)
   : HistManagerBase(cfg)
 {
@@ -167,6 +169,7 @@ EvtHistManager_WZctrl_SFstudy::bookHistograms(TFileDirectory & dir)
   hmindr_lep3_jet_                  = book1D(dir, "mindr_lep3_jet",              "mindr_lep3_jet",             200, 0, 3); 
   hmT_MEtLep3_                      = book1D(dir, "mT_MEtLep3",                  "mT_MEtLep3",                 200, 0,500);
   //
+  if ( ! skipBookingAdditionalHistos) {
   hjet1_pt_                         = book1D(dir, "jet1_pt",                     "jet1_pt",                    200, 0,400); 
   hjet2_pt_                         = book1D(dir, "jet2_pt",                     "jet2_pt",                    200, 0,400); 
   hjet1plus2pt_                     = book1D(dir, "jet1plus2pt",                 "jet1plus2pt",                200, 0,600); 
@@ -188,10 +191,12 @@ EvtHistManager_WZctrl_SFstudy::bookHistograms(TFileDirectory & dir)
   hdr_Wjet2LepIdx3_                 = book1D(dir, "dr_Wjet2LepIdx3",            "dr_Wjet2LepIdx3",             200, 0, 3); 
   hdr_LepIdx3WjetNear_              = book1D(dir, "dr_LepIdx3WjetNear",         "dr_LepIdx3WjetNear",          200, 0, 3); 
   hdr_LepIdx3WjetFar_               = book1D(dir, "dr_LepIdx3WjetFar",          "dr_LepIdx3WjetFar",           200, 0, 3);
+  }
   //
   hmet_                             = book1D(dir, "met",                        "met",                         200, 0,500); 
   hmht_                             = book1D(dir, "mht",                        "mht",                         200, 0,500); 
-  hmet_LD_                          = book1D(dir, "met_LD",                     "met_LD",                      200, 0,500); 
+  hmet_LD_                          = book1D(dir, "met_LD",                     "met_LD",                      200, 0,500);
+  if ( ! skipBookingAdditionalHistos) {
   hHT_                              = book1D(dir, "HT",                         "HT",                          200, 0,1000); 
   hSTMET_                           = book1D(dir, "STMET",                      "STMET",                       200, 0,1000);
   //
@@ -258,7 +263,8 @@ EvtHistManager_WZctrl_SFstudy::bookHistograms(TFileDirectory & dir)
   hdr_LeptonIdx3_Jet1_Approach2_              = book1D(dir, "dr_LeptonIdx3_Jet1_Approach2",            "dr_LeptonIdx3_Jet1_Approach2",            200, 0, 3);
   //
   hm_LeptonIdx3_JetNear_Approach2_            = book1D(dir, "m_LeptonIdx3_JetNear_Approach2",          "m_LeptonIdx3_JetNear_Approach2",          200, 0,200); 
-  hdr_LeptonIdx3_JetNear_Approach2_           = book1D(dir, "dr_LeptonIdx3_JetNear_Approach2",         "dr_LeptonIdx3_JetNear_Approach2",         200, 0, 3);   
+  hdr_LeptonIdx3_JetNear_Approach2_           = book1D(dir, "dr_LeptonIdx3_JetNear_Approach2",         "dr_LeptonIdx3_JetNear_Approach2",         200, 0, 3);
+  }
   //
   heventCategory_                   = book1D(dir, "eventCategory",              "eventCategory",               6, -0.5, 5.5); 
   hmvaOutput_xgb_WZctrl_SFstudy_SUMBk_HH_    = book1D(dir, "mvaOutput_xgb_WZctrl_SFstudy_SUMBk_HH","mvaOutput_xgb_WZctrl_SFstudy_SUMBk_HH",120,  0., 1.);
@@ -451,6 +457,7 @@ EvtHistManager_WZctrl_SFstudy::fillHistograms(
   fillWithOverFlow(hmindr_lep3_jet_,                mindr_lep3_jet,                evtWeight, evtWeightErr); 
   fillWithOverFlow(hmT_MEtLep3_,                    mT_MEtLep3,                    evtWeight, evtWeightErr);
   //
+  if ( ! skipBookingAdditionalHistos) {
   fillWithOverFlow(hjet1_pt_,                       jet1_pt,                       evtWeight, evtWeightErr); 
   fillWithOverFlow(hjet2_pt_,                       jet2_pt,                       evtWeight, evtWeightErr); 
   fillWithOverFlow(hjet1plus2pt_,                   jet1plus2pt,                   evtWeight, evtWeightErr); 
@@ -471,10 +478,12 @@ EvtHistManager_WZctrl_SFstudy::fillHistograms(
   fillWithOverFlow(hdr_Wjet2LepIdx3_,               dr_Wjet2LepIdx3,               evtWeight, evtWeightErr); 
   fillWithOverFlow(hdr_LepIdx3WjetNear_,            dr_LepIdx3WjetNear,            evtWeight, evtWeightErr); 
   fillWithOverFlow(hdr_LepIdx3WjetFar_,             dr_LepIdx3WjetFar,             evtWeight, evtWeightErr);
+  }
   //
   fillWithOverFlow(hmet_,                           met,                           evtWeight, evtWeightErr); 
   fillWithOverFlow(hmht_,                           mht,                           evtWeight, evtWeightErr); 
-  fillWithOverFlow(hmet_LD_,                        met_LD,                        evtWeight, evtWeightErr); 
+  fillWithOverFlow(hmet_LD_,                        met_LD,                        evtWeight, evtWeightErr);
+  if ( ! skipBookingAdditionalHistos) {
   fillWithOverFlow(hHT_,                            HT,                            evtWeight, evtWeightErr); 
   fillWithOverFlow(hSTMET_,                         STMET,                         evtWeight, evtWeightErr);
   //
@@ -537,6 +546,7 @@ EvtHistManager_WZctrl_SFstudy::fillHistograms(
   fillWithOverFlow(hdr_LeptonIdx3_JetNear_Approach2_,         dr_LeptonIdx3_JetNear_Approach2,         evtWeight, evtWeightErr);   
   //
   fillWithOverFlow(hmvaOutput_xgb_WZctrl_SFstudy_SUMBk_HH_,  mvaOutput_xgb_WZctrl_SFstudy_SUMBk_HH,  evtWeight, evtWeightErr);
+  }
   //
   if      (abs(lepton3PID) == 13)  fillWithOverFlow2d(hpt_vs_eta_lepton3_mu, abs(lepton3_eta), lepton3_pt, evtWeight, evtWeightErr);
   else if (abs(lepton3PID) == 11)  fillWithOverFlow2d(hpt_vs_eta_lepton3_e,  abs(lepton3_eta), lepton3_pt, evtWeight, evtWeightErr);

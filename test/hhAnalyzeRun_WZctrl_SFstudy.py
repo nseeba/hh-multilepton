@@ -11,6 +11,8 @@ import sys
 import getpass
 
 # E.g.: ./test/hhAnalyzeRun_3l.py -v 2017Dec13 -m default -e 2017
+# E.g.: time python /home/ssawant/VHbbNtuples_10_x/CMSSW_10_2_10_new15/CMSSW_10_2_10/src/hhAnalysis/multilepton/test/hhAnalyzeRun_WZctrl_SFstudy.py -e 2017 -m default -A -v 20201020_2017_WZctrl_SFStudy_Lep1_2_3_DefaultMVACut_woTightCharge -L default -L_useDifferentMVACutForLepton3 True  -L_mva_cut_mu_forLepton3 0.85 -L_mva_cut_e_forLepton3 0.8 -L_useSFCor False -L_useTightChargeCut False
+
 
 mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full', 'internal' ] + systematics.an_opts_hh_multilepton
@@ -20,10 +22,12 @@ systematics.internal = systematics.an_internal_no_mem
 parser = tthAnalyzeParser()
 parser.add_modes(mode_choices)
 parser.add_sys(sys_choices)
-parser.add_preselect()
+parser.add_preselect(use_preselected = False)
 parser.add_rle_select()
 parser.add_lep_mva_wp(default_wp = 'hh_multilepton') # alternative: hh_multilepton
-parser.add_lep_useDifferentMVACutForLepton3()
+parser.add_lep_useTightChargeCut(default_option = 'False')
+parser.add_lep_useSFCor(default_option = 'True')
+parser.add_lep_useDifferentMVACutForLepton3(default_option = 'False')
 parser.add_lep_mva_cut_mu_forLepton3(default_wp = 'default')
 parser.add_lep_mva_cut_e_forLepton3(default_wp = 'default')
 parser.add_nonnominal()
@@ -58,6 +62,8 @@ rle_select        = os.path.expanduser(args.rle_select)
 use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
 lep_mva_wp        = args.lep_mva_wp
+lep_useTightChargeCut            = args.lep_useTightChargeCut
+lep_useSFCor                     = args.lep_useSFCor
 lep_useDifferentMVACutForLepton3 = args.lep_useDifferentMVACutForLepton3
 lep_mva_cut_mu_forLepton3        = args.lep_mva_cut_mu_forLepton3
 lep_mva_cut_e_forLepton3         = args.lep_mva_cut_e_forLepton3
@@ -148,6 +154,8 @@ if __name__ == '__main__':
     leptonChargeSelections                = leptonChargeSelections,
     central_or_shifts                     = central_or_shifts,
     lep_mva_wp                            = lep_mva_wp,
+    lep_useTightChargeCut                 = lep_useTightChargeCut,
+    lep_useSFCor                          = lep_useSFCor,
     lep_useDifferentMVACutForLepton3      = lep_useDifferentMVACutForLepton3,
     lep_mva_cut_mu_forLepton3             = lep_mva_cut_mu_forLepton3,
     lep_mva_cut_e_forLepton3              = lep_mva_cut_e_forLepton3,
@@ -164,19 +172,6 @@ if __name__ == '__main__':
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
     histograms_to_fit                     = {
       "EventCounter"                      : {},
-      "numElectrons"                      : {},
-      "numMuons"                          : {},
-      "numJets"                           : {},
-      "chargedSum3l"                      : {},
-      "numSFOS2l"                         : {},
-      "dihiggsVisMass"                    : {},
-      "dihiggsMass"                       : {},
-      "WTojjMass"                         : {},
-      "mTMetLepton1"                      : {},
-      "mTMetLepton2"                      : {},
-      "HT"                                : {},
-      "STMET"                             : {},
-      "mvaOutput_xgb_WZctrl_SFstudy_SUMBk_HH"      : {},
     },
     select_rle_output                     = True,
     select_root_output                    = False,
