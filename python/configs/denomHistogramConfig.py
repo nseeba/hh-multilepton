@@ -489,7 +489,7 @@ class denomHistogramConfig:
         lines_makefile = []
         self.addToMakefile_nonResDenom(lines_makefile)
         self.addToMakefile_hadd(lines_makefile)
-        self.addToMakefile_plot(lines_makefile)
+        #self.addToMakefile_plot(lines_makefile)
         self.addToMakefile_finalHadd(lines_makefile)
         self.createMakefile(lines_makefile)
         logging.info("Done")
