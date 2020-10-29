@@ -94,6 +94,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/BM_list.h" // BMS
 #include "tthAnalysis/HiggsToTauTau/interface/BtagSFRatioFacility.h" // BtagSFRatioFacility
 #include "tthAnalysis/HiggsToTauTau/interface/mvaInputVariables.h" // comp_avg_dr_jet, comp_MT_met
+#include "tthAnalysis/HiggsToTauTau/interface/generalAuxFunctions.h" // format_vstring
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_1l_3tau.h" // EvtHistManager_hh_1l_3tau
 #include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
@@ -778,7 +779,6 @@ int main(int argc, char* argv[])
   std::map<std::string, GenEvtHistManager*> genEvtHistManager_afterCuts;
   std::map<std::string, LHEInfoHistManager*> lheInfoHistManager;
   std::map<std::string, std::map<int, selHistManagerType*>> selHistManagers;
-
   for(const std::string & central_or_shift: central_or_shifts_local)
   {
     const bool skipBooking = central_or_shift != central_or_shift_main;
@@ -830,7 +830,7 @@ int main(int argc, char* argv[])
 
       for(const std::string & evt_cat_str: evt_cat_strs)
       {
-        if(skipBooking && evt_cat_str != default_cat_str)
+        if((skipBooking && !apply_HH_rwgt) && evt_cat_str != default_cat_str)
         {
           continue;
         }
@@ -863,7 +863,7 @@ int main(int argc, char* argv[])
 
           for(const std::string & evt_cat_str: evt_cat_strs)
           {
-            if(skipBooking && evt_cat_str != default_cat_str)
+            if((skipBooking && !apply_HH_rwgt) && evt_cat_str != default_cat_str)
             {
               continue;
             }
@@ -874,7 +874,6 @@ int main(int argc, char* argv[])
             const std::string decayMode_and_genMatchName = boost::replace_all_copy(
               decayMode_and_genMatch, process_string, process_string_new
             );
-
             selHistManager->evt_in_decayModes_[evt_cat_str][decayMode_evt] = new EvtHistManager_hh_1l_3tau(makeHistManager_cfg(decayMode_and_genMatchName,
               Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift, gen_mHH, nonRes_BMs));
             selHistManager->evt_in_decayModes_[evt_cat_str][decayMode_evt]->bookHistograms(fs);
@@ -898,7 +897,7 @@ int main(int argc, char* argv[])
 
         for(const std::string & evt_cat_str: evt_cat_strs)
         {
-          if(skipBooking && evt_cat_str != default_cat_str)
+          if((skipBooking && !apply_HH_rwgt) && evt_cat_str != default_cat_str)
           {
             continue;
           }
@@ -1394,6 +1393,7 @@ int main(int argc, char* argv[])
     cutFlowTable.update(">= 1 presel lepton", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms(">= 1 presel lepton", evtWeightRecorder.get(central_or_shift_main));
 
+
     // require presence of at least three hadronic taus passing fakeable preselection criteria
     // (do not veto events with more than three fakeable selected hadronic tau candidates,
     //  as sample of hadronic tau candidates passing fakeable preselection criteria contains significant contamination from jets)
@@ -1484,23 +1484,23 @@ int main(int argc, char* argv[])
       bool selTrigger_Tau = selTrigger_2tau;
 
       if ( selTrigger_SingleElectron && isTriggered_SingleMuon ) {
-	if ( run_lumi_eventSelector ) {
+      if ( run_lumi_eventSelector ) {
           std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
-	  std::cout << " (selTrigger_SingleElectron = " << selTrigger_SingleElectron
-		    << ", isTriggered_SingleMuon = " << isTriggered_SingleMuon << ")" << std::endl;
-	}
-	continue;
+        std::cout << " (selTrigger_SingleElectron = " << selTrigger_SingleElectron
+              << ", isTriggered_SingleMuon = " << isTriggered_SingleMuon << ")" << std::endl;
+      }
+      continue;
       }
       if ( selTrigger_Tau && (isTriggered_SingleMuon || isTriggered_SingleElectron) ) {
-	if ( run_lumi_eventSelector ) {
+      if ( run_lumi_eventSelector ) {
           std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
-	  std::cout << " (selTrigger_Tau = " << selTrigger_Tau
-		    << ", isTriggered_SingleMuon = " << isTriggered_SingleMuon
-		    << ", isTriggered_SingleElectron = " << isTriggered_SingleElectron << ")" << std::endl;
-	}
-	continue;
+        std::cout << " (selTrigger_Tau = " << selTrigger_Tau
+              << ", isTriggered_SingleMuon = " << isTriggered_SingleMuon
+              << ", isTriggered_SingleElectron = " << isTriggered_SingleElectron << ")" << std::endl;
       }
-    }              
+      continue;
+      }
+    }
     cutFlowTable.update("trigger & dataset matching", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("trigger & dataset matching", evtWeightRecorder.get(central_or_shift_main));
 
@@ -1610,7 +1610,7 @@ int main(int argc, char* argv[])
       evtWeightRecorder.record_jetToLepton_FR_lead(leptonFakeRateInterface, selLepton);
     }
 
-    if(!selectBDT){    
+    if(!selectBDT){
       if(applyFakeRateWeights == kFR_4L)
       {
         bool passesTight_lepton = isMatched(*selLepton, tightElectrons) || isMatched(*selLepton, tightMuons);
@@ -1815,14 +1815,15 @@ int main(int argc, char* argv[])
     }
 
     std::map<std::string, double> weightMapHH;
-    std::map<std::string, double> reWeightMapHH;
+    std::map<std::string, double> reWeightMapHH_base;
+    std::map<std::string, std::map<std::string, double>> reWeightMapsHH;
     double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
 
     if(apply_HH_rwgt)
     {
       assert(HHWeight_calc);
       weightMapHH = HHWeight_calc->getWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
-      reWeightMapHH = HHWeight_calc->getReWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+      reWeightMapHH_base = HHWeight_calc->getReWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
       HHWeight = weightMapHH["Weight_SM"];
       evtWeightRecorder.record_bm(HHWeight); // SM by default
 
@@ -1832,18 +1833,22 @@ int main(int argc, char* argv[])
           "cost "             << eventInfo.gen_cosThetaStar << " : "
           "weight = "         << HHWeight                   << '\n'
           ;
-
         std::cout << "Calculated " << weightMapHH.size() << " scan weights\n";
         for(const auto & kv: weightMapHH)
+        {
+          std::cout << "line = " <<kv.first << "; Weight = " <<  kv.second << '\n';
+        }
+        std::cout << "Calculated " << reWeightMapHH_base.size() << " scan reweights\n";
+        for(const auto & kv:reWeightMapHH_base)
         {
           std::cout << "line = " <<kv.first << "; Weight = " <<  kv.second << '\n';
         }
         std::cout << '\n';
       }
     }
-
     for(const std::string & central_or_shift: central_or_shifts_local)
     {
+      reWeightMapsHH[central_or_shift] = reWeightMapHH_base;
       const double evtWeight = evtWeightRecorder.get(central_or_shift);
       const bool skipFilling = central_or_shift != central_or_shift_main;
       for(const std::string & evt_cat_str: evt_cat_strs)
@@ -1854,11 +1859,11 @@ int main(int argc, char* argv[])
         }
         if(apply_HH_rwgt)
         {
-          reWeightMapHH[evt_cat_str] *= evtWeight;
+          reWeightMapsHH[central_or_shift][evt_cat_str] *= evtWeight;
         }
         else
         {
-          reWeightMapHH[evt_cat_str] = evtWeight;
+          reWeightMapsHH[central_or_shift][evt_cat_str] = evtWeight;
         }
       }
     }
@@ -2014,7 +2019,8 @@ int main(int argc, char* argv[])
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
         }
-        for(const auto & kv: reWeightMapHH)
+
+        for(const auto & kv: reWeightMapsHH[central_or_shift])
         {
           selHistManager->evt_[kv.first]->fillHistograms(
             selElectrons.size(),
@@ -2095,7 +2101,7 @@ int main(int argc, char* argv[])
         else if ( selElectrons.size() >= 1 ) category = "1e_3tau";
         else assert(0);
 
-        for(const auto & kv: reWeightMapHH)
+        for(const auto & kv: reWeightMapsHH[central_or_shift])
         {
           selHistManager->evt_in_categories_[kv.first][category]->fillHistograms(
             selElectrons.size(),

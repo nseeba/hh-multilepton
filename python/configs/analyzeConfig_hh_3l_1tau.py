@@ -192,14 +192,17 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig_hh):
       central_or_shift: either 'central' or one of the systematic uncertainties defined in $CMSSW_BASE/src/hhAnalysis/multilepton/bin/analyze_hh_3l_1tau.cc
     """
     lepton_and_hadTau_frWeight = "disabled" if jobOptions['applyFakeRateWeights'] == "disabled" else "enabled"
-    if ( jobOptions['muonSelection'] == jobOptions['electronSelection'] ): 
-      jobOptions['histogramDir'] = getHistogramDir(
-        jobOptions['muonSelection'], jobOptions['hadTauSelection'], lepton_and_hadTau_frWeight,
-        jobOptions['chargeSumSelection']
-      )
-    else: 
-      jobOptions['histogramDir'] = getHistogramDir(
-        lepton_and_hadTau_selection, jobOptions['hadTauSelection'], lepton_and_hadTau_frWeight,
+    lepton_selection = lepton_and_hadTau_selection
+    if ("Fakeable" not in lepton_and_hadTau_selection and (jobOptions['muonSelection'] == jobOptions['electronSelection'])):
+      lepton_selection = jobOptions['muonSelection']
+    elif lepton_and_hadTau_selection == "Fakeable_mcClosure_e":
+      lepton_selection = "Fakeable_mcClosure_e"
+    elif lepton_and_hadTau_selection == "Fakeable_mcClosure_m":
+      lepton_selection = "Fakeable_mcClosure_m"
+    elif lepton_and_hadTau_selection == "Fakeable_mcClosure_t":
+      lepton_selection = "Tight_mcClosure_t"
+    jobOptions['histogramDir'] = getHistogramDir(
+        lepton_selection, jobOptions['hadTauSelection'], lepton_and_hadTau_frWeight,
         jobOptions['chargeSumSelection']
       )
     if 'mcClosure' in lepton_and_hadTau_selection:
@@ -353,8 +356,8 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig_hh):
         electron_selection = "Tight"
         muon_selection = "Tight"
         hadTau_selection = "Fakeable"
+        lepton_selection = "Tight_mcClosure_t"
         hadTau_selection = "|".join([ hadTau_selection, self.hadTau_selection_part2 ])
-
       for lepton_and_hadTau_frWeight in self.lepton_and_hadTau_frWeights:
         if lepton_and_hadTau_frWeight == "enabled" and not lepton_and_hadTau_selection.startswith("Fakeable"):
           continue

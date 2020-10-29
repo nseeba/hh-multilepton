@@ -245,12 +245,13 @@ EvtHistManager_hh_1l_3tau::fillHistograms(
       if ( selHadTau->charge()*selLepton->charge() < 0. )
       {
         double mass_etau = (selLepton->p4() + selHadTau->p4()).mass();
-      if ( mass_etau_OS_closestToZ == -1. || TMath::Abs(mass_etau - z_mass) < TMath::Abs(mass_etau_OS_closestToZ - z_mass) )
+        if ( mass_etau_OS_closestToZ == -1. || TMath::Abs(mass_etau - z_mass) < TMath::Abs(mass_etau_OS_closestToZ - z_mass) )
         {
           mass_etau_OS_closestToZ = mass_etau;
         }
       }
     }
+
     fillWithOverFlow(histogram_1e3tau_mass_etau_OS_closestToZ_,          mass_etau_OS_closestToZ,              evtWeight, evtWeightErr);
     fillWithOverFlow(histogram_1e3tau_numTightLeptons_,                  numTightLeptons,                      evtWeight, evtWeightErr);
     fillWithOverFlow(histogram_1e3tau_numFakeableTaus_passingElecVeto_,  numFakeableHadTaus_passingElecVeto,   evtWeight, evtWeightErr);
@@ -262,7 +263,7 @@ EvtHistManager_hh_1l_3tau::fillHistograms(
       fillWithOverFlow(histogram_1e3tau_evtWeight_,                      evtWeight,                            evtWeight, evtWeightErr);
     }
   }
-  
+
   if ( selLepton->is_muon() )
   {
     fillWithOverFlow(histogram_1mu3tau_numTightLeptons_,                 numTightLeptons,                      evtWeight, evtWeightErr);
@@ -275,7 +276,7 @@ EvtHistManager_hh_1l_3tau::fillHistograms(
       fillWithOverFlow(histogram_1mu3tau_evtWeight_,                     evtWeight,                            evtWeight, evtWeightErr);
     }
   }
-  
+
   fillWithOverFlow(histogram_EventCounter_, 0., evtWeight, evtWeightErr);
 
   for(unsigned int i=0;i < labels_spin2_.size();i++){
@@ -286,7 +287,7 @@ EvtHistManager_hh_1l_3tau::fillHistograms(
     fillWithOverFlow(histogram_Map_BDTOutput_SUM_spin0_[labels_spin0_[i]], BDTOutput_SUM_Map_spin0[labels_spin0_[i]], evtWeight, evtWeightErr);
   }
 
- for(unsigned int i=0;i < labels_nonres_.size();i++){
+  for(unsigned int i=0;i < labels_nonres_.size();i++){
     fillWithOverFlow(histogram_Map_BDTOutput_SUM_nonres_[labels_nonres_[i]], BDTOutput_SUM_Map_nonres[labels_nonres_[i]], evtWeight, evtWeightErr);
   }
 }

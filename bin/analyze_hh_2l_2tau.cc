@@ -940,7 +940,7 @@ int main(int argc, char* argv[])
       }
       for(const std::string & evt_cat_str: evt_cat_strs)
       {
-        if(skipBooking && evt_cat_str != default_cat_str)
+	if(( skipBooking && !apply_HH_rwgt ) && evt_cat_str != default_cat_str)
         {
           continue;
         }
@@ -1874,55 +1874,60 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms("signal region veto", evtWeightRecorder.get(central_or_shift_main));
 
     std::map<std::string, double> weightMapHH;
-    std::map<std::string, double> reWeightMapHH;
+    std::map<std::string, double> reWeightMapHH_base;
+    std::map<std::string, std::map<std::string, double>> reWeightMapsHH;
     double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
-    
     if(apply_HH_rwgt)
-    {
-      assert(HHWeight_calc);
-      weightMapHH = HHWeight_calc->getWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
-      reWeightMapHH = HHWeight_calc->getReWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
-      HHWeight = weightMapHH["Weight_SM"];
-      evtWeightRecorder.record_bm(HHWeight); // SM by default
-
-      if(isDEBUG)
       {
-        std::cout << "mhh = " << eventInfo.gen_mHH          << " : "
-          "cost "             << eventInfo.gen_cosThetaStar << " : "
-          "weight = "         << HHWeight                   << '\n'
-          ;
-	std::cout << "Calculated " << weightMapHH.size() << " scan weights\n";
-	for(const auto & kv: weightMapHH)
-        {
-          std::cout << "line = " <<kv.first << "; Weight = " <<  kv.second << '\n';
-        }
+	assert(HHWeight_calc);
+	weightMapHH = HHWeight_calc->getWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+	reWeightMapHH_base = HHWeight_calc->getReWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+	HHWeight = weightMapHH["Weight_SM"];
+	evtWeightRecorder.record_bm(HHWeight); // SM by default
 
-        std::cout << '\n';
-      }
-    } 
+	if(isDEBUG)
+	  {
+	    std::cout << "mhh = " << eventInfo.gen_mHH          << " : "
+	      "cost "             << eventInfo.gen_cosThetaStar << " : "
+	      "weight = "         << HHWeight                   << '\n'
+	      ;
+	    std::cout << "Calculated " << weightMapHH.size() << " scan weights\n";
+	    for(const auto & kv: weightMapHH)
+	      {
+		std::cout << "line = " <<kv.first << "; Weight = " <<  kv.second << '\n';
+	      }
+	    std::cout << "Calculated " << reWeightMapHH_base.size() << " scan reweights\n";
+	    for(const auto & kv:reWeightMapHH_base)
+	      {
+		std::cout << "line = " <<kv.first << "; Weight = " <<  kv.second << '\n';
+	      }
+    
+	    std::cout << '\n';
+	  }
+      }     
 
     for(const std::string & central_or_shift: central_or_shifts_local)
-    {
-      const double evtWeight = evtWeightRecorder.get(central_or_shift);
-      const bool skipFilling = central_or_shift != central_or_shift_main;
-      for(const std::string & evt_cat_str: evt_cat_strs)
       {
-	if(skipFilling && evt_cat_str != default_cat_str)
-	{
-	  continue;
-	}
-	if(apply_HH_rwgt)
-	{
-	  reWeightMapHH[evt_cat_str] *= evtWeight;
-	}
-	else
-	{
-	  reWeightMapHH[evt_cat_str] = evtWeight;
-	}
+	reWeightMapsHH[central_or_shift] = reWeightMapHH_base;
+	const double evtWeight = evtWeightRecorder.get(central_or_shift);
+	const bool skipFilling = central_or_shift != central_or_shift_main;
+	for(const std::string & evt_cat_str: evt_cat_strs)
+	  {
+	    if(skipFilling && evt_cat_str != default_cat_str)
+	      {
+		continue;
+	      }
+	    if(apply_HH_rwgt)
+	      {
+		reWeightMapsHH[central_or_shift][evt_cat_str] *= evtWeight;
+	      }
+	    else
+	      {
+		reWeightMapsHH[central_or_shift][evt_cat_str] = evtWeight;
+	      }
+	  }
       }
-    }
-    
-    //std::cout<<"reWeightMapHH.size() " << reWeightMapHH.size() << std::endl;
+    //std::cout<<"reWeightMapsHH.size() " << reWeightMapsHH.size() << std::endl;
 
     const Particle::LorentzVector tautau_p4 = selHadTau_lead->p4() + selHadTau_sublead->p4();
     const double mTauTauVis_sel = tautau_p4.mass();
@@ -2286,8 +2291,7 @@ int main(int argc, char* argv[])
             categories.push_back("2eOS_2tau_wChargeFlipWeights");
           } else assert(0);
         } else assert(0);
-
-	for(const auto & kv: reWeightMapHH)
+	for(const auto & kv: reWeightMapsHH[central_or_shift])
 	  { 
 	    selHistManager->evt_[kv.first]->fillHistograms(
 							   selElectrons.size(),
@@ -2312,6 +2316,7 @@ int main(int argc, char* argv[])
 							   );
 	    selHistManager->svFit4tau_wMassConstraint_[kv.first]->fillHistograms(svFit4tauResults_wMassConstraint, kv.second);
 	  } 
+
         if(isMC && ! skipFilling)
         {
           selHistManager->genEvtHistManager_afterCuts_->fillHistograms(
@@ -2333,7 +2338,6 @@ int main(int argc, char* argv[])
           selHistManager->weights_->fillHistograms("data_to_MC_correction", evtWeightRecorder.get_tauSF(central_or_shift));
           selHistManager->weights_->fillHistograms("fakeRate", evtWeightRecorder.get_FR(central_or_shift));
         }
-
         for(const std::string & category: categories)
         {
           double evtWeight_chargeFlip = 1.;
@@ -2343,7 +2347,7 @@ int main(int argc, char* argv[])
 	      double prob_chargeMisId_sublead = prob_chargeMisId(era, getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
 	      evtWeight_chargeFlip *= ( prob_chargeMisId_lead + prob_chargeMisId_sublead);
 	    }
-	  for(const auto & kv: reWeightMapHH)
+	  for(const auto & kv: reWeightMapsHH[central_or_shift])
 	    {
 	      double evtWeight_category = kv.second * evtWeight_chargeFlip;
 	      if ( category.find("_wChargeFlipWeights") != std::string::npos )
@@ -2385,7 +2389,6 @@ int main(int argc, char* argv[])
         }
       }
     }
-
     if ( selEventsFile ) {
       (*selEventsFile) << eventInfo.run << ':' << eventInfo.lumi << ':' << eventInfo.event << '\n';
     }
