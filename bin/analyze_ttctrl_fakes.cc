@@ -323,10 +323,18 @@ int main(int argc, char* argv[])
   const bool disableFRwgts = cfg_analyze.exists("disableFRwgts") ? cfg_analyze.getParameter<bool>("disableFRwgts") : false;
   printf("disableFRwgts %d\n",disableFRwgts);
 
-  
+
+  if ( ! cfg_analyze.exists("lep_useTightChargeCut") )
+  {
+    throw cms::Exception("analyze_WZctrl_SFstudy")
+      << " Missing input parameter lep_useTightChargeCut !!\n";
+  }
+  const bool lep_useTightChargeCut = cfg_analyze.exists("lep_useTightChargeCut") ? cfg_analyze.getParameter<bool>("lep_useTightChargeCut") : true;
+  printf("lep_useTightChargeCut %d \n",lep_useTightChargeCut);
+/*  
   const bool disableLeptonTightChargeCut = cfg_analyze.exists("disableLeptonTightChargeCut") ? cfg_analyze.getParameter<bool>("disableLeptonTightChargeCut") : false;
   printf("disableLeptonTightChargeCut %d\n",disableLeptonTightChargeCut);
-
+*/
   
   //const int minNumJets = cfg_analyze.getParameter<int>("minNumJets");
   //std::cout << "minNumJets = " << minNumJets << '\n';
@@ -1576,7 +1584,8 @@ int main(int argc, char* argv[])
         evtWeightRecorder.record_ewk_bjet(selBJets_medium);
       }
 
-      dataToMCcorrectionInterface->setLeptons({ selLepton_lead, selLepton_sublead }, true);
+      bool requireChargeMatch = lep_useTightChargeCut;  
+      dataToMCcorrectionInterface->setLeptons({ selLepton_lead, selLepton_sublead }, requireChargeMatch);
 
 //--- apply data/MC corrections for trigger efficiency
       evtWeightRecorder.record_leptonTriggerEff(dataToMCcorrectionInterface);
@@ -1596,7 +1605,7 @@ int main(int argc, char* argv[])
 	{
 	  dataToMCcorrectionInterface->enableLooseToTightLeptonSFCorrection();
 	  }*/
-	bool woTightCharge = disableLeptonTightChargeCut;
+	bool woTightCharge = lep_useTightChargeCut ? false : true;
         evtWeightRecorder.record_leptonIDSF_looseToTight(dataToMCcorrectionInterface, woTightCharge);
       }
 
@@ -1666,7 +1675,7 @@ int main(int argc, char* argv[])
 	  }
       }
     }
-    if ( failsTightChargeCut && ( ! disableLeptonTightChargeCut)) {
+    if ( failsTightChargeCut && ( lep_useTightChargeCut )) {
       if ( run_lumi_eventSelector ) {
 	std::cout << "event " << eventInfo.str() << " FAILS tight lepton charge requirement." << std::endl;
       }
@@ -1695,11 +1704,18 @@ int main(int argc, char* argv[])
       continue;
     }
     if ( leptonChargeSelection == kOS ) {
-      double prob_chargeMisId_lead = prob_chargeMisId(era, getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta());
-      double prob_chargeMisId_sublead = prob_chargeMisId(era, getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
+      double prob_chargeMisId_lead = prob_chargeMisId(era, getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta(), lep_mva_wp);
+      double prob_chargeMisId_sublead = prob_chargeMisId(era, getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta(), lep_mva_wp);
       evtWeightRecorder.record_chargeMisIdProb(prob_chargeMisId_lead + prob_chargeMisId_sublead);
 
-      // Karl: reject the event, if the applied probability of charge misidentification is 0;
+      /*
+      printf("lepton1 type %d, pt %g, eta %g, prob_chargeMisId %g \n",
+	     getLeptonType(selLepton_lead->pdgId()),selLepton_lead->pt(), selLepton_lead->eta(), prob_chargeMisId_lead);
+      printf("lepton2 type %d, pt %g, eta %g, prob_chargeMisId %g \n",
+	     getLeptonType(selLepton_sublead->pdgId()),selLepton_sublead->pt(), selLepton_sublead->eta(), prob_chargeMisId_sublead);
+      */
+      
+      // Karl: reject the event, if the applied probability of charge misidentification is 0; 
       //       we assume that the event weight was not 0 before including the charge flip weights
       //       Note that this can happen only if both selected leptons are muons (their misId prob is 0).
       if(evtWeightRecorder.get_chargeMisIdProb() == 0.)
