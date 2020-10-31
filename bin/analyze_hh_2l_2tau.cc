@@ -90,7 +90,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/NtupleFillerBDT.h" // NtupleFillerBDT
 #include "tthAnalysis/HiggsToTauTau/interface/mvaInputVariables.h" // comp_*()
 #include "tthAnalysis/HiggsToTauTau/interface/Topness.h" // Topness
-#include "tthAnalysis/HiggsToTauTau/interface/backgroundEstimation.h" // prob_chargeMisId
+#include "tthAnalysis/HiggsToTauTau/interface/ChargeMisIdRate.h" // ChargeMisIdRate
 #include "tthAnalysis/HiggsToTauTau/interface/XGBInterface.h" // XGBInterface
 #include "tthAnalysis/HiggsToTauTau/interface/TMVAInterface.h" // TMVAInterface
 #include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface_2.h" // HHWeightInterface
@@ -519,6 +519,7 @@ int main(int argc, char* argv[])
     case Era::k2018: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2018(cfg_dataToMCcorrectionInterface); break;
     default: throw cmsException("analyze_0l_2tau", __LINE__) << "Invalid era = " << static_cast<int>(era);
   }
+  const ChargeMisIdRate chargeMisIdRate(era, lep_mva_wp, false);
 
   std::string applyFakeRateWeights_string = cfg_analyze.getParameter<std::string>("applyFakeRateWeights");
   int applyFakeRateWeights = -1;
@@ -2340,52 +2341,43 @@ int main(int argc, char* argv[])
         }
         for(const std::string & category: categories)
         {
-          double evtWeight_chargeFlip = 1.;
-          if ( category.find("_wChargeFlipWeights") != std::string::npos )
-	    {
-	      double prob_chargeMisId_lead = prob_chargeMisId(era, getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta());
-	      double prob_chargeMisId_sublead = prob_chargeMisId(era, getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
-	      evtWeight_chargeFlip *= ( prob_chargeMisId_lead + prob_chargeMisId_sublead);
-	    }
+          const double evtWeight_chargeFlip = category.find("_wChargeFlipWeights") != std::string::npos ?
+            chargeMisIdRate.get(selLepton_lead, selLepton_sublead) :
+            1.
+          ;
 	  for(const auto & kv: reWeightMapsHH[central_or_shift])
-	    {
-	      double evtWeight_category = kv.second * evtWeight_chargeFlip;
-	      if ( category.find("_wChargeFlipWeights") != std::string::npos )
-		{
-		  double prob_chargeMisId_lead = prob_chargeMisId(era, getLeptonType(selLepton_lead->pdgId()), selLepton_lead->pt(), selLepton_lead->eta());
-		  double prob_chargeMisId_sublead = prob_chargeMisId(era, getLeptonType(selLepton_sublead->pdgId()), selLepton_sublead->pt(), selLepton_sublead->eta());
-		  evtWeight_category *= ( prob_chargeMisId_lead + prob_chargeMisId_sublead);
-		}
-	      if(selHistManager->evt_in_categories_.find(category) != selHistManager->evt_in_categories_.end())
-		{
-		  selHistManager->evt_in_categories_[kv.first][category]->fillHistograms(
-											 selElectrons.size(),
-											 selMuons.size(),
-											 selHadTaus.size(),
-											 selJets.size(),
-											 numSelJetsPtGt40,
-											 selBJets_loose.size(),
-											 selBJets_medium.size(),
-											 mTauTauVis_sel,
-											 leptonPairCharge_sel,
-											 hadTauPairCharge_sel,
-											 dihiggsVisMass_sel,
-											 dihiggsMass,
-											 HT,
-											 STMET,
-											 BDTOutput_SUM_Map_spin2,
-											 BDTOutput_SUM_Map_spin0,
-											 BDTOutput_SUM_Map_nonres,
-											 eventInfo.event,
-											 evtWeight_category
-											 );
-		  selHistManager->svFit4tau_wMassConstraint_in_categories_[kv.first][category]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight_category);
-		}
-	    }
+          {
+            const double evtWeight_category = kv.second * evtWeight_chargeFlip;
+            if(selHistManager->evt_in_categories_.find(category) != selHistManager->evt_in_categories_.end())
+            {
+              selHistManager->evt_in_categories_[kv.first][category]->fillHistograms(
+                                                                                     selElectrons.size(),
+                                                                                     selMuons.size(),
+                                                                                     selHadTaus.size(),
+                                                                                     selJets.size(),
+                                                                                     numSelJetsPtGt40,
+                                                                                     selBJets_loose.size(),
+                                                                                     selBJets_medium.size(),
+                                                                                     mTauTauVis_sel,
+                                                                                     leptonPairCharge_sel,
+                                                                                     hadTauPairCharge_sel,
+                                                                                     dihiggsVisMass_sel,
+                                                                                     dihiggsMass,
+                                                                                     HT,
+                                                                                     STMET,
+                                                                                     BDTOutput_SUM_Map_spin2,
+                                                                                     BDTOutput_SUM_Map_spin0,
+                                                                                     BDTOutput_SUM_Map_nonres,
+                                                                                     eventInfo.event,
+                                                                                     evtWeight_category
+                                                                                     );
+              selHistManager->svFit4tau_wMassConstraint_in_categories_[kv.first][category]->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight_category);
+            }
+          }
           if(isMC && ! skipFilling)
-	    {
-	      selHistManager->lheInfoHistManager_afterCuts_in_categories_[category]->fillHistograms(*lheInfoReader, evtWeight * evtWeight_chargeFlip);
-	    }
+          {
+            selHistManager->lheInfoHistManager_afterCuts_in_categories_[category]->fillHistograms(*lheInfoReader, evtWeight * evtWeight_chargeFlip);
+          }
         }
       }
     }
