@@ -47,9 +47,6 @@ public:
           double dihiggsMass,
           double HT,
           double STMET,
-          std::map<std::string, double>& BDTOutput_SUM_Map_spin2,
-          std::map<std::string, double>& BDTOutput_SUM_Map_spin0,
-          std::map<std::string, double>& BDTOutput_SUM_Map_nonres,
           const RecoLepton* selLepton,
           const RecoHadTau* selHadTau_lead,
           const RecoHadTau* selHadTau_sublead,
@@ -81,13 +78,6 @@ public:
   TH1 * histogram_STMET_;
   
   TH1 * histogram_EventCounter_;
-  std::map<std::string, TH1*> histogram_Map_BDTOutput_SUM_spin2_;
-  std::map<std::string, TH1*> histogram_Map_BDTOutput_SUM_spin0_;
-  std::map<std::string, TH1*> histogram_Map_BDTOutput_SUM_nonres_;
-
-  std::vector<string> labels_spin2_;
-  std::vector<string> labels_spin0_;
-  std::vector<string> labels_nonres_;
 
   // CV: plots specific to 1e+3tau category
   TH1 * histogram_1e3tau_tau1_OS_antiE_OS_matched_;
