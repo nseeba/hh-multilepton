@@ -1,7 +1,6 @@
 #include "hhAnalysis/multilepton/interface/DatacardHistManager_hh.h"
 
-#include "FWCore/Utilities/interface/Exception.h" // cms::Exception
-
+#include "tthAnalysis/HiggsToTauTau/interface/cmsException.h"          // cmsException
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow()
 
 #include <TString.h> // Form
@@ -107,7 +106,7 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & bdt
         TH1* histogram = histograms_bdtOutput_resonant_spin2_[decayMode][histogramName];
         std::map<std::string, double>::const_iterator bdtOutput = bdtOutputs_resonant_spin2.find(histogramName);
         if ( bdtOutput == bdtOutputs_resonant_spin2.end() )
-          throw cmsException(this, _func_, _LINE_)
+          throw cmsException(this, __func__, __LINE__)
             << "No BDT output provided to fill histogram = '" << histogram << "' !!\n";
         fillWithOverFlow(histogram, bdtOutput->second, evtWeight, evtWeightErr);
       }
@@ -116,7 +115,7 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & bdt
         TH1* histogram = histograms_bdtOutput_resonant_spin0_[decayMode][histogramName];
         std::map<std::string, double>::const_iterator bdtOutput = bdtOutputs_resonant_spin0.find(histogramName);
         if ( bdtOutput == bdtOutputs_resonant_spin0.end() )
-          throw cmsException(this, _func_, _LINE_)
+          throw cmsException(this, __func__, __LINE__)
             << "No BDT output provided to fill histogram = '" << histogram << "' !!\n";
         fillWithOverFlow(histogram, bdtOutput->second, evtWeight, evtWeightErr);
       }
@@ -126,7 +125,7 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & bdt
         TH1* histogram = histograms_bdtOutput_nonresonant_[decayMode][histogramName];
         std::map<std::string, double>::const_iterator bdtOutput = bdtOutputs_nonresonant.find(histogramName);
         if ( bdtOutput == bdtOutputs_nonresonant.end() )
-          throw cmsException(this, _func_, _LINE_)
+          throw cmsException(this, __func__, __LINE__)
             << "No BDT output provided to fill histogram = '" << histogram << "' !!\n";
         double hh_reweight = HHWeight_calc_->getReWeight(histogramName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);        
         double evtWeight_reweighted = evtWeight*hh_reweight;

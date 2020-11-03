@@ -1,6 +1,6 @@
 #include "hhAnalysis/multilepton/interface/AnalysisConfig_hh.h"
 
-#include "FWCore/Utilities/interface/Exception.h" // cms::Exception
+#include "tthAnalysis/HiggsToTauTau/interface/cmsException.h" // cmsException
 
 #include <TString.h> // Form
 
@@ -13,7 +13,7 @@ AnalysisConfig_hh::AnalysisConfig_hh(const std::string & analysis, const edm::Pa
 {
   if      ( analysis == "HH->multilepton" ) analysis_ = kHH_multilepton;
   else if ( analysis == "HH->bbWW"        ) analysis_ = kHH_bbWW;
-  else throw cmsException(this, _func_, _LINE_)
+  else throw cmsException(this, __func__, __LINE__)
     << "Invalid Configuration parameter 'analysis' = " << analysis << " !!\n";
 
   decayModes_H_ = { "hww", "hzz", "htt", "hbb" };
