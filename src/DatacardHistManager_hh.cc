@@ -107,7 +107,7 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & bdt
         TH1* histogram = histograms_bdtOutput_resonant_spin2_[decayMode][histogramName];
         std::map<std::string, double>::const_iterator bdtOutput = bdtOutputs_resonant_spin2.find(histogramName);
         if ( bdtOutput == bdtOutputs_resonant_spin2.end() )
-          throw cms::Exception("DatacardHistManager_hh::fillHistograms")
+          throw cmsException(this, _func_, _LINE_)
             << "No BDT output provided to fill histogram = '" << histogram << "' !!\n";
         fillWithOverFlow(histogram, bdtOutput->second, evtWeight, evtWeightErr);
       }
@@ -116,7 +116,7 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & bdt
         TH1* histogram = histograms_bdtOutput_resonant_spin0_[decayMode][histogramName];
         std::map<std::string, double>::const_iterator bdtOutput = bdtOutputs_resonant_spin0.find(histogramName);
         if ( bdtOutput == bdtOutputs_resonant_spin0.end() )
-          throw cms::Exception("DatacardHistManager_hh::fillHistograms")
+          throw cmsException(this, _func_, _LINE_)
             << "No BDT output provided to fill histogram = '" << histogram << "' !!\n";
         fillWithOverFlow(histogram, bdtOutput->second, evtWeight, evtWeightErr);
       }
@@ -126,7 +126,7 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & bdt
         TH1* histogram = histograms_bdtOutput_nonresonant_[decayMode][histogramName];
         std::map<std::string, double>::const_iterator bdtOutput = bdtOutputs_nonresonant.find(histogramName);
         if ( bdtOutput == bdtOutputs_nonresonant.end() )
-          throw cms::Exception("DatacardHistManager_hh::fillHistograms")
+          throw cmsException(this, _func_, _LINE_)
             << "No BDT output provided to fill histogram = '" << histogram << "' !!\n";
         double hh_reweight = HHWeight_calc_->getReWeight(histogramName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);        
         double evtWeight_reweighted = evtWeight*hh_reweight;
