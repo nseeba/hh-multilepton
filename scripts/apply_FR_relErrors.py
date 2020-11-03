@@ -250,7 +250,6 @@ for measurement_map_key in output_histograms:
     nbins_y = len(yaxis)
     histogram = ROOT.TH2F(output_histogram['name'], output_histogram['name'], nbins_x - 1, xaxis, nbins_y - 1, yaxis)
     for yidx in range(nbins_y - 1):
-      row = []
       for xidx in range(nbins_x - 1):
         histogram.SetBinContent(xidx + 1, yidx + 1, output_histogram['histogram'][yidx][xidx])
     histogram.Write()
