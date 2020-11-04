@@ -139,14 +139,6 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig_hh):
     self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH", "ggH", "qqH"]
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
-    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ] + self.get_samples_categories_HH()
-    self.prep_dcard_signals = []
-    for sample_name, sample_info in self.samples.items():
-      if not sample_info["use_it"]:
-        continue
-      sample_category = sample_info["sample_category"]
-      if sample_category.startswith("signal"):
-        self.prep_dcard_signals.append(sample_category)
     self.histogramDir_prep_dcard = "hh_3l_1tau_OS_lepTight_tauTight"
     self.histogramDir_prep_dcard_SS = "hh_3l_1tau_SS_lepTight_tauTight"
 
@@ -598,6 +590,22 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig_hh):
 
     logging.info("Creating configuration files to run 'prepareDatacards'")
     for histogramToFit in self.histograms_to_fit:
+      self.prep_dcard_signals = []
+      for sample_name, sample_info in self.samples.items():
+        if not sample_info["use_it"]:
+          continue
+        sample_category = sample_info["sample_category"]
+        if sample_category.startswith("signal"):
+          if "BDTOutput" in histogramToFit:
+            if ("SM" in histogramToFit or "BM" in histogramToFit) and 'nonresonant' in sample_category:
+              if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
+            if "spin0" in histogramToFit and "spin0" in sample_category and histogramToFit[9:13] in sample_category:
+              if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
+            if "spin2" in histogramToFit and "spin2" in sample_category and histogramToFit[9:13] in sample_category:
+              if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
+          else:
+            if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
+      self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ] + self.prep_dcard_signals
       key_prep_dcard_dir = getKey("prepareDatacards")
       if "OS" in self.chargeSumSelections:
         key_hadd_stage2_job = getKey(get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
