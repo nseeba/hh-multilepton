@@ -590,6 +590,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig_hh):
 
     logging.info("Creating configuration files to run 'prepareDatacards'")
     for histogramToFit in self.histograms_to_fit:
+      self.prep_dcard_signals = []
       for sample_name, sample_info in self.samples.items():
         if not sample_info["use_it"]:
           continue
