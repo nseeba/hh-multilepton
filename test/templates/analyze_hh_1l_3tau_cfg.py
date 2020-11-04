@@ -149,9 +149,9 @@ process.analyze_hh_1l_3tau = cms.PSet(
         BDT_xml_FileName_odd_spin0 = cms.string('hhAnalysis/multilepton/data/1l_3tau_even_model_spin0.xml'),
         fitFunctionFileName_spin0 = cms.string('hhAnalysis/multilepton/data/1l_3tau_TProfile_signal_fit_func_spin0.root'),
         inputVars_spin0 = cms.vstring(
-            'lep_phi', 'met', 'diHiggsVisMass', 'diHiggsMass', 'dr_lep_tau1', 'dr_lep_tau2',
+            'lep_pt', 'tau1_phi', 'met', 'diHiggsVisMass', 'diHiggsMass', 'dr_lep_tau1', 'dr_lep_tau2',
             'dr_lep_tau3', 'dr_tau1_tau2', 'dr_tau1_tau3', 'dr_tau2_tau3', 'm_lep_tau1',
-            'pt_HH_recoil', 'dphi_tau_tau_OS_pair_max', 'mT_lep', 'gen_mHH'
+            'pt_HH_recoil', 'mT_lep', 'gen_mHH'
         ),
     ),
     nonRes_BMs = cms.vdouble(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
