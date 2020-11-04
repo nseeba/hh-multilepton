@@ -143,7 +143,7 @@ process.analyze_hh_1l_3tau = cms.PSet(
         inputVars_spin2 = cms.vstring(
             'tau1_pt', 'met', 'diHiggsVisMass', 'diHiggsMass', 'dr_lep_tau1', 'dr_lep_tau2',
             'dr_lep_tau3', 'dr_tau1_tau2', 'dr_tau1_tau3', 'dr_tau2_tau3', 'm_lep_tau1',
-            'pt_HH_recoil', 'dphi_lep_tau_OS_pair_max', 'mT_lep', 'gen_mHH'
+            'pt_HH_recoil', 'dphi_tau_tau_OS_pair_max', 'mT_lep', 'gen_mHH'
         ),
         BDT_xml_FileName_even_spin0 = cms.string('hhAnalysis/multilepton/data/1l_3tau_odd_model_spin0.xml'),
         BDT_xml_FileName_odd_spin0 = cms.string('hhAnalysis/multilepton/data/1l_3tau_even_model_spin0.xml'),
