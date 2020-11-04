@@ -605,7 +605,7 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig_hh):
               if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
           else:
             if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
-        self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ] + self.prep_dcard_signals
+      self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ] + self.prep_dcard_signals
       key_prep_dcard_dir = getKey("prepareDatacards")
       if "OS" in self.chargeSumSelections:
         key_hadd_stage2_job = getKey(get_lepton_and_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
