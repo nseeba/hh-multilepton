@@ -27,7 +27,7 @@ class AnalysisConfig_hh : public AnalysisConfig
   ~AnalysisConfig_hh() {}
 
   /// mass-points for resonant HH analysis
-  std::vector<double> get_gen_mHH() const;
+  std::vector<double> get_HH_resonant_mass_points() const;
 
   /// benchmark scenarios for coupling scan of non-resonant HH analysis
   std::vector<std::string> get_bmNames() const;
