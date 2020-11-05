@@ -439,7 +439,7 @@ int main(int argc, char* argv[])
 
   // Resonant info
   const edm::ParameterSet mvaInfo_res = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_res");
-  std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
+  std::vector<double> gen_mHH = analysisConfig.get_HH_resonant_mass_points();
   std::string BDTFileName_even_spin2  = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_even_spin2");
   std::string BDTFileName_odd_spin2   = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_odd_spin2");
   std::string fitFunctionFileName_spin2 = mvaInfo_res.getParameter<std::string>("fitFunctionFileName_spin2");
@@ -513,7 +513,7 @@ int main(int argc, char* argv[])
   std::cout << "Loaded " << inputTree -> getFileCount() << " file(s).\n";
 
 //--- declare event-level variables
-  EventInfo eventInfo(isMC, isSignal, isHH_rwgt_allowed, apply_topPtReweighting);
+  EventInfo eventInfo(analysisConfig);
   if(isMC)
   {
     const double ref_genWeight = cfg_analyze.getParameter<double>("ref_genWeight");
@@ -787,7 +787,8 @@ int main(int argc, char* argv[])
 
       selHistManager->datacard_ = new DatacardHistManager_hh(makeHistManager_cfg(process_and_genMatch,
         Form("%s/sel/datacard", histogramDir.data()), era_string, central_or_shift),
-        analysisConfig, eventInfo, HHWeight_calc);
+        analysisConfig, eventInfo, HHWeight_calc, 
+        isDEBUG);
       selHistManager->datacard_->bookHistograms(fs);
       
       if(! skipBooking)
