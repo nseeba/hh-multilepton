@@ -24,11 +24,12 @@ using namespace std;
 class DatacardHistManager_hh
   : public HistManagerBase
 {
-public:
+ public:
   DatacardHistManager_hh(const edm::ParameterSet & cfg,
                          const AnalysisConfig_hh & analysisConfig, 
                          const EventInfo & eventInfo, 
-                         const HHWeightInterface2 * HHWeight_calc);
+                         const HHWeightInterface2 * HHWeight_calc,
+                         bool isDEBUG = false);
   ~DatacardHistManager_hh() {}
 
   /// book and fill histograms
@@ -45,14 +46,17 @@ public:
   const AnalysisConfig_hh & analysisConfig_;
   const EventInfo & eventInfo_;
   const HHWeightInterface2 * HHWeight_calc_;
+  bool apply_HH_rwgt_;
 
   std::vector<double> resonant_gen_mHH_;
   std::vector<std::string> nonresonant_BMs_;
   std::vector<std::string> decayModes_;
+  std::map<std::string, std::vector<std::string>> decayModeMap_;
 
-  std::vector<string> histogramNames_bdtOutput_resonant_spin2_;
-  std::vector<string> histogramNames_bdtOutput_resonant_spin0_;
-  std::vector<string> histogramNames_bdtOutput_nonresonant_;
+  std::vector<std::string> histogramNames_bdtOutput_resonant_spin2_;
+  std::vector<std::string> histogramNames_bdtOutput_resonant_spin0_;
+  std::vector<std::string> histogramNames_bdtOutput_nonresonant_;
+  std::map<std::string, std::string> bmNames_; // key = histogramName
 
   int numBinsX_;
   double xMin_;
