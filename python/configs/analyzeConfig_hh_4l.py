@@ -534,11 +534,29 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
         if sample_category.startswith("signal"):
           if "BDTOutput" in histogramToFit:
             if ("SM" in histogramToFit or "BM" in histogramToFit) and 'nonresonant' in sample_category:
-              if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
+              if sample_category not in self.prep_dcard_signals:
+                self.prep_dcard_signals.append(sample_category)
+                if "wwww" in sample_category:
+                  self.prep_dcard_signals.append(sample_category.replace("wwww","wwzz"))
+                  self.prep_dcard_signals.append(sample_category.replace("wwww","zzzz"))
+                if "wwtt" in sample_category:
+                  self.prep_dcard_signals.append(sample_category.replace("wwtt","zztt"))
             if "spin0" in histogramToFit and "spin0" in sample_category and histogramToFit[9:13] in sample_category:
-              if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
+              if sample_category not in self.prep_dcard_signals:
+                self.prep_dcard_signals.append(sample_category)
+                if "wwww" in sample_category:
+                  self.prep_dcard_signals.append(sample_category.replace("wwww","wwzz"))
+                  self.prep_dcard_signals.append(sample_category.replace("wwww","zzzz"))
+                if "wwtt" in sample_category:
+                  self.prep_dcard_signals.append(sample_category.replace("wwtt","zztt"))
             if "spin2" in histogramToFit and "spin2" in sample_category and histogramToFit[9:13] in sample_category:
-              if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
+              if sample_category not in self.prep_dcard_signals:
+                self.prep_dcard_signals.append(sample_category)
+                if "wwww" in sample_category:
+                  self.prep_dcard_signals.append(sample_category.replace("wwww","wwzz"))
+                  self.prep_dcard_signals.append(sample_category.replace("wwww","zzzz"))
+                if "wwtt" in sample_category:
+                  self.prep_dcard_signals.append(sample_category.replace("wwtt","zztt"))
           else:
             if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
       self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ] + self.prep_dcard_signals
