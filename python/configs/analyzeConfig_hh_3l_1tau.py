@@ -151,8 +151,8 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig_hh):
 
     self.categories = [
       "hh_3l_1tau", 
-      "hh_3l_1tau_nSFOSis0", 
-      "hh_3l_1tau_nSFOSisNot0", 
+      ##"hh_3l_1tau_nSFOSis0", 
+      ##"hh_3l_1tau_nSFOSisNot0", 
     ]
 
     self.category_inclusive = "hh_3l_1tau"

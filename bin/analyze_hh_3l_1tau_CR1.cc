@@ -2331,11 +2331,8 @@ int main(int argc, char* argv[])
 	    mT_SSlepdR,
 	    maxdZ_lep,
 	    mindPhiLepMET,
-	    BDTOutput_Map_spin0,
-	    BDTOutput_Map_spin2,
-	    BDTOutput_Map_nonRes,
-            kv.second,
-	    eventInfo.event
+            eventInfo.event,
+            kv.second
 							 );
 	  	  for(const std::string & category: categories_evt){
 	    bool fill_cat = false;
@@ -2367,11 +2364,8 @@ int main(int argc, char* argv[])
 							     mT_SSlepdR,
 							     maxdZ_lep,
 							     mindPhiLepMET,
-							     BDTOutput_Map_spin0,
-							     BDTOutput_Map_spin2,
-							     BDTOutput_Map_nonRes,
-							     kv.second,
-							     eventInfo.event
+                                                             eventInfo.event,
+							     kv.second
 							     );
 	      }
 	    }
