@@ -196,10 +196,11 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & bdt
                                        double evtWeight)
 {
   const double evtWeightErr = 0.;
-
   for ( auto decayMode : decayModes_ )
   {
-    if ( decayMode == "*" || decayMode == eventInfo_.getDiHiggsDecayModeString() )
+    if ( decayMode == "*" || 
+        (analysisConfig_.isMC_HH() && decayMode == eventInfo_.getDiHiggsDecayModeString()) || 
+        (analysisConfig_.isMC_H()  && decayMode == eventInfo_.getDecayModeString())        )
     {
       for ( auto histogramName : histogramNames_bdtOutput_resonant_spin2_ )
       {
