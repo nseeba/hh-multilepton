@@ -94,6 +94,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfoReader.h" // EventInfoReader
 #include "hhAnalysis/multilepton/interface/EvtWeightRecorderHH.h" // EvtWeightRecorderHH
 #include "hhAnalysis/multilepton/interface/AnalysisConfig_hh.h" // AnalysisConfig_hh
+#include "hhAnalysis/multilepton/interface/DatacardHistManager_hh.h" // DatacardHistManager_hh
 
 #include "TauAnalysis/ClassicSVfit4tau/interface/ClassicSVfit4tau.h" // ClassicSVfit4tau
 #include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h" // classic_svFit::MeasuredTauLepton
@@ -162,8 +163,6 @@ int main(int argc, char* argv[])
   bool isMC_ttH = process_string == "TTH";
   bool isMC_tH = process_string == "TH";
   bool isMC_EWK = process_string == "WZ" || process_string == "ZZ";
-  bool isSignal = boost::starts_with(process_string, "signal_") && process_string.find("_hh_") != std::string::npos;
-  bool isHH_rwgt_allowed = boost::starts_with(process_string, "signal_ggf_nonresonant_") && process_string.find("cHHH") == std::string::npos;
 
   std::string histogramDir = cfg_analyze.getParameter<std::string>("histogramDir");
   bool isMCClosure_e = histogramDir.find("mcClosure_e") != std::string::npos;
@@ -395,29 +394,17 @@ int main(int argc, char* argv[])
     const double ref_genWeight = cfg_analyze.getParameter<double>("ref_genWeight");
     eventInfo.set_refGetWeight(ref_genWeight);
   }
-  const std::string default_cat_str = "default";
-  std::vector<std::string> evt_cat_strs = { default_cat_str };
-  std::vector<std::string> HHWeightNames;
 
-//--- HH scan
+//--- HH coupling scan
+  std::vector<std::string> HHWeightNames;
   const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
   const bool apply_HH_rwgt = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt");
-  const HHWeightInterface_2 * HHWeight_calc = nullptr;
+  const HHWeightInterface2* HHWeight_calc = nullptr;
   if(apply_HH_rwgt)
   {
-    HHWeight_calc = new HHWeightInterface_2(hhWeight_cfg);
-    evt_cat_strs = HHWeight_calc->get_bm_names();
+    HHWeight_calc = new HHWeightInterface2(hhWeight_cfg);
     HHWeightNames = HHWeight_calc->get_weight_names();
   }
-  const size_t Nscan = evt_cat_strs.size();
-  std::cout << "Number of points being scanned = " << Nscan << '\n';
-  if (apply_HH_rwgt)
-    {
-      std::cout << "\n Weights booked = " << apply_HH_rwgt << '\n';
-      for (const std::string catcat : evt_cat_strs) {
-	std::cout << catcat << '\n';
-      }
-    }
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
@@ -578,12 +565,9 @@ int main(int argc, char* argv[])
     JetHistManager* BJets_medium_;
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
-    std::map<std::string, EvtHistManager_hh_4l*> evt_;
-    std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_woMassConstraint_;
-    std::map<std::string, SVfit4tauHistManager_MarkovChain*> svFit4tau_wMassConstraint_;
-    std::map<std::string, std::map<std::string, EvtHistManager_hh_4l*>> evt_in_decayModes_;
-    std::map<std::string, std::map<std::string, SVfit4tauHistManager_MarkovChain*>> svFit4tau_woMassConstraint_in_decayModes_;
-    std::map<std::string, std::map<std::string, SVfit4tauHistManager_MarkovChain*>> svFit4tau_wMassConstraint_in_decayModes_;
+    EvtHistManager_hh_4l* evt_;
+    SVfit4tauHistManager_MarkovChain* svFit4tau_wMassConstraint_;
+    DatacardHistManager_hh* datacard_;
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
@@ -627,67 +611,19 @@ int main(int argc, char* argv[])
         selHistManager->metFilters_ = new MEtFilterHistManager(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/metFilters", histogramDir.data()), era_string, central_or_shift));
         selHistManager->metFilters_->bookHistograms(fs);
-      }
-
-      for(const std::string & evt_cat_str: evt_cat_strs)
-      {
-        if(skipBooking && evt_cat_str != default_cat_str)
-        {
-          continue;
-        }
-        const std::string process_string_new = evt_cat_str == default_cat_str ?
-          process_string  :
-          process_string + evt_cat_str
-        ;
-
-        const std::string process_and_genMatchName = boost::replace_all_copy(
-          process_and_genMatch, process_string, process_string_new
-        );
-        selHistManager->evt_[evt_cat_str] = new EvtHistManager_hh_4l(makeHistManager_cfg(process_and_genMatchName,
+        selHistManager->evt_ = new EvtHistManager_hh_4l(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
-        selHistManager->evt_[evt_cat_str]->bookHistograms(fs);
-        selHistManager->svFit4tau_woMassConstraint_[evt_cat_str] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatchName,
-          Form("%s/sel/svFit4tau_woMassConstraint", histogramDir.data()), era_string, central_or_shift));
-        selHistManager->svFit4tau_woMassConstraint_[evt_cat_str]->bookHistograms(fs);
-        selHistManager->svFit4tau_wMassConstraint_[evt_cat_str] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatchName,
+        selHistManager->evt_->bookHistograms(fs);
+        selHistManager->svFit4tau_wMassConstraint_ = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), era_string, central_or_shift));
-        selHistManager->svFit4tau_wMassConstraint_[evt_cat_str]->bookHistograms(fs);
+        selHistManager->svFit4tau_wMassConstraint_->bookHistograms(fs);
       }
 
-      const vstring decayModes_evt = eventInfo.getDiHiggsDecayModes();
-      if(isSignal)
-      {
-        for(const std::string & decayMode_evt: decayModes_evt)
-        {
-          std::string decayMode_and_genMatch = decayMode_evt;
-          decayMode_and_genMatch += genMatchDefinition->getName();
-
-          for(const std::string & evt_cat_str: evt_cat_strs)
-          {
-            if(skipBooking && evt_cat_str != default_cat_str)
-            {
-              continue;
-            }
-            const std::string process_string_new = evt_cat_str == default_cat_str ?
-              process_string:
-              process_string + "_" + evt_cat_str
-            ;
-            const std::string decayMode_and_genMatchName = boost::replace_all_copy(
-              decayMode_and_genMatch, process_string, process_string_new
-            );
-
-            selHistManager->evt_in_decayModes_[evt_cat_str][decayMode_evt] = new EvtHistManager_hh_4l(makeHistManager_cfg(decayMode_and_genMatchName,
-              Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
-            selHistManager->evt_in_decayModes_[evt_cat_str][decayMode_evt]->bookHistograms(fs);
-            selHistManager->svFit4tau_woMassConstraint_in_decayModes_[evt_cat_str][decayMode_evt] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(decayMode_and_genMatchName,
-              Form("%s/sel/svFit4tau_woMassConstraint", histogramDir.data()), era_string, central_or_shift));
-            selHistManager->svFit4tau_woMassConstraint_in_decayModes_[evt_cat_str][decayMode_evt]->bookHistograms(fs);
-            selHistManager->svFit4tau_wMassConstraint_in_decayModes_[evt_cat_str][decayMode_evt] = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(decayMode_and_genMatchName,
-              Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), era_string, central_or_shift));
-            selHistManager->svFit4tau_wMassConstraint_in_decayModes_[evt_cat_str][decayMode_evt]->bookHistograms(fs);
-          }
-        }
-      }
+      selHistManager->datacard_ = new DatacardHistManager_hh(makeHistManager_cfg(process_and_genMatch,
+        Form("%s/sel/datacard", histogramDir.data()), era_string, central_or_shift),
+        analysisConfig, eventInfo, HHWeight_calc, 
+        isDEBUG);
+      selHistManager->datacard_->bookHistograms(fs);
 
       if(! skipBooking)
       {
@@ -732,11 +668,13 @@ int main(int argc, char* argv[])
     bdt_filler = new std::remove_pointer<decltype(bdt_filler)>::type(
       makeHistManager_cfg(process_string, Form("%s/sel/evtntuple", histogramDir.data()), era_string, central_or_shift_main)
     );
-    for(const std::string & evt_cat_str: HHWeightNames)
+    if(apply_HH_rwgt)
+    {
+      for(auto bmName : HHWeightNames)
       {
-    	if (!apply_HH_rwgt) continue;
-	bdt_filler->register_variable<float_type>(Form(evt_cat_str.c_str()));
+        bdt_filler->register_variable<float_type>(bmName.data());
       }
+    }
     bdt_filler->register_variable<float_type>("evtWeight",
 					      "genWeight",
 					      "lheWeight",
@@ -2001,57 +1939,6 @@ int main(int argc, char* argv[])
     cutFlowTable.update("signal region veto", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("signal region veto", evtWeightRecorder.get(central_or_shift_main));
 
-    std::map<std::string, double> weightMapHH;
-    std::map<std::string, double> reWeightMapHH;
-    double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
-
-    if(apply_HH_rwgt)
-    {
-      assert(HHWeight_calc);
-      weightMapHH = HHWeight_calc->getWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
-      reWeightMapHH = HHWeight_calc->getReWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
-      HHWeight = weightMapHH["Weight_SM"];
-      evtWeightRecorder.record_bm(HHWeight); // SM by default
-
-      if(isDEBUG)
-      {
-        std::cout << "mhh = " << eventInfo.gen_mHH          << " : "
-          "cost "             << eventInfo.gen_cosThetaStar << " : "
-          "weight = "         << HHWeight                   << '\n'
-          ;
-	std::cout << "Calculated " << weightMapHH.size() << " scan weights\n";
-	for(const auto & kv: weightMapHH)
-        {
-          std::cout << "line = " <<kv.first << "; Weight = " <<  kv.second << '\n';
-        }
-
-        std::cout << '\n';
-      }
-    }
-            
-    for(const std::string & central_or_shift: central_or_shifts_local)
-    {
-      const double evtWeight = evtWeightRecorder.get(central_or_shift);
-      const bool skipFilling = central_or_shift != central_or_shift_main;
-      for(const std::string & evt_cat_str: evt_cat_strs)
-      {
-	if(skipFilling && evt_cat_str != default_cat_str)
-	{
-	  continue;
-	}
-	if(apply_HH_rwgt)
-	{
-	  reWeightMapHH[evt_cat_str] *= evtWeight;
-	}
-	else
-	{
-	  reWeightMapHH[evt_cat_str] = evtWeight;
-	}
-      }
-    }
-    
-    std::vector<SVfit4tauResult> svFit4tauResults_woMassConstraint = compSVfit4tau(
-      *selLepton_lead, *selLepton_sublead, *selLepton_third, *selLepton_fourth, met, leptonChargeSelection_string, rnd, -1., 2.);
     std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4tau(
       *selLepton_lead, *selLepton_sublead, *selLepton_third, *selLepton_fourth, met, leptonChargeSelection_string, rnd, 125., 2.);
         
@@ -2080,23 +1967,8 @@ int main(int argc, char* argv[])
           selHistManager->BJets_medium_->fillHistograms(selBJets_medium, evtWeight);
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
-        }
-	for(const auto & kv: reWeightMapHH)
-        {
-          selHistManager->evt_[kv.first]->fillHistograms(selElectrons.size(), selMuons.size(), selJets.size(), numSelJetsPtGt40, selBJets_loose.size(), selBJets_medium.size(), dihiggsVisMass_sel, dihiggsMass, HT, STMET, lep1_pt, lep2_pt, lep3_pt, lep4_pt, lep1_conePt, lep2_conePt, lep3_conePt, lep4_conePt, lep1_eta, lep2_eta, lep3_eta, lep4_eta, lep1_phi, lep2_phi, lep3_phi, lep4_phi, maxPtSum_pair1_pt, maxPtSum_pair1_eta, maxPtSum_pair1_phi, maxPtSum_pair1_deltaEtaLep1, maxPtSum_pair1_deltaPhiLep1, maxPtSum_pair1_deltaEta, maxPtSum_pair1_deltaPhi, maxPtSum_pair1_deltaR, maxPtSum_pair1_deltaPt, maxPtSum_pair1_m, maxPtSum_pair2_pt, maxPtSum_pair2_eta, maxPtSum_pair2_phi, maxPtSum_pair2_deltaEtaLep1, maxPtSum_pair2_deltaPhiLep1, maxPtSum_pair2_deltaEta, maxPtSum_pair2_deltaPhi, maxPtSum_pair2_deltaR,maxPtSum_pair2_deltaPt, maxPtSum_pair2_m, maxSubleadPt_pair1_pt, maxSubleadPt_pair1_eta, maxSubleadPt_pair1_phi, maxSubleadPt_pair1_deltaEtaLep1, maxSubleadPt_pair1_deltaPhiLep1, maxSubleadPt_pair1_deltaEta, maxSubleadPt_pair1_deltaPhi, maxSubleadPt_pair1_deltaR, maxSubleadPt_pair1_deltaPt, maxSubleadPt_pair1_m, maxSubleadPt_pair2_pt, maxSubleadPt_pair2_eta, maxSubleadPt_pair2_phi, maxSubleadPt_pair2_deltaEtaLep1, maxSubleadPt_pair2_deltaPhiLep1, maxSubleadPt_pair2_deltaEta, maxSubleadPt_pair2_deltaPhi, maxSubleadPt_pair2_deltaR, maxSubleadPt_pair2_deltaPt, maxSubleadPt_pair2_m, minDeltaRSum_pair1_pt, minDeltaRSum_pair1_eta, minDeltaRSum_pair1_phi, minDeltaRSum_pair1_deltaEtaLep1, minDeltaRSum_pair1_deltaPhiLep1, minDeltaRSum_pair1_deltaEta, minDeltaRSum_pair1_deltaPhi, minDeltaRSum_pair1_deltaR, minDeltaRSum_pair1_deltaPt, minDeltaRSum_pair1_m, minDeltaRSum_pair2_pt, minDeltaRSum_pair2_eta, minDeltaRSum_pair2_phi, minDeltaRSum_pair2_deltaEtaLep1, minDeltaRSum_pair2_deltaPhiLep1, minDeltaRSum_pair2_deltaEta, minDeltaRSum_pair2_deltaPhi, minDeltaRSum_pair2_deltaR, minDeltaRSum_pair2_deltaPt, minDeltaRSum_pair2_m, minSubclosestDeltaR_pair1_pt, minSubclosestDeltaR_pair1_eta, minSubclosestDeltaR_pair1_phi, minSubclosestDeltaR_pair1_deltaEtaLep1, minSubclosestDeltaR_pair1_deltaPhiLep1, minSubclosestDeltaR_pair1_deltaEta, minSubclosestDeltaR_pair1_deltaPhi, minSubclosestDeltaR_pair1_deltaR, minSubclosestDeltaR_pair1_deltaPt, minSubclosestDeltaR_pair1_m, minSubclosestDeltaR_pair2_pt, minSubclosestDeltaR_pair2_eta, minSubclosestDeltaR_pair2_phi, minSubclosestDeltaR_pair2_deltaEtaLep1, minSubclosestDeltaR_pair2_deltaPhiLep1, minSubclosestDeltaR_pair2_deltaEta, minSubclosestDeltaR_pair2_deltaPhi, minSubclosestDeltaR_pair2_deltaR, minSubclosestDeltaR_pair2_deltaPt, minSubclosestDeltaR_pair2_m, MET, METPhi, METDeltaPhiLep1, met_LD, HTmiss, lep1_isElectron, lep1_charge, lep2_isElectron, lep2_charge, lep3_isElectron, lep3_charge, lep4_isElectron, lep4_charge, leptonChargeSum, electronChargeSum, muonChargeSum, nSFOS, kv.second);
-          selHistManager->svFit4tau_woMassConstraint_[kv.first]->fillHistograms(svFit4tauResults_woMassConstraint, kv.second);
-          selHistManager->svFit4tau_wMassConstraint_[kv.first]->fillHistograms(svFit4tauResults_wMassConstraint, kv.second);
-
-          if(isSignal)
-          {
-            const std::string decayModeStr = eventInfo.getDiHiggsDecayModeString();
-            if(! decayModeStr.empty())
-            {
-              selHistManager -> evt_in_decayModes_[kv.first][decayModeStr] -> fillHistograms(selElectrons.size(), selMuons.size(), selJets.size(), numSelJetsPtGt40, selBJets_loose.size(), selBJets_medium.size(), dihiggsVisMass_sel, dihiggsMass, HT, STMET, lep1_pt, lep2_pt, lep3_pt, lep4_pt, lep1_conePt, lep2_conePt, lep3_conePt, lep4_conePt, lep1_eta, lep2_eta, lep3_eta, lep4_eta, lep1_phi, lep2_phi, lep3_phi, lep4_phi, maxPtSum_pair1_pt, maxPtSum_pair1_eta, maxPtSum_pair1_phi, maxPtSum_pair1_deltaEtaLep1, maxPtSum_pair1_deltaPhiLep1, maxPtSum_pair1_deltaEta, maxPtSum_pair1_deltaPhi, maxPtSum_pair1_deltaR, maxPtSum_pair1_deltaPt, maxPtSum_pair1_m, maxPtSum_pair2_pt, maxPtSum_pair2_eta, maxPtSum_pair2_phi, maxPtSum_pair2_deltaEtaLep1, maxPtSum_pair2_deltaPhiLep1, maxPtSum_pair2_deltaEta, maxPtSum_pair2_deltaPhi, maxPtSum_pair2_deltaR,maxPtSum_pair2_deltaPt, maxPtSum_pair2_m, maxSubleadPt_pair1_pt, maxSubleadPt_pair1_eta, maxSubleadPt_pair1_phi, maxSubleadPt_pair1_deltaEtaLep1, maxSubleadPt_pair1_deltaPhiLep1, maxSubleadPt_pair1_deltaEta, maxSubleadPt_pair1_deltaPhi, maxSubleadPt_pair1_deltaR, maxSubleadPt_pair1_deltaPt,maxSubleadPt_pair1_m, maxSubleadPt_pair2_pt, maxSubleadPt_pair2_eta, maxSubleadPt_pair2_phi, maxSubleadPt_pair2_deltaEtaLep1, maxSubleadPt_pair2_deltaPhiLep1, maxSubleadPt_pair2_deltaEta, maxSubleadPt_pair2_deltaPhi, maxSubleadPt_pair2_deltaR, maxSubleadPt_pair2_deltaPt, maxSubleadPt_pair2_m, minDeltaRSum_pair1_pt, minDeltaRSum_pair1_eta, minDeltaRSum_pair1_phi, minDeltaRSum_pair1_deltaEtaLep1, minDeltaRSum_pair1_deltaPhiLep1, minDeltaRSum_pair1_deltaEta, minDeltaRSum_pair1_deltaPhi, minDeltaRSum_pair1_deltaR, minDeltaRSum_pair1_deltaPt, minDeltaRSum_pair1_m, minDeltaRSum_pair2_pt, minDeltaRSum_pair2_eta, minDeltaRSum_pair2_phi, minDeltaRSum_pair2_deltaEtaLep1, minDeltaRSum_pair2_deltaPhiLep1, minDeltaRSum_pair2_deltaEta, minDeltaRSum_pair2_deltaPhi, minDeltaRSum_pair2_deltaR, minDeltaRSum_pair2_deltaPt, minDeltaRSum_pair2_m, minSubclosestDeltaR_pair1_pt, minSubclosestDeltaR_pair1_eta, minSubclosestDeltaR_pair1_phi, minSubclosestDeltaR_pair1_deltaEtaLep1, minSubclosestDeltaR_pair1_deltaPhiLep1, minSubclosestDeltaR_pair1_deltaEta, minSubclosestDeltaR_pair1_deltaPhi, minSubclosestDeltaR_pair1_deltaR, minSubclosestDeltaR_pair1_deltaPt, minSubclosestDeltaR_pair1_m, minSubclosestDeltaR_pair2_pt, minSubclosestDeltaR_pair2_eta, minSubclosestDeltaR_pair2_phi, minSubclosestDeltaR_pair2_deltaEtaLep1, minSubclosestDeltaR_pair2_deltaPhiLep1, minSubclosestDeltaR_pair2_deltaEta, minSubclosestDeltaR_pair2_deltaPhi, minSubclosestDeltaR_pair2_deltaR, minSubclosestDeltaR_pair2_deltaPt, minSubclosestDeltaR_pair2_m, MET, METPhi, METDeltaPhiLep1, met_LD, HTmiss, lep1_isElectron, lep1_charge, lep2_isElectron, lep2_charge, lep3_isElectron, lep3_charge, lep4_isElectron, lep4_charge, leptonChargeSum, electronChargeSum, muonChargeSum, nSFOS, kv.second);
-              selHistManager->svFit4tau_woMassConstraint_in_decayModes_[kv.first][decayModeStr]->fillHistograms(svFit4tauResults_woMassConstraint, kv.second);
-              selHistManager->svFit4tau_wMassConstraint_in_decayModes_[kv.first][decayModeStr]->fillHistograms(svFit4tauResults_wMassConstraint, kv.second);
-            }
-          }
+          selHistManager->evt_->fillHistograms(selElectrons.size(), selMuons.size(), selJets.size(), numSelJetsPtGt40, selBJets_loose.size(), selBJets_medium.size(), dihiggsVisMass_sel, dihiggsMass, HT, STMET, lep1_pt, lep2_pt, lep3_pt, lep4_pt, lep1_conePt, lep2_conePt, lep3_conePt, lep4_conePt, lep1_eta, lep2_eta, lep3_eta, lep4_eta, lep1_phi, lep2_phi, lep3_phi, lep4_phi, maxPtSum_pair1_pt, maxPtSum_pair1_eta, maxPtSum_pair1_phi, maxPtSum_pair1_deltaEtaLep1, maxPtSum_pair1_deltaPhiLep1, maxPtSum_pair1_deltaEta, maxPtSum_pair1_deltaPhi, maxPtSum_pair1_deltaR, maxPtSum_pair1_deltaPt, maxPtSum_pair1_m, maxPtSum_pair2_pt, maxPtSum_pair2_eta, maxPtSum_pair2_phi, maxPtSum_pair2_deltaEtaLep1, maxPtSum_pair2_deltaPhiLep1, maxPtSum_pair2_deltaEta, maxPtSum_pair2_deltaPhi, maxPtSum_pair2_deltaR,maxPtSum_pair2_deltaPt, maxPtSum_pair2_m, maxSubleadPt_pair1_pt, maxSubleadPt_pair1_eta, maxSubleadPt_pair1_phi, maxSubleadPt_pair1_deltaEtaLep1, maxSubleadPt_pair1_deltaPhiLep1, maxSubleadPt_pair1_deltaEta, maxSubleadPt_pair1_deltaPhi, maxSubleadPt_pair1_deltaR, maxSubleadPt_pair1_deltaPt, maxSubleadPt_pair1_m, maxSubleadPt_pair2_pt, maxSubleadPt_pair2_eta, maxSubleadPt_pair2_phi, maxSubleadPt_pair2_deltaEtaLep1, maxSubleadPt_pair2_deltaPhiLep1, maxSubleadPt_pair2_deltaEta, maxSubleadPt_pair2_deltaPhi, maxSubleadPt_pair2_deltaR, maxSubleadPt_pair2_deltaPt, maxSubleadPt_pair2_m, minDeltaRSum_pair1_pt, minDeltaRSum_pair1_eta, minDeltaRSum_pair1_phi, minDeltaRSum_pair1_deltaEtaLep1, minDeltaRSum_pair1_deltaPhiLep1, minDeltaRSum_pair1_deltaEta, minDeltaRSum_pair1_deltaPhi, minDeltaRSum_pair1_deltaR, minDeltaRSum_pair1_deltaPt, minDeltaRSum_pair1_m, minDeltaRSum_pair2_pt, minDeltaRSum_pair2_eta, minDeltaRSum_pair2_phi, minDeltaRSum_pair2_deltaEtaLep1, minDeltaRSum_pair2_deltaPhiLep1, minDeltaRSum_pair2_deltaEta, minDeltaRSum_pair2_deltaPhi, minDeltaRSum_pair2_deltaR, minDeltaRSum_pair2_deltaPt, minDeltaRSum_pair2_m, minSubclosestDeltaR_pair1_pt, minSubclosestDeltaR_pair1_eta, minSubclosestDeltaR_pair1_phi, minSubclosestDeltaR_pair1_deltaEtaLep1, minSubclosestDeltaR_pair1_deltaPhiLep1, minSubclosestDeltaR_pair1_deltaEta, minSubclosestDeltaR_pair1_deltaPhi, minSubclosestDeltaR_pair1_deltaR, minSubclosestDeltaR_pair1_deltaPt, minSubclosestDeltaR_pair1_m, minSubclosestDeltaR_pair2_pt, minSubclosestDeltaR_pair2_eta, minSubclosestDeltaR_pair2_phi, minSubclosestDeltaR_pair2_deltaEtaLep1, minSubclosestDeltaR_pair2_deltaPhiLep1, minSubclosestDeltaR_pair2_deltaEta, minSubclosestDeltaR_pair2_deltaPhi, minSubclosestDeltaR_pair2_deltaR, minSubclosestDeltaR_pair2_deltaPt, minSubclosestDeltaR_pair2_m, MET, METPhi, METDeltaPhiLep1, met_LD, HTmiss, lep1_isElectron, lep1_charge, lep2_isElectron, lep2_charge, lep3_isElectron, lep3_charge, lep4_isElectron, lep4_charge, leptonChargeSum, electronChargeSum, muonChargeSum, nSFOS, evtWeight);
+          selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
         }
 
         if(! skipFilling)
@@ -2147,6 +2019,17 @@ int main(int argc, char* argv[])
       double lep3_frWeight = lep3_genLepPt > 0 ? 1.0 : prob_fake_lepton_third;
       double lep4_frWeight = lep4_genLepPt > 0 ? 1.0 : prob_fake_lepton_fourth;
       evtWeight_BDT *= lep1_frWeight*lep2_frWeight*lep3_frWeight*lep4_frWeight;
+
+      std::map<std::string, double> weightMapHH;
+      if(apply_HH_rwgt)
+      {
+        assert(HHWeight_calc);
+        for(auto bmName : HHWeightNames)
+        {
+          weightMapHH[bmName] = HHWeight_calc->getWeight(bmName, eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+        }
+      }
+
       bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
 	("lep1_frWeight",       lep1_frWeight)
 	("lep2_frWeight",       lep2_frWeight)
