@@ -186,8 +186,6 @@ int main(int argc, char* argv[])
   bool isMC_ttH = process_string == "TTH";
   bool isMC_tH = process_string == "TH";
   bool isMC_EWK = process_string == "WZ" || process_string == "ZZ";
-  bool isSignal = boost::starts_with(process_string, "signal_") && process_string.find("_hh_") != std::string::npos;
-  bool isHH_rwgt_allowed = boost::starts_with(process_string, "signal_ggf_nonresonant_") && process_string.find("cHHH") == std::string::npos;
 
   std::string histogramDir = cfg_analyze.getParameter<std::string>("histogramDir");
   bool isMCClosure_e = histogramDir.find("mcClosure_e") != std::string::npos;
@@ -523,7 +521,7 @@ int main(int argc, char* argv[])
 //--- HH coupling scan
   std::vector<std::string> HHWeightNames;
   const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
-  const bool apply_HH_rwgt = eventInfo.is_hh_nonresonant() && hhWeight_cfg.getParameter<bool>("apply_rwgt");
+  const bool apply_HH_rwgt = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt");
   const HHWeightInterface2* HHWeight_calc = nullptr;
   if(apply_HH_rwgt)
   {
@@ -716,7 +714,6 @@ int main(int argc, char* argv[])
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
     EvtHistManager_hh_1l_3tau* evt_;
-    SVfit4tauHistManager_MarkovChain* svFit4tau_woMassConstraint_;
     SVfit4tauHistManager_MarkovChain* svFit4tau_wMassConstraint_;
     DatacardHistManager_hh* datacard_;
     EvtYieldHistManager* evtYield_;
@@ -777,9 +774,6 @@ int main(int argc, char* argv[])
         selHistManager->evt_ = new EvtHistManager_hh_1l_3tau(makeHistManager_cfg(process_and_genMatch,
          Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
         selHistManager->evt_->bookHistograms(fs);
-        selHistManager->svFit4tau_woMassConstraint_ = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
-          Form("%s/sel/svFit4tau_woMassConstraint", histogramDir.data()), era_string, central_or_shift));
-        selHistManager->svFit4tau_woMassConstraint_->bookHistograms(fs);
         selHistManager->svFit4tau_wMassConstraint_ = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), era_string, central_or_shift));
         selHistManager->svFit4tau_wMassConstraint_->bookHistograms(fs);
@@ -1684,8 +1678,6 @@ int main(int argc, char* argv[])
       }
     }
     
-    std::vector<SVfit4tauResult> svFit4tauResults_woMassConstraint = compSVfit4tau(
-      *selLepton, *selHadTau_lead, *selHadTau_sublead, *selHadTau_third, met, chargeSumSelection_string, rnd,  -1., 2.);
     std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4tau(
       *selLepton, *selHadTau_lead, *selHadTau_sublead, *selHadTau_third, met, chargeSumSelection_string, rnd, 125., 2.);
         
@@ -1852,7 +1844,6 @@ int main(int argc, char* argv[])
             tightHadTaus_passingElecVeto.size(),
             isMC,
             evtWeight);
-          selHistManager->svFit4tau_woMassConstraint_->fillHistograms(svFit4tauResults_woMassConstraint, evtWeight);
           selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
         }
 
