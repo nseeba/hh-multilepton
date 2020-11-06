@@ -1077,7 +1077,7 @@ int main(int argc, char* argv[])
       //
       "met", "mht", "met_LD", "HT", "STMET",
       //
-      "mSFOS2l", "m_jj", "diHiggsVisMass", "diHiggsMass", "mTMetLepton1", "mTMetLepton2",
+      "mSFOS2l", "m3l", "m_jj", "diHiggsVisMass", "diHiggsMass", "mTMetLepton1", "mTMetLepton2",
       //
       "lep1_genLepPt", "lep2_genLepPt", "lep3_genLepPt",
       "lep1_fake_prob", "lep2_fake_prob", "lep3_fake_prob",
@@ -2424,6 +2424,8 @@ int main(int argc, char* argv[])
       }
     }
 
+    double m3l = (selLepton_lead->p4() + selLepton_sublead->p4() + selLepton_third->p4()).mass();
+
     
     // 		VBF, nonVBF categorization -----    
     std::vector<const RecoJetBase*> selJets_Wjj;
@@ -2855,6 +2857,7 @@ int main(int argc, char* argv[])
 		STMET,
 		//
 		mSFOS2l,
+		m3l,
 		WTojjMass,
 		dihiggsVisMass_sel,
 		dihiggsMass,
@@ -2992,6 +2995,7 @@ int main(int argc, char* argv[])
 		STMET,
 		//
 		mSFOS2l,
+		m3l,
 		WTojjMass,
 		dihiggsVisMass_sel,
 		dihiggsMass,
@@ -3142,6 +3146,7 @@ int main(int argc, char* argv[])
 		STMET,
 		//
 		mSFOS2l,
+		m3l,
 		WTojjMass,
 		dihiggsVisMass_sel,
 		dihiggsMass,
@@ -3281,6 +3286,7 @@ int main(int argc, char* argv[])
 		STMET,
 		//
 		mSFOS2l,
+		m3l,
 		WTojjMass,
 		dihiggsVisMass_sel,
 		dihiggsMass,
@@ -3466,7 +3472,8 @@ int main(int argc, char* argv[])
 	("HT",                  HT)
 	("STMET",               STMET)
 	//
-	("mSFOS2l",             mSFOS2l)	
+	("mSFOS2l",             mSFOS2l)
+	("m3l",                 m3l)
 	("m_jj",                WTojjMass)	
 	("diHiggsVisMass",      dihiggsVisMass_sel)
 	("diHiggsMass",         dihiggsMass)

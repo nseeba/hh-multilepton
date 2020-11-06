@@ -85,6 +85,7 @@ class EvtHistManager_hh_3l
 		   double STMET,
 		   //
 		   double mSFOS2l,
+		   double m3l,
 		   double WTojjMass,
 		   double dihiggsVisMass_sel,
 		   double dihiggsMass,
@@ -219,6 +220,7 @@ class EvtHistManager_hh_3l
   TH1 * hSTMET_;
   //
   TH1 * hmSFOS2l_;
+  TH1 * hm3l_;
   TH1 * hWTojjMass_;
   TH1 * hdihiggsVisMass_sel_;
   TH1 * hdihiggsMass_;

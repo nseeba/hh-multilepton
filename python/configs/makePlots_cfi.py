@@ -22,7 +22,7 @@ process.makePlots = cms.PSet(
     processesBackground = cms.vstring(),
     processSignal = cms.string("signal_spin0_400_hh"),
     scaleSignal = cms.double(scaleSignal),
-    legendEntrySignal = cms.string("%dx GGF#rightarrow X(400;spin0)#rightarrow HH#rightarrow 4W,2W2#tau,4#tau" % scaleSignal),
+    legendEntrySignal = cms.string(str(scaleSignal) + "x Signal HH"),
     categories = cms.VPSet(),
     distributions = cms.VPSet(
         cms.PSet(
@@ -73,11 +73,16 @@ process.makePlots = cms.PSet(
             WZ = cms.string("1.0 +/- 0.20"),
             DY = cms.string("1.0 +/- 0.20"),
             W = cms.string("1.0 +/- 0.20"),
+            ggH = cms.string("1.0 +/- 0.20"),
+            qqH = cms.string("1.0 +/- 0.20"),
+            TTWH = cms.string("1.0 +/- 0.20"),
+            TTZH = cms.string("1.0 +/- 0.20"),
             data_fakes = cms.string("1.0 +/- 0.20"),
             data_flips = cms.string("1.0 +/- 0.20"),
             flips_mc = cms.string("1.0 +/- 0.20"),
             Convs = cms.string("1.0 +/- 0.20"),
             signal_spin0_400_hh = cms.string("1.0 +/- 0.20"),
+            fakes_mc = cms.string("1.0 +/- 0.20"),
         ),
         shape = cms.PSet(
             CMS_ttHl_btag_HF = cms.string("0.00 +/- 1.00"),

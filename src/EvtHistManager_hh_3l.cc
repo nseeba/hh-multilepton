@@ -64,7 +64,8 @@ EvtHistManager_hh_3l::EvtHistManager_hh_3l(const edm::ParameterSet & cfg)
   central_or_shiftOptions_["HT"]                             = { "central" }; 
   central_or_shiftOptions_["STMET"]                          = { "central" };
   //
-  central_or_shiftOptions_["mSFOS2l"]                        = { "central" }; 
+  central_or_shiftOptions_["mSFOS2l"]                        = { "central" };
+  central_or_shiftOptions_["m3l"]                            = { "central" }; 
   central_or_shiftOptions_["WTojjMass"]                      = { "*" }; 
   central_or_shiftOptions_["dihiggsVisMass_sel"]             = { "*" }; 
   central_or_shiftOptions_["dihiggsMass"]                    = { "*" }; 
@@ -191,7 +192,8 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   hHT_                              = book1D(dir, "HT",                         "HT",                          200, 0,1000); 
   hSTMET_                           = book1D(dir, "STMET",                      "STMET",                       200, 0,1000);
   //
-  hmSFOS2l_                         = book1D(dir, "mSFOS2l",                    "mSFOS2l",                     200, 0,  400); 
+  hmSFOS2l_                         = book1D(dir, "mSFOS2l",                    "mSFOS2l",                     200, 0,  400);
+  hm3l_                             = book1D(dir, "m3l",                        "m3l",                         200, 0,  400); 
   hWTojjMass_                       = book1D(dir, "WTojjMass",                  "WTojjMass",                   200, 0,  500); 
   hdihiggsVisMass_sel_              = book1D(dir, "dihiggsVisMass_sel",         "dihiggsVisMass_sel",          200, 0, 1500); 
   hdihiggsMass_                     = book1D(dir, "dihiggsMass",                "dihiggsMass",                 200, 0, 1500); 
@@ -324,6 +326,7 @@ EvtHistManager_hh_3l::fillHistograms(
 		   double STMET,
 		   //
 		   double mSFOS2l,
+		   double m3l,
 		   double WTojjMass,
 		   double dihiggsVisMass_sel,
 		   double dihiggsMass,
@@ -454,7 +457,8 @@ EvtHistManager_hh_3l::fillHistograms(
   fillWithOverFlow(hSTMET_,                         STMET,                         evtWeight, evtWeightErr);
   //
   if (mSFOS2l > 0.) 
-    fillWithOverFlow(hmSFOS2l_,                     mSFOS2l,                       evtWeight, evtWeightErr); 
+    fillWithOverFlow(hmSFOS2l_,                     mSFOS2l,                       evtWeight, evtWeightErr);
+  fillWithOverFlow(hm3l_,                           m3l,                           evtWeight, evtWeightErr); 
   if (WTojjMass > 0.)
     fillWithOverFlow(hWTojjMass_,                   WTojjMass,                     evtWeight, evtWeightErr);
   if (dihiggsVisMass_sel > 0.)

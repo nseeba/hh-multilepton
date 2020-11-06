@@ -110,8 +110,10 @@ else:
   raise ValueError("Invalid mode: %s" % mode)
 
 hadTauWP_veto_map = {
-  'dR03mva' : 'Loose',
-  'deepVSj' : 'Loose',
+  #'dR03mva' : 'Loose',
+  #'deepVSj' : 'Loose',
+  'dR03mva' : 'Medium',
+  'deepVSj' : 'Medium', 
 }
 hadTau_selection_veto = tau_id + hadTauWP_veto_map[tau_id]
 
