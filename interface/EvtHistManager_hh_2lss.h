@@ -39,9 +39,6 @@ public:
 		 double leptonPairCharge,
 		 double HT,
 		 double STMET,
-		 //double BDTOutput_SUM,
-		 double BDTOutput_SUM_gen_mHH_400,
-		 double BDTOutput_SUM_gen_mHH_700,
                  double evtWeight);
 
   const TH1 *
@@ -61,9 +58,6 @@ public:
   TH1 * histogram_leptonPairCharge_;
   TH1 * histogram_HT_;
   TH1 * histogram_STMET_;
-  //TH1 * histogram_BDTOutput_SUM_;
-  TH1 * histogram_BDTOutput_SUM_gen_mHH_400_;
-  TH1 * histogram_BDTOutput_SUM_gen_mHH_700_;
   TH1 * histogram_EventCounter_;
 };
 

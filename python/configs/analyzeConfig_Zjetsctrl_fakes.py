@@ -140,14 +140,6 @@ class analyzeConfig_Zjetsctrl_fakes(analyzeConfig_hh):
     self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH", "ggH", "qqH", "TTWH", "TTZH"]
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
-    self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ] + self.get_samples_categories_HH()
-    self.prep_dcard_signals = []
-    for sample_name, sample_info in self.samples.items():
-      if not sample_info["use_it"]:
-        continue
-      sample_category = sample_info["sample_category"]
-      if sample_category.startswith("signal"):
-        self.prep_dcard_signals.append(sample_category)
 
     self.histogramDir_prep_dcard = "Zjetsctrl_fakes_OS_Tight"
     self.histogramDir_prep_dcard_SS = "Zjetsctrl_fakes_SS_Tight"
@@ -615,6 +607,40 @@ class analyzeConfig_Zjetsctrl_fakes(analyzeConfig_hh):
     logging.info("Creating configuration files to run 'prepareDatacards'")
     for category in self.categories:
       for histogramToFit in self.histograms_to_fit:
+        self.prep_dcard_signals = []
+        for sample_name, sample_info in self.samples.items():
+          if not sample_info["use_it"]:
+            continue
+          sample_category = sample_info["sample_category"]
+          if sample_category.startswith("signal"):
+            if "BDTOutput" in histogramToFit:
+              if ("SM" in histogramToFit or "BM" in histogramToFit) and 'nonresonant' in sample_category:
+                if sample_category not in self.prep_dcard_signals:
+                  self.prep_dcard_signals.append(sample_category)
+                  if "wwww" in sample_category:
+                    self.prep_dcard_signals.append(sample_category.replace("wwww","wwzz"))
+                    self.prep_dcard_signals.append(sample_category.replace("wwww","zzzz"))
+                  if "wwtt" in sample_category:
+                    self.prep_dcard_signals.append(sample_category.replace("wwtt","zztt"))
+              if "spin0" in histogramToFit and "spin0" in sample_category and histogramToFit[9:13] in sample_category:
+                if sample_category not in self.prep_dcard_signals:
+                  self.prep_dcard_signals.append(sample_category)
+                  if "wwww" in sample_category:
+                    self.prep_dcard_signals.append(sample_category.replace("wwww","wwzz"))
+                    self.prep_dcard_signals.append(sample_category.replace("wwww","zzzz"))
+                  if "wwtt" in sample_category:
+                    self.prep_dcard_signals.append(sample_category.replace("wwtt","zztt"))
+              if "spin2" in histogramToFit and "spin2" in sample_category and histogramToFit[9:13] in sample_category:
+                if sample_category not in self.prep_dcard_signals:
+                  self.prep_dcard_signals.append(sample_category)
+                  if "wwww" in sample_category:
+                    self.prep_dcard_signals.append(sample_category.replace("wwww","wwzz"))
+                    self.prep_dcard_signals.append(sample_category.replace("wwww","zzzz"))
+                  if "wwtt" in sample_category:
+                    self.prep_dcard_signals.append(sample_category.replace("wwtt","zztt"))
+            else:
+              if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
+        self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ] + self.prep_dcard_signals
         key_prep_dcard_dir = getKey("prepareDatacards")
         if "OS" in self.leptonChargeSelections:
           key_hadd_stage2_job = getKey(get_lepton_selection_and_frWeight("Tight", "disabled"), "OS")

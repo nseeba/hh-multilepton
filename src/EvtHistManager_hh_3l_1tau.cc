@@ -26,50 +26,6 @@ EvtHistManager_hh_3l_1tau::EvtHistManager_hh_3l_1tau(const edm::ParameterSet & c
   central_or_shiftOptions_["mindPhiLepMET"] = { "central" };
   central_or_shiftOptions_["EventCounter"] = { "*" };
   central_or_shiftOptions_["EventNumber"] = { "*" };
-  std::vector<double> gen_mHH = cfg.getParameter<std::vector<double>>("gen_mHH");
-  std::vector<double> nonRes_BMs = cfg.getParameter<std::vector<double>>("nonRes_BMs");
-
-  for(unsigned int i=0;i<gen_mHH.size();i++){ // Loop over signal masses (Resonant case)
-    unsigned int mass_int = (int)gen_mHH[i]; // Conversion from double to unsigned int                                                                                                    
-    std::string key = "";
-    std::ostringstream temp;
-    temp << mass_int;
-    key = temp.str(); // Conversion from unsigned int to string                                                                                                                          
-                                                                                   
-    std::string key_final = "BDTOutput_" + key; // For the TMVAInterface
-    std::string key_final_spin2 = key_final + "_hypo_spin2";
-    std::string key_final_spin0 = key_final + "_hypo_spin0";
-    labels_spin2_.push_back(key_final_spin2);
-    labels_spin0_.push_back(key_final_spin0);
-  }
-
-  for(unsigned int i=0;i<nonRes_BMs.size();i++){ // Loop over BM indices (Non Resonant case)
-    std::string key_final = "";
-    if(nonRes_BMs[i] == 0){ // For SM
-      key_final = "BDTOutput_SM"; // For the TMVAInterface
-    }else{
-      unsigned int bm_index_int = (int)nonRes_BMs[i]; // Conversion from double to unsigned int
-      std::string key = "";
-      std::ostringstream temp;
-      temp << bm_index_int;
-      key = temp.str(); // Conversion from unsigned int to string
-      key_final = "BDTOutput_BM" + key; // For the TMVAInterface
-    }
-    std::string key_final_nonres = key_final;
-    labels_nonres_.push_back(key_final_nonres);
-  }
-
-  for(unsigned int i=0;i < labels_spin2_.size();i++){
-    central_or_shiftOptions_[labels_spin2_[i]] = { "*" };
-  }
-
-  for(unsigned int i=0;i < labels_spin0_.size();i++){
-    central_or_shiftOptions_[labels_spin0_[i]] = { "*" };
-  }
-
-  for(unsigned int i=0;i < labels_nonres_.size();i++){
-    central_or_shiftOptions_[labels_nonres_[i]] = { "*" };
-  }
 }
 
 const TH1 *
@@ -104,21 +60,6 @@ EvtHistManager_hh_3l_1tau::bookHistograms(TFileDirectory & dir)
   histogram_EventNumber_      = book1D(dir, "EventNumber",      "EventNumber",       2,   -0.5,  +1.5  );
   histogram_EventNumber_->GetXaxis()->SetBinLabel(1,"Odd");
   histogram_EventNumber_->GetXaxis()->SetBinLabel(2,"Even");
-
-  for(unsigned int i=0;i < labels_spin2_.size();i++){ 
-    TH1* histogram_BDT_output_spin2 = book1D(dir, labels_spin2_[i], labels_spin2_[i], 100, 0., 1.); 
-    histogram_Map_BDTOutput_spin2_.insert(std::make_pair(labels_spin2_[i], histogram_BDT_output_spin2)); 
-  }
-
-  for(unsigned int i=0;i < labels_spin0_.size();i++){ 
-    TH1* histogram_BDT_output_spin0 = book1D(dir, labels_spin0_[i], labels_spin0_[i], 100, 0., 1.); 
-    histogram_Map_BDTOutput_spin0_.insert(std::make_pair(labels_spin0_[i], histogram_BDT_output_spin0)); 
-  }
-
-  for(unsigned int i=0;i < labels_nonres_.size();i++){ 
-    TH1* histogram_BDT_output_nonres = book1D(dir, labels_nonres_[i], labels_nonres_[i], 100, 0., 1.); 
-    histogram_Map_BDTOutput_nonRes_.insert(std::make_pair(labels_nonres_[i], histogram_BDT_output_nonres)); 
-  }
 }
 
 void
@@ -141,12 +82,8 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
 					  double mT_SSlepdR,
 					  double maxdZ_lep,
 					  double mindPhiLepMET,
-					  std::map<std::string, double> & BDTOutput_Map_spin0,
-					  std::map<std::string, double> & BDTOutput_Map_spin2,
-					  std::map<std::string, double> & BDTOutput_Map_nonRes,
-					  double evtWeight,					 
-					  unsigned int evt_number					 
-)
+                                          unsigned int evt_number,
+					  double evtWeight)
 {
   const double evtWeightErr = 0.;
   fillWithOverFlow(histogram_numElectrons_,      numElectrons,        evtWeight,     evtWeightErr);
@@ -154,7 +91,7 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_numHadTaus_,        numHadTaus,          evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_numJets_,           numJets,             evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_MET_,               MET,                 evtWeight,     evtWeightErr);
-  fillWithOverFlow(histogram_nSFOS_,               nSFOS,                 evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_nSFOS_,             nSFOS,               evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_HT_,                HT,                  evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_MET_LD_,            MET_LD,              evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_lep1_pt_,           lep1_pt,             evtWeight,     evtWeightErr);
@@ -176,13 +113,4 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
   }else{ // EVEN EVENT NUMBER CASE                                                                                                                                                                   
     fillWithOverFlow(histogram_EventNumber_,     1.,                  evtWeight,     evtWeightErr);     
   }      
-  for(unsigned int i=0;i < labels_spin2_.size();i++){
-    fillWithOverFlow(histogram_Map_BDTOutput_spin2_[labels_spin2_[i]], BDTOutput_Map_spin2[labels_spin2_[i]], evtWeight, evtWeightErr);
-  }
-  for(unsigned int i=0;i < labels_spin0_.size();i++){
-    fillWithOverFlow(histogram_Map_BDTOutput_spin0_[labels_spin0_[i]], BDTOutput_Map_spin0[labels_spin0_[i]], evtWeight, evtWeightErr);
-  }
-  for(unsigned int i=0;i < labels_nonres_.size();i++){
-    fillWithOverFlow(histogram_Map_BDTOutput_nonRes_[labels_nonres_[i]], BDTOutput_Map_nonRes[labels_nonres_[i]], evtWeight, evtWeightErr);
-  }
 }

@@ -50,12 +50,8 @@ public:
 		   double mT_SSlepdR,
 		   double maxdZ_lep,
 		   double mindPhiLepMET,
-		   std::map<std::string, double> & BDTOutput_Map_spin0,
-		   std::map<std::string, double> & BDTOutput_Map_spin2,
-		   std::map<std::string, double> & BDTOutput_Map_nonRes,
-		   double evtWeight,					 
-		   unsigned int evt_number					 
-);
+                   unsigned int evt_number,
+		   double evtWeight);
 
   const TH1 *
   getHistogram_EventCounter() const;
@@ -80,14 +76,8 @@ public:
   TH1 * histogram_mT_SSlepdR_;
   TH1 * histogram_maxdZ_lep_;
   TH1 * histogram_mindPhiLepMET_;
-  std::map<std::string, TH1*> histogram_Map_BDTOutput_spin2_;
-  std::map<std::string, TH1*> histogram_Map_BDTOutput_spin0_;
-  std::map<std::string, TH1*> histogram_Map_BDTOutput_nonRes_;
   TH1 * histogram_EventCounter_;
   TH1 * histogram_EventNumber_;
-  std::vector<string> labels_spin2_;
-  std::vector<string> labels_spin0_;
-  std::vector<string> labels_nonres_;
 };
 
 #endif

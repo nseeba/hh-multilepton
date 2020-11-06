@@ -189,7 +189,7 @@ RecoMuonSelectorFakeable_hh_multilepton_Dynamic::operator()(const RecoMuon & muo
       return false;
     }
 
-    double max_jetBtagCSV; 
+    double max_jetBtagCSV = 0.;
     if ( (jetBtagCSV_ID_forFakeable_.compare("WP-I") == 0) || (jetBtagCSV_ID_forFakeable_.compare("WP-IMT") == 0)) { // 
       max_jetBtagCSV = smoothBtagCut(muon.assocJet_pt());
     }
