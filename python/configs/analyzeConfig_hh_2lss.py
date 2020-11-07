@@ -123,7 +123,15 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
     self.executable_addFakes = executable_addFakes
     self.executable_addFlips = "addBackgroundLeptonFlips"
 
-    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TH", "ggH", "qqH"]
+    processesVH = ["VH", "VH_hbb", "VH_hww", "VH_hzz", "VH_htt"]
+    processesTH = ["TH", "TH_hbb", "TH_hww", "TH_hzz", "TH_htt"]
+    processesTTH = ["TTH", "TTH_hbb", "TTH_hww", "TTH_hzz", "TTH_htt"]
+    processesTTWH = ["TTWH", "TTWH_hbb", "TTWH_hww", "TTWH_hzz", "TTWH_htt"]
+    processesTTZH = ["TTZH", "TTZH_hbb", "TTZH_hww", "TTZH_hzz", "TTZH_htt"]
+    processesggH = ["ggH", "ggH_hbb", "ggH_hww", "ggH_hzz", "ggH_htt"]
+    processesqqH = ["qqH", "qqH_hbb", "qqH_hww", "qqH_hzz", "qqH_htt"]
+    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other"] + processesVH + processesTH + processesTTH + processesggH + processesqqH + processesTTWH + processesTTZH
+
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.inputFiles_hadd_stage1_6 = {}
@@ -614,11 +622,29 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
           if sample_category.startswith("signal"):
             if "BDTOutput" in histogramToFit:
               if ("SM" in histogramToFit or "BM" in histogramToFit) and 'nonresonant' in sample_category:
-                if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
+                if sample_category not in self.prep_dcard_signals:
+                  self.prep_dcard_signals.append(sample_category)
+                  if "wwww" in sample_category:
+                    self.prep_dcard_signals.append(sample_category.replace("wwww","wwzz"))
+                    self.prep_dcard_signals.append(sample_category.replace("wwww","zzzz"))
+                  if "wwtt" in sample_category:
+                    self.prep_dcard_signals.append(sample_category.replace("wwtt","zztt"))
               if "spin0" in histogramToFit and "spin0" in sample_category and histogramToFit[9:13] in sample_category:
-                if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
+                if sample_category not in self.prep_dcard_signals:
+                  self.prep_dcard_signals.append(sample_category)
+                  if "wwww" in sample_category:
+                    self.prep_dcard_signals.append(sample_category.replace("wwww","wwzz"))
+                    self.prep_dcard_signals.append(sample_category.replace("wwww","zzzz"))
+                  if "wwtt" in sample_category:
+                    self.prep_dcard_signals.append(sample_category.replace("wwtt","zztt"))
               if "spin2" in histogramToFit and "spin2" in sample_category and histogramToFit[9:13] in sample_category:
-                if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
+                if sample_category not in self.prep_dcard_signals:
+                  self.prep_dcard_signals.append(sample_category)
+                  if "wwww" in sample_category:
+                    self.prep_dcard_signals.append(sample_category.replace("wwww","wwzz"))
+                    self.prep_dcard_signals.append(sample_category.replace("wwww","zzzz"))
+                  if "wwtt" in sample_category:
+                    self.prep_dcard_signals.append(sample_category.replace("wwtt","zztt"))
             else:
               if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
         self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ] + self.prep_dcard_signals

@@ -149,7 +149,7 @@ process.analyze_hh_3l_1tau = cms.PSet(
     mvaInfo_nonRes = cms.PSet( ## [Tweaked hyper-para.s used]
         BDT_xml_FileName_nonRes_even = cms.string('hhAnalysis/multilepton/data/BDT_3l_1tau/3l_1tau_nonRes_oddTrainModel_opt8Vars_newHyp.xml'),
         BDT_xml_FileName_nonRes_odd = cms.string('hhAnalysis/multilepton/data/BDT_3l_1tau/3l_1tau_nonRes_evenTrainModel_opt8Vars_newHyp.xml'),
-        inputVars_nonRes = cms.vstring('met_LD', 'HT', 'diHigsVisMass', 'diHiggsMass', 'mllOS_closestToZ', 'dR_smartpair_ltau', 'm_smartpair_ltau', 'm_smartpair_ll',
+        inputVars_nonRes = cms.vstring('met_LD', 'HT', 'diHiggsVisMass', 'diHiggsMass', 'mllOS_closestToZ', 'dR_smartpair_ltau', 'm_smartpair_ltau', 'm_smartpair_ll',
                                        'SM', 'BM1', 'BM2', 'BM3', 'BM4', 'BM5', 'BM6', 'BM7', 'BM8', 'BM9', 'BM10', 'BM11', 'BM12'),
     ),
 
