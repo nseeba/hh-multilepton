@@ -150,7 +150,15 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
     self.executable_addFlips = executable_addFlips
 
-    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTZ", "DY", "Other", "VH", "TTH", "TH", "W", "TTWW", "ggH", "qqH"] 
+    processesVH = ["VH", "VH_hbb", "VH_hww", "VH_hzz", "VH_htt"]
+    processesTH = ["TH", "TH_hbb", "TH_hww", "TH_hzz", "TH_htt"]
+    processesTTH = ["TTH", "TTH_hbb", "TTH_hww", "TTH_hzz", "TTH_htt"]
+    processesTTWH = ["TTWH", "TTWH_hbb", "TTWH_hww", "TTWH_hzz", "TTWH_htt"]
+    processesTTZH = ["TTZH", "TTZH_hbb", "TTZH_hww", "TTZH_hzz", "TTZH_htt"]
+    processesggH = ["ggH", "ggH_hbb", "ggH_hww", "ggH_hzz", "ggH_htt"]
+    processesqqH = ["qqH", "qqH_hbb", "qqH_hww", "qqH_hzz", "qqH_htt"]
+    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other"] + processesVH + processesTH + processesTTH + processesggH + processesqqH + processesTTWH + processesTTZH
+
 
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.inputFiles_hadd_stage1_6 = {}
