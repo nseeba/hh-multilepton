@@ -494,36 +494,6 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
           }
           self.createCfg_addBackgrounds(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_Convs])
 
-          # sum signal contributions from HH->4tau ("tttt"), HH->2W2tau ("wwtt"), and HH->4W ("wwww"),
-          # separately for "nonfake" and "fake" contributions
-          genMatch_categories = [ "nonfake", "fake" ]
-          for genMatch_category in genMatch_categories:
-            for signal_base, signal_input in self.signal_io.items():
-              addBackgrounds_job_signal_tuple = (lepton_and_hadTau_selection_and_frWeight, chargeSumSelection, signal_base, genMatch_category)
-              key_addBackgrounds_job_signal = getKey(*addBackgrounds_job_signal_tuple)
-              if key_addBackgrounds_job_signal in self.jobOptions_addBackgrounds_sum.keys():
-                continue
-              processes_input = signal_input
-              process_output = signal_base
-              if genMatch_category == "fake":
-                processes_input = [ process_input + "_fake" for process_input in processes_input ]
-                process_output += "_fake"
-              self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal] = {
-                'inputFile' : self.outputFile_hadd_stage1_5[key_hadd_stage1_5_job],
-                'cfgFile_modified' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_CFGS], "addBackgrounds_%s_%s_%s_%s_cfg.py" % addBackgrounds_job_signal_tuple),
-                'outputFile' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_HIST], "addBackgrounds_%s_%s_%s_%s.root" % addBackgrounds_job_signal_tuple),
-                'logFile' : os.path.join(self.dirs[key_addBackgrounds_dir][DKEY_LOGS], "addBackgrounds_%s_%s_%s_%s.log" % addBackgrounds_job_signal_tuple),
-                'categories' : [ getHistogramDir(lepton_selection, hadTau_selection, lepton_and_hadTau_frWeight, chargeSumSelection) ],
-                'processes_input' : processes_input,
-                'process_output' : process_output
-              }
-              self.createCfg_addBackgrounds(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal])
-              key_hadd_stage2_job = getKey(lepton_and_hadTau_selection_and_frWeight, chargeSumSelection)
-              if not key_hadd_stage2_job in self.inputFiles_hadd_stage2:
-                self.inputFiles_hadd_stage2[key_hadd_stage2_job] = []
-              if lepton_and_hadTau_selection == "Tight":
-                self.inputFiles_hadd_stage2[key_hadd_stage2_job].append(self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_signal]['outputFile'])
-
           if self.isBDTtraining:
             continue
 
