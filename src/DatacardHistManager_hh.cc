@@ -111,6 +111,8 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
     {
       std::cout << " using HH decay modes = " << format_vstring(decayModes_) << std::endl;
     }
+    // CV: book & fill extra histogram for HH signal without splitting by decay mode
+    decayModes_.push_back("*");
   }
   else if ( analysisConfig_.isMC_H() )
   {
@@ -119,6 +121,8 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
     {
       std::cout << " using H decay modes = " << format_vstring(decayModes_) << std::endl;
     }
+    // CV: book & fill extra histogram for H signal without splitting by decay mode
+    decayModes_.push_back("*");
   }
   else
   {
