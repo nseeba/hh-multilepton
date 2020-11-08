@@ -83,4 +83,7 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None)
     if sample_name.startswith(('/TGJets', '/TTGJets', '/WGTo', '/ZGTo')):
       sample_info["sample_category"] = "XGamma"
 
+    if sample_info["process_name_specific"].startswith('signal_') and sample_info["process_name_specific"].endswith('_private'):
+      sample_info["use_it"] = False #TODO temporary
+
   return samples
