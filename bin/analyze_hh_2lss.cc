@@ -577,10 +577,10 @@ int main(int argc, char* argv[])
   RecoJetCollectionCleanerAK8 jetCleanerAK8_dR16(1.6, isDEBUG);
   RecoJetCollectionSelectorAK8 jetSelectorAK8(era, -1, isDEBUG);
   RecoJetCollectionSelectorAK8_hh_Wjj jetSelectorAK8_Wjj(era, -1, isDEBUG); // Need to redefine new class RecoJetCollectionSelectorAK8_WWWW_Wjj
-  std::cout << "branchName_jets_ak8_Wjj: " << branchName_jets_ak8_Wjj << ", "
-	    << "branchName_subjets_ak8_Wjj: " << branchName_subjets_ak8_Wjj << "\n";
-  if ( branchName_jets_ak8_Wjj.find("AK8LS") != std::string::npos    &&
-       branchName_subjets_ak8_Wjj .find("AK8LS") != std::string::npos )
+  std::cout << "branchName_jets_ak8: " << branchName_jets_ak8 << ", "
+	    << "branchName_subjets_ak8: " << branchName_subjets_ak8 << "\n";
+  if ( branchName_jets_ak8.find("AK8LS") != std::string::npos    &&
+       branchName_subjets_ak8 .find("AK8LS") != std::string::npos )
   {
     jetSelectorAK8_Wjj.disableDeltaRCut_between_AK8Subjets_NearestLepton();
     std::cout << "\t diable dR(AK8subjets, nearestLepton) cut ***** \n";

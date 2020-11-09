@@ -82,7 +82,7 @@ protected:
   bool debug_;
 };
 
-//typedef ParticleCollectionSelector<RecoJetAK8, RecoJetSelectorAK8_hh_Wjj> RecoJetCollectionSelectorAK8_hh_Wjj;
+
 class RecoJetCollectionSelectorAK8_hh_Wjj
   : public ParticleCollectionSelector<RecoJetAK8, RecoJetSelectorAK8_hh_Wjj>
 {
