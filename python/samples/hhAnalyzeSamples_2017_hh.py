@@ -1,6 +1,6 @@
 from collections import OrderedDict as OD
 
-# file generated at 2020-11-07 20:36:41 with the following command:
+# file generated at 2020-11-08 23:02:34 with the following command:
 # create_dictionary.py -m python/samples/metaDict_2017.py -p python/samples/sampleLocations_2017_hh_multilepton.txt -N samples_2017 -E 2017 -o python/samples -g hhAnalyzeSamples_2017_hh.py -M -q /hdfs/local/karl/count_final/2020Nov07/count_2017.root
 
 samples_2017 = OD()
@@ -13624,7 +13624,7 @@ samples_2017["/GluGluToHHTo4Tau_node_SM_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific",           "signal_ggf_nonresonant_node_sm_hh_4t_private"),
-  ("nof_files",                       4),
+  ("nof_files",                       10),
   ("nof_db_files",                    4000),
   ("nof_events",                      {
     'Count'                                                                          : [ 1000000, ],
@@ -13645,7 +13645,7 @@ samples_2017["/GluGluToHHTo4Tau_node_SM_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   }),
   ("nof_tree_events",                 1000000),
   ("nof_db_events",                   1000000),
-  ("fsize_local",                     4376791713), # 4.38GB, avg file size 1.09GB
+  ("fsize_local",                     4407697290), # 4.41GB, avg file size 440.77MB
   ("fsize_db",                        79886965724), # 79.89GB, avg file size 19.97MB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -13658,7 +13658,7 @@ samples_2017["/GluGluToHHTo4Tau_node_SM_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Oct28_woPresel_nom_all/ntuples/signal_ggf_nonresonant_node_sm_hh_4t_private"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov08v2_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_sm_hh_4t_private"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -13682,7 +13682,7 @@ samples_2017["/GluGluToHHTo4Tau_node_1_TuneCP5_PSWeights_13TeV/RunIIFall17MiniAO
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific",           "signal_ggf_nonresonant_node_1_hh_4t_private"),
-  ("nof_files",                       4),
+  ("nof_files",                       10),
   ("nof_db_files",                    4000),
   ("nof_events",                      {
     'Count'                                                                          : [ 1000000, ],
@@ -13703,7 +13703,7 @@ samples_2017["/GluGluToHHTo4Tau_node_1_TuneCP5_PSWeights_13TeV/RunIIFall17MiniAO
   }),
   ("nof_tree_events",                 1000000),
   ("nof_db_events",                   1000000),
-  ("fsize_local",                     4271834134), # 4.27GB, avg file size 1.07GB
+  ("fsize_local",                     4302705645), # 4.30GB, avg file size 430.27MB
   ("fsize_db",                        79103654607), # 79.10GB, avg file size 19.78MB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -13716,7 +13716,7 @@ samples_2017["/GluGluToHHTo4Tau_node_1_TuneCP5_PSWeights_13TeV/RunIIFall17MiniAO
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Oct28_woPresel_nom_all/ntuples/signal_ggf_nonresonant_node_1_hh_4t_private"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov08v2_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_1_hh_4t_private"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -13740,7 +13740,7 @@ samples_2017["/GluGluToHHTo4Tau_node_4_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific",           "signal_ggf_nonresonant_node_4_hh_4t_private"),
-  ("nof_files",                       4),
+  ("nof_files",                       10),
   ("nof_db_files",                    4000),
   ("nof_events",                      {
     'Count'                                                                          : [ 1000000, ],
@@ -13761,7 +13761,7 @@ samples_2017["/GluGluToHHTo4Tau_node_4_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   }),
   ("nof_tree_events",                 1000000),
   ("nof_db_events",                   1000000),
-  ("fsize_local",                     4272051380), # 4.27GB, avg file size 1.07GB
+  ("fsize_local",                     4302828756), # 4.30GB, avg file size 430.28MB
   ("fsize_db",                        79167526635), # 79.17GB, avg file size 19.79MB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -13774,7 +13774,7 @@ samples_2017["/GluGluToHHTo4Tau_node_4_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Oct28_woPresel_nom_all/ntuples/signal_ggf_nonresonant_node_4_hh_4t_private"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov08v2_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_4_hh_4t_private"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -13798,7 +13798,7 @@ samples_2017["/GluGluToHHTo4Tau_node_7_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific",           "signal_ggf_nonresonant_node_7_hh_4t_private"),
-  ("nof_files",                       4),
+  ("nof_files",                       10),
   ("nof_db_files",                    4000),
   ("nof_events",                      {
     'Count'                                                                          : [ 1000000, ],
@@ -13819,7 +13819,7 @@ samples_2017["/GluGluToHHTo4Tau_node_7_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   }),
   ("nof_tree_events",                 1000000),
   ("nof_db_events",                   1000000),
-  ("fsize_local",                     4272405579), # 4.27GB, avg file size 1.07GB
+  ("fsize_local",                     4302960287), # 4.30GB, avg file size 430.30MB
   ("fsize_db",                        79131507440), # 79.13GB, avg file size 19.78MB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -13832,7 +13832,7 @@ samples_2017["/GluGluToHHTo4Tau_node_7_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Oct28_woPresel_nom_all/ntuples/signal_ggf_nonresonant_node_7_hh_4t_private"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov08v2_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_7_hh_4t_private"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -13856,7 +13856,7 @@ samples_2017["/GluGluToHHTo4Tau_node_12_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_tttt"),
   ("process_name_specific",           "signal_ggf_nonresonant_node_12_hh_4t_private"),
-  ("nof_files",                       4),
+  ("nof_files",                       10),
   ("nof_db_files",                    4000),
   ("nof_events",                      {
     'Count'                                                                          : [ 1000000, ],
@@ -13877,7 +13877,7 @@ samples_2017["/GluGluToHHTo4Tau_node_12_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   }),
   ("nof_tree_events",                 1000000),
   ("nof_db_events",                   1000000),
-  ("fsize_local",                     4263886802), # 4.26GB, avg file size 1.07GB
+  ("fsize_local",                     4294382232), # 4.29GB, avg file size 429.44MB
   ("fsize_db",                        78754180682), # 78.75GB, avg file size 19.69MB
   ("use_it",                          True),
   ("xsection",                        0.003934),
@@ -13890,7 +13890,7 @@ samples_2017["/GluGluToHHTo4Tau_node_12_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Oct28_woPresel_nom_all/ntuples/signal_ggf_nonresonant_node_12_hh_4t_private"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov08v2_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_12_hh_4t_private"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -13914,7 +13914,7 @@ samples_2017["/GluGluToHHTo2V2Tau_node_SM_13TeV/RunIIFall17MiniAODv2/USER"] = OD
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific",           "signal_ggf_nonresonant_node_sm_hh_2v2t_private"),
-  ("nof_files",                       4),
+  ("nof_files",                       10),
   ("nof_db_files",                    4000),
   ("nof_events",                      {
     'Count'                                                                          : [ 999997, ],
@@ -13935,7 +13935,7 @@ samples_2017["/GluGluToHHTo2V2Tau_node_SM_13TeV/RunIIFall17MiniAODv2/USER"] = OD
   }),
   ("nof_tree_events",                 999997),
   ("nof_db_events",                   999997),
-  ("fsize_local",                     4573264862), # 4.57GB, avg file size 1.14GB
+  ("fsize_local",                     4599696445), # 4.60GB, avg file size 459.97MB
   ("fsize_db",                        81657974168), # 81.66GB, avg file size 20.41MB
   ("use_it",                          True),
   ("xsection",                        0.030092),
@@ -13948,7 +13948,7 @@ samples_2017["/GluGluToHHTo2V2Tau_node_SM_13TeV/RunIIFall17MiniAODv2/USER"] = OD
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Oct28_woPresel_nom_all/ntuples/signal_ggf_nonresonant_node_sm_hh_2v2t_private"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov08v2_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_sm_hh_2v2t_private"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -13972,7 +13972,7 @@ samples_2017["/GluGluToHHTo2V2tau_node_1_TuneCP5_PSWeights_13TeV/RunIIFall17Mini
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific",           "signal_ggf_nonresonant_node_1_hh_2v2t_private"),
-  ("nof_files",                       4),
+  ("nof_files",                       10),
   ("nof_db_files",                    4000),
   ("nof_events",                      {
     'Count'                                                                          : [ 999998, ],
@@ -13993,7 +13993,7 @@ samples_2017["/GluGluToHHTo2V2tau_node_1_TuneCP5_PSWeights_13TeV/RunIIFall17Mini
   }),
   ("nof_tree_events",                 999998),
   ("nof_db_events",                   999998),
-  ("fsize_local",                     4475508162), # 4.48GB, avg file size 1.12GB
+  ("fsize_local",                     4500283369), # 4.50GB, avg file size 450.03MB
   ("fsize_db",                        80767326118), # 80.77GB, avg file size 20.19MB
   ("use_it",                          True),
   ("xsection",                        0.030092),
@@ -14006,7 +14006,7 @@ samples_2017["/GluGluToHHTo2V2tau_node_1_TuneCP5_PSWeights_13TeV/RunIIFall17Mini
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Oct28_woPresel_nom_all/ntuples/signal_ggf_nonresonant_node_1_hh_2v2t_private"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov08v2_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_1_hh_2v2t_private"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -14030,7 +14030,7 @@ samples_2017["/GluGluToHHTo2V2Tau_node_4_13TeV/RunIIFall17MiniAODv2/USER"] = OD(
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific",           "signal_ggf_nonresonant_node_4_hh_2v2t_private"),
-  ("nof_files",                       4),
+  ("nof_files",                       10),
   ("nof_db_files",                    4000),
   ("nof_events",                      {
     'Count'                                                                          : [ 999998, ],
@@ -14051,7 +14051,7 @@ samples_2017["/GluGluToHHTo2V2Tau_node_4_13TeV/RunIIFall17MiniAODv2/USER"] = OD(
   }),
   ("nof_tree_events",                 999998),
   ("nof_db_events",                   999998),
-  ("fsize_local",                     4469207024), # 4.47GB, avg file size 1.12GB
+  ("fsize_local",                     4493184927), # 4.49GB, avg file size 449.32MB
   ("fsize_db",                        80793399079), # 80.79GB, avg file size 20.20MB
   ("use_it",                          True),
   ("xsection",                        0.030092),
@@ -14064,7 +14064,7 @@ samples_2017["/GluGluToHHTo2V2Tau_node_4_13TeV/RunIIFall17MiniAODv2/USER"] = OD(
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Oct28_woPresel_nom_all/ntuples/signal_ggf_nonresonant_node_4_hh_2v2t_private"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov08v2_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_4_hh_2v2t_private"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -14088,7 +14088,7 @@ samples_2017["/GluGluToHHTo2V2Tau_node_7_13TeV/RunIIFall17MiniAODv2/USER"] = OD(
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific",           "signal_ggf_nonresonant_node_7_hh_2v2t_private"),
-  ("nof_files",                       4),
+  ("nof_files",                       10),
   ("nof_db_files",                    4000),
   ("nof_events",                      {
     'Count'                                                                          : [ 999998, ],
@@ -14109,7 +14109,7 @@ samples_2017["/GluGluToHHTo2V2Tau_node_7_13TeV/RunIIFall17MiniAODv2/USER"] = OD(
   }),
   ("nof_tree_events",                 999998),
   ("nof_db_events",                   999998),
-  ("fsize_local",                     4475434184), # 4.48GB, avg file size 1.12GB
+  ("fsize_local",                     4498866915), # 4.50GB, avg file size 449.89MB
   ("fsize_db",                        80792256740), # 80.79GB, avg file size 20.20MB
   ("use_it",                          True),
   ("xsection",                        0.030092),
@@ -14122,7 +14122,7 @@ samples_2017["/GluGluToHHTo2V2Tau_node_7_13TeV/RunIIFall17MiniAODv2/USER"] = OD(
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Oct28_woPresel_nom_all/ntuples/signal_ggf_nonresonant_node_7_hh_2v2t_private"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov08v2_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_7_hh_2v2t_private"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -14146,7 +14146,7 @@ samples_2017["/GluGluToHHTo2V2Tau_node_12_13TeV/RunIIFall17MiniAODv2/USER"] = OD
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_wwtt"),
   ("process_name_specific",           "signal_ggf_nonresonant_node_12_hh_2v2t_private"),
-  ("nof_files",                       4),
+  ("nof_files",                       10),
   ("nof_db_files",                    4000),
   ("nof_events",                      {
     'Count'                                                                          : [ 999996, ],
@@ -14167,7 +14167,7 @@ samples_2017["/GluGluToHHTo2V2Tau_node_12_13TeV/RunIIFall17MiniAODv2/USER"] = OD
   }),
   ("nof_tree_events",                 999996),
   ("nof_db_events",                   999996),
-  ("fsize_local",                     4465641999), # 4.47GB, avg file size 1.12GB
+  ("fsize_local",                     4489535112), # 4.49GB, avg file size 448.95MB
   ("fsize_db",                        80383889041), # 80.38GB, avg file size 20.10MB
   ("use_it",                          True),
   ("xsection",                        0.030092),
@@ -14180,7 +14180,7 @@ samples_2017["/GluGluToHHTo2V2Tau_node_12_13TeV/RunIIFall17MiniAODv2/USER"] = OD
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Oct28_woPresel_nom_all/ntuples/signal_ggf_nonresonant_node_12_hh_2v2t_private"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov08v2_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_12_hh_2v2t_private"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -14204,7 +14204,7 @@ samples_2017["/GluGluToHHTo4V_node_SM_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific",           "signal_ggf_nonresonant_node_sm_hh_4v_private"),
-  ("nof_files",                       4),
+  ("nof_files",                       10),
   ("nof_db_files",                    4000),
   ("nof_events",                      {
     'Count'                                                                          : [ 1000000, ],
@@ -14225,7 +14225,7 @@ samples_2017["/GluGluToHHTo4V_node_SM_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   }),
   ("nof_tree_events",                 1000000),
   ("nof_db_events",                   1000000),
-  ("fsize_local",                     4669760532), # 4.67GB, avg file size 1.17GB
+  ("fsize_local",                     4685249479), # 4.69GB, avg file size 468.52MB
   ("fsize_db",                        83190363853), # 83.19GB, avg file size 20.80MB
   ("use_it",                          True),
   ("xsection",                        0.057547),
@@ -14238,7 +14238,7 @@ samples_2017["/GluGluToHHTo4V_node_SM_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Oct28_woPresel_nom_all/ntuples/signal_ggf_nonresonant_node_sm_hh_4v_private"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov08v2_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_sm_hh_4v_private"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -14262,7 +14262,7 @@ samples_2017["/GluGluToHHTo4V_node_1_TuneCP5_PSWeights_13TeV/RunIIFall17MiniAODv
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific",           "signal_ggf_nonresonant_node_1_hh_4v_private"),
-  ("nof_files",                       4),
+  ("nof_files",                       10),
   ("nof_db_files",                    4000),
   ("nof_events",                      {
     'Count'                                                                          : [ 1000000, ],
@@ -14283,7 +14283,7 @@ samples_2017["/GluGluToHHTo4V_node_1_TuneCP5_PSWeights_13TeV/RunIIFall17MiniAODv
   }),
   ("nof_tree_events",                 1000000),
   ("nof_db_events",                   1000000),
-  ("fsize_local",                     4580073914), # 4.58GB, avg file size 1.15GB
+  ("fsize_local",                     4595816217), # 4.60GB, avg file size 459.58MB
   ("fsize_db",                        82235953558), # 82.24GB, avg file size 20.56MB
   ("use_it",                          True),
   ("xsection",                        0.057547),
@@ -14296,7 +14296,7 @@ samples_2017["/GluGluToHHTo4V_node_1_TuneCP5_PSWeights_13TeV/RunIIFall17MiniAODv
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Oct28_woPresel_nom_all/ntuples/signal_ggf_nonresonant_node_1_hh_4v_private"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov08v2_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_1_hh_4v_private"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -14320,7 +14320,7 @@ samples_2017["/GluGluToHHTo4V_node_4_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific",           "signal_ggf_nonresonant_node_4_hh_4v_private"),
-  ("nof_files",                       4),
+  ("nof_files",                       10),
   ("nof_db_files",                    4000),
   ("nof_events",                      {
     'Count'                                                                          : [ 999997, ],
@@ -14341,7 +14341,7 @@ samples_2017["/GluGluToHHTo4V_node_4_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   }),
   ("nof_tree_events",                 999997),
   ("nof_db_events",                   999997),
-  ("fsize_local",                     4568505157), # 4.57GB, avg file size 1.14GB
+  ("fsize_local",                     4584178567), # 4.58GB, avg file size 458.42MB
   ("fsize_db",                        82255572456), # 82.26GB, avg file size 20.56MB
   ("use_it",                          True),
   ("xsection",                        0.057547),
@@ -14354,7 +14354,7 @@ samples_2017["/GluGluToHHTo4V_node_4_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Oct28_woPresel_nom_all/ntuples/signal_ggf_nonresonant_node_4_hh_4v_private"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov08v2_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_4_hh_4v_private"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -14378,7 +14378,7 @@ samples_2017["/GluGluToHHTo4V_node_7_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific",           "signal_ggf_nonresonant_node_7_hh_4v_private"),
-  ("nof_files",                       4),
+  ("nof_files",                       10),
   ("nof_db_files",                    4000),
   ("nof_events",                      {
     'Count'                                                                          : [ 999999, ],
@@ -14399,7 +14399,7 @@ samples_2017["/GluGluToHHTo4V_node_7_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   }),
   ("nof_tree_events",                 999999),
   ("nof_db_events",                   999999),
-  ("fsize_local",                     4578964962), # 4.58GB, avg file size 1.14GB
+  ("fsize_local",                     4594159029), # 4.59GB, avg file size 459.42MB
   ("fsize_db",                        82292366273), # 82.29GB, avg file size 20.57MB
   ("use_it",                          True),
   ("xsection",                        0.057547),
@@ -14412,7 +14412,7 @@ samples_2017["/GluGluToHHTo4V_node_7_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Oct28_woPresel_nom_all/ntuples/signal_ggf_nonresonant_node_7_hh_4v_private"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov08v2_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_7_hh_4v_private"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -14436,7 +14436,7 @@ samples_2017["/GluGluToHHTo4V_node_12_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("type",                            "mc"),
   ("sample_category",                 "signal_ggf_nonresonant_hh_wwww"),
   ("process_name_specific",           "signal_ggf_nonresonant_node_12_hh_4v_private"),
-  ("nof_files",                       4),
+  ("nof_files",                       10),
   ("nof_db_files",                    4000),
   ("nof_events",                      {
     'Count'                                                                          : [ 999999, ],
@@ -14457,7 +14457,7 @@ samples_2017["/GluGluToHHTo4V_node_12_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   }),
   ("nof_tree_events",                 999999),
   ("nof_db_events",                   999999),
-  ("fsize_local",                     4569719369), # 4.57GB, avg file size 1.14GB
+  ("fsize_local",                     4584748810), # 4.58GB, avg file size 458.47MB
   ("fsize_db",                        81871806292), # 81.87GB, avg file size 20.47MB
   ("use_it",                          True),
   ("xsection",                        0.057547),
@@ -14470,7 +14470,7 @@ samples_2017["/GluGluToHHTo4V_node_12_13TeV/RunIIFall17MiniAODv2/USER"] = OD([
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Oct28_woPresel_nom_all/ntuples/signal_ggf_nonresonant_node_12_hh_4v_private"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov08v2_woPresel_nom_hh/ntuples/signal_ggf_nonresonant_node_12_hh_4v_private"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
