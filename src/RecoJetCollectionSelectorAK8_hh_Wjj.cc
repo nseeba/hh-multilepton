@@ -19,6 +19,7 @@ RecoJetSelectorAK8_hh_Wjj::RecoJetSelectorAK8_hh_Wjj(Era era, int index, bool de
   , max_subJet1_absEta_(2.4)
   , min_subJet2_pt_(20.)
   , max_subJet2_absEta_(2.4)
+  , useDeltaRCut_bet_subjet_lep_(true)
   , debug_(debug)
 {
   switch(era)
@@ -94,6 +95,18 @@ void
 RecoJetSelectorAK8_hh_Wjj::set_min_jetId(int min_jetId)
 {
   min_jetId_ = min_jetId;
+}
+
+void
+RecoJetSelectorAK8_hh_Wjj::enableDeltaRCut_between_AK8Subjets_NearestLepton()
+{
+  useDeltaRCut_bet_subjet_lep_ = true;
+}
+
+void
+RecoJetSelectorAK8_hh_Wjj::disableDeltaRCut_between_AK8Subjets_NearestLepton()
+{
+  useDeltaRCut_bet_subjet_lep_ = false;
 }
 
 void
@@ -268,8 +281,9 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet,
   if(!(jet.subJet1() && jet.subJet2()                    &&
        // CV: make sure that lepton is not contained in either subjet
        // (neccessary, as we do not yet reconstruct AK8 jets on nanoAOD level, which are cleaned with respect to leptons)
-       deltaR(jet.subJet1()->p4(), lepton->p4()) > 0.1  &&
-       deltaR(jet.subJet2()->p4(), lepton->p4()) > 0.1  &&
+       // SS: useDeltaRCut_bet_subjet_lep=False when reading AK8-LeptonSubtracted branch
+       ( (useDeltaRCut_bet_subjet_lep_ && deltaR(jet.subJet1()->p4(), lepton->p4()) > 0.1) || ( ! useDeltaRCut_bet_subjet_lep_) ) &&
+       ( (useDeltaRCut_bet_subjet_lep_ && deltaR(jet.subJet2()->p4(), lepton->p4()) > 0.1) || ( ! useDeltaRCut_bet_subjet_lep_) ) && 
        (
          (
            jet.subJet1()->pt()      >= min_subJet1_pt_     &&
@@ -286,7 +300,7 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet,
        )
      ))
   {
-    if(debug_)
+    if(debug_ || 1==1)
     {
       std::cout << "FAILS subjet selection criteria\njet: " << jet;
       returnType = "FAILS subjet selection criteria";
@@ -321,6 +335,7 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet,
           returnType += "  |eta| > trsh";
         }
       }
+      std::cout << returnType << "\n";
     }
     return false;
   }
@@ -333,4 +348,25 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet) const
 {
   std::string returnType = "";
   return this->operator()(jet, returnType);
+}
+
+
+RecoJetCollectionSelectorAK8_hh_Wjj::RecoJetCollectionSelectorAK8_hh_Wjj(Era era,
+									 int index,
+									 bool debug)
+  : ParticleCollectionSelector<RecoJetAK8, RecoJetSelectorAK8_hh_Wjj>(era, index, debug)
+{
+
+}
+
+void
+RecoJetCollectionSelectorAK8_hh_Wjj::enableDeltaRCut_between_AK8Subjets_NearestLepton()
+{
+  selector_.enableDeltaRCut_between_AK8Subjets_NearestLepton();
+}   
+
+void
+RecoJetCollectionSelectorAK8_hh_Wjj::disableDeltaRCut_between_AK8Subjets_NearestLepton()
+{
+  selector_.disableDeltaRCut_between_AK8Subjets_NearestLepton();
 }

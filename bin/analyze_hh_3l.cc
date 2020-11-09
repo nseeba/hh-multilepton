@@ -322,16 +322,18 @@ int main(int argc, char* argv[])
 
   const std::string electronSelection_string = cfg_analyze.getParameter<std::string>("electronSelection");
   const std::string muonSelection_string     = cfg_analyze.getParameter<std::string>("muonSelection");
+  std::cout << "electronSelection_string = " << electronSelection_string << "\n"
+               "muonSelection_string     = " << muonSelection_string     << '\n'
+  ;
   const int electronSelection = get_selection(electronSelection_string);
   const int muonSelection     = get_selection(muonSelection_string);
 
   bool apply_leptonGenMatching = cfg_analyze.getParameter<bool>("apply_leptonGenMatching");
   std::vector<leptonGenMatchEntry> leptonGenMatch_definitions = getLeptonGenMatch_definitions_3lepton(true);
-  std::cout << leptonGenMatch_definitions;
+  std::cout << "leptonGenMatch_definitions: \n" << leptonGenMatch_definitions;
 
   GenMatchInterface genMatchInterface(3, apply_leptonGenMatching, false);
 
-  std::cout << "analyze_hh_3l:: Siddh here1" << std::endl;
 
   TString hadTauSelection_string = cfg_analyze.getParameter<std::string>("hadTauSelection").data();
   TObjArray* hadTauSelection_parts = hadTauSelection_string.Tokenize("|");
@@ -351,7 +353,6 @@ int main(int argc, char* argv[])
   else throw cms::Exception("analyze_hh_3l")
     << "Invalid Configuration parameter 'leptonChargeSelection' = " << leptonChargeSelection_string << " !!\n";
 
-  std::cout << "analyze_hh_3l:: Siddh here2" << std::endl;
   
   //const int minNumJets = 1;
 
@@ -374,7 +375,6 @@ int main(int argc, char* argv[])
   MEtFilterSelector metFilterSelector(cfgMEtFilter, isMC);
   const bool useNonNominal = cfg_analyze.getParameter<bool>("useNonNominal");
   const bool useNonNominal_jetmet = useNonNominal || ! isMC;
-  std::cout << "analyze_hh_3l:: Siddh here3" << std::endl;
   
   if(! central_or_shifts_local.empty())
   {
@@ -633,6 +633,20 @@ int main(int argc, char* argv[])
   RecoJetCollectionCleanerAK8 jetCleanerAK8_dR16(1.6, isDEBUG);
   RecoJetCollectionSelectorAK8 jetSelectorAK8(era, -1, isDEBUG);
   RecoJetCollectionSelectorAK8_hh_Wjj jetSelectorAK8_Wjj(era, -1, isDEBUG);
+  std::cout << "branchName_jets_ak8_Wjj: " << branchName_jets_ak8_Wjj << ", "
+	    << "branchName_subjets_ak8_Wjj: " << branchName_subjets_ak8_Wjj << "\n";
+  if ( branchName_jets_ak8_Wjj.find("AK8LS") != std::string::npos    &&
+       branchName_subjets_ak8_Wjj .find("AK8LS") != std::string::npos )
+  {
+    jetSelectorAK8_Wjj.disableDeltaRCut_between_AK8Subjets_NearestLepton();
+    std::cout << "\t diable dR(AK8subjets, nearestLepton) cut ***** \n";
+  }
+  else
+  {
+    jetSelectorAK8_Wjj.enableDeltaRCut_between_AK8Subjets_NearestLepton();
+    std::cout << "\t enable dR(AK8subjets, nearestLepton) cut ***** \n";
+  }
+    
   
   //--- declare missing transverse energy
   RecoMEtReader* metReader = new RecoMEtReader(era, isMC, branchName_met);
@@ -711,6 +725,57 @@ int main(int argc, char* argv[])
     inputTree->registerReader(genWJetReader);
   }
 
+  
+//Setting up BDT for signal extraction  
+
+  const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
+  std::vector<double> gen_mHH = analysisConfig.get_HH_resonant_mass_points();
+  /*
+  const edm::ParameterSet mvaInfo_res = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_res");
+  std::string BDTFileName_spin0_even  = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_spin0_even");
+  std::string BDTFileName_spin0_odd   = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_spin0_odd");
+  std::string fitFunctionFileName_spin0 = mvaInfo_res.getParameter<std::string>("fitFunctionFileName_spin0");
+  std::vector<std::string> BDTInputVariables_spin0 = mvaInfo_res.getParameter<std::vector<std::string>>("inputVars_spin0");
+  std::string BDTFileName_spin2_even  = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_spin2_even");
+  std::string BDTFileName_spin2_odd   = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_spin2_odd");
+  std::string fitFunctionFileName_spin2 = mvaInfo_res.getParameter<std::string>("fitFunctionFileName_spin2");
+  std::vector<std::string> BDTInputVariables_spin2 = mvaInfo_res.getParameter<std::vector<std::string>>("inputVars_spin2");
+  const edm::ParameterSet mvaInfo_nonRes = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_nonRes");
+  std::vector<double> nonRes_BMs = cfg_analyze.getParameter<std::vector<double>>("nonRes_BMs");
+  std::string BDTFileName_nonRes_even  = mvaInfo_nonRes.getParameter<std::string>("BDT_xml_FileName_nonRes_even");
+  std::string BDTFileName_nonRes_odd   = mvaInfo_nonRes.getParameter<std::string>("BDT_xml_FileName_nonRes_odd");
+  std::vector<std::string> BDTInputVariables_nonRes = mvaInfo_nonRes.getParameter<std::vector<std::string>>("inputVars_nonRes"); // Include all Input Var.s except BM indices
+
+
+  assert(BDTFileName_spin0_odd != "");
+  assert(BDTFileName_spin0_even != "");
+  assert(fitFunctionFileName_spin0 != "");
+  assert(BDTInputVariables_spin0.size() != 0);
+  TMVAInterface* BDT_spin0 = new TMVAInterface(BDTFileName_spin0_odd, BDTFileName_spin0_even, BDTInputVariables_spin0, fitFunctionFileName_spin0);
+  BDT_spin0->enableBDTTransform();
+  std::map<std::string, double> BDTOutput_Map_spin0;
+
+  assert(BDTFileName_spin2_odd != "");
+  assert(BDTFileName_spin2_even != "");
+  assert(fitFunctionFileName_spin2 != "");
+  assert(BDTInputVariables_spin2.size() != 0);
+  TMVAInterface* BDT_spin2 = new TMVAInterface(BDTFileName_spin2_odd, BDTFileName_spin2_even, BDTInputVariables_spin2, fitFunctionFileName_spin2);
+  BDT_spin2->enableBDTTransform();
+  std::map<std::string, double> BDTOutput_Map_spin2;
+
+  assert(BDTFileName_nonRes_odd != "");
+  assert(BDTFileName_nonRes_even != "");
+  assert(BDTInputVariables_nonRes.size() != 0);
+  TMVAInterface* BDT_nonRes = new TMVAInterface(BDTFileName_nonRes_odd, BDTFileName_nonRes_even, BDTInputVariables_nonRes);
+  BDT_nonRes->enableBDTTransform();
+  std::map<std::string, double> BDTOutput_Map_nonRes;
+
+  std::map<std::string, double> AllVars_Map;
+  */
+  
+  /////////////////////
+
+  
   //std::string mvaFileName_hh_3l_SUMBk_HH_pkl = "hhAnalysis/multilepton/data/3l_0tau_HH_XGB_noTopness_evtLevelSUM_HH_res_26Var.pkl"; 
   std::string mvaFileName_hh_3l_SUMBk_HH_xml = "hhAnalysis/multilepton/data/3l_0tau_HH_XGB_noTopness_evtLevelSUM_HH_res_26Var.xml";
   std::vector<std::string> mvaInputs_hh_3l_SUMBk_HH = {
@@ -725,7 +790,7 @@ int main(int argc, char* argv[])
   TMVAInterface *mva_tmva_hh_3l_SUMBk_HH = new TMVAInterface(mvaFileName_hh_3l_SUMBk_HH_xml, mvaInputs_hh_3l_SUMBk_HH);
   mva_tmva_hh_3l_SUMBk_HH->enableBDTTransform();
 
-  bool selectBDT = ( cfg_analyze.exists("selectBDT") ) ? cfg_analyze.getParameter<bool>("selectBDT") : false;
+  //bool selectBDT = ( cfg_analyze.exists("selectBDT") ) ? cfg_analyze.getParameter<bool>("selectBDT") : false;
 
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
   std::ostream* selEventsFile = ( selEventsFileName_output != "" ) ? new std::ofstream(selEventsFileName_output.data(), std::ios::out) : 0;
@@ -873,7 +938,12 @@ int main(int argc, char* argv[])
         selHistManager->evtYield_->bookHistograms(fs);
         selHistManager->weights_ = new WeightHistManager(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/weights", histogramDir.data()), era_string, central_or_shift));
-        selHistManager->weights_->bookHistograms(fs, { "genWeight", "pileupWeight", "triggerWeight", "data_to_MC_correction", "fakeRate" });
+        selHistManager->weights_->bookHistograms(fs, {
+	    "genWeight", "lheWeight", "pileupWeight",
+	    "triggerWeight", "btagWeight", "leptonEff","data_to_MC_correction",
+	    "fakeRate" });
+	    //"genWeight", "pileupWeight", "triggerWeight", "data_to_MC_correction", "fakeRate" });
+	    
       }
       selHistManagers[central_or_shift][idxLepton] = selHistManager;
 
@@ -1806,10 +1876,10 @@ int main(int argc, char* argv[])
     const RecoLepton* selLepton2_H_WW_ll = nullptr;
     std::vector<const RecoJetAK8*> selJetsAK8_Wjj_wSelectorAK8_Wjj;
     std::vector<const RecoJetAK8*> selJetsAK8_Wjj;
-    std::vector<const RecoJet*> selJetsAK4_Wjj;
-    const RecoJetAK8* selJetAK8_Wjj = nullptr;
-    const RecoJetBase* selJet1_Wjj = nullptr;
-    const RecoJetBase* selJet2_Wjj = nullptr;
+    //std::vector<const RecoJet*> selJetsAK4_Wjj;
+    const RecoJetAK8*  selJetAK8_Wjj = nullptr;
+    const RecoJetBase* selJet1_Wjj   = nullptr;
+    const RecoJetBase* selJet2_Wjj   = nullptr;
 
 
      if (idxLepton_H_WW_ljj < 3) { // Approach - 0 
@@ -1826,23 +1896,23 @@ int main(int argc, char* argv[])
     //selJetsAK8_Wjj = jet_ptrs_ak8_Wjj; // without using AK8LS_H_WW_jj selector, just use AK8LS
     //selJetsAK8_Wjj = selJetsAK8_selectorAK8; // without using AK8LS_H_WW_jj selector, just use AK8LS
      
-    selJetsAK4_Wjj = jetSelectorAK4(cleanedJetsAK4, isHigherPt);
+    //selJetsAK4_Wjj = jetSelectorAK4(cleanedJetsAK4, isHigherPt);
 
 
     
     if (selJetsAK8_Wjj.size() >= 1 && selJetsAK8_Wjj[0] && selJetsAK8_Wjj[0]->subJet1() && selJetsAK8_Wjj[0]->subJet2()) {  // using AK8LS_H_WW_jj selector
       selJetAK8_Wjj = selJetsAK8_Wjj[0];
-      selJet1_Wjj = selJetAK8_Wjj->subJet1();
-      selJet2_Wjj = selJetAK8_Wjj->subJet2();
-      isWjjBoosted = true;
+      selJet1_Wjj   = selJetAK8_Wjj->subJet1();
+      selJet2_Wjj   = selJetAK8_Wjj->subJet2();
+      isWjjBoosted  = true;
       assert(selJet1_Wjj && selJet2_Wjj);
     } else {      
       double minRank = 1.e+3;
-      // Question: use selJetsAK4 (cleaned w.r.t fakable lepton and tau jets) or selJetsAK4_Wjj (cleaned w.r.t fakable lepton only) for non-boosted AK4 jets
-      for ( std::vector<const RecoJet*>::const_iterator selJet1 = selJetsAK4_Wjj.begin();
-	    selJet1 != selJetsAK4_Wjj.end(); ++selJet1 ) {
+      // Question: use selJetsAK4 (cleaned w.r.t fakable lepton and tau jets) or selJetsAK4 (cleaned w.r.t fakable lepton only) for non-boosted AK4 jets
+      for ( std::vector<const RecoJet*>::const_iterator selJet1 = selJetsAK4.begin();
+	    selJet1 != selJetsAK4.end(); ++selJet1 ) {
 	for ( std::vector<const RecoJet*>::const_iterator selJet2 = selJet1 + 1;
-	      selJet2 != selJetsAK4_Wjj.end(); ++selJet2 ) {
+	      selJet2 != selJetsAK4.end(); ++selJet2 ) {
 	  Particle::LorentzVector jjP4 = (*selJet1)->p4() + (*selJet2)->p4();
 	  double m_jj = jjP4.mass();
 	  double pT_jj = jjP4.pt();
@@ -1854,14 +1924,14 @@ int main(int argc, char* argv[])
 	  }
 	} 
       }
-      if ( !selJet1_Wjj && selJetsAK4_Wjj.size() >= 1 ) selJet1_Wjj = selJetsAK4_Wjj[0];
-      if ( !selJet2_Wjj && selJetsAK4_Wjj.size() >= 2 ) selJet2_Wjj = selJetsAK4_Wjj[1];
+      if ( !selJet1_Wjj && selJetsAK4.size() >= 1 ) selJet1_Wjj = selJetsAK4[0];
+      if ( !selJet2_Wjj && selJetsAK4.size() >= 2 ) selJet2_Wjj = selJetsAK4[1];
       if ( selJet1_Wjj && selJet2_Wjj ) {
 	isWjjResolved = true;
       }
       else {
-	if (selJetsAK4_Wjj.size() == 1) {
-	  selJet1_Wjj = selJetsAK4_Wjj[0];
+	if (selJetsAK4.size() == 1) {
+	  selJet1_Wjj = selJetsAK4[0];
 	  isWjjHasOnly1j = true;
 	}
       }
@@ -2156,7 +2226,7 @@ int main(int argc, char* argv[])
     }
     //printf("nselLeptons: %zu, tightLeptons: %zu, fakeableLeptons %zu, tightLeptonsFull %zu, fakeableLeptonsFull %zu \n",selLeptons.size(),tightLeptons.size(),fakeableLeptons.size(),tightLeptonsFull.size(),fakeableLeptonsFull.size());
     if (fakeableLeptonsFull.size() > 3) {
-      cutFlowTable.update(Form("pass all selection, nakeableLeptonsFull > 3, genMatchIdx %d",genMatchIdx_0), evtWeightRecorder.get(central_or_shift_main));
+      cutFlowTable.update(Form("pass all selection, fakeableLeptonsFull > 3, genMatchIdx %d",genMatchIdx_0), evtWeightRecorder.get(central_or_shift_main));
     }
    
     if (isWjjBoosted) {
@@ -2219,7 +2289,7 @@ int main(int argc, char* argv[])
 
     double m3l = (selLepton_lead->p4() + selLepton_sublead->p4() + selLepton_third->p4()).mass();
 
-    
+    /*
     // 		VBF, nonVBF categorization -----    
     std::vector<const RecoJetBase*> selJets_Wjj;
     if ( selJet1_Wjj) {
@@ -2265,7 +2335,8 @@ int main(int argc, char* argv[])
       std::vector<const RecoJet*> cleanedJets_wrtVBF = jetCleanerAK4_dR04(selJetsAK4, overlaps);
       selJets_nonVBF = jetSelectorAK4(cleanedJets_wrtVBF, isHigherPt);      
     }
-
+    */
+    
     int eventCategory = -1;
     if      (isWjjBoosted)   eventCategory = 1;
     else if (isWjjResolved)  eventCategory = 2;
@@ -2369,9 +2440,9 @@ int main(int argc, char* argv[])
     }
 
     // just to avoid 'variables defined but not used' error
-    TString sTmp123 = Form("selLepton1_H_WW_ll pt: %f,  selLepton2_H_WW_ll: %f,  vbf_dEta_jj: %f",selLepton1_H_WW_ll->pt(),selLepton2_H_WW_ll->pt(), vbf_dEta_jj);
+    TString sTmp123 = Form("selLepton1_H_WW_ll pt: %f,  selLepton2_H_WW_ll: %f ",selLepton1_H_WW_ll->pt(),selLepton2_H_WW_ll->pt());
     sTmp123 += "";
-    sTmp123 += Form(" isVBF: %i, ",(int)isVBF); 
+    //sTmp123 += Form(" isVBF: %i, ",(int)isVBF); 
 
     // Variables using lepton1/2/3 indexed following Approach-0
     const RecoLepton* selLepton_H_WW_ljj_Approach0 = selLepton_H_WW_ljj;

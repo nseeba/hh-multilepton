@@ -31,6 +31,8 @@ public:
   void set_min_subJet2_pt(double min_pt);
   void set_max_subJet2_absEta(double max_absEta);
   void set_min_jetId(int min_jetId);
+  void enableDeltaRCut_between_AK8Subjets_NearestLepton();
+  void disableDeltaRCut_between_AK8Subjets_NearestLepton();
 
   void set_lepton(const RecoLepton * lepton) const;
   void set_leptons(const std::vector<const RecoLepton *> & leptons) const;
@@ -62,23 +64,37 @@ public:
              std::string & returnType) const;
  
 protected:
-  Double_t min_pt_;                    ///< lower cut threshold on pT of "fat" (AK8) jet
-  Double_t max_absEta_;                ///< upper cut threshold on absolute value of eta of "fat" (AK8) jet
-  Int_t min_jetId_;                    ///< lower cut threshold on jet ID value 
-  Double_t min_msoftdrop_;             ///< lower cut threshold on mass of the two subjets
-  Double_t max_msoftdrop_;             ///< upper cut threshold on mass of the two subjets
-  Double_t max_tau2_div_tau1_;         ///< upper cut threshold on value of N-subjettiness ratio tau2/tau1
-  Double_t max_dR_lepton_;             ///< upper cut threshold on distance between "fat" (AK8) jet and electron or muon
-  Double_t min_subJet1_pt_;            ///< lower cut threshold on pT of first subjet
-  Double_t max_subJet1_absEta_;        ///< upper cut threshold on absolute value of eta of first subjet
-  Double_t min_subJet2_pt_;            ///< lower cut threshold on pT of second subjet
-  Double_t max_subJet2_absEta_;        ///< upper cut threshold on absolute value of eta of second subjet
-
+  Double_t min_pt_;                        ///< lower cut threshold on pT of "fat" (AK8) jet
+  Double_t max_absEta_;                    ///< upper cut threshold on absolute value of eta of "fat" (AK8) jet
+  Int_t    min_jetId_;                     ///< lower cut threshold on jet ID value 
+  Double_t min_msoftdrop_;                 ///< lower cut threshold on mass of the two subjets
+  Double_t max_msoftdrop_;                 ///< upper cut threshold on mass of the two subjets
+  Double_t max_tau2_div_tau1_;             ///< upper cut threshold on value of N-subjettiness ratio tau2/tau1
+  Double_t max_dR_lepton_;                 ///< upper cut threshold on distance between "fat" (AK8) jet and electron or muon
+  Double_t min_subJet1_pt_;                ///< lower cut threshold on pT of first subjet
+  Double_t max_subJet1_absEta_;            ///< upper cut threshold on absolute value of eta of first subjet
+  Double_t min_subJet2_pt_;                ///< lower cut threshold on pT of second subjet
+  Double_t max_subJet2_absEta_;            ///< upper cut threshold on absolute value of eta of second subjet
+  bool     useDeltaRCut_bet_subjet_lep_;   /// set False when reading AK8-LeptonSubtracted branch
+  
   mutable std::vector<const RecoLepton *> leptons_; ///< pointer to electron or muon produced in H->WW*->jj lnu decay
   
   bool debug_;
 };
 
-typedef ParticleCollectionSelector<RecoJetAK8, RecoJetSelectorAK8_hh_Wjj> RecoJetCollectionSelectorAK8_hh_Wjj;
+//typedef ParticleCollectionSelector<RecoJetAK8, RecoJetSelectorAK8_hh_Wjj> RecoJetCollectionSelectorAK8_hh_Wjj;
+class RecoJetCollectionSelectorAK8_hh_Wjj
+  : public ParticleCollectionSelector<RecoJetAK8, RecoJetSelectorAK8_hh_Wjj>
+{
+public:
+  explicit
+  RecoJetCollectionSelectorAK8_hh_Wjj(Era era,
+                                      int index = -1,
+                                      bool debug = false);
+  ~RecoJetCollectionSelectorAK8_hh_Wjj() {}
+
+  void enableDeltaRCut_between_AK8Subjets_NearestLepton();
+  void disableDeltaRCut_between_AK8Subjets_NearestLepton();
+};
 
 #endif // hhAnalysis_bbww_RecoJetCollectionSelectorAK8_hh_Wjj_h
