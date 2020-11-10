@@ -300,7 +300,7 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet,
        )
      ))
   {
-    if(debug_ || 1==1)
+    if(debug_)
     {
       std::cout << "FAILS subjet selection criteria\njet: " << jet;
       returnType = "FAILS subjet selection criteria";
@@ -335,7 +335,6 @@ RecoJetSelectorAK8_hh_Wjj::operator()(const RecoJetAK8 & jet,
           returnType += "  |eta| > trsh";
         }
       }
-      std::cout << returnType << "\n";
     }
     return false;
   }
