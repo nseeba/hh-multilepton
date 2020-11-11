@@ -130,14 +130,6 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
     self.executable_addBackgrounds = executable_addBackgrounds
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
 
-    ##processesVH = ["VH", "VH_hbb", "VH_hww", "VH_hzz", "VH_htt"]
-    ##processesTH = ["TH", "TH_hbb", "TH_hww", "TH_hzz", "TH_htt"]
-    ##processesTTH = ["TTH", "TTH_hbb", "TTH_hww", "TTH_hzz", "TTH_htt"]
-    ##processesTTWH = ["TTWH", "TTWH_hbb", "TTWH_hww", "TTWH_hzz", "TTWH_htt"]
-    ##processesTTZH = ["TTZH", "TTZH_hbb", "TTZH_hww", "TTZH_hzz", "TTZH_htt"]
-    ##processesggH = ["ggH", "ggH_hbb", "ggH_hww", "ggH_hzz", "ggH_htt"]
-    ##processesqqH = ["qqH", "qqH_hbb", "qqH_hww", "qqH_hzz", "qqH_htt"]
-    ##self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other"] + processesVH + processesTH + processesTTH + processesggH + processesqqH + processesTTWH + processesTTZH
     self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ] 
 
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "Convs", "data_fakes" ]
@@ -570,9 +562,9 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
           if "BDTOutput" in histogramToFit:
             if ("SM" in histogramToFit or "BM" in histogramToFit) and 'nonresonant' in sample_category:
               doAdd = True
-            if "spin0" in histogramToFit and "spin0" in sample_category and histogramToFit[9:13] in sample_category:
+            if "spin0" in histogramToFit and "spin0" in sample_category and "_%s_" % histogramToFit[9:histogramToFit.find("_", 9)] in sample_category:
               doAdd = True
-            if "spin2" in histogramToFit and "spin2" in sample_category and histogramToFit[9:13] in sample_category:
+            if "spin2" in histogramToFit and "spin2" in sample_category and "_%s_" % histogramToFit[9:histogramToFit.find("_", 9)] in sample_category:
               doAdd = True
           else:
             doAdd = True
@@ -610,7 +602,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
           'datacardFile' : os.path.join(self.dirs[key_prep_dcard_dir][DKEY_DCRD], "prepareDatacards_%s_%s_%s.root" % prep_dcard_job_tuple),
           'histogramDir' : self.histogramDir_prep_dcard,
           'histogramToFit' : histogramToFit,
-          'label' : '1l+3#tau_{h}',
+          'label' : None
         }
         self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
       if "SS" in self.chargeSumSelections:
@@ -623,7 +615,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
           'datacardFile' : os.path.join(self.dirs[key_prep_dcard_dir][DKEY_DCRD], "prepareDatacards_%s_%s_%s.root" % prep_dcard_job_tuple),
           'histogramDir' : self.histogramDir_prep_dcard_SS,
           'histogramToFit' : histogramToFit,
-          'label' : '1l+3#tau_{h} SS',
+          'label' : 'SS'
         }
         self.createCfg_prep_dcard(self.jobOptions_prep_dcard[key_prep_dcard_job])
 
