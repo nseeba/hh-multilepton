@@ -565,6 +565,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
         if not sample_info["use_it"]:
           continue
         sample_category = sample_info["sample_category"]
+        masses_to_exclude = ["3000", "2500", "2000", "1750", "1500", "1250"]
         if sample_category.startswith("signal"):
           doAdd = False
           if "BDTOutput" in histogramToFit:
@@ -574,6 +575,8 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
               doAdd = True
             if "spin2" in histogramToFit and "spin2" in sample_category and histogramToFit[9:13] in sample_category:
               doAdd = True
+            for mass in masses_to_exclude:
+              if mass in sample_category: doAdd = False
           else:
             doAdd = True
           if doAdd:

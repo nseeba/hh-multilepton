@@ -122,15 +122,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
     self.executable_addBackgrounds = executable_addBackgrounds
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
 
-    processesVH = ["VH", "VH_hbb", "VH_hww", "VH_hzz", "VH_htt"]
-    processesTH = ["TH", "TH_hbb", "TH_hww", "TH_hzz", "TH_htt"]
-    processesTTH = ["TTH", "TTH_hbb", "TTH_hww", "TTH_hzz", "TTH_htt"]
-    processesTTWH = ["TTWH", "TTWH_hbb", "TTWH_hww", "TTWH_hzz", "TTWH_htt"]
-    processesTTZH = ["TTZH", "TTZH_hbb", "TTZH_hww", "TTZH_hzz", "TTZH_htt"]
-    processesggH = ["ggH", "ggH_hbb", "ggH_hww", "ggH_hzz", "ggH_htt"]
-    processesqqH = ["qqH", "qqH_hbb", "qqH_hww", "qqH_hzz", "qqH_htt"]
-    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other"] + processesVH + processesTH + processesTTH + processesggH + processesqqH + processesTTWH + processesTTZH
-
+    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]
 
     self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "data_fakes" ]
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
@@ -532,40 +524,48 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
 
     logging.info("Creating configuration files to run 'prepareDatacards'")
     for histogramToFit in self.histograms_to_fit:
-      self.prep_dcard_signals = []
+      prep_dcard_HH = set()
       for sample_name, sample_info in self.samples.items():
         if not sample_info["use_it"]:
           continue
         sample_category = sample_info["sample_category"]
+        masses_to_exclude = ["3000", "2500", "2000", "1750", "1500", "1250"]
         if sample_category.startswith("signal"):
+          doAdd = False
           if "BDTOutput" in histogramToFit:
             if ("SM" in histogramToFit or "BM" in histogramToFit) and 'nonresonant' in sample_category:
-              if sample_category not in self.prep_dcard_signals:
-                self.prep_dcard_signals.append(sample_category)
-                if "wwww" in sample_category:
-                  self.prep_dcard_signals.append(sample_category.replace("wwww","wwzz"))
-                  self.prep_dcard_signals.append(sample_category.replace("wwww","zzzz"))
-                if "wwtt" in sample_category:
-                  self.prep_dcard_signals.append(sample_category.replace("wwtt","zztt"))
+              doAdd = True
             if "spin0" in histogramToFit and "spin0" in sample_category and histogramToFit[9:13] in sample_category:
-              if sample_category not in self.prep_dcard_signals:
-                self.prep_dcard_signals.append(sample_category)
-                if "wwww" in sample_category:
-                  self.prep_dcard_signals.append(sample_category.replace("wwww","wwzz"))
-                  self.prep_dcard_signals.append(sample_category.replace("wwww","zzzz"))
-                if "wwtt" in sample_category:
-                  self.prep_dcard_signals.append(sample_category.replace("wwtt","zztt"))
+              doAdd = True
             if "spin2" in histogramToFit and "spin2" in sample_category and histogramToFit[9:13] in sample_category:
-              if sample_category not in self.prep_dcard_signals:
-                self.prep_dcard_signals.append(sample_category)
-                if "wwww" in sample_category:
-                  self.prep_dcard_signals.append(sample_category.replace("wwww","wwzz"))
-                  self.prep_dcard_signals.append(sample_category.replace("wwww","zzzz"))
-                if "wwtt" in sample_category:
-                  self.prep_dcard_signals.append(sample_category.replace("wwtt","zztt"))
+              doAdd = True
+            for mass in masses_to_exclude:
+              if mass in sample_category: doAdd = False
           else:
-            if sample_category not in self.prep_dcard_signals: self.prep_dcard_signals.append(sample_category)
-      self.prep_dcard_processesToCopy = [ "data_obs" ] + self.nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ] + self.prep_dcard_signals
+            doAdd = True
+          if doAdd:
+            if "wwww" in sample_category:
+              prep_dcard_HH.add(sample_category.replace("wwww", "zzzz"))
+              prep_dcard_HH.add(sample_category.replace("wwww", "wwww"))
+              prep_dcard_HH.add(sample_category.replace("wwww", "zzww"))
+            elif "wwtt" in sample_category:
+              prep_dcard_HH.add(sample_category.replace("wwtt", "ttzz"))
+              prep_dcard_HH.add(sample_category.replace("wwtt", "ttww"))
+            elif "tttt" in sample_category:                  
+              prep_dcard_HH.add(sample_category)
+            else:
+              raise ValueError("Failed to identify relevant HH decay mode(s) for 'sample_category' = %s !!" % sample_category)
+      prep_dcard_HH = list(prep_dcard_HH)
+      prep_dcard_H = []
+      prep_dcard_other_nonfake_backgrounds = []
+      for process in self.nonfake_backgrounds:
+        if process in [ "VH", "TH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]:
+          prep_dcard_H.append("%s_hww" % process)
+          prep_dcard_H.append("%s_hzz" % process)
+          prep_dcard_H.append("%s_htt" % process)
+        else:
+          prep_dcard_other_nonfake_backgrounds.append(process)
+      self.prep_dcard_processesToCopy = [ "data_obs" ] + prep_dcard_HH + prep_dcard_H + prep_dcard_other_nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ]
       key_prep_dcard_dir = getKey("prepareDatacards")
       if "OS" in self.hadTau_charge_selections:
         key_hadd_stage2_job = getKey(get_hadTau_selection_and_frWeight("Tight", "disabled"), "OS")
