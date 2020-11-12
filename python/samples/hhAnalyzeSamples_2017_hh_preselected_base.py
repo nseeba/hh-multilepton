@@ -1,6 +1,6 @@
 from collections import OrderedDict as OD
 
-# file generated at 2020-11-12 10:30:45 with the following command:
+# file generated at 2020-11-12 11:23:35 with the following command:
 # create_dictionary.py -m python/samples/metaDict_2017.py -p python/samples/sampleLocations_2017_preselected.txt -N samples_2017 -E 2017 -o python/samples -g hhAnalyzeSamples_2017_hh_preselected_base.py -M -q /hdfs/local/karl/count_final/2020Nov07/count_2017.root
 
 samples_2017 = OD()
@@ -9343,9 +9343,9 @@ samples_2017["/VBFHHTo4T_CV_1_C2V_2_C3_1_dipoleRecoilOff-TuneCP5_PSweights_13TeV
     'CountWeightedFullPSWeightL1PrefireNom'                                          : [ 3.68036875e+06, 3.68036875e+06, 3.68036875e+06, 3.68036875e+06, 3.68036875e+06, 3.68036875e+06, ],
     'CountWeightedFullPSWeightOriginalXWGTUPL1PrefireNom'                            : [ 3.68079125e+05, 3.67461875e+05, 4.96007062e+05, 3.68018250e+05, 3.68565219e+05, 2.50879438e+05, ],
   }),
-  ("nof_tree_events",                 307113),
+  ("nof_tree_events",                 315254),
   ("nof_db_events",                   397000),
-  ("fsize_local",                     1560833060), # 1.56GB, avg file size 1.56GB
+  ("fsize_local",                     1600099522), # 1.60GB, avg file size 1.60GB
   ("fsize_db",                        24795263904), # 24.80GB, avg file size 1.03GB
   ("use_it",                          True),
   ("xsection",                        5.5891e-05),
@@ -9358,7 +9358,7 @@ samples_2017["/VBFHHTo4T_CV_1_C2V_2_C3_1_dipoleRecoilOff-TuneCP5_PSweights_13TeV
   ("local_paths",
     [
       OD([
-        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov12_wPresel_nom_all/ntuples/signal_vbf_nonresonant_1_2_1_hh_4t_dipoleRecoilOff"),
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2017/2020Nov12_wPresel_nom_hh/ntuples/signal_vbf_nonresonant_1_2_1_hh_4t_dipoleRecoilOff"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
