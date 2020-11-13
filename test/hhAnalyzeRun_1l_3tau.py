@@ -10,6 +10,7 @@ from tthAnalysis.HiggsToTauTau.common import load_samples_stitched
 import os
 import sys
 import getpass
+import collections
 
 # E.g.: ./test/hhAnalyzeRun_1l_3tau.py -v 2017Dec13 -m default -e 2017 -t deepVSj
 
@@ -132,10 +133,10 @@ for sample_name, sample_info in samples.items():
   elif sample_name.startswith("/Tau/"):
     sample_info["use_it"] = True
 
-histograms_to_fit = {
-  "EventCounter" : {},
-  "dihiggsMass"  : {}
-}
+histograms_to_fit = collections.OrderedDict([
+  ("EventCounter", {}),
+  ("dihiggsMass" , {}),
+])
 masspoints = [ 250., 260., 270., 280., 300., 350., 400., 450., 500., 550., 600., 650., 700., 750., 800., 850., 900., 1000. ]
 for masspoint in masspoints:
   histograms_to_fit.update({ "BDTOutput_%0.0f_hypo_spin0" % masspoint : {} })

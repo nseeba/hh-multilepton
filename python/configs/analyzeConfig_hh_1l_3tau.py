@@ -557,7 +557,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
       for sample_name, sample_info in self.samples.items():
         if not sample_info["use_it"]:
           continue
-        sample_category = sample_info["sample_category"]
+        sample_category = sample_info["sample_category_hh"]
         if sample_category.startswith("signal"):
           doAdd = False
           if "BDTOutput" in histogramToFit:

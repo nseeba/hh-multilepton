@@ -39,6 +39,8 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
   , xMax_(1.)
   , isDEBUG_(isDEBUG)
 {
+  process_ = analysisConfig.isMC_HH() ? analysisConfig.process_hh() : analysisConfig.process();
+
   if ( central_or_shift_ == "central" )
   {
     std::cout << "<DatacardHistManager_hh>: booking histograms for process = '" << process_ << "'" << std::endl;

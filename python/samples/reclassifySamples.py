@@ -1,6 +1,11 @@
 import collections
 import itertools
 import copy
+import re
+
+HH_DECAYMODES = [ 'wwww', 'wwtt', 'tttt', 'bbtt', 'bbvv', 'bbvv_sl' ]
+HH_DECAYMODES_SUFFIX = [ '_{}'.format(hh_dm) for hh_dm in HH_DECAYMODES ]
+HH_DECAYMODES_RE = re.compile('_({})$'.format('|'.join(HH_DECAYMODES)))
 
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 
@@ -38,7 +43,10 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None)
 
     if sample_info["process_name_specific"].startswith('signal') and 'hh' in sample_info["process_name_specific"]:
       sample_info["use_it"] = 'vbf_spin' not in sample_info["process_name_specific"]
-      sample_info["sample_category_hh"] = sample_info["sample_category"]
+      sample_info["sample_category_hh"] = copy.deepcopy(sample_info["sample_category"])
+      assert (sample_info["sample_category"].endswith(tuple(HH_DECAYMODES_SUFFIX)))
+      sample_info["sample_category"] = HH_DECAYMODES_RE.sub("", sample_info["sample_category_hh"])
+      assert (sample_info["sample_category"] != sample_info["sample_category_hh"])
 
     if sample_info["sample_category"] == "Rares":
       sample_info["sample_category"] = "Other"
