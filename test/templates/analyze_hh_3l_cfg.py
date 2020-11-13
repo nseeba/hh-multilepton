@@ -135,6 +135,10 @@ process.analyze_hh_3l = cms.PSet(
     apply_LHE_nom = cms.bool(False),
     useObjectMultiplicity = cms.bool(False),
 
+    gen_mHH = cms.vdouble(250,260,270,280,300, 320,350,400,450,500,550,600,650,700,750,800,850,900,1000), ## Set the signal mass range used in the BDT .pkl/.xml/.pb files
+
+    nonRes_BMs = cms.vdouble(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+    
     evtWeight = cms.PSet(
         apply = cms.bool(False),
         histogramFile = cms.string(''),
