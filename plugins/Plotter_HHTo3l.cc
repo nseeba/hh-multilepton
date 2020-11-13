@@ -15,6 +15,8 @@
 const int printLevel = 0;
 //bool isDataBlinded = true; // added by Siddhesh
 
+typedef std::vector<std::string> vstring;
+
 std::string
 printfHistoIntegral(TH1 *h)
 {
@@ -29,11 +31,22 @@ Plotter_HHTo3l::Plotter_HHTo3l(const TFile* inputFile, const edm::ParameterSet& 
 {
   scaleSignal_ = cfg.getParameter<double>("scaleSignal");
   legendEntrySignal_ = cfg.getParameter<std::string>("legendEntrySignal");
+  
+  if (cfg.exists("legendEntriesSignal"))
+  {
+    legendEntriesSignal_ = cfg.getParameter<vstring>("legendEntriesSignal");
+  }
+
+  if (cfg.exists("optionToNormalizeSignalDistributions"))
+  {
+    optionToNormalizeSignalDistributions_ = (int)cfg.getParameter<double>("optionToNormalizeSignalDistributions");
+  }
 }
  
 Plotter_HHTo3l::~Plotter_HHTo3l()
 {}
 
+/*
 void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
 			  TH1* histogramData, TH1* histogramData_blinded,
 			  std::vector<histogramEntryType*>& histogramsBackground, 	
@@ -49,11 +62,68 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
 			  bool isRebinned, 
 			  bool divideByBinWidth)
 {
+  std::vector<histogramEntryType*> histogramsSignal = { new histogramEntryType("Signal", histogramSignal) };
+
+  makePlot_multiSignal( canvasSizeX,  canvasSizeY,
+			histogramData,  histogramData_blinded,
+			histogramsBackground, 	
+			histogramsSignal,
+			histogramUncertainty,
+			legendTextSize,  legendPosX,  legendPosY,  legendSizeX, legendSizeY, 
+			labelOnTop,
+			extraLabels,  labelTextSize,
+			labelPosX,  labelPosY,  labelSizeX,  labelSizeY,
+			xMin,  xMax,  xAxisTitle,  xAxisOffset,
+			useLogScale,  yMin,  yMax, yAxisTitle,  yAxisOffset,
+			outputFileName, 
+			isRebinned, 
+		        divideByBinWidth);
+}
+*/
+void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
+			  TH1* histogramData, TH1* histogramData_blinded,
+			  std::vector<histogramEntryType*>& histogramsBackground, 	
+			  std::vector<histogramEntryType*>& histogramsSignal,
+			  TH1* histogramUncertainty,
+			  double legendTextSize, double legendPosX, double legendPosY, double legendSizeX, double legendSizeY, 
+			  const std::string& labelOnTop,
+			  std::vector<std::string>& extraLabels, double labelTextSize,
+			  double labelPosX, double labelPosY, double labelSizeX, double labelSizeY,
+			  double xMin, double xMax, const std::string& xAxisTitle, double xAxisOffset,
+			  bool useLogScale, double yMin, double yMax, const std::string& yAxisTitle, double yAxisOffset,
+			  const std::string& outputFileName, 
+			  bool isRebinned, 
+			  bool divideByBinWidth)
+{
   std::cout << "<Plotter_HHTo3l::makePlot>:";
   std::cout << " outputFileName = " << outputFileName << "\n";
   //std::cout << " divideByBinWidth: " << divideByBinWidth << std::endl;
- 
+
+  TH1 * histogramSignal = nullptr;
+  if (histogramsSignal.size() > 0)
+  {
+    histogramSignal = histogramsSignal[0]->histogram_;
+
+    if (histogramsSignal.size() != legendEntriesSignal_.size())
+    {
+      std::cout << "Mismatch in signal processes and signal-legends.. \nTerminating\n " << std::endl;
+      exit(0);
+    }
+  }
+  if (printLevel > 3)
+  {
+    std::cout << "Plotter_HHTo3l::makePlot():: histogramsSignal.size: " << histogramsSignal.size();
+    for (size_t i=0; i<histogramsSignal.size(); i++)
+    {
+      std::cout << ",  histogramSignal " << histogramsSignal[i]; 
+    }
+    std::cout << "\n";
+  }
+
+
+
   
+	
   TH1* histogramData_density = 0;
   if ( histogramData ) {
     if  ( divideByBinWidth ) {
@@ -248,6 +318,36 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     if ( scaleSignal_ > 0. ) histogramSignal_density->Scale(scaleSignal_);
   }
   
+  std::vector<TH1*> histogramsSignal_density;
+  double nSignalEvents_scale = -1.;
+  for (size_t i=0; i<histogramsSignal.size(); i++)
+  {
+    TH1 *hSig = histogramsSignal[i]->histogram_;
+    TH1 *hSig_density = 0;
+    if ( hSig ) checkCompatibleBinning(hSig, histogramData);
+    if ( divideByBinWidth ) {
+      hSig_density = divideHistogramByBinWidth(hSig); 
+    } else {
+      std::string histogramNameSignal_density = Form("%s_NotDivided",hSig->GetName());
+      hSig_density = (TH1*)hSig->Clone(histogramNameSignal_density.data());
+    }
+    if ( scaleSignal_ > 0. ) hSig_density->Scale(scaleSignal_);
+
+    // normalized all signal histograms' area w.r.t. each other
+    if (optionToNormalizeSignalDistributions_ == 1) // normalize w.r.t. area
+    {    
+      if (nSignalEvents_scale < 0.) nSignalEvents_scale = hSig_density->Integral();
+      else                          hSig_density->Scale(nSignalEvents_scale / hSig_density->Integral());
+    }
+    else if (optionToNormalizeSignalDistributions_ == 2) // normalize w.r.t. height
+    {    
+      if (nSignalEvents_scale < 0.) nSignalEvents_scale = hSig_density->GetMaximum();
+      else                          hSig_density->Scale(nSignalEvents_scale / hSig_density->GetMaximum());
+    }
+    
+    histogramsSignal_density.push_back(hSig_density);
+  }
+  
   TH1* histogramSum_density = 0;
   std::vector<TH1*> histogramsSignal_and_Background_density = histogramsBackground_density;
   if ( histogramSignal_density ) histogramsSignal_and_Background_density.push_back(histogramSignal_density);
@@ -307,6 +407,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   histogramOther_density->Add(histogramW_density);                                      
   //---------------------------------------------------------------------------   
 
+  
   TCanvas* canvas = new TCanvas("canvas", "", canvasSizeX, canvasSizeY);
   canvas->SetFillColor(10);
   canvas->SetFillStyle(4000);
@@ -335,11 +436,13 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   canvas->cd();
   topPad->Draw();
   topPad->cd();
+
   
   TAxis* xAxis_top = 0;
   if ( histogramData_blinded_density ) xAxis_top = histogramData_blinded_density->GetXaxis();
   else xAxis_top = histogramSum_density->GetXaxis();
-  if ( xMin >= 0. && xMax > xMin ) xAxis_top->SetRangeUser(xMin, xMax);
+  //if ( xMin >= 0. && xMax > xMin ) xAxis_top->SetRangeUser(xMin, xMax);
+  if ( xMax > xMin && (abs(xMin+1.)>1e-5 || abs(xMax+1.)>1e-5)) xAxis_top->SetRangeUser(xMin, xMax); // default xMin=xMax=-1
   xAxis_top->SetTitle(xAxisTitle.data());
   xAxis_top->SetTitleOffset(xAxisOffset);
   xAxis_top->SetLabelColor(10);
@@ -362,7 +465,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   legend->SetBorderSize(0);
   legend->SetFillColor(10);
   legend->SetTextSize(legendTextSize);
-  legend->SetNColumns(2);
+  legend->SetNColumns(3);
 
   if (printLevel > 4)
     printf("Plotter_HHTo3l:: Before  yMin: %f,  yMax: %f\n",yMin,yMax);
@@ -403,11 +506,19 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     histogramData_blinded_density->SetMarkerSize(markerSize);
     histogramData_blinded_density->SetMarkerColor(kBlack);
     histogramData_blinded_density->SetLineColor(kBlack);
-    if ( isDataBlinded) {
+    if ( ! isDataBlinded)
+    {
       legend->AddEntry(histogramData_blinded_density, "Observed", "p");
       histogramData_blinded_density->Draw("ep");
     }
+    else
+    {
+      TH1 *hDummy = (TH1*)histogramData_blinded_density->Clone("hDummy");
+      hDummy->SetLineColor(0);
+      hDummy->Draw("HIST");
+    }
   }
+  
   /*color used for tth
   const int color_ttW         = 823; // dark green 
   const int color_ttZ         = 822; // light green
@@ -454,7 +565,6 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   */
 
 
-
   const int color_WZ          = 822; // light green
   const int color_Fakes       = 630; // light red 
   const int color_DY          = 800; // yellow/orange
@@ -473,7 +583,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   const int color_qqH         = 624; // light red
   const int color_TTWH        = 424; // light cyan
   const int color_TTZH        = 922; //  lioght gray
-  const int color_Signal      =   2; // red
+  //const int color_Signal      =   2; // red
   const int color_Flips       = 810; // orange
   
   const std::string legendEntry_WZ          = "WZ";
@@ -495,6 +605,9 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   const std::string legendEntry_TTWH        = "TTWH";
   const std::string legendEntry_TTZH        = "TTZH";
   const std::string legendEntry_Flips       = "Flips";
+
+  const std::vector<int> lineColor_multiSignal = { 2, 1, 419, 618, 4,   2, 1, 4,   2, 1, 4};
+  const std::vector<int> lineStyle_multiSignal = { 2, 2,   2,   2, 2,   8, 8, 8,   1, 1, 1};
   
   std::vector<TH1*> histogramsForStack_density;
   /*
@@ -665,7 +778,6 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     legend->AddEntry(histogramFlips_density, legendEntry_Flips.data(), "f");
   } 
   
-  
 
   
   // CV: add histograms to THStack in "reverse" order, so that ZZ background is drawn on top
@@ -674,6 +786,8 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
 	histogram_density != histogramsForStack_density.rend(); ++histogram_density ) {
     histogramStack_density->Add(*histogram_density);
   }
+
+  
   if ( histogramData_blinded_density ) histogramStack_density->Draw("histsame");
   else histogramStack_density->Draw("hist");
   std::string histogramNameBkg_bins = Form("%s_bins", histogramData_blinded_density->GetName());
@@ -721,6 +835,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     legend->AddEntry(histogramUncertainty_density, "Uncertainty", "f");
   }
 
+  /*
   if ( histogramSignal_density ) {      
     histogramSignal_density->SetLineWidth(5);
     histogramSignal_density->SetLineStyle(kDashed);
@@ -729,8 +844,27 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     histogramSignal_density->Draw("histsame");
     legend->AddEntry(histogramSignal_density, legendEntrySignal_.data(), "l");
   }
+  */
+  
+  for (size_t iSig = 0; iSig < histogramsSignal_density.size(); iSig++)
+  {
+    if (iSig >= lineColor_multiSignal.size())
+    {
+      std::cout << "No. of signal histograms are more than size of histogram_color array... Add few more colors.. \nTerminating\n " << std::endl;
+      exit(0);
+    }
+    
+    TH1 *hSig_density = histogramsSignal_density[iSig];
+    std::string legendEntry = legendEntriesSignal_[iSig];
+    hSig_density->SetLineWidth(5);
+    hSig_density->SetLineStyle(lineStyle_multiSignal[iSig]);
+    hSig_density->SetLineColor(lineColor_multiSignal[iSig]);
+    hSig_density->Draw("histsame");
+    legend->AddEntry(hSig_density, legendEntry.data(), "l");
+  }
+  
 
-  if ( histogramData_blinded_density ) {
+  if ( histogramData_blinded_density && (! isDataBlinded)) {
     std::string histogramNameData_blinded_bins = Form("%s_bins", histogramData_blinded_density->GetName());
     TH1* histogramData_blinded_bins = (TH1*)histogramData_blinded_density->Clone(histogramNameData_blinded_bins.data());
     int numBins = histogramData_blinded_density->GetNbinsX();
@@ -762,15 +896,16 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   }
   
   if ( histogramData_blinded_density ) {
-    histogramData_blinded_density->Draw("epsame");
+    if ( ! isDataBlinded) histogramData_blinded_density->Draw("epsame");
     histogramData_blinded_density->Draw("axissame");
   }
   
   legend->Draw();
   
   TPaveText* labelOnTop_pave = 0;
-  if ( labelOnTop != "" ) {
-    labelOnTop_pave = new TPaveText(0.165, 0.95, 0.61, 1.00, "brNDC");
+  if ( labelOnTop != "" ) { // CMS Preliminary, luminosity (13 TeV)
+    //labelOnTop_pave = new TPaveText(0.165, 0.95, 0.61, 1.00, "brNDC");
+    labelOnTop_pave = new TPaveText(0.45, 0.95, 0.99, 1.00, "brNDC");
     labelOnTop_pave->AddText(labelOnTop.data());
     labelOnTop_pave->SetFillColor(10);
     labelOnTop_pave->SetBorderSize(0);
@@ -781,6 +916,8 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   }
   TPaveText* extraLabels_pave = 0;
   if ( extraLabels.size() > 0 ) {
+    labelPosY += 0.08; // SS: shift lable up for convenience
+    
     extraLabels_pave = new TPaveText(labelPosX, labelPosY, labelPosX + labelSizeX, labelPosY + labelSizeY, "brNDC");
     for ( std::vector<std::string>::const_iterator extraLabel = extraLabels.begin();
 	  extraLabel != extraLabels.end(); ++extraLabel ) {
@@ -793,7 +930,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     extraLabels_pave->SetTextSize(labelTextSize);
     extraLabels_pave->Draw();
   }
-  
+
   canvas->cd();
   bottomPad->Draw();
   bottomPad->cd();
@@ -854,7 +991,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     }
     if (printLevel > 2)
       std::cout << "After histogramRatio: " << printfHistoIntegral(histogramRatio) << std::endl;
-    
+
     histogramRatio->SetTitle("");
     histogramRatio->SetStats(false);
     histogramRatio->SetMinimum(-0.50);
@@ -865,7 +1002,8 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     histogramRatio->SetLineColor(histogramData_blinded_density->GetLineColor());
     
     TAxis* xAxis_bottom = histogramRatio->GetXaxis();
-    if ( xMin >= 0. && xMax > xMin ) xAxis_bottom->SetRangeUser(xMin, xMax);
+    //if ( xMin >= 0. && xMax > xMin ) xAxis_bottom->SetRangeUser(xMin, xMax);
+    if ( xMax > xMin && (abs(xMin+1.)>1e-5 || abs(xMax+1.)>1e-5)) xAxis_bottom->SetRangeUser(xMin, xMax);
     xAxis_bottom->SetTitle(xAxis_top->GetTitle());
     xAxis_bottom->SetLabelColor(1);
     xAxis_bottom->SetTitleColor(1);
@@ -883,7 +1021,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     yAxis_bottom->SetTitleSize(0.09);
     yAxis_bottom->SetLabelSize(0.10);
     yAxis_bottom->SetTickLength(0.04);  
-    
+
     if ( histogramUncertainty ) {
       histogramRatioUncertainty = (TH1*)histogramUncertainty->Clone("histogramRatioUncertainty");
       if ( !histogramRatioUncertainty->GetSumw2N() ) histogramRatioUncertainty->Sumw2();
@@ -913,7 +1051,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     
     histogramRatio->Draw("epsame");
   }
-  
+
   canvas->Update();
   size_t idx = outputFileName.find_last_of('.');
   std::string outputFileName_plot(outputFileName, 0, idx);
@@ -924,7 +1062,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
   canvas->Print(std::string(outputFileName_plot).append(".png").data());
   canvas->Print(std::string(outputFileName_plot).append(".pdf").data());
   canvas->Print(std::string(outputFileName_plot).append(".root").data());
-  
+
   delete histogramData_density;
   delete histogramData_blinded_density;
   delete histogramSignal_density;

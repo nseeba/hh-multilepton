@@ -16,6 +16,8 @@
 #include <vector>
 #include <string>
 
+//class histogramEntryType;
+
 class Plotter_HHTo3l : public Plotter
 {
  public:
@@ -26,6 +28,7 @@ class Plotter_HHTo3l : public Plotter
   virtual ~Plotter_HHTo3l();
 
  private:
+  /*
   virtual void makePlot(double canvasSizeX, double canvasSizeY,
 			TH1* histogramData, TH1* histogramData_blinded,
 			std::vector<histogramEntryType*>& histogramsBackground, 	
@@ -40,10 +43,28 @@ class Plotter_HHTo3l : public Plotter
 			const std::string& outputFileName, 
 			bool isRebinned, 
 			bool divideByBinWidth);
+  */
+  virtual void makePlot(double canvasSizeX, double canvasSizeY,
+			TH1* histogramData, TH1* histogramData_blinded,
+			std::vector<histogramEntryType*>& histogramsBackground, 	
+			std::vector<histogramEntryType*>& histogramsSignal,
+			TH1* histogramUncertainty,
+			double legendTextSize, double legendPosX, double legendPosY, double legendSizeX, double legendSizeY, 
+			const std::string& labelOnTop,
+			std::vector<std::string>& extraLabels, double labelTextSize,
+			double labelPosX, double labelPosY, double labelSizeX, double labelSizeY,
+			double xMin, double xMax, const std::string& xAxisTitle, double xAxisOffset,
+			bool useLogScale, double yMin, double yMax, const std::string& yAxisTitle, double yAxisOffset,
+			const std::string& outputFileName, 
+			bool isRebinned, 
+			bool divideByBinWidth);
 
+  
   double scaleSignal_;
   std::string legendEntrySignal_;
-
+  std::vector<std::string> legendEntriesSignal_;
+  int optionToNormalizeSignalDistributions_;   // 0: don't normalize, 1: normalize w.r.t. area, 2: normalize w.r.t. height
+  
   bool isDataBlinded = true; // added by Siddhesh
 };
 

@@ -80,9 +80,51 @@ process.makePlots = cms.PSet(
             data_fakes = cms.string("1.0 +/- 0.20"),
             data_flips = cms.string("1.0 +/- 0.20"),
             flips_mc = cms.string("1.0 +/- 0.20"),
-            Convs = cms.string("1.0 +/- 0.20"),
-            signal_spin0_400_hh = cms.string("1.0 +/- 0.20"),
+            Convs = cms.string("1.0 +/- 0.20"),            
             fakes_mc = cms.string("1.0 +/- 0.20"),
+            #
+            signal_spin0_250_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_260_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_270_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_280_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_300_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_320_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_350_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_400_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_450_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_500_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_550_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_600_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_650_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_700_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_750_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_800_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_850_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_900_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin0_1000_hh = cms.string("1.0 +/- 0.20"),
+            #
+            signal_spin2_250_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_260_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_270_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_280_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_300_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_320_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_350_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_400_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_450_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_500_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_550_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_600_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_650_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_700_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_750_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_800_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_850_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_900_hh = cms.string("1.0 +/- 0.20"),
+            signal_spin2_1000_hh = cms.string("1.0 +/- 0.20"),
+            #            
+            #signal_spin0__hh = cms.string("1.0 +/- 0.20"),
+            
         ),
         shape = cms.PSet(
             CMS_ttHl_btag_HF = cms.string("0.00 +/- 1.00"),
@@ -111,3 +153,6 @@ process.makePlots = cms.PSet(
 
     outputFileName = cms.string("")
 )
+
+# gen_mHH = cms.vdouble(250,260,270,280,300, 320,350,400,450,500,550,600,650,700,750,800,850,900,1000)
+# nonRes_BMs = cms.vdouble(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
