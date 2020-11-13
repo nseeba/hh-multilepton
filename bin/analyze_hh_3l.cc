@@ -138,7 +138,7 @@ enum { kFR_disabled, kFR_3lepton };
 const int hadTauSelection_antiElectron = -1; // not applied
 const int hadTauSelection_antiMuon = -1; // not applied
 
-const int printLevel = 6;
+const int printLevel = 0;
 
 void dumpGenParticles(const std::string& label, const std::vector<GenParticle>& particles)
 {
@@ -525,6 +525,7 @@ int main(int argc, char* argv[])
 
 //--- HH coupling scan
   std::vector<std::string> HHWeightNames;
+  std::vector<std::string> HHBMNames;
   const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
   const bool apply_HH_rwgt = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt");
   const HHWeightInterface2* HHWeight_calc = nullptr;
@@ -533,12 +534,22 @@ int main(int argc, char* argv[])
   {
     HHWeight_calc = new HHWeightInterface2(hhWeight_cfg);
     HHWeightNames = HHWeight_calc->get_weight_names();
+    HHBMNames     = HHWeight_calc->get_bm_names();
     std::cout << "HHWeightNames: ";
     for(auto bmName : HHWeightNames)
     {
       std::cout << bmName << ",  ";
     }
     std::cout << "\n";
+    std::cout << "HHBMNames: ";
+    for(auto bmName : HHBMNames)
+    {
+      std::cout << bmName << ",  ";
+    }
+    std::cout << "\n";
+
+    HHWeightNames = HHBMNames;
+    std::cout << "Setting HHWeightNames = HHBMNames \n";
   }
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
@@ -1154,6 +1165,7 @@ int main(int argc, char* argv[])
                 << (inputTree -> getProcessedFileCount() - 1)
                 << " (" << eventInfo
                 << ") file (" << selectedEntries << " Entries selected)\n";
+      std::cout << std::endl;
     }
     ++analyzedEntries;
     histogram_analyzedEntries->Fill(0.);
@@ -1258,9 +1270,11 @@ int main(int argc, char* argv[])
       dumpGenParticles("genWJet", genWJets);
     }
 
+    if (printLevel > 5) std::cout << "Siddh here10 " << std::endl;
     if(isMC)
     {
       if(apply_genWeight)         evtWeightRecorder.record_genWeight(eventInfo);
+      if (printLevel > 5) std::cout << "Siddh here11 " << std::endl;
       if(eventWeightManager)      evtWeightRecorder.record_auxWeight(eventWeightManager);
       if(l1PreFiringWeightReader) evtWeightRecorder.record_l1PrefireWeight(l1PreFiringWeightReader);
       if(apply_topPtReweighting)  evtWeightRecorder.record_toppt_rwgt(eventInfo.topPtRwgtSF);
@@ -1288,6 +1302,7 @@ int main(int argc, char* argv[])
         }
       }
     }
+    if (printLevel > 5) std::cout << "Siddh here12 " << std::endl;
 
     bool isTriggered_1e = hltPaths_isTriggered(triggers_1e, triggerWhiteList, eventInfo, isMC, isDEBUG);
     bool isTriggered_1mu = hltPaths_isTriggered(triggers_1mu, triggerWhiteList, eventInfo, isMC, isDEBUG);
@@ -3114,12 +3129,7 @@ int main(int argc, char* argv[])
         assert(HHWeight_calc);
         for(auto bmName : HHWeightNames)
         {
-          weightMapHH[bmName] = HHWeight_calc->getWeight(bmName, eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
-	  if (printLevel > 5)
-	  {
-	    std::cout << "bmName " << bmName << ", gen_mHH " << eventInfo.gen_mHH << ", gen_cosThetaStar " << eventInfo.gen_cosThetaStar
-		      << ", weightMapHH " << weightMapHH[bmName] << "\n";
-	  }
+          weightMapHH[bmName] = HHWeight_calc->getWeight(bmName, eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);	  
         }
       }
 
