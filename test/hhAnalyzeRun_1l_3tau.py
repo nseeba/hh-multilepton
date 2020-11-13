@@ -21,7 +21,7 @@ systematics.internal = systematics.an_internal_no_mem
 parser = tthAnalyzeParser()
 parser.add_modes(mode_choices)
 parser.add_sys(sys_choices)
-parser.add_preselect(use_preselected = False)
+parser.add_preselect()
 parser.add_rle_select()
 parser.add_lep_mva_wp(default_wp = 'hh_multilepton') # alternative: hh_multilepton
 parser.add_nonnominal()
@@ -132,6 +132,18 @@ for sample_name, sample_info in samples.items():
   elif sample_name.startswith("/Tau/"):
     sample_info["use_it"] = True
 
+histograms_to_fit = {
+  "EventCounter" : {},
+  "dihiggsMass"  : {}
+}
+masspoints = [ 250., 260., 270., 280., 300., 350., 400., 450., 500., 550., 600., 650., 700., 750., 800., 850., 900., 1000. ]
+for masspoint in masspoints:
+  histograms_to_fit.update({ "BDTOutput_%0.0f_hypo_spin0" % masspoint : {} })
+  histograms_to_fit.update({ "BDTOutput_%0.0f_hypo_spin2" % masspoint : {} })
+bmNames = [ "SM", "BM1", "BM2", "BM3", "BM4", "BM5", "BM6", "BM7", "BM8", "BM9", "BM10", "BM11", "BM12" ]
+for bmName in bmNames:
+  histograms_to_fit.update({ "BDTOutput_%s" % bmName : {} })
+
 if __name__ == '__main__':
   logging.info(
     "Running the jobs with the following systematic uncertainties enabled: %s" % \
@@ -169,13 +181,7 @@ if __name__ == '__main__':
     num_parallel_jobs                     = num_parallel_jobs,
     executable_addBackgrounds             = "addBackgrounds",
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
-    histograms_to_fit                     = {
-      "EventCounter"                      : {},
-      "dihiggsMass"                       : {},
-      "BDTOutput_300_hypo_spin0"          : {},
-      "BDTOutput_SM"                      : {},
-      "BDTOutput_BM1"                     : {},
-    },
+    histograms_to_fit                     = histograms_to_fit,
     select_rle_output                     = True,
     dry_run                               = dry_run,
     isDebug                               = debug,

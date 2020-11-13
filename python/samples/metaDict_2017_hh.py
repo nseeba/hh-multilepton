@@ -1,6 +1,6 @@
 from collections import OrderedDict as OD
 
-# file generated at 2020-10-23 10:53:01 with the following command:
+# file generated at 2020-11-02 20:00:47 with the following command:
 # find_samples.py -V -i ../../tthAnalysis/NanoAOD/test/datasets/txt/datasets_hh_multilepton_mc_2017_RunIIFall17MiniAODv2.txt -m python/samples/metaDict_2017_hh.py -s ../../tthAnalysis/NanoAOD/test/datasets/txt/sum_datasets_hh_multilepton_2017_RunIIFall17MiniAODv2.txt -c python/samples/sampleLocations_2017_nanoAOD_hh_multilepton.txt
 
 meta_dictionary = OD()
@@ -2076,16 +2076,16 @@ meta_dictionary["/VBFHHTo4T_CV_1_C2V_1_C3_2_dipoleRecoilOff-TuneCP5_PSweights_13
 ])
 
 meta_dictionary["/VBFHHTo4T_CV_1_C2V_2_C3_1_dipoleRecoilOff-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM"] =  OD([
-  ("crab_string",           ""),
+  ("crab_string",           "2017v2_2020Oct31_VBFHHTo4T_CV_1_C2V_2_C3_1_dipoleRecoilOff-TuneCP5_PSweights_13TeV-madgraph-pythia8__RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_re"),
   ("sample_category",       "signal_vbf_nonresonant_1_2_1_hh_tttt"),
   ("process_name_specific", "signal_vbf_nonresonant_1_2_1_hh_4t_dipoleRecoilOff"),
-  ("nof_db_events",         367000),
-  ("nof_db_files",          20),
-  ("fsize_db",              22916714623),
+  ("nof_db_events",         397000),
+  ("nof_db_files",          24),
+  ("fsize_db",              24795263904),
   ("xsection",              5.5891e-05),
   ("use_it",                True),
   ("genWeight",             True),
-  ("comment",               "status: PRODUCTION; size: 22.92GB; nevents: 367.00k; release: 9_4_7; last modified: 2020-09-23 18:15:00"),
+  ("comment",               "100.0%; status: VALID; size: 24.80GB; nevents: 397.00k; release: 9_4_7; last modified: 2020-10-26 01:04:45"),
 ])
 
 meta_dictionary["/VBFHHTo4T_CV_1_C2V_1_C3_0_dipoleRecoilOff-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM"] =  OD([
@@ -3139,7 +3139,7 @@ meta_dictionary["/GluGluToHHTo4V_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythi
 # signal_ggf_spin2_3000_hh_wwww:           100.00k
 # signal_vbf_nonresonant_1_1_1_hh_tttt:    400.00k
 # signal_vbf_nonresonant_1_1_2_hh_tttt:    396.00k
-# signal_vbf_nonresonant_1_2_1_hh_tttt:    367.00k
+# signal_vbf_nonresonant_1_2_1_hh_tttt:    397.00k
 # signal_vbf_nonresonant_1_1_0_hh_tttt:    400.00k
 # signal_vbf_nonresonant_0p5_1_1_hh_tttt:  400.00k
 # signal_vbf_nonresonant_1p5_1_1_hh_tttt:  378.00k

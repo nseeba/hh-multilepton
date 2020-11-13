@@ -20,7 +20,7 @@ process.makePlots = cms.PSet(
     divideByBinWidth = cms.bool(True),
     processData = cms.string("data_obs"),
     processesBackground = cms.vstring(),
-    processSignal = cms.string("signal_spin0_400_hh"),
+    processSignal = cms.string("signal_ggf_spin0_400_hh_tttt"),
     scaleSignal = cms.double(scaleSignal),
     legendEntrySignal = cms.string(str(scaleSignal) + "x Signal HH"),
     categories = cms.VPSet(),
@@ -124,7 +124,6 @@ process.makePlots = cms.PSet(
             signal_spin2_1000_hh = cms.string("1.0 +/- 0.20"),
             #            
             #signal_spin0__hh = cms.string("1.0 +/- 0.20"),
-            
         ),
         shape = cms.PSet(
             CMS_ttHl_btag_HF = cms.string("0.00 +/- 1.00"),

@@ -111,6 +111,8 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
     {
       std::cout << " using HH decay modes = " << format_vstring(decayModes_) << std::endl;
     }
+    // CV: book & fill extra histogram for HH signal without splitting by decay mode
+    decayModes_.push_back("*");
   }
   else if ( analysisConfig_.isMC_H() )
   {
@@ -119,6 +121,8 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
     {
       std::cout << " using H decay modes = " << format_vstring(decayModes_) << std::endl;
     }
+    // CV: book & fill extra histogram for H signal without splitting by decay mode
+    decayModes_.push_back("*");
   }
   else
   {
@@ -196,6 +200,22 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & bdt
                                        double evtWeight)
 {
   const double evtWeightErr = 0.;
+
+  std::map<std::string, double> hh_reweightMap;
+  if ( analysisConfig_.isMC_HH_nonresonant() && apply_HH_rwgt_ )
+  {
+    for ( auto histogramName : histogramNames_bdtOutput_nonresonant_ )
+    {
+      std::map<std::string, std::string>::const_iterator bmName = bmNames_.find(histogramName);
+      if ( bmName == bmNames_.end() )
+        throw cmsException(this, __func__, __LINE__)
+          << "No non-resonant HH benchmark scenario available to fill histogram = '" << histogramName << "' !!\n";
+      assert(HHWeight_calc_);
+      double hh_reweight = HHWeight_calc_->getReWeight(bmName->second, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);
+      hh_reweightMap[histogramName] = hh_reweight;
+    }
+  }
+
   for ( auto decayMode : decayModes_ )
   {
     if ( decayMode == "*" || 
@@ -235,14 +255,10 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & bdt
         double evtWeightErr_reweighted = evtWeightErr;
         if ( analysisConfig_.isMC_HH_nonresonant() && apply_HH_rwgt_ )
         {
-          std::map<std::string, std::string>::const_iterator bmName = bmNames_.find(histogramName);
-          if ( bmName == bmNames_.end() )
-            throw cmsException(this, __func__, __LINE__)
-              << "No non-resonant HH benchmark scenario available to fill histogram = '" << histogramName << "' !!\n";
-          assert(HHWeight_calc_);
-          double hh_reweight = HHWeight_calc_->getReWeight(bmName->second, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);        
-          evtWeight_reweighted *= hh_reweight;
-          evtWeightErr_reweighted *= hh_reweight;
+          std::map<std::string, double>::const_iterator hh_reweight = hh_reweightMap.find(histogramName);
+          assert(hh_reweight != hh_reweightMap.end());
+          evtWeight_reweighted *= hh_reweight->second;
+          evtWeightErr_reweighted *= hh_reweight->second;
         }
         fillWithOverFlow(histogram, bdtOutput->second, evtWeight_reweighted, evtWeightErr_reweighted);
       }
