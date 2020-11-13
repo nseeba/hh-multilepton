@@ -116,19 +116,23 @@ process.analyze_hh_0l_4tau = cms.PSet(
 
     gen_mHH = cms.vdouble(250,260,270,280,300,350,400,450,500,550,600,650,700,750,800,850,900,1000), ## Set the signal mass range used in the BDT .pkl/.xml/.pb files
     mvaInfo_res = cms.PSet(
-        BDT_xml_FileName_even_spin2 = cms.string('hhAnalysis/multilepton/data/0l_4tau_odd_model_spin2.xml'), ## "BDT .xml -> Odd train:Even test" to be used for even evt no.
-        BDT_xml_FileName_odd_spin2 = cms.string('hhAnalysis/multilepton/data/0l_4tau_even_model_spin2.xml'), ## "BDT .xml -> Even train:Odd test" to be used for odd evt no.
+        BDT_xml_FileName_even_spin2 = cms.string('hhAnalysis/multilepton/data/0l_4tau_odd_half_model_spin2.xml'), ## "BDT .xml -> Odd train:Even test" to be used for even evt no.
+        BDT_xml_FileName_odd_spin2 = cms.string('hhAnalysis/multilepton/data/0l_4tau_even_half_model_spin2.xml'), ## "BDT .xml -> Even train:Odd test" to be used for odd evt no.
         fitFunctionFileName_spin2 = cms.string('hhAnalysis/multilepton/data/0l_4tau_TProfile_signal_fit_func_spin2.root'),  ## File contaning the fitted TF1s
         inputVars_spin2 = cms.vstring(
-            'tau1_phi', 'diHiggsMass', 'met_LD', 'dr_tau2_tau3', 'dr_tau2_tau4', 'dr_tau3_tau4',
-            'm_tau1_tau2', 'pt_bestTauHPair_m', 'pt_bestTauHPair_dPhi', 'dr_bestTauHPair_m',
-            'dr_bestTauHPair_dr', 'dr_bestTauHPair_dEta', 'Zee_secondTauHPair_m',
-            'dr_secondTauHPair_dr', 'gen_mHH'
+            'tau1_pt', 'tau1_phi', 'diHiggsMass', 'met_phi', 'dr_tau1_tau3',
+            'dr_tau2_tau4', 'pt_bestTauHPair_m', 'dr_bestTauHPair_m',
+            'dr_bestTauHPair_dr', 'gen_mHH'
         ),
-        BDT_xml_FileName_even_spin0 = cms.string('hhAnalysis/multilepton/data/0l_4tau_odd_model_spin0.xml'),
-        BDT_xml_FileName_odd_spin0 = cms.string('hhAnalysis/multilepton/data/0l_4tau_even_model_spin0.xml'),
+        BDT_xml_FileName_even_spin0 = cms.string('hhAnalysis/multilepton/data/0l_4tau_odd_half_model_spin0.xml'),
+        BDT_xml_FileName_odd_spin0 = cms.string('hhAnalysis/multilepton/data/0l_4tau_even_half_model_spin0.xml'),
         fitFunctionFileName_spin0 = cms.string('hhAnalysis/multilepton/data/0l_4tau_TProfile_signal_fit_func_spin0.root'),
         inputVars_spin0 = cms.vstring(
+            'tau1_phi', 'tau4_phi', 'diHiggsVisMass', 'diHiggsMass', 'met_LD',
+            'deltaEta_tau2_tau3', 'dr_tau2_tau4', 'dr_bestTauHPair_m',
+            'dr_secondTauHPair_m', 'gen_mHH'
+
+
             'tau1_eta', 'tau1_phi', 'tau2_eta', 'tau3_phi', 'tau4_phi', 'diHiggsVisMass',
             'diHiggsMass', 'met_LD', 'dr_tau1_tau3', 'dr_tau2_tau3', 'dr_bestTauHPair_m',
             'Zee_secondTauHPair_m', 'pt_secondTauHPair_dPhi', 'dr_secondTauHPair_dr', 'gen_mHH'
