@@ -130,12 +130,22 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     } else if ( process.find("TTH") != std::string::npos ) {
       histogramTTH = histogramBackground;
       histogramTTH_density = histogramBackground_density;
-    } else if ( process.find("TH") != std::string::npos ) {
+    } else if ( process.find("tHq") != std::string::npos || process.find("tHW") != std::string::npos ) {
       histogramTH = histogramBackground;
       histogramTH_density = histogramBackground_density;
     } else if ( process.find("TT") != std::string::npos ) {
-      histogramTT = histogramBackground;
-      histogramTT_density = histogramBackground_density;
+      if(histogramTT) {
+        histogramTT->Add(histogramBackground);
+      }
+      else {
+        histogramTT = histogramBackground;
+      }
+      if(histogramTT_density) {
+        histogramTT_density->Add(histogramBackground_density);
+      }
+      else {
+        histogramTT_density = histogramBackground_density;
+      }
     } else if ( process.find("Other") != std::string::npos ) {
       histogramOther = histogramBackground;
       histogramOther_density = histogramBackground_density;
@@ -149,8 +159,20 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
       histogramVH = histogramBackground;
       histogramVH_density = histogramBackground_density;
     } else if ( process.find("ZZ") != std::string::npos ) {
-      histogramZZ = histogramBackground;
-      histogramZZ_density = histogramBackground_density;
+      if(histogramZZ) {
+        histogramZZ->Add(histogramBackground);
+      }
+      else
+      {
+        histogramZZ = histogramBackground;
+      }
+      if(histogramZZ_density) {
+        histogramZZ_density->Add(histogramBackground_density);
+      }
+      else
+      {
+        histogramZZ_density = histogramBackground_density;
+      }
     } else if ( process.find("WZ") != std::string::npos ) {
       histogramWZ = histogramBackground;
       histogramWZ_density = histogramBackground_density;

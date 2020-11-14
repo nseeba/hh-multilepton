@@ -39,7 +39,7 @@ class analyzeConfig_hh(analyzeConfig):
     self.topPtRwgtChoice = "HighPt"
 
   def get_nonfake_backgrounds(self):
-    return [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]
+    return [ "ggZZ", "qqZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "tHq", "tHW", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]
 
   def get_makeplots_backgrounds(self, add_flips = ''):
     result = self.nonfake_backgrounds + [ "data_fakes" ]
