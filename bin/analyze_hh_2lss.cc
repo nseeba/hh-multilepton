@@ -489,8 +489,8 @@ int main(int argc, char* argv[])
     }
     std::cout << "\n";
 
-    HHWeightNames = HHBMNames;     // Siddhesh: bench mark weight map has BMName as map index
-    std::cout << "Setting HHWeightNames = HHBMNames \n";
+    //    HHWeightNames = HHBMNames;     // Siddhesh: bench mark weight map has BMName as map index
+    //std::cout << "Setting HHWeightNames = HHBMNames \n";
   }
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
@@ -1935,9 +1935,9 @@ int main(int argc, char* argv[])
       if(apply_HH_rwgt)
       {
         assert(HHWeight_calc);
-        for(auto bmName : HHWeightNames)
+        for(unsigned int i =0; i < HHWeightNames.size();i++)
         {
-          weightMapHH[bmName] = HHWeight_calc->getWeight(bmName, eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+          weightMapHH[HHWeightNames[i]] = HHWeight_calc->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
         }
       }
 

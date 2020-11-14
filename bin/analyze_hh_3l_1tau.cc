@@ -481,6 +481,7 @@ int main(int argc, char* argv[])
 
 //--- HH coupling scan
   std::vector<std::string> HHWeightNames;
+  std::vector<std::string> HHBMNames;
   const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
   const bool apply_HH_rwgt = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt");
   const HHWeightInterface2* HHWeight_calc = nullptr;
@@ -488,6 +489,7 @@ int main(int argc, char* argv[])
   {
     HHWeight_calc = new HHWeightInterface2(hhWeight_cfg);
     HHWeightNames = HHWeight_calc->get_weight_names();
+    HHBMNames = HHWeight_calc->get_bm_names();
   }
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
@@ -683,7 +685,7 @@ int main(int argc, char* argv[])
     EvtHistManager_hh_3l_1tau* evt_;
     SVfit4tauHistManager_MarkovChain* svFit4tau_wMassConstraint_;
     DatacardHistManager_hh* datacard_;
-    std::map<std::string, DatacardHistManager_hh*> datacard_in_categories_;
+    //std::map<std::string, DatacardHistManager_hh*> datacard_in_categories_;
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
@@ -836,8 +838,8 @@ int main(int argc, char* argv[])
       "mllOS_closestToZ",
       "SVFit_h1_visMass","SVFit_h2_visMass", "SVFit_h1_pT", "SVFit_h2_pT", "SVFit_hh_deltaPhi", "SVFit_hh_deltaR", "SVFit_hh_deltaEta",  "SVFit_hh_pT", "SVFit_hh_cosTheta",
       //"genHiggs1_pt", "genHiggs1_eta","genHiggs1_phi","genHiggs2_pt","genHiggs2_eta","genHiggs2_phi", "genDiHiggs_pt","genDiHiggs_eta","genDiHiggs_phi","genDiHiggs_M","genDiHiggs_dR","genDiHiggs_dPhi","genDiHiggs_dEta","genDiHiggs_cosTheta",
-      "nSFOS", "dR_smartpair1", "dEta_smartpair1", "dPhi_smartpair1", "m_smartpair1", "pT_smartpair1", "pTSum_smartpair1", "dR_smartpair2", "dEta_smartpair2", "dPhi_smartpair2", "m_smartpair2", "pT_smartpair2", "pTSum_smartpair2", "dR_smartpair_ltau", "dEta_smartpair_ltau", "dPhi_smartpair_ltau", "m_smartpair_ltau", "pT_smartpair_ltau", "pTSum_smartpair_ltau", "dR_smartpair_ll", "dEta_smartpair_ll", "dPhi_smartpair_ll", "m_smartpair_ll", "pT_smartpair_ll", "pTSum_smartpair_ll", "mZ_tau", "dPhi_nonZlMET", "mindPhiLepMET", "pTDiff_smartpair1", "pTDiff_smartpair2","pTDiff_smartpair_ltau", "pTDiff_smartpair_ll", "SVFit_Z1_visMass","SVFit_Z2_visMass", "pT4l", "pT4l_par", "pT4l_ort", "met_par", "met_ort", "maxdZ_lep", "maxdXY_lep",
-      "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "hadTauEffSF", "data_to_MC_correction","FR_Weight"
+      "nSFOS", "dR_smartpair1", "dEta_smartpair1", "dPhi_smartpair1", "m_smartpair1", "pT_smartpair1", "pTSum_smartpair1", "dR_smartpair2", "dEta_smartpair2", "dPhi_smartpair2", "m_smartpair2", "pT_smartpair2", "pTSum_smartpair2", "dR_smartpair_ltau", "dEta_smartpair_ltau", "dPhi_smartpair_ltau", "m_smartpair_ltau", "pT_smartpair_ltau", "pTSum_smartpair_ltau", "dR_smartpair_ll", "dEta_smartpair_ll", "dPhi_smartpair_ll", "m_smartpair_ll", "pT_smartpair_ll", "pTSum_smartpair_ll", "mZ_tau", "dPhi_nonZlMET", "mindPhiLepMET", "pTDiff_smartpair1", "pTDiff_smartpair2","pTDiff_smartpair_ltau", "pTDiff_smartpair_ll", "SVFit_Z1_visMass","SVFit_Z2_visMass", "pT4l", "pT4l_par", "pT4l_ort", "met_par", "met_ort", "maxdZ_lep", "maxdXY_lep", "mHH_contruct", "mHHT_construct",
+  "genWeight", "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "hadTauEffSF", "data_to_MC_correction","FR_Weight"
      );
     bdt_filler->register_variable<int_type>(
       "nJet",
@@ -1797,6 +1799,10 @@ int main(int argc, char* argv[])
       mT_SSlephigh = comp_MT_met(selLepton_sublead, met.pt(), met.phi());
       mT_SSleplow = comp_MT_met(selLepton_third, met.pt(), met.phi());
     }
+    TLorentzVector temppair_hh = tau1LV+lep1LV+lep2LV+lep3LV;
+    double mHHT_construct = std::sqrt(2. * temppair_hh.Pt() * met.pt() * (1. - std::cos(temppair_hh.Phi() - met.phi())));
+    double mHH_contruct =(selLepton_lead->p4()+selLepton_sublead->p4()+selLepton_third->p4()+ selHadTau->p4()+met.p4()).mass();
+
     double dR_ltau_minltaupair = -1;
     double dEta_ltau_minltaupair = -1;
     double dPhi_ltau_minltaupair = -1;
@@ -2229,7 +2235,6 @@ int main(int argc, char* argv[])
             evtWeight);
           selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
         }
-
         selHistManager->datacard_->fillHistograms(
           BDTOutput_Map_spin2,
           BDTOutput_Map_spin0,
@@ -2343,11 +2348,11 @@ int main(int argc, char* argv[])
       if (std::abs(selLepton_third_type) == 11) lep3_isElectron = 1;
       else if (std::abs(selLepton_third_type) == 13) lep3_isElectron = 0;
 
-      std::cout << "mhh = " << eventInfo.gen_mHH          << " : "
-	"cost "             << eventInfo.gen_cosThetaStar << '\n';
-      for(unsigned int i =0; i< genHiggs.size();i++){
-	std::cout << "higgs " << i << " mass: "<<genHiggs[i].mass() << std::endl;
-      }
+      // std::cout << "mhh = " << eventInfo.gen_mHH          << " : "
+      // 	"cost "             << eventInfo.gen_cosThetaStar << '\n';
+      // for(unsigned int i =0; i< genHiggs.size();i++){
+      // 	std::cout << "higgs " << i << " mass: "<<genHiggs[i].mass() << std::endl;
+      // }
       int numSameFlavor_OS_3l = 0;
       //double mSFOS2l = 0.;
       for (int iLepton1 = 0; iLepton1 < 3; iLepton1++) {
@@ -2410,9 +2415,9 @@ int main(int argc, char* argv[])
       if(apply_HH_rwgt)
       {
         assert(HHWeight_calc);
-        for(auto bmName : HHWeightNames)
+        for(unsigned int i =0; i < HHWeightNames.size();i++)
         {
-          weightMapHH[bmName] = HHWeight_calc->getWeight(bmName, eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+          weightMapHH[HHWeightNames[i]] = HHWeight_calc->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
         }
       }
 
@@ -2583,6 +2588,8 @@ int main(int argc, char* argv[])
 	("met_ort",                met_ort)
 	("maxdZ_lep",               maxdZ_lep)
 	("maxdXY_lep",              maxdXY_lep)
+	("mHH_contruct",            mHH_contruct)
+	("mHHT_construct",           mHHT_construct)
 	(weightMapHH)
         .fill()
       ;
