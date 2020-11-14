@@ -134,13 +134,14 @@ for sample_name, sample_info in samples.items():
 
 histograms_to_fit = {
   "EventCounter" : {},
-  "dihiggsMass"  : {}
+  "dihiggsMass"  : {},
+  "MVAOutput_SM" : {},
 }
 masspoints = [ 250., 260., 270., 280., 300., 350., 400., 450., 500., 550., 600., 650., 700., 750., 800., 850., 900., 1000. ]
 for masspoint in masspoints:
   histograms_to_fit.update({ "BDTOutput_%0.0f_hypo_spin0" % masspoint : {} })
   histograms_to_fit.update({ "BDTOutput_%0.0f_hypo_spin2" % masspoint : {} })
-bmNames = [ "SM", "BM1", "BM2", "BM3", "BM4", "BM5", "BM6", "BM7", "BM8", "BM9", "BM10", "BM11", "BM12" ]
+bmNames = [ "BM1", "BM2", "BM3", "BM4", "BM5", "BM6", "BM7", "BM8", "BM9", "BM10", "BM11", "BM12" ]
 for bmName in bmNames:
   histograms_to_fit.update({ "BDTOutput_%s" % bmName : {} })
 

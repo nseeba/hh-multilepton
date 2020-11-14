@@ -82,7 +82,7 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
   }
   for ( auto BM : nonresonant_BMs_ ) 
   {
-    std::string histogramName_nonresonant = Form("BDTOutput_%s", BM.data());
+    std::string histogramName_nonresonant = Form("%sOutput_%s", BM == "SM" ? "MVA" : "BDT", BM.data());
     central_or_shiftOptions_[histogramName_nonresonant] = { "*" };
     histogramNames_bdtOutput_nonresonant_.push_back(histogramName_nonresonant);
     std::string bmName = BM;
