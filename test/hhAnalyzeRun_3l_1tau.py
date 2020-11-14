@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from hhAnalysis.multilepton.configs.analyzeConfig_hh_3l_1tau import analyzeConfig_hh_3l_1tau
+from hhAnalysis.multilepton.common import get_histograms_to_fit
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics, get_lumi
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
@@ -159,41 +160,7 @@ if __name__ == '__main__':
     num_parallel_jobs                     = num_parallel_jobs,
     executable_addBackgrounds             = "addBackgrounds",
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
-    histograms_to_fit                     = {
-      "EventCounter"                      : {},
-      "numJets"                           : {},
-      "dihiggsVisMass"                    : {},
-      "dihiggsMass"                       : {},
-      "HT"                                : {},
-      "STMET"                             : {},
-      "BDTOutput_1000_hypo_spin2"         : {},
-      "BDTOutput_250_hypo_spin2"          : {},
-      "BDTOutput_400_hypo_spin2"          : {},
-      "BDTOutput_700_hypo_spin2"          : {},
-      "BDTOutput_300_hypo_spin2"          : {},
-      "BDTOutput_500_hypo_spin2"          : {},
-      "BDTOutput_800_hypo_spin2"          : {},
-      "BDTOutput_1000_hypo_spin0"         : {},
-      "BDTOutput_250_hypo_spin0"          : {},
-      "BDTOutput_400_hypo_spin0"          : {},
-      "BDTOutput_700_hypo_spin0"          : {},
-      "BDTOutput_300_hypo_spin0"          : {},
-      "BDTOutput_500_hypo_spin0"          : {},
-      "BDTOutput_800_hypo_spin0"          : {},
-      "BDTOutput_SM"              : {},
-      "BDTOutput_BM1"             : {},
-      "BDTOutput_BM2"             : {},
-      "BDTOutput_BM3"             : {},
-      "BDTOutput_BM4"             : {},
-      "BDTOutput_BM5"             : {},
-      "BDTOutput_BM6"             : {},
-      "BDTOutput_BM7"             : {},
-      "BDTOutput_BM8"             : {},
-      "BDTOutput_BM9"             : {},
-      "BDTOutput_BM10"            : {},
-      "BDTOutput_BM11"            : {},
-      "BDTOutput_BM12"            : {},
-    },
+    histograms_to_fit                     = get_histograms_to_fit("numJets", "dihiggsVisMass", "HT", "STMET"),
     select_rle_output                     = True,
     dry_run                               = dry_run,
     isDebug                               = debug,

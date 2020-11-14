@@ -730,7 +730,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
             self.inputFiles_hadd_stage2[key_hadd_stage2_job].append(self.jobOptions_addFlips[key_addFlips_job]['outputFile'])
 
 
-    logging.info("Creating configuration files to run 'prepareDatacards'")
+    logging.info("Creating configuration files to run 'prepareDatacards'...")
     for category in self.categories:
       if category == self.category_inclusive:
         self.central_or_shifts.extend(["EigenVec_1Up",  "EigenVec_1Down", "EigenVec_2Up", "EigenVec_2Down", "fit_bias_Syst", "FitSystUp", "FitSystDown", "original"]) ## these systematics only for the inclusive case
@@ -742,11 +742,12 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
           if hadTau_charge_selection != "disabled":
             lepton_and_hadTau_charge_selection += "_tau%s" % hadTau_charge_selection
           for histogramToFit in self.histograms_to_fit:
+            logging.info(" ...  for category %s, charge selection %s, histogram %s" % (category, lepton_and_hadTau_charge_selection, histogramToFit))
             prep_dcard_HH = set()
             for sample_name, sample_info in self.samples.items():
               if not sample_info["use_it"]:
                 continue
-              sample_category = sample_info["sample_category"]
+              sample_category = sample_info["sample_category_hh"]
               masses_to_exclude = ["3000", "2500", "2000", "1750", "1500", "1250"]
               if sample_category.startswith("signal"):
                 doAdd = False

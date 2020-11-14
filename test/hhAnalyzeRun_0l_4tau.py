@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from hhAnalysis.multilepton.configs.analyzeConfig_hh_0l_4tau import analyzeConfig_hh_0l_4tau
+from hhAnalysis.multilepton.common import get_histograms_to_fit
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics, get_lumi
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
@@ -170,13 +171,7 @@ if __name__ == '__main__':
     num_parallel_jobs                     = num_parallel_jobs,
     executable_addBackgrounds             = "addBackgrounds",
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
-    histograms_to_fit                     = {
-      "EventCounter"                      : {},
-      "dihiggsMass"                       : {},
-      "BDTOutput_300_hypo_spin0"          : {},
-      "BDTOutput_SM"                      : {},
-      "BDTOutput_BM1"                     : {},
-    },
+    histograms_to_fit                     = get_histograms_to_fit(),
     select_rle_output                     = True,
     dry_run                               = dry_run,
     isDebug                               = debug,

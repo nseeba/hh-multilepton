@@ -524,13 +524,14 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
       key_hadd_stage2_job = getKey(get_lepton_selection_and_frWeight("Tight", "disabled"), leptonChargeSelection)
       self.inputFiles_hadd_stage2[key_hadd_stage2_job].append(self.jobOptions_addFakes[key_addFakes_job]['outputFile'])
 
-    logging.info("Creating configuration files to run 'prepareDatacards'")
+    logging.info("Creating configuration files to run 'prepareDatacards'...")
     for histogramToFit in self.histograms_to_fit:
+      logging.info(" ...  for histogram %s" % histogramToFit)
       prep_dcard_HH = set()
       for sample_name, sample_info in self.samples.items():
         if not sample_info["use_it"]:
           continue
-        sample_category = sample_info["sample_category"]
+        sample_category = sample_info["sample_category_hh"]
         masses_to_exclude = ["3000", "2500", "2000", "1750", "1500", "1250"]
         if sample_category.startswith("signal"):
           doAdd = False
