@@ -11,21 +11,6 @@
 #include <string>
 #include <map>
 
-namespace
-{
-  void replaceAll(std::string& str, const std::string& from, const std::string& to)
-  {
-    if ( from.empty() ) return;
-    size_t start_pos = str.find(from, start_pos);
-    while ( start_pos != std::string::npos ) 
-    {
-      str.replace(start_pos, from.length(), to);
-      start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
-      start_pos = str.find(from, start_pos);
-    }
-  }
-}
-
 DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
                                                const AnalysisConfig_hh & analysisConfig, 
                                                const EventInfo & eventInfo, 
@@ -41,11 +26,6 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
   , xMax_(1.)
   , isDEBUG_(isDEBUG)
 {
-  if(analysisConfig.isMC_HH())
-  {
-    boost::replace_all(process_, analysisConfig.process(), analysisConfig.process_hh());
-  }
-
   if ( central_or_shift_ == "central" )
   {
     std::cout << "<DatacardHistManager_hh>: booking histograms for process = '" << process_ << "'" << std::endl;
@@ -104,9 +84,10 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
     decayModeMap_["_bbtt"] = { "bbtt" };
     decayModeMap_["_bbvv"] = { "bbzz", "bbww" };
     bool is_known_decayMode = false;
+    const std::string process_hh = analysisConfig_.process_hh();
     for ( auto decayModeIter : decayModeMap_ )
     {
-      if ( process_.find(decayModeIter.first) != std::string::npos )
+      if ( process_hh.find(decayModeIter.first) != std::string::npos )
       {
         decayModes_ = decayModeIter.second;
         is_known_decayMode = true;
@@ -140,6 +121,8 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
 void
 DatacardHistManager_hh::bookHistograms(TFileDirectory & dir)
 {
+  const std::string process = analysisConfig_.process();
+  const std::string process_hh = analysisConfig_.process_hh();
   for ( auto decayMode : decayModes_ )
   {
     std::string process_and_decayMode;
@@ -148,10 +131,11 @@ DatacardHistManager_hh::bookHistograms(TFileDirectory & dir)
       bool is_known_decayMode = false;
       for ( auto decayModeIter : decayModeMap_ )
       {
-        if ( process_.find(decayModeIter.first) != std::string::npos )
+        if ( process_hh.find(decayModeIter.first) != std::string::npos )
         {
           process_and_decayMode = process_;
-          replaceAll(process_and_decayMode, decayModeIter.first, Form("_%s", decayMode.data()));
+          boost::replace_all(process_and_decayMode, process, process_hh);
+          boost::replace_all(process_and_decayMode, decayModeIter.first, Form("_%s", decayMode.data()));
           is_known_decayMode = true;
           break;
         }
