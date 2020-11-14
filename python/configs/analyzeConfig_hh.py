@@ -38,18 +38,6 @@ class analyzeConfig_hh(analyzeConfig):
     #       https://indico.cern.ch/event/904971/contributions/3857701/attachments/2036949/3410728/TopPt_20.05.12.pdf
     self.topPtRwgtChoice = "HighPt"
 
-  def get_samples_categories_HH(self):
-    sample_categories_HH = []
-    couplings = self.kl_weights + self.BM_weights + self.kt_weights + self.c2_weights
-    for sample_key, sample_info in self.samples.items():
-      if sample_key == 'sum_events':
-        continue
-      process_category = sample_info["sample_category"]
-      if sample_info["use_it"] and is_nonresonant(process_category, allow_nlo = False):
-        for coupling in couplings:
-          sample_categories_HH.append("{}{}".format(process_category, coupling))
-    return sample_categories_HH
-
   def createCfg_makePlots(self, jobOptions):
     """Fills the template of python configuration file for making control plots
 
