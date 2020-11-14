@@ -466,6 +466,7 @@ int main(int argc, char* argv[])
 
 //--- HH coupling scan
   std::vector<std::string> HHWeightNames;
+  std::vector<std::string> HHBMNames;
   const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
   const bool apply_HH_rwgt = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt");
   const HHWeightInterface2* HHWeight_calc = nullptr;
@@ -473,6 +474,23 @@ int main(int argc, char* argv[])
   {
     HHWeight_calc = new HHWeightInterface2(hhWeight_cfg);
     HHWeightNames = HHWeight_calc->get_weight_names();
+    HHBMNames     = HHWeight_calc->get_bm_names();
+
+    std::cout << "HHWeightNames: ";
+    for(auto bmName : HHWeightNames)
+    {
+      std::cout << bmName << ",  ";
+    }
+    std::cout << "\n";
+    std::cout << "HHBMNames: ";
+    for(auto bmName : HHBMNames)
+    {
+      std::cout << bmName << ",  ";
+    }
+    std::cout << "\n";
+
+    //    HHWeightNames = HHBMNames;     // Siddhesh: bench mark weight map has BMName as map index
+    //std::cout << "Setting HHWeightNames = HHBMNames \n";
   }
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
@@ -577,7 +595,20 @@ int main(int argc, char* argv[])
   RecoJetCollectionCleanerAK8 jetCleanerAK8_dR16(1.6, isDEBUG);
   RecoJetCollectionSelectorAK8 jetSelectorAK8(era, -1, isDEBUG);
   RecoJetCollectionSelectorAK8_hh_Wjj jetSelectorAK8_Wjj(era, -1, isDEBUG); // Need to redefine new class RecoJetCollectionSelectorAK8_WWWW_Wjj
-
+  std::cout << "branchName_jets_ak8: " << branchName_jets_ak8 << ", "
+	    << "branchName_subjets_ak8: " << branchName_subjets_ak8 << "\n";
+  if ( branchName_jets_ak8.find("AK8LS") != std::string::npos    &&
+       branchName_subjets_ak8 .find("AK8LS") != std::string::npos )
+  {
+    jetSelectorAK8_Wjj.disableDeltaRCut_between_AK8Subjets_NearestLepton();
+    std::cout << "\t diable dR(AK8subjets, nearestLepton) cut ***** \n";
+  }
+  else
+  {
+    jetSelectorAK8_Wjj.enableDeltaRCut_between_AK8Subjets_NearestLepton();
+    std::cout << "\t enable dR(AK8subjets, nearestLepton) cut ***** \n";
+  }
+  
   GenParticleReader* genWBosonReader = nullptr;
   GenParticleReader* genWJetReader = nullptr;
   if ( isMC ) {
@@ -1904,9 +1935,9 @@ int main(int argc, char* argv[])
       if(apply_HH_rwgt)
       {
         assert(HHWeight_calc);
-        for(auto bmName : HHWeightNames)
+        for(unsigned int i =0; i < HHWeightNames.size();i++)
         {
-          weightMapHH[bmName] = HHWeight_calc->getWeight(bmName, eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+          weightMapHH[HHWeightNames[i]] = HHWeight_calc->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
         }
       }
 

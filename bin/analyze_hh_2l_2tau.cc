@@ -614,6 +614,7 @@ int main(int argc, char* argv[])
 
 //--- HH coupling scan
   std::vector<std::string> HHWeightNames;
+  std::vector<std::string> HHBMNames;
   const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
   const bool apply_HH_rwgt = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt");
   const HHWeightInterface2* HHWeight_calc = nullptr;
@@ -621,6 +622,7 @@ int main(int argc, char* argv[])
   {
     HHWeight_calc = new HHWeightInterface2(hhWeight_cfg);
     HHWeightNames = HHWeight_calc->get_weight_names();
+    HHBMNames = HHWeight_calc->get_bm_names();
   }
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
@@ -2171,9 +2173,9 @@ int main(int argc, char* argv[])
       if(apply_HH_rwgt)
       {
         assert(HHWeight_calc);
-        for(auto bmName : HHWeightNames)
+        for(unsigned int i =0; i < HHWeightNames.size();i++)
         {
-          weightMapHH[bmName] = HHWeight_calc->getWeight(bmName, eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+          weightMapHH[HHWeightNames[i]] = HHWeight_calc->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
         }
       }
 
