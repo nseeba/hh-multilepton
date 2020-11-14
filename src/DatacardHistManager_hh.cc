@@ -6,6 +6,8 @@
 
 #include <TString.h> // Form
 
+#include <boost/algorithm/string/replace.hpp> // boost::replace_all()
+
 #include <string>
 #include <map>
 
@@ -39,7 +41,10 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
   , xMax_(1.)
   , isDEBUG_(isDEBUG)
 {
-  process_ = analysisConfig.isMC_HH() ? analysisConfig.process_hh() : analysisConfig.process();
+  if(analysisConfig.isMC_HH())
+  {
+    boost::replace_all(process_, analysisConfig.process(), analysisConfig.process_hh());
+  }
 
   if ( central_or_shift_ == "central" )
   {
