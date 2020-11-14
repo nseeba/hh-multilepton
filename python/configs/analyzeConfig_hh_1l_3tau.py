@@ -130,9 +130,8 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
     self.executable_addBackgrounds = executable_addBackgrounds
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
 
-    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ] 
-
-    self.make_plots_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "Other", "VH", "TTH", "TH" ] + [ "Convs", "data_fakes" ]
+    self.nonfake_backgrounds = self.get_nonfake_backgrounds()
+    self.make_plots_backgrounds = self.get_makeplots_backgrounds()
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.histogramDir_prep_dcard = "hh_1l_3tau_OS_Tight"
     self.histogramDir_prep_dcard_SS = "hh_1l_3tau_SS_Tight"

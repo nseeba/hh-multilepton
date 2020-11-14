@@ -38,6 +38,22 @@ class analyzeConfig_hh(analyzeConfig):
     #       https://indico.cern.ch/event/904971/contributions/3857701/attachments/2036949/3410728/TopPt_20.05.12.pdf
     self.topPtRwgtChoice = "HighPt"
 
+  def get_nonfake_backgrounds(self):
+    return [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]
+
+  def get_makeplots_backgrounds(self, add_flips = ''):
+    result = self.nonfake_backgrounds + [ "data_fakes" ]
+    if '0l' not in self.channel:
+      result.append("Convs")
+    if add_flips:
+      if add_flips == 'mc':
+        result.append("flips_mc")
+      elif add_flips == 'data':
+        result.append("data_flips")
+      else:
+        raise RuntimeError("Invalid option: %s" % add_flips)
+    return result
+
   def createCfg_makePlots(self, jobOptions):
     """Fills the template of python configuration file for making control plots
 

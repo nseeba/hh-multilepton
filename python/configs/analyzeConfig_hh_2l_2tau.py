@@ -150,15 +150,14 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     self.executable_addFakes = executable_addBackgroundJetToTauFakes
     self.executable_addFlips = executable_addFlips
 
-    self.nonfake_backgrounds = [ "ZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ] 
-
+    self.nonfake_backgrounds = self.get_nonfake_backgrounds()
     self.cfgFile_analyze = os.path.join(self.template_dir, cfgFile_analyze)
     self.inputFiles_hadd_stage1_6 = {}
     self.outputFile_hadd_stage1_6 = {}
     self.cfgFile_addFlips = os.path.join(self.template_dir, "addBackgroundLeptonFlips_cfg.py")
     self.jobOptions_addFlips = {}
     self.histogramDir_prep_dcard = "hh_2l_2tau_sumOS_Tight"
-    self.make_plots_backgrounds = ["DY", "ZZ", "WZ", "WW", "TT", "TTW", "TTZ", "Other", "VH", "TTH", "TH", "TTWW", "W" ] + [ "Convs", "data_fakes", "flips_mc" ]
+    self.make_plots_backgrounds = self.get_makeplots_backgrounds(add_flips = 'mc')
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2l_2tau_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2l_2tau_cfg.py")
 
