@@ -746,9 +746,10 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
             for sample_name, sample_info in self.samples.items():
               if not sample_info["use_it"]:
                 continue
-              sample_category = sample_info["sample_category_hh"]
+              sample_category = sample_info["sample_category"]
               masses_to_exclude = ["3000", "2500", "2000", "1750", "1500", "1250"]
               if sample_category.startswith("signal"):
+                sample_category = sample_info["sample_category_hh"]
                 doAdd = False
                 if "BDTOutput" in histogramToFit:
                   if ("SM" in histogramToFit or "BM" in histogramToFit) and 'nonresonant' in sample_category:

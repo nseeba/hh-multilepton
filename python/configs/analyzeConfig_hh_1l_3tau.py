@@ -556,8 +556,9 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
       for sample_name, sample_info in self.samples.items():
         if not sample_info["use_it"]:
           continue
-        sample_category = sample_info["sample_category_hh"]
+        sample_category = sample_info["sample_category"]
         if sample_category.startswith("signal"):
+          sample_category = sample_info["sample_category_hh"]
           doAdd = False
           if "BDTOutput" in histogramToFit:
             if ("SM" in histogramToFit or "BM" in histogramToFit) and 'nonresonant' in sample_category:
