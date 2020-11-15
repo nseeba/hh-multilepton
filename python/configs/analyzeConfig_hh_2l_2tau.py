@@ -530,8 +530,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
               key_addBackgrounds_dir = getKey("addBackgrounds")
               addBackgrounds_job_fakes_tuple = ("fakes_mc", leptonChargeSelection, hadTau_charge_selection, lepton_and_hadTau_selection_and_frWeight, chargeSumSelection)
               key_addBackgrounds_job_fakes = getKey(*addBackgrounds_job_fakes_tuple)
-              sample_categories = []
-              sample_categories.extend(self.nonfake_backgrounds)
+              sample_categories = self.get_sample_categories()
               processes_input = []
               for sample_category in sample_categories:
                 processes_input.append("%s_fake" % sample_category)
@@ -552,8 +551,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
               # output process: flips_mc
               addBackgrounds_job_flips_tuple = ("flips_mc", leptonChargeSelection, hadTau_charge_selection, lepton_and_hadTau_selection_and_frWeight, chargeSumSelection)
               key_addBackgrounds_job_flips = getKey(*addBackgrounds_job_flips_tuple)
-              sample_categories = []
-              sample_categories.extend(self.nonfake_backgrounds)
               processes_input = []
               for sample_category in sample_categories:
                 processes_input.append("%s_flip" % sample_category)
@@ -574,8 +571,6 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
               # output process: Convs
               addBackgrounds_job_Convs_tuple = ("Convs", leptonChargeSelection, hadTau_charge_selection, lepton_and_hadTau_selection_and_frWeight, chargeSumSelection)
               key_addBackgrounds_job_Convs = getKey(*addBackgrounds_job_Convs_tuple)
-              sample_categories = []
-              sample_categories.extend(self.nonfake_backgrounds)
               processes_input = []
               for sample_category in self.convs_backgrounds:
                 processes_input.append("%s_Convs" % sample_category)
@@ -778,10 +773,11 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
             prep_dcard_H = []
             prep_dcard_other_nonfake_backgrounds = []
             for process in self.nonfake_backgrounds:
-              if process in [ "VH", "TH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]:
+              if process in [ "VH", "WH", "ZH", "TH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]:
                 prep_dcard_H.append("%s_hww" % process)
                 prep_dcard_H.append("%s_hzz" % process)
                 prep_dcard_H.append("%s_htt" % process)
+                prep_dcard_H.append("%s_hbb" % process)
               else:
                 prep_dcard_other_nonfake_backgrounds.append(process)
             self.prep_dcard_processesToCopy = [ "data_obs" ] + prep_dcard_HH + prep_dcard_H + prep_dcard_other_nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ]

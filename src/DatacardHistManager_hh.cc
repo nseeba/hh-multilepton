@@ -43,7 +43,7 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
   {
     std::cout << " using resonant HH mass-points = " << format_vdouble(resonant_gen_mHH_) << std::endl;
   }
-  for ( auto gen_mHH : resonant_gen_mHH_ ) 
+  for ( const auto & gen_mHH : resonant_gen_mHH_ )
   {
     if ( !(analysisConfig_.isMC_HH_nonresonant() || analysisConfig_.isMC_HH_resonant_spin0()) )
     {
@@ -67,7 +67,7 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
   {
     std::cout << " using non-resonant HH benchmark scenarios = " << format_vstring(nonresonant_BMs_) << std::endl;
   }
-  for ( auto BM : nonresonant_BMs_ ) 
+  for ( const auto & BM : nonresonant_BMs_ )
   {
     std::string histogramName_nonresonant = Form("%sOutput_%s", BM == "SM" ? "MVA" : "BDT", BM.data());
     central_or_shiftOptions_[histogramName_nonresonant] = { "*" };
@@ -83,9 +83,10 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
     decayModeMap_["_wwtt"] = { "ttzz", "ttww" };
     decayModeMap_["_bbtt"] = { "bbtt" };
     decayModeMap_["_bbvv"] = { "bbzz", "bbww" };
+
     bool is_known_decayMode = false;
     const std::string process_hh = analysisConfig_.process_hh();
-    for ( auto decayModeIter : decayModeMap_ )
+    for ( const auto & decayModeIter : decayModeMap_ )
     {
       if ( process_hh.find(decayModeIter.first) != std::string::npos )
       {
@@ -95,6 +96,7 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
       }
     }
     if ( !is_known_decayMode ) decayModes_ = analysisConfig_.get_decayModes_HH();
+
     if ( central_or_shift_ == "central" )
     {
       std::cout << " using HH decay modes = " << format_vstring(decayModes_) << std::endl;
@@ -104,6 +106,17 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
   }
   else if ( analysisConfig_.isMC_H() )
   {
+    productionModeMap_["VH"] = { "WH", "ZH" };
+    const std::string process = analysisConfig_.process();
+    for ( const auto & decayModeIter : productionModeMap_ )
+    {
+      if ( process.find(decayModeIter.first) != std::string::npos )
+      {
+        productionModes_ = decayModeIter.second;
+        break;
+      }
+    }
+
     decayModes_ = analysisConfig_.get_decayModes_H();
     if ( central_or_shift_ == "central" )
     {
@@ -115,7 +128,8 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
   else
   {
     decayModes_.push_back("*");
-  } 
+  }
+  productionModes_.push_back("*");
 }
 
 void
@@ -123,13 +137,13 @@ DatacardHistManager_hh::bookHistograms(TFileDirectory & dir)
 {
   const std::string process = analysisConfig_.process();
   const std::string process_hh = analysisConfig_.process_hh();
-  for ( auto decayMode : decayModes_ )
+  for ( const auto & decayMode : decayModes_ )
   {
     std::string process_and_decayMode;
     if ( decayMode != "*" ) 
     {
       bool is_known_decayMode = false;
-      for ( auto decayModeIter : decayModeMap_ )
+      for ( const auto & decayModeIter : decayModeMap_ )
       {
         if ( process_hh.find(decayModeIter.first) != std::string::npos )
         {
@@ -150,27 +164,36 @@ DatacardHistManager_hh::bookHistograms(TFileDirectory & dir)
     {
       process_and_decayMode = process_;
     }
-    const std::string processBAK = process_;
-    process_ = process_and_decayMode;
+    for( auto productionMode : productionModes_ )
+    {
+      std::string process_production_and_decayMode = process_and_decayMode;
+      if( productionMode != "*" )
+      {
+        boost::replace_all(process_production_and_decayMode, analysisConfig_.process(), productionMode);
+      }
 
-    for ( auto histogramName : histogramNames_bdtOutput_resonant_spin2_ )
-    {
-      TH1* histogram = book1D(dir, histogramName, histogramName, numBinsX_, xMin_, xMax_);
-      histograms_bdtOutput_resonant_spin2_[decayMode][histogramName] = histogram; 
-    }
-    for ( auto histogramName : histogramNames_bdtOutput_resonant_spin0_ )
-    {
-      TH1* histogram = book1D(dir, histogramName, histogramName, numBinsX_, xMin_, xMax_);
-      histograms_bdtOutput_resonant_spin0_[decayMode][histogramName] = histogram; 
-    }
-      
-    for ( auto histogramName : histogramNames_bdtOutput_nonresonant_ )
-    {
-      TH1* histogram = book1D(dir, histogramName, histogramName, numBinsX_, xMin_, xMax_);
-      histograms_bdtOutput_nonresonant_[decayMode][histogramName] = histogram; 
-    }
+      const std::string processBAK = process_;
+      process_ = process_production_and_decayMode;
 
-    process_ = processBAK;
+      for ( const auto & histogramName : histogramNames_bdtOutput_resonant_spin2_ )
+      {
+        TH1* histogram = book1D(dir, histogramName, histogramName, numBinsX_, xMin_, xMax_);
+        histograms_bdtOutput_resonant_spin2_[productionMode][decayMode][histogramName] = histogram;
+      }
+      for ( const auto & histogramName : histogramNames_bdtOutput_resonant_spin0_ )
+      {
+        TH1* histogram = book1D(dir, histogramName, histogramName, numBinsX_, xMin_, xMax_);
+        histograms_bdtOutput_resonant_spin0_[productionMode][decayMode][histogramName] = histogram;
+      }
+
+      for ( const auto & histogramName : histogramNames_bdtOutput_nonresonant_ )
+      {
+        TH1* histogram = book1D(dir, histogramName, histogramName, numBinsX_, xMin_, xMax_);
+        histograms_bdtOutput_nonresonant_[productionMode][decayMode][histogramName] = histogram;
+      }
+
+      process_ = processBAK;
+    }
   }
 }
 
@@ -180,7 +203,7 @@ namespace
   get_keys(const std::map<std::string, double> & bdtOutputs)
   {
     std::vector<std::string> keys;
-    for ( auto bdtOutput : bdtOutputs )
+    for ( const auto & bdtOutput : bdtOutputs )
     {
       keys.push_back(bdtOutput.first);
     }
@@ -199,7 +222,7 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & bdt
   std::map<std::string, double> hh_reweightMap;
   if ( analysisConfig_.isMC_HH_nonresonant() && apply_HH_rwgt_ )
   {
-    for ( auto histogramName : histogramNames_bdtOutput_nonresonant_ )
+    for ( const auto & histogramName : histogramNames_bdtOutput_nonresonant_ )
     {
       std::map<std::string, std::string>::const_iterator bmName = bmNames_.find(histogramName);
       if ( bmName == bmNames_.end() )
@@ -211,15 +234,24 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & bdt
     }
   }
 
-  for ( auto decayMode : decayModes_ )
+  for ( const auto & decayMode : decayModes_ )
   {
-    if ( decayMode == "*" || 
-        (analysisConfig_.isMC_HH() && decayMode == eventInfo_.getDiHiggsDecayModeString()) || 
-        (analysisConfig_.isMC_H()  && decayMode == eventInfo_.getDecayModeString())        )
+    if (! ( decayMode == "*" ||
+          (analysisConfig_.isMC_HH() && decayMode == eventInfo_.getDiHiggsDecayModeString()) ||
+          (analysisConfig_.isMC_H()  && decayMode == eventInfo_.getDecayModeString())        ))
     {
-      for ( auto histogramName : histogramNames_bdtOutput_resonant_spin2_ )
+      continue;
+    }
+    for ( const auto & productionMode : productionModes_ )
+    {
+      if ( ! ( productionMode == "*" ||
+               (analysisConfig_.isMC_VH() && productionMode == eventInfo_.getProductionModeString()) ))
       {
-        TH1* histogram = histograms_bdtOutput_resonant_spin2_[decayMode][histogramName];
+        continue;
+      }
+      for ( const auto & histogramName : histogramNames_bdtOutput_resonant_spin2_ )
+      {
+        TH1* histogram = histograms_bdtOutput_resonant_spin2_[productionMode][decayMode][histogramName];
         std::map<std::string, double>::const_iterator bdtOutput = bdtOutputs_resonant_spin2.find(histogramName);
         if ( bdtOutput == bdtOutputs_resonant_spin2.end() )
           throw cmsException(this, __func__, __LINE__)
@@ -227,9 +259,9 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & bdt
             << "(available BDT outputs = " << format_vstring(get_keys(bdtOutputs_resonant_spin2)) << ")\n";
         fillWithOverFlow(histogram, bdtOutput->second, evtWeight, evtWeightErr);
       }
-      for ( auto histogramName : histogramNames_bdtOutput_resonant_spin0_ )
+      for ( const auto & histogramName : histogramNames_bdtOutput_resonant_spin0_ )
       {
-        TH1* histogram = histograms_bdtOutput_resonant_spin0_[decayMode][histogramName];
+        TH1* histogram = histograms_bdtOutput_resonant_spin0_[productionMode][decayMode][histogramName];
         std::map<std::string, double>::const_iterator bdtOutput = bdtOutputs_resonant_spin0.find(histogramName);
         if ( bdtOutput == bdtOutputs_resonant_spin0.end() )
           throw cmsException(this, __func__, __LINE__)
@@ -238,9 +270,9 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & bdt
         fillWithOverFlow(histogram, bdtOutput->second, evtWeight, evtWeightErr);
       }
 
-      for ( auto histogramName : histogramNames_bdtOutput_nonresonant_ )
+      for ( const auto & histogramName : histogramNames_bdtOutput_nonresonant_ )
       {
-        TH1* histogram = histograms_bdtOutput_nonresonant_[decayMode][histogramName];
+        TH1* histogram = histograms_bdtOutput_nonresonant_[productionMode][decayMode][histogramName];
         std::map<std::string, double>::const_iterator bdtOutput = bdtOutputs_nonresonant.find(histogramName);
         if ( bdtOutput == bdtOutputs_nonresonant.end() )
           throw cmsException(this, __func__, __LINE__)

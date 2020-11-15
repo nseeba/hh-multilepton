@@ -39,10 +39,10 @@ class analyzeConfig_hh(analyzeConfig):
     self.topPtRwgtChoice = "HighPt"
 
   def get_nonfake_backgrounds(self):
-    return [ "ggZZ", "qqZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "tHq", "tHW", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]
+    return [ "ggZZ", "qqZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "ZH", "WH", "tHq", "tHW", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]
 
   def get_makeplots_backgrounds(self, add_flips = ''):
-    result = self.nonfake_backgrounds + [ "data_fakes" ]
+    result = [ bkg for bkg in self.nonfake_backgrounds if bkg not in [ "ZH", "WH" ] ] + [ "data_fakes" ]
     if '0l' not in self.channel:
       result.append("Convs")
     if add_flips:
@@ -53,6 +53,11 @@ class analyzeConfig_hh(analyzeConfig):
       else:
         raise RuntimeError("Invalid option: %s" % add_flips)
     return result
+
+  def get_sample_categories(self):
+    # exclude WH and ZH in order to avoid double counting the contribution from VH which is included anwyays
+    # we don't care about separating the VH background when subtracting the prompt MC from data fakes
+    return [ bkg for bkg in self.nonfake_backgrounds if bkg not in [ "WH", "ZH" ] ]
 
   def createCfg_makePlots(self, jobOptions):
     """Fills the template of python configuration file for making control plots

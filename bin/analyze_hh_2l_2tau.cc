@@ -519,6 +519,7 @@ int main(int argc, char* argv[])
   std::string branchName_genHadTaus = cfg_analyze.getParameter<std::string>("branchName_genHadTaus");
   std::string branchName_genPhotons = cfg_analyze.getParameter<std::string>("branchName_genPhotons");
   std::string branchName_genJets = cfg_analyze.getParameter<std::string>("branchName_genJets");
+  std::string branchName_genWBosons = cfg_analyze.getParameter<std::string>("branchName_genWBosons");
 
   std::string branchName_muonGenMatch     = cfg_analyze.getParameter<std::string>("branchName_muonGenMatch");
   std::string branchName_electronGenMatch = cfg_analyze.getParameter<std::string>("branchName_electronGenMatch");
@@ -737,6 +738,7 @@ int main(int argc, char* argv[])
   GenLeptonReader * genLeptonReader = nullptr;
   GenHadTauReader * genHadTauReader = nullptr;
   GenPhotonReader * genPhotonReader = nullptr;
+  GenParticleReader * genWBosonReader = nullptr;
   GenJetReader * genJetReader = nullptr;
   LHEInfoReader * lheInfoReader = nullptr;
   PSWeightReader * psWeightReader = nullptr;
@@ -785,6 +787,12 @@ int main(int argc, char* argv[])
     inputTree->registerReader(lheInfoReader);
     psWeightReader = new PSWeightReader(hasPS, apply_LHE_nom);
     inputTree -> registerReader(psWeightReader);
+
+    if(analysisConfig.isMC_VH())
+    {
+      genWBosonReader = new GenParticleReader(branchName_genWBosons);
+      inputTree -> registerReader(genWBosonReader);
+    }
   }
 
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
@@ -1119,6 +1127,13 @@ int main(int argc, char* argv[])
         printCollection("genPhotons", genPhotons);
         printCollection("genJets", genJets);
       }
+    }
+
+    eventInfo.reset_productionMode();
+    if(genWBosonReader && analysisConfig.isMC_VH())
+    {
+      const std::vector<GenParticle> genWBosons = genWBosonReader->read();
+      eventInfo.set_productionMode(get_VH_productionMode(genWBosons));
     }
 
     if(isMC)
