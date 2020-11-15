@@ -133,7 +133,7 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
     self.histogramDir_prep_dcard = "hh_2lss_SS"
     self.histogramDir_prep_dcard_OS = "hh_2lss_OS"
     self.make_plots_backgrounds = self.get_makeplots_backgrounds(add_flips = 'data')
-    self.make_plots_backgrounds_OS = self.add_flips()
+    self.make_plots_backgrounds_OS = self.get_makeplots_backgrounds()
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2lss_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2lss_cfg.py") #TODO
 
