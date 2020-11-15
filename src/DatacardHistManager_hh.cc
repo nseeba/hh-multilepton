@@ -140,13 +140,17 @@ DatacardHistManager_hh::bookHistograms(TFileDirectory & dir)
           break;
         }
       }
-      if ( !is_known_decayMode ) process_and_decayMode = Form("%s_%s", process_.data(), decayMode.data());
+      if ( !is_known_decayMode )
+      {
+        process_and_decayMode = process_;
+        boost::replace_all(process_and_decayMode, process_hh, Form("%s_%s", process_hh.data(), decayMode.data()));
+      }
     }
     else 
     {
       process_and_decayMode = process_;
     }
-    std::string processBAK = process_;
+    const std::string processBAK = process_;
     process_ = process_and_decayMode;
 
     for ( auto histogramName : histogramNames_bdtOutput_resonant_spin2_ )
