@@ -47,13 +47,13 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
   {
     if ( !(analysisConfig_.isMC_HH_nonresonant() || analysisConfig_.isMC_HH_resonant_spin0()) )
     {
-      std::string histogramName_resonant_spin2 = Form("BDTOutput_%0.0f_hypo_spin2", gen_mHH);
+      std::string histogramName_resonant_spin2 = Form("MVAOutput_%0.0f_hypo_spin2", gen_mHH);
       central_or_shiftOptions_[histogramName_resonant_spin2] = { "*" };
       histogramNames_bdtOutput_resonant_spin2_.push_back(histogramName_resonant_spin2);
     }
     if ( !(analysisConfig_.isMC_HH_nonresonant() || analysisConfig_.isMC_HH_resonant_spin2()) )
     {
-      std::string histogramName_resonant_spin0 = Form("BDTOutput_%0.0f_hypo_spin0", gen_mHH);
+      std::string histogramName_resonant_spin0 = Form("MVAOutput_%0.0f_hypo_spin0", gen_mHH);
       central_or_shiftOptions_[histogramName_resonant_spin0] = { "*" };
       histogramNames_bdtOutput_resonant_spin0_.push_back(histogramName_resonant_spin0);
     }
@@ -69,7 +69,7 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
   }
   for ( auto BM : nonresonant_BMs_ ) 
   {
-    std::string histogramName_nonresonant = Form("%sOutput_%s", BM == "SM" ? "MVA" : "BDT", BM.data());
+    std::string histogramName_nonresonant = Form("MVAOutput_%s", BM.data());
     central_or_shiftOptions_[histogramName_nonresonant] = { "*" };
     histogramNames_bdtOutput_nonresonant_.push_back(histogramName_nonresonant);
     std::string bmName = BM;
