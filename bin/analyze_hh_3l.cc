@@ -1258,11 +1258,17 @@ int main(int argc, char* argv[])
       }
     }
 
+    eventInfo.reset_productionMode();
     std::vector<GenParticle> genWBosons;
     std::vector<GenParticle> genWJets;
     if ( isMC ) {
       genWBosons = genWBosonReader->read();
       genWJets = genWJetReader->read();
+
+      if(analysisConfig.isMC_VH())
+      {
+        eventInfo.set_productionMode(get_VH_productionMode(genWBosons));
+      }
     }
     
     if ( isDEBUG ) {

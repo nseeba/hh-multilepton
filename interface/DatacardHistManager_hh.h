@@ -52,6 +52,8 @@ class DatacardHistManager_hh
   std::vector<std::string> nonresonant_BMs_;
   std::vector<std::string> decayModes_;
   std::map<std::string, std::vector<std::string>> decayModeMap_;
+  std::vector<std::string> productionModes_;
+  std::map<std::string, std::vector<std::string>> productionModeMap_;
 
   std::vector<std::string> histogramNames_bdtOutput_resonant_spin2_;
   std::vector<std::string> histogramNames_bdtOutput_resonant_spin0_;
@@ -62,9 +64,10 @@ class DatacardHistManager_hh
   double xMin_;
   double xMax_;
 
-  std::map<std::string, std::map<std::string, TH1*>> histograms_bdtOutput_resonant_spin2_; // key = decayMode ("*" for data and background), histogramName
-  std::map<std::string, std::map<std::string, TH1*>> histograms_bdtOutput_resonant_spin0_; // key = decayMode ("*" for data and background), histogramName
-  std::map<std::string, std::map<std::string, TH1*>> histograms_bdtOutput_nonresonant_;    // key = decayMode ("*" for data and background), histogramName
+  // key = prduction and decay mode ("*" for data and background), histogramName
+  std::map<std::string, std::map<std::string, std::map<std::string, TH1*>>> histograms_bdtOutput_resonant_spin2_;
+  std::map<std::string, std::map<std::string, std::map<std::string, TH1*>>> histograms_bdtOutput_resonant_spin0_;
+  std::map<std::string, std::map<std::string, std::map<std::string, TH1*>>> histograms_bdtOutput_nonresonant_;
 
   bool isDEBUG_;
 };

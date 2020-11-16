@@ -105,6 +105,7 @@ process.analyze_hh_4l = cms.PSet(
     branchName_genHadTaus = cms.string('GenVisTau'),
     branchName_genPhotons = cms.string('GenPhoton'),
     branchName_genJets = cms.string('GenJet'),
+    branchName_genWBosons = cms.string('GenVbosons'),
 
     redoGenMatching = cms.bool(False),
     genMatchingByIndex = cms.bool(True),

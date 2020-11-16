@@ -133,7 +133,7 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
     self.histogramDir_prep_dcard = "hh_2lss_SS"
     self.histogramDir_prep_dcard_OS = "hh_2lss_OS"
     self.make_plots_backgrounds = self.get_makeplots_backgrounds(add_flips = 'data')
-    self.make_plots_backgrounds_OS = self.add_flips()
+    self.make_plots_backgrounds_OS = self.get_makeplots_backgrounds()
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2lss_cfg.py")
     self.cfgFile_make_plots_mcClosure = os.path.join(self.template_dir, "makePlots_mcClosure_hh_2lss_cfg.py") #TODO
 
@@ -421,8 +421,7 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
           key_addBackgrounds_dir = getKey("addBackgrounds")
           addBackgrounds_job_fakes_tuple = ("fakes_mc", lepton_selection_and_frWeight, leptonChargeSelection)
           key_addBackgrounds_job_fakes = getKey(*addBackgrounds_job_fakes_tuple)
-          sample_categories = []
-          sample_categories.extend(self.nonfake_backgrounds)
+          sample_categories = self.get_sample_categories()
           processes_input = []
           for sample_category in sample_categories:
             processes_input.append("%s_fake" % sample_category)
@@ -442,8 +441,6 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
           # output process: flips_mc
           addBackgrounds_job_flips_tuple = ("flips_mc", lepton_selection_and_frWeight, leptonChargeSelection)
           key_addBackgrounds_job_flips = getKey(*addBackgrounds_job_flips_tuple)
-          sample_categories = []
-          sample_categories.extend(self.nonfake_backgrounds)
           processes_input = []
           for sample_category in sample_categories:
             processes_input.append("%s_flip" % sample_category)
@@ -463,8 +460,6 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
           # output process: Convs
           addBackgrounds_job_Convs_tuple = ("Convs", lepton_selection_and_frWeight, leptonChargeSelection)
           key_addBackgrounds_job_Convs = getKey(*addBackgrounds_job_Convs_tuple)
-          sample_categories = []
-          sample_categories.extend(self.nonfake_backgrounds)
           processes_input = []
           for sample_category in self.convs_backgrounds:
             processes_input.append("%s_Convs" % sample_category)
@@ -611,9 +606,10 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
         for sample_name, sample_info in self.samples.items():
           if not sample_info["use_it"]:
             continue
-          sample_category = sample_info["sample_category"] #TODO: change it to sample_info["sample_category_hh"]
+          sample_category = sample_info["sample_category"]
           masses_to_exclude = ["3000", "2500", "2000", "1750", "1500", "1250"]
           if sample_category.startswith("signal"):
+            #sample_category = sample_info["sample_category_hh"] #TODO
             doAdd = False
             if "BDTOutput" in histogramToFit:
               if ("SM" in histogramToFit or "BM" in histogramToFit) and 'nonresonant' in sample_category:
@@ -642,10 +638,11 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
         prep_dcard_H = []
         prep_dcard_other_nonfake_backgrounds = []
         for process in self.nonfake_backgrounds:
-          if process in [ "VH", "TH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]:
+          if process in [ "VH", "WH", "ZH", "TH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]:
             prep_dcard_H.append("%s_hww" % process)
             prep_dcard_H.append("%s_hzz" % process)
             prep_dcard_H.append("%s_htt" % process)
+            prep_dcard_H.append("%s_hbb" % process)
           else:
             prep_dcard_other_nonfake_backgrounds.append(process)
         self.prep_dcard_processesToCopy = [ "data_obs" ] + prep_dcard_HH + prep_dcard_H + prep_dcard_other_nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ]
