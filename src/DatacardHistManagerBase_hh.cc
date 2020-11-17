@@ -171,7 +171,7 @@ DatacardHistManagerBase_hh::bookHistograms(TFileDirectory & dir)
       if ( decayMode != "*" ) 
       {
         bool is_known_decayMode = false;
-        for ( const auto & decayModeIter : decayModeMap_ )
+        for ( const auto & decayModeIter: decayModeMap_ )
         {
           if ( process_hh.find(decayModeIter.first) != std::string::npos )
           {
