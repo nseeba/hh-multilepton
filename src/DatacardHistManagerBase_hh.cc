@@ -66,7 +66,7 @@ DatacardHistManagerBase_hh::initialize()
   {
     std::cout << " using resonant HH mass-points = " << format_vdouble(resonant_gen_mHH_) << std::endl;
   }
-  for ( const auto & gen_mHH : resonant_gen_mHH_ )
+  for ( const auto & gen_mHH: resonant_gen_mHH_ )
   {
     if ( !(analysisConfig_.isMC_HH_nonresonant() || analysisConfig_.isMC_HH_resonant_spin0()) )
     {
@@ -92,7 +92,7 @@ DatacardHistManagerBase_hh::initialize()
   {
     std::cout << " using non-resonant HH benchmark scenarios = " << format_vstring(nonresonant_BMs_) << std::endl;
   }
-  for ( const auto & BM : nonresonant_BMs_ )
+  for ( const auto & BM: nonresonant_BMs_ )
   {
     std::string histogramName_nonresonant = Form("MVAOutput_%s", BM.data());
     central_or_shiftOptions_[histogramName_nonresonant] = { "*" };
@@ -102,37 +102,44 @@ DatacardHistManagerBase_hh::initialize()
   
   if ( analysisConfig_.isMC_HH_resonant() || analysisConfig_.isMC_HH_nonresonant() )
   {
-    decayModeMap_["_tttt"] = { "tttt" };
-    decayModeMap_["_wwww"] = { "zzzz", "wwww", "zzww" };
-    decayModeMap_["_wwtt"] = { "ttzz", "ttww" };
-    decayModeMap_["_bbtt"] = { "bbtt" };
-    decayModeMap_["_bbvv"] = { "bbzz", "bbww" };
-
-    bool is_known_decayMode = false;
-    const std::string process_hh = analysisConfig_.process_hh();
-    for ( const auto & decayModeIter : decayModeMap_ )
+    // CV: do not split fake and conversion contributions by decay mode
+    if ( process_.find("_fake") == std::string::npos && process_.find("_Convs") == std::string::npos )
     {
-      if ( process_hh.find(decayModeIter.first) != std::string::npos )
+      decayModeMap_["_tttt"] = { "tttt" };
+      decayModeMap_["_wwww"] = { "zzzz", "wwww", "zzww" };
+      decayModeMap_["_wwtt"] = { "ttzz", "ttww" };
+      decayModeMap_["_bbtt"] = { "bbtt" };
+      decayModeMap_["_bbvv"] = { "bbzz", "bbww" };
+
+      bool is_known_decayMode = false;
+      const std::string process_hh = analysisConfig_.process_hh();
+      for ( const auto & decayModeIter: decayModeMap_ )
       {
-        decayModes_ = decayModeIter.second;
-        is_known_decayMode = true;
-        break;
+        if ( process_hh.find(decayModeIter.first) != std::string::npos )
+        {
+          decayModes_ = decayModeIter.second;
+          is_known_decayMode = true;
+          break;
+        }
+      }
+      if ( !is_known_decayMode ) decayModes_ = analysisConfig_.get_decayModes_HH();
+
+      if ( central_or_shift_ == "central" )
+      {
+        std::cout << " using HH decay modes = " << format_vstring(decayModes_) << std::endl;
       }
     }
-    if ( !is_known_decayMode ) decayModes_ = analysisConfig_.get_decayModes_HH();
 
-    if ( central_or_shift_ == "central" )
-    {
-      std::cout << " using HH decay modes = " << format_vstring(decayModes_) << std::endl;
-    }
     // CV: book & fill extra histogram for HH signal without splitting by decay mode
     decayModes_.push_back("*");
   }
   else if ( analysisConfig_.isMC_H() )
   {
+    // KE: split VH into WH and ZH contributions,
+    //     as WH and ZH contributions are affected differently by variations of Higgs boson couplings
     productionModeMap_["VH"] = { "WH", "ZH" };
     const std::string process = analysisConfig_.process();
-    for ( const auto & decayModeIter : productionModeMap_ )
+    for ( const auto & decayModeIter: productionModeMap_ )
     {
       if ( process.find(decayModeIter.first) != std::string::npos )
       {
@@ -141,11 +148,16 @@ DatacardHistManagerBase_hh::initialize()
       }
     }
 
-    decayModes_ = analysisConfig_.get_decayModes_H();
-    if ( central_or_shift_ == "central" )
+    // CV: do not split fake and conversion contributions by decay mode
+    if ( process_.find("_fake") == std::string::npos && process_.find("_Convs") == std::string::npos )
     {
-      std::cout << " using H decay modes = " << format_vstring(decayModes_) << std::endl;
+      decayModes_ = analysisConfig_.get_decayModes_H();
+      if ( central_or_shift_ == "central" )
+      {
+        std::cout << " using H decay modes = " << format_vstring(decayModes_) << std::endl;
+      }
     }
+
     // CV: book & fill extra histogram for H signal without splitting by decay mode
     decayModes_.push_back("*");
   }
@@ -153,7 +165,10 @@ DatacardHistManagerBase_hh::initialize()
   {
     decayModes_.push_back("*");
   }
-  productionModes_.push_back("*");
+  if ( productionModes_.size() == 0 )
+  {
+    productionModes_.push_back("*");
+  }
 }
 
 void
