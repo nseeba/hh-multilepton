@@ -1,20 +1,22 @@
-#ifndef hhAnalysis_multilepton_DatacardHistManager_hh
-#define hhAnalysis_multilepton_DatacardHistManager_hh
+#ifndef hhAnalysis_multilepton_DatacardHistManager_hh_h
+#define hhAnalysis_multilepton_DatacardHistManager_hh_h
 
 /** \class DatacardHistManager_hh
  *
- * Book and fill histograms of BDT output for non-resonant (SM and non-SM kinematics) and resonant (spin 0 and 2) HH analyses,
- * which are used for the signal extraction.
+ * Book and fill histograms of BDT output for non-resonant (SM and non-SM kinematics) and resonant (spin 0 and 2) HH analyses.
+ * The code supports multiple event categories.
  * This class can be used for the HH->multilepton as well as for the HH->bbWW analysis.
  *
  * \author Christian Veelken, Tallinn
  *
  */
 
-#include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h"    // HistManagerBase
-#include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h"          // EventInfo
-#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface2.h" // HHWeightInterface2
-#include "hhAnalysis/multilepton/interface/AnalysisConfig_hh.h"     // AnalysisConfig_hh
+#include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h"         // HistManagerBase
+#include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h"               // EventInfo
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface2.h"      // HHWeightInterface2
+#include "hhAnalysis/multilepton/interface/AnalysisConfig_hh.h"          // AnalysisConfig_hh
+#include "hhAnalysis/multilepton/interface/DatacardHistManagerBase_hh.h" // DatacardHistManagerBase_hh
+#include "hhAnalysis/multilepton/interface/EventCategory.h"              // EventCategory
 
 #include <vector>
 #include <map>
@@ -22,7 +24,7 @@
 using namespace std;
 
 class DatacardHistManager_hh
-  : public HistManagerBase
+  : public DatacardHistManagerBase_hh
 {
  public:
   DatacardHistManager_hh(const edm::ParameterSet & cfg,
@@ -30,46 +32,23 @@ class DatacardHistManager_hh
                          const EventInfo & eventInfo, 
                          const HHWeightInterface2 * HHWeight_calc,
                          bool isDEBUG = false);
+  DatacardHistManager_hh(const edm::ParameterSet & cfg,
+                         const AnalysisConfig_hh & analysisConfig, 
+                         const EventInfo & eventInfo, 
+                         const HHWeightInterface2 * HHWeight_calc,
+                         const EventCategory * eventCategory,
+                         bool isDEBUG = false);
   ~DatacardHistManager_hh() {}
 
-  /// book and fill histograms
+  /// fill histograms
   void
-  bookHistograms(TFileDirectory & dir) override;
-
-  void
-  fillHistograms(const std::map<std::string, double> & bdtOutputs_resonant_spin2,
-                 const std::map<std::string, double> & bdtOutputs_resonant_spin0,
-                 const std::map<std::string, double> & bdtOutputs_nonresonant,
+  fillHistograms(const std::map<std::string, double> & mvaOutputs_resonant_spin2,
+                 const std::map<std::string, double> & mvaOutputs_resonant_spin0,
+                 const std::map<std::string, double> & mvaOutputs_nonresonant,
                  double evtWeight);
 
  private:
-  const AnalysisConfig_hh & analysisConfig_;
-  const EventInfo & eventInfo_;
-  const HHWeightInterface2 * HHWeight_calc_;
-  bool apply_HH_rwgt_;
-
-  std::vector<double> resonant_gen_mHH_;
-  std::vector<std::string> nonresonant_BMs_;
-  std::vector<std::string> decayModes_;
-  std::map<std::string, std::vector<std::string>> decayModeMap_;
-  std::vector<std::string> productionModes_;
-  std::map<std::string, std::vector<std::string>> productionModeMap_;
-
-  std::vector<std::string> histogramNames_bdtOutput_resonant_spin2_;
-  std::vector<std::string> histogramNames_bdtOutput_resonant_spin0_;
-  std::vector<std::string> histogramNames_bdtOutput_nonresonant_;
-  std::map<std::string, std::string> bmNames_; // key = histogramName
-
-  int numBinsX_;
-  double xMin_;
-  double xMax_;
-
-  // key = prduction and decay mode ("*" for data and background), histogramName
-  std::map<std::string, std::map<std::string, std::map<std::string, TH1*>>> histograms_bdtOutput_resonant_spin2_;
-  std::map<std::string, std::map<std::string, std::map<std::string, TH1*>>> histograms_bdtOutput_resonant_spin0_;
-  std::map<std::string, std::map<std::string, std::map<std::string, TH1*>>> histograms_bdtOutput_nonresonant_;
-
-  bool isDEBUG_;
+  const EventCategory * eventCategory_;
 };
 
 #endif
