@@ -165,10 +165,7 @@ DatacardHistManagerBase_hh::initialize()
   {
     decayModes_.push_back("*");
   }
-  if ( productionModes_.size() == 0 )
-  {
-    productionModes_.push_back("*");
-  }
+  productionModes_.push_back("*");
 }
 
 void
