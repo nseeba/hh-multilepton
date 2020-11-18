@@ -625,7 +625,7 @@ class analyzeConfig_WZctrl_SFstudy(analyzeConfig_hh):
           masses_to_exclude = ["3000", "2500", "2000", "1750", "1500", "1250"]
           if sample_category.startswith("signal"):
             doAdd = False
-            if "BDTOutput" in histogramToFit:
+            if "BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit:
               if ("SM" in histogramToFit or "BM" in histogramToFit) and 'nonresonant' in sample_category:
                 doAdd = True
               if "spin0" in histogramToFit and "spin0" in sample_category and histogramToFit[9:13] in sample_category:

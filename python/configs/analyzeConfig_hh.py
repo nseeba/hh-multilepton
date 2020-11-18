@@ -38,8 +38,11 @@ class analyzeConfig_hh(analyzeConfig):
     #       https://indico.cern.ch/event/904971/contributions/3857701/attachments/2036949/3410728/TopPt_20.05.12.pdf
     self.topPtRwgtChoice = "HighPt"
 
-  def get_nonfake_backgrounds(self):
-    return [ "ggZZ", "qqZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "ZH", "WH", "tHq", "tHW", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]
+  def get_nonfake_backgrounds(self, split_vh = True):
+    processes = [ "ggZZ", "qqZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "tHq", "tHW", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]
+    if split_vh:
+      processes.extend([ "ZH", "WH" ])
+    return processes
 
   def get_makeplots_backgrounds(self, add_flips = ''):
     result = [ bkg for bkg in self.nonfake_backgrounds if bkg not in [ "ZH", "WH" ] ] + [ "data_fakes" ]
