@@ -219,6 +219,10 @@ DatacardHistManagerBase_hh::bookHistograms(TFileDirectory & dir)
         {
           assert(eventCategoryBase_);
           process_ += Form("%s/", eventCategoryBase_->categoryName(category).data());
+        } 
+        else if ( categories_.size() > 1 )
+        {
+          process_ += "inclusive/";
         }
         process_ += process_production_and_decayMode;
 
