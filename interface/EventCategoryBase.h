@@ -28,6 +28,8 @@ class EventCategoryBase
   const std::string & categoryName(int for_category) const;
 
  protected:
+  void initialize();
+
   std::vector<std::string> categoryNames_;
   std::vector<int> categories_;
   std::map<int, std::string> categoryMap_;

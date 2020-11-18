@@ -26,3 +26,16 @@ EventCategoryBase::categoryName(int category) const
     throw cmsException(__func__, __LINE__) << "Invalid argument: " << category << " !!\n";
   return categoryName->second;
 }
+
+void
+EventCategoryBase::initialize()
+{
+  for ( std::map<int, std::string>::const_iterator category = categoryMap_.begin();
+        category != categoryMap_.end(); ++category ) {
+    if ( category->first >= 0 ) // skip "undefined" category (which has value = -1)
+    {
+      categoryNames_.push_back(category->second);
+      categories_.push_back(category->first);
+    }
+  }
+}
