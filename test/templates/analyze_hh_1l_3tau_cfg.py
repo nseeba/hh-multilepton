@@ -164,7 +164,7 @@ process.analyze_hh_1l_3tau = cms.PSet(
             'diHiggsMass', 'dr_lep_tau3', 'dr_tau1_tau2', 'dr_tau1_tau3', 'dr_tau2_tau3',
             'm_lep_tau1', 'pt_HH_recoil', 'mT_lep',
             'SM', 'BM1', 'BM2', 'BM3', 'BM4', 'BM5', 'BM6', 'BM7', 'BM8', 'BM9', 'BM10', 'BM11', 'BM12'
-        ), ## No Need to add BM indices they will be added for the  non-reso case on the fly
+        ),
     ),
 
     evtWeight = cms.PSet(
