@@ -1196,7 +1196,7 @@ int main(int argc, char* argv[])
     const std::vector<const RecoJet*> selJets = jetSelector(cleanedJets, isHigherPt);
     const std::vector<const RecoJet*> selBJets_loose = jetSelectorBtagLoose(cleanedJets, isHigherPt);
     const std::vector<const RecoJet*> selBJets_medium = jetSelectorBtagMedium(cleanedJets, isHigherPt);
-    int numSelJetsPtGt40 = countHighPtObjects(selJets, 40.);
+    //int numSelJetsPtGt40 = countHighPtObjects(selJets, 40.);
     if(isDEBUG || run_lumi_eventSelector)
     {
       printCollection("uncleanedJets", jet_ptrs);
