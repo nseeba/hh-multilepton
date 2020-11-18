@@ -46,14 +46,18 @@ namespace
   unpackMVAOutputMap(const std::map<std::string, std::map<std::string, double>>& mvaOutputs)
   {
     std::map<std::string, std::pair<std::string, double>> mvaOutputs_unpacked;
-    for ( std::map<std::string, std::map<std::string, double>>::const_iterator classIter = mvaOutputs.begin();
-          classIter != mvaOutputs.end(); ++classIter ) {
-      for ( std::map<std::string, double>::const_iterator gen_mHH_or_bmName = classIter->second.begin(); 
-            gen_mHH_or_bmName != classIter->second.end(); ++gen_mHH_or_bmName ) {
+    for ( std::map<std::string, std::map<std::string, double>>::const_iterator gen_mHH_or_bmName = mvaOutputs.begin();
+          gen_mHH_or_bmName != mvaOutputs.end(); ++gen_mHH_or_bmName ) {
+      for ( std::map<std::string, double>::const_iterator classIter = gen_mHH_or_bmName->second.begin(); 
+            classIter != gen_mHH_or_bmName->second.end(); ++classIter ) {
+        //if ( gen_mHH_or_bmName->first == "SM" )
+        //{
+        //  std::cout << classIter->first << " = " << classIter->second << std::endl;
+        //}
         const std::string & key = gen_mHH_or_bmName->first;
-        if ( mvaOutputs_unpacked.find(key) == mvaOutputs_unpacked.end() || gen_mHH_or_bmName->second > mvaOutputs_unpacked[key].second )
+        if ( mvaOutputs_unpacked.find(key) == mvaOutputs_unpacked.end() || classIter->second > mvaOutputs_unpacked[key].second )
         {
-          mvaOutputs_unpacked[key] = std::pair<std::string, double>(classIter->first, gen_mHH_or_bmName->second);
+          mvaOutputs_unpacked[key] = std::pair<std::string, double>(classIter->first, classIter->second);
         }
       }
     }
