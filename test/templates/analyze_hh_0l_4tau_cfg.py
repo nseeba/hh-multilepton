@@ -132,9 +132,6 @@ process.analyze_hh_0l_4tau = cms.PSet(
             'tau1_phi', 'tau4_phi', 'diHiggsVisMass', 'diHiggsMass', 'met_LD',
             'deltaEta_tau2_tau3', 'dr_tau2_tau4', 'dr_bestTauHPair_m',
             'dr_secondTauHPair_m', 'gen_mHH'
-            'tau1_eta', 'tau1_phi', 'tau2_eta', 'tau3_phi', 'tau4_phi', 'diHiggsVisMass',
-            'diHiggsMass', 'met_LD', 'dr_tau1_tau3', 'dr_tau2_tau3', 'dr_bestTauHPair_m',
-            'Zee_secondTauHPair_m', 'pt_secondTauHPair_dPhi', 'dr_secondTauHPair_dr', 'gen_mHH'
         ),
     ),
     nonRes_BMs = cms.vdouble(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
