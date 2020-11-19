@@ -378,7 +378,7 @@ int main(int argc, char* argv[])
   assert(fitFunctionFileName_spin0 != "");
   assert(BDTInputVariables_SUM_spin0.size() != 0);
   TMVAInterface* BDT_SUM_spin0 = new TMVAInterface(BDTFileName_odd_spin0, BDTFileName_even_spin0, BDTInputVariables_SUM_spin0, fitFunctionFileName_spin0);
-  BDT_SUM_spin0->disableBDTTransform();
+  BDT_SUM_spin0->enableBDTTransform();
   std::map<std::string, double> BDTOutput_SUM_Map_spin0;
 
   assert(BDTFileName_odd_spin2 != "");
@@ -386,14 +386,14 @@ int main(int argc, char* argv[])
   assert(fitFunctionFileName_spin2 != "");
   assert(BDTInputVariables_SUM_spin2.size() != 0);
   TMVAInterface* BDT_SUM_spin2 = new TMVAInterface(BDTFileName_odd_spin2, BDTFileName_even_spin2, BDTInputVariables_SUM_spin2, fitFunctionFileName_spin2);
-  BDT_SUM_spin2->disableBDTTransform();
+  BDT_SUM_spin2->enableBDTTransform();
   std::map<std::string, double> BDTOutput_SUM_Map_spin2;
 
   assert(BDTFileName_odd_nonres != "");
   assert(BDTFileName_even_nonres != "");
   assert(BDTInputVariables_SUM_nonres.size() != 0);
   TMVAInterface* BDT_SUM_nonres = new TMVAInterface(BDTFileName_odd_nonres, BDTFileName_even_nonres, BDTInputVariables_SUM_nonres);
-  BDT_SUM_nonres->disableBDTTransform();
+  BDT_SUM_nonres->enableBDTTransform();
   std::map<std::string, double> BDTOutput_SUM_Map_nonres;
 
   std::map<std::string, double> AllVars_Map;
@@ -1977,10 +1977,10 @@ int main(int argc, char* argv[])
         if(apply_HH_rwgt)
         {
           assert(HHWeight_calc);
-	  for(unsigned int i =0; i < HHWeightNames.size();i++)
-	    {
-	      weightMapHH[HHWeightNames[i]] = HHWeight_calc->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
-	    }
+          for(unsigned int i =0; i < HHWeightNames.size();i++)
+          {
+            weightMapHH[HHWeightNames[i]] = HHWeight_calc->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+          }
         }
 
         bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
