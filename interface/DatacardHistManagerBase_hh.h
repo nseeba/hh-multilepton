@@ -67,6 +67,7 @@ class DatacardHistManagerBase_hh
   std::map<std::string, std::string> histogramNames_mvaOutput_resonant_spin2_; // key = gen_mHH + "_spin2", value = histogramName
   std::map<std::string, std::string> histogramNames_mvaOutput_resonant_spin0_; // key = gen_mHH + "_spin0", value = histogramName
   std::map<std::string, std::string> histogramNames_mvaOutput_nonresonant_;    // key = bmName, value = histogramName
+  std::string histogramName_mvaOutput_nonresonant_allBMs_;
 
   int numBinsX_;
   double xMin_;
@@ -78,6 +79,7 @@ class DatacardHistManagerBase_hh
     std::map<std::string, std::map<std::string, std::map<std::string, TH1*>>> histograms_mvaOutput_resonant_spin2_; // keys = productionMode, decayMode, gen_mHH + "_spin2"
     std::map<std::string, std::map<std::string, std::map<std::string, TH1*>>> histograms_mvaOutput_resonant_spin0_; // keys = productionMode, decayMode, gen_mHH + "_spin0"
     std::map<std::string, std::map<std::string, std::map<std::string, TH1*>>> histograms_mvaOutput_nonresonant_;    // keys = productionMode, decayMode, bmName
+    std::map<std::string, std::map<std::string, TH1*>> histograms_mvaOutput_nonresonant_allBMs_;                    // keys = productionMode, decayMode
     int category_;
   };
   std::vector<categoryEntryType> histograms_in_categories_;

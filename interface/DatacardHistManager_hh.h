@@ -45,6 +45,7 @@ class DatacardHistManager_hh
   fillHistograms(const std::map<std::string, double> & mvaOutputs_resonant_spin2,
                  const std::map<std::string, double> & mvaOutputs_resonant_spin0,
                  const std::map<std::string, double> & mvaOutputs_nonresonant,
+                 double mvaOutput_nonresonant_allBMs,
                  double evtWeight);
 
  private:

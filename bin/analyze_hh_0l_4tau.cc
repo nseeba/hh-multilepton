@@ -1918,6 +1918,7 @@ int main(int argc, char* argv[])
           BDTOutput_SUM_Map_spin2,
           BDTOutput_SUM_Map_spin0,
           BDTOutput_SUM_Map_nonres,
+          -1., // CV: BDTOutput for nonresonant_allBMs case not implemented yet !!
           evtWeight);
 
         if(! skipFilling)

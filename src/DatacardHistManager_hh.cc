@@ -51,6 +51,7 @@ void
 DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & mvaOutputs_resonant_spin2,
                                        const std::map<std::string, double> & mvaOutputs_resonant_spin0,
                                        const std::map<std::string, double> & mvaOutputs_nonresonant,
+                                       double mvaOutput_nonresonant_allBMs,
                                        double evtWeight)
 {
   const double evtWeightErr = 0.;
@@ -123,6 +124,8 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & mva
           }
           fillWithOverFlow(histogram, mvaOutput->second, evtWeight_reweighted, evtWeightErr_reweighted);
         }
+        TH1* histogram = categoryEntry->histograms_mvaOutput_nonresonant_allBMs_[productionMode][decayMode];
+        fillWithOverFlow(histogram, mvaOutput_nonresonant_allBMs, evtWeight, evtWeightErr);
       }
     }
   }

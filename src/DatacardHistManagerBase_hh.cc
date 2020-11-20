@@ -99,6 +99,8 @@ DatacardHistManagerBase_hh::initialize()
     std::string key_nonresonant = BM;
     histogramNames_mvaOutput_nonresonant_[key_nonresonant] = histogramName_nonresonant;
   }
+  histogramName_mvaOutput_nonresonant_allBMs_ = "MVAOutput_allBMs";
+  central_or_shiftOptions_[histogramName_mvaOutput_nonresonant_allBMs_] = { "*" };
   
   if ( analysisConfig_.isMC_HH_resonant() || analysisConfig_.isMC_HH_nonresonant() )
   {
@@ -242,6 +244,8 @@ DatacardHistManagerBase_hh::bookHistograms(TFileDirectory & dir)
           TH1* histogram = book1D(dir, histogramName->second, histogramName->second, numBinsX_, xMin_, xMax_);
           categoryEntry.histograms_mvaOutput_nonresonant_[productionMode][decayMode][histogramName->first] = histogram;
         }
+        TH1* histogram = book1D(dir, histogramName_mvaOutput_nonresonant_allBMs_, histogramName_mvaOutput_nonresonant_allBMs_, numBinsX_, xMin_, xMax_);
+        categoryEntry.histograms_mvaOutput_nonresonant_allBMs_[productionMode][decayMode] = histogram;
 
         process_ = processBAK;
       }
