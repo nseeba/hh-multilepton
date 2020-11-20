@@ -157,13 +157,13 @@ process.analyze_hh_1l_3tau = cms.PSet(
     ),
     nonRes_BMs = cms.vdouble(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
     mvaInfo_nonres = cms.PSet(
-        BDT_xml_FileName_even_nonres = cms.string('hhAnalysis/multilepton/data/1l_3tau_odd_model_nonres.xml'),
-        BDT_xml_FileName_odd_nonres = cms.string('hhAnalysis/multilepton/data/1l_3tau_even_model_nonres.xml'),
+        BDT_xml_FileName_even_nonres = cms.string('hhAnalysis/multilepton/data/1l_3tau_odd_half_model_nonres.xml'),
+        BDT_xml_FileName_odd_nonres = cms.string('hhAnalysis/multilepton/data/1l_3tau_even_half_model_nonres.xml'),
         inputVars_nonres = cms.vstring(
-            'lep_pt', 'lep_phi', 'tau1_pt', 'tau2_pt', 'tau3_pt', 'met', 'diHiggsVisMass',
-            'diHiggsMass', 'dr_lep_tau3', 'dr_tau1_tau2', 'dr_tau1_tau3', 'dr_tau2_tau3',
-            'm_lep_tau1', 'pt_HH_recoil', 'mT_lep',
-            'SM', 'BM1', 'BM2', 'BM3', 'BM4', 'BM5', 'BM6', 'BM7', 'BM8', 'BM9', 'BM10', 'BM11', 'BM12'
+            'lep_pt', 'lep_eta', 'tau1_pt', 'tau2_pt', 'met', 'mht', 'diHiggsVisMass',
+            'diHiggsMass', 'dr_lep_tau2', 'dr_lep_tau3', 'dr_tau1_tau2', 'dr_tau1_tau3',
+            'm_lep_tau1', 'pt_HH_recoil', 'mT_lep', 'SM', 'BM1', 'BM2', 'BM3',
+            'BM4', 'BM5', 'BM6', 'BM7', 'BM8', 'BM9', 'BM10', 'BM11', 'BM12'
         ),
     ),
 
