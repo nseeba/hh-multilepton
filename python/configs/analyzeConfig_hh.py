@@ -38,8 +38,12 @@ class analyzeConfig_hh(analyzeConfig):
     #       https://indico.cern.ch/event/904971/contributions/3857701/attachments/2036949/3410728/TopPt_20.05.12.pdf
     self.topPtRwgtChoice = "HighPt"
 
-  def get_nonfake_backgrounds(self, split_vh = True):
-    processes = [ "ggZZ", "qqZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "tHq", "tHW", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]
+  def get_nonfake_backgrounds(self, split_vh = True, split_th = True):
+    processes = [ "ggZZ", "qqZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]
+    if split_vh:
+      processes.extend([ "tHq", "tHW" ])
+    else:
+      processes.append("TH")
     if split_vh:
       processes.extend([ "ZH", "WH" ])
     return processes
