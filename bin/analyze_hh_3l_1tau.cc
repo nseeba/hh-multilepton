@@ -2250,10 +2250,12 @@ int main(int argc, char* argv[])
             evtWeight);
           selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
         }
+
         selHistManager->datacard_->fillHistograms(
           BDTOutput_Map_spin2,
           BDTOutput_Map_spin0,
           BDTOutput_Map_nonRes,
+          -1., // CV: BDTOutput for nonresonant_allBMs case not implemented yet !!
           evtWeight);
 
 	//for(const std::string & category: categories_evt)

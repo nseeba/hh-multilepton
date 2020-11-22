@@ -42,6 +42,22 @@ DatacardHistManager_hh_multiclass::DatacardHistManager_hh_multiclass(const edm::
 
 namespace
 {
+  std::pair<std::string, double> // value = class, mvaOutput
+  unpackMVAOutputMap(const std::map<std::string, double>& mvaOutputs)
+  {
+    std::pair<std::string, double> mvaOutputs_unpacked;
+    bool isFirst = true;
+    for ( std::map<std::string, double>::const_iterator classIter = mvaOutputs.begin(); 
+          classIter != mvaOutputs.end(); ++classIter ) {
+      if ( isFirst || classIter->second > mvaOutputs_unpacked.second )
+      {
+        mvaOutputs_unpacked = std::pair<std::string, double>(classIter->first, classIter->second);
+        isFirst = false;
+      }
+    }
+    return mvaOutputs_unpacked;
+  }
+
   std::map<std::string, std::pair<std::string, double>> // key = gen_mHH/bmName; value = class, mvaOutput
   unpackMVAOutputMap(const std::map<std::string, std::map<std::string, double>>& mvaOutputs)
   {
@@ -80,6 +96,7 @@ void
 DatacardHistManager_hh_multiclass::fillHistograms(const std::map<std::string, std::map<std::string, double>> & mvaOutputs_resonant_spin2,
                                                   const std::map<std::string, std::map<std::string, double>> & mvaOutputs_resonant_spin0,
                                                   const std::map<std::string, std::map<std::string, double>> & mvaOutputs_nonresonant,
+                                                  const std::map<std::string, double> & mvaOutputs_nonresonant_allBMs, 
                                                   double evtWeight)
 {
   const double evtWeightErr = 0.;
@@ -87,6 +104,7 @@ DatacardHistManager_hh_multiclass::fillHistograms(const std::map<std::string, st
   std::map<std::string, std::pair<std::string, double>> mvaOutputs_resonant_spin2_unpacked = unpackMVAOutputMap(mvaOutputs_resonant_spin2);
   std::map<std::string, std::pair<std::string, double>> mvaOutputs_resonant_spin0_unpacked = unpackMVAOutputMap(mvaOutputs_resonant_spin0);
   std::map<std::string, std::pair<std::string, double>> mvaOutputs_nonresonant_unpacked = unpackMVAOutputMap(mvaOutputs_nonresonant);
+  std::pair<std::string, double> mvaOutput_nonresonant_allBMs_unpacked = unpackMVAOutputMap(mvaOutputs_nonresonant_allBMs);
 
   compHHReweightMap();
  
@@ -162,6 +180,12 @@ DatacardHistManager_hh_multiclass::fillHistograms(const std::map<std::string, st
             }
             fillWithOverFlow(histogram, mvaOutput->second.second, evtWeight_reweighted, evtWeightErr_reweighted);
           }
+        }
+        const std::string & for_class = mvaOutput_nonresonant_allBMs_unpacked.first;
+        if ( isSelected(categoryEntry->category_, for_class) )
+        {
+          TH1* histogram = categoryEntry->histograms_mvaOutput_nonresonant_allBMs_[productionMode][decayMode];
+          fillWithOverFlow(histogram, mvaOutput_nonresonant_allBMs_unpacked.second, evtWeight, evtWeightErr);
         }
       }
     }
