@@ -9,7 +9,7 @@ HH_DECAYMODES_RE = re.compile('_({})$'.format('|'.join(HH_DECAYMODES)))
 
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 
-def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None):
+def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = Nonem, separate_th = True):
 
   sum_events_hh  = copy.deepcopy(samples_era_hh['sum_events'])
   sum_events_bkg = copy.deepcopy(samples_era_bkg['sum_events'])
@@ -65,7 +65,8 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None)
     elif sample_name.startswith('/ttH'):
       sample_info["sample_category"] = "TTH"
     elif sample_info["sample_category"] in [ "tHq", "tHW" ]:
-      sample_info["sample_category"] = "TH"
+      if not separate_th:
+        sample_info["sample_category"] = "TH"
     elif sample_name.startswith('/TTTo'):
       if sample_info["sample_category"].replace("TT_", "") not in systematics.ttbar:
         sample_info["sample_category"] = "TT"

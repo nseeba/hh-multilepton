@@ -40,7 +40,7 @@ class analyzeConfig_hh(analyzeConfig):
 
   def get_nonfake_backgrounds(self, split_vh = True, split_th = True, split_ST = False):
     processes = [ "ggZZ", "qqZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]
-    if split_vh:
+    if split_th:
       processes.extend([ "tHq", "tHW" ])
     else:
       processes.append("TH")
