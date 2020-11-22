@@ -9,7 +9,7 @@ HH_DECAYMODES_RE = re.compile('_({})$'.format('|'.join(HH_DECAYMODES)))
 
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 
-def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = Nonem, separate_th = True):
+def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None, separate_th = True):
 
   sum_events_hh  = copy.deepcopy(samples_era_hh['sum_events'])
   sum_events_bkg = copy.deepcopy(samples_era_bkg['sum_events'])
