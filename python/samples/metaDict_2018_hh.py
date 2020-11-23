@@ -3280,7 +3280,7 @@ meta_dictionary["/VBFHHTo4T_CV_1_C2V_1_C3_1_dipoleRecoilOff-TuneCP5_PSweights_13
 
 meta_dictionary["/VBFHHTo4T_CV_1_C2V_1_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] =  OD([
   ("crab_string",           "2018_2020Nov18_VBFHHTo4T_CV_1_C2V_1_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2"),
-  ("sample_category",       "signal_vbf_nonresonant_1_1_1_hh_tttt_dipoleRecoilOn"),
+  ("sample_category",       "signal_vbf_nonresonant_1_1_1_hh_dipoleRecoilOn_tttt"),
   ("process_name_specific", "signal_vbf_nonresonant_1_1_1_hh_4t_dipoleRecoilOn"),
   ("nof_db_events",         392000),
   ("nof_db_files",          8),
@@ -3319,7 +3319,7 @@ meta_dictionary["/VBFHHTo4T_CV_1_C2V_2_C3_1_dipoleRecoilOff-TuneCP5_PSweights_13
 
 meta_dictionary["/VBFHHTo4T_CV_1_C2V_2_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] =  OD([
   ("crab_string",           "2018_2020Nov18_VBFHHTo4T_CV_1_C2V_2_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2"),
-  ("sample_category",       "signal_vbf_nonresonant_1_2_1_hh_tttt_dipoleRecoilOn"),
+  ("sample_category",       "signal_vbf_nonresonant_1_2_1_hh_dipoleRecoilOn_tttt"),
   ("process_name_specific", "signal_vbf_nonresonant_1_2_1_hh_4t_dipoleRecoilOn"),
   ("nof_db_events",         400000),
   ("nof_db_files",          10),
@@ -3397,7 +3397,7 @@ meta_dictionary["/VBFHHTo2V2Tau_CV_1_C2V_1_C3_1_dipoleRecoilOff-TuneCP5_PSweight
 
 meta_dictionary["/VBFHHTo2V2Tau_CV_1_C2V_1_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] =  OD([
   ("crab_string",           "2018_2020Nov21_VBFHHTo2V2Tau_CV_1_C2V_1_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v1"),
-  ("sample_category",       "signal_vbf_nonresonant_1_1_1_hh_wwtt_dipoleRecoilOn"),
+  ("sample_category",       "signal_vbf_nonresonant_1_1_1_hh_dipoleRecoilOn_wwtt"),
   ("process_name_specific", "signal_vbf_nonresonant_1_1_1_hh_2v2t_dipoleRecoilOn"),
   ("nof_db_events",         395994),
   ("nof_db_files",          10),
@@ -3436,7 +3436,7 @@ meta_dictionary["/VBFHHTo2V2Tau_CV_1_C2V_2_C3_1_dipoleRecoilOff-TuneCP5_PSweight
 
 meta_dictionary["/VBFHHTo2V2Tau_CV_1_C2V_2_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] =  OD([
   ("crab_string",           "2018_2020Nov18_VBFHHTo2V2Tau_CV_1_C2V_2_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v1"),
-  ("sample_category",       "signal_vbf_nonresonant_1_2_1_hh_wwtt_dipoleRecoilOn"),
+  ("sample_category",       "signal_vbf_nonresonant_1_2_1_hh_dipoleRecoilOn_wwtt"),
   ("process_name_specific", "signal_vbf_nonresonant_1_2_1_hh_2v2t_dipoleRecoilOn"),
   ("nof_db_events",         360992),
   ("nof_db_files",          11),
@@ -3514,7 +3514,7 @@ meta_dictionary["/VBFHHTo4V_CV_1_C2V_1_C3_1_dipoleRecoilOff-TuneCP5_PSweights_13
 
 meta_dictionary["/VBFHHTo4V_CV_1_C2V_1_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] =  OD([
   ("crab_string",           "2018_2020Nov18_VBFHHTo4V_CV_1_C2V_1_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2"),
-  ("sample_category",       "signal_vbf_nonresonant_1_1_1_hh_wwww_dipoleRecoilOn"),
+  ("sample_category",       "signal_vbf_nonresonant_1_1_1_hh_dipoleRecoilOn_wwww"),
   ("process_name_specific", "signal_vbf_nonresonant_1_1_1_hh_4v_dipoleRecoilOn"),
   ("nof_db_events",         399997),
   ("nof_db_files",          10),
@@ -3566,7 +3566,7 @@ meta_dictionary["/VBFHHTo4V_CV_1_C2V_2_C3_1_dipoleRecoilOff-TuneCP5_PSweights_13
 
 meta_dictionary["/VBFHHTo4V_CV_1_C2V_2_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] =  OD([
   ("crab_string",           "2018_2020Nov18_VBFHHTo4V_CV_1_C2V_2_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2"),
-  ("sample_category",       "signal_vbf_nonresonant_1_2_1_hh_wwww_dipoleRecoilOn"),
+  ("sample_category",       "signal_vbf_nonresonant_1_2_1_hh_dipoleRecoilOn_wwww"),
   ("process_name_specific", "signal_vbf_nonresonant_1_2_1_hh_4v_dipoleRecoilOn"),
   ("nof_db_events",         400000),
   ("nof_db_files",          12),
@@ -4532,29 +4532,29 @@ meta_dictionary["/GluGluToHHTo4V_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythi
 # signal_ggf_spin2_2500_hh_wwww:                       100.00k
 # signal_ggf_spin2_3000_hh_wwww:                       100.00k
 # signal_vbf_nonresonant_1_1_1_hh_tttt:                400.00k
-# signal_vbf_nonresonant_1_1_1_hh_tttt_dipoleRecoilOn: 392.00k
+# signal_vbf_nonresonant_1_1_1_hh_dipoleRecoilOn_tttt: 392.00k
 # signal_vbf_nonresonant_1_1_2_hh_tttt:                400.00k
 # signal_vbf_nonresonant_1_2_1_hh_tttt:                400.00k
-# signal_vbf_nonresonant_1_2_1_hh_tttt_dipoleRecoilOn: 400.00k
+# signal_vbf_nonresonant_1_2_1_hh_dipoleRecoilOn_tttt: 400.00k
 # signal_vbf_nonresonant_1_1_0_hh_tttt:                400.00k
 # signal_vbf_nonresonant_0p5_1_1_hh_tttt:              400.00k
 # signal_vbf_nonresonant_1p5_1_1_hh_tttt:              375.00k
 # signal_vbf_nonresonant_1_0_1_hh_tttt:                400.00k
 # signal_vbf_nonresonant_1_1_1_hh_wwtt:                399.99k
-# signal_vbf_nonresonant_1_1_1_hh_wwtt_dipoleRecoilOn: 395.99k
+# signal_vbf_nonresonant_1_1_1_hh_dipoleRecoilOn_wwtt: 395.99k
 # signal_vbf_nonresonant_1_1_2_hh_wwtt:                399.99k
 # signal_vbf_nonresonant_1_2_1_hh_wwtt:                400.00k
-# signal_vbf_nonresonant_1_2_1_hh_wwtt_dipoleRecoilOn: 360.99k
+# signal_vbf_nonresonant_1_2_1_hh_dipoleRecoilOn_wwtt: 360.99k
 # signal_vbf_nonresonant_1_1_0_hh_wwtt:                399.99k
 # signal_vbf_nonresonant_0p5_1_1_hh_wwtt:              399.99k
 # signal_vbf_nonresonant_1p5_1_1_hh_wwtt:              400.00k
 # signal_vbf_nonresonant_1_0_1_hh_wwtt:                399.99k
 # signal_vbf_nonresonant_1_1_1_hh_wwww:                400.00k
-# signal_vbf_nonresonant_1_1_1_hh_wwww_dipoleRecoilOn: 400.00k
+# signal_vbf_nonresonant_1_1_1_hh_dipoleRecoilOn_wwww: 400.00k
 # signal_vbf_nonresonant_1_1_2_hh_wwww:                388.00k
 # signal_vbf_nonresonant_1_1_0_hh_wwww:                400.00k
 # signal_vbf_nonresonant_1_2_1_hh_wwww:                400.00k
-# signal_vbf_nonresonant_1_2_1_hh_wwww_dipoleRecoilOn: 400.00k
+# signal_vbf_nonresonant_1_2_1_hh_dipoleRecoilOn_wwww: 400.00k
 # signal_vbf_nonresonant_0p5_1_1_hh_wwww:              400.00k
 # signal_vbf_nonresonant_1p5_1_1_hh_wwww:              400.00k
 # signal_vbf_nonresonant_1_0_1_hh_wwww:                400.00k
