@@ -1301,12 +1301,23 @@ int main(int argc, char* argv[])
       ((selLepton_third_type == kElectron) ? selLepton_third->charge() : 0) + ((selLepton_fourth_type == kElectron) ? selLepton_fourth->charge() : 0);
     int muonChargeSum = ((selLepton_lead_type != kElectron) ? selLepton_lead->charge() : 0) + ((selLepton_sublead_type != kElectron) ? selLepton_sublead->charge() : 0) +
       ((selLepton_third_type != kElectron) ? selLepton_third->charge() : 0) + ((selLepton_fourth_type != kElectron) ? selLepton_fourth->charge() : 0);
-    int nSFOS = ((((selLepton_lead_type == selLepton_sublead_type) && (selLepton_lead->charge() != selLepton_sublead->charge())) ? 1 : 0) +
-                 (((selLepton_lead_type == selLepton_third_type) && (selLepton_lead->charge() != selLepton_third->charge())) ? 1 : 0) +
-                 (((selLepton_lead_type == selLepton_fourth_type) && (selLepton_lead->charge() != selLepton_fourth->charge())) ? 1 : 0) +
-                 (((selLepton_third_type == selLepton_sublead_type) && (selLepton_third->charge() != selLepton_sublead->charge())) ? 1 : 0) +
-                 (((selLepton_fourth_type == selLepton_sublead_type) && (selLepton_fourth->charge() != selLepton_sublead->charge())) ? 1 : 0) +
-                 (((selLepton_third_type == selLepton_fourth_type) && (selLepton_third->charge() != selLepton_fourth->charge())) ? 1 : 0));
+    int nSFOS = 0;
+    if(selLepton_lead->pdgId()==-selLepton_sublead->pdgId())
+      nSFOS++;
+    if(selLepton_third->pdgId()==-selLepton_fourth->pdgId())
+      nSFOS++;
+    if(nSFOS==0){
+      if(selLepton_lead->pdgId()==-selLepton_third->pdgId())
+	nSFOS++;
+      if(selLepton_sublead->pdgId()==-selLepton_fourth->pdgId())
+	nSFOS++;
+    }
+    if(nSFOS==0){
+      if(selLepton_lead->pdgId()==-selLepton_fourth->pdgId())
+	nSFOS++;
+      if(selLepton_sublead->pdgId()==-selLepton_third->pdgId())
+        nSFOS++;
+    }
 
     Particle::LorentzVector maxPtSum_pair1lep1 = selLepton_lead->p4();
     Particle::LorentzVector maxPtSum_pair2lep1 = selLepton_sublead->p4();
