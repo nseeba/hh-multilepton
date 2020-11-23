@@ -720,7 +720,18 @@ int main(int argc, char* argv[])
                                               "lep1_phi",                               
                                               "lep2_phi",                               
                                               "lep3_phi",                               
-                                              "lep4_phi",                               
+                                              "lep4_phi",
+					      "lep1_dxy",
+					      "lep2_dxy",
+					      "lep3_dxy",
+					      "lep4_dxy",
+					      "lep1_dz",
+					      "lep2_dz",
+					      "lep3_dz",
+					      "lep4_dz",
+					      "pt4l",
+					      "pt4lParallelHadT",
+					      "pt4lPerpendicularHadT",
                                               "maxPtSum_pair1_pt",                      
                                               "maxPtSum_pair1_eta",                     
                                               "maxPtSum_pair1_phi",                     
@@ -801,7 +812,9 @@ int main(int argc, char* argv[])
                                               "minSubclosestDeltaR_pair2_deltaR",       
                                               "minSubclosestDeltaR_pair2_deltaPt",      
                                               "minSubclosestDeltaR_pair2_m",            
-                                              "MET",                                    
+                                              "MET",
+					      "METParallelHadT",
+					      "METPerpendicularHadT",
                                               "METPhi",                                 
                                               "METDeltaPhiLep1",                        
                                               "MET_LD",                                 
@@ -1286,7 +1299,25 @@ int main(int argc, char* argv[])
     double lep2_phi = selLepton_sublead->phi();
     double lep3_phi = selLepton_third->phi();
     double lep4_phi = selLepton_fourth->phi();
+    double lep1_dxy = selLepton_lead->dxy();
+    double lep2_dxy = selLepton_sublead->dxy();
+    double lep3_dxy = selLepton_third->dxy();
+    double lep4_dxy = selLepton_fourth->dxy();
+    double lep1_dz = selLepton_lead->dz();
+    double lep2_dz = selLepton_sublead->dz();
+    double lep3_dz = selLepton_third->dz();
+    double lep4_dz = selLepton_fourth->dz();
+    Particle::LorentzVector p4l = selLepton_lead->p4()+selLepton_sublead->p4()+selLepton_third->p4()+selLepton_fourth->p4();
+    TVector3 pt4lVetor(p4l.px(),p4l.py(),0);
+    TVector3 metVector(met.p4().px(),met.p4().py(),0);
+    TVector3 hadTVector = -metVector-pt4lVetor;
+    TVector3 hadTVectorNorm = hadTVector.Unit();
+    double pt4l = p4l.pt();
+    double pt4lParallelHadT = pt4lVetor.Dot(hadTVectorNorm);
+    double pt4lPerpendicularHadT = pt4lVetor.Perp(hadTVectorNorm);
     double MET = met.pt();
+    double METParallelHadT = metVector.Dot(hadTVectorNorm);
+    double METPerpendicularHadT = metVector.Perp(hadTVectorNorm);
     double METPhi = met.phi();
     double METDeltaPhiLep1 = std::abs(deltaPhi(met.phi(), lep1_phi));
     double HTmiss = mht_p4.pt();
@@ -1998,7 +2029,7 @@ int main(int argc, char* argv[])
           selHistManager->BJets_medium_->fillHistograms(selBJets_medium, evtWeight);
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
-          selHistManager->evt_->fillHistograms(selElectrons.size(), selMuons.size(), selJets.size(), numSelJetsPtGt40, selBJets_loose.size(), selBJets_medium.size(), dihiggsVisMass_sel, dihiggsMass, HT, STMET, lep1_pt, lep2_pt, lep3_pt, lep4_pt, lep1_conePt, lep2_conePt, lep3_conePt, lep4_conePt, lep1_eta, lep2_eta, lep3_eta, lep4_eta, lep1_phi, lep2_phi, lep3_phi, lep4_phi, maxPtSum_pair1_pt, maxPtSum_pair1_eta, maxPtSum_pair1_phi, maxPtSum_pair1_deltaEtaLep1, maxPtSum_pair1_deltaPhiLep1, maxPtSum_pair1_deltaEta, maxPtSum_pair1_deltaPhi, maxPtSum_pair1_deltaR, maxPtSum_pair1_deltaPt, maxPtSum_pair1_m, maxPtSum_pair2_pt, maxPtSum_pair2_eta, maxPtSum_pair2_phi, maxPtSum_pair2_deltaEtaLep1, maxPtSum_pair2_deltaPhiLep1, maxPtSum_pair2_deltaEta, maxPtSum_pair2_deltaPhi, maxPtSum_pair2_deltaR,maxPtSum_pair2_deltaPt, maxPtSum_pair2_m, maxSubleadPt_pair1_pt, maxSubleadPt_pair1_eta, maxSubleadPt_pair1_phi, maxSubleadPt_pair1_deltaEtaLep1, maxSubleadPt_pair1_deltaPhiLep1, maxSubleadPt_pair1_deltaEta, maxSubleadPt_pair1_deltaPhi, maxSubleadPt_pair1_deltaR, maxSubleadPt_pair1_deltaPt, maxSubleadPt_pair1_m, maxSubleadPt_pair2_pt, maxSubleadPt_pair2_eta, maxSubleadPt_pair2_phi, maxSubleadPt_pair2_deltaEtaLep1, maxSubleadPt_pair2_deltaPhiLep1, maxSubleadPt_pair2_deltaEta, maxSubleadPt_pair2_deltaPhi, maxSubleadPt_pair2_deltaR, maxSubleadPt_pair2_deltaPt, maxSubleadPt_pair2_m, minDeltaRSum_pair1_pt, minDeltaRSum_pair1_eta, minDeltaRSum_pair1_phi, minDeltaRSum_pair1_deltaEtaLep1, minDeltaRSum_pair1_deltaPhiLep1, minDeltaRSum_pair1_deltaEta, minDeltaRSum_pair1_deltaPhi, minDeltaRSum_pair1_deltaR, minDeltaRSum_pair1_deltaPt, minDeltaRSum_pair1_m, minDeltaRSum_pair2_pt, minDeltaRSum_pair2_eta, minDeltaRSum_pair2_phi, minDeltaRSum_pair2_deltaEtaLep1, minDeltaRSum_pair2_deltaPhiLep1, minDeltaRSum_pair2_deltaEta, minDeltaRSum_pair2_deltaPhi, minDeltaRSum_pair2_deltaR, minDeltaRSum_pair2_deltaPt, minDeltaRSum_pair2_m, minSubclosestDeltaR_pair1_pt, minSubclosestDeltaR_pair1_eta, minSubclosestDeltaR_pair1_phi, minSubclosestDeltaR_pair1_deltaEtaLep1, minSubclosestDeltaR_pair1_deltaPhiLep1, minSubclosestDeltaR_pair1_deltaEta, minSubclosestDeltaR_pair1_deltaPhi, minSubclosestDeltaR_pair1_deltaR, minSubclosestDeltaR_pair1_deltaPt, minSubclosestDeltaR_pair1_m, minSubclosestDeltaR_pair2_pt, minSubclosestDeltaR_pair2_eta, minSubclosestDeltaR_pair2_phi, minSubclosestDeltaR_pair2_deltaEtaLep1, minSubclosestDeltaR_pair2_deltaPhiLep1, minSubclosestDeltaR_pair2_deltaEta, minSubclosestDeltaR_pair2_deltaPhi, minSubclosestDeltaR_pair2_deltaR, minSubclosestDeltaR_pair2_deltaPt, minSubclosestDeltaR_pair2_m, MET, METPhi, METDeltaPhiLep1, met_LD, HTmiss, lep1_isElectron, lep1_charge, lep2_isElectron, lep2_charge, lep3_isElectron, lep3_charge, lep4_isElectron, lep4_charge, leptonChargeSum, electronChargeSum, muonChargeSum, nSFOS, evtWeight);
+	  selHistManager->evt_->fillHistograms(selElectrons.size(), selMuons.size(), selJets.size(), numSelJetsPtGt40, selBJets_loose.size(), selBJets_medium.size(), dihiggsVisMass_sel, dihiggsMass, HT, STMET, lep1_pt, lep2_pt, lep3_pt, lep4_pt, lep1_conePt, lep2_conePt, lep3_conePt, lep4_conePt, lep1_eta, lep2_eta, lep3_eta, lep4_eta, lep1_phi, lep2_phi, lep3_phi, lep4_phi, lep1_dxy, lep2_dxy, lep3_dxy, lep4_dxy, lep1_dz, lep2_dz, lep3_dz, lep4_dz, pt4l, pt4lParallelHadT, pt4lPerpendicularHadT, maxPtSum_pair1_pt, maxPtSum_pair1_eta, maxPtSum_pair1_phi, maxPtSum_pair1_deltaEtaLep1, maxPtSum_pair1_deltaPhiLep1, maxPtSum_pair1_deltaEta, maxPtSum_pair1_deltaPhi, maxPtSum_pair1_deltaR, maxPtSum_pair1_deltaPt, maxPtSum_pair1_m, maxPtSum_pair2_pt, maxPtSum_pair2_eta, maxPtSum_pair2_phi, maxPtSum_pair2_deltaEtaLep1, maxPtSum_pair2_deltaPhiLep1, maxPtSum_pair2_deltaEta, maxPtSum_pair2_deltaPhi, maxPtSum_pair2_deltaR,maxPtSum_pair2_deltaPt, maxPtSum_pair2_m, maxSubleadPt_pair1_pt, maxSubleadPt_pair1_eta, maxSubleadPt_pair1_phi, maxSubleadPt_pair1_deltaEtaLep1, maxSubleadPt_pair1_deltaPhiLep1, maxSubleadPt_pair1_deltaEta, maxSubleadPt_pair1_deltaPhi, maxSubleadPt_pair1_deltaR, maxSubleadPt_pair1_deltaPt, maxSubleadPt_pair1_m, maxSubleadPt_pair2_pt, maxSubleadPt_pair2_eta, maxSubleadPt_pair2_phi, maxSubleadPt_pair2_deltaEtaLep1, maxSubleadPt_pair2_deltaPhiLep1, maxSubleadPt_pair2_deltaEta, maxSubleadPt_pair2_deltaPhi, maxSubleadPt_pair2_deltaR, maxSubleadPt_pair2_deltaPt, maxSubleadPt_pair2_m, minDeltaRSum_pair1_pt, minDeltaRSum_pair1_eta, minDeltaRSum_pair1_phi, minDeltaRSum_pair1_deltaEtaLep1, minDeltaRSum_pair1_deltaPhiLep1, minDeltaRSum_pair1_deltaEta, minDeltaRSum_pair1_deltaPhi, minDeltaRSum_pair1_deltaR, minDeltaRSum_pair1_deltaPt, minDeltaRSum_pair1_m, minDeltaRSum_pair2_pt, minDeltaRSum_pair2_eta, minDeltaRSum_pair2_phi, minDeltaRSum_pair2_deltaEtaLep1, minDeltaRSum_pair2_deltaPhiLep1, minDeltaRSum_pair2_deltaEta, minDeltaRSum_pair2_deltaPhi, minDeltaRSum_pair2_deltaR, minDeltaRSum_pair2_deltaPt, minDeltaRSum_pair2_m, minSubclosestDeltaR_pair1_pt, minSubclosestDeltaR_pair1_eta, minSubclosestDeltaR_pair1_phi, minSubclosestDeltaR_pair1_deltaEtaLep1, minSubclosestDeltaR_pair1_deltaPhiLep1, minSubclosestDeltaR_pair1_deltaEta, minSubclosestDeltaR_pair1_deltaPhi, minSubclosestDeltaR_pair1_deltaR, minSubclosestDeltaR_pair1_deltaPt, minSubclosestDeltaR_pair1_m, minSubclosestDeltaR_pair2_pt, minSubclosestDeltaR_pair2_eta, minSubclosestDeltaR_pair2_phi, minSubclosestDeltaR_pair2_deltaEtaLep1, minSubclosestDeltaR_pair2_deltaPhiLep1, minSubclosestDeltaR_pair2_deltaEta, minSubclosestDeltaR_pair2_deltaPhi, minSubclosestDeltaR_pair2_deltaR, minSubclosestDeltaR_pair2_deltaPt, minSubclosestDeltaR_pair2_m, MET, METParallelHadT, METPerpendicularHadT, METPhi, METDeltaPhiLep1, met_LD, HTmiss, lep1_isElectron, lep1_charge, lep2_isElectron, lep2_charge, lep3_isElectron, lep3_charge, lep4_isElectron, lep4_charge, leptonChargeSum, electronChargeSum, muonChargeSum, nSFOS, evtWeight);
           selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
         }
 
@@ -2101,7 +2132,18 @@ int main(int argc, char* argv[])
 	("lep1_phi", lep1_phi)                                        
 	("lep2_phi", lep2_phi)                                        
 	("lep3_phi", lep3_phi)                                        
-	("lep4_phi", lep4_phi)                     
+	("lep4_phi", lep4_phi)
+	("lep1_dxy", lep1_dxy)
+	("lep2_dxy", lep2_dxy)
+	("lep3_dxy", lep3_dxy)
+	("lep4_dxy", lep4_dxy)
+	("lep1_dz", lep1_dz)
+	("lep2_dz", lep2_dz)
+	("lep3_dz", lep3_dz)
+	("lep4_dz", lep4_dz)
+	("pt4l", pt4l)
+	("pt4lParallelHadT", pt4lParallelHadT)
+	("pt4lPerpendicularHadT", pt4lPerpendicularHadT)
 	("maxPtSum_pair1_pt", maxPtSum_pair1_pt)   
 	("maxPtSum_pair1_eta", maxPtSum_pair1_eta)                               
 	("maxPtSum_pair1_phi", maxPtSum_pair1_phi)                               
@@ -2182,7 +2224,9 @@ int main(int argc, char* argv[])
 	("minSubclosestDeltaR_pair2_deltaR", minSubclosestDeltaR_pair2_deltaR)             
 	("minSubclosestDeltaR_pair2_deltaPt", minSubclosestDeltaR_pair2_deltaPt)           
 	("minSubclosestDeltaR_pair2_m", minSubclosestDeltaR_pair2_m)                       
-	("MET", MET)                                                                       
+	("MET", MET)
+	("METParallelHadT", METParallelHadT)
+	("METPerpendicularHadT", METPerpendicularHadT)
 	("METPhi", METPhi)                                                                 
 	("METDeltaPhiLep1", METDeltaPhiLep1)                                               
 	("MET_LD", met_LD)                                                                 
