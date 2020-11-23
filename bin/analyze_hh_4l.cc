@@ -16,6 +16,7 @@
 #include <TString.h> // TString, Form
 #include <TError.h> // gErrorAbortLevel, kError
 #include <TROOT.h> // TROOT
+#include "TVector3.h"
 
 #include "tthAnalysis/HiggsToTauTau/interface/RecoLepton.h" // RecoLepton
 #include "tthAnalysis/HiggsToTauTau/interface/RecoJet.h" // RecoJet
@@ -362,6 +363,8 @@ int main(int argc, char* argv[])
   const bool genMatchingByIndex = cfg_analyze.getParameter<bool>("genMatchingByIndex");
 
   const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
+  std::vector<double> gen_mHH = analysisConfig.get_HH_resonant_mass_points();
+  std::vector<double> nonRes_BMs = cfg_analyze.getParameter<std::vector<double>>("nonRes_BMs");
 
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
   std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
