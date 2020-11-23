@@ -1,6 +1,6 @@
 from collections import OrderedDict as OD
 
-# file generated at 2020-11-07 20:47:01 with the following command:
+# file generated at 2020-11-23 11:17:03 with the following command:
 # create_dictionary.py -m python/samples/metaDict_2018_hh.py -p python/samples/sampleLocations_2018_hh_multilepton.txt -N samples_2018 -E 2018 -o python/samples -g hhAnalyzeSamples_2018_hh.py -M -M -q /hdfs/local/karl/count_final/2020Nov07/count_2018.root
 
 samples_2018 = OD()
@@ -14354,6 +14354,62 @@ samples_2018["/VBFHHTo4T_CV_1_C2V_1_C3_1_dipoleRecoilOff-TuneCP5_PSweights_13TeV
   ]),
 ])
 
+samples_2018["/VBFHHTo4T_CV_1_C2V_1_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_vbf_nonresonant_1_1_1_hh_dipoleRecoilOn_tttt"),
+  ("process_name_specific",           "signal_vbf_nonresonant_1_1_1_hh_4t_dipoleRecoilOn"),
+  ("nof_files",                       2),
+  ("nof_db_files",                    8),
+  ("nof_events",                      {
+    'Count'                                                                          : [ 392000, ],
+    'CountWeighted'                                                                  : [ 3.91980969e+05, 3.91965906e+05, 3.91936906e+05, ],
+    'CountWeightedLHEEnvelope'                                                       : [ 3.91980969e+05, 3.91980969e+05, ],
+    'CountWeightedPSWeight'                                                          : [ 3.91923862e+06, 3.91926712e+06, 3.91926712e+06, 3.91923700e+06, 3.91926712e+06, 3.91923525e+06, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [ 3.91946047e+05, 3.92058375e+05, 4.95959562e+05, 3.91888266e+05, 3.91634500e+05, 2.95025906e+05, ],
+    'CountWeightedFull'                                                              : [ 3.91782375e+05, 3.91768094e+05, 3.91739516e+05, ],
+    'CountWeightedFullLHEEnvelope'                                                   : [ 3.91782375e+05, 3.91782375e+05, ],
+    'CountWeightedFullPSWeight'                                                      : [ 3.91729475e+06, 3.91729475e+06, 3.91729475e+06, 3.91729475e+06, 3.91729475e+06, 3.91729475e+06, ],
+    'CountWeightedFullPSWeightOriginalXWGTUP'                                        : [ 3.91799172e+05, 3.91857844e+05, 4.95711188e+05, 3.91741078e+05, 3.91439188e+05, 2.94915328e+05, ],
+  }),
+  ("nof_tree_events",                 392000),
+  ("nof_db_events",                   392000),
+  ("fsize_local",                     1510288423), # 1.51GB, avg file size 755.14MB
+  ("fsize_db",                        21499809340), # 21.50GB, avg file size 2.69GB
+  ("use_it",                          False),
+  ("xsection",                        6.785e-06),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         False),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHEPdfWeight[nLHEPdfWeight]/F"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2018/2020Nov22_woPresel_nom_all/ntuples/signal_vbf_nonresonant_1_1_1_hh_4t_dipoleRecoilOn"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+    "HLT_DoubleMediumChargedIsoPFTau40_Trk1_TightID_eta2p1_Reg",
+    "HLT_DoubleTightChargedIsoPFTau35_Trk1_TightID_eta2p1_Reg",
+    "HLT_DoubleTightChargedIsoPFTau40_Trk1_eta2p1_Reg",
+    "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTau30_eta2p1_CrossL1",
+    "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1",
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
 samples_2018["/VBFHHTo4T_CV_1_C2V_1_C3_2_dipoleRecoilOff-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] = OD([
   ("type",                            "mc"),
   ("sample_category",                 "signal_vbf_nonresonant_1_1_2_hh_tttt"),
@@ -14443,6 +14499,62 @@ samples_2018["/VBFHHTo4T_CV_1_C2V_2_C3_1_dipoleRecoilOff-TuneCP5_PSweights_13TeV
     [
       OD([
         ("path",      "/hdfs/local/karl/ttHNtupleProduction/2018/2020Oct26_woPresel_nom_all/ntuples/signal_vbf_nonresonant_1_2_1_hh_4t_dipoleRecoilOff"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+    "HLT_DoubleMediumChargedIsoPFTau40_Trk1_TightID_eta2p1_Reg",
+    "HLT_DoubleTightChargedIsoPFTau35_Trk1_TightID_eta2p1_Reg",
+    "HLT_DoubleTightChargedIsoPFTau40_Trk1_eta2p1_Reg",
+    "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTau30_eta2p1_CrossL1",
+    "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1",
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
+samples_2018["/VBFHHTo4T_CV_1_C2V_2_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_vbf_nonresonant_1_2_1_hh_dipoleRecoilOn_tttt"),
+  ("process_name_specific",           "signal_vbf_nonresonant_1_2_1_hh_4t_dipoleRecoilOn"),
+  ("nof_files",                       2),
+  ("nof_db_files",                    10),
+  ("nof_events",                      {
+    'Count'                                                                          : [ 400000, ],
+    'CountWeighted'                                                                  : [ 3.99952344e+05, 3.99967641e+05, 3.99961625e+05, ],
+    'CountWeightedLHEEnvelope'                                                       : [ 3.99952344e+05, 3.99952344e+05, ],
+    'CountWeightedPSWeight'                                                          : [ 3.99976800e+06, 3.99988562e+06, 3.99988562e+06, 3.99976388e+06, 3.99988562e+06, 3.99976388e+06, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [ 3.99811547e+05, 4.00140156e+05, 5.06156547e+05, 4.00038547e+05, 3.99262594e+05, 3.00641984e+05, ],
+    'CountWeightedFull'                                                              : [ 3.99708250e+05, 3.99722906e+05, 3.99715656e+05, ],
+    'CountWeightedFullLHEEnvelope'                                                   : [ 3.99708250e+05, 3.99708250e+05, ],
+    'CountWeightedFullPSWeight'                                                      : [ 3.99741088e+06, 3.99741088e+06, 3.99741088e+06, 3.99741088e+06, 3.99741088e+06, 3.99741088e+06, ],
+    'CountWeightedFullPSWeightOriginalXWGTUP'                                        : [ 3.99635625e+05, 3.99897016e+05, 5.05849250e+05, 3.99862984e+05, 3.99013531e+05, 3.00510250e+05, ],
+  }),
+  ("nof_tree_events",                 400000),
+  ("nof_db_events",                   400000),
+  ("fsize_local",                     1884858995), # 1.88GB, avg file size 942.43MB
+  ("fsize_db",                        23633639242), # 23.63GB, avg file size 2.36GB
+  ("use_it",                          False),
+  ("xsection",                        5.5891e-05),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         False),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHEPdfWeight[nLHEPdfWeight]/F"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2018/2020Nov22_woPresel_nom_all/ntuples/signal_vbf_nonresonant_1_2_1_hh_4t_dipoleRecoilOn"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -14746,6 +14858,62 @@ samples_2018["/VBFHHTo2V2Tau_CV_1_C2V_1_C3_1_dipoleRecoilOff-TuneCP5_PSweights_1
   ]),
 ])
 
+samples_2018["/VBFHHTo2V2Tau_CV_1_C2V_1_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_vbf_nonresonant_1_1_1_hh_dipoleRecoilOn_wwtt"),
+  ("process_name_specific",           "signal_vbf_nonresonant_1_1_1_hh_2v2t_dipoleRecoilOn"),
+  ("nof_files",                       2),
+  ("nof_db_files",                    10),
+  ("nof_events",                      {
+    'Count'                                                                          : [ 395994, ],
+    'CountWeighted'                                                                  : [ 3.96044750e+05, 3.95945375e+05, 3.96007625e+05, ],
+    'CountWeightedLHEEnvelope'                                                       : [ 3.96044750e+05, 3.96044750e+05, ],
+    'CountWeightedPSWeight'                                                          : [ 3.95958762e+06, 3.95961338e+06, 3.95961338e+06, 3.95958788e+06, 3.95961338e+06, 3.95958738e+06, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [ 3.95944953e+05, 3.96252375e+05, 5.22016234e+05, 3.95984750e+05, 3.95436453e+05, 2.78699453e+05, ],
+    'CountWeightedFull'                                                              : [ 3.95814516e+05, 3.95720062e+05, 3.95780750e+05, ],
+    'CountWeightedFullLHEEnvelope'                                                   : [ 3.95814516e+05, 3.95814516e+05, ],
+    'CountWeightedFullPSWeight'                                                      : [ 3.95734700e+06, 3.95734700e+06, 3.95734700e+06, 3.95734700e+06, 3.95734700e+06, 3.95734700e+06, ],
+    'CountWeightedFullPSWeightOriginalXWGTUP'                                        : [ 3.95752969e+05, 3.96026438e+05, 5.21716547e+05, 3.95793328e+05, 3.95204688e+05, 2.78564406e+05, ],
+  }),
+  ("nof_tree_events",                 395994),
+  ("nof_db_events",                   395994),
+  ("fsize_local",                     1582638076), # 1.58GB, avg file size 791.32MB
+  ("fsize_db",                        22110747881), # 22.11GB, avg file size 2.21GB
+  ("use_it",                          False),
+  ("xsection",                        5.19e-05),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         False),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHEPdfWeight[nLHEPdfWeight]/F"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2018/2020Nov22_woPresel_nom_all/ntuples/signal_vbf_nonresonant_1_1_1_hh_2v2t_dipoleRecoilOn"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+    "HLT_DoubleMediumChargedIsoPFTau40_Trk1_TightID_eta2p1_Reg",
+    "HLT_DoubleTightChargedIsoPFTau35_Trk1_TightID_eta2p1_Reg",
+    "HLT_DoubleTightChargedIsoPFTau40_Trk1_eta2p1_Reg",
+    "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTau30_eta2p1_CrossL1",
+    "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1",
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
 samples_2018["/VBFHHTo2V2Tau_CV_1_C2V_1_C3_2_dipoleRecoilOff-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] = OD([
   ("type",                            "mc"),
   ("sample_category",                 "signal_vbf_nonresonant_1_1_2_hh_wwtt"),
@@ -14835,6 +15003,62 @@ samples_2018["/VBFHHTo2V2Tau_CV_1_C2V_2_C3_1_dipoleRecoilOff-TuneCP5_PSweights_1
     [
       OD([
         ("path",      "/hdfs/local/karl/ttHNtupleProduction/2018/2020Oct26_woPresel_nom_all/ntuples/signal_vbf_nonresonant_1_2_1_hh_2v2t_dipoleRecoilOff"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+    "HLT_DoubleMediumChargedIsoPFTau40_Trk1_TightID_eta2p1_Reg",
+    "HLT_DoubleTightChargedIsoPFTau35_Trk1_TightID_eta2p1_Reg",
+    "HLT_DoubleTightChargedIsoPFTau40_Trk1_eta2p1_Reg",
+    "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTau30_eta2p1_CrossL1",
+    "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1",
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
+samples_2018["/VBFHHTo2V2Tau_CV_1_C2V_2_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_vbf_nonresonant_1_2_1_hh_dipoleRecoilOn_wwtt"),
+  ("process_name_specific",           "signal_vbf_nonresonant_1_2_1_hh_2v2t_dipoleRecoilOn"),
+  ("nof_files",                       2),
+  ("nof_db_files",                    11),
+  ("nof_events",                      {
+    'Count'                                                                          : [ 360992, ],
+    'CountWeighted'                                                                  : [ 3.61032656e+05, 3.60974148e+05, 3.60981297e+05, ],
+    'CountWeightedLHEEnvelope'                                                       : [ 3.61032656e+05, 3.61032656e+05, ],
+    'CountWeightedPSWeight'                                                          : [ 3.60964500e+06, 3.60986775e+06, 3.60986775e+06, 3.60964300e+06, 3.60986775e+06, 3.60964212e+06, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [ 3.60799781e+05, 3.60943914e+05, 4.76347484e+05, 3.60953758e+05, 3.61080781e+05, 2.53795922e+05, ],
+    'CountWeightedFull'                                                              : [ 3.60743375e+05, 3.60689797e+05, 3.60689953e+05, ],
+    'CountWeightedFullLHEEnvelope'                                                   : [ 3.60743375e+05, 3.60743375e+05, ],
+    'CountWeightedFullPSWeight'                                                      : [ 3.60699675e+06, 3.60699675e+06, 3.60699675e+06, 3.60699675e+06, 3.60699675e+06, 3.60699675e+06, ],
+    'CountWeightedFullPSWeightOriginalXWGTUP'                                        : [ 3.60603453e+05, 3.60660359e+05, 4.75978203e+05, 3.60757906e+05, 3.60794000e+05, 2.53657578e+05, ],
+  }),
+  ("nof_tree_events",                 360992),
+  ("nof_db_events",                   360992),
+  ("fsize_local",                     1755841493), # 1.76GB, avg file size 877.92MB
+  ("fsize_db",                        22606163408), # 22.61GB, avg file size 2.06GB
+  ("use_it",                          False),
+  ("xsection",                        0.0004275219),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         False),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHEPdfWeight[nLHEPdfWeight]/F"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2018/2020Nov22_woPresel_nom_all/ntuples/signal_vbf_nonresonant_1_2_1_hh_2v2t_dipoleRecoilOn"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
@@ -15138,6 +15362,62 @@ samples_2018["/VBFHHTo4V_CV_1_C2V_1_C3_1_dipoleRecoilOff-TuneCP5_PSweights_13TeV
   ]),
 ])
 
+samples_2018["/VBFHHTo4V_CV_1_C2V_1_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_vbf_nonresonant_1_1_1_hh_dipoleRecoilOn_wwww"),
+  ("process_name_specific",           "signal_vbf_nonresonant_1_1_1_hh_4v_dipoleRecoilOn"),
+  ("nof_files",                       2),
+  ("nof_db_files",                    10),
+  ("nof_events",                      {
+    'Count'                                                                          : [ 399997, ],
+    'CountWeighted'                                                                  : [ 3.99982594e+05, 3.99962547e+05, 3.99913453e+05, ],
+    'CountWeightedLHEEnvelope'                                                       : [ 3.99982594e+05, 3.99982594e+05, ],
+    'CountWeightedPSWeight'                                                          : [ 3.99948038e+06, 3.99954788e+06, 3.99954788e+06, 3.99947950e+06, 3.99954788e+06, 3.99947850e+06, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [ 3.99958750e+05, 4.00158219e+05, 5.45136469e+05, 3.99930672e+05, 4.00086266e+05, 2.65668578e+05, ],
+    'CountWeightedFull'                                                              : [ 3.99706312e+05, 3.99689594e+05, 3.99640969e+05, ],
+    'CountWeightedFullLHEEnvelope'                                                   : [ 3.99706312e+05, 3.99706312e+05, ],
+    'CountWeightedFullPSWeight'                                                      : [ 3.99678988e+06, 3.99678988e+06, 3.99678988e+06, 3.99678988e+06, 3.99678988e+06, 3.99678988e+06, ],
+    'CountWeightedFullPSWeightOriginalXWGTUP'                                        : [ 3.99724094e+05, 3.99883953e+05, 5.44764688e+05, 3.99696578e+05, 3.99807781e+05, 2.65512680e+05, ],
+  }),
+  ("nof_tree_events",                 399997),
+  ("nof_db_events",                   399997),
+  ("fsize_local",                     1623260985), # 1.62GB, avg file size 811.63MB
+  ("fsize_db",                        22668367403), # 22.67GB, avg file size 2.27GB
+  ("use_it",                          False),
+  ("xsection",                        9.92524e-05),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         False),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHEPdfWeight[nLHEPdfWeight]/F"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2018/2020Nov22_woPresel_nom_all/ntuples/signal_vbf_nonresonant_1_1_1_hh_4v_dipoleRecoilOn"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+    "HLT_DoubleMediumChargedIsoPFTau40_Trk1_TightID_eta2p1_Reg",
+    "HLT_DoubleTightChargedIsoPFTau35_Trk1_TightID_eta2p1_Reg",
+    "HLT_DoubleTightChargedIsoPFTau40_Trk1_eta2p1_Reg",
+    "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTau30_eta2p1_CrossL1",
+    "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1",
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
 samples_2018["/VBFHHTo4V_CV_1_C2V_1_C3_2_dipoleRecoilOff-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] = OD([
   ("type",                            "mc"),
   ("sample_category",                 "signal_vbf_nonresonant_1_1_2_hh_wwww"),
@@ -15283,6 +15563,62 @@ samples_2018["/VBFHHTo4V_CV_1_C2V_2_C3_1_dipoleRecoilOff-TuneCP5_PSweights_13TeV
     [
       OD([
         ("path",      "/hdfs/local/karl/ttHNtupleProduction/2018/2020Oct26_woPresel_nom_all/ntuples/signal_vbf_nonresonant_1_2_1_hh_4v_dipoleRecoilOff"),
+        ("selection", "*"),
+        ("blacklist", []),
+      ]),
+    ]
+  ),
+  ("missing_completely",           [
+    # not computed
+  ]),
+  ("missing_from_superset",        [
+    # not computed
+  ]),
+  ("missing_hlt_paths",            [
+    "HLT_DoubleMediumChargedIsoPFTau40_Trk1_TightID_eta2p1_Reg",
+    "HLT_DoubleTightChargedIsoPFTau35_Trk1_TightID_eta2p1_Reg",
+    "HLT_DoubleTightChargedIsoPFTau40_Trk1_eta2p1_Reg",
+    "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTau30_eta2p1_CrossL1",
+    "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1",
+  ]),
+  ("hlt_paths",                    [
+    # not computed
+  ]),
+])
+
+samples_2018["/VBFHHTo4V_CV_1_C2V_2_C3_1_dipoleRecoilOn-TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM"] = OD([
+  ("type",                            "mc"),
+  ("sample_category",                 "signal_vbf_nonresonant_1_2_1_hh_dipoleRecoilOn_wwww"),
+  ("process_name_specific",           "signal_vbf_nonresonant_1_2_1_hh_4v_dipoleRecoilOn"),
+  ("nof_files",                       2),
+  ("nof_db_files",                    12),
+  ("nof_events",                      {
+    'Count'                                                                          : [ 400000, ],
+    'CountWeighted'                                                                  : [ 4.00016016e+05, 4.00033406e+05, 3.99984422e+05, ],
+    'CountWeightedLHEEnvelope'                                                       : [ 4.00016016e+05, 4.00016016e+05, ],
+    'CountWeightedPSWeight'                                                          : [ 3.99966475e+06, 3.99984538e+06, 3.99984538e+06, 3.99966512e+06, 3.99984538e+06, 3.99966375e+06, ],
+    'CountWeightedPSWeightOriginalXWGTUP'                                            : [ 3.99957047e+05, 4.00180000e+05, 5.44703875e+05, 3.99845781e+05, 3.99441891e+05, 2.65448938e+05, ],
+    'CountWeightedFull'                                                              : [ 3.99670016e+05, 3.99684781e+05, 3.99640766e+05, ],
+    'CountWeightedFullLHEEnvelope'                                                   : [ 3.99670016e+05, 3.99670016e+05, ],
+    'CountWeightedFullPSWeight'                                                      : [ 3.99640875e+06, 3.99640875e+06, 3.99640875e+06, 3.99640875e+06, 3.99640875e+06, 3.99640875e+06, ],
+    'CountWeightedFullPSWeightOriginalXWGTUP'                                        : [ 3.99696422e+05, 3.99833234e+05, 5.44240656e+05, 3.99585281e+05, 3.99099219e+05, 2.65275531e+05, ],
+  }),
+  ("nof_tree_events",                 400000),
+  ("nof_db_events",                   400000),
+  ("fsize_local",                     1957371911), # 1.96GB, avg file size 978.69MB
+  ("fsize_db",                        25772279332), # 25.77GB, avg file size 2.15GB
+  ("use_it",                          False),
+  ("xsection",                        0.0008175824),
+  ("genWeight",                       True),
+  ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
+  ("has_LHE",                         False),
+  ("nof_PSweights",                   4),
+  ("LHE_set",                         "LHEPdfWeight[nLHEPdfWeight]/F"),
+  ("nof_reweighting",                 0),
+  ("local_paths",
+    [
+      OD([
+        ("path",      "/hdfs/local/karl/ttHNtupleProduction/2018/2020Nov22_woPresel_nom_all/ntuples/signal_vbf_nonresonant_1_2_1_hh_4v_dipoleRecoilOn"),
         ("selection", "*"),
         ("blacklist", []),
       ]),
