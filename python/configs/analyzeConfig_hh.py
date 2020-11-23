@@ -39,7 +39,7 @@ class analyzeConfig_hh(analyzeConfig):
     self.topPtRwgtChoice = "HighPt"
 
   def get_nonfake_backgrounds(self, split_vh = True, split_th = True, split_ST = False):
-    processes = [ "ggZZ", "qqZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]
+    processes = [ "ggZZ", "qqZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "ggH", "qqH" ]
     if split_th:
       processes.extend([ "tHq", "tHW" ])
     else:
