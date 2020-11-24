@@ -46,8 +46,6 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None,
       sample_info["sample_category_hh"] = copy.deepcopy(sample_info["sample_category"])
       if 'dipoleRecoilOn' not in sample_info["sample_category"]:
         assert(sample_info["sample_category"].endswith(tuple(HH_DECAYMODES_SUFFIX)))
-      else:
-        sample_info["use_it"] = False
       sample_info["sample_category"] = HH_DECAYMODES_RE.sub("", sample_info["sample_category_hh"])
       assert(sample_info["sample_category"] != sample_info["sample_category_hh"])
 
