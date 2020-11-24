@@ -5,7 +5,7 @@ import re
 
 HH_DECAYMODES = [ 'wwww', 'wwtt', 'tttt', 'bbtt', 'bbvv', 'bbvv_sl' ]
 HH_DECAYMODES_SUFFIX = [ '_{}'.format(hh_dm) for hh_dm in HH_DECAYMODES ]
-HH_DECAYMODES_RE = re.compile('_({})'.format('|'.join(HH_DECAYMODES)))
+HH_DECAYMODES_RE = re.compile('_({}$)'.format('|'.join(HH_DECAYMODES)))
 
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 
