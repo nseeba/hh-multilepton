@@ -19,9 +19,9 @@ def get_histograms_to_fit(*custom_histograms):
 
   masspoints = [ 250., 260., 270., 280., 300., 350., 400., 450., 500., 550., 600., 650., 700., 750., 800., 850., 900., 1000. ]
   for masspoint in masspoints:
-    histograms_to_fit["BDTOutput_%0.0f_hypo_spin0" % masspoint] = {}
-    histograms_to_fit["BDTOutput_%0.0f_hypo_spin2" % masspoint] = {}
+    histograms_to_fit["MVAOutput_%0.0f_spin0" % masspoint] = {}
+    histograms_to_fit["MVAOutput_%0.0f_spin2" % masspoint] = {}
   bmNames = [ "BM1", "BM2", "BM3", "BM4", "BM5", "BM6", "BM7", "BM8", "BM9", "BM10", "BM11", "BM12" ]
   for bmName in bmNames:
-    histograms_to_fit["BDTOutput_%s" % bmName] = {}
+    histograms_to_fit["MVAOutput_%s" % bmName] = {}
   return histograms_to_fit
