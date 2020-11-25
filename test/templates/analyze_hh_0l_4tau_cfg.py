@@ -121,9 +121,9 @@ process.analyze_hh_0l_4tau = cms.PSet(
         BDT_xml_FileName_odd_spin2 = cms.string('hhAnalysis/multilepton/data/0l_4tau_even_half_model_spin2.xml'), ## "BDT .xml -> Even train:Odd test" to be used for odd evt no.
         fitFunctionFileName_spin2 = cms.string('hhAnalysis/multilepton/data/0l_4tau_TProfile_signal_fit_func_spin2.root'),  ## File contaning the fitted TF1s
         inputVars_spin2 = cms.vstring(
-            'tau1_pt', 'tau1_phi', 'diHiggsMass', 'met_phi', 'dr_tau1_tau3',
-            'dr_tau2_tau4', 'pt_bestTauHPair_m', 'dr_bestTauHPair_m',
-            'dr_bestTauHPair_dr', 'gen_mHH'
+            'tau1_phi', 'tau4_phi', 'diHiggsVisMass', 'diHiggsMass', 'met_LD',
+            'deltaEta_tau2_tau3', 'dr_tau2_tau4', 'dr_bestTauHPair_m',
+            'dr_secondTauHPair_m', 'gen_mHH'
         ),
         BDT_xml_FileName_even_spin0 = cms.string('hhAnalysis/multilepton/data/0l_4tau_odd_half_model_spin0.xml'),
         BDT_xml_FileName_odd_spin0 = cms.string('hhAnalysis/multilepton/data/0l_4tau_even_half_model_spin0.xml'),
