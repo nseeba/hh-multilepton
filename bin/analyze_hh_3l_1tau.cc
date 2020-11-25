@@ -417,6 +417,10 @@ int main(int argc, char* argv[])
   std::string BDTFileName_nonRes_even  = mvaInfo_nonRes.getParameter<std::string>("BDT_xml_FileName_nonRes_even");
   std::string BDTFileName_nonRes_odd   = mvaInfo_nonRes.getParameter<std::string>("BDT_xml_FileName_nonRes_odd");
   std::vector<std::string> BDTInputVariables_nonRes = mvaInfo_nonRes.getParameter<std::vector<std::string>>("inputVars_nonRes"); // Include all Input Var.s except BM indices
+  const edm::ParameterSet mvaInfo_nonRes_base = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_nonRes_base");
+  std::string BDTFileName_nonRes_base_even  = mvaInfo_nonRes_base.getParameter<std::string>("BDT_xml_FileName_nonRes_base_even");
+  std::string BDTFileName_nonRes_base_odd   = mvaInfo_nonRes_base.getParameter<std::string>("BDT_xml_FileName_nonRes_base_odd");
+  std::vector<std::string> BDTInputVariables_nonRes_base = mvaInfo_nonRes_base.getParameter<std::vector<std::string>>("inputVars_nonRes_base"); // Include all Input Var.s except BM indices
 
 
   assert(BDTFileName_spin0_odd != "");
@@ -441,6 +445,13 @@ int main(int argc, char* argv[])
   TMVAInterface* BDT_nonRes = new TMVAInterface(BDTFileName_nonRes_odd, BDTFileName_nonRes_even, BDTInputVariables_nonRes);
   BDT_nonRes->enableBDTTransform();
   std::map<std::string, double> BDTOutput_Map_nonRes;
+
+  assert(BDTFileName_nonRes_base_odd != "");
+  assert(BDTFileName_nonRes_base_even != "");
+  assert(BDTInputVariables_nonRes_base.size() != 0);
+  TMVAInterface* BDT_nonRes_base = new TMVAInterface(BDTFileName_nonRes_base_odd, BDTFileName_nonRes_base_even, BDTInputVariables_nonRes_base);
+  BDT_nonRes_base->enableBDTTransform();
+  std::map<std::string, double> BDTOutput_Map_nonRes_base;
 
   std::map<std::string, double> AllVars_Map;
 
@@ -2202,10 +2213,15 @@ int main(int argc, char* argv[])
       std::map<std::string, double> BDTInputs_spin2 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin2, false);
       std::map<std::string, double> BDTInputs_spin0 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin0, false);
       std::map<std::string, double> BDTInputs_nonRes = InitializeInputVarMap(AllVars_Map, BDTInputVariables_nonRes, true); // Include all Input Var.s except BM indices
+      std::map<std::string, double> BDTInputs_nonRes_base = InitializeInputVarMap(AllVars_Map, BDTInputVariables_nonRes_base, true); 
     
+      std::vector<double> nonResBase_params;
+      nonResBase_params.push_back(0.);
+
       BDTOutput_Map_spin2 = CreateBDTOutputMap(gen_mHH, BDT_spin2, BDTInputs_spin2, eventInfo.event, false, "_spin2");
       BDTOutput_Map_spin0 = CreateBDTOutputMap(gen_mHH, BDT_spin0, BDTInputs_spin0, eventInfo.event, false, "_spin0");
       BDTOutput_Map_nonRes = CreateBDTOutputMap(nonRes_BMs, BDT_nonRes, BDTInputs_nonRes, eventInfo.event, true, "");
+      BDTOutput_Map_nonRes_base = CreateBDTOutputMap(nonResBase_params, BDT_nonRes_base, BDTInputs_nonRes_base, eventInfo.event, true, "_base");
 
     //--- fill histograms with events passing final selection
     for(const std::string & central_or_shift: central_or_shifts_local)
@@ -2234,8 +2250,8 @@ int main(int argc, char* argv[])
 	    met.pt(),
 	    nSFOS,
             HT,
+	    STMET,
 	    met_LD,
-	    selLepton_lead->pt(),
             dihiggsVisMass_sel,
             dihiggsMass,
 	    dR_smartpair_ltau,
@@ -2243,19 +2259,16 @@ int main(int argc, char* argv[])
 	    dR_smartpair_ll,
 	    m_smartpair_ll,
 	    mllOS_closestToZ,
-	    mT_SSlepdR,
-	    maxdZ_lep,
-	    mindPhiLepMET,
 	    eventInfo.event,
             evtWeight);
           selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
         }
-
         selHistManager->datacard_->fillHistograms(
           BDTOutput_Map_spin2,
           BDTOutput_Map_spin0,
           BDTOutput_Map_nonRes,
-          -1., // CV: BDTOutput for nonresonant_allBMs case not implemented yet !!
+          BDTOutput_Map_nonRes_base["Base"],
+	  // -1., // CV: BDTOutput for nonresonant_allBMs case not implemented yet !!
           evtWeight);
 
 	//for(const std::string & category: categories_evt)

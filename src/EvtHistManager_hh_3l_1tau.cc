@@ -12,8 +12,8 @@ EvtHistManager_hh_3l_1tau::EvtHistManager_hh_3l_1tau(const edm::ParameterSet & c
   central_or_shiftOptions_["MET"] = { "central" };
   central_or_shiftOptions_["nSFOS"] = { "central" };
   central_or_shiftOptions_["HT"] = { "central" };
+  central_or_shiftOptions_["STMET"] = { "central" };
   central_or_shiftOptions_["MET_LD"] = { "central" };
-  central_or_shiftOptions_["lep1_pt"] = { "central" };
   central_or_shiftOptions_["dihiggsVisMass"] = { "central" };
   central_or_shiftOptions_["dihiggsMass"] = { "central" };
   central_or_shiftOptions_["dR_smartpair_ltau"] = { "central" };
@@ -21,9 +21,6 @@ EvtHistManager_hh_3l_1tau::EvtHistManager_hh_3l_1tau(const edm::ParameterSet & c
   central_or_shiftOptions_["dR_smartpair_ll"] = { "central" };
   central_or_shiftOptions_["m_smartpair_ll"] = { "central" };
   central_or_shiftOptions_["mllOS_closestToZ"] = { "central" };
-  central_or_shiftOptions_["mT_SSlepdR"] = { "central" };
-  central_or_shiftOptions_["maxdZ_lep"] = { "central" };
-  central_or_shiftOptions_["mindPhiLepMET"] = { "central" };
   central_or_shiftOptions_["EventCounter"] = { "*" };
   central_or_shiftOptions_["EventNumber"] = { "*" };
 }
@@ -44,8 +41,8 @@ EvtHistManager_hh_3l_1tau::bookHistograms(TFileDirectory & dir)
   histogram_MET_              = book1D(dir, "MET",              "MET",               125, -0.,   +250  );
   histogram_nSFOS_            = book1D(dir, "nSFOS",            "nSFOS",             5,   -0.5,  +4.5  );
   histogram_HT_               = book1D(dir, "HT",               "HT",                150, -0.,   +1500.);
+  histogram_STMET_            = book1D(dir, "STMET",            "STMET",             150, -0.,   +1500.);
   histogram_MET_LD_           = book1D(dir, "MET_LD",           "MET_LD",            125, -0.,   +250. );
-  histogram_lep1_pt_          = book1D(dir, "lep1_pt",          "lep1_pt",           125, -0.,   +250. );
   histogram_dihiggsVisMass_   = book1D(dir, "dihiggsVisMass",   "dihiggsVisMass",    150, -0.,   +1500.);
   histogram_dihiggsMass_      = book1D(dir, "dihiggsMass",      "dihiggsMass",       150, -0.,   +1500.);
   histogram_dR_smartpair_ltau_= book1D(dir, "dR_smartpair_ltau","dR_smartpair_ltau", 35,  -0.,   +3.5  );
@@ -53,9 +50,6 @@ EvtHistManager_hh_3l_1tau::bookHistograms(TFileDirectory & dir)
   histogram_dR_smartpair_ll_  = book1D(dir, "dR_smartpair_ll",  "dR_smartpair_ll",   35,  -0.,   +3.5  );
   histogram_m_smartpair_ll_   = book1D(dir, "m_smartpair_ll",   "m_smartpair_ll",    100, -0.,   +200. );
   histogram_mllOS_closestToZ_ = book1D(dir, "mllOS_closestToZ", "mllOS_closestToZ",  126, -2.,   +250. );
-  histogram_mT_SSlepdR_       = book1D(dir, "mT_SSlepdR",       "mT_SSlepdR",        151, -1.,   +150. );
-  histogram_maxdZ_lep_        = book1D(dir, "maxdZ_lep",        "maxdZ_lep",         100, -0.,   +0.05 );
-  histogram_mindPhiLepMET_    = book1D(dir, "mindPhiLepMET",    "mindPhiLepMET",     35,  -3.5,  +3.5  );
   histogram_EventCounter_     = book1D(dir, "EventCounter",     "EventCounter",      1,   -0.5,  +0.5  );
   histogram_EventNumber_      = book1D(dir, "EventNumber",      "EventNumber",       2,   -0.5,  +1.5  );
   histogram_EventNumber_->GetXaxis()->SetBinLabel(1,"Odd");
@@ -70,8 +64,8 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
 					  double MET,
 					  int nSFOS,
 					  double HT,
+					  double STMET,
 					  double MET_LD,
-					  double lep1_pt,
 					  double dihiggsVisMass,
 					  double dihiggsMass,
 					  double dR_smartpair_ltau,
@@ -79,9 +73,6 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
 					  double dR_smartpair_ll,
 					  double m_smartpair_ll,
 					  double mllOS_closestToZ,
-					  double mT_SSlepdR,
-					  double maxdZ_lep,
-					  double mindPhiLepMET,
                                           unsigned int evt_number,
 					  double evtWeight)
 {
@@ -93,8 +84,8 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_MET_,               MET,                 evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_nSFOS_,             nSFOS,               evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_HT_,                HT,                  evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_STMET_,             STMET,               evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_MET_LD_,            MET_LD,              evtWeight,     evtWeightErr);
-  fillWithOverFlow(histogram_lep1_pt_,           lep1_pt,             evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_dihiggsVisMass_,    dihiggsVisMass,      evtWeight,     evtWeightErr);
   if ( dihiggsMass > 0. ) {
     fillWithOverFlow(histogram_dihiggsMass_,     dihiggsMass,         evtWeight,     evtWeightErr);
@@ -104,9 +95,6 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_dR_smartpair_ltau_, dR_smartpair_ll,     evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_m_smartpair_ltau_,  m_smartpair_ll,      evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_mllOS_closestToZ_,  mllOS_closestToZ,    evtWeight,     evtWeightErr);
-  fillWithOverFlow(histogram_mT_SSlepdR_,        mT_SSlepdR,          evtWeight,     evtWeightErr);
-  fillWithOverFlow(histogram_maxdZ_lep_,         maxdZ_lep,           evtWeight,     evtWeightErr);
-  fillWithOverFlow(histogram_mindPhiLepMET_,     mindPhiLepMET,       evtWeight,     evtWeightErr);  
   fillWithOverFlow(histogram_EventCounter_,      0.,                  evtWeight,     evtWeightErr);
   if(evt_number % 2){// ODD EVENT NUMBER CASE                                                                                                                                                    
     fillWithOverFlow(histogram_EventNumber_,     0.,                  evtWeight,     evtWeightErr);                                                                                                                         
