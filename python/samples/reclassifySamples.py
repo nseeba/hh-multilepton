@@ -3,13 +3,13 @@ import itertools
 import copy
 import re
 
-HH_DECAYMODES = [ 'wwww', 'wwtt', 'tttt', 'bbtt', 'bbvv', 'bbvv_sl' ]
+HH_DECAYMODES = [ 'wwww', 'wwtt', 'tttt', 'bbtt', 'bbvv_sl', 'bbvv' ]
 HH_DECAYMODES_SUFFIX = [ '_{}'.format(hh_dm) for hh_dm in HH_DECAYMODES ]
-HH_DECAYMODES_RE = re.compile('_({})$'.format('|'.join(HH_DECAYMODES)))
+HH_DECAYMODES_RE = re.compile('_({}$)'.format('|'.join(HH_DECAYMODES)))
 
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 
-def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None):
+def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None, separate_th = True):
 
   sum_events_hh  = copy.deepcopy(samples_era_hh['sum_events'])
   sum_events_bkg = copy.deepcopy(samples_era_bkg['sum_events'])
@@ -44,9 +44,10 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None)
     if sample_info["process_name_specific"].startswith('signal') and 'hh' in sample_info["process_name_specific"]:
       sample_info["use_it"] = 'vbf_spin' not in sample_info["process_name_specific"]
       sample_info["sample_category_hh"] = copy.deepcopy(sample_info["sample_category"])
-      assert (sample_info["sample_category"].endswith(tuple(HH_DECAYMODES_SUFFIX)))
+      if 'dipoleRecoilOn' not in sample_info["sample_category"]:
+        assert(sample_info["sample_category"].endswith(tuple(HH_DECAYMODES_SUFFIX)))
       sample_info["sample_category"] = HH_DECAYMODES_RE.sub("", sample_info["sample_category_hh"])
-      assert (sample_info["sample_category"] != sample_info["sample_category_hh"])
+      assert(sample_info["sample_category"] != sample_info["sample_category_hh"])
 
     if sample_info["sample_category"] == "Rares":
       sample_info["sample_category"] = "Other"
@@ -65,7 +66,8 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None)
     elif sample_name.startswith('/ttH'):
       sample_info["sample_category"] = "TTH"
     elif sample_info["sample_category"] in [ "tHq", "tHW" ]:
-      sample_info["sample_category"] = "TH"
+      if not separate_th:
+        sample_info["sample_category"] = "TH"
     elif sample_name.startswith('/TTTo'):
       if sample_info["sample_category"].replace("TT_", "") not in systematics.ttbar:
         sample_info["sample_category"] = "TT"
@@ -81,6 +83,8 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None)
       sample_info["sample_category"] = "TTWW"
     elif sample_name.startswith(('/TTWJets', '/ttWJets')):
       sample_info["sample_category"] = "TTW"
+    elif sample_name.startswith(("/TTZH", "/TTWH")):
+      sample_info["use_it"] = False
 
     # disable Tau PD by default -- to avoid double-counting the data events in all analysis channels but 0l+4tau and 1l+3tau
     # where the PD is the only one enabled
