@@ -708,6 +708,9 @@ class analyzeConfig_hh_3l_1tau(analyzeConfig_hh):
             lepton_and_hadTau_selection_and_frWeight = get_lepton_and_hadTau_selection_and_frWeight(lepton_and_hadTau_mcClosure, "enabled")
             key_addBackgrounds_job_fakes = getKey("fakes_mc", lepton_and_hadTau_selection_and_frWeight, chargeSumSelection)
             histogramDir_mcClosure = self.mcClosure_dir['%s_%s' % (lepton_and_hadTau_mcClosure, chargeSumSelection)]
+            if "BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit:
+              histogramDir_nominal = histogramDir_nominal.replace("/sel/evt", "/sel/datacard")
+              histogramDir_mcClosure = histogramDir_mcClosure.replace("/sel/evt", "/sel/datacard")
             self.jobOptions_add_syst_fakerate[key_add_syst_fakerate_job].update({
               'add_Clos_%s' % lepton_and_hadTau_type : ("Fakeable_mcClosure_%s" % lepton_and_hadTau_type) in self.lepton_and_hadTau_selections,
               'inputFile_nominal_%s' % lepton_and_hadTau_type : self.outputFile_hadd_stage2[key_hadd_stage2_job],

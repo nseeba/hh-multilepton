@@ -626,6 +626,9 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
           hadTau_selection_and_frWeight = get_hadTau_selection_and_frWeight(hadTau_mcClosure, "enabled")
           key_addBackgrounds_job_fakes = getKey("fakes_mc", hadTau_selection_and_frWeight, hadTau_charge_selection)
           histogramDir_mcClosure = self.mcClosure_dir['%s_%s' % (hadTau_mcClosure, hadTau_charge_selection)]
+          if "BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit:
+            histogramDir_nominal = histogramDir_nominal.replace("/sel/evt", "/sel/datacard")
+            histogramDir_mcClosure = histogramDir_mcClosure.replace("/sel/evt", "/sel/datacard")
           self.jobOptions_add_syst_fakerate[key_add_syst_fakerate_job].update({
             'add_Clos_%s' % hadTau_type : ("Fakeable_mcClosure_%s" % hadTau_type) in self.hadTau_selections,
             'inputFile_nominal_%s' % hadTau_type : self.outputFile_hadd_stage2[key_hadd_stage2_job],
