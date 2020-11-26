@@ -38,8 +38,8 @@ public:
 		   double MET,
 		   int nSFOS,
 		   double HT,
+		   double STMET,
 		   double MET_LD,
-		   double lep1_pt,
 		   double dihiggsVisMass,
 		   double dihiggsMass,
 		   double dR_smartpair_ltau,
@@ -47,9 +47,6 @@ public:
 		   double dR_smartpair_ll,
 		   double m_smartpair_ll,
 		   double mllOS_closestToZ,
-		   double mT_SSlepdR,
-		   double maxdZ_lep,
-		   double mindPhiLepMET,
                    unsigned int evt_number,
 		   double evtWeight);
 
@@ -64,8 +61,8 @@ public:
   TH1 * histogram_MET_;
   TH1 * histogram_nSFOS_;
   TH1 * histogram_HT_;
+  TH1 * histogram_STMET_;
   TH1 * histogram_MET_LD_;
-  TH1 * histogram_lep1_pt_;
   TH1 * histogram_dihiggsVisMass_;
   TH1 * histogram_dihiggsMass_;
   TH1 * histogram_dR_smartpair_ltau_;
@@ -73,9 +70,6 @@ public:
   TH1 * histogram_dR_smartpair_ll_;
   TH1 * histogram_m_smartpair_ll_;
   TH1 * histogram_mllOS_closestToZ_;
-  TH1 * histogram_mT_SSlepdR_;
-  TH1 * histogram_maxdZ_lep_;
-  TH1 * histogram_mindPhiLepMET_;
   TH1 * histogram_EventCounter_;
   TH1 * histogram_EventNumber_;
 };
