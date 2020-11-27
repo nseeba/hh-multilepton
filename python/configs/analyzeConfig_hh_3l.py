@@ -690,23 +690,23 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
             'histogramToFit' : histogramToFit,
             'plots_outputFileName' : os.path.join(self.dirs[DKEY_PLOT], "addSystFakeRates.png")
           }
-          histogramDir_nominal = getHistogramDir(category, "Tight", "disabled", leptonChargeSelection)  
+          histogramDir_nominal = "%s/sel/evt/fakes_mc" % getHistogramDir(category, "Tight", "disabled", leptonChargeSelection)  
           for lepton_type in [ 'e', 'm' ]:
             lepton_mcClosure = "Fakeable_mcClosure_%s" % lepton_type
             if lepton_mcClosure not in self.lepton_selections:
               continue
             lepton_selection_and_frWeight = get_lepton_selection_and_frWeight(lepton_mcClosure, "enabled")
             key_addBackgrounds_job_fakes = getKey("fakes_mc", lepton_selection_and_frWeight, leptonChargeSelection)
-            histogramDir_mcClosure = self.mcClosure_dir['%s_%s' % (lepton_mcClosure, leptonChargeSelection)]
+            histogramDir_mcClosure = "%s/sel/evt/fakes_mc" % self.mcClosure_dir['%s_%s' % (lepton_mcClosure, leptonChargeSelection)]
             if "BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit:
               histogramDir_nominal = histogramDir_nominal.replace("/sel/evt", "/sel/datacard")
               histogramDir_mcClosure = histogramDir_mcClosure.replace("/sel/evt", "/sel/datacard")
             self.jobOptions_add_syst_fakerate[key_add_syst_fakerate_job].update({
               'add_Clos_%s' % lepton_type : ("Fakeable_mcClosure_%s" % lepton_type) in self.lepton_selections,
               'inputFile_nominal_%s' % lepton_type : self.outputFile_hadd_stage2[key_hadd_stage2_job],
-              'histogramName_nominal_%s' % lepton_type : "%s/sel/evt/fakes_mc/%s" % (histogramDir_nominal, histogramToFit),
+              'histogramName_nominal_%s' % lepton_type : "%s/%s" % (histogramDir_nominal, histogramToFit),
               'inputFile_mcClosure_%s' % lepton_type : self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_fakes]['outputFile'],
-              'histogramName_mcClosure_%s' % lepton_type : "%s/sel/evt/fakes_mc/%s" % (histogramDir_mcClosure, histogramToFit)
+              'histogramName_mcClosure_%s' % lepton_type : "%s/%s" % (histogramDir_mcClosure, histogramToFit)
             })
           self.createCfg_add_syst_fakerate(self.jobOptions_add_syst_fakerate[key_add_syst_fakerate_job])
 
