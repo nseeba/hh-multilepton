@@ -560,22 +560,35 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
           if "BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit:
             if ("SM" in histogramToFit or "BM" in histogramToFit) and 'nonresonant' in sample_category:
               doAdd = True
-            if "spin0" in histogramToFit and "spin0" in sample_category and "_%s_" % histogramToFit[9:histogramToFit.find("_", 9)] in sample_category:
-              doAdd = True
-            if "spin2" in histogramToFit and "spin2" in sample_category and "_%s_" % histogramToFit[9:histogramToFit.find("_", 9)] in sample_category:
-              doAdd = True
+            if ("spin0" in histogramToFit and "spin0" in sample_category) or ("spin2" in histogramToFit and "spin2" in sample_category):
+              startpos = None
+              for pattern in [ "MVAOutput", "BDTOutput" ]:
+                if pattern in histogramToFit:
+                  startpos = histogramToFit.find(pattern) + len(pattern) + 1 # CV: increment startpos by 1 to account for trailing "_"
+              if not startpos:
+                raise ValueError("Failed to parse histogram name = '%s' !!" % histogramToFit) 
+              endpos = histogramToFit.find("_", startpos)
+              masspoint = histogramToFit[startpos:endpos]
+              if masspoint in sample_category:
+                doAdd = True
           else:
             doAdd = True
           if doAdd:
-            if "wwww" in sample_category:
-              prep_dcard_HH.add(sample_category.replace("wwww", "zzzz"))
-              prep_dcard_HH.add(sample_category.replace("wwww", "wwww"))
-              prep_dcard_HH.add(sample_category.replace("wwww", "zzww"))
-            elif "wwtt" in sample_category:
-              prep_dcard_HH.add(sample_category.replace("wwtt", "ttzz"))
-              prep_dcard_HH.add(sample_category.replace("wwtt", "ttww"))
-            elif "tttt" in sample_category:                  
+            if "_wwww" in sample_category:
+              prep_dcard_HH.add(sample_category.replace("_wwww", "_zzzz"))
+              prep_dcard_HH.add(sample_category.replace("_wwww", "_wwww"))
+              prep_dcard_HH.add(sample_category.replace("_wwww", "_zzww"))
+              if not ("BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit):
+                prep_dcard_HH.add(sample_category.replace("_wwww", ""))
+            elif "_wwtt" in sample_category:
+              prep_dcard_HH.add(sample_category.replace("_wwtt", "_ttzz"))
+              prep_dcard_HH.add(sample_category.replace("_wwtt", "_ttww"))
+              if not ("BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit):
+                prep_dcard_HH.add(sample_category.replace("_wwtt", ""))
+            elif "_tttt" in sample_category:
               prep_dcard_HH.add(sample_category)
+              if not ("BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit):
+                prep_dcard_HH.add(sample_category.replace("_tttt", ""))
             else:
               raise ValueError("Failed to identify relevant HH decay mode(s) for 'sample_category' = %s !!" % sample_category)
       prep_dcard_HH = list(prep_dcard_HH)
