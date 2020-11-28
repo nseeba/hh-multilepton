@@ -773,7 +773,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
             prep_dcard_H = []
             prep_dcard_other_nonfake_backgrounds = []
             for process in self.nonfake_backgrounds:
-              if process in [ "VH", "WH", "ZH", "TH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]:
+              if process in [ "VH", "WH", "ZH", "TH", "tHq", "tHW", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]:
                 prep_dcard_H.append("%s_hww" % process)
                 prep_dcard_H.append("%s_hzz" % process)
                 prep_dcard_H.append("%s_htt" % process)
