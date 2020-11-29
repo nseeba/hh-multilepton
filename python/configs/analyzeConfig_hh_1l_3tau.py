@@ -569,7 +569,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
                 raise ValueError("Failed to parse histogram name = '%s' !!" % histogramToFit) 
               endpos = histogramToFit.find("_", startpos)
               masspoint = histogramToFit[startpos:endpos]
-              if masspoint in sample_category:
+              if ("_%s_" % masspoint) in sample_category:
                 doAdd = True
           else:
             doAdd = True
