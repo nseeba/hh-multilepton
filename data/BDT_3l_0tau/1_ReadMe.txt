@@ -1,0 +1,35 @@
+
+spin0:
+/home/ssawant/BDT_Output/training/spin0_v3_pso_kappa0p3_wBestHyperparameters
+cp 3l_0tau_even_half_model_spin0.xml 3l_0tau_spin0_evenTrainModel.xml
+cp 3l_0tau_odd_half_model_spin0.xml 3l_0tau_spin0_oddTrainModel.xml
+cp 3l_0tau_spin0_evenTrainModel.xml 3l_0tau_spin0_oddTrainModel.xml /home/ssawant/VHbbNtuples_10_x/CMSSW_10_2_10_new16/CMSSW_10_2_10/src/hhAnalysis/multilepton/data/BDT_3l_0tau
+
+fit function:
+/home/ssawant/MVA_fit_funcs/Run2/3l_0tau/Resonant_Spin0_v1
+cp 3l_0tau_TProfile_signal_fit_func_spin0.root 3l_0tau_spin0_fitFuncs.root
+cp 3l_0tau_spin0_fitFuncs.root /home/ssawant/VHbbNtuples_10_x/CMSSW_10_2_10_new16/CMSSW_10_2_10/src/hhAnalysis/multilepton/data/BDT_3l_0tau
+
+
+
+
+spin2:
+/home/ssawant/BDT_Output/training/spin2_v3_pso_kappa0p3_wBestHyperparameters
+cp 3l_0tau_even_half_model_spin2.xml 3l_0tau_spin2_evenTrainModel.xml
+cp 3l_0tau_odd_half_model_spin2.xml 3l_0tau_spin2_oddTrainModel.xml
+cp 3l_0tau_spin2_evenTrainModel.xml 3l_0tau_spin2_oddTrainModel.xml /home/ssawant/VHbbNtuples_10_x/CMSSW_10_2_10_new16/CMSSW_10_2_10/src/hhAnalysis/multilepton/data/BDT_3l_0tau
+
+fit sunction:
+/home/ssawant/MVA_fit_funcs/Run2/3l_0tau/Resonant_Spin2_v1
+cp 3l_0tau_TProfile_signal_fit_func_spin2.root 3l_0tau_spin2_fitFuncs.root
+cp 3l_0tau_spin2_fitFuncs.root /home/ssawant/VHbbNtuples_10_x/CMSSW_10_2_10_new16/CMSSW_10_2_10/src/hhAnalysis/multilepton/data/BDT_3l_0tau
+
+
+
+
+nonres:
+/home/ssawant/BDT_Output/training/nonres_v3_pso_kappa0p3_wBestHyperparameters
+cp 3l_0tau_even_half_model_nonres.xml 3l_0tau_nonRes_default_evenTrainModel.xml
+cp 3l_0tau_odd_half_model_nonres.xml 3l_0tau_nonRes_default_oddTrainModel.xml
+cp 3l_0tau_nonRes_default_evenTrainModel.xml 3l_0tau_nonRes_default_oddTrainModel.xml /home/ssawant/VHbbNtuples_10_x/CMSSW_10_2_10_new16/CMSSW_10_2_10/src/hhAnalysis/multilepton/data/BDT_3l_0tau
+
