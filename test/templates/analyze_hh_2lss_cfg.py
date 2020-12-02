@@ -131,7 +131,6 @@ process.analyze_hh_2lss = cms.PSet(
     selEventsFileName_input = cms.string(''),
     selEventsFileName_output = cms.string(''),
     selectBDT = cms.bool(False),
-    gen_mHH = cms.vdouble(400, 700),
 
     useNonNominal = cms.bool(False),
     isDEBUG = cms.bool(False),
@@ -141,6 +140,29 @@ process.analyze_hh_2lss = cms.PSet(
     useObjectMultiplicity = cms.bool(False),
     minNumJets = cms.int32(3),
 
+
+    gen_mHH = cms.vdouble(250,260,270,280,300, 320,350,400,450,500,550,600,650,700,750,800,850,900,1000), ## Set the signal mass range used in the BDT .pkl/.xml/.pb files
+    ## -------- USE THIS FOR TMVAInterface (after changing it in the .cc file) -----------------##
+    mvaInfo_res = cms.PSet( 
+        BDT_xml_FileName_spin0_even = cms.string('hhAnalysis/multilepton/data/BDT_2lss/2lss_odd_half_model_spin0.xml'),
+        BDT_xml_FileName_spin0_odd = cms.string('hhAnalysis/multilepton/data/BDT_2lss/2lss_even_half_model_spin0.xml'),
+        fitFunctionFileName_spin0 = cms.string('hhAnalysis/multilepton/data/BDT_2lss/2lss_TProfile_signal_fit_func_spin0.root'), 
+        inputVars_spin0 = cms.vstring('leptonPairMass_sel', 'met', 'mht', 'HT', 'lep1_pt', 'mT_lep1', 'lep2_pt', 'mindr_lep2_jet', 'dR_ll', 'gen_mHH'),
+        BDT_xml_FileName_spin2_even = cms.string('hhAnalysis/multilepton/data/BDT_2lss/2lss_odd_half_model_spin2.xml'),
+        BDT_xml_FileName_spin2_odd = cms.string('hhAnalysis/multilepton/data/BDT_2lss/2lss_even_half_model_spin2.xml'),
+        fitFunctionFileName_spin2 = cms.string('hhAnalysis/multilepton/data/BDT_2lss/2lss_TProfile_signal_fit_func_spin2.root'), 
+        inputVars_spin2 = cms.vstring('leptonPairMass_sel', 'met', 'mht', 'HT', 'lep1_pt', 'mindr_lep1_jet', 'lep2_pt', 'mindr_lep2_jet', 'dR_ll', 'gen_mHH'),
+    ),
+    nonRes_BMs = cms.vdouble(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+    mvaInfo_nonRes = cms.PSet( ## [Tweaked hyper-para.s used]
+        BDT_xml_FileName_nonRes_even = cms.string('hhAnalysis/multilepton/data/BDT_2lss/2lss_odd_half_model_nonres_default.xml'),
+        BDT_xml_FileName_nonRes_odd = cms.string('hhAnalysis/multilepton/data/BDT_2lss/2lss_even_half_model_nonres_default.xml'),
+        inputVars_nonRes = cms.vstring('mht', 'HT', 'lep1_pt', 'mindr_lep1_jet', 'mT_lep1', 'lep2_pt', 'mindr_lep2_jet', 'mT_lep2', 'dR_ll', 'max_lep_eta', 
+                                       'SM', 'BM1', 'BM2', 'BM3', 'BM4', 'BM5', 'BM6', 'BM7', 'BM8', 'BM9', 'BM10', 'BM11', 'BM12'),
+    ),
+
+    
+    
     evtWeight = cms.PSet(
         apply = cms.bool(False),
         histogramFile = cms.string(''),
