@@ -851,7 +851,7 @@ int main(int argc, char* argv[])
       "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "data_to_MC_correction","FR_Weight", "lep1_frWeight", "lep2_frWeight", "evtWeight"
     );
     bdt_filler->register_variable<int_type>(
-      "BM", "nJet", "nJet_vbf", "isVBF", "nLep"
+      "BM", "nJet", "nJet_vbf", "isVBF", "nLep", "nLep_loose", "nElec"
     );
     bdt_filler->bookTree(fs);
   }
@@ -1980,6 +1980,8 @@ int main(int argc, char* argv[])
 	("nJet_vbf",                       selJetsVBF.size())
 	("isVBF",                          isVBF)
 	("nLep",                           selLeptons.size())
+        ("nLep_loose",                     preselLeptonsFull.size())
+        ("nElec",                          selElectrons.size())
 	("THWeight",                       THWeight)
 	("BM",                             BM)
 	("mhh_gen",                        mhh_gen)
