@@ -192,6 +192,7 @@ DatacardHistManagerBase_hh::bookHistograms(TFileDirectory & dir)
             process_and_decayMode = process_;
             boost::replace_all(process_and_decayMode, process, process_hh);
             boost::replace_all(process_and_decayMode, decayModeIter.first, Form("_%s", decayMode.data()));
+            boost::replace_all(process_and_decayMode, "_sl", "");
             is_known_decayMode = true;
             break;
           }
@@ -200,6 +201,7 @@ DatacardHistManagerBase_hh::bookHistograms(TFileDirectory & dir)
         {
           process_and_decayMode = process_;
           boost::replace_all(process_and_decayMode, process_hh, Form("%s_%s", process_hh.data(), decayMode.data()));
+          boost::replace_all(process_and_decayMode, "_sl", "");
         }
       }
       else 
