@@ -2107,7 +2107,7 @@ int main(int argc, char* argv[])
     AllVars_Map["maxPtSum_pair1_pt"] = maxPtSum_pair1_pt;
     AllVars_Map["maxPtSum_pair1_eta"] = maxPtSum_pair1_eta;
     AllVars_Map["maxPtSum_pair1_phi"] = maxPtSum_pair1_phi;                               
-    AllVars_Map["maxPtSum_pair1_deltaEtaLep1"] = maxPtSum_pair1_deltaPhiLep1;             
+    AllVars_Map["maxPtSum_pair1_deltaEtaLep1"] = maxPtSum_pair1_deltaEtaLep1;             
     AllVars_Map["maxPtSum_pair1_deltaPhiLep1"] = maxPtSum_pair1_deltaPhiLep1;             
     AllVars_Map["maxPtSum_pair1_deltaEta"] = maxPtSum_pair1_deltaEta;                     
     AllVars_Map["maxPtSum_pair1_deltaPhi"] = maxPtSum_pair1_deltaPhi;                     
@@ -2303,7 +2303,7 @@ int main(int argc, char* argv[])
 	("maxPtSum_pair1_pt", maxPtSum_pair1_pt)   
 	("maxPtSum_pair1_eta", maxPtSum_pair1_eta)                               
 	("maxPtSum_pair1_phi", maxPtSum_pair1_phi)                               
-	("maxPtSum_pair1_deltaEtaLep1", maxPtSum_pair1_deltaPhiLep1)             
+	("maxPtSum_pair1_deltaEtaLep1", maxPtSum_pair1_deltaEtaLep1)             
 	("maxPtSum_pair1_deltaPhiLep1", maxPtSum_pair1_deltaPhiLep1)             
 	("maxPtSum_pair1_deltaEta", maxPtSum_pair1_deltaEta)                     
 	("maxPtSum_pair1_deltaPhi", maxPtSum_pair1_deltaPhi)                     
