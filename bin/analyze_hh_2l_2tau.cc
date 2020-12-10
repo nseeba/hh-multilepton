@@ -98,6 +98,9 @@
 #include "tthAnalysis/HiggsToTauTau/interface/TensorFlowInterface.h" // TensorFlowInterface
 #include "tthAnalysis/HiggsToTauTau/interface/BtagSFRatioFacility.h" // BtagSFRatioFacility
 
+#include "tthAnalysis/HiggsToTauTau/interface/mvaAuxFunctions.h" // check_mvaInputs, get_mvaInputVariables 
+#include "tthAnalysis/HiggsToTauTau/interface/mvaInputVariables.h" // auxiliary functions for computing input variables of the MVA used for signal extraction in the 2l_2tau category
+#include "tthAnalysis/HiggsToTauTau/interface/MVAInputVarHistManager.h" // MVAInputVarHistManager
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_2l_2tau.h" // EvtHistManager_hh_2l_2tau
 #include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
 #include "hhAnalysis/multilepton/interface/mySVfit4tauAuxFunctions.h" // getMeasuredTauLeptonType, getHadTauDecayMode
@@ -133,6 +136,8 @@
 #include <sstream>
 #include <map>
 #include <iterator>
+
+#include <algorithm>
 
 typedef math::PtEtaPhiMLorentzVector LV;
 typedef std::vector<std::string> vstring;
@@ -269,6 +274,13 @@ std::map<std::string, ParticlePair*>ComputeBoostPairs(const Particle::LorentzVec
   boost_pair_map["pair2"] = pair_vec[index];
 
   return boost_pair_map;
+}
+
+
+void RemoveEntryFromVector(std::vector<std::string>& orig_vector, std::string value)
+{
+  std::vector<std::string>::iterator it = remove(orig_vector.begin(), orig_vector.end(), value);
+  orig_vector.erase(it, orig_vector.end());
 }
 
 
@@ -550,6 +562,29 @@ int main(int argc, char* argv[])
   std::string BDTFileName_odd_nonres   = mvaInfo_nonres.getParameter<std::string>("BDT_xml_FileName_odd_nonres");
   std::vector<std::string> BDTInputVariables_SUM_nonres = mvaInfo_nonres.getParameter<std::vector<std::string>>("inputVars_nonres"); // Include all Input Var.s except BM indices
 
+
+  std::vector<std::string> BDTInputVariables_SUM_spin2_reduced = BDTInputVariables_SUM_spin2;
+  std::vector<std::string> BDTInputVariables_SUM_spin0_reduced = BDTInputVariables_SUM_spin0;
+  std::vector<std::string> BDTInputVariables_SUM_nonres_reduced = BDTInputVariables_SUM_nonres;
+
+  // Removing entries from the reduced string vectors which we don't want
+  RemoveEntryFromVector(BDTInputVariables_SUM_spin2_reduced, "gen_mHH");
+  RemoveEntryFromVector(BDTInputVariables_SUM_spin0_reduced, "gen_mHH");
+  RemoveEntryFromVector(BDTInputVariables_SUM_nonres_reduced, "SM");
+  RemoveEntryFromVector(BDTInputVariables_SUM_nonres_reduced, "BM1");
+  RemoveEntryFromVector(BDTInputVariables_SUM_nonres_reduced, "BM2");
+  RemoveEntryFromVector(BDTInputVariables_SUM_nonres_reduced, "BM3");
+  RemoveEntryFromVector(BDTInputVariables_SUM_nonres_reduced, "BM4");
+  RemoveEntryFromVector(BDTInputVariables_SUM_nonres_reduced, "BM5");
+  RemoveEntryFromVector(BDTInputVariables_SUM_nonres_reduced, "BM6");
+  RemoveEntryFromVector(BDTInputVariables_SUM_nonres_reduced, "BM7");
+  RemoveEntryFromVector(BDTInputVariables_SUM_nonres_reduced, "BM8");
+  RemoveEntryFromVector(BDTInputVariables_SUM_nonres_reduced, "BM9");
+  RemoveEntryFromVector(BDTInputVariables_SUM_nonres_reduced, "BM10");
+  RemoveEntryFromVector(BDTInputVariables_SUM_nonres_reduced, "BM11");
+  RemoveEntryFromVector(BDTInputVariables_SUM_nonres_reduced, "BM12");
+
+
   assert(BDTFileName_odd_spin2 != "");
   assert(BDTFileName_even_spin2 != "");
   assert(fitFunctionFileName_spin2 != "");
@@ -816,6 +851,9 @@ int main(int argc, char* argv[])
     JetHistManager* BJets_medium_;
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
+    MVAInputVarHistManager* mvaInputVariables_2l_2tau_spin0_; 
+    MVAInputVarHistManager* mvaInputVariables_2l_2tau_spin2_; 
+    MVAInputVarHistManager* mvaInputVariables_2l_2tau_nonres_; 
     EvtHistManager_hh_2l_2tau* evt_;
     SVfit4tauHistManager_MarkovChain* svFit4tau_wMassConstraint_;
     DatacardHistManager_hh* datacard_;
@@ -890,12 +928,25 @@ int main(int argc, char* argv[])
           Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), era_string, central_or_shift));
         selHistManager->svFit4tau_wMassConstraint_->bookHistograms(fs);
       }
-
       selHistManager->datacard_ = new DatacardHistManager_hh(makeHistManager_cfg(process_and_genMatch,
         Form("%s/sel/datacard", histogramDir.data()), era_string, central_or_shift),
         analysisConfig, eventInfo, HHWeight_calc, 
         isDEBUG);
       selHistManager->datacard_->bookHistograms(fs);
+      
+      selHistManager->mvaInputVariables_2l_2tau_spin0_ = new MVAInputVarHistManager(makeHistManager_cfg(process_and_genMatch,
+	Form("%s/sel/mvaInputs_2l_2tau_spin0", histogramDir.data()), era_string, central_or_shift)); 
+      selHistManager->mvaInputVariables_2l_2tau_spin0_->bookHistograms(fs, BDTInputVariables_SUM_spin0_reduced); 
+
+      selHistManager->mvaInputVariables_2l_2tau_spin2_ = new MVAInputVarHistManager(makeHistManager_cfg(process_and_genMatch,
+	Form("%s/sel/mvaInputs_2l_2tau_spin2", histogramDir.data()), era_string, central_or_shift)); 
+      selHistManager->mvaInputVariables_2l_2tau_spin2_->bookHistograms(fs, BDTInputVariables_SUM_spin2_reduced); 
+
+      selHistManager->mvaInputVariables_2l_2tau_nonres_ = new MVAInputVarHistManager(makeHistManager_cfg(process_and_genMatch,
+	Form("%s/sel/mvaInputs_2l_2tau_nonres", histogramDir.data()), era_string, central_or_shift)); 
+      selHistManager->mvaInputVariables_2l_2tau_nonres_->bookHistograms(fs, BDTInputVariables_SUM_nonres_reduced); 
+
+
 
       if(! skipBooking)
       {
@@ -2059,11 +2110,16 @@ int main(int argc, char* argv[])
     
     std::map<std::string, double> BDTInputs_SUM_spin2 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin2, false);
     std::map<std::string, double> BDTInputs_SUM_spin0 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin0, false);
-    std::map<std::string, double> BDTInputs_SUM_nonres = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_nonres, true); // Include all Input Var.s except BM indices
+    std::map<std::string, double> BDTInputs_SUM_nonres = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_nonres, true); 
     
     BDTOutput_SUM_Map_spin2 = CreateBDTOutputMap(gen_mHH, BDT_SUM_spin2, BDTInputs_SUM_spin2, eventInfo.event, false, "_spin2");
     BDTOutput_SUM_Map_spin0 = CreateBDTOutputMap(gen_mHH, BDT_SUM_spin0, BDTInputs_SUM_spin0, eventInfo.event, false, "_spin0");
     BDTOutput_SUM_Map_nonres = CreateBDTOutputMap(nonRes_BMs, BDT_SUM_nonres, BDTInputs_SUM_nonres, eventInfo.event, true, "");
+
+    // For Plotting Input Var.s
+    std::map<std::string, double> BDTInputs_SUM_spin2_reduced = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin2_reduced, false); 
+    std::map<std::string, double> BDTInputs_SUM_spin0_reduced = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin0_reduced, false); 
+    std::map<std::string, double> BDTInputs_SUM_nonres_reduced = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_nonres_reduced, true); 
     // -------------------------------
 
 //--- retrieve gen-matching flags
@@ -2102,6 +2158,9 @@ int main(int argc, char* argv[])
           selHistManager->BJets_medium_->fillHistograms(selBJets_medium, evtWeight);
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
+	  selHistManager->mvaInputVariables_2l_2tau_spin2_->fillHistograms(BDTInputs_SUM_spin2_reduced, evtWeight); 
+	  selHistManager->mvaInputVariables_2l_2tau_spin0_->fillHistograms(BDTInputs_SUM_spin0_reduced, evtWeight); 
+	  selHistManager->mvaInputVariables_2l_2tau_nonres_->fillHistograms(BDTInputs_SUM_nonres_reduced, evtWeight); 
 	  selHistManager->evt_->fillHistograms(
             selElectrons.size(),
             selMuons.size(),

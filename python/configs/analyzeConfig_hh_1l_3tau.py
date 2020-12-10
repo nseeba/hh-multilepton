@@ -560,29 +560,42 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
           if "BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit:
             if ("SM" in histogramToFit or "BM" in histogramToFit) and 'nonresonant' in sample_category:
               doAdd = True
-            if "spin0" in histogramToFit and "spin0" in sample_category and "_%s_" % histogramToFit[9:histogramToFit.find("_", 9)] in sample_category:
-              doAdd = True
-            if "spin2" in histogramToFit and "spin2" in sample_category and "_%s_" % histogramToFit[9:histogramToFit.find("_", 9)] in sample_category:
-              doAdd = True
+            if ("spin0" in histogramToFit and "spin0" in sample_category) or ("spin2" in histogramToFit and "spin2" in sample_category):
+              startpos = None
+              for pattern in [ "MVAOutput", "BDTOutput" ]:
+                if pattern in histogramToFit:
+                  startpos = histogramToFit.find(pattern) + len(pattern) + 1 # CV: increment startpos by 1 to account for trailing "_"
+              if not startpos:
+                raise ValueError("Failed to parse histogram name = '%s' !!" % histogramToFit) 
+              endpos = histogramToFit.find("_", startpos)
+              masspoint = histogramToFit[startpos:endpos]
+              if ("_%s_" % masspoint) in sample_category:
+                doAdd = True
           else:
             doAdd = True
           if doAdd:
-            if "wwww" in sample_category:
-              prep_dcard_HH.add(sample_category.replace("wwww", "zzzz"))
-              prep_dcard_HH.add(sample_category.replace("wwww", "wwww"))
-              prep_dcard_HH.add(sample_category.replace("wwww", "zzww"))
-            elif "wwtt" in sample_category:
-              prep_dcard_HH.add(sample_category.replace("wwtt", "ttzz"))
-              prep_dcard_HH.add(sample_category.replace("wwtt", "ttww"))
-            elif "tttt" in sample_category:                  
+            if "_wwww" in sample_category:
+              prep_dcard_HH.add(sample_category.replace("_wwww", "_zzzz"))
+              prep_dcard_HH.add(sample_category.replace("_wwww", "_wwww"))
+              prep_dcard_HH.add(sample_category.replace("_wwww", "_zzww"))
+              if not ("BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit):
+                prep_dcard_HH.add(sample_category.replace("_wwww", ""))
+            elif "_wwtt" in sample_category:
+              prep_dcard_HH.add(sample_category.replace("_wwtt", "_ttzz"))
+              prep_dcard_HH.add(sample_category.replace("_wwtt", "_ttww"))
+              if not ("BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit):
+                prep_dcard_HH.add(sample_category.replace("_wwtt", ""))
+            elif "_tttt" in sample_category:
               prep_dcard_HH.add(sample_category)
+              if not ("BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit):
+                prep_dcard_HH.add(sample_category.replace("_tttt", ""))
             else:
               raise ValueError("Failed to identify relevant HH decay mode(s) for 'sample_category' = %s !!" % sample_category)
       prep_dcard_HH = list(prep_dcard_HH)
       prep_dcard_H = []
       prep_dcard_other_nonfake_backgrounds = []
       for process in self.nonfake_backgrounds:
-        if process in [ "VH", "WH", "ZH", "TH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]:
+        if process in [ "VH", "WH", "ZH", "TH", "tHq", "tHW", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]:
           prep_dcard_H.append("%s_hww" % process)
           prep_dcard_H.append("%s_hzz" % process)
           prep_dcard_H.append("%s_htt" % process)
@@ -641,9 +654,9 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
         }
         histogramDir_nominal = None
         if chargeSumSelection == "OS":
-          histogramDir_nominal = self.histogramDir_prep_dcard
+          histogramDir_nominal = "%s/sel/evt/fakes_mc" % self.histogramDir_prep_dcard
         elif chargeSumSelection == "SS":
-          histogramDir_nominal = self.histogramDir_prep_dcard_SS
+          histogramDir_nominal = "%s/sel/evt/fakes_mc" % self.histogramDir_prep_dcard_SS
         else:
           raise ValueError("Invalid parameter 'chargeSumSelection' = %s !!" % chargeSumSelection)
         for lepton_and_hadTau_type in [ 'e', 'm', 't' ]:
@@ -652,13 +665,16 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
             continue
           lepton_and_hadTau_selection_and_frWeight = get_lepton_and_hadTau_selection_and_frWeight(lepton_and_hadTau_mcClosure, "enabled")
           key_addBackgrounds_job_fakes = getKey("fakes_mc", lepton_and_hadTau_selection_and_frWeight, chargeSumSelection)
-          histogramDir_mcClosure = self.mcClosure_dir['%s_%s' % (lepton_and_hadTau_mcClosure, chargeSumSelection)]
+          histogramDir_mcClosure = "%s/sel/evt/fakes_mc" % self.mcClosure_dir['%s_%s' % (lepton_and_hadTau_mcClosure, chargeSumSelection)]
+          if "BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit:
+            histogramDir_nominal = histogramDir_nominal.replace("/sel/evt", "/sel/datacard")
+            histogramDir_mcClosure = histogramDir_mcClosure.replace("/sel/evt", "/sel/datacard")
           self.jobOptions_add_syst_fakerate[key_add_syst_fakerate_job].update({
             'add_Clos_%s' % lepton_and_hadTau_type : ("Fakeable_mcClosure_%s" % lepton_and_hadTau_type) in self.lepton_and_hadTau_selections,
             'inputFile_nominal_%s' % lepton_and_hadTau_type : self.outputFile_hadd_stage2[key_hadd_stage2_job],
-            'histogramName_nominal_%s' % lepton_and_hadTau_type : "%s/sel/evt/fakes_mc/%s" % (histogramDir_nominal, histogramToFit),
+            'histogramName_nominal_%s' % lepton_and_hadTau_type : "%s/%s" % (histogramDir_nominal, histogramToFit),
             'inputFile_mcClosure_%s' % lepton_and_hadTau_type : self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_fakes]['outputFile'],
-            'histogramName_mcClosure_%s' % lepton_and_hadTau_type : "%s/sel/evt/fakes_mc/%s" % (histogramDir_mcClosure, histogramToFit)
+            'histogramName_mcClosure_%s' % lepton_and_hadTau_type : "%s/%s" % (histogramDir_mcClosure, histogramToFit)
           })
         self.createCfg_add_syst_fakerate(self.jobOptions_add_syst_fakerate[key_add_syst_fakerate_job])
 

@@ -135,9 +135,29 @@ process.analyze_hh_3l = cms.PSet(
     apply_LHE_nom = cms.bool(False),
     useObjectMultiplicity = cms.bool(False),
 
-    gen_mHH = cms.vdouble(250,260,270,280,300, 320,350,400,450,500,550,600,650,700,750,800,850,900,1000), ## Set the signal mass range used in the BDT .pkl/.xml/.pb files
 
+    gen_mHH = cms.vdouble(250,260,270,280,300, 320,350,400,450,500,550,600,650,700,750,800,850,900,1000), ## Set the signal mass range used in the BDT .pkl/.xml/.pb files
+    ## -------- USE THIS FOR TMVAInterface (after changing it in the .cc file) -----------------##
+    mvaInfo_res = cms.PSet( 
+        BDT_xml_FileName_spin0_even = cms.string('hhAnalysis/multilepton/data/BDT_3l_0tau/3l_0tau_spin0_oddTrainModel.xml'),
+        BDT_xml_FileName_spin0_odd = cms.string('hhAnalysis/multilepton/data/BDT_3l_0tau/3l_0tau_spin0_evenTrainModel.xml'),
+        fitFunctionFileName_spin0 = cms.string('hhAnalysis/multilepton/data/BDT_3l_0tau/3l_0tau_spin0_fitFuncs.root'), 
+        inputVars_spin0 = cms.vstring('m3l', 'diHiggsVisMass', 'mSFOS2l_closestToZ', 'dr_LeptonIdx3_AK4jNear_Approach2', 'dr_LeptonIdx3_2j_inclusive1j_Approach2', 'dr_los_min', 'dr_los_max', 'nSFOS_3l', 'met_LD', 'gen_mHH'),
+        BDT_xml_FileName_spin2_even = cms.string('hhAnalysis/multilepton/data/BDT_3l_0tau/3l_0tau_spin2_oddTrainModel.xml'),
+        BDT_xml_FileName_spin2_odd = cms.string('hhAnalysis/multilepton/data/BDT_3l_0tau/3l_0tau_spin2_evenTrainModel.xml'),
+        fitFunctionFileName_spin2 = cms.string('hhAnalysis/multilepton/data/BDT_3l_0tau/3l_0tau_spin2_fitFuncs.root'), 
+        inputVars_spin2 = cms.vstring('m3l', 'diHiggsVisMass', 'mSFOS2l_closestToZ', 'dr_LeptonIdx3_AK4jNear_Approach2', 'dr_LeptonIdx3_2j_inclusive1j_Approach2', 'dr_los_min', 'dr_los_max', 'nSFOS_3l', 'met_LD', 'gen_mHH'),
+    ),
     nonRes_BMs = cms.vdouble(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+    mvaInfo_nonRes = cms.PSet( ## [Tweaked hyper-para.s used]
+        BDT_xml_FileName_nonRes_even = cms.string('hhAnalysis/multilepton/data/BDT_3l_0tau/3l_0tau_nonRes_default_oddTrainModel.xml'),
+        BDT_xml_FileName_nonRes_odd = cms.string('hhAnalysis/multilepton/data/BDT_3l_0tau/3l_0tau_nonRes_default_evenTrainModel.xml'),
+        inputVars_nonRes = cms.vstring('m3l', 'diHiggsVisMass', 'mSFOS2l_closestToZ', 'dr_LeptonIdx3_AK4jNear_Approach2', 'dr_LeptonIdx3_2j_inclusive1j_Approach2', 'dr_los_min', 'dr_los_max', 'nSFOS_3l', 'met_LD',
+                                       'SM', 'BM1', 'BM2', 'BM3', 'BM4', 'BM5', 'BM6', 'BM7', 'BM8', 'BM9', 'BM10', 'BM11', 'BM12'),
+    ),
+
+
+    
     
     evtWeight = cms.PSet(
         apply = cms.bool(False),

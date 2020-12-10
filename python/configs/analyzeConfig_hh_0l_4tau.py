@@ -559,7 +559,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
       prep_dcard_H = []
       prep_dcard_other_nonfake_backgrounds = []
       for process in self.nonfake_backgrounds:
-        if process in [ "VH", "WH", "ZH", "TH", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]:
+        if process in [ "VH", "WH", "ZH", "TH", "tHq", "tHW", "TTH", "TTWH", "TTZH", "ggH", "qqH" ]:
           prep_dcard_H.append("%s_hww" % process)
           prep_dcard_H.append("%s_hzz" % process)
           prep_dcard_H.append("%s_htt" % process)
@@ -614,9 +614,9 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
         }
         histogramDir_nominal = None
         if hadTau_charge_selection == "OS":
-          histogramDir_nominal = self.histogramDir_prep_dcard
+          histogramDir_nominal = "%s/sel/evt/fakes_mc" % self.histogramDir_prep_dcard
         elif hadTau_charge_selection == "SS":
-          histogramDir_nominal = self.histogramDir_prep_dcard_SS
+          histogramDir_nominal = "%s/sel/evt/fakes_mc" % self.histogramDir_prep_dcard_SS
         else:
           raise ValueError("Invalid parameter 'hadTau_charge_selection' = %s !!" % hadTau_charge_selection)
         for hadTau_type in [ 't' ]:
@@ -625,13 +625,16 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
             continue
           hadTau_selection_and_frWeight = get_hadTau_selection_and_frWeight(hadTau_mcClosure, "enabled")
           key_addBackgrounds_job_fakes = getKey("fakes_mc", hadTau_selection_and_frWeight, hadTau_charge_selection)
-          histogramDir_mcClosure = self.mcClosure_dir['%s_%s' % (hadTau_mcClosure, hadTau_charge_selection)]
+          histogramDir_mcClosure = "%s/sel/evt/fakes_mc" % self.mcClosure_dir['%s_%s' % (hadTau_mcClosure, hadTau_charge_selection)]
+          if "BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit:
+            histogramDir_nominal = histogramDir_nominal.replace("/sel/evt", "/sel/datacard")
+            histogramDir_mcClosure = histogramDir_mcClosure.replace("/sel/evt", "/sel/datacard")
           self.jobOptions_add_syst_fakerate[key_add_syst_fakerate_job].update({
             'add_Clos_%s' % hadTau_type : ("Fakeable_mcClosure_%s" % hadTau_type) in self.hadTau_selections,
             'inputFile_nominal_%s' % hadTau_type : self.outputFile_hadd_stage2[key_hadd_stage2_job],
-            'histogramName_nominal_%s' % hadTau_type : "%s/sel/evt/fakes_mc/%s" % (histogramDir_nominal, histogramToFit),
+            'histogramName_nominal_%s' % hadTau_type : "%s/%s" % (histogramDir_nominal, histogramToFit),
             'inputFile_mcClosure_%s' % hadTau_type : self.jobOptions_addBackgrounds_sum[key_addBackgrounds_job_fakes]['outputFile'],
-            'histogramName_mcClosure_%s' % hadTau_type : "%s/sel/evt/fakes_mc/%s" % (histogramDir_mcClosure, histogramToFit)
+            'histogramName_mcClosure_%s' % hadTau_type : "%s/%s" % (histogramDir_mcClosure, histogramToFit)
           })
         self.createCfg_add_syst_fakerate(self.jobOptions_add_syst_fakerate[key_add_syst_fakerate_job])
 
