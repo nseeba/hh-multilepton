@@ -847,7 +847,7 @@ int main(int argc, char* argv[])
       }
     }
     bdt_filler->register_variable<float_type>(
-      "lep_pt", "lep_conePt", "lep_eta" "lep_phi",
+      "lep_pt", "lep_conePt", "lep_eta", "lep_phi",
       "tau1_pt", "tau1_eta", "tau1_phi",
       "tau2_pt", "tau2_eta", "tau2_phi",
       "tau3_pt", "tau3_eta", "tau3_phi",
@@ -864,7 +864,7 @@ int main(int argc, char* argv[])
       "dphi_tau_tau_OS_pair_max", "dphi_tau_tau_OS_pair_min",
       "dphi_HHvis_max", "dphi_HHvis_min",
       "mT_lep",
-      "lep_frWeight", "hadTau1_frWeight",  "hadTau2_frWeight",  "hadTau3_frWeight",
+      "lep_frWeight", "hadTau1_frWeight",  "hadTau2_frWeight", "hadTau3_frWeight",
       "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "hadTauEffSF", "data_to_MC_correction","FR_Weight", "evtWeight"
     );
     bdt_filler->register_variable<int_type>(
