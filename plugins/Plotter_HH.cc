@@ -254,9 +254,9 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
 
   //---------------------------------------------------------------------------   
   //SB: W+jets added to Other
-  // assert(histogramOther && histogramOther_density && histogramW && histogramW_density); 
-  //  histogramOther->Add(histogramW);                                                      
-  // histogramOther_density->Add(histogramW_density);                                      
+  //assert(histogramOther && histogramOther_density && histogramW && histogramW_density); 
+  //histogramOther->Add(histogramW);                                                      
+  //histogramOther_density->Add(histogramW_density);                                      
   //---------------------------------------------------------------------------   
 
   TCanvas* canvas = new TCanvas("canvas", "", canvasSizeX, canvasSizeY);
@@ -368,16 +368,18 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
 */
   
   const int color_DY          = 610; // purple
-  const int color_ZZ          = 634; // dark red
+  const int color_W           = 634; // dark red
+  const int color_ZZ          = 628; // red
   const int color_Fakes       =   1; // black
   const int color_ttZ         = 822; // light green
   const int color_singleTop   = 823; // dark green 
   const int color_Conversions = 800; // yellow/orange
-  const int color_VH          = 628; // red
+  const int color_VH          =  16; // gray
   const int color_Other       = 851; // light blue
-  const int color_Flips       = 1; // black
+  const int color_Flips       = 1;   // black
 
   const std::string legendEntry_DY          = "DY";
+  const std::string legendEntry_W           = "W";
   const std::string legendEntry_ZZ          = "Diboson";
   const std::string legendEntry_Fakes       = "Fakes";
   const std::string legendEntry_ttZ         = "t#bar{t} + t#bar{t}V(V)";
@@ -392,6 +394,11 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     histogramDY_density->SetFillColor(color_DY);
     histogramsForStack_density.push_back(histogramDY_density);
     legend->AddEntry(histogramDY_density, legendEntry_DY.data(), "f");
+  }
+  if ( histogramW_density ) {
+    histogramW_density->SetFillColor(color_W);
+    histogramsForStack_density.push_back(histogramW_density);
+    legend->AddEntry(histogramW_density, legendEntry_W.data(), "f");
   }
   if ( histogramZZ_density ) {
     histogramZZ_density->SetFillColor(color_ZZ);
