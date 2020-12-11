@@ -158,8 +158,16 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
       histogramConversions = histogramBackground;
       histogramConversions_density = histogramBackground_density;
     } else if ( process.find("Fakes") != std::string::npos || process.find("fakes") != std::string::npos ) {
-      histogramFakes = histogramBackground;
-      histogramFakes_density = histogramBackground_density;
+      if ( histogramFakes && histogramFakes_density && process.find("data_fakes") != std::string::npos ) {
+        if ( process.find("data_fakes") != std::string::npos ) {
+          // CV: preferentially take fakes background from data
+          histogramFakes = histogramBackground;
+          histogramFakes_density = histogramBackground_density;
+        }
+      } else {
+        histogramFakes = histogramBackground;
+        histogramFakes_density = histogramBackground_density;
+      }
     } else if ( process.find("VH") != std::string::npos ) {
       histogramVH = histogramBackground;
       histogramVH_density = histogramBackground_density;
@@ -353,7 +361,8 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
       histogramData_blinded_density->Draw("ep");
     }
   }
-  /*color used for tth
+/*
+  color used for tth
   const int color_ttW         = 823; // dark green 
   const int color_ttZ         = 822; // light green
   const int color_ttH         = 628; // red  
@@ -365,7 +374,7 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
   const int color_Conversions = 800; // yellow/orange
   const int color_Fakes       =   1; // black
   const int color_Flips       =   1; // black
-*/
+ */
   
   const int color_DY          = 610; // purple
   const int color_W           = 634; // dark red
@@ -455,6 +464,7 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
   for ( int iBin = 1; iBin <= numBins_top; ++iBin ) {
     double sumBinContents = 0.;
     if ( histogramDY_density          ) sumBinContents += histogramDY_density->GetBinContent(iBin);
+    if ( histogramW_density           ) sumBinContents += histogramW_density->GetBinContent(iBin);
     if ( histogramZZ_density          ) sumBinContents += histogramZZ_density->GetBinContent(iBin);
     if ( histogramFakes_density       ) sumBinContents += histogramFakes_density->GetBinContent(iBin);
     if ( histogramTTZ_density         ) sumBinContents += histogramTTZ_density->GetBinContent(iBin);
@@ -558,6 +568,7 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     histogramSum->Reset();
     if ( !histogramSum->GetSumw2N() ) histogramSum->Sumw2();
     if ( histogramDY          ) histogramSum->Add(histogramDY);
+    if ( histogramW           ) histogramSum->Add(histogramW);
     if ( histogramZZ          ) histogramSum->Add(histogramZZ);
     if ( histogramFakes       ) histogramSum->Add(histogramFakes);
     if ( histogramTTZ         ) histogramSum->Add(histogramTTZ);
