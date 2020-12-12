@@ -574,8 +574,11 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     
     histogramRatio->SetTitle("");
     histogramRatio->SetStats(false);
-    histogramRatio->SetMinimum(-0.50);
-    histogramRatio->SetMaximum(+0.50);
+    double histogramRatioMax = TMath::Max(histogramRatio->GetMaximum(),TMath::Abs(histogramRatio->GetMinimum()));
+    histogramRatio->SetMinimum(-1.2*histogramRatioMax);
+    histogramRatio->SetMaximum(1.2*histogramRatioMax);
+    //histogramRatio->SetMinimum(-0.50);
+    //histogramRatio->SetMaximum(+0.50);
     histogramRatio->SetMarkerStyle(histogramData_blinded_density->GetMarkerStyle());
     histogramRatio->SetMarkerSize(histogramData_blinded_density->GetMarkerSize());
     histogramRatio->SetMarkerColor(histogramData_blinded_density->GetMarkerColor());
