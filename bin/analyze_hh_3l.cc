@@ -140,6 +140,14 @@ const int hadTauSelection_antiMuon = -1; // not applied
 
 const int printLevel = 0;
 
+
+double calculateAbsDeltaPhi(double phi1, double phi2)
+{
+  double dPhi = std::abs(phi1 - phi2);
+  if (dPhi > TMath::Pi()) dPhi = 2*TMath::Pi() - dPhi;
+  return dPhi;
+}
+
 void dumpGenParticles(const std::string& label, const std::vector<GenParticle>& particles)
 {
   for ( size_t idxParticle = 0; idxParticle < particles.size(); ++idxParticle ) {
@@ -538,7 +546,7 @@ int main(int argc, char* argv[])
     std::cout << "HHWeightNames: ";
     for(auto bmName : HHWeightNames)
     {
-      std::cout << bmName << ",  ";
+      std::cout << bmName << ",  "; 
     }
     std::cout << "\n";
     std::cout << "HHBMNames: ";
@@ -747,12 +755,12 @@ int main(int argc, char* argv[])
   }
 
   
-//Setting up BDT for signal extraction  
+//Setting up BDT for signal extraction
+
 
   const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
-  std::vector<double> gen_mHH = analysisConfig.get_HH_resonant_mass_points();
-  /*
   const edm::ParameterSet mvaInfo_res = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_res");
+  std::vector<double> gen_mHH = analysisConfig.get_HH_resonant_mass_points();
   std::string BDTFileName_spin0_even  = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_spin0_even");
   std::string BDTFileName_spin0_odd   = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_spin0_odd");
   std::string fitFunctionFileName_spin0 = mvaInfo_res.getParameter<std::string>("fitFunctionFileName_spin0");
@@ -766,7 +774,12 @@ int main(int argc, char* argv[])
   std::string BDTFileName_nonRes_even  = mvaInfo_nonRes.getParameter<std::string>("BDT_xml_FileName_nonRes_even");
   std::string BDTFileName_nonRes_odd   = mvaInfo_nonRes.getParameter<std::string>("BDT_xml_FileName_nonRes_odd");
   std::vector<std::string> BDTInputVariables_nonRes = mvaInfo_nonRes.getParameter<std::vector<std::string>>("inputVars_nonRes"); // Include all Input Var.s except BM indices
-
+  /*
+  const edm::ParameterSet mvaInfo_nonRes_base = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_nonRes_base");
+  std::string BDTFileName_nonRes_base_even  = mvaInfo_nonRes_base.getParameter<std::string>("BDT_xml_FileName_nonRes_base_even");
+  std::string BDTFileName_nonRes_base_odd   = mvaInfo_nonRes_base.getParameter<std::string>("BDT_xml_FileName_nonRes_base_odd");
+  std::vector<std::string> BDTInputVariables_nonRes_base = mvaInfo_nonRes_base.getParameter<std::vector<std::string>>("inputVars_nonRes_base"); // Include all Input Var.s except BM indices
+  */
 
   assert(BDTFileName_spin0_odd != "");
   assert(BDTFileName_spin0_even != "");
@@ -790,13 +803,19 @@ int main(int argc, char* argv[])
   TMVAInterface* BDT_nonRes = new TMVAInterface(BDTFileName_nonRes_odd, BDTFileName_nonRes_even, BDTInputVariables_nonRes);
   BDT_nonRes->enableBDTTransform();
   std::map<std::string, double> BDTOutput_Map_nonRes;
-
-  std::map<std::string, double> AllVars_Map;
+  /*
+  assert(BDTFileName_nonRes_base_odd != "");
+  assert(BDTFileName_nonRes_base_even != "");
+  assert(BDTInputVariables_nonRes_base.size() != 0);
+  TMVAInterface* BDT_nonRes_base = new TMVAInterface(BDTFileName_nonRes_base_odd, BDTFileName_nonRes_base_even, BDTInputVariables_nonRes_base);
+  BDT_nonRes_base->enableBDTTransform();
+  std::map<std::string, double> BDTOutput_Map_nonRes_base;
   */
-  
+  std::map<std::string, double> AllVars_Map;
+
   /////////////////////
 
-  
+  /*
   //std::string mvaFileName_hh_3l_SUMBk_HH_pkl = "hhAnalysis/multilepton/data/3l_0tau_HH_XGB_noTopness_evtLevelSUM_HH_res_26Var.pkl"; 
   std::string mvaFileName_hh_3l_SUMBk_HH_xml = "hhAnalysis/multilepton/data/3l_0tau_HH_XGB_noTopness_evtLevelSUM_HH_res_26Var.xml";
   std::vector<std::string> mvaInputs_hh_3l_SUMBk_HH = {
@@ -812,7 +831,8 @@ int main(int argc, char* argv[])
   mva_tmva_hh_3l_SUMBk_HH->enableBDTTransform();
 
   //bool selectBDT = ( cfg_analyze.exists("selectBDT") ) ? cfg_analyze.getParameter<bool>("selectBDT") : false;
-
+  */
+  
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
   std::ostream* selEventsFile = ( selEventsFileName_output != "" ) ? new std::ofstream(selEventsFileName_output.data(), std::ios::out) : 0;
   
@@ -844,6 +864,7 @@ int main(int argc, char* argv[])
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
     EvtHistManager_hh_3l* evt_;
+    DatacardHistManager_hh* datacard_;
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
@@ -853,6 +874,7 @@ int main(int argc, char* argv[])
   std::map<std::string, LHEInfoHistManager*> lheInfoHistManager;
   std::map<std::string, std::map<int, selHistManagerType*>> selHistManagers;
 
+  /*
   std::map<int, TH1*> hMEt_All_0 ;
   std::map<int, TH1*> hHt_All_0;
   std::map<int, TH1*> hMEt_LD_All_0;
@@ -883,6 +905,7 @@ int main(int argc, char* argv[])
   std::map<int, TH1*> hm_SFOS2lpresel_1;
   std::map<int, TH1*> hm_SFOS4lpresel_0;
   std::map<int, TH1*> hm_SFOS4lpresel_1;
+  */
 
   //TH1* histogram_analyzedEntries = fs.make<TH1D>("analyzedEntries", "analyzedEntries", 1, -0.5, +0.5);
   //std::map<std::string, std::map<int, TH1*>> hMEt_All_0;
@@ -903,7 +926,7 @@ int main(int argc, char* argv[])
 		<< ",\t idxLepton: " << idxLepton << std::endl;
 
       selHistManagerType* selHistManager = new selHistManagerType();
-      if(! skipBooking)
+      if(! skipBooking && 1==0)
       {
         selHistManager->electrons_ = new ElectronHistManager(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/electrons", histogramDir.data()), era_string, central_or_shift, "allHistograms"));
@@ -944,10 +967,19 @@ int main(int argc, char* argv[])
         selHistManager->metFilters_ = new MEtFilterHistManager(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/metFilters", histogramDir.data()), era_string, central_or_shift));
         selHistManager->metFilters_->bookHistograms(fs);
+      }
+      if(! skipBooking)
+      {
         selHistManager->evt_ = new EvtHistManager_hh_3l(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
         selHistManager->evt_->bookHistograms(fs);
       }
+
+      selHistManager->datacard_ = new DatacardHistManager_hh(makeHistManager_cfg(process_and_genMatch,
+        Form("%s/sel/datacard", histogramDir.data()), era_string, central_or_shift),
+        analysisConfig, eventInfo, HHWeight_calc, 
+        isDEBUG);
+      selHistManager->datacard_->bookHistograms(fs);
 
       if(! skipBooking)
       {
@@ -968,6 +1000,7 @@ int main(int argc, char* argv[])
       }
       selHistManagers[central_or_shift][idxLepton] = selHistManager;
 
+      /*
       if (central_or_shift == central_or_shift_main) {
 	//TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_string.data()));
 	TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_and_genMatch.data()));
@@ -1002,6 +1035,7 @@ int main(int argc, char* argv[])
 	hm_SFOS4lpresel_0[idxLepton]        = subD1.make<TH1D>("hm_SFOS4lpresel_0",       "hm_SFOS4lpresel_0",        200, 0.,500.);
 	hm_SFOS4lpresel_1[idxLepton]        = subD1.make<TH1D>("hm_SFOS4lpresel_1",       "hm_SFOS4lpresel_1",        200, 0.,500.);
       }
+      */
     }
 
     if(isMC && ! skipBooking)
@@ -1037,7 +1071,7 @@ int main(int argc, char* argv[])
       {
         bdt_filler->register_variable<float_type>(bmName.data());
       }
-    }
+    } 
     bdt_filler -> register_variable<float_type>(
       "lep1_pt", "lep1_conePt", "lep1_eta", "mindr_lep1_jet", "mT_MEtLep1",
       "lep2_pt", "lep2_conePt", "lep2_eta", "mindr_lep2_jet", "mT_MEtLep2",
@@ -1055,11 +1089,13 @@ int main(int argc, char* argv[])
       "avg_dr_jet", "dr_Wjj",
       //
       "dPhi_3l_2j", "dPhi_3l_2j_inclusive1j", "dEta_3l_2j", "dEta_3l_2j_inclusive1j", "dR_3l_2j", "dR_3l_2j_inclusive1j",
-      "dPhi_3l_avg2j", "dPhi_3l_avg2j_inclusive1j", "dEta_3l_avg2j", "dEta_3l_avg2j_inclusive1j",
+      "dEta_3l_avg2j", "dEta_3l_avg2j_inclusive1j",
       //
       "bTag_jet1", "bTag_jet2", "bTag_sum_jet1And2", "bTag_max_jet1or2", "bTag_max_AK4", "bTag_sum_AK4",
       //
       "pt_lastAK4",
+      //
+      "m_AK8",
       //
       //
       "mT_LeptonIdx1_Met_Approach0", "mT_LeptonIdx2_Met_Approach0", "mT_LeptonIdx3_Met_Approach0",
@@ -1070,7 +1106,13 @@ int main(int argc, char* argv[])
       "m_LeptonIdx3_Jet1_Approach0", "dr_LeptonIdx3_Jet1_Approach0",
       "m_LeptonIdx3_JetNear_Approach0", "dr_LeptonIdx3_JetNear_Approach0",
       "dr_LeptonIdx3_2j_Approach0", "dr_LeptonIdx3_2j_inclusive1j_Approach0",
+      "dr_LeptonIdx3_AK4jNear_Approach0",
+      "dr_LeptonIdx3_2AK4jNear_Approach0", "dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach0",
+      "m_LeptonIdx3_2AK4jNear_Approach0", "m_LeptonIdx3_2AK4jNear_inclusive1j_Approach0",
+      "dr_2AK4J_NearestToLeptonIdx3_Approach0",
+      "dr_LeptonIdx3_AK8_Approach0", "m_LeptonIdx3_AK8_Approach0",
       "dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach0",
+      "dPhi_LeptonIdx3_Met_Approach0",
       //
       //
       "mT_LeptonIdx1_Met_Approach2", "mT_LeptonIdx2_Met_Approach2", "mT_LeptonIdx3_Met_Approach2",
@@ -1081,7 +1123,13 @@ int main(int argc, char* argv[])
       "m_LeptonIdx3_Jet1_Approach2", "dr_LeptonIdx3_Jet1_Approach2",
       "m_LeptonIdx3_JetNear_Approach2", "dr_LeptonIdx3_JetNear_Approach2",
       "dr_LeptonIdx3_2j_Approach2", "dr_LeptonIdx3_2j_inclusive1j_Approach2",
+      "dr_LeptonIdx3_AK4jNear_Approach2",
+      "dr_LeptonIdx3_2AK4jNear_Approach2", "dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach2",
+      "m_LeptonIdx3_2AK4jNear_Approach2", "m_LeptonIdx3_2AK4jNear_inclusive1j_Approach2",
+      "dr_2AK4J_NearestToLeptonIdx3_Approach2",
+      "dr_LeptonIdx3_AK8_Approach2", "m_LeptonIdx3_AK8_Approach2",
       "dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2",
+      "dPhi_LeptonIdx3_Met_Approach2",
       //
       //
       "mT_LeptonIdx1_Met_Approach3", "mT_LeptonIdx2_Met_Approach3", "mT_LeptonIdx3_Met_Approach3",
@@ -1092,16 +1140,23 @@ int main(int argc, char* argv[])
       "m_LeptonIdx3_Jet1_Approach3", "dr_LeptonIdx3_Jet1_Approach3",
       "m_LeptonIdx3_JetNear_Approach3", "dr_LeptonIdx3_JetNear_Approach3",
       "dr_LeptonIdx3_2j_Approach3", "dr_LeptonIdx3_2j_inclusive1j_Approach3",
+      "dr_LeptonIdx3_AK4jNear_Approach3",
+      "dr_LeptonIdx3_2AK4jNear_Approach3", "dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach3",
+      "m_LeptonIdx3_2AK4jNear_Approach3", "m_LeptonIdx3_2AK4jNear_inclusive1j_Approach3",
+      "dr_2AK4J_NearestToLeptonIdx3_Approach3",
+      "dr_LeptonIdx3_AK8_Approach3", "m_LeptonIdx3_AK8_Approach3",
       "dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach3",
+      "dPhi_LeptonIdx3_Met_Approach3",
+      //
       //
       //
       "lep1_genLepPt",  "lep2_genLepPt",  "lep3_genLepPt",
       "lep1_fake_prob", "lep2_fake_prob", "lep3_fake_prob",
       "lep1_frWeight",  "lep2_frWeight",  "lep3_frWeight",
       //
+      "evtWeight",
       "lumiScale", "genWeight", "evtWeight", "lheWeight", "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "data_to_MC_correction", "FR_Weight"
       );
-    
     bdt_filler -> register_variable<int_type>(
       "nElectron", "nMuon", "nLepton", "nJetAK4", "nBJetLoose", "nBJetMedium", "nJetAK8", "nJetAK8_wSelectorAK8_Wjj",
       "sumLeptonCharge_3l", "nSFOS_3l", "numSameFlavor_OS_Presel", 
@@ -2050,6 +2105,7 @@ int main(int argc, char* argv[])
 
     
     //Check: failsLowMassVeto
+    /*
     for(auto lepton1_it = preselLeptonsFullUncleaned.begin(); lepton1_it != preselLeptonsFullUncleaned.end(); ++lepton1_it) {
       const RecoLepton * lepton1 = *lepton1_it;
       for(auto lepton2_it = lepton1_it + 1; lepton2_it != preselLeptonsFullUncleaned.end(); ++lepton2_it) {
@@ -2057,7 +2113,7 @@ int main(int argc, char* argv[])
 	const double mass = (lepton1->p4() + lepton2->p4()).mass();
 	hm_2lpreselUnclean_0[genMatchIdx_0]->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
       }
-    }
+      }*/
     
     const bool failsLowMassVeto = isfailsLowMassVeto(preselLeptonsFullUncleaned);
     if ( failsLowMassVeto ) {
@@ -2070,7 +2126,7 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms("m(ll) > 12 GeV", evtWeightRecorder.get(central_or_shift_main));
 
     
-
+   /*
     for(auto lepton1_it = preselLeptonsFullUncleaned.begin(); lepton1_it != preselLeptonsFullUncleaned.end(); ++lepton1_it) {
       const RecoLepton * lepton1 = *lepton1_it;
       for(auto lepton2_it = lepton1_it + 1; lepton2_it != preselLeptonsFullUncleaned.end(); ++lepton2_it) {
@@ -2078,7 +2134,7 @@ int main(int argc, char* argv[])
 	const double mass = (lepton1->p4() + lepton2->p4()).mass();
 	hm_2lpreselUnclean_1[genMatchIdx_0]->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
       }
-    }
+      }*/
     
     
     bool isSameFlavor_OS = false;
@@ -2092,7 +2148,7 @@ int main(int argc, char* argv[])
           isSameFlavor_OS = true;
 	  numSameFlavor_OS_Full++;
           double mass = ((*lepton1)->p4() + (*lepton2)->p4()).mass();
-	  hm_SFOS2lpresel_0[genMatchIdx_0]->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
+	  //hm_SFOS2lpresel_0[genMatchIdx_0]->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
           if ( std::fabs(mass - z_mass) < std::fabs(massSameFlavor_OS - z_mass) ) massSameFlavor_OS = mass;
         }
       }
@@ -2108,6 +2164,7 @@ int main(int argc, char* argv[])
     cutFlowTable.update("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
 
+    /*
     for ( std::vector<const RecoLepton*>::const_iterator lepton1 = preselLeptonsFull.begin();
 	  lepton1 != preselLeptonsFull.end(); ++lepton1 ) {
       for ( std::vector<const RecoLepton*>::const_iterator lepton2 = lepton1 + 1;
@@ -2117,12 +2174,13 @@ int main(int argc, char* argv[])
 	  hm_SFOS2lpresel_1[genMatchIdx_0]->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
         }
       }
-    }
+      }*/
 
 
     
 
     // Check: isfailsHtoZZVeto
+    /*
     for(auto lepton1_it = preselLeptonsFull.begin(); lepton1_it != preselLeptonsFull.end(); ++lepton1_it) {
       const RecoLepton * lepton1 = *lepton1_it;
       for(auto lepton2_it = lepton1_it + 1; lepton2_it != preselLeptonsFull.end(); ++lepton2_it) {
@@ -2149,7 +2207,7 @@ int main(int argc, char* argv[])
 	  }
 	}
       }
-    }
+      }*/
     
     
     const bool failsHtoZZVeto = isfailsHtoZZVeto(preselLeptonsFull);
@@ -2162,6 +2220,7 @@ int main(int argc, char* argv[])
     cutFlowTable.update("H->ZZ*->4l veto", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("H->ZZ*->4l veto", evtWeightRecorder.get(central_or_shift_main));
 
+    /*
     for(auto lepton1_it = preselLeptonsFull.begin(); lepton1_it != preselLeptonsFull.end(); ++lepton1_it) {
       const RecoLepton * lepton1 = *lepton1_it;
       for(auto lepton2_it = lepton1_it + 1; lepton2_it != preselLeptonsFull.end(); ++lepton2_it) {
@@ -2188,7 +2247,7 @@ int main(int argc, char* argv[])
 	  }
 	}
       }
-    }
+      }*/
 
 
 
@@ -2198,6 +2257,7 @@ int main(int argc, char* argv[])
 
 
     const bool isSameFlavor_OS_FO = isSFOS(fakeableLeptons);
+    /*
     hMEt_All_0[genMatchIdx_0]->Fill(met.pt(),      evtWeightRecorder.get(central_or_shift_main));
     hHt_All_0[genMatchIdx_0]->Fill(mht_p4.pt(),    evtWeightRecorder.get(central_or_shift_main));
     hMEt_LD_All_0[genMatchIdx_0]->Fill(met_LD,     evtWeightRecorder.get(central_or_shift_main));
@@ -2209,7 +2269,7 @@ int main(int argc, char* argv[])
       hMEt_LD_SFOS_0[genMatchIdx_0]->Fill(met_LD,  evtWeightRecorder.get(central_or_shift_main));
       hHT_SFOS_0[genMatchIdx_0]->Fill(HT,          evtWeightRecorder.get(central_or_shift_main));
       hSTMET_SFOS_0[genMatchIdx_0]->Fill(STMET,    evtWeightRecorder.get(central_or_shift_main));
-    }
+      }*/
     
     double met_LD_cut = 0.;
     if      ( selJetsAK4.size() >= 4 ) met_LD_cut = -1.; // MET LD cut not applied
@@ -2225,6 +2285,7 @@ int main(int argc, char* argv[])
     cutFlowTable.update("met LD", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("met LD", evtWeightRecorder.get(central_or_shift_main));
 
+    /*
     hMEt_All_1[genMatchIdx_0]->Fill(met.pt(),      evtWeightRecorder.get(central_or_shift_main));
     hHt_All_1[genMatchIdx_0]->Fill(mht_p4.pt(),    evtWeightRecorder.get(central_or_shift_main));
     hMEt_LD_All_1[genMatchIdx_0]->Fill(met_LD,     evtWeightRecorder.get(central_or_shift_main));
@@ -2236,7 +2297,7 @@ int main(int argc, char* argv[])
       hMEt_LD_SFOS_1[genMatchIdx_0]->Fill(met_LD,  evtWeightRecorder.get(central_or_shift_main));
       hHT_SFOS_1[genMatchIdx_0]->Fill(HT,          evtWeightRecorder.get(central_or_shift_main));
       hSTMET_SFOS_1[genMatchIdx_0]->Fill(STMET,    evtWeightRecorder.get(central_or_shift_main));
-    }
+      }*/
 
     if ( apply_met_filters ) {
       if ( !metFilterSelector(metFilters) ) {
@@ -2315,6 +2376,9 @@ int main(int argc, char* argv[])
       cutFlowTable.update("After all cuts: evt category isWjjHasOnly1j", evtWeightRecorder.get(central_or_shift_main));
       cutFlowHistManager->fillHistograms("After all cuts: evt category isWjjHasOnly1j", evtWeightRecorder.get(central_or_shift_main));
     }
+
+
+
 
     
     const Particle::LorentzVector lv_3l   = (selLepton_lead->p4() + selLepton_sublead->p4() + selLepton_third->p4());
@@ -2437,14 +2501,12 @@ int main(int argc, char* argv[])
     double dR_3l_2j = -1;
     double dR_3l_2j_inclusive1j = -1;
     // ---
-    double dPhi_3l_avg2j = -1;
-    double dPhi_3l_avg2j_inclusive1j = -1;
     double dEta_3l_avg2j = -1;
     double dEta_3l_avg2j_inclusive1j = -1;   
     if (selJet2_Wjj)
     {
-      dPhi_3l_2j             = std::abs(lv_3l.phi() - (selJet1_Wjj->p4() + selJet2_Wjj->p4()).phi());
-      dPhi_3l_2j_inclusive1j = std::abs(lv_3l.phi() - (selJet1_Wjj->p4() + selJet2_Wjj->p4()).phi());
+      dPhi_3l_2j             = calculateAbsDeltaPhi(lv_3l.phi(), (selJet1_Wjj->p4() + selJet2_Wjj->p4()).phi());
+      dPhi_3l_2j_inclusive1j = calculateAbsDeltaPhi(lv_3l.phi(), (selJet1_Wjj->p4() + selJet2_Wjj->p4()).phi());
 
       dEta_3l_2j             = std::abs(lv_3l.eta() - (selJet1_Wjj->p4() + selJet2_Wjj->p4()).eta());
       dEta_3l_2j_inclusive1j = std::abs(lv_3l.eta() - (selJet1_Wjj->p4() + selJet2_Wjj->p4()).eta());
@@ -2452,19 +2514,16 @@ int main(int argc, char* argv[])
       dR_3l_2j               = deltaR(lv_3l, (selJet1_Wjj->p4() + selJet2_Wjj->p4()));
       dR_3l_2j_inclusive1j   = deltaR(lv_3l, (selJet1_Wjj->p4() + selJet2_Wjj->p4()));
       // ---
-      dPhi_3l_avg2j             = std::abs(lv_3l.phi() - (selJet1_Wjj->phi() + selJet2_Wjj->phi())/2.);
-      dPhi_3l_avg2j_inclusive1j = std::abs(lv_3l.phi() - (selJet1_Wjj->phi() + selJet2_Wjj->phi())/2.);
 
       dEta_3l_avg2j             = std::abs(lv_3l.eta() - (selJet1_Wjj->eta() + selJet2_Wjj->eta())/2.);
       dEta_3l_avg2j_inclusive1j = std::abs(lv_3l.eta() - (selJet1_Wjj->eta() + selJet2_Wjj->eta())/2.);      
     }
     else
     {
-      dPhi_3l_2j_inclusive1j = std::abs(lv_3l.phi() - (selJet1_Wjj->p4()).phi());
+      dPhi_3l_2j_inclusive1j = calculateAbsDeltaPhi(lv_3l.phi(), (selJet1_Wjj->p4()).phi());
       dEta_3l_2j_inclusive1j = std::abs(lv_3l.eta() - (selJet1_Wjj->p4()).eta());
       dR_3l_2j_inclusive1j  = deltaR(lv_3l, (selJet1_Wjj->p4()));
       // ---
-      dPhi_3l_avg2j_inclusive1j = std::abs(lv_3l.phi() - (selJet1_Wjj->phi()));
       dEta_3l_avg2j_inclusive1j = std::abs(lv_3l.eta() - (selJet1_Wjj->eta()));        
      }
 
@@ -2497,7 +2556,7 @@ int main(int argc, char* argv[])
     
     double pt_lastAK4 = selJetsAK4.size() > 0 ? selJetsAK4[selJetsAK4.size() - 1]->pt() : -1;
 
-
+    double m_AK8 = (isWjjBoosted) ? selJetAK8_Wjj->mass() : -1.;
 
     
     /*
@@ -2535,6 +2594,7 @@ int main(int argc, char* argv[])
     //sTmp123 += Form(" isVBF: %i, ",(int)isVBF); 
 
 
+
     
     // Approach-0 ----------------------------------------------------------------
     // Variables using lepton1/2/3 indexed following Approach-0
@@ -2550,9 +2610,9 @@ int main(int argc, char* argv[])
     double m_LeptonIdx2_LeptonIdx3_Approach0 = (selLepton2_H_WW_ll_Approach0->p4() + selLepton_H_WW_ljj_Approach0->p4()).mass();
     double m_LeptonIdx1_LeptonIdx3_Approach0 = (selLepton1_H_WW_ll_Approach0->p4() + selLepton_H_WW_ljj_Approach0->p4()).mass();
     //
-    double dPhi_LeptonIdx1_LeptonIdx2_Approach0 = std::abs(selLepton1_H_WW_ll_Approach0->phi() - selLepton2_H_WW_ll_Approach0->phi());
-    double dPhi_LeptonIdx2_LeptonIdx3_Approach0 = std::abs(selLepton2_H_WW_ll_Approach0->phi() - selLepton_H_WW_ljj_Approach0->phi());
-    double dPhi_LeptonIdx1_LeptonIdx3_Approach0 = std::abs(selLepton1_H_WW_ll_Approach0->phi() - selLepton_H_WW_ljj_Approach0->phi());
+    double dPhi_LeptonIdx1_LeptonIdx2_Approach0 = calculateAbsDeltaPhi(selLepton1_H_WW_ll_Approach0->phi(), selLepton2_H_WW_ll_Approach0->phi());
+    double dPhi_LeptonIdx2_LeptonIdx3_Approach0 = calculateAbsDeltaPhi(selLepton2_H_WW_ll_Approach0->phi(), selLepton_H_WW_ljj_Approach0->phi());
+    double dPhi_LeptonIdx1_LeptonIdx3_Approach0 = calculateAbsDeltaPhi(selLepton1_H_WW_ll_Approach0->phi(), selLepton_H_WW_ljj_Approach0->phi());
     //
     double dEta_LeptonIdx1_LeptonIdx2_Approach0 = std::abs(selLepton1_H_WW_ll_Approach0->eta() - selLepton2_H_WW_ll_Approach0->eta());
     double dEta_LeptonIdx2_LeptonIdx3_Approach0 = std::abs(selLepton2_H_WW_ll_Approach0->eta() - selLepton_H_WW_ljj_Approach0->eta());
@@ -2596,10 +2656,104 @@ int main(int argc, char* argv[])
     {
       dr_LeptonIdx3_2j_inclusive1j_Approach0 = deltaR(selLepton_H_WW_ljj_Approach0->p4(), (selJet1_Wjj->p4()));
     }
+
+
+    double dr_LeptonIdx3_AK4jNear_Approach0              = -1.;
+    double dr_LeptonIdx3_2AK4jNear_Approach0             = -1.;
+    double dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach0 = -1.;
+    double m_LeptonIdx3_2AK4jNear_Approach0              = -1.;
+    double m_LeptonIdx3_2AK4jNear_inclusive1j_Approach0  = -1.;
+    double dr_2AK4J_NearestToLeptonIdx3_Approach0        = -1.;
     
-    double dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach0 = std::abs((selLepton_H_WW_ljj_Approach0->p4() + met.p4()).phi() - 
-								       (selLepton1_H_WW_ll_Approach0->p4() + selLepton2_H_WW_ll_Approach0->p4()).phi());
+    const RecoJet* selAK4J_closestToLeptonIdx3_Approach0 = nullptr;
+    const RecoJet* selAK4J_2ndclosestToLeptonIdx3_Approach0 = nullptr;
+    double dr_LeptonIdx3_AK4_min = 99999.;
+    if (printLevel > 0) printf("nselAK4 %zu \n",selJetsAK4.size());
+    for ( std::vector<const RecoJet*>::const_iterator selJet1 = selJetsAK4.begin();
+	  selJet1 != selJetsAK4.end(); ++selJet1 ) {
+      double dr = deltaR(selLepton_H_WW_ljj_Approach0->p4(), (*selJet1)->p4());
+      if (dr < dr_LeptonIdx3_AK4_min)
+      {
+	selAK4J_closestToLeptonIdx3_Approach0 = (*selJet1);
+	dr_LeptonIdx3_AK4_min = dr;
+      }
+    }
+
+    // 2nd closest AK4 jet
+    dr_LeptonIdx3_AK4_min = 99999.;
+    for ( std::vector<const RecoJet*>::const_iterator selJet1 = selJetsAK4.begin();
+	  selJet1 != selJetsAK4.end(); ++selJet1 ) {
+      if ((*selJet1) == selAK4J_closestToLeptonIdx3_Approach0) continue;
+      
+      double dr = deltaR(selLepton_H_WW_ljj_Approach0->p4(), (*selJet1)->p4());
+      if (dr < dr_LeptonIdx3_AK4_min)
+      {
+	selAK4J_2ndclosestToLeptonIdx3_Approach0 = (*selJet1);
+	dr_LeptonIdx3_AK4_min = dr;
+      }
+    }
+
+    if (selAK4J_closestToLeptonIdx3_Approach0 && selAK4J_2ndclosestToLeptonIdx3_Approach0)
+    {
+      const Particle::LorentzVector lv_2AK4jNear = (selAK4J_closestToLeptonIdx3_Approach0->p4() + selAK4J_2ndclosestToLeptonIdx3_Approach0->p4());
+      dr_LeptonIdx3_2AK4jNear_Approach0 = deltaR(selLepton_H_WW_ljj_Approach0->p4(), lv_2AK4jNear);
+      dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach0 = deltaR(selLepton_H_WW_ljj_Approach0->p4(), lv_2AK4jNear);
+      
+      m_LeptonIdx3_2AK4jNear_Approach0 = (selLepton_H_WW_ljj_Approach0->p4() + lv_2AK4jNear).mass();
+      m_LeptonIdx3_2AK4jNear_inclusive1j_Approach0 = (selLepton_H_WW_ljj_Approach0->p4() + lv_2AK4jNear).mass();
+
+      dr_2AK4J_NearestToLeptonIdx3_Approach0 = deltaR(selAK4J_closestToLeptonIdx3_Approach0->p4(), selAK4J_2ndclosestToLeptonIdx3_Approach0->p4());
+    }
+    else if (selAK4J_closestToLeptonIdx3_Approach0)
+    {
+      const Particle::LorentzVector lv_2AK4jNear = (selAK4J_closestToLeptonIdx3_Approach0->p4());
+      dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach0 = deltaR(selLepton_H_WW_ljj_Approach0->p4(), lv_2AK4jNear);
+      m_LeptonIdx3_2AK4jNear_inclusive1j_Approach0 = (selLepton_H_WW_ljj_Approach0->p4() + lv_2AK4jNear).mass();
+    }
+
+    if (selAK4J_closestToLeptonIdx3_Approach0)
+    {
+      dr_LeptonIdx3_AK4jNear_Approach0 = deltaR(selLepton_H_WW_ljj_Approach0->p4(), selAK4J_closestToLeptonIdx3_Approach0->p4());
+    }
+
+
+    double dr_LeptonIdx3_AK8_Approach0 = -1;
+    double m_LeptonIdx3_AK8_Approach0  = -1; 
+    if (isWjjBoosted)
+    {
+      dr_LeptonIdx3_AK8_Approach0 = deltaR(selLepton_H_WW_ljj_Approach0->p4(), selJetAK8_Wjj->p4());
+      m_LeptonIdx3_AK8_Approach0 = (selLepton_H_WW_ljj_Approach0->p4() + selJetAK8_Wjj->p4()).mass();
+    }
+
     
+    
+    double dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach0 = calculateAbsDeltaPhi((selLepton_H_WW_ljj_Approach0->p4() + met.p4()).phi(), 
+										   (selLepton1_H_WW_ll_Approach0->p4() + selLepton2_H_WW_ll_Approach0->p4()).phi());
+    
+    double dPhi_LeptonIdx3_Met_Approach0 = calculateAbsDeltaPhi(selLepton_H_WW_ljj_Approach0->phi(), met.phi());
+
+
+    //std::abs(selLepton1_H_WW_ll_Approach0->phi() - selLepton2_H_WW_ll_Approach0->phi());
+    if (printLevel > 0)
+    {
+      double dPhi = std::abs(selLepton1_H_WW_ll_Approach0->phi() - selLepton2_H_WW_ll_Approach0->phi());
+      if (dPhi > TMath::Pi()) dPhi = 2*TMath::Pi() - dPhi;
+      TLorentzVector v1, v2;
+      v1.SetPtEtaPhiM(selLepton1_H_WW_ll_Approach0->pt(), selLepton1_H_WW_ll_Approach0->eta(), selLepton1_H_WW_ll_Approach0->phi(), selLepton1_H_WW_ll_Approach0->mass());
+      v2.SetPtEtaPhiM(selLepton2_H_WW_ll_Approach0->pt(), selLepton2_H_WW_ll_Approach0->eta(), selLepton2_H_WW_ll_Approach0->phi(), selLepton2_H_WW_ll_Approach0->mass());
+      
+      std::cout << "\nselLepton1_H_WW_ll_Approach0->phi(): " << selLepton1_H_WW_ll_Approach0->phi()
+		<< ", selLepton2_H_WW_ll_Approach0->phi(): " << selLepton2_H_WW_ll_Approach0->phi()
+		<< ", abs(diff): " << std::abs(selLepton1_H_WW_ll_Approach0->phi() - selLepton2_H_WW_ll_Approach0->phi())
+		<< ", dPhi " << dPhi << "\n";
+      printf("v1(%g, %g, %g, %g), v1(%g, %g, %g, %g), dPhi %g \n",
+	     v1.Pt(),v1.Eta(),v1.Phi(),v1.M(),
+	     v2.Pt(),v2.Eta(),v2.Phi(),v2.M(),
+	     v1.DeltaPhi(v2)
+	);
+      std::cout << "TMath::Pi(): " << TMath::Pi() << "\n";
+      //std::cout << (selLepton1_H_WW_ll_Approach0->p4()).DeltaPhi(selLepton2_H_WW_ll_Approach0->p4()) << "\n";
+    }
 
     
     // Approach-2 ----------------------------------------------------------------
@@ -2651,9 +2805,9 @@ int main(int argc, char* argv[])
     double m_LeptonIdx2_LeptonIdx3_Approach2 = (selLepton2_H_WW_ll_Approach2->p4() + selLepton_H_WW_ljj_Approach2->p4()).mass();
     double m_LeptonIdx1_LeptonIdx3_Approach2 = (selLepton1_H_WW_ll_Approach2->p4() + selLepton_H_WW_ljj_Approach2->p4()).mass();
     //
-    double dPhi_LeptonIdx1_LeptonIdx2_Approach2 = std::abs(selLepton1_H_WW_ll_Approach2->phi() - selLepton2_H_WW_ll_Approach2->phi());
-    double dPhi_LeptonIdx2_LeptonIdx3_Approach2 = std::abs(selLepton2_H_WW_ll_Approach2->phi() - selLepton_H_WW_ljj_Approach2->phi());
-    double dPhi_LeptonIdx1_LeptonIdx3_Approach2 = std::abs(selLepton1_H_WW_ll_Approach2->phi() - selLepton_H_WW_ljj_Approach2->phi());
+    double dPhi_LeptonIdx1_LeptonIdx2_Approach2 = calculateAbsDeltaPhi(selLepton1_H_WW_ll_Approach2->phi(), selLepton2_H_WW_ll_Approach2->phi());
+    double dPhi_LeptonIdx2_LeptonIdx3_Approach2 = calculateAbsDeltaPhi(selLepton2_H_WW_ll_Approach2->phi(), selLepton_H_WW_ljj_Approach2->phi());
+    double dPhi_LeptonIdx1_LeptonIdx3_Approach2 = calculateAbsDeltaPhi(selLepton1_H_WW_ll_Approach2->phi(), selLepton_H_WW_ljj_Approach2->phi());
     //
     double dEta_LeptonIdx1_LeptonIdx2_Approach2 = std::abs(selLepton1_H_WW_ll_Approach2->eta() - selLepton2_H_WW_ll_Approach2->eta());
     double dEta_LeptonIdx2_LeptonIdx3_Approach2 = std::abs(selLepton2_H_WW_ll_Approach2->eta() - selLepton_H_WW_ljj_Approach2->eta());
@@ -2697,11 +2851,81 @@ int main(int argc, char* argv[])
     {
       dr_LeptonIdx3_2j_inclusive1j_Approach2 = deltaR(selLepton_H_WW_ljj_Approach2->p4(), (selJet1_Wjj->p4()));
     }
+
     
-    double dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2 = std::abs((selLepton_H_WW_ljj_Approach2->p4() + met.p4()).phi() - 
-								       (selLepton1_H_WW_ll_Approach2->p4() + selLepton2_H_WW_ll_Approach2->p4()).phi());
+    double dr_LeptonIdx3_AK4jNear_Approach2              = -1.;
+    double dr_LeptonIdx3_2AK4jNear_Approach2             = -1.;
+    double dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach2 = -1.;
+    double m_LeptonIdx3_2AK4jNear_Approach2              = -1.;
+    double m_LeptonIdx3_2AK4jNear_inclusive1j_Approach2  = -1.;
+    double dr_2AK4J_NearestToLeptonIdx3_Approach2        = -1.;
+    
+    const RecoJet* selAK4J_closestToLeptonIdx3_Approach2 = nullptr;
+    const RecoJet* selAK4J_2ndclosestToLeptonIdx3_Approach2 = nullptr;
+    dr_LeptonIdx3_AK4_min = 99999.;
+    if (printLevel > 0) printf("nselAK4 %zu \n",selJetsAK4.size());
+    for ( std::vector<const RecoJet*>::const_iterator selJet1 = selJetsAK4.begin();
+	  selJet1 != selJetsAK4.end(); ++selJet1 ) {
+      double dr = deltaR(selLepton_H_WW_ljj_Approach2->p4(), (*selJet1)->p4());
+      if (dr < dr_LeptonIdx3_AK4_min)
+      {
+	selAK4J_closestToLeptonIdx3_Approach2 = (*selJet1);
+	dr_LeptonIdx3_AK4_min = dr;
+      }
+    }
+
+    // 2nd closest AK4 jet
+    dr_LeptonIdx3_AK4_min = 99999.;
+    for ( std::vector<const RecoJet*>::const_iterator selJet1 = selJetsAK4.begin();
+	  selJet1 != selJetsAK4.end(); ++selJet1 ) {
+      if ((*selJet1) == selAK4J_closestToLeptonIdx3_Approach2) continue;
+      
+      double dr = deltaR(selLepton_H_WW_ljj_Approach2->p4(), (*selJet1)->p4());
+      if (dr < dr_LeptonIdx3_AK4_min)
+      {
+	selAK4J_2ndclosestToLeptonIdx3_Approach2 = (*selJet1);
+	dr_LeptonIdx3_AK4_min = dr;
+      }
+    }
+
+    if (selAK4J_closestToLeptonIdx3_Approach2 && selAK4J_2ndclosestToLeptonIdx3_Approach2)
+    {
+      const Particle::LorentzVector lv_2AK4jNear = (selAK4J_closestToLeptonIdx3_Approach2->p4() + selAK4J_2ndclosestToLeptonIdx3_Approach2->p4());
+      dr_LeptonIdx3_2AK4jNear_Approach2 = deltaR(selLepton_H_WW_ljj_Approach2->p4(), lv_2AK4jNear);
+      dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach2 = deltaR(selLepton_H_WW_ljj_Approach2->p4(), lv_2AK4jNear);
+      
+      m_LeptonIdx3_2AK4jNear_Approach2 = (selLepton_H_WW_ljj_Approach2->p4() + lv_2AK4jNear).mass();
+      m_LeptonIdx3_2AK4jNear_inclusive1j_Approach2 = (selLepton_H_WW_ljj_Approach2->p4() + lv_2AK4jNear).mass();
+
+      dr_2AK4J_NearestToLeptonIdx3_Approach2 = deltaR(selAK4J_closestToLeptonIdx3_Approach2->p4(), selAK4J_2ndclosestToLeptonIdx3_Approach2->p4());
+    }
+    else if (selAK4J_closestToLeptonIdx3_Approach2)
+    {
+      const Particle::LorentzVector lv_2AK4jNear = (selAK4J_closestToLeptonIdx3_Approach2->p4());
+      dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach2 = deltaR(selLepton_H_WW_ljj_Approach2->p4(), lv_2AK4jNear);
+      m_LeptonIdx3_2AK4jNear_inclusive1j_Approach2 = (selLepton_H_WW_ljj_Approach2->p4() + lv_2AK4jNear).mass();
+    }
+
+    if (selAK4J_closestToLeptonIdx3_Approach2)
+    {
+      dr_LeptonIdx3_AK4jNear_Approach2 = deltaR(selLepton_H_WW_ljj_Approach2->p4(), selAK4J_closestToLeptonIdx3_Approach2->p4());
+    }
 
 
+    double dr_LeptonIdx3_AK8_Approach2 = -1;
+    double m_LeptonIdx3_AK8_Approach2  = -1; 
+    if (isWjjBoosted)
+    {
+      dr_LeptonIdx3_AK8_Approach2 = deltaR(selLepton_H_WW_ljj_Approach2->p4(), selJetAK8_Wjj->p4());
+      m_LeptonIdx3_AK8_Approach2 = (selLepton_H_WW_ljj_Approach2->p4() + selJetAK8_Wjj->p4()).mass();
+    }
+
+    
+    double dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2 = calculateAbsDeltaPhi((selLepton_H_WW_ljj_Approach2->p4() + met.p4()).phi(), 
+										   (selLepton1_H_WW_ll_Approach2->p4() + selLepton2_H_WW_ll_Approach2->p4()).phi());
+
+    double dPhi_LeptonIdx3_Met_Approach2 = calculateAbsDeltaPhi(selLepton_H_WW_ljj_Approach2->phi(), met.phi());
+    
     // Approach-3 ----------------------------------------------------------------
     // Z(->l1 l2) W(->l3) event topology
     size_t idxLepton_H_WW_ljj_Approach3 = 9999;
@@ -2761,9 +2985,9 @@ int main(int argc, char* argv[])
     double m_LeptonIdx2_LeptonIdx3_Approach3 = (selLepton2_H_WW_ll_Approach3->p4() + selLepton_H_WW_ljj_Approach3->p4()).mass();
     double m_LeptonIdx1_LeptonIdx3_Approach3 = (selLepton1_H_WW_ll_Approach3->p4() + selLepton_H_WW_ljj_Approach3->p4()).mass();
     //
-    double dPhi_LeptonIdx1_LeptonIdx2_Approach3 = std::abs(selLepton1_H_WW_ll_Approach3->phi() - selLepton2_H_WW_ll_Approach3->phi());
-    double dPhi_LeptonIdx2_LeptonIdx3_Approach3 = std::abs(selLepton2_H_WW_ll_Approach3->phi() - selLepton_H_WW_ljj_Approach3->phi());
-    double dPhi_LeptonIdx1_LeptonIdx3_Approach3 = std::abs(selLepton1_H_WW_ll_Approach3->phi() - selLepton_H_WW_ljj_Approach3->phi());
+    double dPhi_LeptonIdx1_LeptonIdx2_Approach3 = calculateAbsDeltaPhi(selLepton1_H_WW_ll_Approach3->phi(), selLepton2_H_WW_ll_Approach3->phi());
+    double dPhi_LeptonIdx2_LeptonIdx3_Approach3 = calculateAbsDeltaPhi(selLepton2_H_WW_ll_Approach3->phi(), selLepton_H_WW_ljj_Approach3->phi());
+    double dPhi_LeptonIdx1_LeptonIdx3_Approach3 = calculateAbsDeltaPhi(selLepton1_H_WW_ll_Approach3->phi(), selLepton_H_WW_ljj_Approach3->phi());
     //
     double dEta_LeptonIdx1_LeptonIdx2_Approach3 = std::abs(selLepton1_H_WW_ll_Approach3->eta() - selLepton2_H_WW_ll_Approach3->eta());
     double dEta_LeptonIdx2_LeptonIdx3_Approach3 = std::abs(selLepton2_H_WW_ll_Approach3->eta() - selLepton_H_WW_ljj_Approach3->eta());
@@ -2807,11 +3031,153 @@ int main(int argc, char* argv[])
     {
       dr_LeptonIdx3_2j_inclusive1j_Approach3 = deltaR(selLepton_H_WW_ljj_Approach3->p4(), (selJet1_Wjj->p4()));
     }
-        
-    double dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach3 = std::abs((selLepton_H_WW_ljj_Approach3->p4() + met.p4()).phi() - 
-								       (selLepton1_H_WW_ll_Approach3->p4() + selLepton2_H_WW_ll_Approach3->p4()).phi());
 
     
+    double dr_LeptonIdx3_AK4jNear_Approach3              = -1.;
+    double dr_LeptonIdx3_2AK4jNear_Approach3             = -1.;
+    double dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach3 = -1.;
+    double m_LeptonIdx3_2AK4jNear_Approach3              = -1.;
+    double m_LeptonIdx3_2AK4jNear_inclusive1j_Approach3  = -1.;
+    double dr_2AK4J_NearestToLeptonIdx3_Approach3        = -1.;
+    
+    const RecoJet* selAK4J_closestToLeptonIdx3_Approach3 = nullptr;
+    const RecoJet* selAK4J_2ndclosestToLeptonIdx3_Approach3 = nullptr;
+    dr_LeptonIdx3_AK4_min = 99999.;
+    if (printLevel > 0) printf("nselAK4 %zu \n",selJetsAK4.size());
+    for ( std::vector<const RecoJet*>::const_iterator selJet1 = selJetsAK4.begin();
+	  selJet1 != selJetsAK4.end(); ++selJet1 ) {
+      double dr = deltaR(selLepton_H_WW_ljj_Approach3->p4(), (*selJet1)->p4());
+      if (dr < dr_LeptonIdx3_AK4_min)
+      {
+	selAK4J_closestToLeptonIdx3_Approach3 = (*selJet1);
+	dr_LeptonIdx3_AK4_min = dr;
+      }
+    }
+
+    // 2nd closest AK4 jet
+    dr_LeptonIdx3_AK4_min = 99999.;
+    for ( std::vector<const RecoJet*>::const_iterator selJet1 = selJetsAK4.begin();
+	  selJet1 != selJetsAK4.end(); ++selJet1 ) {
+      if ((*selJet1) == selAK4J_closestToLeptonIdx3_Approach3) continue;
+      
+      double dr = deltaR(selLepton_H_WW_ljj_Approach3->p4(), (*selJet1)->p4());
+      if (dr < dr_LeptonIdx3_AK4_min)
+      {
+	selAK4J_2ndclosestToLeptonIdx3_Approach3 = (*selJet1);
+	dr_LeptonIdx3_AK4_min = dr;
+      }
+    }
+
+    if (selAK4J_closestToLeptonIdx3_Approach3 && selAK4J_2ndclosestToLeptonIdx3_Approach3)
+    {
+      const Particle::LorentzVector lv_2AK4jNear = (selAK4J_closestToLeptonIdx3_Approach3->p4() + selAK4J_2ndclosestToLeptonIdx3_Approach3->p4());
+      dr_LeptonIdx3_2AK4jNear_Approach3 = deltaR(selLepton_H_WW_ljj_Approach3->p4(), lv_2AK4jNear);
+      dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach3 = deltaR(selLepton_H_WW_ljj_Approach3->p4(), lv_2AK4jNear);
+      
+      m_LeptonIdx3_2AK4jNear_Approach3 = (selLepton_H_WW_ljj_Approach3->p4() + lv_2AK4jNear).mass();
+      m_LeptonIdx3_2AK4jNear_inclusive1j_Approach3 = (selLepton_H_WW_ljj_Approach3->p4() + lv_2AK4jNear).mass();
+
+      dr_2AK4J_NearestToLeptonIdx3_Approach3 = deltaR(selAK4J_closestToLeptonIdx3_Approach3->p4(), selAK4J_2ndclosestToLeptonIdx3_Approach3->p4());
+    }
+    else if (selAK4J_closestToLeptonIdx3_Approach3)
+    {
+      const Particle::LorentzVector lv_2AK4jNear = (selAK4J_closestToLeptonIdx3_Approach3->p4());
+      dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach3 = deltaR(selLepton_H_WW_ljj_Approach3->p4(), lv_2AK4jNear);
+      m_LeptonIdx3_2AK4jNear_inclusive1j_Approach3 = (selLepton_H_WW_ljj_Approach3->p4() + lv_2AK4jNear).mass();
+    }
+
+    if (selAK4J_closestToLeptonIdx3_Approach3)
+    {
+      dr_LeptonIdx3_AK4jNear_Approach3 = deltaR(selLepton_H_WW_ljj_Approach3->p4(), selAK4J_closestToLeptonIdx3_Approach3->p4());
+    }
+
+
+    double dr_LeptonIdx3_AK8_Approach3 = -1;
+    double m_LeptonIdx3_AK8_Approach3  = -1; 
+    if (isWjjBoosted)
+    {
+      dr_LeptonIdx3_AK8_Approach3 = deltaR(selLepton_H_WW_ljj_Approach3->p4(), selJetAK8_Wjj->p4());
+      m_LeptonIdx3_AK8_Approach3 = (selLepton_H_WW_ljj_Approach3->p4() + selJetAK8_Wjj->p4()).mass();
+    }
+
+
+    
+    double dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach3 = calculateAbsDeltaPhi((selLepton_H_WW_ljj_Approach3->p4() + met.p4()).phi(), 
+										   (selLepton1_H_WW_ll_Approach3->p4() + selLepton2_H_WW_ll_Approach3->p4()).phi());
+
+    double dPhi_LeptonIdx3_Met_Approach3 = calculateAbsDeltaPhi(selLepton_H_WW_ljj_Approach3->phi(), met.phi());
+
+
+    
+    // one2lSFOS events -----------
+    double dPhi_2lSFOS_one2lSFOSEvt            = -1.;
+    double dR_2lSFOS_one2lSFOSEvt              = -1.;
+    double m_2lSFOS_one2lSFOSEvt               = -1.;
+    double mT_LeptonNonSFOS_Met_one2lSFOSEvt   = -1.;
+    double dPhi_LeptonNonSFOS_Met_one2lSFOSEvt = -1.;
+    if (nSFOS_3l == 1)
+    {
+      dPhi_2lSFOS_one2lSFOSEvt = calculateAbsDeltaPhi(selLepton1_H_WW_ll_Approach3->phi(), selLepton2_H_WW_ll_Approach3->phi());
+      dR_2lSFOS_one2lSFOSEvt = deltaR(selLepton1_H_WW_ll_Approach3->p4(), selLepton2_H_WW_ll_Approach3->p4());
+      m_2lSFOS_one2lSFOSEvt = (selLepton1_H_WW_ll_Approach3->p4() + selLepton2_H_WW_ll_Approach3->p4()).mass();
+
+      mT_LeptonNonSFOS_Met_one2lSFOSEvt = comp_MT_met(selLepton_H_WW_ljj_Approach3, met.pt(), met.phi());
+      dPhi_LeptonNonSFOS_Met_one2lSFOSEvt = calculateAbsDeltaPhi((selLepton_H_WW_ljj_Approach3)->phi(), 
+								 (met).phi());
+    }
+    
+
+
+
+    //Gathering final BDT Inputs
+
+    AllVars_Map["gen_mHH"]                                   =       250.; // setting a Dummy value which will be reset depending on mass hypothesis
+    AllVars_Map["m3l"]                                       =       m3l;
+    AllVars_Map["diHiggsVisMass"]                            =       dihiggsVisMass_sel; 
+    AllVars_Map["mSFOS2l_closestToZ"]                        =       mSFOS2l_closestToZ;
+    AllVars_Map["dr_LeptonIdx3_AK4jNear_Approach2"]          =       dr_LeptonIdx3_AK4jNear_Approach2;
+    AllVars_Map["dr_LeptonIdx3_2j_inclusive1j_Approach2"]    =       dr_LeptonIdx3_2j_inclusive1j_Approach2;
+    AllVars_Map["dr_los_min"]                                =       dr_los_min;
+    AllVars_Map["dr_los_max"]                                =       dr_los_max;
+    AllVars_Map["nSFOS_3l"]                                  =       nSFOS_3l;
+    AllVars_Map["met_LD"]                                    =       met_LD;
+    //AllVars_Map[""]          =       ;
+
+
+    std::map<std::string, double> BDTInputs_spin2 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin2, false);
+    std::map<std::string, double> BDTInputs_spin0 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin0, false);
+    std::map<std::string, double> BDTInputs_nonRes = InitializeInputVarMap(AllVars_Map, BDTInputVariables_nonRes, true); // Include all Input Var.s except BM indices
+    //std::map<std::string, double> BDTInputs_nonRes_base = InitializeInputVarMap(AllVars_Map, BDTInputVariables_nonRes_base, true); 
+    
+    std::vector<double> nonResBase_params;
+    nonResBase_params.push_back(0.);
+
+    BDTOutput_Map_spin2 = CreateBDTOutputMap(gen_mHH, BDT_spin2, BDTInputs_spin2, eventInfo.event, false, "_spin2");
+    BDTOutput_Map_spin0 = CreateBDTOutputMap(gen_mHH, BDT_spin0, BDTInputs_spin0, eventInfo.event, false, "_spin0");
+    BDTOutput_Map_nonRes = CreateBDTOutputMap(nonRes_BMs, BDT_nonRes, BDTInputs_nonRes, eventInfo.event, true, "");
+    //BDTOutput_Map_nonRes_base = CreateBDTOutputMap(nonResBase_params, BDT_nonRes_base, BDTInputs_nonRes_base, eventInfo.event, true, "_base");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     
@@ -2877,7 +3243,7 @@ int main(int argc, char* argv[])
 	//std::cout << "genMatch Idx: " << genMatch->getIdx() << ", name: " << genMatch->getName() << std::endl;
         selHistManagerType* selHistManager = selHistManagers[central_or_shift][genMatch->getIdx()];
         assert(selHistManager);
-        if(! skipFilling)
+        if(! skipFilling && 1==0)
         {
           selHistManager->electrons_->fillHistograms(selElectrons, evtWeight);
           selHistManager->muons_->fillHistograms(selMuons, evtWeight);
@@ -2891,6 +3257,9 @@ int main(int argc, char* argv[])
           selHistManager->BJetsAK4_medium_->fillHistograms(selBJetsAK4_medium, evtWeight);
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
+	}
+	if(! skipFilling)
+        {
           selHistManager->evt_->fillHistograms(
 	    selElectrons.size(),
 	    selMuons.size(),
@@ -2963,8 +3332,6 @@ int main(int argc, char* argv[])
 	    dR_3l_2j,
 	    dR_3l_2j_inclusive1j,
 	    //
-	    dPhi_3l_avg2j,
-	    dPhi_3l_avg2j_inclusive1j,
 	    dEta_3l_avg2j,
 	    dEta_3l_avg2j_inclusive1j,
 	    //
@@ -2976,6 +3343,8 @@ int main(int argc, char* argv[])
 	    bTag_sum_AK4,
 	    //
 	    pt_lastAK4,
+	    //
+	    m_AK8,
 	    //
 	    //
 	    mT_LeptonIdx1_Met_Approach0,
@@ -3007,7 +3376,19 @@ int main(int argc, char* argv[])
 	    dr_LeptonIdx3_2j_Approach0,
 	    dr_LeptonIdx3_2j_inclusive1j_Approach0,
 	    //
+	    dr_LeptonIdx3_AK4jNear_Approach0,
+	    dr_LeptonIdx3_2AK4jNear_Approach0,
+	    dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach0,
+	    m_LeptonIdx3_2AK4jNear_Approach0,
+	    m_LeptonIdx3_2AK4jNear_inclusive1j_Approach0,
+	    dr_2AK4J_NearestToLeptonIdx3_Approach0,
+	    //
+	    dr_LeptonIdx3_AK8_Approach0,
+	    m_LeptonIdx3_AK8_Approach0,
+	    //
 	    dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach0,
+	    //
+	    dPhi_LeptonIdx3_Met_Approach0,
 	    //
 	    //
 	    mT_LeptonIdx1_Met_Approach2,
@@ -3039,7 +3420,19 @@ int main(int argc, char* argv[])
 	    dr_LeptonIdx3_2j_Approach2,
 	    dr_LeptonIdx3_2j_inclusive1j_Approach2,
 	    //
+	    dr_LeptonIdx3_AK4jNear_Approach2,
+	    dr_LeptonIdx3_2AK4jNear_Approach2,
+	    dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach2,
+	    m_LeptonIdx3_2AK4jNear_Approach2,
+	    m_LeptonIdx3_2AK4jNear_inclusive1j_Approach2,
+	    dr_2AK4J_NearestToLeptonIdx3_Approach2,
+	    //
+	    dr_LeptonIdx3_AK8_Approach2,
+	    m_LeptonIdx3_AK8_Approach2,
+	    //
 	    dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2,
+	    //
+	    dPhi_LeptonIdx3_Met_Approach2,
 	    //
 	    //
 	    mT_LeptonIdx1_Met_Approach3,
@@ -3071,14 +3464,41 @@ int main(int argc, char* argv[])
 	    dr_LeptonIdx3_2j_Approach3,
 	    dr_LeptonIdx3_2j_inclusive1j_Approach3,
 	    //
+	    dr_LeptonIdx3_AK4jNear_Approach3,
+	    dr_LeptonIdx3_2AK4jNear_Approach3,
+	    dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach3,
+	    m_LeptonIdx3_2AK4jNear_Approach3,
+	    m_LeptonIdx3_2AK4jNear_inclusive1j_Approach3,
+	    dr_2AK4J_NearestToLeptonIdx3_Approach3,
+	    //
+	    dr_LeptonIdx3_AK8_Approach3,
+	    m_LeptonIdx3_AK8_Approach3,
+	    //
 	    dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach3,
+	    //
+	    dPhi_LeptonIdx3_Met_Approach3,
+	    //
+	    //	    
+	    //
+	    dPhi_2lSFOS_one2lSFOSEvt,
+	    dR_2lSFOS_one2lSFOSEvt,
+	    m_2lSFOS_one2lSFOSEvt,
+	    mT_LeptonNonSFOS_Met_one2lSFOSEvt,
+	    dPhi_LeptonNonSFOS_Met_one2lSFOSEvt,
 	    //
 	    //
 	    eventCategory,
 	    //
 	    evtWeight	    
-	    );	    
+	    );
         }
+	selHistManager->datacard_->fillHistograms(
+          BDTOutput_Map_spin2,
+          BDTOutput_Map_spin0,
+          BDTOutput_Map_nonRes,
+          //BDTOutput_Map_nonRes_base["Base"],
+	  -1., // CV: BDTOutput for nonresonant_allBMs case not implemented yet !!
+          evtWeight);
 
         if(! skipFilling)
         {
@@ -3138,7 +3558,7 @@ int main(int argc, char* argv[])
           weightMapHH[HHWeightNames[i]] = HHWeight_calc->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
         }
       }
-
+      
       bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
 	("nElectron",                                               selElectrons.size())
 	("nMuon",                                                   selMuons.size())
@@ -3211,10 +3631,8 @@ int main(int argc, char* argv[])
 	("dEta_3l_2j",                                              dEta_3l_2j)
 	("dEta_3l_2j_inclusive1j",                                  dEta_3l_2j_inclusive1j)
 	("dR_3l_2j",                                                dR_3l_2j)
-	("dR_3l_2j_inclusive1j",                                    dR_3l_2j_inclusive1j)
+	("dR_3l_2j_inclusive1j",                                    dR_3l_2j_inclusive1j) 
 	//
-	("dPhi_3l_avg2j",                                           dPhi_3l_avg2j)
-	("dPhi_3l_avg2j_inclusive1j",                               dPhi_3l_avg2j_inclusive1j)
 	("dEta_3l_avg2j",                                           dEta_3l_avg2j)
 	("dEta_3l_avg2j_inclusive1j",                               dEta_3l_avg2j_inclusive1j)
 	//
@@ -3226,6 +3644,8 @@ int main(int argc, char* argv[])
 	("bTag_sum_AK4",                                            bTag_sum_AK4)
 	//
 	("pt_lastAK4",                                              pt_lastAK4)
+	//
+	("m_AK8",                                                   m_AK8)
 	//
 	//
 	("mT_LeptonIdx1_Met_Approach0",                             mT_LeptonIdx1_Met_Approach0)
@@ -3257,7 +3677,19 @@ int main(int argc, char* argv[])
 	("dr_LeptonIdx3_2j_Approach0",                              dr_LeptonIdx3_2j_Approach0)
 	("dr_LeptonIdx3_2j_inclusive1j_Approach0",                  dr_LeptonIdx3_2j_inclusive1j_Approach0)
 	//
+	("dr_LeptonIdx3_AK4jNear_Approach0",                        dr_LeptonIdx3_AK4jNear_Approach0)
+	("dr_LeptonIdx3_2AK4jNear_Approach0",                       dr_LeptonIdx3_2AK4jNear_Approach0)
+	("dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach0",           dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach0)
+	("m_LeptonIdx3_2AK4jNear_Approach0",                        m_LeptonIdx3_2AK4jNear_Approach0)
+	("m_LeptonIdx3_2AK4jNear_inclusive1j_Approach0",            m_LeptonIdx3_2AK4jNear_inclusive1j_Approach0)
+	("dr_2AK4J_NearestToLeptonIdx3_Approach0",                  dr_2AK4J_NearestToLeptonIdx3_Approach0)
+	//
+	("dr_LeptonIdx3_AK8_Approach0",                             dr_LeptonIdx3_AK8_Approach0)
+	("m_LeptonIdx3_AK8_Approach0",                              m_LeptonIdx3_AK8_Approach0)
+	//
 	("dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach0",        dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach0)
+	//
+	("dPhi_LeptonIdx3_Met_Approach0",                           dPhi_LeptonIdx3_Met_Approach0)
 	//
 	//
 	("mT_LeptonIdx1_Met_Approach2",                             mT_LeptonIdx1_Met_Approach2)
@@ -3289,7 +3721,19 @@ int main(int argc, char* argv[])
 	("dr_LeptonIdx3_2j_Approach2",                              dr_LeptonIdx3_2j_Approach2)
 	("dr_LeptonIdx3_2j_inclusive1j_Approach2",                  dr_LeptonIdx3_2j_inclusive1j_Approach2)
 	//
+	("dr_LeptonIdx3_AK4jNear_Approach2",                        dr_LeptonIdx3_AK4jNear_Approach2)
+	("dr_LeptonIdx3_2AK4jNear_Approach2",                       dr_LeptonIdx3_2AK4jNear_Approach2)
+	("dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach2",           dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach2)
+	("m_LeptonIdx3_2AK4jNear_Approach2",                        m_LeptonIdx3_2AK4jNear_Approach2)
+	("m_LeptonIdx3_2AK4jNear_inclusive1j_Approach2",            m_LeptonIdx3_2AK4jNear_inclusive1j_Approach2)
+	("dr_2AK4J_NearestToLeptonIdx3_Approach2",                  dr_2AK4J_NearestToLeptonIdx3_Approach2)
+	//
+	("dr_LeptonIdx3_AK8_Approach2",                             dr_LeptonIdx3_AK8_Approach2)
+	("m_LeptonIdx3_AK8_Approach2",                              m_LeptonIdx3_AK8_Approach2)	
+	//
 	("dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2",        dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2)
+	//
+	("dPhi_LeptonIdx3_Met_Approach2",                           dPhi_LeptonIdx3_Met_Approach2)
 	//
 	//
 	("mT_LeptonIdx1_Met_Approach3",                             mT_LeptonIdx1_Met_Approach3)
@@ -3321,7 +3765,19 @@ int main(int argc, char* argv[])
 	("dr_LeptonIdx3_2j_Approach3",                              dr_LeptonIdx3_2j_Approach3)
 	("dr_LeptonIdx3_2j_inclusive1j_Approach3",                  dr_LeptonIdx3_2j_inclusive1j_Approach3)
 	//
+	("dr_LeptonIdx3_AK4jNear_Approach3",                        dr_LeptonIdx3_AK4jNear_Approach3)
+	("dr_LeptonIdx3_2AK4jNear_Approach3",                       dr_LeptonIdx3_2AK4jNear_Approach3)
+	("dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach3",           dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach3)
+	("m_LeptonIdx3_2AK4jNear_Approach3",                        m_LeptonIdx3_2AK4jNear_Approach3)
+	("m_LeptonIdx3_2AK4jNear_inclusive1j_Approach3",            m_LeptonIdx3_2AK4jNear_inclusive1j_Approach3)
+	("dr_2AK4J_NearestToLeptonIdx3_Approach3",                  dr_2AK4J_NearestToLeptonIdx3_Approach3)
+	//
+	("dr_LeptonIdx3_AK8_Approach3",                             dr_LeptonIdx3_AK8_Approach3)
+	("m_LeptonIdx3_AK8_Approach3",                              m_LeptonIdx3_AK8_Approach3)	
+	//
 	("dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach3",        dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach3)
+	//
+	("dPhi_LeptonIdx3_Met_Approach3",                           dPhi_LeptonIdx3_Met_Approach3)
 	//
 	//
 	("eventCategory",         eventCategory)
@@ -3343,6 +3799,7 @@ int main(int argc, char* argv[])
 	("lep2_fake_prob",        prob_fake_lepton_sublead)
 	("lep3_fake_prob",        prob_fake_lepton_third)
 	//
+	("evtWeight",             evtWeight_BDT)
         ("lumiScale",             evtWeightRecorder.get_lumiScale(central_or_shift_main))
 	("genWeight",             eventInfo.genWeight)
         ("evtWeight",             evtWeight_BDT)

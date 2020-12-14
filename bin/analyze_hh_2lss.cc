@@ -428,10 +428,7 @@ int main(int argc, char* argv[])
 
   std::string branchName_genWBosons = cfg_analyze.getParameter<std::string>("branchName_genWBosons");
   std::string branchName_genWJets = cfg_analyze.getParameter<std::string>("branchName_genWJets");
-
-  const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
-  std::vector<double> gen_mHH = cfg_analyze.getParameter<std::vector<double>>("gen_mHH");
-
+ 
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
   std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
   RunLumiEventSelector* run_lumi_eventSelector = 0;
@@ -488,10 +485,7 @@ int main(int argc, char* argv[])
       std::cout << bmName << ",  ";
     }
     std::cout << "\n";
-
-    //    HHWeightNames = HHBMNames;     // Siddhesh: bench mark weight map has BMName as map index
-    //std::cout << "Setting HHWeightNames = HHBMNames \n";
-  }
+  }  
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
@@ -685,6 +679,72 @@ int main(int argc, char* argv[])
     inputTree -> registerReader(psWeightReader);
   }
 
+
+
+
+
+
+  const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
+  const edm::ParameterSet mvaInfo_res = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_res");
+  std::vector<double> gen_mHH = analysisConfig.get_HH_resonant_mass_points();
+  std::string BDTFileName_spin0_even  = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_spin0_even");
+  std::string BDTFileName_spin0_odd   = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_spin0_odd");
+  std::string fitFunctionFileName_spin0 = mvaInfo_res.getParameter<std::string>("fitFunctionFileName_spin0");
+  std::vector<std::string> BDTInputVariables_spin0 = mvaInfo_res.getParameter<std::vector<std::string>>("inputVars_spin0");
+  std::string BDTFileName_spin2_even  = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_spin2_even");
+  std::string BDTFileName_spin2_odd   = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_spin2_odd");
+  std::string fitFunctionFileName_spin2 = mvaInfo_res.getParameter<std::string>("fitFunctionFileName_spin2");
+  std::vector<std::string> BDTInputVariables_spin2 = mvaInfo_res.getParameter<std::vector<std::string>>("inputVars_spin2");
+  const edm::ParameterSet mvaInfo_nonRes = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_nonRes");
+  std::vector<double> nonRes_BMs = cfg_analyze.getParameter<std::vector<double>>("nonRes_BMs");
+  std::string BDTFileName_nonRes_even  = mvaInfo_nonRes.getParameter<std::string>("BDT_xml_FileName_nonRes_even");
+  std::string BDTFileName_nonRes_odd   = mvaInfo_nonRes.getParameter<std::string>("BDT_xml_FileName_nonRes_odd");
+  std::vector<std::string> BDTInputVariables_nonRes = mvaInfo_nonRes.getParameter<std::vector<std::string>>("inputVars_nonRes"); // Include all Input Var.s except BM indices
+  /*
+  const edm::ParameterSet mvaInfo_nonRes_base = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_nonRes_base");
+  std::string BDTFileName_nonRes_base_even  = mvaInfo_nonRes_base.getParameter<std::string>("BDT_xml_FileName_nonRes_base_even");
+  std::string BDTFileName_nonRes_base_odd   = mvaInfo_nonRes_base.getParameter<std::string>("BDT_xml_FileName_nonRes_base_odd");
+  std::vector<std::string> BDTInputVariables_nonRes_base = mvaInfo_nonRes_base.getParameter<std::vector<std::string>>("inputVars_nonRes_base"); // Include all Input Var.s except BM indices
+  */
+
+  assert(BDTFileName_spin0_odd != "");
+  assert(BDTFileName_spin0_even != "");
+  assert(fitFunctionFileName_spin0 != "");
+  assert(BDTInputVariables_spin0.size() != 0);
+  TMVAInterface* BDT_spin0 = new TMVAInterface(BDTFileName_spin0_odd, BDTFileName_spin0_even, BDTInputVariables_spin0, fitFunctionFileName_spin0);
+  BDT_spin0->enableBDTTransform();
+  std::map<std::string, double> BDTOutput_Map_spin0;
+
+  assert(BDTFileName_spin2_odd != "");
+  assert(BDTFileName_spin2_even != "");
+  assert(fitFunctionFileName_spin2 != "");
+  assert(BDTInputVariables_spin2.size() != 0);
+  TMVAInterface* BDT_spin2 = new TMVAInterface(BDTFileName_spin2_odd, BDTFileName_spin2_even, BDTInputVariables_spin2, fitFunctionFileName_spin2);
+  BDT_spin2->enableBDTTransform();
+  std::map<std::string, double> BDTOutput_Map_spin2;
+
+  assert(BDTFileName_nonRes_odd != "");
+  assert(BDTFileName_nonRes_even != "");
+  assert(BDTInputVariables_nonRes.size() != 0);
+  TMVAInterface* BDT_nonRes = new TMVAInterface(BDTFileName_nonRes_odd, BDTFileName_nonRes_even, BDTInputVariables_nonRes);
+  BDT_nonRes->enableBDTTransform();
+  std::map<std::string, double> BDTOutput_Map_nonRes;
+  /*
+  assert(BDTFileName_nonRes_base_odd != "");
+  assert(BDTFileName_nonRes_base_even != "");
+  assert(BDTInputVariables_nonRes_base.size() != 0);
+  TMVAInterface* BDT_nonRes_base = new TMVAInterface(BDTFileName_nonRes_base_odd, BDTFileName_nonRes_base_even, BDTInputVariables_nonRes_base);
+  BDT_nonRes_base->enableBDTTransform();
+  std::map<std::string, double> BDTOutput_Map_nonRes_base;
+  */
+  std::map<std::string, double> AllVars_Map;
+
+  /////////////////////
+
+
+
+
+  /*
   //--- initialize BDTs
   std::string BDTFileName = "hhAnalysis/multilepton/data/hh_2lss_XGB_noTopness_evtLevelSUM_HH_res_10Var.pkl";
   std::vector<std::string> BDTInputVariables_SUM =
@@ -701,7 +761,7 @@ int main(int argc, char* argv[])
     };
   XGBInterface BDT_SUM(BDTFileName, BDTInputVariables_SUM);
   std::map<std::string, double> BDTInputs_SUM;
-
+  */
 
 //--- open output file containing run:lumi:event numbers of events passing final event selection criteria
   std::ostream* selEventsFile = ( selEventsFileName_output != "" ) ? new std::ofstream(selEventsFileName_output.data(), std::ios::out) : 0;
@@ -723,6 +783,7 @@ int main(int argc, char* argv[])
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
     EvtHistManager_hh_2lss* evt_;
+    DatacardHistManager_hh* datacard_;
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
@@ -743,7 +804,7 @@ int main(int argc, char* argv[])
       int idxLepton = genMatchDefinition->getIdx();
 
       selHistManagerType* selHistManager = new selHistManagerType();
-      if(! skipBooking)
+      if(! skipBooking && 1==0)
       {
         selHistManager->electrons_ = new ElectronHistManager(makeHistManager_cfg(process_and_genMatch,
             Form("%s/sel/electrons", histogramDir.data()), era_string, central_or_shift, "allHistograms"));
@@ -781,10 +842,19 @@ int main(int argc, char* argv[])
         selHistManager->metFilters_ = new MEtFilterHistManager(makeHistManager_cfg(process_and_genMatch,
             Form("%s/sel/metFilters", histogramDir.data()), era_string, central_or_shift));
         selHistManager->metFilters_->bookHistograms(fs);
+      }
+      if(! skipBooking)
+      {
         selHistManager->evt_ = new EvtHistManager_hh_2lss(makeHistManager_cfg(process_and_genMatch,
             Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
         selHistManager->evt_->bookHistograms(fs);
       }
+      
+      selHistManager->datacard_ = new DatacardHistManager_hh(makeHistManager_cfg(process_and_genMatch,
+        Form("%s/sel/datacard", histogramDir.data()), era_string, central_or_shift),
+        analysisConfig, eventInfo, HHWeight_calc, 
+        isDEBUG);
+      selHistManager->datacard_->bookHistograms(fs);
 
       if(! skipBooking)
       {
@@ -1808,6 +1878,7 @@ int main(int argc, char* argv[])
     double pT_llMEt = (llP4 + metP4).pt();
     double Smin_llMEt = comp_Smin(llP4, metP4.px(), metP4.py());
 
+    /*
     //--- compute output of BDTs
     BDTInputs_SUM["jetMass_sel"]          = jetMass_sel;
     BDTInputs_SUM["leptonPairMass_sel"]   = leptonPairMass_sel;
@@ -1825,6 +1896,7 @@ int main(int argc, char* argv[])
       BDTInputs_SUM["gen_mHH"] = gen_mHH[i];
       BDTOutput_SUM.push_back( BDT_SUM(BDTInputs_SUM));
     }
+    */
 
     double vbf_dEta_jj = -1.;
     double vbf_m_jj = -1.;
@@ -1843,6 +1915,64 @@ int main(int argc, char* argv[])
       }
     }
 
+
+    //Gathering final BDT Inputs
+
+    AllVars_Map["gen_mHH"]                                   =       250.; // setting a Dummy value which will be reset depending on mass hypothesis
+
+    AllVars_Map["dihiggsVisMass_sel"] =              dihiggsVisMass_sel;
+    AllVars_Map["dihiggsMass_wMet_sel"] =            dihiggsMass_wMet_sel;
+    AllVars_Map["jetMass_sel"] =                     jetMass_sel;
+    AllVars_Map["leptonPairMass_sel"] =              leptonPairMass_sel;
+    AllVars_Map["leptonPairCharge_sel"] =            leptonPairCharge_sel;
+    AllVars_Map["met"] =                             metP4.pt();
+    AllVars_Map["mht"] =                             mhtP4.pt();
+    AllVars_Map["met_LD"] =                          met_LD;
+    AllVars_Map["HT"] =                              HT;
+    AllVars_Map["STMET"] =                           STMET;
+    AllVars_Map["evtWeight"] =                       evtWeightRecorder.get(central_or_shift_main);
+    AllVars_Map["lep1_pt"] =                         selLepton_lead->pt();
+    AllVars_Map["lep1_conePt"] =                     comp_lep_conePt(*selLepton_lead);
+    AllVars_Map["lep1_eta"] =                        selLepton_lead->eta();
+    AllVars_Map["mindr_lep1_jet"] =                  std::min(10., mindr_lep1_jet) ;
+    AllVars_Map["mT_lep1"] =                         comp_MT_met(selLepton_lead, met.pt(), met.phi());
+    AllVars_Map["lep2_pt"] =                         selLepton_sublead->pt();
+    AllVars_Map["lep2_conePt"] =                     comp_lep_conePt(*selLepton_sublead);
+    AllVars_Map["lep2_eta"] =                        selLepton_sublead->eta();
+    AllVars_Map["mindr_lep2_jet"] =                  std::min(10., mindr_lep2_jet) ;
+    AllVars_Map["mT_lep2"] =                         comp_MT_met(selLepton_sublead, met.pt(), met.phi());
+    AllVars_Map["dR_ll"] =                           dR_ll;
+    AllVars_Map["pT_ll"] =                           pT_ll;
+    AllVars_Map["max_lep_eta"] =                     TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
+    AllVars_Map["pT_llMEt"] =                        pT_llMEt;
+    AllVars_Map["Smin_llMEt"] =                      Smin_llMEt;
+    AllVars_Map["vbf_dEta_jj"] =                     vbf_dEta_jj;
+    AllVars_Map["vbf_m_jj"] =                        vbf_m_jj;
+    AllVars_Map["nJet"] =                            comp_n_jet25_recl(selJets);
+    AllVars_Map["nJet_vbf"] =                        selJetsVBF.size();
+    AllVars_Map["isVBF"] =                           isVBF;
+    AllVars_Map["nLep"] =                            selLeptons.size();
+    AllVars_Map["THWeight"] =                        THWeight;
+
+
+    std::map<std::string, double> BDTInputs_spin2 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin2, false);
+    std::map<std::string, double> BDTInputs_spin0 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin0, false);
+    std::map<std::string, double> BDTInputs_nonRes = InitializeInputVarMap(AllVars_Map, BDTInputVariables_nonRes, true); // Include all Input Var.s except BM indices
+    //std::map<std::string, double> BDTInputs_nonRes_base = InitializeInputVarMap(AllVars_Map, BDTInputVariables_nonRes_base, true); 
+    
+    std::vector<double> nonResBase_params;
+    nonResBase_params.push_back(0.);
+
+    BDTOutput_Map_spin2 = CreateBDTOutputMap(gen_mHH, BDT_spin2, BDTInputs_spin2, eventInfo.event, false, "_spin2");
+    BDTOutput_Map_spin0 = CreateBDTOutputMap(gen_mHH, BDT_spin0, BDTInputs_spin0, eventInfo.event, false, "_spin0");
+    BDTOutput_Map_nonRes = CreateBDTOutputMap(nonRes_BMs, BDT_nonRes, BDTInputs_nonRes, eventInfo.event, true, "");
+    //BDTOutput_Map_nonRes_base = CreateBDTOutputMap(nonResBase_params, BDT_nonRes_base, BDTInputs_nonRes_base, eventInfo.event, true, "_base");
+
+
+
+
+    
+
 //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons);
 
@@ -1855,7 +1985,7 @@ int main(int argc, char* argv[])
       {
         selHistManagerType* selHistManager = selHistManagers[central_or_shift][genMatch->getIdx()];
         assert(selHistManager);
-        if(! skipFilling)
+        if(! skipFilling && 1==0)
         {
           selHistManager->electrons_->fillHistograms(selElectrons, evtWeight);
           if ( selElectrons.size() >= 1 ) {
@@ -1879,6 +2009,9 @@ int main(int argc, char* argv[])
           }
           selHistManager->met_->fillHistograms(met, mhtP4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
+	}
+	if(! skipFilling)
+        {
           selHistManager->evt_->fillHistograms(
             selElectrons.size(),
             selMuons.size(),
@@ -1894,7 +2027,14 @@ int main(int argc, char* argv[])
             HT,
             STMET,
             evtWeight);
-        }
+        }	
+	selHistManager->datacard_->fillHistograms(
+          BDTOutput_Map_spin2,
+          BDTOutput_Map_spin0,
+          BDTOutput_Map_nonRes,
+          //BDTOutput_Map_nonRes_base["Base"],
+	  -1., // CV: BDTOutput for nonresonant_allBMs case not implemented yet !!
+          evtWeight);
 
         if(! skipFilling)
         {
