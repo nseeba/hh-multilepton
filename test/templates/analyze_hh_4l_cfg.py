@@ -83,6 +83,7 @@ process.analyze_hh_4l = cms.PSet(
     apply_l1PreFireWeight = cms.bool(True),
     apply_hlt_filter = cms.bool(False),
     apply_met_filters = cms.bool(True),
+    invert_ZbosonMassVeto = cms.bool(False),
     cfgMEtFilter = cms.PSet(),
     triggerWhiteList = cms.PSet(),
 
@@ -128,23 +129,23 @@ process.analyze_hh_4l = cms.PSet(
         BDT_xml_FileName_spin0_even = cms.string('hhAnalysis/multilepton/data/BDT_4l/4l_even_half_model_spin0.xml'),
         BDT_xml_FileName_spin0_odd = cms.string('hhAnalysis/multilepton/data/BDT_4l/4l_odd_half_model_spin0.xml'),
         fitFunctionFileName_spin0 = cms.string('hhAnalysis/multilepton/data/BDT_4l/4l_TProfile_signal_fit_func_spin0.root'), 
-        inputVars_spin0 = cms.vstring('dihiggsVisMass_sel', 'dihiggsMass', 'maxPtSum_pair1_m', 'maxPtSum_pair2_deltaEtaLep1', 'maxPtSum_pair2_deltaEta', 'maxPtSum_pair2_deltaPhi', 'maxPtSum_pair2_m', 'MET', 'METDeltaPhiLep1', 'HTmiss', 'gen_mHH'),
+        inputVars_spin0 = cms.vstring('dihiggsVisMass_sel', 'maxPtSum_pair1_m', 'maxPtSum_pair2_deltaEtaLep1', 'maxPtSum_pair2_deltaEta', 'maxPtSum_pair2_deltaPhi', 'maxPtSum_pair2_m', 'MET', 'METDeltaPhiLep1', 'HTmiss', 'gen_mHH'),
         BDT_xml_FileName_spin2_even = cms.string('hhAnalysis/multilepton/data/BDT_4l/4l_even_half_model_spin2.xml'),
         BDT_xml_FileName_spin2_odd = cms.string('hhAnalysis/multilepton/data/BDT_4l/4l_odd_half_model_spin2.xml'),
         fitFunctionFileName_spin2 = cms.string('hhAnalysis/multilepton/data/BDT_4l/4l_TProfile_signal_fit_func_spin2.root'), 
-        inputVars_spin2 = cms.vstring('dihiggsVisMass_sel', 'dihiggsMass', 'maxPtSum_pair1_m', 'maxPtSum_pair2_deltaEtaLep1', 'maxPtSum_pair2_deltaEta', 'maxPtSum_pair2_deltaPhi', 'maxPtSum_pair2_m', 'MET', 'METDeltaPhiLep1', 'HTmiss', 'gen_mHH'),
+        inputVars_spin2 = cms.vstring('dihiggsVisMass_sel', 'maxPtSum_pair1_m', 'maxPtSum_pair2_deltaEtaLep1', 'maxPtSum_pair2_deltaEta', 'maxPtSum_pair2_deltaPhi', 'maxPtSum_pair2_m', 'MET', 'METDeltaPhiLep1', 'HTmiss', 'gen_mHH'),
     ),
     nonRes_BMs = cms.vdouble(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
     mvaInfo_nonRes = cms.PSet( ## [Tweaked hyper-para.s used]
-        BDT_xml_FileName_nonRes_even = cms.string('hhAnalysis/multilepton/data/BDT_4l/4l_even_half_model_nonres.xml'),
-        BDT_xml_FileName_nonRes_odd = cms.string('hhAnalysis/multilepton/data/BDT_4l/4l_odd_half_model_nonres.xml'),
-        inputVars_nonRes = cms.vstring('dihiggsVisMass_sel', 'dihiggsMass', 'HT', 'maxPtSum_pair1_deltaPhi', 'maxPtSum_pair1_m', 'maxPtSum_pair2_deltaPhiLep1', 'maxPtSum_pair2_m', 'MET', 'METDeltaPhiLep1', 'HTmiss', 'SM', 'BM1', 'BM2', 'BM3', 'BM4', 'BM5', 'BM6', 'BM7', 'BM8', 'BM9', 'BM10', 'BM11', 'BM12'),
+        BDT_xml_FileName_nonRes_even = cms.string('hhAnalysis/multilepton/data/BDT_4l/4l_even_half_model_nonres_default.xml'),
+        BDT_xml_FileName_nonRes_odd = cms.string('hhAnalysis/multilepton/data/BDT_4l/4l_odd_half_model_nonres_default.xml'),
+        inputVars_nonRes = cms.vstring('dihiggsVisMass_sel', 'HT', 'maxPtSum_pair1_deltaPhi', 'maxPtSum_pair1_m', 'maxPtSum_pair2_deltaPhiLep1', 'maxPtSum_pair2_m', 'MET', 'METDeltaPhiLep1', 'HTmiss', 'SM', 'BM1', 'BM2', 'BM3', 'BM4', 'BM5', 'BM6', 'BM7', 'BM8', 'BM9', 'BM10', 'BM11', 'BM12'),
     ),
 
     mvaInfo_nonRes_base = cms.PSet( ## [Tweaked hyper-para.s used]                                                                                                                                
         BDT_xml_FileName_nonRes_base_even = cms.string('hhAnalysis/multilepton/data/BDT_4l/4l_even_half_model_nonres_base.xml'),
         BDT_xml_FileName_nonRes_base_odd = cms.string('hhAnalysis/multilepton/data/BDT_4l/4l_odd_half_model_nonres_base.xml'),
-        inputVars_nonRes_base = cms.vstring('dihiggsVisMass_sel', 'dihiggsMass', 'HT', 'maxPtSum_pair1_deltaPhi', 'maxPtSum_pair1_m', 'maxPtSum_pair2_deltaPhiLep1', 'maxPtSum_pair2_m', 'MET', 'METDeltaPhiLep1', 'HTmiss'),
+        inputVars_nonRes_base = cms.vstring('dihiggsVisMass_sel', 'HT', 'maxPtSum_pair1_deltaPhi', 'maxPtSum_pair1_m', 'maxPtSum_pair2_deltaPhiLep1', 'maxPtSum_pair2_m', 'MET', 'METDeltaPhiLep1', 'HTmiss'),
     ),
 
 
