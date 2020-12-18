@@ -168,9 +168,16 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
         histogramFakes = histogramBackground;
         histogramFakes_density = histogramBackground_density;
       }
-    } else if ( process.find("VH") != std::string::npos ) {
-      histogramVH = histogramBackground;
-      histogramVH_density = histogramBackground_density;
+    } else if ( process.find("WH") != std::string::npos ||
+                process.find("ZH") != std::string::npos  ) {
+      if ( histogramVH && histogramVH_density ) {
+        histogramVH->Add(histogramBackground);
+        histogramVH_density->Add(histogramBackground_density);
+      }
+      else {
+        histogramVH = histogramBackground;
+        histogramVH_density = histogramBackground_density;
+      }
     } else if ( process.find("ZZ") != std::string::npos ) {
       if ( histogramZZ && histogramZZ_density ) {
         histogramZZ->Add(histogramBackground);

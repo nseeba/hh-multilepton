@@ -38,20 +38,18 @@ class analyzeConfig_hh(analyzeConfig):
     #       https://indico.cern.ch/event/904971/contributions/3857701/attachments/2036949/3410728/TopPt_20.05.12.pdf
     self.topPtRwgtChoice = "HighPt"
 
-  def get_nonfake_backgrounds(self, split_vh = True, split_th = True, split_ST = False):
-    processes = [ "ggZZ", "qqZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "VH", "TTH", "ggH", "qqH" ]
+  def get_nonfake_backgrounds(self, split_th = True, split_ST = False):
+    processes = [ "ggZZ", "qqZZ", "WZ", "WW", "TT", "TTW", "TTWW", "TTZ", "DY", "W", "Other", "ZH", "WH", "TTH", "ggH", "qqH" ]
     if split_th:
       processes.extend([ "tHq", "tHW" ])
     else:
       processes.append("TH")
-    if split_vh:
-      processes.extend([ "ZH", "WH" ])
     if split_ST:
       processes.extend([ "ST" ])
     return processes
 
   def get_makeplots_backgrounds(self, add_flips = ''):
-    result = [ bkg for bkg in self.nonfake_backgrounds if bkg not in [ "ZH", "WH" ] ] + [ "data_fakes" ]
+    result = self.nonfake_backgrounds + [ "data_fakes" ]
     if '0l' not in self.channel:
       result.append("Convs")
     if add_flips:
@@ -64,9 +62,7 @@ class analyzeConfig_hh(analyzeConfig):
     return result
 
   def get_sample_categories(self):
-    # exclude WH and ZH in order to avoid double counting the contribution from VH which is included anwyays
-    # we don't care about separating the VH background when subtracting the prompt MC from data fakes
-    return [ bkg for bkg in self.nonfake_backgrounds if bkg not in [ "WH", "ZH" ] ]
+    return self.nonfake_backgrounds
 
   def createCfg_makePlots(self, jobOptions):
     """Fills the template of python configuration file for making control plots
