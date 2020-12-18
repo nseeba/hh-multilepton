@@ -96,9 +96,9 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None,
       sample_info["sample_category"] = "XGamma"
 
     if sample_info["sample_category"] == "VH":
-      if sample_name.startswith("/WH"):
+      if sample_name.startswith(("/WH", "/WplusH", "/WminusH")):
         sample_info["sample_category"] = "WH"
-      elif sample_name.startswith("/ZH"):
+      elif sample_name.startswith(("/ZH", "/HZJ")):
         sample_info["sample_category"] = "ZH"
       else:
         assert(sample_name.startswith("/VH"))
