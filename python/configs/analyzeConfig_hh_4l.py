@@ -52,6 +52,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
         era,
         use_lumi,
         lumi,
+        invert_ZbosonMassVeto,
         check_output_files,
         running_method,
         num_parallel_jobs,
@@ -96,6 +97,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
       apply_nc_correction   = False,
     )
 
+    self.invert_ZbosonMassVeto = invert_ZbosonMassVeto
     self.lepton_selections = [ "Tight", "Fakeable" ]
     self.lepton_frWeights = [ "enabled", "disabled" ]
     self.applyFakeRateWeights = applyFakeRateWeights
@@ -173,6 +175,7 @@ class analyzeConfig_hh_4l(analyzeConfig_hh):
     jobOptions['leptonFakeRateWeight.histogramName_mu'] = self.leptonFakeRateWeight_histogramName_mu
 
     lines = super(analyzeConfig_hh_4l, self).createCfg_analyze(jobOptions, sample_info)
+    lines.append("process.analyze_hh_4l.invert_ZbosonMassVeto   = cms.bool(%s)" % self.invert_ZbosonMassVeto)
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
 
   def create(self):
