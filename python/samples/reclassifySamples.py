@@ -104,8 +104,4 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None,
         assert(sample_name.startswith("/VH"))
         sample_info["use_it"] = False
 
-      #TODO remove after we've skimmed them
-      if sample_name.startswith(("/WHToNonbb", "/ZHToNonbb")):
-        sample_info["use_it"] = False
-
   return samples
