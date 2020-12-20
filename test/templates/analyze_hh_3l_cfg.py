@@ -105,6 +105,7 @@ process.analyze_hh_3l = cms.PSet(
     #branchName_jets_ak8_Wjj = cms.string('FatJet'),
     #branchName_subjets_ak8_Wjj = cms.string('SubJet'),
     branchName_met = cms.string('MET'),
+    branchName_vertex = cms.string('PV'),
 
     branchName_muonGenMatch = cms.string('MuonGenMatch'),
     branchName_electronGenMatch = cms.string('ElectronGenMatch'),
