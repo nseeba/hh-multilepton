@@ -516,7 +516,8 @@ int main(int argc, char* argv[])
   }
   inputTree -> registerReader(&eventInfoReader);
 
-  RecoVertexReader vertexReader(branchName_vertex);
+  RecoVertex vertex;
+  RecoVertexReader vertexReader(&vertex, branchName_vertex);
   inputTree -> registerReader(&vertexReader);
 
   ObjectMultiplicity objectMultiplicity;
@@ -1365,7 +1366,6 @@ int main(int argc, char* argv[])
     const RecoHadTau* selHadTau = selHadTaus[0];
     const hadTauGenMatchEntry& selHadTau_genMatch = getHadTauGenMatch(hadTauGenMatch_definitions, selHadTau);
 
-    RecoVertex vertex = vertexReader.read();
     crackVetoHadTauFilter.set_vertex(vertex);
     bool selHadTau_isInCrack = !crackVetoHadTauFilter(*selHadTau);
     if ( selHadTau_isInCrack ) {
