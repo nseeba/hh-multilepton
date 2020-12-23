@@ -8,7 +8,17 @@ SVfit4tauHistManager_VAMP::SVfit4tauHistManager_VAMP(const edm::ParameterSet & c
   : HistManagerBase(cfg)
   , histogram_logLmax1_vs_dihiggsMass1_(nullptr)
   , histogram_logLmax2_vs_dihiggsMass2_(nullptr)
-{}
+{
+  central_or_shiftOptions_["numValidSolutions"] = { "central" };
+  central_or_shiftOptions_["dihiggsVisMass1"] = { "central" };
+  central_or_shiftOptions_["dihiggsMass1"] = { "central" };
+  central_or_shiftOptions_["logLmax1"] = { "central" };
+  central_or_shiftOptions_["dihiggsVisMass2"] = { "central" };
+  central_or_shiftOptions_["dihiggsMass2"] = { "central" };
+  central_or_shiftOptions_["logLmax2"] = { "central" };
+  central_or_shiftOptions_["logLmax1_vs_dihiggsMass1"] = { "central" };
+  central_or_shiftOptions_["logLmax2_vs_dihiggsMass2"] = { "central" };
+}
 
 void
 SVfit4tauHistManager_VAMP::bookHistograms(TFileDirectory & dir)

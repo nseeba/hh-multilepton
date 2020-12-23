@@ -1,6 +1,6 @@
 from collections import OrderedDict as OD
 
-# file generated at 2020-11-07 20:35:57 with the following command:
+# file generated at 2020-12-17 02:22:03 with the following command:
 # create_dictionary.py -m python/samples/metaDict_2016_hh.py -p python/samples/sampleLocations_2016_preselected.txt -N samples_2016 -E 2016 -o python/samples -g hhAnalyzeSamples_2016_hh_preselected_base.py -M -q /hdfs/local/karl/count_final/2020Nov07/count_2016.root
 
 samples_2016 = OD()
@@ -11424,7 +11424,7 @@ samples_2016["/VBFHHTo4T_CV_1_C2V_1_C3_1_dipoleRecoilOff-TuneCUETP8M1_PSweights_
   ("fsize_local",                     970242485), # 970.24MB, avg file size 970.24MB
   ("fsize_db",                        17641273615), # 17.64GB, avg file size 882.06MB
   ("use_it",                          True),
-  ("xsection",                        6.785e-06),
+  ("xsection",                        6.79e-06),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -11486,7 +11486,7 @@ samples_2016["/VBFHHTo4T_CV_1_C2V_1_C3_2_dipoleRecoilOff-TuneCUETP8M1_PSweights_
   ("fsize_local",                     1056898946), # 1.06GB, avg file size 1.06GB
   ("fsize_db",                        18337645661), # 18.34GB, avg file size 764.07MB
   ("use_it",                          True),
-  ("xsection",                        5.5932e-06),
+  ("xsection",                        5.628e-06),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -11548,7 +11548,7 @@ samples_2016["/VBFHHTo4T_CV_1_C2V_2_C3_1_dipoleRecoilOff-TuneCUETP8M1_PSweights_
   ("fsize_local",                     1567959910), # 1.57GB, avg file size 1.57GB
   ("fsize_db",                        19035822380), # 19.04GB, avg file size 761.43MB
   ("use_it",                          True),
-  ("xsection",                        5.5891e-05),
+  ("xsection",                        5.6616e-05),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -11610,7 +11610,7 @@ samples_2016["/VBFHHTo4T_CV_1_C2V_1_C3_0_dipoleRecoilOff-TuneCUETP8M1_PSweights_
   ("fsize_local",                     1006881188), # 1.01GB, avg file size 1.01GB
   ("fsize_db",                        17469941462), # 17.47GB, avg file size 831.90MB
   ("use_it",                          True),
-  ("xsection",                        1.81178e-05),
+  ("xsection",                        1.8062e-05),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -11672,7 +11672,7 @@ samples_2016["/VBFHHTo4T_CV_0_5_C2V_1_C3_1_dipoleRecoilOff-TuneCUETP8M1_PSweight
   ("fsize_local",                     1471012075), # 1.47GB, avg file size 1.47GB
   ("fsize_db",                        18592779701), # 18.59GB, avg file size 885.37MB
   ("use_it",                          True),
-  ("xsection",                        4.25487e-05),
+  ("xsection",                        4.2791e-05),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -11734,7 +11734,7 @@ samples_2016["/VBFHHTo4T_CV_1_5_C2V_1_C3_1_dipoleRecoilOff-TuneCUETP8M1_PSweight
   ("fsize_local",                     1261747602), # 1.26GB, avg file size 1.26GB
   ("fsize_db",                        18174217627), # 18.17GB, avg file size 865.44MB
   ("use_it",                          True),
-  ("xsection",                        0.0002595228),
+  ("xsection",                        0.000260945),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -11796,7 +11796,7 @@ samples_2016["/VBFHHTo4T_CV_1_C2V_0_C3_1_dipoleRecoilOff-TuneCUETP8M1_PSweights_
   ("fsize_local",                     1362866146), # 1.36GB, avg file size 1.36GB
   ("fsize_db",                        18416108721), # 18.42GB, avg file size 920.81MB
   ("use_it",                          True),
-  ("xsection",                        0.0001064477),
+  ("xsection",                        0.000107126),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -11858,7 +11858,7 @@ samples_2016["/VBFHHTo2V2Tau_CV_1_C2V_1_C3_1_dipoleRecoilOff-TuneCUETP8M1_PSweig
   ("fsize_local",                     633287686), # 633.29MB, avg file size 633.29MB
   ("fsize_db",                        17917516231), # 17.92GB, avg file size 689.14MB
   ("use_it",                          True),
-  ("xsection",                        5.19e-05),
+  ("xsection",                        5.1938e-05),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -11920,7 +11920,7 @@ samples_2016["/VBFHHTo2V2Tau_CV_1_C2V_1_C3_2_dipoleRecoilOff-TuneCUETP8M1_PSweig
   ("fsize_local",                     684012444), # 684.01MB, avg file size 684.01MB
   ("fsize_db",                        18791082669), # 18.79GB, avg file size 854.14MB
   ("use_it",                          True),
-  ("xsection",                        4.27833e-05),
+  ("xsection",                        4.305e-05),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -11982,7 +11982,7 @@ samples_2016["/VBFHHTo2V2Tau_CV_1_C2V_2_C3_1_dipoleRecoilOff-TuneCUETP8M1_PSweig
   ("fsize_local",                     991437123), # 991.44MB, avg file size 991.44MB
   ("fsize_db",                        19166074534), # 19.17GB, avg file size 798.59MB
   ("use_it",                          True),
-  ("xsection",                        0.0004275219),
+  ("xsection",                        0.000433091),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -12044,7 +12044,7 @@ samples_2016["/VBFHHTo2V2Tau_CV_1_C2V_1_C3_0_dipoleRecoilOff-TuneCUETP8M1_PSweig
   ("fsize_local",                     668656079), # 668.66MB, avg file size 668.66MB
   ("fsize_db",                        17935707869), # 17.94GB, avg file size 1.28GB
   ("use_it",                          True),
-  ("xsection",                        0.0001385868),
+  ("xsection",                        0.000138167),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -12106,7 +12106,7 @@ samples_2016["/VBFHHTo2V2Tau_CV_0_5_C2V_1_C3_1_dipoleRecoilOff-TuneCUETP8M1_PSwe
   ("fsize_local",                     978353259), # 978.35MB, avg file size 978.35MB
   ("fsize_db",                        19530490653), # 19.53GB, avg file size 849.15MB
   ("use_it",                          True),
-  ("xsection",                        0.0003254642),
+  ("xsection",                        0.000327333),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -12168,7 +12168,7 @@ samples_2016["/VBFHHTo2V2Tau_CV_1_5_C2V_1_C3_1_dipoleRecoilOff-TuneCUETP8M1_PSwe
   ("fsize_local",                     833812925), # 833.81MB, avg file size 833.81MB
   ("fsize_db",                        18832486606), # 18.83GB, avg file size 896.79MB
   ("use_it",                          True),
-  ("xsection",                        0.001985145),
+  ("xsection",                        0.001996109),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -12230,7 +12230,7 @@ samples_2016["/VBFHHTo2V2Tau_CV_1_C2V_0_C3_1_dipoleRecoilOff-TuneCUETP8M1_PSweig
   ("fsize_local",                     899229289), # 899.23MB, avg file size 899.23MB
   ("fsize_db",                        19150368996), # 19.15GB, avg file size 1.01GB
   ("use_it",                          True),
-  ("xsection",                        0.0008142775),
+  ("xsection",                        0.000819465),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -12292,7 +12292,7 @@ samples_2016["/VBFHHTo4V_CV_1_C2V_1_C3_1_dipoleRecoilOff-TuneCUETP8M1_PSweights_
   ("fsize_local",                     321592207), # 321.59MB, avg file size 321.59MB
   ("fsize_db",                        18679351810), # 18.68GB, avg file size 667.12MB
   ("use_it",                          True),
-  ("xsection",                        9.92524e-05),
+  ("xsection",                        9.9326e-05),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -12354,7 +12354,7 @@ samples_2016["/VBFHHTo4V_CV_1_C2V_1_C3_2_dipoleRecoilOff-TuneCUETP8M1_PSweights_
   ("fsize_local",                     330233833), # 330.23MB, avg file size 330.23MB
   ("fsize_db",                        18636089106), # 18.64GB, avg file size 776.50MB
   ("use_it",                          True),
-  ("xsection",                        8.18177e-05),
+  ("xsection",                        8.2329e-05),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -12416,7 +12416,7 @@ samples_2016["/VBFHHTo4V_CV_1_C2V_1_C3_0_dipoleRecoilOff-TuneCUETP8M1_PSweights_
   ("fsize_local",                     339061510), # 339.06MB, avg file size 339.06MB
   ("fsize_db",                        18558351469), # 18.56GB, avg file size 742.33MB
   ("use_it",                          True),
-  ("xsection",                        0.00026503),
+  ("xsection",                        0.000264229),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -12478,7 +12478,7 @@ samples_2016["/VBFHHTo4V_CV_1_C2V_2_C3_1_dipoleRecoilOff-TuneCUETP8M1_PSweights_
   ("fsize_local",                     379456548), # 379.46MB, avg file size 379.46MB
   ("fsize_db",                        19966917406), # 19.97GB, avg file size 998.35MB
   ("use_it",                          True),
-  ("xsection",                        0.0008175824),
+  ("xsection",                        0.000828237),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -12540,7 +12540,7 @@ samples_2016["/VBFHHTo4V_CV_0_5_C2V_1_C3_1_dipoleRecoilOff-TuneCUETP8M1_PSweight
   ("fsize_local",                     387112137), # 387.11MB, avg file size 387.11MB
   ("fsize_db",                        20403120727), # 20.40GB, avg file size 816.12MB
   ("use_it",                          True),
-  ("xsection",                        0.0006224099),
+  ("xsection",                        0.000625988),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -12602,7 +12602,7 @@ samples_2016["/VBFHHTo4V_CV_1_5_C2V_1_C3_1_dipoleRecoilOff-TuneCUETP8M1_PSweight
   ("fsize_local",                     364654725), # 364.65MB, avg file size 364.65MB
   ("fsize_db",                        19570320877), # 19.57GB, avg file size 698.94MB
   ("use_it",                          True),
-  ("xsection",                        0.003796343),
+  ("xsection",                        0.003817336),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -12664,7 +12664,7 @@ samples_2016["/VBFHHTo4V_CV_1_C2V_0_C3_1_dipoleRecoilOff-TuneCUETP8M1_PSweights_
   ("fsize_local",                     374059961), # 374.06MB, avg file size 374.06MB
   ("fsize_db",                        19933948507), # 19.93GB, avg file size 906.09MB
   ("use_it",                          True),
-  ("xsection",                        0.003796343),
+  ("xsection",                        0.001567135),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         False),
@@ -13484,7 +13484,7 @@ samples_2016["/GluGluToHHTo4Tau_node_cHHH0_TuneCUETP8M1_PSWeights_13TeV-powheg-p
   ("fsize_local",                     2749328370), # 2.75GB, avg file size 2.75GB
   ("fsize_db",                        38805354616), # 38.81GB, avg file size 597.01MB
   ("use_it",                          True),
-  ("xsection",                        0.00026349),
+  ("xsection",                        0.00026593),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -13550,7 +13550,7 @@ samples_2016["/GluGluToHHTo4Tau_node_cHHH1_TuneCUETP8M1_PSWeights_13TeV-powheg-p
   ("fsize_local",                     2810115151), # 2.81GB, avg file size 2.81GB
   ("fsize_db",                        38550780831), # 38.55GB, avg file size 296.54MB
   ("use_it",                          True),
-  ("xsection",                        0.00011734),
+  ("xsection",                        0.00011841),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -13616,7 +13616,7 @@ samples_2016["/GluGluToHHTo4Tau_node_cHHH2p45_TuneCUETP8M1_PSWeights_13TeV-powhe
   ("fsize_local",                     2895137825), # 2.90GB, avg file size 2.90GB
   ("fsize_db",                        39777294092), # 39.78GB, avg file size 375.26MB
   ("use_it",                          True),
-  ("xsection",                        4.97e-05),
+  ("xsection",                        5.006e-05),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -13682,7 +13682,7 @@ samples_2016["/GluGluToHHTo4Tau_node_cHHH5_TuneCUETP8M1_PSWeights_13TeV-powheg-p
   ("fsize_local",                     2314410826), # 2.31GB, avg file size 2.31GB
   ("fsize_db",                        38214275567), # 38.21GB, avg file size 471.78MB
   ("use_it",                          True),
-  ("xsection",                        0.00034666),
+  ("xsection",                        0.00034774),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -14554,7 +14554,7 @@ samples_2016["/GluGluToHHTo2V2Tau_node_cHHH0_TuneCUETP8M1_PSWeights_13TeV-powheg
   ("fsize_local",                     697652846), # 697.65MB, avg file size 697.65MB
   ("fsize_db",                        15456054734), # 15.46GB, avg file size 672.00MB
   ("use_it",                          True),
-  ("xsection",                        0.0020155),
+  ("xsection",                        0.00203428),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -14620,7 +14620,7 @@ samples_2016["/GluGluToHHTo2V2Tau_node_cHHH1_TuneCUETP8M1_PSWeights_13TeV-powheg
   ("fsize_local",                     782252205), # 782.25MB, avg file size 782.25MB
   ("fsize_db",                        16374952584), # 16.37GB, avg file size 655.00MB
   ("use_it",                          True),
-  ("xsection",                        0.00089753),
+  ("xsection",                        0.00090581),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -14686,7 +14686,7 @@ samples_2016["/GluGluToHHTo2V2Tau_node_cHHH2p45_TuneCUETP8M1_PSWeights_13TeV-pow
   ("fsize_local",                     760474660), # 760.47MB, avg file size 760.47MB
   ("fsize_db",                        16238506681), # 16.24GB, avg file size 523.82MB
   ("use_it",                          True),
-  ("xsection",                        0.00038015),
+  ("xsection",                        0.0003829),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -14752,7 +14752,7 @@ samples_2016["/GluGluToHHTo2V2Tau_node_cHHH5_TuneCUETP8M1_PSWeights_13TeV-powheg
   ("fsize_local",                     601704122), # 601.70MB, avg file size 601.70MB
   ("fsize_db",                        15486983330), # 15.49GB, avg file size 645.29MB
   ("use_it",                          True),
-  ("xsection",                        0.00265166),
+  ("xsection",                        0.00266003),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -15624,7 +15624,7 @@ samples_2016["/GluGluToHHTo4V_node_cHHH0_TuneCUETP8M1_PSWeights_13TeV-powheg-pyt
   ("fsize_local",                     851852751), # 851.85MB, avg file size 851.85MB
   ("fsize_db",                        40336608667), # 40.34GB, avg file size 1.01GB
   ("use_it",                          True),
-  ("xsection",                        0.00385439),
+  ("xsection",                        0.00389033),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -15690,7 +15690,7 @@ samples_2016["/GluGluToHHTo4V_node_cHHH1_TuneCUETP8M1_PSWeights_13TeV-powheg-pyt
   ("fsize_local",                     881573844), # 881.57MB, avg file size 881.57MB
   ("fsize_db",                        40722538714), # 40.72GB, avg file size 904.95MB
   ("use_it",                          True),
-  ("xsection",                        0.00171641),
+  ("xsection",                        0.00173227),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -15756,7 +15756,7 @@ samples_2016["/GluGluToHHTo4V_node_cHHH2p45_TuneCUETP8M1_PSWeights_13TeV-powheg-
   ("fsize_local",                     878971328), # 878.97MB, avg file size 878.97MB
   ("fsize_db",                        41734175155), # 41.73GB, avg file size 1.35GB
   ("use_it",                          True),
-  ("xsection",                        0.00072699),
+  ("xsection",                        0.00073225),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -15822,7 +15822,7 @@ samples_2016["/GluGluToHHTo4V_node_cHHH5_TuneCUETP8M1_PSWeights_13TeV-powheg-pyt
   ("fsize_local",                     748664259), # 748.66MB, avg file size 748.66MB
   ("fsize_db",                        38929152863), # 38.93GB, avg file size 811.02MB
   ("use_it",                          True),
-  ("xsection",                        0.00507095),
+  ("xsection",                        0.00508701),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),

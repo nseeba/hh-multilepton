@@ -15,12 +15,15 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
                                                        const AnalysisConfig_hh & analysisConfig, 
                                                        const EventInfo & eventInfo, 
                                                        const HHWeightInterface2 * HHWeight_calc,
+                                                       const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
                                                        bool isDEBUG)
   : HistManagerBase(cfg)
   , analysisConfig_(analysisConfig)
   , eventInfo_(eventInfo)
   , HHWeight_calc_(HHWeight_calc)
   , apply_HH_rwgt_(HHWeight_calc_ != nullptr)
+  , HHWeight_calc_LOtoNLO_(HHWeight_calc_LOtoNLO)
+  , apply_HH_rwgt_LOtoNLO_(HHWeight_calc_LOtoNLO_ != nullptr)
   , eventCategoryBase_(nullptr)
   , numBinsX_(100)
   , xMin_(0.)
@@ -32,6 +35,7 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
                                                        const AnalysisConfig_hh & analysisConfig, 
                                                        const EventInfo & eventInfo, 
                                                        const HHWeightInterface2 * HHWeight_calc,
+                                                       const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
                                                        const EventCategoryBase * eventCategoryBase,
                                                        bool isDEBUG)
   : HistManagerBase(cfg)
@@ -39,6 +43,8 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
   , eventInfo_(eventInfo)
   , HHWeight_calc_(HHWeight_calc)
   , apply_HH_rwgt_(HHWeight_calc_ != nullptr)
+  , HHWeight_calc_LOtoNLO_(HHWeight_calc_LOtoNLO)
+  , apply_HH_rwgt_LOtoNLO_(HHWeight_calc_LOtoNLO_ != nullptr)
   , eventCategoryBase_(eventCategoryBase)
   , numBinsX_(100)
   , xMin_(0.) // 0.
@@ -261,13 +267,22 @@ DatacardHistManagerBase_hh::bookHistograms(TFileDirectory & dir)
 void
 DatacardHistManagerBase_hh::compHHReweightMap()
 {
-  if ( analysisConfig_.isMC_HH_nonresonant() && apply_HH_rwgt_ )
+  if ( analysisConfig_.isMC_HH_nonresonant() && (apply_HH_rwgt_ || apply_HH_rwgt_LOtoNLO_) )
   {
     for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_nonresonant_.begin();
           histogramName != histogramNames_mvaOutput_nonresonant_.end(); ++histogramName ) {
       const std::string& bmName = histogramName->first;
-      assert(HHWeight_calc_);
-      double HHReweight = HHWeight_calc_->getReWeight(bmName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);
+      double HHReweight = 1.;
+      if ( apply_HH_rwgt_ )
+      {
+        assert(HHWeight_calc_);
+        HHReweight = HHWeight_calc_->getReWeight(bmName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);
+      }
+      if ( apply_HH_rwgt_LOtoNLO_ )
+      {
+        assert(HHWeight_calc_LOtoNLO_);
+        HHReweight *= HHWeight_calc_LOtoNLO_->getReWeight(bmName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);
+      }
       HHReweightMap_[histogramName->first] = HHReweight;
     }
   }

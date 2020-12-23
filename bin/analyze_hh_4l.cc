@@ -83,9 +83,12 @@
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
 #include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface_2.h" // HHWeightInterface
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterfaceLOtoNLO.h" // HHWeightInterfaceLOtoNLO
 #include "tthAnalysis/HiggsToTauTau/interface/BM_list.h" // BMS
 #include "tthAnalysis/HiggsToTauTau/interface/NtupleFillerBDT.h" // NtupleFillerBDT
 #include "tthAnalysis/HiggsToTauTau/interface/BtagSFRatioFacility.h" // BtagSFRatioFacility
+#include "tthAnalysis/HiggsToTauTau/interface/RecoVertex.h" // RecoVertex
+#include "tthAnalysis/HiggsToTauTau/interface/RecoVertexReader.h" // RecoVertexReader
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_4l.h" // EvtHistManager_hh_4l
 #include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
@@ -346,6 +349,7 @@ int main(int argc, char* argv[])
   std::string branchName_hadTaus = cfg_analyze.getParameter<std::string>("branchName_hadTaus");
   std::string branchName_jets = cfg_analyze.getParameter<std::string>("branchName_jets");
   std::string branchName_met = cfg_analyze.getParameter<std::string>("branchName_met");
+  std::string branchName_vertex = cfg_analyze.getParameter<std::string>("branchName_vertex");
 
   std::string branchName_genLeptons = cfg_analyze.getParameter<std::string>("branchName_genLeptons");
   std::string branchName_genHadTaus = cfg_analyze.getParameter<std::string>("branchName_genHadTaus");
@@ -363,8 +367,57 @@ int main(int argc, char* argv[])
   const bool genMatchingByIndex = cfg_analyze.getParameter<bool>("genMatchingByIndex");
 
   const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
+  const edm::ParameterSet mvaInfo_res = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_res");
   std::vector<double> gen_mHH = analysisConfig.get_HH_resonant_mass_points();
+  std::string BDTFileName_spin0_even  = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_spin0_even");
+  std::string BDTFileName_spin0_odd   = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_spin0_odd");
+  std::string fitFunctionFileName_spin0 = mvaInfo_res.getParameter<std::string>("fitFunctionFileName_spin0");
+  std::vector<std::string> BDTInputVariables_spin0 = mvaInfo_res.getParameter<std::vector<std::string>>("inputVars_spin0");
+  std::string BDTFileName_spin2_even  = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_spin2_even");
+  std::string BDTFileName_spin2_odd   = mvaInfo_res.getParameter<std::string>("BDT_xml_FileName_spin2_odd");
+  std::string fitFunctionFileName_spin2 = mvaInfo_res.getParameter<std::string>("fitFunctionFileName_spin2");
+  std::vector<std::string> BDTInputVariables_spin2 = mvaInfo_res.getParameter<std::vector<std::string>>("inputVars_spin2");
+  const edm::ParameterSet mvaInfo_nonRes = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_nonRes");
   std::vector<double> nonRes_BMs = cfg_analyze.getParameter<std::vector<double>>("nonRes_BMs");
+  std::string BDTFileName_nonRes_even  = mvaInfo_nonRes.getParameter<std::string>("BDT_xml_FileName_nonRes_even");
+  std::string BDTFileName_nonRes_odd   = mvaInfo_nonRes.getParameter<std::string>("BDT_xml_FileName_nonRes_odd");
+  std::vector<std::string> BDTInputVariables_nonRes = mvaInfo_nonRes.getParameter<std::vector<std::string>>("inputVars_nonRes"); // Include all Input Var.s except BM indices
+  const edm::ParameterSet mvaInfo_nonRes_base = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_nonRes_base");
+  std::string BDTFileName_nonRes_base_even  = mvaInfo_nonRes_base.getParameter<std::string>("BDT_xml_FileName_nonRes_base_even");
+  std::string BDTFileName_nonRes_base_odd   = mvaInfo_nonRes_base.getParameter<std::string>("BDT_xml_FileName_nonRes_base_odd");
+  std::vector<std::string> BDTInputVariables_nonRes_base = mvaInfo_nonRes_base.getParameter<std::vector<std::string>>("inputVars_nonRes_base"); // Include all Input Var.s except BM indices
+
+  assert(BDTFileName_spin0_odd != "");
+  assert(BDTFileName_spin0_even != "");
+  assert(fitFunctionFileName_spin0 != "");
+  assert(BDTInputVariables_spin0.size() != 0);
+  TMVAInterface* BDT_spin0 = new TMVAInterface(BDTFileName_spin0_odd, BDTFileName_spin0_even, BDTInputVariables_spin0, fitFunctionFileName_spin0);
+  BDT_spin0->enableBDTTransform();
+  std::map<std::string, double> BDTOutput_Map_spin0;
+
+  assert(BDTFileName_spin2_odd != "");
+  assert(BDTFileName_spin2_even != "");
+  assert(fitFunctionFileName_spin2 != "");
+  assert(BDTInputVariables_spin2.size() != 0);
+  TMVAInterface* BDT_spin2 = new TMVAInterface(BDTFileName_spin2_odd, BDTFileName_spin2_even, BDTInputVariables_spin2, fitFunctionFileName_spin2);
+  BDT_spin2->enableBDTTransform();
+  std::map<std::string, double> BDTOutput_Map_spin2;
+
+  assert(BDTFileName_nonRes_odd != "");
+  assert(BDTFileName_nonRes_even != "");
+  assert(BDTInputVariables_nonRes.size() != 0);
+  TMVAInterface* BDT_nonRes = new TMVAInterface(BDTFileName_nonRes_odd, BDTFileName_nonRes_even, BDTInputVariables_nonRes);
+  BDT_nonRes->enableBDTTransform();
+  std::map<std::string, double> BDTOutput_Map_nonRes;
+
+  assert(BDTFileName_nonRes_base_odd != "");
+  assert(BDTFileName_nonRes_base_even != "");
+  assert(BDTInputVariables_nonRes_base.size() != 0);
+  TMVAInterface* BDT_nonRes_base = new TMVAInterface(BDTFileName_nonRes_base_odd, BDTFileName_nonRes_base_even, BDTInputVariables_nonRes_base);
+  BDT_nonRes_base->enableBDTTransform();
+  std::map<std::string, double> BDTOutput_Map_nonRes_base;
+
+  std::map<std::string, double> AllVars_Map;
 
   std::string selEventsFileName_input = cfg_analyze.getParameter<std::string>("selEventsFileName_input");
   std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
@@ -411,6 +464,12 @@ int main(int argc, char* argv[])
     HHWeightNames = HHWeight_calc->get_weight_names();
     HHBMNames = HHWeight_calc->get_bm_names();
   }
+  const bool apply_HH_rwgt_LOtoNLO = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt_LOtoNLO");
+  const HHWeightInterfaceLOtoNLO* HHWeight_calc_LOtoNLO = nullptr;
+  if(apply_HH_rwgt_LOtoNLO)
+  {
+    HHWeight_calc_LOtoNLO = new HHWeightInterfaceLOtoNLO(10., isDEBUG);
+  }
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
@@ -423,6 +482,10 @@ int main(int argc, char* argv[])
     eventInfoReader.setTopPtRwgtBranchName(apply_topPtReweighting_str);
   }
   inputTree -> registerReader(&eventInfoReader);
+
+  RecoVertex vertex;
+  RecoVertexReader vertexReader(&vertex, branchName_vertex);
+  inputTree -> registerReader(&vertexReader);
 
   ObjectMultiplicity objectMultiplicity;
   ObjectMultiplicityReader objectMultiplicityReader(&objectMultiplicity);
@@ -499,6 +562,7 @@ int main(int argc, char* argv[])
 //--- declare missing transverse energy
   RecoMEtReader* metReader = new RecoMEtReader(era, isMC, branchName_met);
   metReader->setMEt_central_or_shift(met_option);
+  metReader->set_phiModulationCorrDetails(&eventInfo, &vertex);
   inputTree -> registerReader(metReader);
 
   MEtFilter metFilters;
@@ -634,7 +698,7 @@ int main(int argc, char* argv[])
 
       selHistManager->datacard_ = new DatacardHistManager_hh(makeHistManager_cfg(process_and_genMatch,
         Form("%s/sel/datacard", histogramDir.data()), era_string, central_or_shift),
-        analysisConfig, eventInfo, HHWeight_calc, 
+        analysisConfig, eventInfo, HHWeight_calc, HHWeight_calc_LOtoNLO, 
         isDEBUG);
       selHistManager->datacard_->bookHistograms(fs);
 
@@ -2014,6 +2078,100 @@ int main(int argc, char* argv[])
 //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons);
 
+    //Gathering final BDT Inputs
+    
+    AllVars_Map["gen_mHH"] = 250.; // setting a Dummy value which will be reset depending on mass hypothesis
+    AllVars_Map["numJets"] = selJets.size();                                   
+    AllVars_Map["numElectrons"] = selElectrons.size();                         
+    AllVars_Map["numMuons"] = selMuons.size();
+    AllVars_Map["numLeptons"] = selLeptons.size();
+    AllVars_Map["numBJets_loose"] = selBJets_loose.size();                     
+    AllVars_Map["numBJets_medium"] = selBJets_medium.size();                   
+    AllVars_Map["dihiggsVisMass_sel"] = dihiggsVisMass_sel;                   
+    AllVars_Map["dihiggsMass"] = dihiggsMass;                   
+    AllVars_Map["HT"] = HT;                                                    
+    AllVars_Map["STMET"] = STMET;                                              
+    AllVars_Map["lep1_pt"] = lep1_pt;                                          
+    AllVars_Map["lep2_pt"] = lep2_pt;                                          
+    AllVars_Map["lep3_pt"] = lep3_pt;                                          
+    AllVars_Map["lep4_pt"] = lep4_pt;                                          
+    AllVars_Map["lep1_conePt"] = lep1_conePt;                                  
+    AllVars_Map["lep2_conePt"] = lep2_conePt;                                  
+    AllVars_Map["lep3_conePt"] = lep3_conePt;                                  
+    AllVars_Map["lep4_conePt"] = lep4_conePt;                                  
+    AllVars_Map["lep1_eta"] = lep1_eta;                                       
+    AllVars_Map["lep2_eta"] = lep2_eta;                                        
+    AllVars_Map["lep3_eta"] = lep3_eta;                                        
+    AllVars_Map["lep4_eta"] = lep4_eta;                                        
+    AllVars_Map["lep1_phi"] = lep1_phi;                                        
+    AllVars_Map["lep2_phi"] = lep2_phi;                                        
+    AllVars_Map["lep3_phi"] = lep3_phi;                                        
+    AllVars_Map["lep4_phi"] = lep4_phi;
+    AllVars_Map["lep1_dxy"] = lep1_dxy;
+    AllVars_Map["lep2_dxy"] = lep2_dxy;
+    AllVars_Map["lep3_dxy"] = lep3_dxy;
+    AllVars_Map["lep4_dxy"] = lep4_dxy;
+    AllVars_Map["lep1_dz"] = lep1_dz;
+    AllVars_Map["lep2_dz"] = lep2_dz;
+    AllVars_Map["lep3_dz"] = lep3_dz;
+    AllVars_Map["lep4_dz"] = lep4_dz;
+    AllVars_Map["pt4l"] = pt4l;
+    AllVars_Map["pt4lParallelHadT"] = pt4lParallelHadT;
+    AllVars_Map["pt4lPerpendicularHadT"] = pt4lPerpendicularHadT;
+    AllVars_Map["mt4l"] = mt4l;
+    AllVars_Map["maxPtSum_pair1_pt"] = maxPtSum_pair1_pt;
+    AllVars_Map["maxPtSum_pair1_eta"] = maxPtSum_pair1_eta;
+    AllVars_Map["maxPtSum_pair1_phi"] = maxPtSum_pair1_phi;                               
+    AllVars_Map["maxPtSum_pair1_deltaEtaLep1"] = maxPtSum_pair1_deltaEtaLep1;             
+    AllVars_Map["maxPtSum_pair1_deltaPhiLep1"] = maxPtSum_pair1_deltaPhiLep1;             
+    AllVars_Map["maxPtSum_pair1_deltaEta"] = maxPtSum_pair1_deltaEta;                     
+    AllVars_Map["maxPtSum_pair1_deltaPhi"] = maxPtSum_pair1_deltaPhi;                     
+    AllVars_Map["maxPtSum_pair1_deltaR"] = maxPtSum_pair1_deltaR;                         
+    AllVars_Map["maxPtSum_pair1_deltaPt"] = maxPtSum_pair1_deltaPt;                       
+    AllVars_Map["maxPtSum_pair1_m"] = maxPtSum_pair1_m;                                   
+    AllVars_Map["maxPtSum_pair2_pt"] = maxPtSum_pair2_pt;                                 
+    AllVars_Map["maxPtSum_pair2_eta"] = maxPtSum_pair2_eta;                                
+    AllVars_Map["maxPtSum_pair2_phi"] = maxPtSum_pair2_phi;                               
+    AllVars_Map["maxPtSum_pair2_deltaEtaLep1"] = maxPtSum_pair2_deltaEtaLep1;             
+    AllVars_Map["maxPtSum_pair2_deltaPhiLep1"] = maxPtSum_pair2_deltaPhiLep1;             
+    AllVars_Map["maxPtSum_pair2_deltaEta"] = maxPtSum_pair2_deltaEta;                     
+    AllVars_Map["maxPtSum_pair2_deltaPhi"] = maxPtSum_pair2_deltaPhi;                     
+    AllVars_Map["maxPtSum_pair2_deltaR"] = maxPtSum_pair2_deltaR;                         
+    AllVars_Map["maxPtSum_pair2_deltaPt"] = maxPtSum_pair2_deltaPt;                       
+    AllVars_Map["maxPtSum_pair2_m"] = maxPtSum_pair2_m;
+    AllVars_Map["MET"] = MET;
+    AllVars_Map["METParallelHadT"] = METParallelHadT;
+    AllVars_Map["METPerpendicularHadT"] = METPerpendicularHadT;
+    AllVars_Map["METPhi"] = METPhi;                                                                 
+    AllVars_Map["METDeltaPhiLep1"] = METDeltaPhiLep1;                                               
+    AllVars_Map["MET_LD"] = met_LD;                                                                 
+    AllVars_Map["HTmiss"] = HTmiss;                                                                 
+    AllVars_Map["lep1_isElectron"] = lep1_isElectron;                                               
+    AllVars_Map["lep1_charge"] = lep1_charge;                                                       
+    AllVars_Map["lep2_isElectron"] = lep2_isElectron;                                               
+    AllVars_Map["lep2_charge"] = lep2_charge;                                                       
+    AllVars_Map["lep3_isElectron"] = lep3_isElectron;                                               
+    AllVars_Map["lep3_charge"] = lep3_charge;                                                       
+    AllVars_Map["lep4_isElectron"] = lep4_isElectron;                                               
+    AllVars_Map["lep4_charge"] = lep4_charge;                                                       
+    AllVars_Map["electronChargeSum"] = electronChargeSum;                                           
+    AllVars_Map["muonChargeSum"] = muonChargeSum;                                                   
+    AllVars_Map["nSFOS"] = nSFOS;
+
+
+    std::map<std::string, double> BDTInputs_spin2 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin2, false);
+    std::map<std::string, double> BDTInputs_spin0 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin0, false);
+    std::map<std::string, double> BDTInputs_nonRes = InitializeInputVarMap(AllVars_Map, BDTInputVariables_nonRes, true); // Include all Input Var.s except BM indices
+    std::map<std::string, double> BDTInputs_nonRes_base = InitializeInputVarMap(AllVars_Map, BDTInputVariables_nonRes_base, true);
+
+    std::vector<double> nonResBase_params;
+    nonResBase_params.push_back(0.);
+
+    BDTOutput_Map_spin2 = CreateBDTOutputMap(gen_mHH, BDT_spin2, BDTInputs_spin2, eventInfo.event, false, "_spin2");
+    BDTOutput_Map_spin0 = CreateBDTOutputMap(gen_mHH, BDT_spin0, BDTInputs_spin0, eventInfo.event, false, "_spin0");
+    BDTOutput_Map_nonRes = CreateBDTOutputMap(nonRes_BMs, BDT_nonRes, BDTInputs_nonRes, eventInfo.event, true, "");
+    BDTOutput_Map_nonRes_base = CreateBDTOutputMap(nonResBase_params, BDT_nonRes_base, BDTInputs_nonRes_base, eventInfo.event, true, "_base");
+
 //--- fill histograms with events passing final selection
     for(const std::string & central_or_shift: central_or_shifts_local)
     {
@@ -2035,6 +2193,14 @@ int main(int argc, char* argv[])
 	  selHistManager->evt_->fillHistograms(selElectrons.size(), selMuons.size(), selLeptons.size(), selJets.size(), numSelJetsPtGt40, selBJets_loose.size(), selBJets_medium.size(), dihiggsVisMass_sel, dihiggsMass, HT, STMET, lep1_pt, lep2_pt, lep3_pt, lep4_pt, lep1_conePt, lep2_conePt, lep3_conePt, lep4_conePt, lep1_eta, lep2_eta, lep3_eta, lep4_eta, lep1_phi, lep2_phi, lep3_phi, lep4_phi, lep1_dxy, lep2_dxy, lep3_dxy, lep4_dxy, lep1_dz, lep2_dz, lep3_dz, lep4_dz, pt4l, pt4lParallelHadT, pt4lPerpendicularHadT, mt4l, maxPtSum_pair1_pt, maxPtSum_pair1_eta, maxPtSum_pair1_phi, maxPtSum_pair1_deltaEtaLep1, maxPtSum_pair1_deltaPhiLep1, maxPtSum_pair1_deltaEta, maxPtSum_pair1_deltaPhi, maxPtSum_pair1_deltaR, maxPtSum_pair1_deltaPt, maxPtSum_pair1_m, maxPtSum_pair2_pt, maxPtSum_pair2_eta, maxPtSum_pair2_phi, maxPtSum_pair2_deltaEtaLep1, maxPtSum_pair2_deltaPhiLep1, maxPtSum_pair2_deltaEta, maxPtSum_pair2_deltaPhi, maxPtSum_pair2_deltaR,maxPtSum_pair2_deltaPt, maxPtSum_pair2_m,MET, METParallelHadT, METPerpendicularHadT, METPhi, METDeltaPhiLep1, met_LD, HTmiss, lep1_isElectron, lep1_charge, lep2_isElectron, lep2_charge, lep3_isElectron, lep3_charge, lep4_isElectron, lep4_charge, leptonChargeSum, electronChargeSum, muonChargeSum, nSFOS, evtWeight);
           selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
         }
+
+        selHistManager->datacard_->fillHistograms(
+						  BDTOutput_Map_spin2,
+						  BDTOutput_Map_spin0,
+						  BDTOutput_Map_nonRes,
+						  BDTOutput_Map_nonRes_base["Base"],
+						  //-1., // CV: BDTOutput for nonresonant_allBMs case not implemented yet !!
+						  evtWeight);
 
         if(! skipFilling)
         {
@@ -2086,12 +2252,22 @@ int main(int argc, char* argv[])
       evtWeight_BDT *= lep1_frWeight*lep2_frWeight*lep3_frWeight*lep4_frWeight;
 
       std::map<std::string, double> weightMapHH;
-      if(apply_HH_rwgt)
+      if ( apply_HH_rwgt || apply_HH_rwgt_LOtoNLO )
       {
-        assert(HHWeight_calc);
-        for(unsigned int i =0; i < HHWeightNames.size();i++)
+        for ( unsigned int i = 0; i < HHWeightNames.size(); i++ )
         {
-          weightMapHH[HHWeightNames[i]] = HHWeight_calc->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+          double HHReweight = 1.;
+          if ( apply_HH_rwgt )
+          {
+            assert(HHWeight_calc);
+            HHReweight = HHWeight_calc->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+          }
+          if ( apply_HH_rwgt_LOtoNLO )
+          {
+            assert(HHWeight_calc_LOtoNLO);
+            HHReweight *= HHWeight_calc_LOtoNLO->getReWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+          }
+          weightMapHH[HHWeightNames[i]] = HHReweight;
         }
       }
 
@@ -2152,7 +2328,7 @@ int main(int argc, char* argv[])
 	("maxPtSum_pair1_pt", maxPtSum_pair1_pt)   
 	("maxPtSum_pair1_eta", maxPtSum_pair1_eta)                               
 	("maxPtSum_pair1_phi", maxPtSum_pair1_phi)                               
-	("maxPtSum_pair1_deltaEtaLep1", maxPtSum_pair1_deltaPhiLep1)             
+	("maxPtSum_pair1_deltaEtaLep1", maxPtSum_pair1_deltaEtaLep1)             
 	("maxPtSum_pair1_deltaPhiLep1", maxPtSum_pair1_deltaPhiLep1)             
 	("maxPtSum_pair1_deltaEta", maxPtSum_pair1_deltaEta)                     
 	("maxPtSum_pair1_deltaPhi", maxPtSum_pair1_deltaPhi)                     

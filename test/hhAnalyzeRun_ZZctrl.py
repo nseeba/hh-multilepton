@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-from hhAnalysis.multilepton.configs.analyzeConfig_hh_3l_1tau import analyzeConfig_hh_3l_1tau
+from hhAnalysis.multilepton.configs.analyzeConfig_hh_4l import analyzeConfig_hh_4l
+from hhAnalysis.multilepton.common import get_histograms_to_fit
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics, get_lumi
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
@@ -10,7 +11,7 @@ import os
 import sys
 import getpass
 
-# E.g.: ./test/tthAnalyzeRun_hh_3l_1tau.py -v 2017Dec13 -m default -e 2017
+# E.g.: ./test/hhAnalyzeRun_4l.py -v 2017Dec13 -m default -e 2017
 
 mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full', 'internal' ] + systematics.an_opts_hh_multilepton
@@ -20,7 +21,7 @@ systematics.internal = systematics.an_internal_no_mem
 parser = tthAnalyzeParser()
 parser.add_modes(mode_choices)
 parser.add_sys(sys_choices)
-parser.add_preselect(use_preselected = False)
+parser.add_preselect()
 parser.add_lep_mva_wp(default_wp = 'hh_multilepton') # alternative: hh_multilepton
 parser.add_nonnominal()
 parser.add_tau_id_wp()
@@ -93,19 +94,17 @@ jet_cleaning_by_index = (jet_cleaning == 'by_index')
 gen_matching_by_index = (gen_matching == 'by_index')
 
 if sideband == 'disabled':
-  chargeSumSelections = [ "OS" ]
+  leptonChargeSelections = [ "OS" ]
 elif sideband == 'enabled':
-  chargeSumSelections = [ "OS", "SS" ]
+  leptonChargeSelections = [ "OS", "SS" ]
 elif sideband == 'only':
-  chargeSumSelections = [ "SS" ]
+  leptonChargeSelections = [ "SS" ]
 else:
   raise ValueError("Invalid choice for the sideband: %s" % sideband)
 
 hadTauWP_map = {
-  #'dR03mva' : 'Loose', #VLoose # VVLoose # Medium
-  #'deepVSj' : 'Loose',
-  'dR03mva' : 'Medium', #VLoose # VVLoose # Medium
-  'deepVSj' : 'Medium',
+  'dR03mva' : 'Loose',
+  'deepVSj' : 'Loose',
 }
 hadTau_selection = tau_id + hadTauWP_map[tau_id]
 
@@ -118,16 +117,19 @@ elif mode == "forBDTtraining":
 
   samples = load_samples(era, suffix = "BDT")
   samples = load_samples_stitched(samples, era, [ 'dy_lo' ])
-
-  hadTauWP_map_relaxed = {
-    'dR03mva' : 'VVVLoose',
-    'deepVSj' : 'VVVLoose',
-  }
-  if args.tau_id_wp:
-    tau_id = args.tau_id[:7]
-  hadTau_selection_relaxed = tau_id + hadTauWP_map_relaxed[tau_id]
 else:
   raise ValueError("Internal logic error")
+
+hadTauWP_veto_map = {
+  'dR03mva' : 'Loose',
+  'deepVSj' : 'Loose',
+}
+hadTau_selection_veto = tau_id + hadTauWP_veto_map[tau_id]
+
+for sample_name, sample_info in samples.items():
+  if sample_name == 'sum_events': continue
+  if sample_name.startswith('/Tau/Run'):
+    sample_info["use_it"] = False
 
 if __name__ == '__main__':
   logging.info(
@@ -140,19 +142,15 @@ if __name__ == '__main__':
   if sample_filter:
     samples = filter_samples(samples, sample_filter)
 
-  if args.tau_id_wp:
-    logging.info("Changing tau ID working point: %s -> %s" % (hadTau_selection, args.tau_id_wp))
-    hadTau_selection = args.tau_id_wp
-
-  analysis = analyzeConfig_hh_3l_1tau(
+  analysis = analyzeConfig_hh_4l(
     configDir = os.path.join("/home",       getpass.getuser(), "hhAnalysis", era, version),
     outputDir = os.path.join("/hdfs/local", getpass.getuser(), "hhAnalysis", era, version),
-    executable_analyze                    = "analyze_hh_3l_1tau_CR1",
-    cfgFile_analyze                       = "analyze_hh_3l_1tau_cfg.py",
+    executable_analyze                    = "analyze_hh_4l",
+    cfgFile_analyze                       = "analyze_hh_4l_cfg.py",
     samples                               = samples,
-    hadTau_selection                      = hadTau_selection,
-    applyFakeRateWeights                  = "4L",
-    chargeSumSelections                   = chargeSumSelections,
+    hadTau_selection                      = hadTau_selection, # to compute MHT
+    applyFakeRateWeights                  = "4lepton",
+    leptonChargeSelections                = leptonChargeSelections,
     central_or_shifts                     = central_or_shifts,
     lep_mva_wp                            = lep_mva_wp,
     jet_cleaning_by_index                 = jet_cleaning_by_index,
@@ -161,39 +159,13 @@ if __name__ == '__main__':
     era                                   = era,
     use_lumi                              = True,
     lumi                                  = lumi,
+    invert_ZbosonMassVeto                 = True,
     check_output_files                    = check_output_files,
     running_method                        = running_method,
     num_parallel_jobs                     = num_parallel_jobs,
     executable_addBackgrounds             = "addBackgrounds",
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
-    histograms_to_fit                     = {
-      "EventCounter"                      : {},
-      "numJets"                           : {},
-      "dihiggsVisMass"                    : {},
-      "dihiggsMass"                       : {},
-      "HT"                                : {},
-      "STMET"                             : {},
-      "BDTOutput_1000"                    : {},
-      "BDTOutput_250"                    : {},
-      "BDTOutput_400"                    : {},
-      "BDTOutput_700"                    : {},
-      "BDTOutput_300"                    : {},
-      "BDTOutput_500"                    : {},
-      "BDTOutput_800"                    : {},
-      "BDTOutput_nonRes_SM"              : {},
-      "BDTOutput_nonRes_BM1"             : {},
-      "BDTOutput_nonRes_BM2"             : {},
-      "BDTOutput_nonRes_BM3"             : {},
-      "BDTOutput_nonRes_BM4"             : {},
-      "BDTOutput_nonRes_BM5"             : {},
-      "BDTOutput_nonRes_BM6"             : {},
-      "BDTOutput_nonRes_BM7"             : {},
-      "BDTOutput_nonRes_BM8"             : {},
-      "BDTOutput_nonRes_BM9"             : {},
-      "BDTOutput_nonRes_BM10"            : {},
-      "BDTOutput_nonRes_BM11"            : {},
-      "BDTOutput_nonRes_BM12"            : {},
-    },
+    histograms_to_fit                     = get_histograms_to_fit("numJets", "dihiggsVisMass", "HT", "STMET"),
     select_rle_output                     = True,
     dry_run                               = dry_run,
     isDebug                               = debug,
@@ -203,8 +175,9 @@ if __name__ == '__main__':
     submission_cmd                        = sys.argv,
   )
 
-  if mode.find("forBDTtraining") != -1:
-    analysis.set_BDT_training(hadTau_selection_relaxed)
+  if mode == "forBDTtraining":
+    analysis.set_BDT_training()
+    #analysis.set_BDT_training(hadTau_selection_relaxed)
 
   job_statistics = analysis.create()
   for job_type, num_jobs in job_statistics.items():

@@ -159,6 +159,7 @@ if __name__ == '__main__':
     era                                   = era,
     use_lumi                              = True,
     lumi                                  = lumi,
+    invert_ZbosonMassVeto                 = False,
     check_output_files                    = check_output_files,
     running_method                        = running_method,
     num_parallel_jobs                     = num_parallel_jobs,

@@ -158,11 +158,26 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
       histogramConversions = histogramBackground;
       histogramConversions_density = histogramBackground_density;
     } else if ( process.find("Fakes") != std::string::npos || process.find("fakes") != std::string::npos ) {
-      histogramFakes = histogramBackground;
-      histogramFakes_density = histogramBackground_density;
-    } else if ( process.find("VH") != std::string::npos ) {
-      histogramVH = histogramBackground;
-      histogramVH_density = histogramBackground_density;
+      if ( histogramFakes && histogramFakes_density && process.find("data_fakes") != std::string::npos ) {
+        if ( process.find("data_fakes") != std::string::npos ) {
+          // CV: preferentially take fakes background from data
+          histogramFakes = histogramBackground;
+          histogramFakes_density = histogramBackground_density;
+        }
+      } else {
+        histogramFakes = histogramBackground;
+        histogramFakes_density = histogramBackground_density;
+      }
+    } else if ( process.find("WH") != std::string::npos ||
+                process.find("ZH") != std::string::npos  ) {
+      if ( histogramVH && histogramVH_density ) {
+        histogramVH->Add(histogramBackground);
+        histogramVH_density->Add(histogramBackground_density);
+      }
+      else {
+        histogramVH = histogramBackground;
+        histogramVH_density = histogramBackground_density;
+      }
     } else if ( process.find("ZZ") != std::string::npos ) {
       if ( histogramZZ && histogramZZ_density ) {
         histogramZZ->Add(histogramBackground);
@@ -254,9 +269,9 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
 
   //---------------------------------------------------------------------------   
   //SB: W+jets added to Other
-  // assert(histogramOther && histogramOther_density && histogramW && histogramW_density); 
-  //  histogramOther->Add(histogramW);                                                      
-  // histogramOther_density->Add(histogramW_density);                                      
+  //assert(histogramOther && histogramOther_density && histogramW && histogramW_density); 
+  //histogramOther->Add(histogramW);                                                      
+  //histogramOther_density->Add(histogramW_density);                                      
   //---------------------------------------------------------------------------   
 
   TCanvas* canvas = new TCanvas("canvas", "", canvasSizeX, canvasSizeY);
@@ -353,7 +368,8 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
       histogramData_blinded_density->Draw("ep");
     }
   }
-  /*color used for tth
+/*
+  color used for tth
   const int color_ttW         = 823; // dark green 
   const int color_ttZ         = 822; // light green
   const int color_ttH         = 628; // red  
@@ -365,19 +381,21 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
   const int color_Conversions = 800; // yellow/orange
   const int color_Fakes       =   1; // black
   const int color_Flips       =   1; // black
-*/
+ */
   
   const int color_DY          = 610; // purple
-  const int color_ZZ          = 634; // dark red
+  const int color_W           = 634; // dark red
+  const int color_ZZ          = 628; // red
   const int color_Fakes       =   1; // black
   const int color_ttZ         = 822; // light green
   const int color_singleTop   = 823; // dark green 
   const int color_Conversions = 800; // yellow/orange
-  const int color_VH          = 628; // red
+  const int color_VH          =  16; // gray
   const int color_Other       = 851; // light blue
-  const int color_Flips       = 1; // black
+  const int color_Flips       = 1;   // black
 
   const std::string legendEntry_DY          = "DY";
+  const std::string legendEntry_W           = "W";
   const std::string legendEntry_ZZ          = "Diboson";
   const std::string legendEntry_Fakes       = "Fakes";
   const std::string legendEntry_ttZ         = "t#bar{t} + t#bar{t}V(V)";
@@ -392,6 +410,11 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     histogramDY_density->SetFillColor(color_DY);
     histogramsForStack_density.push_back(histogramDY_density);
     legend->AddEntry(histogramDY_density, legendEntry_DY.data(), "f");
+  }
+  if ( histogramW_density ) {
+    histogramW_density->SetFillColor(color_W);
+    histogramsForStack_density.push_back(histogramW_density);
+    legend->AddEntry(histogramW_density, legendEntry_W.data(), "f");
   }
   if ( histogramZZ_density ) {
     histogramZZ_density->SetFillColor(color_ZZ);
@@ -448,6 +471,7 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
   for ( int iBin = 1; iBin <= numBins_top; ++iBin ) {
     double sumBinContents = 0.;
     if ( histogramDY_density          ) sumBinContents += histogramDY_density->GetBinContent(iBin);
+    if ( histogramW_density           ) sumBinContents += histogramW_density->GetBinContent(iBin);
     if ( histogramZZ_density          ) sumBinContents += histogramZZ_density->GetBinContent(iBin);
     if ( histogramFakes_density       ) sumBinContents += histogramFakes_density->GetBinContent(iBin);
     if ( histogramTTZ_density         ) sumBinContents += histogramTTZ_density->GetBinContent(iBin);
@@ -551,6 +575,7 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     histogramSum->Reset();
     if ( !histogramSum->GetSumw2N() ) histogramSum->Sumw2();
     if ( histogramDY          ) histogramSum->Add(histogramDY);
+    if ( histogramW           ) histogramSum->Add(histogramW);
     if ( histogramZZ          ) histogramSum->Add(histogramZZ);
     if ( histogramFakes       ) histogramSum->Add(histogramFakes);
     if ( histogramTTZ         ) histogramSum->Add(histogramTTZ);
@@ -574,8 +599,11 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     
     histogramRatio->SetTitle("");
     histogramRatio->SetStats(false);
-    histogramRatio->SetMinimum(-0.50);
-    histogramRatio->SetMaximum(+0.50);
+    double histogramRatioMax = TMath::Max(histogramRatio->GetMaximum(),TMath::Abs(histogramRatio->GetMinimum()));
+    histogramRatio->SetMinimum(-1.2*histogramRatioMax);
+    histogramRatio->SetMaximum(1.2*histogramRatioMax);
+    //histogramRatio->SetMinimum(-0.50);
+    //histogramRatio->SetMaximum(+0.50);
     histogramRatio->SetMarkerStyle(histogramData_blinded_density->GetMarkerStyle());
     histogramRatio->SetMarkerSize(histogramData_blinded_density->GetMarkerSize());
     histogramRatio->SetMarkerColor(histogramData_blinded_density->GetMarkerColor());

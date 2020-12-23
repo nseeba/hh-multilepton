@@ -90,6 +90,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
 #include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface2.h" // HHWeightInterface2
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterfaceLOtoNLO.h" // HHWeightInterfaceLOtoNLO
 #include "tthAnalysis/HiggsToTauTau/interface/NtupleFillerBDT.h" // NtupleFillerBDT
 #include "tthAnalysis/HiggsToTauTau/interface/BM_list.h" // BMS
 #include "tthAnalysis/HiggsToTauTau/interface/BtagSFRatioFacility.h" // BtagSFRatioFacility
@@ -531,6 +532,12 @@ int main(int argc, char* argv[])
     HHWeightNames = HHWeight_calc->get_weight_names();
     HHBMNames = HHWeight_calc->get_bm_names();
   }
+  const bool apply_HH_rwgt_LOtoNLO = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt_LOtoNLO");
+  const HHWeightInterfaceLOtoNLO* HHWeight_calc_LOtoNLO = nullptr;
+  if(apply_HH_rwgt_LOtoNLO)
+  {
+    HHWeight_calc_LOtoNLO = new HHWeightInterfaceLOtoNLO(10., isDEBUG);
+  }
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
@@ -544,7 +551,8 @@ int main(int argc, char* argv[])
   }
   inputTree -> registerReader(&eventInfoReader);
 
-  RecoVertexReader vertexReader(branchName_vertex);
+  RecoVertex vertex;
+  RecoVertexReader vertexReader(&vertex, branchName_vertex);
   inputTree -> registerReader(&vertexReader);
 
   ObjectMultiplicity objectMultiplicity;
@@ -640,6 +648,7 @@ int main(int argc, char* argv[])
 //--- declare missing transverse energy
   RecoMEtReader* metReader = new RecoMEtReader(era, isMC, branchName_met);
   metReader->setMEt_central_or_shift(met_option);
+  metReader->set_phiModulationCorrDetails(&eventInfo, &vertex);
   inputTree -> registerReader(metReader);
 
   MEtFilter metFilters;
@@ -791,7 +800,7 @@ int main(int argc, char* argv[])
 
       selHistManager->datacard_ = new DatacardHistManager_hh(makeHistManager_cfg(process_and_genMatch,
         Form("%s/sel/datacard", histogramDir.data()), era_string, central_or_shift),
-        analysisConfig, eventInfo, HHWeight_calc, 
+        analysisConfig, eventInfo, HHWeight_calc, HHWeight_calc_LOtoNLO, 
         isDEBUG);
       selHistManager->datacard_->bookHistograms(fs);
       
@@ -847,7 +856,7 @@ int main(int argc, char* argv[])
       }
     }
     bdt_filler->register_variable<float_type>(
-      "lep_pt", "lep_conePt", "lep_eta" "lep_phi",
+      "lep_pt", "lep_conePt", "lep_eta", "lep_phi",
       "tau1_pt", "tau1_eta", "tau1_phi",
       "tau2_pt", "tau2_eta", "tau2_phi",
       "tau3_pt", "tau3_eta", "tau3_phi",
@@ -864,7 +873,7 @@ int main(int argc, char* argv[])
       "dphi_tau_tau_OS_pair_max", "dphi_tau_tau_OS_pair_min",
       "dphi_HHvis_max", "dphi_HHvis_min",
       "mT_lep",
-      "lep_frWeight", "hadTau1_frWeight",  "hadTau2_frWeight",  "hadTau3_frWeight",
+      "lep_frWeight", "hadTau1_frWeight",  "hadTau2_frWeight", "hadTau3_frWeight",
       "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "hadTauEffSF", "data_to_MC_correction","FR_Weight", "evtWeight"
     );
     bdt_filler->register_variable<int_type>(
@@ -1622,7 +1631,6 @@ int main(int argc, char* argv[])
     cutFlowTable.update("sel lepton+hadTau charge", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("sel lepton+hadTau charge", evtWeightRecorder.get(central_or_shift_main));
 
-    RecoVertex vertex = vertexReader.read();
     crackVetoHadTauSelector.getSelector().set_vertex(vertex);
 
     bool failsZeeVeto = false;
@@ -1932,12 +1940,22 @@ int main(int argc, char* argv[])
       evtWeight_BDT *= lep_frWeight*hadTau1_frWeight*hadTau2_frWeight*hadTau3_frWeight;
 
       std::map<std::string, double> weightMapHH;
-      if(apply_HH_rwgt)
+      if ( apply_HH_rwgt || apply_HH_rwgt_LOtoNLO )
       {
-        assert(HHWeight_calc);
-        for(unsigned int i =0; i < HHWeightNames.size();i++)
+        for ( unsigned int i = 0; i < HHWeightNames.size(); i++ )
         {
-          weightMapHH[HHWeightNames[i]] = HHWeight_calc->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+          double HHReweight = 1.;
+          if ( apply_HH_rwgt )
+          {
+            assert(HHWeight_calc);
+            HHReweight = HHWeight_calc->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+          }
+          if ( apply_HH_rwgt_LOtoNLO )
+          {
+            assert(HHWeight_calc_LOtoNLO);
+            HHReweight *= HHWeight_calc_LOtoNLO->getReWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+          }
+          weightMapHH[HHWeightNames[i]] = HHReweight;
         }
       }
 
