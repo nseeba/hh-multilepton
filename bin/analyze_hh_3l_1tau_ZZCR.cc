@@ -765,7 +765,7 @@ int main(int argc, char* argv[])
 
       selHistManager->datacard_ = new DatacardHistManager_hh(makeHistManager_cfg(process_and_genMatch,
         Form("%s/sel/datacard", histogramDir.data()), era_string, central_or_shift),
-        analysisConfig, eventInfo, HHWeight_calc, 
+        analysisConfig, eventInfo, nullptr, nullptr,
         isDEBUG);
       selHistManager->datacard_->bookHistograms(fs);
 
@@ -776,7 +776,7 @@ int main(int argc, char* argv[])
       //
       //  selHistManager->datacard_in_categories_[category] = new DatacardHistManager_hh(makeHistManager_cfg(process_and_genMatch,
       //    Form("%s/sel/datacard", histogramDir_category.Data()), era_string, central_or_shift),
-      //    analysisConfig, eventInfo, HHWeight_calc, 
+      //    analysisConfig, eventInfo, HHWeight_calc, nullptr, 
       //    isDEBUG);
       //  selHistManager->datacard_in_categories_[category]->bookHistograms(fs);
       //}
