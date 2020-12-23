@@ -108,6 +108,7 @@ process.analyze_hh_2lss = cms.PSet(
     #branchName_jets_ak8 = cms.string('FatJet'),
     #branchName_subjets_ak8 = cms.string('SubJet'),
     branchName_met = cms.string('MET'),
+    branchName_vertex = cms.string('PV'),
     branchName_memOutput = cms.string(''),
 
     branchName_muonGenMatch = cms.string('MuonGenMatch'),

@@ -551,7 +551,8 @@ int main(int argc, char* argv[])
   }
   inputTree -> registerReader(&eventInfoReader);
 
-  RecoVertexReader vertexReader(branchName_vertex);
+  RecoVertex vertex;
+  RecoVertexReader vertexReader(&vertex, branchName_vertex);
   inputTree -> registerReader(&vertexReader);
 
   ObjectMultiplicity objectMultiplicity;
@@ -647,6 +648,7 @@ int main(int argc, char* argv[])
 //--- declare missing transverse energy
   RecoMEtReader* metReader = new RecoMEtReader(era, isMC, branchName_met);
   metReader->setMEt_central_or_shift(met_option);
+  metReader->set_phiModulationCorrDetails(&eventInfo, &vertex);
   inputTree -> registerReader(metReader);
 
   MEtFilter metFilters;
@@ -1629,7 +1631,6 @@ int main(int argc, char* argv[])
     cutFlowTable.update("sel lepton+hadTau charge", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("sel lepton+hadTau charge", evtWeightRecorder.get(central_or_shift_main));
 
-    RecoVertex vertex = vertexReader.read();
     crackVetoHadTauSelector.getSelector().set_vertex(vertex);
 
     bool failsZeeVeto = false;
