@@ -8,9 +8,10 @@ DatacardHistManager_hh_multiclass::DatacardHistManager_hh_multiclass(const edm::
                                                                      const AnalysisConfig_hh & analysisConfig, 
                                                                      const EventInfo & eventInfo, 
                                                                      const HHWeightInterface2 * HHWeight_calc,
+                                                                     const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
                                                                      const std::vector<std::string> & classes,
                                                                      bool isDEBUG)
-  : DatacardHistManagerBase_hh(cfg, analysisConfig, eventInfo, HHWeight_calc, isDEBUG)
+  : DatacardHistManagerBase_hh(cfg, analysisConfig, eventInfo, HHWeight_calc, HHWeight_calc_LOtoNLO, isDEBUG)
 {
   // CV: define one event category for each class;
   //     then fill histograms for all event categories so defined
@@ -29,9 +30,10 @@ DatacardHistManager_hh_multiclass::DatacardHistManager_hh_multiclass(const edm::
                                                                      const AnalysisConfig_hh & analysisConfig, 
                                                                      const EventInfo & eventInfo, 
                                                                      const HHWeightInterface2 * HHWeight_calc,
+                                                                     const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
                                                                      const EventCategory_multiclass * eventCategory,
                                                                      bool isDEBUG)
-  : DatacardHistManagerBase_hh(cfg, analysisConfig, eventInfo, HHWeight_calc, eventCategory, isDEBUG)
+  : DatacardHistManagerBase_hh(cfg, analysisConfig, eventInfo, HHWeight_calc, HHWeight_calc_LOtoNLO, eventCategory, isDEBUG)
   , eventCategory_(eventCategory)
 {
   // CV: fill histograms for all event categories defined in EventCategoryBase object

@@ -9,12 +9,15 @@
 HHGenKinematicsHistManager::HHGenKinematicsHistManager(const edm::ParameterSet & cfg, 
                                                        const AnalysisConfig_hh & analysisConfig,
                                                        const EventInfo & eventInfo, 
-                                                       const HHWeightInterface2 * HHWeight_calc)
+                                                       const HHWeightInterface2 * HHWeight_calc,
+                                                       const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO)
   : HistManagerBase(cfg)
   , analysisConfig_(analysisConfig)
   , eventInfo_(eventInfo)
   , HHWeight_calc_(HHWeight_calc)
   , apply_HH_rwgt_(HHWeight_calc_ != nullptr)
+  , HHWeight_calc_LOtoNLO_(HHWeight_calc_LOtoNLO)
+  , apply_HH_rwgt_LOtoNLO_(HHWeight_calc_LOtoNLO_ != nullptr)
 {
   central_or_shiftOptions_["gen_mHH"]             = { "central" };
   central_or_shiftOptions_["gen_absCosThetaStar"] = { "central" };
@@ -48,10 +51,18 @@ HHGenKinematicsHistManager::fillHistograms(const std::vector<LHEParticle> & lheP
     const LHEParticle* lheHiggsBoson_sublead = lheHiggsBosons[1];
 
     double HHReweight = 1.;
-    if ( analysisConfig_.isMC_HH_nonresonant() && apply_HH_rwgt_ )
+    if ( analysisConfig_.isMC_HH_nonresonant() && (apply_HH_rwgt_ || apply_HH_rwgt_LOtoNLO_) )
     {
-      assert(HHWeight_calc_);
-      HHReweight = HHWeight_calc_->getReWeight("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
+      if ( apply_HH_rwgt_ )
+      {
+        assert(HHWeight_calc_);
+        HHReweight = HHWeight_calc_->getReWeight("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
+      }
+      if ( apply_HH_rwgt_LOtoNLO_ )
+      {
+        assert(HHWeight_calc_LOtoNLO_);
+        HHReweight *= HHWeight_calc_LOtoNLO_->getReWeight("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
+      }
     }
 
     double gen_mHH = (lheHiggsBoson_lead->p4() + lheHiggsBoson_sublead->p4()).mass();    

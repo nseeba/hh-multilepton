@@ -8,8 +8,9 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
                                                const AnalysisConfig_hh & analysisConfig, 
                                                const EventInfo & eventInfo, 
                                                const HHWeightInterface2 * HHWeight_calc,
+                                               const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
                                                bool isDEBUG)
-  : DatacardHistManagerBase_hh(cfg, analysisConfig, eventInfo, HHWeight_calc, isDEBUG)
+  : DatacardHistManagerBase_hh(cfg, analysisConfig, eventInfo, HHWeight_calc, HHWeight_calc_LOtoNLO, isDEBUG)
   , eventCategory_(nullptr)
 {
   // CV: fill histograms for inclusive event category
@@ -22,9 +23,10 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
                                                const AnalysisConfig_hh & analysisConfig, 
                                                const EventInfo & eventInfo, 
                                                const HHWeightInterface2 * HHWeight_calc,
+                                               const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
                                                const EventCategory * eventCategory,
                                                bool isDEBUG)
-  : DatacardHistManagerBase_hh(cfg, analysisConfig, eventInfo, HHWeight_calc, eventCategory, isDEBUG)
+  : DatacardHistManagerBase_hh(cfg, analysisConfig, eventInfo, HHWeight_calc, HHWeight_calc_LOtoNLO, eventCategory, isDEBUG)
   , eventCategory_(eventCategory)
 {
   // CV: fill histograms for all event categories defined in EventCategory object

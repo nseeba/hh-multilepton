@@ -9,11 +9,12 @@
  *
  */
 
-#include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h"    // HistManagerBase
-#include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h"          // EventInfo
-#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface2.h" // HHWeightInterface2
-#include "hhAnalysis/multilepton/interface/AnalysisConfig_hh.h"     // AnalysisConfig_hh
-#include "hhAnalysis/multilepton/interface/EventCategoryBase.h"     // EventCategoryBase
+#include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h"          // HistManagerBase
+#include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h"                // EventInfo
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface2.h"       // HHWeightInterface2
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterfaceLOtoNLO.h" // HHWeightInterfaceLOtoNLO
+#include "hhAnalysis/multilepton/interface/AnalysisConfig_hh.h"           // AnalysisConfig_hh
+#include "hhAnalysis/multilepton/interface/EventCategoryBase.h"           // EventCategoryBase
 
 #include <string>
 #include <vector>
@@ -29,11 +30,13 @@ class DatacardHistManagerBase_hh
                              const AnalysisConfig_hh & analysisConfig, 
                              const EventInfo & eventInfo, 
                              const HHWeightInterface2 * HHWeight_calc,
+                             const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
                              bool isDEBUG = false);
   DatacardHistManagerBase_hh(const edm::ParameterSet & cfg,
                              const AnalysisConfig_hh & analysisConfig, 
                              const EventInfo & eventInfo, 
                              const HHWeightInterface2 * HHWeight_calc,
+                             const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
                              const EventCategoryBase * eventCategoryBase,
                              bool isDEBUG = false);
   ~DatacardHistManagerBase_hh() {}
@@ -53,6 +56,8 @@ class DatacardHistManagerBase_hh
   const EventInfo & eventInfo_;
   const HHWeightInterface2 * HHWeight_calc_;
   bool apply_HH_rwgt_;
+  const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO_;
+  bool apply_HH_rwgt_LOtoNLO_;
   std::map<std::string, double> HHReweightMap_;
   const EventCategoryBase * eventCategoryBase_;
   std::vector<int> categories_;

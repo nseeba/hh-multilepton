@@ -11,12 +11,13 @@
  *
  */
 
-#include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h"         // HistManagerBase
-#include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h"               // EventInfo
-#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface2.h"      // HHWeightInterface2
-#include "hhAnalysis/multilepton/interface/AnalysisConfig_hh.h"          // AnalysisConfig_hh
-#include "hhAnalysis/multilepton/interface/DatacardHistManagerBase_hh.h" // DatacardHistManagerBase_hh
-#include "hhAnalysis/multilepton/interface/EventCategory_multiclass.h"   // EventCategory_multiclass
+#include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h"          // HistManagerBase
+#include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h"                // EventInfo
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface2.h"       // HHWeightInterface2
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterfaceLOtoNLO.h" // HHWeightInterfaceLOtoNLO
+#include "hhAnalysis/multilepton/interface/AnalysisConfig_hh.h"           // AnalysisConfig_hh
+#include "hhAnalysis/multilepton/interface/DatacardHistManagerBase_hh.h"  // DatacardHistManagerBase_hh
+#include "hhAnalysis/multilepton/interface/EventCategory_multiclass.h"    // EventCategory_multiclass
 
 #include <vector>
 #include <map>
@@ -31,12 +32,14 @@ class DatacardHistManager_hh_multiclass
                                     const AnalysisConfig_hh & analysisConfig, 
                                     const EventInfo & eventInfo, 
                                     const HHWeightInterface2 * HHWeight_calc,
+                                    const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
                                     const std::vector<std::string> & categories,
                                     bool isDEBUG = false);
   DatacardHistManager_hh_multiclass(const edm::ParameterSet & cfg,
                                     const AnalysisConfig_hh & analysisConfig, 
                                     const EventInfo & eventInfo, 
                                     const HHWeightInterface2 * HHWeight_calc,
+                                    const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
                                     const EventCategory_multiclass * eventCategory,
                                     bool isDEBUG = false);
   ~DatacardHistManager_hh_multiclass() {}
