@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from hhAnalysis.multilepton.configs.analyzeConfig_hh_3l import analyzeConfig_hh_3l
+from hhAnalysis.multilepton.common import get_histograms_to_fit
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics, get_lumi
 from tthAnalysis.HiggsToTauTau.runConfig import tthAnalyzeParser, filter_samples
@@ -33,6 +34,7 @@ parser.add_sideband()
 parser.add_tau_id()
 parser.enable_regrouped_jerc(default = 'jes')
 parser.add_split_trigger_sys()
+parser.add_control_region()
 args = parser.parse_args()
 
 # Common arguments
@@ -63,6 +65,7 @@ jet_cleaning      = args.jet_cleaning
 gen_matching      = args.gen_matching
 regroup_jerc      = args.enable_regrouped_jerc
 split_trigger_sys = args.split_trigger_sys
+control_region    = args.control_region
 
 if regroup_jerc:
   if 'full' not in systematics_label:
@@ -131,6 +134,7 @@ for sample_name, sample_info in samples.items():
 
 
 if __name__ == '__main__':
+  print "\n\nget_histograms_to_fit(EventCounter): {}\n\n".format(get_histograms_to_fit("EventCounter"))
   logging.info(
     "Running the jobs with the following systematic uncertainties enabled: %s" % \
     ', '.join(central_or_shifts)
@@ -141,6 +145,38 @@ if __name__ == '__main__':
   if sample_filter:
     samples = filter_samples(samples, sample_filter)
 
+  histograms_to_fit = None
+  if control_region:
+    histograms_to_fit = {
+    "EventCounter" : {},
+    "m3l"      : {},
+    "dihiggsVisMass_sel"      : {},
+    "mSFOS2l_closestToZ"      : {},
+    "dr_LeptonIdx3_AK4jNear_Approach2"      : {},
+    "dr_LeptonIdx3_2j_inclusive1j_Approach2"      : {},
+    "dr_los_min"      : {},
+    "dr_los_max"      : {},
+    "numSameFlavor_OS_3l"      : {},      
+    "met_LD"      : {},
+    "numElectrons"      : {},
+    "numMuons"      : {},
+    "nJetAK4"      : {},
+    "nJetAK8_wSelectorAK8_Wjj"      : {},
+    #
+    "mT_WZctrl_leptonW_MET"      : {},
+    #
+    "jetMass_sel_WZctrl_2lss"      : {},
+    "leptonPairMass_sel_WZctrl_2lss"      : {},      
+    "mindr_lep1_jet_WZctrl_2lss"      : {},
+    "mT_lep1_WZctrl_2lss"      : {},
+    "mindr_lep2_jet_WZctrl_2lss"      : {},      
+    "mT_lep2_WZctrl_2lss"      : {},
+    "dR_ll_WZctrl_2lss"      : {},
+    "max_lep_eta_WZctrl_2lss"      : {},      
+  }
+  else:
+    histograms_to_fit = get_histograms_to_fit("EventCounter","m3l","dihiggsVisMass_sel","mSFOS2l_closestToZ","dr_LeptonIdx3_AK4jNear_Approach2","dr_LeptonIdx3_2j_inclusive1j_Approach2","dr_los_min","dr_los_max","numSameFlavor_OS_3l","met_LD","numElectrons","numMuons","nJetAK4","nJetAK8_wSelectorAK8_Wjj")
+  
   analysis = analyzeConfig_hh_3l(
     configDir = os.path.join("/home",       getpass.getuser(), "hhAnalysis", era, version),
     outputDir = os.path.join("/hdfs/local", getpass.getuser(), "hhAnalysis", era, version),
@@ -156,6 +192,7 @@ if __name__ == '__main__':
     gen_matching_by_index                 = gen_matching_by_index,
     max_files_per_job                     = files_per_job,
     era                                   = era,
+    isControlRegion                       = control_region,
     use_lumi                              = True,
     lumi                                  = lumi,
     check_output_files                    = check_output_files,
@@ -163,22 +200,7 @@ if __name__ == '__main__':
     num_parallel_jobs                     = num_parallel_jobs,
     executable_addBackgrounds             = "addBackgrounds",
     executable_addBackgroundJetToTauFakes = "addBackgroundLeptonFakes",
-    histograms_to_fit                     = {
-      "EventCounter"                      : {},
-      "numElectrons"                      : {},
-      "numMuons"                          : {},
-      "numJets"                           : {},
-      "chargedSum3l"                      : {},
-      "numSFOS2l"                         : {},
-      "dihiggsVisMass"                    : {},
-      "dihiggsMass"                       : {},
-      "WTojjMass"                         : {},
-      "mTMetLepton1"                      : {},
-      "mTMetLepton2"                      : {},
-      "HT"                                : {},
-      "STMET"                             : {},
-      "mvaOutput_xgb_hh_3l_SUMBk_HH"      : {},
-    },
+    histograms_to_fit                     = histograms_to_fit,
     select_rle_output                     = True,
     select_root_output                    = False,
     dry_run                               = dry_run,

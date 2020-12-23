@@ -54,6 +54,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
         gen_matching_by_index,
         max_files_per_job,
         era,
+        isControlRegion,
         use_lumi,
         lumi,
         check_output_files,
@@ -150,6 +151,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     self.hlt_filter = hlt_filter
 
     self.isBDTtraining = False
+    self.isControlRegion = isControlRegion
 
     '''
     self.categories = [
@@ -165,6 +167,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
     if self.category_inclusive not in self.categories:
       self.categories.append(self.category_inclusive)
 
+    print "Siddh:: histograms_to_fit: {}".format(histograms_to_fit)
 
   def set_BDT_training(self):
     """Run analysis with loose selection criteria for leptons,
@@ -433,6 +436,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
                   'apply_hlt_filter'         : self.hlt_filter,
                   'useNonNominal'            : self.use_nonnominal,
                   'fillGenEvtHistograms'     : True,
+                  'isControlRegion'          : self.isControlRegion,
                 }
                 self.createCfg_analyze(self.jobOptions_analyze[key_analyze_job], sample_info, lepton_selection)
 
@@ -595,6 +599,10 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
         self.inputFiles_hadd_stage2[key_hadd_stage2_job].append(self.jobOptions_addFakes[key_addFakes_job]['outputFile'])
 
     logging.info("Creating configuration files to run 'prepareDatacards'...")
+    logging.info("self.categories: ")
+    print "self.categories: {}".format(self.categories)
+    logging.info("self.histograms_to_fit: ")
+    print "self.histograms_to_fit: {}".format(self.histograms_to_fit)
     for category in self.categories:
       for histogramToFit in self.histograms_to_fit:
         logging.info(" ...  for category %s, histogram %s" % (category, histogramToFit))

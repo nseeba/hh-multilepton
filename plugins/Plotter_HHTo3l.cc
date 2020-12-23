@@ -11,6 +11,10 @@
 #include <TF1.h>
 #include <TStyle.h>
 #include <TROOT.h> // gROOT (needed to (re)define colors)
+//#include <algorithm/string.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+
 
 const int printLevel = 0;
 //bool isDataBlinded = true; // added by Siddhesh
@@ -109,6 +113,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
       std::cout << "Mismatch in signal processes and signal-legends.. \nTerminating\n " << std::endl;
       exit(0);
     }
+    std::cout << "histogramSignal->Integral(): " << histogramSignal->Integral() << "\n";
   }
   if (printLevel > 3)
   {
@@ -235,9 +240,17 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     } else if ( process.find("TTH") != std::string::npos ) {
       histogramTTH = histogramBackground;
       histogramTTH_density = histogramBackground_density;
-    } else if ( process.find("TH") != std::string::npos ) {
-      histogramTH = histogramBackground;
-      histogramTH_density = histogramBackground_density;
+    } else if ( process.find("TH") != std::string::npos || process.find("tHq") != std::string::npos || process.find("tHW") != std::string::npos) {
+      if (histogramTH == 0)
+      {
+	histogramTH = histogramBackground;
+	histogramTH_density = histogramBackground_density;
+      }
+      else
+      {
+	histogramTH->Add(histogramBackground);
+	histogramTH_density->Add(histogramBackground_density);
+      }
     } else if ( process.find("TT") != std::string::npos ) {
       histogramTT = histogramBackground;
       histogramTT_density = histogramBackground_density;
@@ -253,9 +266,17 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     } else if ( process.find("VH") != std::string::npos ) {
       histogramVH = histogramBackground;
       histogramVH_density = histogramBackground_density;
-    } else if ( process.find("ZZ") != std::string::npos ) {
-      histogramZZ = histogramBackground;
-      histogramZZ_density = histogramBackground_density;
+    } else if ( process.find("ZZ") != std::string::npos ) { // recent changes: ZZ is splitted into qqZZ and ggZZ
+      if (histogramZZ == 0)
+      {
+	histogramZZ = histogramBackground;
+	histogramZZ_density = histogramBackground_density;
+      }
+      else
+      {
+	histogramZZ->Add(histogramBackground);
+	histogramZZ_density->Add(histogramBackground_density);
+      }      
     } else if ( process.find("WZ") != std::string::npos ) {
       histogramWZ = histogramBackground;
       histogramWZ_density = histogramBackground_density;
@@ -331,8 +352,11 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
       std::string histogramNameSignal_density = Form("%s_NotDivided",hSig->GetName());
       hSig_density = (TH1*)hSig->Clone(histogramNameSignal_density.data());
     }
+    std::cout << "Plotter_HHTo3l::  hSig->Integral(): " << hSig->Integral() << "\n";
+    std::cout << "Plotter_HHTo3l:: scaleSignal_: " << scaleSignal_ << ", nSignalEvents_scale: " << nSignalEvents_scale << ", hSig_density->Integral(): " << hSig_density->Integral() << "\n";
     if ( scaleSignal_ > 0. ) hSig_density->Scale(scaleSignal_);
-
+    std::cout << "Plotter_HHTo3l:: scaleSignal_: " << scaleSignal_ << ", nSignalEvents_scale: " << nSignalEvents_scale << ", hSig_density->Integral(): " << hSig_density->Integral() << "\n";
+    
     // normalized all signal histograms' area w.r.t. each other
     if (optionToNormalizeSignalDistributions_ == 1) // normalize w.r.t. area
     {    
@@ -344,6 +368,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
       if (nSignalEvents_scale < 0.) nSignalEvents_scale = hSig_density->GetMaximum();
       else                          hSig_density->Scale(nSignalEvents_scale / hSig_density->GetMaximum());
     }
+    std::cout << "Plotter_HHTo3l:: scaleSignal_: " << scaleSignal_ << ", nSignalEvents_scale: " << nSignalEvents_scale << ", hSig_density->Integral(): " << hSig_density->Integral() << "\n\n\n";
     
     histogramsSignal_density.push_back(hSig_density);
   }
@@ -855,6 +880,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     }
     
     TH1 *hSig_density = histogramsSignal_density[iSig];
+    std::cout << "Plotter_HHTo3l:: Draw()  hSig_density->Integral(): " << hSig_density->Integral() << ", Max: " << hSig_density->GetMaximum() << ", Min: " << hSig_density->GetMinimum() << "\n";
     std::string legendEntry = legendEntriesSignal_[iSig];
     hSig_density->SetLineWidth(5);
     hSig_density->SetLineStyle(lineStyle_multiSignal[iSig]);
@@ -931,6 +957,81 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     extraLabels_pave->Draw();
   }
 
+
+  // significance_squared calculation
+  if (histogramsSignal_density.size() > 0 && 1==1)
+  {
+
+    TH1* histogramBkg_Total = (TH1*)histogramData_blinded_density->Clone("histogramBkg_Total");
+    histogramBkg_Total->Reset();
+
+    if ( histogramWZ_density          ) histogramBkg_Total->Add(histogramWZ_density);
+    if ( histogramFakes_density       ) histogramBkg_Total->Add(histogramFakes_density);
+    if ( histogramDY_density          ) histogramBkg_Total->Add(histogramDY_density);
+    if ( histogramZZ_density          ) histogramBkg_Total->Add(histogramZZ_density);
+    if ( histogramConversions_density ) histogramBkg_Total->Add(histogramConversions_density);
+    if ( histogramWW_density          ) histogramBkg_Total->Add(histogramWW_density);
+    if ( histogramTH_density          ) histogramBkg_Total->Add(histogramTH_density);
+    if ( histogramTTW_density         ) histogramBkg_Total->Add(histogramTTW_density);
+    if ( histogramVH_density          ) histogramBkg_Total->Add(histogramVH_density);
+    if ( histogramTTZ_density         ) histogramBkg_Total->Add(histogramTTZ_density);
+    if ( histogramOther_density       ) histogramBkg_Total->Add(histogramOther_density);
+    if ( histogramTTH_density         ) histogramBkg_Total->Add(histogramTTH_density);
+    if ( histogramTT_density          ) histogramBkg_Total->Add(histogramTT_density);
+    if ( histogramTTWW_density        ) histogramBkg_Total->Add(histogramTTWW_density);
+    if ( histogramggH_density         ) histogramBkg_Total->Add(histogramggH_density);
+    if ( histogramqqH_density         ) histogramBkg_Total->Add(histogramqqH_density);
+    if ( histogramTTWH_density        ) histogramBkg_Total->Add(histogramTTWH_density);
+    if ( histogramTTZH_density        ) histogramBkg_Total->Add(histogramTTZH_density);    
+    if ( histogramFlips_density       ) histogramBkg_Total->Add(histogramFlips_density);
+
+    histogramBkg_Total->Scale( 1. / histogramBkg_Total->Integral());
+    std::cout << std::endl;
+    //double *significance_squared = new double[histogramsSignal_density.size()];
+    for (size_t iSig = 0; iSig < histogramsSignal_density.size(); iSig++)
+    {
+      TH1 *hSignal = histogramsSignal_density[iSig];
+      checkCompatibleBinning(histogramBkg_Total, hSignal);
+
+      hSignal->Scale( 1. / hSignal->Integral());
+      double significance_squared = 0;
+      int nBins = hSignal->GetNbinsX();           
+      for (int iBin=1; iBin <= nBins; iBin++)
+      {
+	double S  = hSignal->GetBinContent(iBin);
+	double eS = hSignal->GetBinError(iBin);
+	double B  = histogramBkg_Total->GetBinContent(iBin);
+	double eB = histogramBkg_Total->GetBinError(iBin);
+	double significance_sq = 0;
+	
+	if ( B > 0 && B >= 2*eB) significance_sq = S*S / B;
+	significance_squared += significance_sq;
+	
+	if (printLevel > 10)
+	{
+	  printf("bin %d, S %g +- %g, B %g +- %g,   significane_sq_0 %g,  significane_sq_total %g \n",
+		 iBin, S,eS, B,eB, significance_sq,significance_squared);
+	}
+	
+      }
+      if (printLevel > 0 || 1==1)
+      {
+	if ( ! useLogScale &&  isRebinned)
+	{
+	  std::string histoName(histogramsSignal_density[0]->GetName());	  
+	  /*std::vector<std::string> histoName_parts;
+	  boost::split(histoName_parts, histoName, boost::is_any_of("__rebinned"));
+	  std::string histoName_toPrint = histoName_parts.size() > 0 ? histoName_parts[0] : histoName;*/
+	  std::string histoName_toPrint = histoName.substr(0, histoName.find("__rebinned"));
+	  //std::cout << histoName << ",  " << histoName_toPrint << "\n";
+	  printf("significance_squared & %s & %s &  %g \n",legendEntriesSignal_[iSig].c_str(),histoName_toPrint.c_str(),significance_squared);
+	}
+      }
+    }
+    std::cout << std::endl;
+    
+  }
+
   canvas->cd();
   bottomPad->Draw();
   bottomPad->cd();
@@ -974,7 +1075,7 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     if ( histogramFlips       ) histogramSum->Add(histogramFlips);
 
     if (printLevel > 4)
-      std::cout << "for ratio: data: " << printfHistoIntegral(histogramData) << ",  MC: " << printfHistoIntegral(histogramSum) << std::endl;
+      std::cout << "for ratio: data: " << printfHistoIntegral(histogramData) << ",  MC: " << printfHistoIntegral(histogramSum) << std::endl;   
     histogramRatio = (TH1*)histogramData->Clone("histogramRatio");
     histogramRatio->Reset();
     if ( !histogramRatio->GetSumw2N() ) histogramRatio->Sumw2();

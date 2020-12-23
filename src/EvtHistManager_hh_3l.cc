@@ -6,9 +6,11 @@
 
 const int analysisRunLevel = 0; // 0: only nEvent histo, 1: all category histo, 2: all histo
 
-EvtHistManager_hh_3l::EvtHistManager_hh_3l(const edm::ParameterSet & cfg)
+EvtHistManager_hh_3l::EvtHistManager_hh_3l(const edm::ParameterSet & cfg, bool isControlRegion)
   : HistManagerBase(cfg)
 {
+  isControlRegion_ = isControlRegion;
+  
   const std::vector<std::string> sysOpts_central = {
     "numElectrons",
     "numMuons",
@@ -893,7 +895,21 @@ EvtHistManager_hh_3l::EvtHistManager_hh_3l(const edm::ParameterSet & cfg)
     //
     "dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach3_two2lSFOSEvt",
     //
-    "dPhi_LeptonIdx3_Met_Approach3_two2lSFOSEvt",    
+    "dPhi_LeptonIdx3_Met_Approach3_two2lSFOSEvt",
+    //
+    //
+    //
+    // WZctrl
+    "mT_WZctrl_leptonW_MET",
+    // WZctrl 2lss
+    "jetMass_sel_WZctrl_2lss",
+    "leptonPairMass_sel_WZctrl_2lss",
+    "mindr_lep1_jet_WZctrl_2lss",
+    "mT_lep1_WZctrl_2lss",
+    "mindr_lep2_jet_WZctrl_2lss",
+    "mT_lep2_WZctrl_2lss",
+    "dR_ll_WZctrl_2lss",
+    "max_lep_eta_WZctrl_2lss",    
   };
   const std::vector<std::string> sysOpts_all = {
     //"mvaOutput_xgb_hh_3l_SUMBk_HH",
@@ -920,6 +936,39 @@ void
 EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
 {
   hEventCounter_                                       = book1D(dir, "EventCounter", "EventCounter",                              1, -0.5, +0.5);
+
+  hm3l_                                                = book1D(dir, "m3l",                                               "m3l",                                              200, 0,  600);
+  hdihiggsVisMass_sel_                                 = book1D(dir, "dihiggsVisMass_sel",                                "dihiggsVisMass_sel",                               200, 0, 1500);
+  hmSFOS2l_closestToZ_                                 = book1D(dir, "mSFOS2l_closestToZ",                                "mSFOS2l_closestToZ",                                40, 0,  320);
+  hdr_LeptonIdx3_AK4jNear_Approach2_                   = book1D(dir, "dr_LeptonIdx3_AK4jNear_Approach2",                  "dr_LeptonIdx3_AK4jNear_Approach2",                 100, 0,   7);
+  hdr_LeptonIdx3_2j_inclusive1j_Approach2_             = book1D(dir, "dr_LeptonIdx3_2j_inclusive1j_Approach2",            "dr_LeptonIdx3_2j_inclusive1j_Approach2",           100, 0,   7);
+  hdr_los_min_                                         = book1D(dir, "dr_los_min",                                        "dr_los_min",                                       100, 0, 7); 
+  hdr_los_max_                                         = book1D(dir, "dr_los_max",                                        "dr_los_max",                                       100, 0, 7);
+  hnumSameFlavor_OS_3l_                                = book1D(dir, "numSameFlavor_OS_3l",                               "numSameFlavor_OS_3l",                               9, -0.5,  +8.5);  
+  hmet_LD_                                             = book1D(dir, "met_LD",                                            "met_LD",                                           200, 0,500);
+
+
+  hnumElectrons_                                       = book1D(dir, "numElectrons",                                      "numElectrons",                                      5, -0.5,  +4.5); 
+  hnumMuons_                                           = book1D(dir, "numMuons",                                          "numMuons",                                          5, -0.5,  +4.5);
+  hnJetAK4_                                            = book1D(dir, "nJetAK4",                                           "nJetAK4",                                          20, -0.5, +19.5);
+  hnJetAK8_wSelectorAK8_Wjj_                           = book1D(dir, "nJetAK8_wSelectorAK8_Wjj",                          "nJetAK8_wSelectorAK8_Wjj",                         20, -0.5, +19.5);
+
+
+  if (isControlRegion_)
+  {
+    hmT_WZctrl_leptonW_MET_                            = book1D(dir, "mT_WZctrl_leptonW_MET",                             "mT_WZctrl_leptonW_MET",                           100, 0,500);
+
+    hjetMass_sel_WZctrl_2lss_                          = book1D(dir, "jetMass_sel_WZctrl_2lss",                           "jetMass_sel_WZctrl_2lss",                         200, 0,  600);
+    hleptonPairMass_sel_WZctrl_2lss_                   = book1D(dir, "leptonPairMass_sel_WZctrl_2lss",                    "leptonPairMass_sel_WZctrl_2lss",                  200, 0,  600);
+    hmindr_lep1_jet_WZctrl_2lss_                       = book1D(dir, "mindr_lep1_jet_WZctrl_2lss",                        "mindr_lep1_jet_WZctrl_2lss",                      100, 0,   10);
+    hmT_lep1_WZctrl_2lss_                              = book1D(dir, "mT_lep1_WZctrl_2lss",                               "mT_lep1_WZctrl_2lss",                             100, 0,500);
+    hmindr_lep2_jet_WZctrl_2lss_                       = book1D(dir, "mindr_lep2_jet_WZctrl_2lss",                        "mindr_lep2_jet_WZctrl_2lss",                      100, 0,   10);
+    hmT_lep2_WZctrl_2lss_                              = book1D(dir, "mT_lep2_WZctrl_2lss",                               "mT_lep2_WZctrl_2lss",                             100, 0,500);
+    hdR_ll_WZctrl_2lss_                                = book1D(dir, "dR_ll_WZctrl_2lss",                                 "dR_ll_WZctrl_2lss",                               100, 0,   7);
+    hmax_lep_eta_WZctrl_2lss_                          = book1D(dir, "max_lep_eta_WZctrl_2lss",                           "max_lep_eta_WZctrl_2lss",                         100, 0,   3);
+  }
+
+  
   //
   //hmvaOutput_xgb_hh_3l_SUMBk_HH_    = book1D(dir, "mvaOutput_xgb_hh_3l_SUMBk_HH","mvaOutput_xgb_hh_3l_SUMBk_HH",120,  0., 1.);
   //
@@ -927,15 +976,11 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
 
   if (analysisRunLevel >= 1)
   {  
-  hnumElectrons_                                       = book1D(dir, "numElectrons",                                      "numElectrons",                                      5, -0.5,  +4.5); 
-  hnumMuons_                                           = book1D(dir, "numMuons",                                          "numMuons",                                          5, -0.5,  +4.5);
-  hnJetAK4_                                            = book1D(dir, "nJetAK4",                                           "nJetAK4",                                          20, -0.5, +19.5); 
   hnBJetLoose_                                         = book1D(dir, "nBJetLoose",                                        "nBJetLoose",                                       20, -0.5, +19.5 ); 
-  hnJetAK8_wSelectorAK8_Wjj_                           = book1D(dir, "nJetAK8_wSelectorAK8_Wjj",                          "nJetAK8_wSelectorAK8_Wjj",                         20, -0.5, +19.5);
   //  
   hsumLeptonCharge_3l_                                 = book1D(dir, "sumLeptonCharge_3l",                                "sumLeptonCharge_3l",                                7, -3.5,  +3.5);
   hnumSameFlavor_OS_Full_                              = book1D(dir, "numSameFlavor_OS_FullPresel",                       "numSameFlavor_OS_FullPresel",                       9, -0.5,  +8.5); 
-  hnumSameFlavor_OS_3l_                                = book1D(dir, "numSameFlavor_OS_3l",                               "numSameFlavor_OS_3l",                               9, -0.5,  +8.5);
+  
   //
   hlep1_pt_                                            = book1D(dir, "lep1_pt",                                           "lep1_pt",                                         100, 0,400); 
   hlep1_conePt_                                        = book1D(dir, "lep1_conePt",                                       "lep1_conePt",                                     100, 0,400); 
@@ -966,14 +1011,14 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   //
   hmet_                                                = book1D(dir, "met",                                               "met",                                              200, 0,500); 
   hmht_                                                = book1D(dir, "mht",                                               "mht",                                              200, 0,500); 
-  hmet_LD_                                             = book1D(dir, "met_LD",                                            "met_LD",                                           200, 0,500); 
+  
   hHT_                                                 = book1D(dir, "HT",                                                "HT",                                               200, 0,1000); 
   hSTMET_                                              = book1D(dir, "STMET",                                             "STMET",                                            200, 0,1000);
   //
-  hmSFOS2l_closestToZ_                                 = book1D(dir, "mSFOS2l_closestToZ",                                "mSFOS2l_closestToZ",                                40, 0,  320);
-  hm3l_                                                = book1D(dir, "m3l",                                               "m3l",                                              200, 0,  600); 
+  
+  
   hWTojjMass_                                          = book1D(dir, "WTojjMass",                                         "WTojjMass",                                        200, 0,  600); 
-  hdihiggsVisMass_sel_                                 = book1D(dir, "dihiggsVisMass_sel",                                "dihiggsVisMass_sel",                               200, 0, 1500);
+  
   hdihiggsVisMass_sel_inclusive1j_                     = book1D(dir, "dihiggsVisMass_sel_inclusive1j",                    "dihiggsVisMass_sel_inclusive1j",                   200, 0, 1500); 
   hdihiggsMass_                                        = book1D(dir, "dihiggsMass",                                       "dihiggsMass",                                      200, 0, 1500);
   hdihiggsMass_inclusive1j_                            = book1D(dir, "dihiggsMass_inclusive1j",                           "dihiggsMass_inclusive1j",                          200, 0, 1500);
@@ -985,8 +1030,7 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   hdr_l23_                                             = book1D(dir, "dr_l23",                                            "dr_l23",                                           100, 0, 7); 
   hdr_l13_                                             = book1D(dir, "dr_l13",                                            "dr_l13",                                           100, 0, 7); 
   hdr_lss_                                             = book1D(dir, "dr_lss",                                            "dr_lss",                                           100, 0, 7); 
-  hdr_los_min_                                         = book1D(dir, "dr_los_min",                                        "dr_los_min",                                       100, 0, 7); 
-  hdr_los_max_                                         = book1D(dir, "dr_los_max",                                        "dr_los_max",                                       100, 0, 7);
+ 
   //
   havg_dr_jet_                                         = book1D(dir, "avg_dr_jet",                                        "avg_dr_jet",                                       100, 0, 7);
   hdr_Wjj_                                             = book1D(dir, "dr_Wjj",                                            "dr_Wjj",                                           100, 0, 7);
@@ -1084,9 +1128,9 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   hdr_LeptonIdx3_JetNear_Approach2_                    = book1D(dir, "dr_LeptonIdx3_JetNear_Approach2",                   "dr_LeptonIdx3_JetNear_Approach2",                   100, 0,   7);
   //
   hdr_LeptonIdx3_2j_Approach2_                         = book1D(dir, "dr_LeptonIdx3_2j_Approach2",                        "dr_LeptonIdx3_2j_Approach2",                        100, 0,   7);
-  hdr_LeptonIdx3_2j_inclusive1j_Approach2_             = book1D(dir, "dr_LeptonIdx3_2j_inclusive1j_Approach2",            "dr_LeptonIdx3_2j_inclusive1j_Approach2",            100, 0,   7);
+  
   //
-  hdr_LeptonIdx3_AK4jNear_Approach2_                   = book1D(dir, "dr_LeptonIdx3_AK4jNear_Approach2",                  "dr_LeptonIdx3_AK4jNear_Approach2",                  100, 0,   7);
+  
   hdr_LeptonIdx3_2AK4jNear_Approach2_                  = book1D(dir, "dr_LeptonIdx3_2AK4jNear_Approach2",                 "dr_LeptonIdx3_2AK4jNear_Approach2",                 100, 0,   7);
   hdr_LeptonIdx3_2AK4jNear_inclusive1j_Approach2_      = book1D(dir, "dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach2",     "dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach2",     100, 0,   7);
   hm_LeptonIdx3_2AK4jNear_Approach2_                   = book1D(dir, "m_LeptonIdx3_2AK4jNear_Approach2",                  "m_LeptonIdx3_2AK4jNear_Approach2",                  200, 0, 800);
@@ -2059,28 +2103,79 @@ EvtHistManager_hh_3l::fillHistograms(
   //
   int eventCategory,
   //
-  //double mvaOutput_xgb_hh_3l_SUMBk_HH,
+  //
+  //
+  // WZctrl
+  double mT_WZctrl_leptonW_MET,
+  // WZctrl 2lss
+  double jetMass_sel_WZctrl_2lss,
+  double leptonPairMass_sel_WZctrl_2lss,
+  double mindr_lep1_jet_WZctrl_2lss,
+  double mT_lep1_WZctrl_2lss,
+  double mindr_lep2_jet_WZctrl_2lss,
+  double mT_lep2_WZctrl_2lss,
+  double dR_ll_WZctrl_2lss,
+  double max_lep_eta_WZctrl_2lss,    
+  //
+  //
+  //  
+  //
   double evtWeight)
 {
   const double evtWeightErr = 0.;
 
   fillWithOverFlow(hEventCounter_,                                      0.,                                                evtWeight, evtWeightErr);
-  //
-  //fillWithOverFlow(hmvaOutput_xgb_hh_3l_SUMBk_HH_,  mvaOutput_xgb_hh_3l_SUMBk_HH,  evtWeight, evtWeightErr);
-  //
 
+  if (m3l > 0.)
+    fillWithOverFlow(hm3l_,                                               m3l,                                               evtWeight, evtWeightErr);
+  if (dihiggsVisMass_sel > 0.)
+    fillWithOverFlow(hdihiggsVisMass_sel_,                                dihiggsVisMass_sel,                                evtWeight, evtWeightErr);
+  if (mSFOS2l_closestToZ > 0.)
+    fillWithOverFlow(hmSFOS2l_closestToZ_,                                mSFOS2l_closestToZ,                                evtWeight, evtWeightErr);
+  if (dr_LeptonIdx3_AK4jNear_Approach2 > 0.)
+    fillWithOverFlow(hdr_LeptonIdx3_AK4jNear_Approach2_,                  dr_LeptonIdx3_AK4jNear_Approach2,                  evtWeight, evtWeightErr);
+  if (dr_LeptonIdx3_2j_inclusive1j_Approach2 > 0.)
+    fillWithOverFlow(hdr_LeptonIdx3_2j_inclusive1j_Approach2_,            dr_LeptonIdx3_2j_inclusive1j_Approach2,            evtWeight, evtWeightErr);
+  fillWithOverFlow(hdr_los_min_,                                        dr_los_min,                                        evtWeight, evtWeightErr); 
+  fillWithOverFlow(hdr_los_max_,                                        dr_los_max,                                        evtWeight, evtWeightErr); 
+  fillWithOverFlow(hnumSameFlavor_OS_3l_,                               numSameFlavor_OS_3l,                               evtWeight, evtWeightErr);
+  fillWithOverFlow(hmet_LD_,                                            met_LD,                                            evtWeight, evtWeightErr); 
 
-  if (analysisRunLevel >= 1)
-  {
   fillWithOverFlow(hnumElectrons_,                                      numElectrons,                                      evtWeight, evtWeightErr);
   fillWithOverFlow(hnumMuons_,                                          numMuons,                                          evtWeight, evtWeightErr);
   fillWithOverFlow(hnJetAK4_,                                           nJetAK4,                                           evtWeight, evtWeightErr); 
-  fillWithOverFlow(hnBJetLoose_,                                        nBJetLoose,                                        evtWeight, evtWeightErr); 
   fillWithOverFlow(hnJetAK8_wSelectorAK8_Wjj_,                          nJetAK8_wSelectorAK8_Wjj,                          evtWeight, evtWeightErr);
+  
+
+  if (isControlRegion_)
+  {
+    fillWithOverFlow(hmT_WZctrl_leptonW_MET_,                           mT_WZctrl_leptonW_MET,                             evtWeight, evtWeightErr);
+
+    if (jetMass_sel_WZctrl_2lss > 0)
+      fillWithOverFlow(hjetMass_sel_WZctrl_2lss_,                       jetMass_sel_WZctrl_2lss,                           evtWeight, evtWeightErr);
+    if (leptonPairMass_sel_WZctrl_2lss > 0)
+      fillWithOverFlow(hleptonPairMass_sel_WZctrl_2lss_,                leptonPairMass_sel_WZctrl_2lss,                    evtWeight, evtWeightErr);
+    if (mindr_lep1_jet_WZctrl_2lss > 0)
+      fillWithOverFlow(hmindr_lep1_jet_WZctrl_2lss_,                    mindr_lep1_jet_WZctrl_2lss,                        evtWeight, evtWeightErr);
+    if (mT_lep1_WZctrl_2lss > 0)
+      fillWithOverFlow(hmT_lep1_WZctrl_2lss_,                           mT_lep1_WZctrl_2lss,                               evtWeight, evtWeightErr);
+    if (mindr_lep2_jet_WZctrl_2lss > 0)
+      fillWithOverFlow(hmindr_lep2_jet_WZctrl_2lss_,                    mindr_lep2_jet_WZctrl_2lss,                        evtWeight, evtWeightErr);
+    if (mT_lep2_WZctrl_2lss > 0)
+      fillWithOverFlow(hmT_lep2_WZctrl_2lss_,                           mT_lep2_WZctrl_2lss,                               evtWeight, evtWeightErr);
+    if (dR_ll_WZctrl_2lss > 0)
+      fillWithOverFlow(hdR_ll_WZctrl_2lss_,                             dR_ll_WZctrl_2lss,                                 evtWeight, evtWeightErr);
+    if (max_lep_eta_WZctrl_2lss > 0)
+      fillWithOverFlow(hmax_lep_eta_WZctrl_2lss_,                       max_lep_eta_WZctrl_2lss,                           evtWeight, evtWeightErr);    
+  }
+  
+
+  if (analysisRunLevel >= 1)
+  {
+  fillWithOverFlow(hnBJetLoose_,                                        nBJetLoose,                                        evtWeight, evtWeightErr); 
   //
   fillWithOverFlow(hsumLeptonCharge_3l_,                                sumLeptonCharge_3l,                                evtWeight, evtWeightErr); 
   fillWithOverFlow(hnumSameFlavor_OS_Full_,                             numSameFlavor_OS_Full,                             evtWeight, evtWeightErr);
-  fillWithOverFlow(hnumSameFlavor_OS_3l_,                               numSameFlavor_OS_3l,                               evtWeight, evtWeightErr); 
   //
   fillWithOverFlow(hlep1_pt_,                                           lep1_pt,                                           evtWeight, evtWeightErr); 
   fillWithOverFlow(hlep1_conePt_,                                       lep1_conePt,                                       evtWeight, evtWeightErr); 
@@ -2116,18 +2211,11 @@ EvtHistManager_hh_3l::fillHistograms(
   //
   fillWithOverFlow(hmet_,                                               met,                                               evtWeight, evtWeightErr); 
   fillWithOverFlow(hmht_,                                               mht,                                               evtWeight, evtWeightErr); 
-  fillWithOverFlow(hmet_LD_,                                            met_LD,                                            evtWeight, evtWeightErr); 
   fillWithOverFlow(hHT_,                                                HT,                                                evtWeight, evtWeightErr); 
   fillWithOverFlow(hSTMET_,                                             STMET,                                             evtWeight, evtWeightErr);
   //
-  if (mSFOS2l_closestToZ > 0.)
-    fillWithOverFlow(hmSFOS2l_closestToZ_,                                mSFOS2l_closestToZ,                                evtWeight, evtWeightErr);
-  if (m3l > 0.)
-    fillWithOverFlow(hm3l_,                                               m3l,                                               evtWeight, evtWeightErr);
   if (WTojjMass > 0.)
     fillWithOverFlow(hWTojjMass_,                                         WTojjMass,                                         evtWeight, evtWeightErr);
-  if (dihiggsVisMass_sel > 0.)
-    fillWithOverFlow(hdihiggsVisMass_sel_,                                dihiggsVisMass_sel,                                evtWeight, evtWeightErr);
   if (dihiggsVisMass_sel_inclusive1j > 0.)
     fillWithOverFlow(hdihiggsVisMass_sel_inclusive1j_,                    dihiggsVisMass_sel_inclusive1j,                    evtWeight, evtWeightErr);
   if (dihiggsMass > 0.)
@@ -2142,8 +2230,6 @@ EvtHistManager_hh_3l::fillHistograms(
   fillWithOverFlow(hdr_l23_,                                            dr_l23,                                            evtWeight, evtWeightErr); 
   fillWithOverFlow(hdr_l13_,                                            dr_l13,                                            evtWeight, evtWeightErr); 
   fillWithOverFlow(hdr_lss_,                                            dr_lss,                                            evtWeight, evtWeightErr); 
-  fillWithOverFlow(hdr_los_min_,                                        dr_los_min,                                        evtWeight, evtWeightErr); 
-  fillWithOverFlow(hdr_los_max_,                                        dr_los_max,                                        evtWeight, evtWeightErr); 
   //
   if (avg_dr_jet > 0.)
     fillWithOverFlow(havg_dr_jet_,                                        avg_dr_jet,                                        evtWeight, evtWeightErr);
@@ -2270,11 +2356,7 @@ EvtHistManager_hh_3l::fillHistograms(
   //
   if (dr_LeptonIdx3_2j_Approach2 > 0.)
     fillWithOverFlow(hdr_LeptonIdx3_2j_Approach2_,                        dr_LeptonIdx3_2j_Approach2,                        evtWeight, evtWeightErr);
-  if (dr_LeptonIdx3_2j_inclusive1j_Approach2 > 0.)
-    fillWithOverFlow(hdr_LeptonIdx3_2j_inclusive1j_Approach2_,            dr_LeptonIdx3_2j_inclusive1j_Approach2,            evtWeight, evtWeightErr);
   //
-  if (dr_LeptonIdx3_AK4jNear_Approach2 > 0.)
-    fillWithOverFlow(hdr_LeptonIdx3_AK4jNear_Approach2_,                  dr_LeptonIdx3_AK4jNear_Approach2,                  evtWeight, evtWeightErr);
   if (dr_LeptonIdx3_2AK4jNear_Approach2 > 0.)
     fillWithOverFlow(hdr_LeptonIdx3_2AK4jNear_Approach2_,                 dr_LeptonIdx3_2AK4jNear_Approach2,                 evtWeight, evtWeightErr);
   if (dr_LeptonIdx3_2AK4jNear_inclusive1j_Approach2 > 0.)

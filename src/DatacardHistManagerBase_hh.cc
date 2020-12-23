@@ -1,4 +1,4 @@
-#include "hhAnalysis/multilepton/interface/DatacardHistManagerBase_hh.h"
+#include "hhAnalysis/multilepton/interface/DatacardHistManagerBase_hh.h" 
 
 #include "tthAnalysis/HiggsToTauTau/interface/cmsException.h"          // cmsException
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow()
@@ -24,7 +24,7 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
   , eventCategoryBase_(nullptr)
   , numBinsX_(100)
   , xMin_(0.)
-  , xMax_(1.)
+  , xMax_(500.) // 1.
   , isDEBUG_(isDEBUG)
 {}
 
@@ -41,8 +41,8 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
   , apply_HH_rwgt_(HHWeight_calc_ != nullptr)
   , eventCategoryBase_(eventCategoryBase)
   , numBinsX_(100)
-  , xMin_(0.)
-  , xMax_(1.)
+  , xMin_(0.) // 0.
+  , xMax_(500.) // 1. 
   , isDEBUG_(isDEBUG)
 {}
 

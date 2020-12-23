@@ -289,6 +289,8 @@ int main(int argc, char* argv[])
 
   std::string era_string = cfg_analyze.getParameter<std::string>("era");
   const Era era = get_era(era_string);
+  const bool isControlRegion = cfg_analyze.getParameter<bool>("isControlRegion");
+  std::cout << "isControlRegion: " << isControlRegion << "\n";
 
   // single lepton triggers
   vstring triggerNames_1e = cfg_analyze.getParameter<vstring>("triggers_1e");
@@ -971,7 +973,7 @@ int main(int argc, char* argv[])
       if(! skipBooking)
       {
         selHistManager->evt_ = new EvtHistManager_hh_3l(makeHistManager_cfg(process_and_genMatch,
-          Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
+	  Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift), isControlRegion);
         selHistManager->evt_->bookHistograms(fs);
       }
 
@@ -2075,16 +2077,19 @@ int main(int argc, char* argv[])
     if (isWjjBoosted)   cutFlowTable.update("AK8 hh_Wjj selector isWjjBoosted", evtWeightRecorder.get(central_or_shift_main));
     if (isWjjResolved)  cutFlowTable.update("AK8 hh_Wjj selector isWjjResolved", evtWeightRecorder.get(central_or_shift_main));
     if (isWjjHasOnly1j) cutFlowTable.update("AK8 hh_Wjj selector isWjjHasOnly1j", evtWeightRecorder.get(central_or_shift_main));
-    
-    if ( !(selJet1_Wjj || selJet2_Wjj) ) {
-      if ( run_lumi_eventSelector ) {
-        std::cout << "event " << eventInfo.str() << " FAILS >= 1 jets from W->jj selection\n";
-      }
-      continue;
-    }
-    cutFlowTable.update(">= 1 jets from W->jj", evtWeightRecorder.get(central_or_shift_main));
-    cutFlowHistManager->fillHistograms(">= 1 jets from W->jj", evtWeightRecorder.get(central_or_shift_main));
 
+
+    if ( ! isControlRegion )
+    {
+      if ( !(selJet1_Wjj || selJet2_Wjj) ) {
+	if ( run_lumi_eventSelector ) {
+	  std::cout << "event " << eventInfo.str() << " FAILS >= 1 jets from W->jj selection\n";
+	}
+	continue;
+      }
+      cutFlowTable.update(">= 1 jets from W->jj", evtWeightRecorder.get(central_or_shift_main));
+      cutFlowHistManager->fillHistograms(">= 1 jets from W->jj", evtWeightRecorder.get(central_or_shift_main));
+    }
 
 
 
@@ -2155,9 +2160,9 @@ int main(int argc, char* argv[])
     }
 
     bool failsZbosonMassVeto = isSameFlavor_OS && std::fabs(massSameFlavor_OS - z_mass) < z_window;
-    if ( failsZbosonMassVeto ) {
+    if ( failsZbosonMassVeto != isControlRegion ) { // WZ Control region 
       if ( run_lumi_eventSelector ) {
-    std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
+	std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
       }
       continue;
     }
@@ -2345,6 +2350,7 @@ int main(int argc, char* argv[])
       std::cout << "\nevtWeightRecorder: " << evtWeightRecorder << std::endl; 
     }
 
+
     
     /*
     int nEle_3selLep = 0, nMu_3selLep = 0;
@@ -2517,8 +2523,8 @@ int main(int argc, char* argv[])
 
       dEta_3l_avg2j             = std::abs(lv_3l.eta() - (selJet1_Wjj->eta() + selJet2_Wjj->eta())/2.);
       dEta_3l_avg2j_inclusive1j = std::abs(lv_3l.eta() - (selJet1_Wjj->eta() + selJet2_Wjj->eta())/2.);      
-    }
-    else
+    } 
+    else if (selJet1_Wjj)
     {
       dPhi_3l_2j_inclusive1j = calculateAbsDeltaPhi(lv_3l.phi(), (selJet1_Wjj->p4()).phi());
       dEta_3l_2j_inclusive1j = std::abs(lv_3l.eta() - (selJet1_Wjj->p4()).eta());
@@ -2622,11 +2628,12 @@ int main(int argc, char* argv[])
     double dr_LeptonIdx2_LeptonIdx3_Approach0 = deltaR(selLepton2_H_WW_ll_Approach0->p4(), selLepton_H_WW_ljj_Approach0->p4());
     double dr_LeptonIdx1_LeptonIdx3_Approach0 = deltaR(selLepton1_H_WW_ll_Approach0->p4(), selLepton_H_WW_ljj_Approach0->p4());
     //
-    double m_LeptonIdx3_Jet1_Approach0  = (selLepton_H_WW_ljj_Approach0->p4() + selJet1_Wjj->p4()).mass();
-    double dr_LeptonIdx3_Jet1_Approach0 = deltaR(selLepton_H_WW_ljj_Approach0->p4(), selJet1_Wjj->p4());
+    double m_LeptonIdx3_Jet1_Approach0  = selJet1_Wjj ? (selLepton_H_WW_ljj_Approach0->p4() + selJet1_Wjj->p4()).mass() : -1;
+    double dr_LeptonIdx3_Jet1_Approach0 = selJet1_Wjj ? deltaR(selLepton_H_WW_ljj_Approach0->p4(), selJet1_Wjj->p4()) : -1;
     double m_LeptonIdx3_JetNear_Approach0;
     double dr_LeptonIdx3_JetNear_Approach0;
-    if (selJet2_Wjj) { 
+    if (selJet2_Wjj)
+    { 
       if (deltaR(selLepton_H_WW_ljj_Approach0->p4(), selJet1_Wjj->p4()) <
 	  deltaR(selLepton_H_WW_ljj_Approach0->p4(), selJet2_Wjj->p4()) ) {
 	dr_LeptonIdx3_JetNear_Approach0 = deltaR(selLepton_H_WW_ljj_Approach0->p4(), selJet1_Wjj->p4());
@@ -2635,7 +2642,9 @@ int main(int argc, char* argv[])
 	dr_LeptonIdx3_JetNear_Approach0 = deltaR(selLepton_H_WW_ljj_Approach0->p4(), selJet2_Wjj->p4());
 	m_LeptonIdx3_JetNear_Approach0  = (selLepton_H_WW_ljj_Approach0->p4() + selJet2_Wjj->p4()).mass();
       }
-    } else {
+    }
+    else
+    {
       dr_LeptonIdx3_JetNear_Approach0 = dr_LeptonIdx3_Jet1_Approach0;
       m_LeptonIdx3_JetNear_Approach0 = m_LeptonIdx3_Jet1_Approach0;
     }
@@ -2652,7 +2661,7 @@ int main(int argc, char* argv[])
       dr_LeptonIdx3_2j_Approach0             = deltaR(selLepton_H_WW_ljj_Approach0->p4(), (selJet1_Wjj->p4() + selJet2_Wjj->p4()));
       dr_LeptonIdx3_2j_inclusive1j_Approach0 = deltaR(selLepton_H_WW_ljj_Approach0->p4(), (selJet1_Wjj->p4() + selJet2_Wjj->p4()));
     }
-    else
+    else if (isWjjHasOnly1j)
     {
       dr_LeptonIdx3_2j_inclusive1j_Approach0 = deltaR(selLepton_H_WW_ljj_Approach0->p4(), (selJet1_Wjj->p4()));
     }
@@ -2668,7 +2677,7 @@ int main(int argc, char* argv[])
     const RecoJet* selAK4J_closestToLeptonIdx3_Approach0 = nullptr;
     const RecoJet* selAK4J_2ndclosestToLeptonIdx3_Approach0 = nullptr;
     double dr_LeptonIdx3_AK4_min = 99999.;
-    if (printLevel > 0) printf("nselAK4 %zu \n",selJetsAK4.size());
+    if (printLevel > 5) printf("nselAK4 %zu \n",selJetsAK4.size());
     for ( std::vector<const RecoJet*>::const_iterator selJet1 = selJetsAK4.begin();
 	  selJet1 != selJetsAK4.end(); ++selJet1 ) {
       double dr = deltaR(selLepton_H_WW_ljj_Approach0->p4(), (*selJet1)->p4());
@@ -2817,8 +2826,8 @@ int main(int argc, char* argv[])
     double dr_LeptonIdx2_LeptonIdx3_Approach2 = deltaR(selLepton2_H_WW_ll_Approach2->p4(), selLepton_H_WW_ljj_Approach2->p4());
     double dr_LeptonIdx1_LeptonIdx3_Approach2 = deltaR(selLepton1_H_WW_ll_Approach2->p4(), selLepton_H_WW_ljj_Approach2->p4());
     //
-    double m_LeptonIdx3_Jet1_Approach2  = (selLepton_H_WW_ljj_Approach2->p4() + selJet1_Wjj->p4()).mass();
-    double dr_LeptonIdx3_Jet1_Approach2 = deltaR(selLepton_H_WW_ljj_Approach2->p4(), selJet1_Wjj->p4());
+    double m_LeptonIdx3_Jet1_Approach2  = selJet1_Wjj ? (selLepton_H_WW_ljj_Approach2->p4() + selJet1_Wjj->p4()).mass() : -1;
+    double dr_LeptonIdx3_Jet1_Approach2 = selJet1_Wjj ? deltaR(selLepton_H_WW_ljj_Approach2->p4(), selJet1_Wjj->p4()) : -1;
     double m_LeptonIdx3_JetNear_Approach2;
     double dr_LeptonIdx3_JetNear_Approach2;
     if (selJet2_Wjj) { 
@@ -2847,7 +2856,7 @@ int main(int argc, char* argv[])
       dr_LeptonIdx3_2j_Approach2             = deltaR(selLepton_H_WW_ljj_Approach2->p4(), (selJet1_Wjj->p4() + selJet2_Wjj->p4()));
       dr_LeptonIdx3_2j_inclusive1j_Approach2 = deltaR(selLepton_H_WW_ljj_Approach2->p4(), (selJet1_Wjj->p4() + selJet2_Wjj->p4()));
     }
-    else
+    else if (isWjjHasOnly1j)
     {
       dr_LeptonIdx3_2j_inclusive1j_Approach2 = deltaR(selLepton_H_WW_ljj_Approach2->p4(), (selJet1_Wjj->p4()));
     }
@@ -2997,8 +3006,8 @@ int main(int argc, char* argv[])
     double dr_LeptonIdx2_LeptonIdx3_Approach3 = deltaR(selLepton2_H_WW_ll_Approach3->p4(), selLepton_H_WW_ljj_Approach3->p4());
     double dr_LeptonIdx1_LeptonIdx3_Approach3 = deltaR(selLepton1_H_WW_ll_Approach3->p4(), selLepton_H_WW_ljj_Approach3->p4());
     //
-    double m_LeptonIdx3_Jet1_Approach3  = (selLepton_H_WW_ljj_Approach3->p4() + selJet1_Wjj->p4()).mass();
-    double dr_LeptonIdx3_Jet1_Approach3 = deltaR(selLepton_H_WW_ljj_Approach3->p4(), selJet1_Wjj->p4());
+    double m_LeptonIdx3_Jet1_Approach3  = selJet1_Wjj ? (selLepton_H_WW_ljj_Approach3->p4() + selJet1_Wjj->p4()).mass() : -1;
+    double dr_LeptonIdx3_Jet1_Approach3 = selJet1_Wjj ? deltaR(selLepton_H_WW_ljj_Approach3->p4(), selJet1_Wjj->p4()) : -1;
     double m_LeptonIdx3_JetNear_Approach3;
     double dr_LeptonIdx3_JetNear_Approach3;
     if (selJet2_Wjj) { 
@@ -3027,7 +3036,7 @@ int main(int argc, char* argv[])
       dr_LeptonIdx3_2j_Approach3             = deltaR(selLepton_H_WW_ljj_Approach3->p4(), (selJet1_Wjj->p4() + selJet2_Wjj->p4()));
       dr_LeptonIdx3_2j_inclusive1j_Approach3 = deltaR(selLepton_H_WW_ljj_Approach3->p4(), (selJet1_Wjj->p4() + selJet2_Wjj->p4()));
     }
-    else
+    else if (isWjjHasOnly1j)
     {
       dr_LeptonIdx3_2j_inclusive1j_Approach3 = deltaR(selLepton_H_WW_ljj_Approach3->p4(), (selJet1_Wjj->p4()));
     }
@@ -3128,7 +3137,88 @@ int main(int argc, char* argv[])
     
 
 
+    // WZ control region ---------------------------
+    double mT_WZctrl_leptonW_MET = -1.;
 
+    double jetMass_sel_WZctrl_2lss = -1.;
+    double leptonPairMass_sel_WZctrl_2lss = -1.;
+    double mindr_lep1_jet_WZctrl_2lss = -1.;
+    double mT_lep1_WZctrl_2lss = -1.;
+    double mindr_lep2_jet_WZctrl_2lss = -1.;
+    double mT_lep2_WZctrl_2lss = -1.;
+    double dR_ll_WZctrl_2lss = -1.;
+    double max_lep_eta_WZctrl_2lss = -1.;
+
+    if ( isControlRegion ) // WZ control region
+    {
+      bool passesZbosonMassCut = false;
+      double massSFOS = -1.;
+      const RecoLepton* selLepton1_Z = nullptr;
+      const RecoLepton* selLepton2_Z = nullptr;
+      for ( std::vector<const RecoLepton*>::const_iterator selLepton1 = selLeptons.begin();
+	    selLepton1 != selLeptons.end(); ++selLepton1 ) {
+	for ( std::vector<const RecoLepton*>::const_iterator selLepton2 = selLepton1 + 1;
+	      selLepton2 != selLeptons.end(); ++selLepton2 ) {
+	  if ( (*selLepton1)->pdgId() == -(*selLepton2)->pdgId() ) 
+	  {
+	    // pair of same flavor leptons of opposite charge
+	    double mass = ((*selLepton1)->p4() + (*selLepton2)->p4()).mass();
+	    if ( std::fabs(mass - z_mass) < z_window )
+	    {
+	      passesZbosonMassCut = true;
+	      if ( massSFOS < 0. || std::fabs(mass - z_mass) < std::fabs(massSFOS - z_mass) )
+	      {
+		selLepton1_Z = *selLepton1;
+		selLepton2_Z = *selLepton2;
+		massSFOS = mass;
+	      }
+	    }
+	  }
+	}
+      }
+      if ( !passesZbosonMassCut ) {
+	if ( run_lumi_eventSelector ) {
+	  std::cout << "event " << eventInfo.str() << " FAILS Z-boson mass cut." << std::endl;
+	}
+	continue;
+      }
+      cutFlowTable.update("WZctrl: Z-boson mass cut", evtWeightRecorder.get(central_or_shift_main));
+      const RecoLepton* selLepton_W = nullptr;
+      if      ( selLepton1_Z == selLepton_sublead && selLepton2_Z == selLepton_third   ) selLepton_W = selLepton_lead;
+      else if ( selLepton1_Z == selLepton_lead    && selLepton2_Z == selLepton_third   ) selLepton_W = selLepton_sublead;
+      else if ( selLepton1_Z == selLepton_lead    && selLepton2_Z == selLepton_sublead ) selLepton_W = selLepton_third;
+      else assert(0);
+
+      mT_WZctrl_leptonW_MET = comp_MT_met(selLepton_W, met.pt(), met.phi());
+
+      // hh_2lss BDT variables
+      const RecoLepton* selLepton1_SS = nullptr;
+      const RecoLepton* selLepton2_SS = nullptr;
+      for ( std::vector<const RecoLepton*>::const_iterator selLepton1 = selLeptons.begin();
+	    selLepton1 != selLeptons.end(); ++selLepton1 ) {
+	for ( std::vector<const RecoLepton*>::const_iterator selLepton2 = selLepton1 + 1;
+	      selLepton2 != selLeptons.end(); ++selLepton2 ) {
+	  if ( (*selLepton1)->charge() * (*selLepton2)->charge() < 0) continue;
+	  selLepton1_SS = *selLepton1;
+	  selLepton2_SS = *selLepton2;
+	}
+      }
+      
+      jetMass_sel_WZctrl_2lss        = WTojjMass;
+      leptonPairMass_sel_WZctrl_2lss = (selLepton1_SS->p4() + selLepton2_SS->p4()).mass();
+      mindr_lep1_jet_WZctrl_2lss     = std::min(10., comp_mindr_jet(*selLepton1_SS, selJetsAK4));
+      mT_lep1_WZctrl_2lss            = comp_MT_met(selLepton1_SS, met.pt(), met.phi());
+      mindr_lep2_jet_WZctrl_2lss     = std::min(10., comp_mindr_jet(*selLepton2_SS, selJetsAK4));
+      mT_lep2_WZctrl_2lss            = comp_MT_met(selLepton2_SS, met.pt(), met.phi());
+      dR_ll_WZctrl_2lss              = deltaR(selLepton1_SS->p4(), selLepton2_SS->p4());
+      max_lep_eta_WZctrl_2lss        = TMath::Max(std::abs(selLepton1_SS->eta()), std::abs(selLepton2_SS->eta())) ;
+      
+    }
+    // ---------------------------------------------------------------------------------------------------------------
+
+
+
+    
     //Gathering final BDT Inputs
 
     AllVars_Map["gen_mHH"]                                   =       250.; // setting a Dummy value which will be reset depending on mass hypothesis
@@ -3489,6 +3579,22 @@ int main(int argc, char* argv[])
 	    //
 	    eventCategory,
 	    //
+	    //
+	    //
+	    // WZctrl
+	    mT_WZctrl_leptonW_MET,
+	    // WZctrl 2lss
+	    jetMass_sel_WZctrl_2lss,
+	    leptonPairMass_sel_WZctrl_2lss,
+	    mindr_lep1_jet_WZctrl_2lss,
+	    mT_lep1_WZctrl_2lss,
+	    mindr_lep2_jet_WZctrl_2lss,
+	    mT_lep2_WZctrl_2lss,
+	    dR_ll_WZctrl_2lss,
+	    max_lep_eta_WZctrl_2lss,
+	    //
+	    //
+	    //
 	    evtWeight	    
 	    );
         }
@@ -3497,7 +3603,7 @@ int main(int argc, char* argv[])
           BDTOutput_Map_spin0,
           BDTOutput_Map_nonRes,
           //BDTOutput_Map_nonRes_base["Base"],
-	  -1., // CV: BDTOutput for nonresonant_allBMs case not implemented yet !!
+	  isControlRegion ? mT_WZctrl_leptonW_MET : -1., // CV: BDTOutput for nonresonant_allBMs case not implemented yet !! Temporary solution
           evtWeight);
 
         if(! skipFilling)
