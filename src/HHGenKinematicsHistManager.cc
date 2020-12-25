@@ -31,46 +31,25 @@ HHGenKinematicsHistManager::bookHistograms(TFileDirectory & dir)
 }
 
 void
-HHGenKinematicsHistManager::fillHistograms(const std::vector<LHEParticle> & lheParticles, double evtWeight)
+HHGenKinematicsHistManager::fillHistograms(double evtWeight)
 {
-  const double evtWeightErr = 0.;
-
-  std::vector<const LHEParticle*> lheHiggsBosons;
-  for ( std::vector<LHEParticle>::const_iterator lheParticle = lheParticles.begin();
-        lheParticle != lheParticles.end(); ++lheParticle ) {
-    if ( lheParticle->pdgId() == 25 && lheParticle->status() == 1 )
-    {
-      lheHiggsBosons.push_back(&(*lheParticle));
-    }
-  }
-  std::sort(lheHiggsBosons.begin(), lheHiggsBosons.end(), isHigherPt);
-
-  if ( lheHiggsBosons.size() == 2 )
+  if ( analysisConfig_.isMC_HH_nonresonant() && (apply_HH_rwgt_ || apply_HH_rwgt_LOtoNLO_) )
   {
-    const LHEParticle* lheHiggsBoson_lead    = lheHiggsBosons[0];
-    const LHEParticle* lheHiggsBoson_sublead = lheHiggsBosons[1];
-
+    const double evtWeightErr = 0.;
     double HHReweight = 1.;
-    if ( analysisConfig_.isMC_HH_nonresonant() && (apply_HH_rwgt_ || apply_HH_rwgt_LOtoNLO_) )
+
+    if ( apply_HH_rwgt_ )
     {
-      if ( apply_HH_rwgt_ )
-      {
-        assert(HHWeight_calc_);
-        HHReweight = HHWeight_calc_->getReWeight("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
-      }
-      if ( apply_HH_rwgt_LOtoNLO_ )
-      {
-        assert(HHWeight_calc_LOtoNLO_);
-        HHReweight *= HHWeight_calc_LOtoNLO_->getReWeight("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
-      }
+      assert(HHWeight_calc_);
+      HHReweight = HHWeight_calc_->getReWeight("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
+    }
+    if ( apply_HH_rwgt_LOtoNLO_ )
+    {
+      assert(HHWeight_calc_LOtoNLO_);
+      HHReweight *= HHWeight_calc_LOtoNLO_->getReWeight("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
     }
 
-    double gen_mHH = (lheHiggsBoson_lead->p4() + lheHiggsBoson_sublead->p4()).mass();    
-    //std::cout << "gen_mHH = " << gen_mHH << ": eventInfo_.gen_mHH = " << eventInfo_.gen_mHH << std::endl;
-    fillWithOverFlow(histogram_gen_mHH_, gen_mHH, HHReweight*evtWeight, HHReweight*evtWeightErr);
-
-    double gen_absCosThetaStar = std::fabs(comp_cosThetaStar(lheHiggsBoson_lead->p4(), lheHiggsBoson_sublead->p4()));
-    //std::cout << "gen_absCosThetaStar = " << gen_absCosThetaStar << ": eventInfo_.gen_cosThetaStar = " << eventInfo_.gen_cosThetaStar << std::endl;
-    fillWithOverFlow(histogram_gen_absCosThetaStar_, gen_absCosThetaStar, HHReweight*evtWeight, HHReweight*evtWeightErr);
+    fillWithOverFlow(histogram_gen_mHH_, eventInfo_.gen_mHH, HHReweight*evtWeight, HHReweight*evtWeightErr);
+    fillWithOverFlow(histogram_gen_absCosThetaStar_, eventInfo_.gen_cosThetaStar, HHReweight*evtWeight, HHReweight*evtWeightErr);
   }
 }

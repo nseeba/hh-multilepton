@@ -33,7 +33,7 @@ class HHGenKinematicsHistManager
   bookHistograms(TFileDirectory & dir) override;
 
   void
-  fillHistograms(const std::vector<LHEParticle> & lheParticles, double evtWeight);
+  fillHistograms(double evtWeight);
 
  private:
   const AnalysisConfig_hh & analysisConfig_;
