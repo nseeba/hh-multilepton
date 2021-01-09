@@ -67,6 +67,9 @@ regroup_jerc      = args.enable_regrouped_jerc
 split_trigger_sys = args.split_trigger_sys
 control_region    = args.control_region
 
+if lep_mva_wp != "hh_multilepton" and use_preselected:
+  raise RuntimeError("Cannot use skimmed samples while tightening the prompt lepton MVA cut")
+
 if regroup_jerc:
   if 'full' not in systematics_label:
     raise RuntimeError("Regrouped JEC or split JER was enabled but not running with full systematics")
