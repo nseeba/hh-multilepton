@@ -169,7 +169,9 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
         histogramFakes_density = histogramBackground_density;
       }
     } else if ( process.find("WH") != std::string::npos ||
-                process.find("ZH") != std::string::npos  ) {
+                process.find("ZH") != std::string::npos
+      ||
+		process.find("VH") != std::string::npos ) {
       if ( histogramVH && histogramVH_density ) {
         histogramVH->Add(histogramBackground);
         histogramVH_density->Add(histogramBackground_density);
@@ -600,6 +602,7 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     histogramRatio->SetTitle("");
     histogramRatio->SetStats(false);
     double histogramRatioMax = TMath::Max(histogramRatio->GetMaximum(),TMath::Abs(histogramRatio->GetMinimum()));
+    if (histogramRatioMax > 1.4) histogramRatioMax = 1.4;    
     histogramRatio->SetMinimum(-1.2*histogramRatioMax);
     histogramRatio->SetMaximum(1.2*histogramRatioMax);
     //histogramRatio->SetMinimum(-0.50);
