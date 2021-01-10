@@ -140,6 +140,7 @@ process.analyze_hh_2lss = cms.PSet(
     apply_LHE_nom = cms.bool(False),
     useObjectMultiplicity = cms.bool(False),
     minNumJets = cms.int32(2),
+    maxNumTaus = cms.int32(1),
 
 
     gen_mHH = cms.vdouble(250,260,270,280,300, 320,350,400,450,500,550,600,650,700,750,800,850,900,1000), ## Set the signal mass range used in the BDT .pkl/.xml/.pb files

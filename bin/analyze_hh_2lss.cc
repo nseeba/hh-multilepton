@@ -315,7 +315,8 @@ int main(int argc, char* argv[])
   const std::string lep_mva_wp = cfg_analyze.getParameter<std::string>("lep_mva_wp");
 
   const int minNumJets = cfg_analyze.getParameter<int>("minNumJets");
-  std::cout << "minNumJets = " << minNumJets << '\n';
+  const int maxNumTaus = cfg_analyze.getParameter<int>("maxNumTaus");
+  std::cout << "minNumJets = " << minNumJets << ",  maxNumTaus = " << maxNumTaus << '\n';
 
   bool isMC = cfg_analyze.getParameter<bool>("isMC");
   bool hasLHE = cfg_analyze.getParameter<bool>("hasLHE");
@@ -975,7 +976,8 @@ int main(int argc, char* argv[])
       "BM", "nJet", "nJet_vbf", "isVBF", "nLep", "nLep_loose", "nElec",
       //
       "nElectrons_in_2lss",
-      "nAK8_w2subjets", "nWJets_selected", 
+      "nAK8_w2subjets", "nWJets_selected",
+      "nTaus",
       "eventCategory"
     );
     bdt_filler->bookTree(fs);
@@ -1400,7 +1402,8 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms("b-jet veto", evtWeightRecorder.get(central_or_shift_main));
 
     //if ( selHadTaus.size() > 0 ) {
-    if ( selHadTaus.size() > 1 ) {
+    //if ( selHadTaus.size() > 1 ) {
+    if ( (int)selHadTaus.size() > maxNumTaus ) {
       if ( run_lumi_eventSelector ) {
         std::cout << "event " << eventInfo.str() << " FAILS selHadTaus veto." << std::endl;
         printCollection("selHadTaus", selHadTaus);
@@ -2139,6 +2142,8 @@ int main(int argc, char* argv[])
     if      (selHadTaus.size() == 0) evtCategories.push_back("hh_2lss_0tau");
     else if (selHadTaus.size() == 1) evtCategories.push_back("hh_2lss_1tau");
 
+    int nTaus = (int)selHadTaus.size();
+
     
     /*
     //--- compute output of BDTs
@@ -2549,7 +2554,8 @@ int main(int argc, char* argv[])
         //("HT",                             HT)
         //("STMET",                          STMET)
 	//
-	("eventCategory",                          eventCategory)
+	("nTaus",                            nTaus)
+	("eventCategory",                    eventCategory)
 	//
 	//
 	//
