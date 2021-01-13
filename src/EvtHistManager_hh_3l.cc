@@ -900,7 +900,6 @@ EvtHistManager_hh_3l::EvtHistManager_hh_3l(const edm::ParameterSet & cfg, bool i
     //
     //
     // WZctrl
-    "mT_WZctrl_leptonW_MET",
     // WZctrl 2lss
     "jetMass_sel_WZctrl_2lss",
     "leptonPairMass_sel_WZctrl_2lss",
@@ -913,7 +912,9 @@ EvtHistManager_hh_3l::EvtHistManager_hh_3l(const edm::ParameterSet & cfg, bool i
   };
   const std::vector<std::string> sysOpts_all = {
     //"mvaOutput_xgb_hh_3l_SUMBk_HH",
-    "EventCounter"
+    "EventCounter",
+    // WZctrl
+    "mT_WZctrl_leptonW_MET",
   };
   
   for(const std::string & sysOpt: sysOpts_central)
@@ -954,6 +955,26 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   hnJetAK8_wSelectorAK8_Wjj_                           = book1D(dir, "nJetAK8_wSelectorAK8_Wjj",                          "nJetAK8_wSelectorAK8_Wjj",                         20, -0.5, +19.5);
 
 
+  hdihiggsVisMass_sel_inclusive1j_                     = book1D(dir, "dihiggsVisMass_sel_inclusive1j",                    "dihiggsVisMass_sel_inclusive1j",                   200, 0, 1500); 
+  hmet_                                                = book1D(dir, "met",                                               "met",                                              200, 0,500); 
+  hmht_                                                = book1D(dir, "mht",                                               "mht",                                              200, 0,500); 
+
+  hmT_MEtLep1_                                         = book1D(dir, "mT_MEtLep1",                                        "mT_MEtLep1",                                      100, 0,500);
+  hmindr_lep1_jet_                                     = book1D(dir, "mindr_lep1_jet",                                    "mindr_lep1_jet",                                  100, 0, 7);
+  
+  hdr_lss_                                             = book1D(dir, "dr_lss",                                            "dr_lss",                                           100, 0, 7);
+
+  hm_LeptonIdx1_LeptonIdx2_Approach0_                  = book1D(dir, "m_LeptonIdx1_LeptonIdx2_Approach0",                 "m_LeptonIdx1_LeptonIdx2_Approach0",                 50, 0, 200);
+  hm_LeptonIdx1_LeptonIdx3_Approach0_                  = book1D(dir, "m_LeptonIdx1_LeptonIdx3_Approach0",                 "m_LeptonIdx1_LeptonIdx3_Approach0",                 50, 0, 200);
+  hdPhi_LeptonIdx1_LeptonIdx3_Approach0_               = book1D(dir, "dPhi_LeptonIdx1_LeptonIdx3_Approach0",              "dPhi_LeptonIdx1_LeptonIdx3_Approach0",              100, 0,   TMath::Pi());
+  hm_LeptonIdx3_Jet1_Approach0_                        = book1D(dir, "m_LeptonIdx3_Jet1_Approach0",                       "m_LeptonIdx3_Jet1_Approach0",                       100, 0, 500);
+  hm_LeptonIdx3_JetNear_Approach0_                     = book1D(dir, "m_LeptonIdx3_JetNear_Approach0",                    "m_LeptonIdx3_JetNear_Approach0",                    100, 0, 500);
+  
+  hmT_LeptonIdx3_Met_Approach2_                        = book1D(dir, "mT_LeptonIdx3_Met_Approach2",                       "mT_LeptonIdx3_Met_Approach2",                      100, 0, 500);
+  hm_LeptonIdx1_LeptonIdx2_Approach2_                  = book1D(dir, "m_LeptonIdx1_LeptonIdx2_Approach2",                 "m_LeptonIdx1_LeptonIdx2_Approach2",                 50, 0, 200);
+  hdPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2_   = book1D(dir, "dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2",   "dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2", 100, 0, TMath::Pi());
+
+  
   if (isControlRegion_)
   {
     hmT_WZctrl_leptonW_MET_                            = book1D(dir, "mT_WZctrl_leptonW_MET",                             "mT_WZctrl_leptonW_MET",                           100, 0,500);
@@ -985,8 +1006,8 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   hlep1_pt_                                            = book1D(dir, "lep1_pt",                                           "lep1_pt",                                         100, 0,400); 
   hlep1_conePt_                                        = book1D(dir, "lep1_conePt",                                       "lep1_conePt",                                     100, 0,400); 
   hlep1_eta_                                           = book1D(dir, "lep1_eta",                                          "lep1_eta",                                        100,-5,5); 
-  hmindr_lep1_jet_                                     = book1D(dir, "mindr_lep1_jet",                                    "mindr_lep1_jet",                                  100, 0, 7); 
-  hmT_MEtLep1_                                         = book1D(dir, "mT_MEtLep1",                                        "mT_MEtLep1",                                      100, 0,500);
+  
+  
   //
   hlep2_pt_                                            = book1D(dir, "lep2_pt",                                           "lep2_pt",                                         100, 0,400); 
   hlep2_conePt_                                        = book1D(dir, "lep2_conePt",                                       "lep2_conePt",                                     100, 0,400); 
@@ -1009,8 +1030,6 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   hjet1_m_                                             = book1D(dir, "jet1_m",                                            "jet1_m",                                           50, 0, 200); 
   hjet2_m_                                             = book1D(dir, "jet2_m",                                            "jet2_m",                                           50, 0, 200);
   //
-  hmet_                                                = book1D(dir, "met",                                               "met",                                              200, 0,500); 
-  hmht_                                                = book1D(dir, "mht",                                               "mht",                                              200, 0,500); 
   
   hHT_                                                 = book1D(dir, "HT",                                                "HT",                                               200, 0,1000); 
   hSTMET_                                              = book1D(dir, "STMET",                                             "STMET",                                            200, 0,1000);
@@ -1019,7 +1038,7 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   
   hWTojjMass_                                          = book1D(dir, "WTojjMass",                                         "WTojjMass",                                        200, 0,  600); 
   
-  hdihiggsVisMass_sel_inclusive1j_                     = book1D(dir, "dihiggsVisMass_sel_inclusive1j",                    "dihiggsVisMass_sel_inclusive1j",                   200, 0, 1500); 
+  
   hdihiggsMass_                                        = book1D(dir, "dihiggsMass",                                       "dihiggsMass",                                      200, 0, 1500);
   hdihiggsMass_inclusive1j_                            = book1D(dir, "dihiggsMass_inclusive1j",                           "dihiggsMass_inclusive1j",                          200, 0, 1500);
   //
@@ -1029,7 +1048,7 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   hdr_l12_                                             = book1D(dir, "dr_l12",                                            "dr_l12",                                           100, 0, 7); 
   hdr_l23_                                             = book1D(dir, "dr_l23",                                            "dr_l23",                                           100, 0, 7); 
   hdr_l13_                                             = book1D(dir, "dr_l13",                                            "dr_l13",                                           100, 0, 7); 
-  hdr_lss_                                             = book1D(dir, "dr_lss",                                            "dr_lss",                                           100, 0, 7); 
+  
  
   //
   havg_dr_jet_                                         = book1D(dir, "avg_dr_jet",                                        "avg_dr_jet",                                       100, 0, 7);
@@ -1061,13 +1080,13 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   hmT_LeptonIdx2_Met_Approach0_                        = book1D(dir, "mT_LeptonIdx2_Met_Approach0",                       "mT_LeptonIdx2_Met_Approach0",                      100, 0, 500); 
   hmT_LeptonIdx3_Met_Approach0_                        = book1D(dir, "mT_LeptonIdx3_Met_Approach0",                       "mT_LeptonIdx3_Met_Approach0",                      100, 0, 500);
   //
-  hm_LeptonIdx1_LeptonIdx2_Approach0_                  = book1D(dir, "m_LeptonIdx1_LeptonIdx2_Approach0",                 "m_LeptonIdx1_LeptonIdx2_Approach0",                 50, 0, 200); 
+  
   hm_LeptonIdx2_LeptonIdx3_Approach0_                  = book1D(dir, "m_LeptonIdx2_LeptonIdx3_Approach0",                 "m_LeptonIdx2_LeptonIdx3_Approach0",                 50, 0, 200); 
-  hm_LeptonIdx1_LeptonIdx3_Approach0_                  = book1D(dir, "m_LeptonIdx1_LeptonIdx3_Approach0",                 "m_LeptonIdx1_LeptonIdx3_Approach0",                 50, 0, 200);
+  
   //
   hdPhi_LeptonIdx1_LeptonIdx2_Approach0_               = book1D(dir, "dPhi_LeptonIdx1_LeptonIdx2_Approach0",              "dPhi_LeptonIdx1_LeptonIdx2_Approach0",              100, 0,   TMath::Pi()); 
   hdPhi_LeptonIdx2_LeptonIdx3_Approach0_               = book1D(dir, "dPhi_LeptonIdx2_LeptonIdx3_Approach0",              "dPhi_LeptonIdx2_LeptonIdx3_Approach0",              100, 0,   TMath::Pi()); 
-  hdPhi_LeptonIdx1_LeptonIdx3_Approach0_               = book1D(dir, "dPhi_LeptonIdx1_LeptonIdx3_Approach0",              "dPhi_LeptonIdx1_LeptonIdx3_Approach0",              100, 0,   TMath::Pi());
+  
   //
   hdEta_LeptonIdx1_LeptonIdx2_Approach0_               = book1D(dir, "dEta_LeptonIdx1_LeptonIdx2_Approach0",              "dEta_LeptonIdx1_LeptonIdx2_Approach0",              100, 0,   7); 
   hdEta_LeptonIdx2_LeptonIdx3_Approach0_               = book1D(dir, "dEta_LeptonIdx2_LeptonIdx3_Approach0",              "dEta_LeptonIdx2_LeptonIdx3_Approach0",              100, 0,   7); 
@@ -1077,10 +1096,10 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   hdr_LeptonIdx2_LeptonIdx3_Approach0_                 = book1D(dir, "dr_LeptonIdx2_LeptonIdx3_Approach0",                "dr_LeptonIdx2_LeptonIdx3_Approach0",                100, 0,   7); 
   hdr_LeptonIdx1_LeptonIdx3_Approach0_                 = book1D(dir, "dr_LeptonIdx1_LeptonIdx3_Approach0",                "dr_LeptonIdx1_LeptonIdx3_Approach0",                100, 0,   7);
   //
-  hm_LeptonIdx3_Jet1_Approach0_                        = book1D(dir, "m_LeptonIdx3_Jet1_Approach0",                       "m_LeptonIdx3_Jet1_Approach0",                       100, 0, 500); 
+  
   hdr_LeptonIdx3_Jet1_Approach0_                       = book1D(dir, "dr_LeptonIdx3_Jet1_Approach0",                      "dr_LeptonIdx3_Jet1_Approach0",                      100, 0,   7);
   //
-  hm_LeptonIdx3_JetNear_Approach0_                     = book1D(dir, "m_LeptonIdx3_JetNear_Approach0",                    "m_LeptonIdx3_JetNear_Approach0",                    100, 0, 500); 
+  
   hdr_LeptonIdx3_JetNear_Approach0_                    = book1D(dir, "dr_LeptonIdx3_JetNear_Approach0",                   "dr_LeptonIdx3_JetNear_Approach0",                   100, 0,   7);
   //
   hdr_LeptonIdx3_2j_Approach0_                         = book1D(dir, "dr_LeptonIdx3_2j_Approach0",                        "dr_LeptonIdx3_2j_Approach0",                        100, 0,   7);
@@ -1103,9 +1122,9 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   hmT_LeptonIdx1_Met_Approach2_                        = book1D(dir, "mT_LeptonIdx1_Met_Approach2",                       "mT_LeptonIdx1_Met_Approach2",                      100, 0, 500); 
   hmT_LeptonIdx2_Met_Approach2_                        = book1D(dir, "mT_LeptonIdx2_Met_Approach2",                       "mT_LeptonIdx2_Met_Approach2",                      100, 0, 500); 
-  hmT_LeptonIdx3_Met_Approach2_                        = book1D(dir, "mT_LeptonIdx3_Met_Approach2",                       "mT_LeptonIdx3_Met_Approach2",                      100, 0, 500);
+  
   //
-  hm_LeptonIdx1_LeptonIdx2_Approach2_                  = book1D(dir, "m_LeptonIdx1_LeptonIdx2_Approach2",                 "m_LeptonIdx1_LeptonIdx2_Approach2",                 50, 0, 200); 
+  
   hm_LeptonIdx2_LeptonIdx3_Approach2_                  = book1D(dir, "m_LeptonIdx2_LeptonIdx3_Approach2",                 "m_LeptonIdx2_LeptonIdx3_Approach2",                 50, 0, 200); 
   hm_LeptonIdx1_LeptonIdx3_Approach2_                  = book1D(dir, "m_LeptonIdx1_LeptonIdx3_Approach2",                 "m_LeptonIdx1_LeptonIdx3_Approach2",                 50, 0, 200);
   //
@@ -1140,7 +1159,7 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   hdr_LeptonIdx3_AK8_Approach2_                        = book1D(dir, "dr_LeptonIdx3_AK8_Approach2",                        "dr_LeptonIdx3_AK8_Approach2",                      100, 0,   7);
   hm_LeptonIdx3_AK8_Approach2_                         = book1D(dir, "m_LeptonIdx3_AK8_Approach2",                         "m_LeptonIdx3_AK8_Approach2",                       200, 0, 800);
   //
-  hdPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2_   = book1D(dir, "dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2",   "dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2", 100, 0, TMath::Pi());
+  
   //
   hdPhi_LeptonIdx3_Met_Approach2_                      = book1D(dir, "dPhi_LeptonIdx3_Met_Approach2",                      "dPhi_LeptonIdx3_Met_Approach2",                    100, 0, TMath::Pi());
   //
@@ -2145,6 +2164,34 @@ EvtHistManager_hh_3l::fillHistograms(
   fillWithOverFlow(hnumMuons_,                                          numMuons,                                          evtWeight, evtWeightErr);
   fillWithOverFlow(hnJetAK4_,                                           nJetAK4,                                           evtWeight, evtWeightErr); 
   fillWithOverFlow(hnJetAK8_wSelectorAK8_Wjj_,                          nJetAK8_wSelectorAK8_Wjj,                          evtWeight, evtWeightErr);
+
+
+  if (dihiggsVisMass_sel_inclusive1j > 0.)
+    fillWithOverFlow(hdihiggsVisMass_sel_inclusive1j_,                    dihiggsVisMass_sel_inclusive1j,                    evtWeight, evtWeightErr);
+
+  fillWithOverFlow(hmindr_lep1_jet_,                                    mindr_lep1_jet,                                    evtWeight, evtWeightErr); 
+  fillWithOverFlow(hmT_MEtLep1_,                                        mT_MEtLep1,                                        evtWeight, evtWeightErr);
+  
+  fillWithOverFlow(hmet_,                                               met,                                               evtWeight, evtWeightErr); 
+  fillWithOverFlow(hmht_,                                               mht,                                               evtWeight, evtWeightErr); 
+
+  fillWithOverFlow(hdr_lss_,                                            dr_lss,                                            evtWeight, evtWeightErr); 
+
+  fillWithOverFlow(hm_LeptonIdx1_LeptonIdx2_Approach0_,                 m_LeptonIdx1_LeptonIdx2_Approach0,                 evtWeight, evtWeightErr); 
+  fillWithOverFlow(hm_LeptonIdx1_LeptonIdx3_Approach0_,                 m_LeptonIdx1_LeptonIdx3_Approach0,                 evtWeight, evtWeightErr);
+  fillWithOverFlow(hdPhi_LeptonIdx1_LeptonIdx3_Approach0_,              dPhi_LeptonIdx1_LeptonIdx3_Approach0,              evtWeight, evtWeightErr);
+  fillWithOverFlow(hm_LeptonIdx3_Jet1_Approach0_,                       m_LeptonIdx3_Jet1_Approach0,                       evtWeight, evtWeightErr); 
+  fillWithOverFlow(hm_LeptonIdx3_JetNear_Approach0_,                    m_LeptonIdx3_JetNear_Approach0,                    evtWeight, evtWeightErr); 
+
+  
+  fillWithOverFlow(hmT_LeptonIdx3_Met_Approach2_,                       mT_LeptonIdx3_Met_Approach2,                       evtWeight, evtWeightErr);
+  fillWithOverFlow(hm_LeptonIdx1_LeptonIdx2_Approach2_,                 m_LeptonIdx1_LeptonIdx2_Approach2,                 evtWeight, evtWeightErr); 
+  fillWithOverFlow(hdPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2_,  dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2,  evtWeight, evtWeightErr);
+
+
+
+
+
   
 
   if (isControlRegion_)
@@ -2180,8 +2227,6 @@ EvtHistManager_hh_3l::fillHistograms(
   fillWithOverFlow(hlep1_pt_,                                           lep1_pt,                                           evtWeight, evtWeightErr); 
   fillWithOverFlow(hlep1_conePt_,                                       lep1_conePt,                                       evtWeight, evtWeightErr); 
   fillWithOverFlow(hlep1_eta_,                                          lep1_eta,                                          evtWeight, evtWeightErr); 
-  fillWithOverFlow(hmindr_lep1_jet_,                                    mindr_lep1_jet,                                    evtWeight, evtWeightErr); 
-  fillWithOverFlow(hmT_MEtLep1_,                                        mT_MEtLep1,                                        evtWeight, evtWeightErr);
   //
   fillWithOverFlow(hlep2_pt_,                                           lep2_pt,                                           evtWeight, evtWeightErr); 
   fillWithOverFlow(hlep2_conePt_,                                       lep2_conePt,                                       evtWeight, evtWeightErr); 
@@ -2209,15 +2254,11 @@ EvtHistManager_hh_3l::fillHistograms(
   if (jet2_m > 0.) 
     fillWithOverFlow(hjet2_m_,                                            jet2_m,                                            evtWeight, evtWeightErr);
   //
-  fillWithOverFlow(hmet_,                                               met,                                               evtWeight, evtWeightErr); 
-  fillWithOverFlow(hmht_,                                               mht,                                               evtWeight, evtWeightErr); 
   fillWithOverFlow(hHT_,                                                HT,                                                evtWeight, evtWeightErr); 
   fillWithOverFlow(hSTMET_,                                             STMET,                                             evtWeight, evtWeightErr);
   //
   if (WTojjMass > 0.)
     fillWithOverFlow(hWTojjMass_,                                         WTojjMass,                                         evtWeight, evtWeightErr);
-  if (dihiggsVisMass_sel_inclusive1j > 0.)
-    fillWithOverFlow(hdihiggsVisMass_sel_inclusive1j_,                    dihiggsVisMass_sel_inclusive1j,                    evtWeight, evtWeightErr);
   if (dihiggsMass > 0.)
     fillWithOverFlow(hdihiggsMass_,                                       dihiggsMass,                                       evtWeight, evtWeightErr);
   if (dihiggsMass_inclusive1j > 0.)
@@ -2229,7 +2270,6 @@ EvtHistManager_hh_3l::fillHistograms(
   fillWithOverFlow(hdr_l12_,                                            dr_l12,                                            evtWeight, evtWeightErr); 
   fillWithOverFlow(hdr_l23_,                                            dr_l23,                                            evtWeight, evtWeightErr); 
   fillWithOverFlow(hdr_l13_,                                            dr_l13,                                            evtWeight, evtWeightErr); 
-  fillWithOverFlow(hdr_lss_,                                            dr_lss,                                            evtWeight, evtWeightErr); 
   //
   if (avg_dr_jet > 0.)
     fillWithOverFlow(havg_dr_jet_,                                        avg_dr_jet,                                        evtWeight, evtWeightErr);
@@ -2278,13 +2318,10 @@ EvtHistManager_hh_3l::fillHistograms(
   fillWithOverFlow(hmT_LeptonIdx2_Met_Approach0_,                       mT_LeptonIdx2_Met_Approach0,                       evtWeight, evtWeightErr); 
   fillWithOverFlow(hmT_LeptonIdx3_Met_Approach0_,                       mT_LeptonIdx3_Met_Approach0,                       evtWeight, evtWeightErr);
   //
-  fillWithOverFlow(hm_LeptonIdx1_LeptonIdx2_Approach0_,                 m_LeptonIdx1_LeptonIdx2_Approach0,                 evtWeight, evtWeightErr); 
   fillWithOverFlow(hm_LeptonIdx2_LeptonIdx3_Approach0_,                 m_LeptonIdx2_LeptonIdx3_Approach0,                 evtWeight, evtWeightErr); 
-  fillWithOverFlow(hm_LeptonIdx1_LeptonIdx3_Approach0_,                 m_LeptonIdx1_LeptonIdx3_Approach0,                 evtWeight, evtWeightErr);
   //
   fillWithOverFlow(hdPhi_LeptonIdx1_LeptonIdx2_Approach0_,              dPhi_LeptonIdx1_LeptonIdx2_Approach0,              evtWeight, evtWeightErr); 
   fillWithOverFlow(hdPhi_LeptonIdx2_LeptonIdx3_Approach0_,              dPhi_LeptonIdx2_LeptonIdx3_Approach0,              evtWeight, evtWeightErr); 
-  fillWithOverFlow(hdPhi_LeptonIdx1_LeptonIdx3_Approach0_,              dPhi_LeptonIdx1_LeptonIdx3_Approach0,              evtWeight, evtWeightErr);
   //
   fillWithOverFlow(hdEta_LeptonIdx1_LeptonIdx2_Approach0_,              dEta_LeptonIdx1_LeptonIdx2_Approach0,              evtWeight, evtWeightErr); 
   fillWithOverFlow(hdEta_LeptonIdx2_LeptonIdx3_Approach0_,              dEta_LeptonIdx2_LeptonIdx3_Approach0,              evtWeight, evtWeightErr); 
@@ -2294,10 +2331,8 @@ EvtHistManager_hh_3l::fillHistograms(
   fillWithOverFlow(hdr_LeptonIdx2_LeptonIdx3_Approach0_,                dr_LeptonIdx2_LeptonIdx3_Approach0,                evtWeight, evtWeightErr); 
   fillWithOverFlow(hdr_LeptonIdx1_LeptonIdx3_Approach0_,                dr_LeptonIdx1_LeptonIdx3_Approach0,                evtWeight, evtWeightErr);
   //
-  fillWithOverFlow(hm_LeptonIdx3_Jet1_Approach0_,                       m_LeptonIdx3_Jet1_Approach0,                       evtWeight, evtWeightErr); 
   fillWithOverFlow(hdr_LeptonIdx3_Jet1_Approach0_,                      dr_LeptonIdx3_Jet1_Approach0,                      evtWeight, evtWeightErr);
   //
-  fillWithOverFlow(hm_LeptonIdx3_JetNear_Approach0_,                    m_LeptonIdx3_JetNear_Approach0,                    evtWeight, evtWeightErr); 
   fillWithOverFlow(hdr_LeptonIdx3_JetNear_Approach0_,                   dr_LeptonIdx3_JetNear_Approach0,                   evtWeight, evtWeightErr);
   //
   if (dr_LeptonIdx3_2j_Approach0 > 0.)
@@ -2330,9 +2365,7 @@ EvtHistManager_hh_3l::fillHistograms(
   // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   fillWithOverFlow(hmT_LeptonIdx1_Met_Approach2_,                       mT_LeptonIdx1_Met_Approach2,                       evtWeight, evtWeightErr); 
   fillWithOverFlow(hmT_LeptonIdx2_Met_Approach2_,                       mT_LeptonIdx2_Met_Approach2,                       evtWeight, evtWeightErr); 
-  fillWithOverFlow(hmT_LeptonIdx3_Met_Approach2_,                       mT_LeptonIdx3_Met_Approach2,                       evtWeight, evtWeightErr);
   //
-  fillWithOverFlow(hm_LeptonIdx1_LeptonIdx2_Approach2_,                 m_LeptonIdx1_LeptonIdx2_Approach2,                 evtWeight, evtWeightErr); 
   fillWithOverFlow(hm_LeptonIdx2_LeptonIdx3_Approach2_,                 m_LeptonIdx2_LeptonIdx3_Approach2,                 evtWeight, evtWeightErr); 
   fillWithOverFlow(hm_LeptonIdx1_LeptonIdx3_Approach2_,                 m_LeptonIdx1_LeptonIdx3_Approach2,                 evtWeight, evtWeightErr);
   //
@@ -2373,7 +2406,6 @@ EvtHistManager_hh_3l::fillHistograms(
   if (m_LeptonIdx3_AK8_Approach2 > 0.)
     fillWithOverFlow(hm_LeptonIdx3_AK8_Approach2_,                        m_LeptonIdx3_AK8_Approach2,                        evtWeight, evtWeightErr);
   //
-  fillWithOverFlow(hdPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2_,  dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2,  evtWeight, evtWeightErr);
   //
   fillWithOverFlow(hdPhi_LeptonIdx3_Met_Approach2_,                     dPhi_LeptonIdx3_Met_Approach2,                     evtWeight, evtWeightErr);
   //
