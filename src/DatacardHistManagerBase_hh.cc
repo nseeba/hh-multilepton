@@ -27,7 +27,7 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
   , eventCategoryBase_(nullptr)
   , numBinsX_(100)
   , xMin_(0.)
-  , xMax_(500.) // 1.
+  , xMax_(1.) // 1.
   , isDEBUG_(isDEBUG)
 {}
 
@@ -48,7 +48,7 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
   , eventCategoryBase_(eventCategoryBase)
   , numBinsX_(100)
   , xMin_(0.) // 0.
-  , xMax_(500.) // 1. 
+  , xMax_(1.) // 1. 
   , isDEBUG_(isDEBUG)
 {}
 
