@@ -3234,6 +3234,7 @@ int main(int argc, char* argv[])
     
     //Gathering final BDT Inputs
 
+    // 20201201: 9 variable BDT, used for pre-pre-approval 
     AllVars_Map["gen_mHH"]                                   =       250.; // setting a Dummy value which will be reset depending on mass hypothesis
     AllVars_Map["m3l"]                                       =       m3l;
     AllVars_Map["diHiggsVisMass"]                            =       dihiggsVisMass_sel; 
@@ -3245,7 +3246,49 @@ int main(int argc, char* argv[])
     AllVars_Map["nSFOS_3l"]                                  =       nSFOS_3l;
     AllVars_Map["met_LD"]                                    =       met_LD;
     //AllVars_Map[""]          =       ;
+    
 
+    /*
+    // 20210109: 23 variable BDT 
+    AllVars_Map["gen_mHH"]                                          =       250.; // setting a Dummy value which will be reset depending on mass hypothesis
+    AllVars_Map["nSFOS_3l"]                                         =       nSFOS_3l;
+    AllVars_Map["m3l"]                                              =       m3l;
+    AllVars_Map["diHiggsVisMass"]                                   =       dihiggsVisMass_sel;
+    AllVars_Map["diHiggsVisMass_inclusive1j"]                       =       dihiggsVisMass_sel_inclusive1j;
+    AllVars_Map["met"]                                              =       met.pt();
+    
+    AllVars_Map["mht"]                                              =       mht_p4.pt();
+    AllVars_Map["met_LD"]                                           =       met_LD;
+    AllVars_Map["mT_MEtLep1"]                                       =       comp_MT_met(selLepton_lead, met.pt(), met.phi()); 
+    AllVars_Map["mT_LeptonIdx3_Met_Approach2"]                      =       mT_LeptonIdx3_Met_Approach2;
+    AllVars_Map["dr_lss"]                                           =       dr_lss;
+
+    AllVars_Map["dr_los_min"]                                       =       dr_los_min;
+    AllVars_Map["dr_los_max"]                                       =       dr_los_max;
+    AllVars_Map["mSFOS2l_closestToZ"]                               =       mSFOS2l_closestToZ;
+    AllVars_Map["m_LeptonIdx1_LeptonIdx2_Approach0"]                =       m_LeptonIdx1_LeptonIdx2_Approach0;
+    AllVars_Map["m_LeptonIdx1_LeptonIdx3_Approach0"]                =       m_LeptonIdx1_LeptonIdx3_Approach0;
+    
+    AllVars_Map["m_LeptonIdx1_LeptonIdx2_Approach2"]                =       m_LeptonIdx1_LeptonIdx2_Approach2;
+    AllVars_Map["dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2"] =       dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2;
+    AllVars_Map["dPhi_LeptonIdx1_LeptonIdx3_Approach0"]             =       dPhi_LeptonIdx1_LeptonIdx3_Approach0;
+    AllVars_Map["m_LeptonIdx3_Jet1_Approach0"]                      =       m_LeptonIdx3_Jet1_Approach0;
+    AllVars_Map["m_LeptonIdx3_JetNear_Approach0"]                   =       m_LeptonIdx3_JetNear_Approach0;
+
+    AllVars_Map["mindr_lep1_jet"]                                   =       TMath::Min(10., mindr_lep1_jet);
+    AllVars_Map["dr_LeptonIdx3_AK4jNear_Approach2"]                 =       dr_LeptonIdx3_AK4jNear_Approach2;
+    AllVars_Map["dr_LeptonIdx3_2j_inclusive1j_Approach2"]           =       dr_LeptonIdx3_2j_inclusive1j_Approach2;
+    //AllVars_Map[""]          =       ;
+    */
+
+
+
+
+
+
+
+
+    
 
     std::map<std::string, double> BDTInputs_spin2 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin2, false);
     std::map<std::string, double> BDTInputs_spin0 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin0, false);
