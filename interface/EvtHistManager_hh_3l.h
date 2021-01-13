@@ -16,7 +16,7 @@ class EvtHistManager_hh_3l
   : public HistManagerBase
 {
  public:
-  EvtHistManager_hh_3l(const edm::ParameterSet & cfg);
+  EvtHistManager_hh_3l(const edm::ParameterSet & cfg, bool isControlRegion = false);
   ~EvtHistManager_hh_3l() {}
 
   /// book and fill histograms
@@ -252,7 +252,22 @@ class EvtHistManager_hh_3l
   //
   int eventCategory,
   //
-  //double mvaOutput_xgb_hh_3l_SUMBk_HH,
+  //
+  //
+  // WZctrl
+  double mT_WZctrl_leptonW_MET,
+  // WZctrl 2lss
+  double jetMass_sel_WZctrl_2lss,
+  double leptonPairMass_sel_WZctrl_2lss,
+  double mindr_lep1_jet_WZctrl_2lss,
+  double mT_lep1_WZctrl_2lss,
+  double mindr_lep2_jet_WZctrl_2lss,
+  double mT_lep2_WZctrl_2lss,
+  double dR_ll_WZctrl_2lss,
+  double max_lep_eta_WZctrl_2lss,    
+  //
+  //
+  //  
   double evtWeight);
 
   
@@ -260,6 +275,8 @@ class EvtHistManager_hh_3l
   getHistogram_EventCounter() const;
 
  private:
+  bool isControlRegion_;
+  
   TH1 * hnumElectrons_;
   TH1 * hnumMuons_;
   TH1 * hnJetAK4_;
@@ -1151,6 +1168,23 @@ class EvtHistManager_hh_3l
   TH1 *hdPhi_LeptonIdx3_Met_Approach3_two2lSFOSEvt_;
   //------------------------------------------------------------------------------------
 
+  //
+  //
+  //
+  // WZctrl
+  TH1 * hmT_WZctrl_leptonW_MET_;
+  // WZctrl 2lss
+  TH1 * hjetMass_sel_WZctrl_2lss_;
+  TH1 * hleptonPairMass_sel_WZctrl_2lss_;
+  TH1 * hmindr_lep1_jet_WZctrl_2lss_;
+  TH1 * hmT_lep1_WZctrl_2lss_;
+  TH1 * hmindr_lep2_jet_WZctrl_2lss_;
+  TH1 * hmT_lep2_WZctrl_2lss_;
+  TH1 * hdR_ll_WZctrl_2lss_;
+  TH1 * hmax_lep_eta_WZctrl_2lss_;    
+  //
+  //
+  //  
   
 };
 

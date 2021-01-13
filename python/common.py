@@ -13,7 +13,8 @@ def get_histograms_to_fit(*custom_histograms):
   if custom_histograms:
     for histogram_name in custom_histograms:
       histograms_to_fit[histogram_name] = {}
-  for histogram_name in [ "EventCounter", "dihiggsMass", "MVAOutput_SM" ]:
+  #for histogram_name in [ "EventCounter", "dihiggsMass", "MVAOutput_SM" ]:
+  for histogram_name in [ "EventCounter", "MVAOutput_SM" ]:
     if histogram_name not in histograms_to_fit:
       histograms_to_fit[histogram_name] = {}
 
