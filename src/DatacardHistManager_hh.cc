@@ -9,8 +9,12 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
                                                const EventInfo & eventInfo, 
                                                const HHWeightInterface2 * HHWeight_calc,
                                                const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
-                                               bool isDEBUG)
-  : DatacardHistManagerBase_hh(cfg, analysisConfig, eventInfo, HHWeight_calc, HHWeight_calc_LOtoNLO, isDEBUG)
+                                               bool isDEBUG,
+                                               bool fillHistograms_nonresonant, bool fillHistograms_resonant_spin0, bool fillHistograms_resonant_spin2)
+  : DatacardHistManagerBase_hh(
+      cfg, analysisConfig, eventInfo, HHWeight_calc, HHWeight_calc_LOtoNLO, isDEBUG, 
+      fillHistograms_nonresonant, fillHistograms_resonant_spin0, fillHistograms_resonant_spin2
+    )
   , eventCategory_(nullptr)
 {
   // CV: fill histograms for inclusive event category
@@ -25,8 +29,12 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
                                                const HHWeightInterface2 * HHWeight_calc,
                                                const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
                                                const EventCategory * eventCategory,
-                                               bool isDEBUG)
-  : DatacardHistManagerBase_hh(cfg, analysisConfig, eventInfo, HHWeight_calc, HHWeight_calc_LOtoNLO, eventCategory, isDEBUG)
+                                               bool isDEBUG,
+                                               bool fillHistograms_nonresonant, bool fillHistograms_resonant_spin0, bool fillHistograms_resonant_spin2)
+  : DatacardHistManagerBase_hh(
+      cfg, analysisConfig, eventInfo, HHWeight_calc, HHWeight_calc_LOtoNLO, eventCategory, isDEBUG, 
+      fillHistograms_nonresonant, fillHistograms_resonant_spin0, fillHistograms_resonant_spin2
+    )
   , eventCategory_(eventCategory)
 {
   // CV: fill histograms for all event categories defined in EventCategory object
@@ -82,52 +90,61 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & mva
         {
           continue;
         }
-        for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_resonant_spin2_.begin();
-              histogramName != histogramNames_mvaOutput_resonant_spin2_.end(); ++histogramName ) {
-          const std::string & key_resonant_spin2 = histogramName->first;
-          TH1* histogram = categoryEntry->histograms_mvaOutput_resonant_spin2_[productionMode][decayMode][key_resonant_spin2];
-          std::map<std::string, double>::const_iterator mvaOutput = mvaOutputs_resonant_spin2.find(key_resonant_spin2);
-          if ( mvaOutput == mvaOutputs_resonant_spin2.end() )
-            throw cmsException(this, __func__, __LINE__)
-              << "No MVA output provided to fill histogram = '" << histogramName->second << "' !!\n"
-              << "(available MVA outputs = " << format_vstring(get_keys(mvaOutputs_resonant_spin2)) << ")\n";
-          fillWithOverFlow(histogram, mvaOutput->second, evtWeight, evtWeightErr);
+        if ( fillHistograms_resonant_spin2_ )
+        {
+          for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_resonant_spin2_.begin();
+                histogramName != histogramNames_mvaOutput_resonant_spin2_.end(); ++histogramName ) {
+            const std::string & key_resonant_spin2 = histogramName->first;
+            TH1* histogram = categoryEntry->histograms_mvaOutput_resonant_spin2_[productionMode][decayMode][key_resonant_spin2];
+            std::map<std::string, double>::const_iterator mvaOutput = mvaOutputs_resonant_spin2.find(key_resonant_spin2);
+            if ( mvaOutput == mvaOutputs_resonant_spin2.end() )
+              throw cmsException(this, __func__, __LINE__)
+                << "No MVA output provided to fill histogram = '" << histogramName->second << "' !!\n"
+                << "(available MVA outputs = " << format_vstring(get_keys(mvaOutputs_resonant_spin2)) << ")\n";
+            fillWithOverFlow(histogram, mvaOutput->second, evtWeight, evtWeightErr);
+          }
         }
-        for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_resonant_spin0_.begin();
-              histogramName != histogramNames_mvaOutput_resonant_spin0_.end(); ++histogramName ) {
-          const std::string & key_resonant_spin0 = histogramName->first;
-          TH1* histogram = categoryEntry->histograms_mvaOutput_resonant_spin0_[productionMode][decayMode][key_resonant_spin0];
-          std::map<std::string, double>::const_iterator mvaOutput = mvaOutputs_resonant_spin0.find(key_resonant_spin0);
-          if ( mvaOutput == mvaOutputs_resonant_spin0.end() )
-            throw cmsException(this, __func__, __LINE__)
-              << "No MVA output provided to fill histogram = '" << histogramName->second << "' !!\n"
-              << "(available MVA outputs = " << format_vstring(get_keys(mvaOutputs_resonant_spin0)) << ")\n";
-          fillWithOverFlow(histogram, mvaOutput->second, evtWeight, evtWeightErr);
+        if ( fillHistograms_resonant_spin0_ )
+        {
+          for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_resonant_spin0_.begin();
+                histogramName != histogramNames_mvaOutput_resonant_spin0_.end(); ++histogramName ) {
+            const std::string & key_resonant_spin0 = histogramName->first;
+            TH1* histogram = categoryEntry->histograms_mvaOutput_resonant_spin0_[productionMode][decayMode][key_resonant_spin0];
+            std::map<std::string, double>::const_iterator mvaOutput = mvaOutputs_resonant_spin0.find(key_resonant_spin0);
+            if ( mvaOutput == mvaOutputs_resonant_spin0.end() )
+              throw cmsException(this, __func__, __LINE__)
+                << "No MVA output provided to fill histogram = '" << histogramName->second << "' !!\n"
+                << "(available MVA outputs = " << format_vstring(get_keys(mvaOutputs_resonant_spin0)) << ")\n";
+            fillWithOverFlow(histogram, mvaOutput->second, evtWeight, evtWeightErr);
+          }
         }
 
-        for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_nonresonant_.begin();
-              histogramName != histogramNames_mvaOutput_nonresonant_.end(); ++histogramName ) {
-          const std::string & key_nonresonant = histogramName->first;
-          TH1* histogram = categoryEntry->histograms_mvaOutput_nonresonant_[productionMode][decayMode][key_nonresonant];
-          std::map<std::string, double>::const_iterator mvaOutput = mvaOutputs_nonresonant.find(key_nonresonant);
-          if ( mvaOutput == mvaOutputs_nonresonant.end() )
-            throw cmsException(this, __func__, __LINE__)
-              << "No MVA output provided to fill histogram = '" << histogramName->second << "' !!\n"
-              << "(available MVA outputs = " << format_vstring(get_keys(mvaOutputs_nonresonant)) << ")\n";
-          double evtWeight_reweighted = evtWeight;
-          double evtWeightErr_reweighted = evtWeightErr;
-          if ( analysisConfig_.isMC_HH_nonresonant() && apply_HH_rwgt_ )
-          {
-            const std::string& bmName = histogramName->first;
-            std::map<std::string, double>::const_iterator HHReweight = HHReweightMap_.find(bmName);
-            assert(HHReweight != HHReweightMap_.end());
-            evtWeight_reweighted *= HHReweight->second;
-            evtWeightErr_reweighted *= HHReweight->second;
+        if ( fillHistograms_nonresonant_ )
+        {
+          for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_nonresonant_.begin();
+                histogramName != histogramNames_mvaOutput_nonresonant_.end(); ++histogramName ) {
+            const std::string & key_nonresonant = histogramName->first;
+            TH1* histogram = categoryEntry->histograms_mvaOutput_nonresonant_[productionMode][decayMode][key_nonresonant];
+            std::map<std::string, double>::const_iterator mvaOutput = mvaOutputs_nonresonant.find(key_nonresonant);
+            if ( mvaOutput == mvaOutputs_nonresonant.end() )
+              throw cmsException(this, __func__, __LINE__)
+                << "No MVA output provided to fill histogram = '" << histogramName->second << "' !!\n"
+                << "(available MVA outputs = " << format_vstring(get_keys(mvaOutputs_nonresonant)) << ")\n";
+            double evtWeight_reweighted = evtWeight;
+            double evtWeightErr_reweighted = evtWeightErr;
+            if ( analysisConfig_.isMC_HH_nonresonant() && apply_HH_rwgt_ )
+            {
+              const std::string& bmName = histogramName->first;
+              std::map<std::string, double>::const_iterator HHReweight = HHReweightMap_.find(bmName);
+              assert(HHReweight != HHReweightMap_.end());
+              evtWeight_reweighted *= HHReweight->second;
+              evtWeightErr_reweighted *= HHReweight->second;
+            }
+            fillWithOverFlow(histogram, mvaOutput->second, evtWeight_reweighted, evtWeightErr_reweighted);
           }
-          fillWithOverFlow(histogram, mvaOutput->second, evtWeight_reweighted, evtWeightErr_reweighted);
+          TH1* histogram = categoryEntry->histograms_mvaOutput_nonresonant_allBMs_[productionMode][decayMode];
+          fillWithOverFlow(histogram, mvaOutput_nonresonant_allBMs, evtWeight, evtWeightErr);
         }
-        TH1* histogram = categoryEntry->histograms_mvaOutput_nonresonant_allBMs_[productionMode][decayMode];
-        fillWithOverFlow(histogram, mvaOutput_nonresonant_allBMs, evtWeight, evtWeightErr);
       }
     }
   }

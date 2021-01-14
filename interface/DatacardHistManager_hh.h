@@ -33,14 +33,16 @@ class DatacardHistManager_hh
                          const EventInfo & eventInfo, 
                          const HHWeightInterface2 * HHWeight_calc,
                          const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
-                         bool isDEBUG = false);
+                         bool isDEBUG = false,
+                         bool fillHistograms_nonresonant = true, bool fillHistograms_resonant_spin0 = true, bool fillHistograms_resonant_spin2 = true);
   DatacardHistManager_hh(const edm::ParameterSet & cfg,
                          const AnalysisConfig_hh & analysisConfig, 
                          const EventInfo & eventInfo, 
                          const HHWeightInterface2 * HHWeight_calc,
                          const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
                          const EventCategory * eventCategory,
-                         bool isDEBUG = false);
+                         bool isDEBUG = false,
+                         bool fillHistograms_nonresonant = true, bool fillHistograms_resonant_spin0 = true, bool fillHistograms_resonant_spin2 = true);
   ~DatacardHistManager_hh() {}
 
   /// fill histograms
