@@ -47,6 +47,21 @@ public:
 		   double dR_smartpair_ll,
 		   double m_smartpair_ll,
 		   double mllOS_closestToZ,
+		   double leadMuonPt,
+		   double leadMuonEta,
+		   double leadMuonPhi,
+		   double subleadMuonPt,
+		   double subleadMuonEta,
+		   double subleadMuonPhi,
+		   double leadElectronPt,
+		   double leadElectronEta,
+		   double leadElectronPhi,
+		   double subleadElectronPt,
+		   double subleadElectronEta,
+		   double subleadElectronPhi,
+		   double thirdLepPt,
+		   double thirdLepEta,
+		   double thirdLepPhi,
                    unsigned int evt_number,
 		   double evtWeight);
 
@@ -70,6 +85,21 @@ public:
   TH1 * histogram_dR_smartpair_ll_;
   TH1 * histogram_m_smartpair_ll_;
   TH1 * histogram_mllOS_closestToZ_;
+  TH1 * histogram_leadMuonPt_;
+  TH1 * histogram_leadMuonEta_;
+  TH1 * histogram_leadMuonPhi_;
+  TH1 * histogram_subleadMuonPt_;
+  TH1 * histogram_subleadMuonEta_;
+  TH1 * histogram_subleadMuonPhi_;
+  TH1 * histogram_leadElectronPt_;
+  TH1 * histogram_leadElectronEta_;
+  TH1 * histogram_leadElectronPhi_;
+  TH1 * histogram_subleadElectronPt_;
+  TH1 * histogram_subleadElectronEta_;
+  TH1 * histogram_subleadElectronPhi_;
+  TH1 * histogram_thirdLepPt_;
+  TH1 * histogram_thirdLepEta_;
+  TH1 * histogram_thirdLepPhi_;
   TH1 * histogram_EventCounter_;
   TH1 * histogram_EventNumber_;
 };

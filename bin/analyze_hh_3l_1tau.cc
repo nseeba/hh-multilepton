@@ -711,7 +711,7 @@ int main(int argc, char* argv[])
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
     EvtHistManager_hh_3l_1tau* evt_;
-    SVfit4tauHistManager_MarkovChain* svFit4tau_wMassConstraint_;
+    //SVfit4tauHistManager_MarkovChain* svFit4tau_wMassConstraint_;
     DatacardHistManager_hh* datacard_;
     //std::map<std::string, DatacardHistManager_hh*> datacard_in_categories_;
     EvtYieldHistManager* evtYield_;
@@ -767,9 +767,9 @@ int main(int argc, char* argv[])
         selHistManager->evt_ = new EvtHistManager_hh_3l_1tau(makeHistManager_cfg(process_and_genMatch,
 	  Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift));
         selHistManager->evt_->bookHistograms(fs);
-        selHistManager->svFit4tau_wMassConstraint_ = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
-          Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), era_string, central_or_shift));
-        selHistManager->svFit4tau_wMassConstraint_->bookHistograms(fs);
+        //selHistManager->svFit4tau_wMassConstraint_ = new SVfit4tauHistManager_MarkovChain(makeHistManager_cfg(process_and_genMatch,
+	//Form("%s/sel/svFit4tau_wMassConstraint", histogramDir.data()), era_string, central_or_shift));
+        //selHistManager->svFit4tau_wMassConstraint_->bookHistograms(fs);
       }
 
       selHistManager->datacard_ = new DatacardHistManager_hh(makeHistManager_cfg(process_and_genMatch,
@@ -1713,15 +1713,17 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms("signal region veto", evtWeightRecorder.get(central_or_shift_main));
     
     //compute bdt filler variables
-    std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4tau(
-      *selLepton_lead, *selLepton_sublead, *selLepton_third, *selHadTau, met, chargeSumSelection_string, rnd, 125., 2.);
+    //std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4tau(
+    //  *selLepton_lead, *selLepton_sublead, *selLepton_third, *selHadTau, met, chargeSumSelection_string, rnd, 125., 2.);
 
-    std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint_Z = compSVfit4tau(
-      *selLepton_lead, *selLepton_sublead, *selLepton_third, *selHadTau, met, chargeSumSelection_string, rnd, 91.2, 2.);
+    //std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint_Z = compSVfit4tau(
+    //  *selLepton_lead, *selLepton_sublead, *selLepton_third, *selHadTau, met, chargeSumSelection_string, rnd, 91.2, 2.);
 
     double dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selLepton_third->p4() + selHadTau->p4()).mass();
-    double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ? 
-      svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
+    //double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ? 
+    //  svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
+
+    double dihiggsMass = -1.;
     double SVFit_h1_visMass = -1;
     double SVFit_h2_visMass = -1;
     double SVFit_h1_pT = -1;
@@ -1731,35 +1733,35 @@ int main(int argc, char* argv[])
     double SVFit_hh_deltaR = -1;
     double SVFit_hh_pT = -1;
     double SVFit_hh_cosTheta = -1;
-    if ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ){
-      TLorentzVector h1(1,0,0,1);
-      TLorentzVector h2(1,0,0,1);
-      h1.SetPtEtaPhiM(svFit4tauResults_wMassConstraint[0].ditau1_pt_, svFit4tauResults_wMassConstraint[0].ditau1_eta_, svFit4tauResults_wMassConstraint[0].ditau1_phi_, svFit4tauResults_wMassConstraint[0].ditau1_mass_);
-      h2.SetPtEtaPhiM(svFit4tauResults_wMassConstraint[0].ditau2_pt_, svFit4tauResults_wMassConstraint[0].ditau2_eta_, svFit4tauResults_wMassConstraint[0].ditau2_phi_, svFit4tauResults_wMassConstraint[0].ditau2_mass_);
-      SVFit_h1_visMass = svFit4tauResults_wMassConstraint[0].ditau1_visMass_;
-      SVFit_h2_visMass = svFit4tauResults_wMassConstraint[0].ditau2_visMass_;;
-      SVFit_h1_pT = h1.Pt();
-      SVFit_h2_pT = h2.Pt();
-      SVFit_hh_deltaPhi = h1.DeltaPhi(h2);
-      SVFit_hh_deltaEta = TMath::Abs(h1.Eta()-h2.Eta());
-      SVFit_hh_deltaR = h1.DeltaR(h2);
-      SVFit_hh_pT = svFit4tauResults_wMassConstraint[0].dihiggs_pt_;
-      TVector3 boostvector = (h1+h2).BoostVector();
-      h1.Boost(-1*boostvector);
-      h2.Boost(-1*boostvector);
-      TLorentzVector beamaxis1 = TLorentzVector(0,0,1,1);
-      TLorentzVector beamaxis2 = TLorentzVector(0,0,-1,1);
-      beamaxis1.Boost(-1*boostvector);
-      beamaxis2.Boost(-1*boostvector);
-      TVector3 zaxisCS = (beamaxis1.Vect().Unit() - beamaxis2.Vect().Unit()).Unit();
-      SVFit_hh_cosTheta = TMath::Abs(h1.Vect().Unit().Dot(zaxisCS));
-    }
+    // if ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ){
+    //   TLorentzVector h1(1,0,0,1);
+    //   TLorentzVector h2(1,0,0,1);
+    //   h1.SetPtEtaPhiM(svFit4tauResults_wMassConstraint[0].ditau1_pt_, svFit4tauResults_wMassConstraint[0].ditau1_eta_, svFit4tauResults_wMassConstraint[0].ditau1_phi_, svFit4tauResults_wMassConstraint[0].ditau1_mass_);
+    //   h2.SetPtEtaPhiM(svFit4tauResults_wMassConstraint[0].ditau2_pt_, svFit4tauResults_wMassConstraint[0].ditau2_eta_, svFit4tauResults_wMassConstraint[0].ditau2_phi_, svFit4tauResults_wMassConstraint[0].ditau2_mass_);
+    //   SVFit_h1_visMass = svFit4tauResults_wMassConstraint[0].ditau1_visMass_;
+    //   SVFit_h2_visMass = svFit4tauResults_wMassConstraint[0].ditau2_visMass_;;
+    //   SVFit_h1_pT = h1.Pt();
+    //   SVFit_h2_pT = h2.Pt();
+    //   SVFit_hh_deltaPhi = h1.DeltaPhi(h2);
+    //   SVFit_hh_deltaEta = TMath::Abs(h1.Eta()-h2.Eta());
+    //   SVFit_hh_deltaR = h1.DeltaR(h2);
+    //   SVFit_hh_pT = svFit4tauResults_wMassConstraint[0].dihiggs_pt_;
+    //   TVector3 boostvector = (h1+h2).BoostVector();
+    //   h1.Boost(-1*boostvector);
+    //   h2.Boost(-1*boostvector);
+    //   TLorentzVector beamaxis1 = TLorentzVector(0,0,1,1);
+    //   TLorentzVector beamaxis2 = TLorentzVector(0,0,-1,1);
+    //   beamaxis1.Boost(-1*boostvector);
+    //   beamaxis2.Boost(-1*boostvector);
+    //   TVector3 zaxisCS = (beamaxis1.Vect().Unit() - beamaxis2.Vect().Unit()).Unit();
+    //   SVFit_hh_cosTheta = TMath::Abs(h1.Vect().Unit().Dot(zaxisCS));
+    // }
     double SVFit_Z1_visMass = -1;
     double SVFit_Z2_visMass = -1;
-    if ( svFit4tauResults_wMassConstraint_Z.size() >= 1 && svFit4tauResults_wMassConstraint_Z[0].isValidSolution_ ){
-      SVFit_Z1_visMass = svFit4tauResults_wMassConstraint_Z[0].ditau1_visMass_;
-      SVFit_Z2_visMass = svFit4tauResults_wMassConstraint_Z[0].ditau2_visMass_;;
-    }
+    // if ( svFit4tauResults_wMassConstraint_Z.size() >= 1 && svFit4tauResults_wMassConstraint_Z[0].isValidSolution_ ){
+    //   SVFit_Z1_visMass = svFit4tauResults_wMassConstraint_Z[0].ditau1_visMass_;
+    //   SVFit_Z2_visMass = svFit4tauResults_wMassConstraint_Z[0].ditau2_visMass_;;
+    // }
     //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons, selHadTaus);
     //---additional evt variables
@@ -2229,6 +2231,20 @@ int main(int argc, char* argv[])
       BDTOutput_Map_spin0 = CreateBDTOutputMap(gen_mHH, BDT_spin0, BDTInputs_spin0, eventInfo.event, false, "_spin0");
       BDTOutput_Map_nonRes = CreateBDTOutputMap(nonRes_BMs, BDT_nonRes, BDTInputs_nonRes, eventInfo.event, true, "");
       BDTOutput_Map_nonRes_base = CreateBDTOutputMap(nonResBase_params, BDT_nonRes_base, BDTInputs_nonRes_base, eventInfo.event, true, "_base");
+      
+      double leadMuonPt = selMuons.size()>0 ? selMuons[0]->pt() : -10;
+      double leadMuonEta = selMuons.size()>0 ? selMuons[0]->eta() : -10;
+      double leadMuonPhi = selMuons.size()>0 ? selMuons[0]->phi() : -10;
+      double subleadMuonPt = selMuons.size()>1 ? selMuons[1]->pt() : -10;
+      double subleadMuonEta = selMuons.size()>1 ? selMuons[1]->eta() : -10;
+      double subleadMuonPhi = selMuons.size()>1 ? selMuons[1]->phi() : -10;
+
+      double leadElectronPt = selElectrons.size()>0 ? selElectrons[0]->pt() : -10;
+      double leadElectronEta = selElectrons.size()>0 ? selElectrons[0]->eta() : -10;
+      double leadElectronPhi = selElectrons.size()>0 ? selElectrons[0]->phi() : -10;
+      double subleadElectronPt = selElectrons.size()>1 ? selElectrons[1]->pt() : -10;
+      double subleadElectronEta = selElectrons.size()>1 ? selElectrons[1]->eta() : -10;
+      double subleadElectronPhi = selElectrons.size()>1 ? selElectrons[1]->phi() : -10;
 
     //--- fill histograms with events passing final selection
     for(const std::string & central_or_shift: central_or_shifts_local)
@@ -2266,9 +2282,24 @@ int main(int argc, char* argv[])
 	    dR_smartpair_ll,
 	    m_smartpair_ll,
 	    mllOS_closestToZ,
+	    leadMuonPt,
+	    leadMuonEta,
+	    leadMuonPhi,
+	    subleadMuonPt,
+	    subleadMuonEta,
+	    subleadMuonPhi,
+	    leadElectronPt,
+	    leadElectronEta,
+	    leadElectronPhi,
+	    subleadElectronPt,
+	    subleadElectronEta,
+	    subleadElectronPhi,
+	    selLepton_third->pt(),
+	    selLepton_third->eta(),
+	    selLepton_third->phi(),
 	    eventInfo.event,
             evtWeight);
-          selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
+	  //selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
         }
         selHistManager->datacard_->fillHistograms(
           BDTOutput_Map_spin2,
