@@ -145,7 +145,7 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
 
     self.categories = [
       "hh_2lss",
-      "hh_2lss_0tau", "hh_2lss_1tau"
+#      "hh_2lss_0tau", "hh_2lss_1tau"
       
       # "hh_2ess_3j",   "hh_2ess_3j_vbf",   "hh_2ess_3j_nonvbf",   "hh_2muss_3j",   "hh_2muss_3j_vbf",   "hh_2muss_3j_nonvbf",   "hh_1e1muss_3j",   "hh_1e1muss_3j_vbf",   "hh_1e1muss_3j_nonvbf",
       # "hh_2ess_ge3j", "hh_2ess_ge3j_vbf", "hh_2ess_ge3j_nonvbf", "hh_2muss_ge3j", "hh_2muss_ge3j_vbf", "hh_2muss_ge3j_nonvbf", "hh_1e1muss_ge3j", "hh_1e1muss_ge3j_vbf", "hh_1e1muss_ge3j_nonvbf",
@@ -686,6 +686,7 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
         key_add_syst_fakerate_dir = getKey("addSystFakeRates")
         add_syst_fakerate_job_tuple = (self.channel, category, "SS", histogramToFit)
         key_add_syst_fakerate_job = getKey(category, "SS", histogramToFit)
+        key_prep_dcard_job = getKey(category, "SS", histogramToFit)
         self.jobOptions_add_syst_fakerate[key_add_syst_fakerate_job] = {
           'inputFile' : self.jobOptions_prep_dcard[key_prep_dcard_job]['datacardFile'],
           'cfgFile_modified' : os.path.join(self.dirs[key_add_syst_fakerate_dir][DKEY_CFGS], "addSystFakeRates_%s_%s_%s_%s_cfg.py" % add_syst_fakerate_job_tuple),
