@@ -175,7 +175,8 @@ if __name__ == '__main__':
     "mindr_lep2_jet_WZctrl_2lss"      : {},      
     "mT_lep2_WZctrl_2lss"      : {},
     "dR_ll_WZctrl_2lss"      : {},
-    "max_lep_eta_WZctrl_2lss"      : {},      
+    "max_lep_eta_WZctrl_2lss"      : {},
+    "MVAOutput_allBMs"   : {},
   }
   else:
     histograms_to_fit = get_histograms_to_fit("EventCounter","m3l","dihiggsVisMass_sel","mSFOS2l_closestToZ","dr_LeptonIdx3_AK4jNear_Approach2","dr_LeptonIdx3_2j_inclusive1j_Approach2","dr_los_min","dr_los_max","numSameFlavor_OS_3l","met_LD","numElectrons","numMuons","nJetAK4","nJetAK8_wSelectorAK8_Wjj")
