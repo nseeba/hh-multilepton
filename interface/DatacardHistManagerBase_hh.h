@@ -31,14 +31,16 @@ class DatacardHistManagerBase_hh
                              const EventInfo & eventInfo, 
                              const HHWeightInterface2 * HHWeight_calc,
                              const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
-                             bool isDEBUG = false);
+                             bool isDEBUG = false,
+                             bool fillHistograms_nonresonant = true, bool fillHistograms_resonant_spin0 = true, bool fillHistograms_resonant_spin2 = true);
   DatacardHistManagerBase_hh(const edm::ParameterSet & cfg,
                              const AnalysisConfig_hh & analysisConfig, 
                              const EventInfo & eventInfo, 
                              const HHWeightInterface2 * HHWeight_calc,
                              const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
                              const EventCategoryBase * eventCategoryBase,
-                             bool isDEBUG = false);
+                             bool isDEBUG = false,
+                             bool fillHistograms_nonresonant = true, bool fillHistograms_resonant_spin0 = true, bool fillHistograms_resonant_spin2 = true);
   ~DatacardHistManagerBase_hh() {}
 
   /// book histograms
@@ -61,6 +63,10 @@ class DatacardHistManagerBase_hh
   std::map<std::string, double> HHReweightMap_;
   const EventCategoryBase * eventCategoryBase_;
   std::vector<int> categories_;
+
+  bool fillHistograms_nonresonant_;
+  bool fillHistograms_resonant_spin0_;
+  bool fillHistograms_resonant_spin2_;
 
   std::vector<double> resonant_gen_mHH_;
   std::vector<std::string> nonresonant_BMs_;

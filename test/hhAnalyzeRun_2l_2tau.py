@@ -168,7 +168,8 @@ if __name__ == '__main__':
     era                                   = era,
     use_lumi                              = True,
     lumi                                  = lumi,
-    invert_ZbosonMassVeto                 = False,
+    invert_ZbosonMassVeto                 = False, ## Default is False; This has no effect if dropZmassveto = True 
+    dropZmassveto                         = False, ## Default is False; Set it to True to get Fake enriched sideband  
     check_output_files                    = check_output_files,
     running_method                        = running_method,
     num_parallel_jobs                     = num_parallel_jobs,

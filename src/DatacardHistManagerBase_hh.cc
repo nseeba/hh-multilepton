@@ -16,7 +16,10 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
                                                        const EventInfo & eventInfo, 
                                                        const HHWeightInterface2 * HHWeight_calc,
                                                        const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
-                                                       bool isDEBUG)
+                                                       bool isDEBUG,
+                                                       bool fillHistograms_nonresonant,
+                                                       bool fillHistograms_resonant_spin0,
+                                                       bool fillHistograms_resonant_spin2)
   : HistManagerBase(cfg)
   , analysisConfig_(analysisConfig)
   , eventInfo_(eventInfo)
@@ -25,6 +28,9 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
   , HHWeight_calc_LOtoNLO_(HHWeight_calc_LOtoNLO)
   , apply_HH_rwgt_LOtoNLO_(HHWeight_calc_LOtoNLO_ != nullptr)
   , eventCategoryBase_(nullptr)
+  , fillHistograms_nonresonant_(fillHistograms_nonresonant)
+  , fillHistograms_resonant_spin0_(fillHistograms_resonant_spin0)
+  , fillHistograms_resonant_spin2_(fillHistograms_resonant_spin2)
   , numBinsX_(100)
   , xMin_(0.)
   , xMax_(1.) // 1.
@@ -37,7 +43,10 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
                                                        const HHWeightInterface2 * HHWeight_calc,
                                                        const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
                                                        const EventCategoryBase * eventCategoryBase,
-                                                       bool isDEBUG)
+                                                       bool isDEBUG,
+                                                       bool fillHistograms_nonresonant,
+                                                       bool fillHistograms_resonant_spin0,
+                                                       bool fillHistograms_resonant_spin2)
   : HistManagerBase(cfg)
   , analysisConfig_(analysisConfig)
   , eventInfo_(eventInfo)
@@ -46,6 +55,9 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
   , HHWeight_calc_LOtoNLO_(HHWeight_calc_LOtoNLO)
   , apply_HH_rwgt_LOtoNLO_(HHWeight_calc_LOtoNLO_ != nullptr)
   , eventCategoryBase_(eventCategoryBase)
+  , fillHistograms_nonresonant_(fillHistograms_nonresonant)
+  , fillHistograms_resonant_spin0_(fillHistograms_resonant_spin0)
+  , fillHistograms_resonant_spin2_(fillHistograms_resonant_spin2)
   , numBinsX_(100)
   , xMin_(0.) // 0.
   , xMax_(1.) // 1. 
@@ -236,24 +248,33 @@ DatacardHistManagerBase_hh::bookHistograms(TFileDirectory & dir)
         }
         process_ += process_production_and_decayMode;
 
-        for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_resonant_spin2_.begin();
-              histogramName != histogramNames_mvaOutput_resonant_spin2_.end(); ++histogramName ) {
-          TH1* histogram = book1D(dir, histogramName->second, histogramName->second, numBinsX_, xMin_, xMax_);
-          categoryEntry.histograms_mvaOutput_resonant_spin2_[productionMode][decayMode][histogramName->first] = histogram;
+        if ( fillHistograms_resonant_spin2_ )
+        {
+          for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_resonant_spin2_.begin();
+                histogramName != histogramNames_mvaOutput_resonant_spin2_.end(); ++histogramName ) {
+            TH1* histogram = book1D(dir, histogramName->second, histogramName->second, numBinsX_, xMin_, xMax_);
+            categoryEntry.histograms_mvaOutput_resonant_spin2_[productionMode][decayMode][histogramName->first] = histogram;
+          }
         }
-        for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_resonant_spin0_.begin();
-              histogramName != histogramNames_mvaOutput_resonant_spin0_.end(); ++histogramName ) {
-          TH1* histogram = book1D(dir, histogramName->second, histogramName->second, numBinsX_, xMin_, xMax_);
-          categoryEntry.histograms_mvaOutput_resonant_spin0_[productionMode][decayMode][histogramName->first] = histogram;
+        if ( fillHistograms_resonant_spin0_ )
+        {
+          for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_resonant_spin0_.begin();
+                histogramName != histogramNames_mvaOutput_resonant_spin0_.end(); ++histogramName ) {
+            TH1* histogram = book1D(dir, histogramName->second, histogramName->second, numBinsX_, xMin_, xMax_);
+            categoryEntry.histograms_mvaOutput_resonant_spin0_[productionMode][decayMode][histogramName->first] = histogram;
+          }
         }
 
-        for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_nonresonant_.begin();
-              histogramName != histogramNames_mvaOutput_nonresonant_.end(); ++histogramName ) {
-          TH1* histogram = book1D(dir, histogramName->second, histogramName->second, numBinsX_, xMin_, xMax_);
-          categoryEntry.histograms_mvaOutput_nonresonant_[productionMode][decayMode][histogramName->first] = histogram;
+        if ( fillHistograms_nonresonant_ )
+        {
+          for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_nonresonant_.begin();
+                histogramName != histogramNames_mvaOutput_nonresonant_.end(); ++histogramName ) {
+            TH1* histogram = book1D(dir, histogramName->second, histogramName->second, numBinsX_, xMin_, xMax_);
+            categoryEntry.histograms_mvaOutput_nonresonant_[productionMode][decayMode][histogramName->first] = histogram;
+          }
+          TH1* histogram = book1D(dir, histogramName_mvaOutput_nonresonant_allBMs_, histogramName_mvaOutput_nonresonant_allBMs_, numBinsX_, xMin_, xMax_);
+          categoryEntry.histograms_mvaOutput_nonresonant_allBMs_[productionMode][decayMode] = histogram;
         }
-        TH1* histogram = book1D(dir, histogramName_mvaOutput_nonresonant_allBMs_, histogramName_mvaOutput_nonresonant_allBMs_, numBinsX_, xMin_, xMax_);
-        categoryEntry.histograms_mvaOutput_nonresonant_allBMs_[productionMode][decayMode] = histogram;
 
         process_ = processBAK;
       }

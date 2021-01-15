@@ -21,6 +21,21 @@ EvtHistManager_hh_3l_1tau::EvtHistManager_hh_3l_1tau(const edm::ParameterSet & c
   central_or_shiftOptions_["dR_smartpair_ll"] = { "central" };
   central_or_shiftOptions_["m_smartpair_ll"] = { "central" };
   central_or_shiftOptions_["mllOS_closestToZ"] = { "central" };
+  central_or_shiftOptions_["leadMuonPt"] = { "central" };
+  central_or_shiftOptions_["leadMuonEta"] = { "central" };
+  central_or_shiftOptions_["leadMuonPhi"] = { "central" };
+  central_or_shiftOptions_["subleadMuonPt"] = { "central" };
+  central_or_shiftOptions_["subleadMuonEta"] = { "central" };
+  central_or_shiftOptions_["subleadMuonPhi"] = { "central" };
+  central_or_shiftOptions_["leadElectronPt"] = { "central" };
+  central_or_shiftOptions_["leadElectronEta"] = { "central" };
+  central_or_shiftOptions_["leadElectronPhi"] = { "central" };
+  central_or_shiftOptions_["subleadElectronPt"] = { "central" };
+  central_or_shiftOptions_["subleadElectronEta"] = { "central" };
+  central_or_shiftOptions_["subleadElectronPhi"] = { "central" };
+  central_or_shiftOptions_["thirdLepPt"] = { "central" };
+  central_or_shiftOptions_["thirdLepEta"] = { "central" };
+  central_or_shiftOptions_["thirdLepPhi"] = { "central" };
   central_or_shiftOptions_["EventCounter"] = { "*" };
   central_or_shiftOptions_["EventNumber"] = { "*" };
 }
@@ -50,6 +65,22 @@ EvtHistManager_hh_3l_1tau::bookHistograms(TFileDirectory & dir)
   histogram_dR_smartpair_ll_  = book1D(dir, "dR_smartpair_ll",  "dR_smartpair_ll",   35,  -0.,   +3.5  );
   histogram_m_smartpair_ll_   = book1D(dir, "m_smartpair_ll",   "m_smartpair_ll",    100, -0.,   +200. );
   histogram_mllOS_closestToZ_ = book1D(dir, "mllOS_closestToZ", "mllOS_closestToZ",  126, -2.,   +250. );
+
+  histogram_leadMuonPt_       = book1D(dir, "leadMuonPt",       "leadMuonPt",        100, -0.,   +200. );
+  histogram_leadMuonEta_      = book1D(dir, "leadMuonEta",      "leadMuonEta",       100, -5.,   +5.   );
+  histogram_leadMuonPhi_      = book1D(dir, "leadMuonPhi",      "leadMuonPhi",       35,  -3.5,  +3.5 );
+  histogram_subleadMuonPt_    = book1D(dir, "subleadMuonPt",    "subleadMuonPt",     100, -0.,   +200. );
+  histogram_subleadMuonEta_   = book1D(dir, "subleadMuonEta",   "subleadMuonEta",    100, -5.,   +5.   );
+  histogram_subleadMuonPhi_   = book1D(dir, "subleadMuonPhi",   "subleadMuonPhi",    35,  -3.5,  +3.5 );
+  histogram_leadElectronPt_       = book1D(dir, "leadElectronPt",       "leadElectronPt",        100, -0.,   +200. );
+  histogram_leadElectronEta_      = book1D(dir, "leadElectronEta",      "leadElectronEta",       100, -5.,   +5.   );
+  histogram_leadElectronPhi_      = book1D(dir, "leadElectronPhi",      "leadElectronPhi",       35,  -3.5,  +3.5 );
+  histogram_subleadElectronPt_    = book1D(dir, "subleadElectronPt",    "subleadElectronPt",     100, -0.,   +200. );
+  histogram_subleadElectronEta_   = book1D(dir, "subleadElectronEta",   "subleadElectronEta",    100, -5.,   +5.   );
+  histogram_subleadElectronPhi_   = book1D(dir, "subleadElectronPhi",   "subleadElectronPhi",    35,  -3.5,  +3.5 );
+  histogram_thirdLepPt_       = book1D(dir, "thirdLepPt",       "thirdLepPt",        100, -0.,   +200. );
+  histogram_thirdLepEta_      = book1D(dir, "thirdLepEta",      "thirdLepEta",       100, -5.,   +5.   );
+  histogram_thirdLepPhi_      = book1D(dir, "thirdLepPhi",      "thirdLepPhi",       35,  -3.5,  +3.5 );
   histogram_EventCounter_     = book1D(dir, "EventCounter",     "EventCounter",      1,   -0.5,  +0.5  );
   histogram_EventNumber_      = book1D(dir, "EventNumber",      "EventNumber",       2,   -0.5,  +1.5  );
   histogram_EventNumber_->GetXaxis()->SetBinLabel(1,"Odd");
@@ -73,6 +104,21 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
 					  double dR_smartpair_ll,
 					  double m_smartpair_ll,
 					  double mllOS_closestToZ,
+					  double leadMuonPt,
+					  double leadMuonEta,
+					  double leadMuonPhi,
+					  double subleadMuonPt,
+					  double subleadMuonEta,
+					  double subleadMuonPhi,
+					  double leadElectronPt,
+					  double leadElectronEta,
+					  double leadElectronPhi,
+					  double subleadElectronPt,
+					  double subleadElectronEta,
+					  double subleadElectronPhi,
+					  double thirdLepPt,
+					  double thirdLepEta,
+					  double thirdLepPhi,
                                           unsigned int evt_number,
 					  double evtWeight)
 {
@@ -95,6 +141,21 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_dR_smartpair_ltau_, dR_smartpair_ll,     evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_m_smartpair_ltau_,  m_smartpair_ll,      evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_mllOS_closestToZ_,  mllOS_closestToZ,    evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_leadMuonPt_,        leadMuonPt,    evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_leadMuonEta_,       leadMuonEta,   evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_leadMuonPhi_,       leadMuonPhi,   evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_subleadMuonPt_,     subleadMuonPt, evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_subleadMuonEta_,    subleadMuonEta,evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_subleadMuonPhi_,    subleadMuonPhi,evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_leadElectronPt_,        leadElectronPt,    evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_leadElectronEta_,       leadElectronEta,   evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_leadElectronPhi_,       leadElectronPhi,   evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_subleadElectronPt_,     subleadElectronPt, evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_subleadElectronEta_,    subleadElectronEta,evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_subleadElectronPhi_,    subleadElectronPhi,evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_thirdLepPt_,        thirdLepPt,    evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_thirdLepEta_,       thirdLepEta,   evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_thirdLepPhi_,       thirdLepPhi,   evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_EventCounter_,      0.,                  evtWeight,     evtWeightErr);
   if(evt_number % 2){// ODD EVENT NUMBER CASE                                                                                                                                                    
     fillWithOverFlow(histogram_EventNumber_,     0.,                  evtWeight,     evtWeightErr);                                                                                                                         

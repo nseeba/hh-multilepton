@@ -62,6 +62,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
         use_lumi,
         lumi,
         invert_ZbosonMassVeto,
+        dropZmassveto,       
         check_output_files,
         running_method,
         num_parallel_jobs,
@@ -108,6 +109,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
     )
 
     self.invert_ZbosonMassVeto = invert_ZbosonMassVeto
+    self.dropZmassveto = dropZmassveto
     self.lepton_and_hadTau_selections = [ "Tight", "Fakeable" ]
     self.lepton_and_hadTau_frWeights = [ "enabled", "disabled" ]
     self.hadTau_selection_part2 = hadTau_selection
@@ -243,6 +245,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
 
     lines = super(analyzeConfig_hh_2l_2tau, self).createCfg_analyze(jobOptions, sample_info)
     lines.append("process.analyze_hh_2l_2tau.invert_ZbosonMassVeto   = cms.bool(%s)" % self.invert_ZbosonMassVeto)
+    lines.append("process.analyze_hh_2l_2tau.dropZmassveto   = cms.bool(%s)" % self.dropZmassveto)
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
 
 

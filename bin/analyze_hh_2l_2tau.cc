@@ -548,6 +548,8 @@ int main(int argc, char* argv[])
 
   const bool selectBDT = cfg_analyze.exists("selectBDT") ? cfg_analyze.getParameter<bool>("selectBDT") : false;
 
+  const bool dropZmassveto = cfg_analyze.exists("dropZmassveto") ? cfg_analyze.getParameter<bool>("dropZmassveto") : false;
+
   // Resonant Info
   const edm::ParameterSet mvaInfo_res = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_res");
   std::vector<double> gen_mHH = analysisConfig.get_HH_resonant_mass_points();
@@ -1782,27 +1784,28 @@ int main(int argc, char* argv[])
     cutFlowTable.update("m(ll) > 12 GeV", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("m(ll) > 12 GeV", evtWeightRecorder.get(central_or_shift_main));
 
-    const bool failsZbosonMassVeto = isfailsZbosonMassVeto(preselLeptonsFull);
-    if(invert_ZbosonMassVeto){
-      if ( !failsZbosonMassVeto ) {
-	if ( run_lumi_eventSelector ) {
-	  std::cout << "event " << eventInfo.str() << " FAILS inverted Z-boson veto." << std::endl;
+    if(!dropZmassveto){
+      const bool failsZbosonMassVeto = isfailsZbosonMassVeto(preselLeptonsFull);
+      if(invert_ZbosonMassVeto){
+	if ( !failsZbosonMassVeto ) {
+	  if ( run_lumi_eventSelector ) {
+	    std::cout << "event " << eventInfo.str() << " FAILS inverted Z-boson veto." << std::endl;
+	  }
+	  continue;
 	}
-	continue;
-      }
-      cutFlowTable.update("Z-boson mass veto inverted", evtWeightRecorder.get(central_or_shift_main));
-      cutFlowHistManager->fillHistograms("Z-boson mass veto inverted", evtWeightRecorder.get(central_or_shift_main));
-    }else{
-      if ( failsZbosonMassVeto ) {
-	if ( run_lumi_eventSelector ) {
-	  std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
+	cutFlowTable.update("Z-boson mass veto inverted", evtWeightRecorder.get(central_or_shift_main));
+	cutFlowHistManager->fillHistograms("Z-boson mass veto inverted", evtWeightRecorder.get(central_or_shift_main));
+      }else{
+	if ( failsZbosonMassVeto ) {
+	  if ( run_lumi_eventSelector ) {
+	    std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
+	  }
+	  continue;
 	}
-	continue;
+	cutFlowTable.update("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
+	cutFlowHistManager->fillHistograms("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
       }
-      cutFlowTable.update("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
-      cutFlowHistManager->fillHistograms("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
     }
-
 
     if ( apply_met_filters ) {
       if ( !metFilterSelector(metFilters) ) {
