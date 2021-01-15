@@ -139,7 +139,7 @@ process.analyze_hh_2lss = cms.PSet(
     hasPS = cms.bool(False),
     apply_LHE_nom = cms.bool(False),
     useObjectMultiplicity = cms.bool(False),
-    minNumJets = cms.int32(2),
+    minNumJets = cms.int32(3),
     maxNumTaus = cms.int32(0),
 
 
