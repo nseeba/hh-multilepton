@@ -794,7 +794,7 @@ int main(int argc, char* argv[])
   std::cout << "selEventsFileName_output = " << selEventsFileName_output << std::endl;
 
   vstring categories_evt = {
-    "hh_2lss_0tau", "hh_2lss_1tau"
+    //"hh_2lss_0tau", "hh_2lss_1tau"
   };
   
 //--- declare histograms
@@ -2139,8 +2139,8 @@ int main(int argc, char* argv[])
     
     
     std::vector<std::string> evtCategories;
-    if      (selHadTaus.size() == 0) evtCategories.push_back("hh_2lss_0tau");
-    else if (selHadTaus.size() == 1) evtCategories.push_back("hh_2lss_1tau");
+    //if      (selHadTaus.size() == 0) evtCategories.push_back("hh_2lss_0tau");
+    //else if (selHadTaus.size() == 1) evtCategories.push_back("hh_2lss_1tau");
 
     int nTaus = (int)selHadTaus.size();
 
