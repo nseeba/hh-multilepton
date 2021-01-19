@@ -181,6 +181,7 @@ int main(int argc, char* argv[])
 
   std::string histogramDir = cfg_analyze.getParameter<std::string>("histogramDir");
   bool isMCClosure_t = histogramDir.find("mcClosure_t") != std::string::npos;
+  std::cout << "isMCClosure: tau = " << isMCClosure_t << std::endl;
 
   std::string era_string = cfg_analyze.getParameter<std::string>("era");
   const Era era = get_era(era_string);
