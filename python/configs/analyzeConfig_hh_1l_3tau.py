@@ -16,11 +16,7 @@ def get_lepton_and_hadTau_selection_and_frWeight(lepton_and_hadTau_selection, le
   return lepton_and_hadTau_selection_and_frWeight
 
 def getHistogramDir(lepton_selection, hadTau_selection, lepton_and_hadTau_frWeight, chargeSumSelection):
-  hadTau_selection_part1 = hadTau_selection
-  for separator in [ "|" ]:
-    if hadTau_selection_part1.find(separator) != -1:
-      hadTau_selection_part1 = hadTau_selection_part1[:hadTau_selection_part1.find(separator)]
-  histogramDir = "hh_1l_3tau_%s_%s" % (chargeSumSelection, hadTau_selection_part1)
+  histogramDir = "hh_1l_3tau_%s_%s" % (chargeSumSelection, lepton_selection)
   if lepton_selection.find("Fakeable") != -1 or hadTau_selection.find("Fakeable") != -1:
     if lepton_and_hadTau_frWeight == "enabled":
       histogramDir += "_wFakeRateWeights"

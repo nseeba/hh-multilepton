@@ -18,6 +18,7 @@ def getHistogramDir(category, lepton_selection, lepton_frWeight, leptonChargeSel
   histogramDir = category
   if leptonChargeSelection != "disabled":
     histogramDir += "_%s" % leptonChargeSelection
+  histogramDir += "_%s" % lepton_selection
   if lepton_selection.find("Fakeable") != -1:
     if lepton_frWeight == "enabled":
       histogramDir += "_wFakeRateWeights"
@@ -130,8 +131,8 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
     self.outputFile_hadd_stage1_6 = {}
     self.cfgFile_addFlips = os.path.join(self.template_dir, "addBackgroundLeptonFlips_cfg.py")
     self.jobOptions_addFlips = {}
-    self.histogramDir_prep_dcard = "hh_2lss_SS"
-    self.histogramDir_prep_dcard_OS = "hh_2lss_OS"
+    self.histogramDir_prep_dcard = "hh_2lss_SS_Tight"
+    self.histogramDir_prep_dcard_OS = "hh_2lss_OS_Tight"
     self.make_plots_backgrounds = self.get_makeplots_backgrounds(add_flips = 'data')
     self.make_plots_backgrounds_OS = self.get_makeplots_backgrounds()
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2lss_cfg.py")
@@ -379,7 +380,7 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
                   'muonSelection'            : muon_selection,
                   'apply_leptonGenMatching'  : self.apply_leptonGenMatching,
                   'hadTauSelection'          : hadTauVeto_selection,
-                  'leptonChargeSelection'  : leptonChargeSelection,
+                  'leptonChargeSelection'    : leptonChargeSelection,
                   'applyFakeRateWeights'     : applyFakeRateWeights,
                   'central_or_shift'         : central_or_shift,
                   'central_or_shifts_local'  : central_or_shifts_local,

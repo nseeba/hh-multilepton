@@ -16,12 +16,8 @@ def get_hadTau_selection_and_frWeight(hadTau_selection, hadTau_frWeight):
   return hadTau_selection_and_frWeight
 
 def getHistogramDir(hadTau_selection, hadTau_frWeight, hadTau_charge_selection):
-  hadTau_selection_part1 = hadTau_selection
-  for separator in [ "|" ]:
-    if hadTau_selection_part1.find(separator) != -1:
-      hadTau_selection_part1 = hadTau_selection_part1[:hadTau_selection_part1.find(separator)]
-  histogramDir = "hh_0l_4tau_%s_%s" % (hadTau_charge_selection, hadTau_selection_part1)
-  if hadTau_selection_part1.find("Fakeable") != -1:
+  histogramDir = "hh_0l_4tau_%s_%s" % (hadTau_charge_selection, hadTau_selection)
+  if hadTau_selection.find("Fakeable") != -1:
     if hadTau_frWeight == "enabled":
       histogramDir += "_wFakeRateWeights"
     elif hadTau_frWeight == "disabled":

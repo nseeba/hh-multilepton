@@ -288,6 +288,7 @@ int main(int argc, char* argv[])
   std::string histogramDir = cfg_analyze.getParameter<std::string>("histogramDir");
   bool isMCClosure_e = histogramDir.find("mcClosure_e") != std::string::npos;
   bool isMCClosure_m = histogramDir.find("mcClosure_m") != std::string::npos;
+  std::cout << "isMCClosure: e = " << isMCClosure_e << ", mu = " << isMCClosure_m << std::endl;
 
   std::string era_string = cfg_analyze.getParameter<std::string>("era");
   const Era era = get_era(era_string);
@@ -3233,7 +3234,7 @@ int main(int argc, char* argv[])
 
     
     //Gathering final BDT Inputs
-
+    /*
     // 20201201: 9 variable BDT, used for pre-pre-approval 
     AllVars_Map["gen_mHH"]                                   =       250.; // setting a Dummy value which will be reset depending on mass hypothesis
     AllVars_Map["m3l"]                                       =       m3l;
@@ -3246,9 +3247,9 @@ int main(int argc, char* argv[])
     AllVars_Map["nSFOS_3l"]                                  =       nSFOS_3l;
     AllVars_Map["met_LD"]                                    =       met_LD;
     //AllVars_Map[""]          =       ;
-    
+    */
 
-    /*
+    
     // 20210109: 23 variable BDT 
     AllVars_Map["gen_mHH"]                                          =       250.; // setting a Dummy value which will be reset depending on mass hypothesis
     AllVars_Map["nSFOS_3l"]                                         =       nSFOS_3l;
@@ -3279,7 +3280,7 @@ int main(int argc, char* argv[])
     AllVars_Map["dr_LeptonIdx3_AK4jNear_Approach2"]                 =       dr_LeptonIdx3_AK4jNear_Approach2;
     AllVars_Map["dr_LeptonIdx3_2j_inclusive1j_Approach2"]           =       dr_LeptonIdx3_2j_inclusive1j_Approach2;
     //AllVars_Map[""]          =       ;
-    */
+    
 
 
 

@@ -192,6 +192,7 @@ int main(int argc, char* argv[])
   bool isMCClosure_e = histogramDir.find("mcClosure_e") != std::string::npos;
   bool isMCClosure_m = histogramDir.find("mcClosure_m") != std::string::npos;
   bool isMCClosure_t = histogramDir.find("mcClosure_t") != std::string::npos;
+  std::cout << "isMCClosure: e = " << isMCClosure_e << ", mu = " << isMCClosure_m << ", tau = " << isMCClosure_t << std::endl;
 
   std::string era_string = cfg_analyze.getParameter<std::string>("era");
   const Era era = get_era(era_string);
