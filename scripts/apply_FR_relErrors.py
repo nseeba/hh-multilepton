@@ -3,6 +3,7 @@
 Example usage:
 apply_FR_relErrors_LATEST.py -i ../data/FR_lep_mva_hh_multilepton_wFullSyst_woMETSyst_2018_KBFI_2020Nov27.root \
                                     -o FR_lep_mva_hh_multilepton_wFullSyst_woMETSyst_2018_KBFI_2020Nov27_wGiovanniUncs.root
+                                    -a hh
                                     -n True                      
 '''
 
@@ -96,6 +97,10 @@ parser.add_argument('-o', '--output',
   type = str, dest = 'output', metavar = 'file', required = True,
   help = 'R|Output file name',
 )
+parser.add_argument('-a', '--analysis',
+  type = str, dest = 'analysis', metavar = 'hh', required = True,
+  help = 'R|Analysis for which the Fake Rates are measured. Options include: hh or tth',
+)
 parser.add_argument("-n", '--norm',  
     type = bool, dest = 'norm', metavar = 'bool', required = True, 
     help = 'R|Normalize variations pt1/2, be1/2 w.r.t 2lss TTbar MC Fake rates',                
@@ -112,6 +117,7 @@ args = parser.parse_args()
 input_filename = os.path.abspath(args.input)
 out_filename = os.path.abspath(args.output)
 apply_norm = args.norm
+analysis = args.analysis
 verbose = args.verbose
 
 if apply_norm:
@@ -120,9 +126,11 @@ else:
    print("Un-normalized variations used for pt1/2, be1/2 shape templates")
 
 
-
+assert((analysis == "hh") or (analysis == "tth"))
 assert(input_filename != out_filename)
 
+
+print("Analysis Mode:", analysis)
 
 if not os.path.isfile(input_filename):
   raise RuntimeError("No such file: %s" % input_filename)
@@ -167,9 +175,21 @@ for key in input_histogram_names:
 
  key_tt = ""   
  if "el" in  key:
-     key_tt = "FR_mva030_el_data_comb_TT_fakes2" 
+     if "hh" in analysis:
+         key_tt = "FR_mva030_el_data_comb_TT_fakes2" 
+     elif "tth" in analysis:
+         key_tt = "FR_mva080_el_data_comb_TT_fakes2" 
+     else:
+         print("Invalid analysis identifier")
+         break
  elif "mu" in  key:
-     key_tt = "FR_mva050_mu_data_comb_TT_fakes2_prefit"     
+     if "hh" in analysis:
+         key_tt = "FR_mva050_mu_data_comb_TT_fakes2_prefit"
+     elif "tth" in analysis:
+         key_tt = "FR_mva085_mu_data_comb_TT_fakes2_prefit"
+     else:
+         print("Invalid analysis identifier")
+         break    
  else:
      print("Could not find lepton identifier in", key)
      break
