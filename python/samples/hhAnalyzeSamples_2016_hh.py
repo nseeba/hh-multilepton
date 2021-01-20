@@ -1,6 +1,6 @@
 from collections import OrderedDict as OD
 
-# file generated at 2020-12-31 22:19:53 with the following command:
+# file generated at 2021-01-20 18:34:27 with the following command:
 # create_dictionary.py -m python/samples/metaDict_2016_hh.py -p python/samples/sampleLocations_2016_hh_multilepton.txt -N samples_2016 -E 2016 -o python/samples -g hhAnalyzeSamples_2016_hh.py -M
 
 samples_2016 = OD()
@@ -13484,7 +13484,7 @@ samples_2016["/GluGluToHHTo4Tau_node_cHHH0_TuneCUETP8M1_PSWeights_13TeV-powheg-p
   ("fsize_local",                     5188918363), # 5.19GB, avg file size 648.61MB
   ("fsize_db",                        38805354616), # 38.81GB, avg file size 597.01MB
   ("use_it",                          True),
-  ("xsection",                        0.00026593),
+  ("xsection",                        0.00027429),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -13550,7 +13550,7 @@ samples_2016["/GluGluToHHTo4Tau_node_cHHH1_TuneCUETP8M1_PSWeights_13TeV-powheg-p
   ("fsize_local",                     5131163139), # 5.13GB, avg file size 733.02MB
   ("fsize_db",                        38550780831), # 38.55GB, avg file size 296.54MB
   ("use_it",                          True),
-  ("xsection",                        0.00011841),
+  ("xsection",                        0.00012213),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -13616,7 +13616,7 @@ samples_2016["/GluGluToHHTo4Tau_node_cHHH2p45_TuneCUETP8M1_PSWeights_13TeV-powhe
   ("fsize_local",                     5376073179), # 5.38GB, avg file size 768.01MB
   ("fsize_db",                        39777294092), # 39.78GB, avg file size 375.26MB
   ("use_it",                          True),
-  ("xsection",                        5.006e-05),
+  ("xsection",                        5.163e-05),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -13682,7 +13682,7 @@ samples_2016["/GluGluToHHTo4Tau_node_cHHH5_TuneCUETP8M1_PSWeights_13TeV-powheg-p
   ("fsize_local",                     4860103792), # 4.86GB, avg file size 540.01MB
   ("fsize_db",                        38214275567), # 38.21GB, avg file size 471.78MB
   ("use_it",                          True),
-  ("xsection",                        0.00034774),
+  ("xsection",                        0.00035865),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -14554,7 +14554,7 @@ samples_2016["/GluGluToHHTo2V2Tau_node_cHHH0_TuneCUETP8M1_PSWeights_13TeV-powheg
   ("fsize_local",                     2116123444), # 2.12GB, avg file size 705.37MB
   ("fsize_db",                        15456054734), # 15.46GB, avg file size 672.00MB
   ("use_it",                          True),
-  ("xsection",                        0.00203428),
+  ("xsection",                        0.00209816),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -14620,7 +14620,7 @@ samples_2016["/GluGluToHHTo2V2Tau_node_cHHH1_TuneCUETP8M1_PSWeights_13TeV-powheg
   ("fsize_local",                     2287299487), # 2.29GB, avg file size 1.14GB
   ("fsize_db",                        16374952584), # 16.37GB, avg file size 655.00MB
   ("use_it",                          True),
-  ("xsection",                        0.00090581),
+  ("xsection",                        0.00093427),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -14686,7 +14686,7 @@ samples_2016["/GluGluToHHTo2V2Tau_node_cHHH2p45_TuneCUETP8M1_PSWeights_13TeV-pow
   ("fsize_local",                     2257081202), # 2.26GB, avg file size 322.44MB
   ("fsize_db",                        16238506681), # 16.24GB, avg file size 523.82MB
   ("use_it",                          True),
-  ("xsection",                        0.0003829),
+  ("xsection",                        0.00039491),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -14752,7 +14752,7 @@ samples_2016["/GluGluToHHTo2V2Tau_node_cHHH5_TuneCUETP8M1_PSWeights_13TeV-powheg
   ("fsize_local",                     2009648315), # 2.01GB, avg file size 334.94MB
   ("fsize_db",                        15486983330), # 15.49GB, avg file size 645.29MB
   ("use_it",                          True),
-  ("xsection",                        0.00266003),
+  ("xsection",                        0.00274351),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -15624,7 +15624,7 @@ samples_2016["/GluGluToHHTo4V_node_cHHH0_TuneCUETP8M1_PSWeights_13TeV-powheg-pyt
   ("fsize_local",                     5584333986), # 5.58GB, avg file size 698.04MB
   ("fsize_db",                        40336608667), # 40.34GB, avg file size 1.01GB
   ("use_it",                          True),
-  ("xsection",                        0.00389033),
+  ("xsection",                        0.0040125),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -15690,7 +15690,7 @@ samples_2016["/GluGluToHHTo4V_node_cHHH1_TuneCUETP8M1_PSWeights_13TeV-powheg-pyt
   ("fsize_local",                     5749996556), # 5.75GB, avg file size 1.15GB
   ("fsize_db",                        40722538714), # 40.72GB, avg file size 904.95MB
   ("use_it",                          True),
-  ("xsection",                        0.00173227),
+  ("xsection",                        0.00178668),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -15756,7 +15756,7 @@ samples_2016["/GluGluToHHTo4V_node_cHHH2p45_TuneCUETP8M1_PSWeights_13TeV-powheg-
   ("fsize_local",                     5872689359), # 5.87GB, avg file size 1.17GB
   ("fsize_db",                        41734175155), # 41.73GB, avg file size 1.35GB
   ("use_it",                          True),
-  ("xsection",                        0.00073225),
+  ("xsection",                        0.00075522),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
@@ -15822,7 +15822,7 @@ samples_2016["/GluGluToHHTo4V_node_cHHH5_TuneCUETP8M1_PSWeights_13TeV-powheg-pyt
   ("fsize_local",                     5025359954), # 5.03GB, avg file size 628.17MB
   ("fsize_db",                        38929152863), # 38.93GB, avg file size 811.02MB
   ("use_it",                          True),
-  ("xsection",                        0.00508701),
+  ("xsection",                        0.00524666),
   ("genWeight",                       True),
   ("triggers",                        ['1e', '1mu', '2e', '2mu', '1e1mu', '3e', '3mu', '2e1mu', '1e2mu', '1e1tau', '1mu1tau', '2tau']),
   ("has_LHE",                         True),
