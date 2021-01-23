@@ -65,7 +65,7 @@ class Plotter_HHTo3l : public Plotter
   std::vector<std::string> legendEntriesSignal_;
   int optionToNormalizeSignalDistributions_;   // 0: don't normalize, 1: normalize w.r.t. area, 2: normalize w.r.t. height
   
-  bool isDataBlinded = true; // added by Siddhesh
+  bool isDataBlinded = false; // added by Siddhesh
 };
 
 #endif
