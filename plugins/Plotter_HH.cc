@@ -594,8 +594,12 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     int numBins_bottom = histogramRatio->GetNbinsX();
     for ( int iBin = 1; iBin <= numBins_bottom; ++iBin ) {
       double binContent = histogramRatio->GetBinContent(iBin);
-      if ( histogramData_blinded && histogramData_blinded->GetBinContent(iBin) >= 0. ) histogramRatio->SetBinContent(iBin, binContent - 1.0);
-      else histogramRatio->SetBinContent(iBin, -10.);
+      if ( histogramData_blinded && histogramData_blinded->GetBinContent(iBin) >= 0. ){ 
+	if(histogramData_blinded->GetBinContent(iBin) > 0.){histogramRatio->SetBinContent(iBin, binContent - 1.0);}
+	if(histogramData_blinded->GetBinContent(iBin) == 0.){histogramRatio->SetBinContent(iBin, -1000.0);} // DRAW IT OUTSIDE THE RANGE ALWAYS IF DATA = 0 
+      }else{ 
+	histogramRatio->SetBinContent(iBin, -10.);
+      }
       //std::cout << " bin #" << iBin << " (x = " << histogramRatio->GetBinCenter(iBin) << "): ratio = " << histogramRatio->GetBinContent(iBin) << std::endl;
     }
     
