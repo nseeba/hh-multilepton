@@ -856,10 +856,10 @@ int main(int argc, char* argv[])
   std::cout << "process: " << process_string << std::endl;
 
   vstring categories_evt = {
-    "hh_WjjBoosted", "hh_WjjResolved", "hh_WjjHasOnly1j",
-    //"hh_3lneg", "hh_3lpos",
-    //"hh_3l_nonVBF", "hh_3l_VBF"
-    "hh_3e", "hh_3mu", "hh_2e1mu", "hh_1e2mu",
+    //"hh_WjjBoosted", "hh_WjjResolved", "hh_WjjHasOnly1j",
+    ////"hh_3lneg", "hh_3lpos",
+    ////"hh_3l_nonVBF", "hh_3l_VBF"
+    //"hh_3e", "hh_3mu", "hh_2e1mu", "hh_1e2mu",
   };
 
   bool skipHHDecayModeHistograms = true;
@@ -923,6 +923,11 @@ int main(int argc, char* argv[])
   std::map<int, TH1*> hm_SFOS4lpresel_0;
   std::map<int, TH1*> hm_SFOS4lpresel_1;
   */
+  std::map<int, TH1*> hPhi_forEtaLeqm1p5_selElectrons;
+  std::map<int, TH1*> hPhi_forEtaLeqm1p5_selMuons;
+  std::map<int, TH1*> hPhi_forEtaLeqm1p5_selAK4jets;
+  std::map<int, TH1*> hPhi_forEtaLeqm1p5_selAK4_ptTop2;
+  
 
   //TH1* histogram_analyzedEntries = fs.make<TH1D>("analyzedEntries", "analyzedEntries", 1, -0.5, +0.5);
   //std::map<std::string, std::map<int, TH1*>> hMEt_All_0;
@@ -943,7 +948,7 @@ int main(int argc, char* argv[])
 		<< ",\t idxLepton: " << idxLepton << std::endl;
 
       selHistManagerType* selHistManager = new selHistManagerType();
-      if(! skipBooking && 1==0)
+      if(! skipBooking && 1==1)
       {
         selHistManager->electrons_ = new ElectronHistManager(makeHistManager_cfg(process_and_genMatch,
           Form("%s/sel/electrons", histogramDir.data()), era_string, central_or_shift, "allHistograms"));
@@ -1017,10 +1022,11 @@ int main(int argc, char* argv[])
       }
       selHistManagers[central_or_shift][idxLepton] = selHistManager;
 
-      /*
+      
       if (central_or_shift == central_or_shift_main) {
 	//TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_string.data()));
 	TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_and_genMatch.data()));
+	/*
 	hMEt_All_0[idxLepton]        = subD1.make<TH1D>("hMEt_All_0", "hMEt_All_0", 200, 0.,500.);
 	hHt_All_0[idxLepton]         = subD1.make<TH1D>("hHt_All_0", "hHt_All_0", 200, 0.,500.);
 	hMEt_LD_All_0[idxLepton]     = subD1.make<TH1D>("hMEt_LD_All_0", "hMEt_LD_All_0", 200, 0.,500.);
@@ -1051,8 +1057,14 @@ int main(int argc, char* argv[])
 	hm_SFOS2lpresel_1[idxLepton]        = subD1.make<TH1D>("hm_SFOS2lpresel_1",       "hm_SFOS2lpresel_1",        200, 0.,200.);
 	hm_SFOS4lpresel_0[idxLepton]        = subD1.make<TH1D>("hm_SFOS4lpresel_0",       "hm_SFOS4lpresel_0",        200, 0.,500.);
 	hm_SFOS4lpresel_1[idxLepton]        = subD1.make<TH1D>("hm_SFOS4lpresel_1",       "hm_SFOS4lpresel_1",        200, 0.,500.);
+	*/
+
+	hPhi_forEtaLeqm1p5_selElectrons[idxLepton]  = subD1.make<TH1D>("hPhi_forEtaLeqm1p5_selElectrons",  "hPhi_forEtaLeqm1p5_selElectrons",   200, -1*TMath::Pi(),TMath::Pi());
+	hPhi_forEtaLeqm1p5_selMuons[idxLepton]      = subD1.make<TH1D>("hPhi_forEtaLeqm1p5_selMuons",      "hPhi_forEtaLeqm1p5_selMuons",       200, -1*TMath::Pi(),TMath::Pi());
+	hPhi_forEtaLeqm1p5_selAK4jets[idxLepton]    = subD1.make<TH1D>("hPhi_forEtaLeqm1p5_selAK4jets",    "hPhi_forEtaLeqm1p5_selAK4jets",     200, -1*TMath::Pi(),TMath::Pi());
+	hPhi_forEtaLeqm1p5_selAK4_ptTop2[idxLepton] = subD1.make<TH1D>("hPhi_forEtaLeqm1p5_selAK4_ptTop2", "hPhi_forEtaLeqm1p5_selAK4_ptTop2",  200, -1*TMath::Pi(),TMath::Pi());
       }
-      */
+      
     }
 
     if(isMC && ! skipBooking)
@@ -3390,7 +3402,7 @@ int main(int argc, char* argv[])
 	//std::cout << "genMatch Idx: " << genMatch->getIdx() << ", name: " << genMatch->getName() << std::endl;
         selHistManagerType* selHistManager = selHistManagers[central_or_shift][genMatch->getIdx()];
         assert(selHistManager);
-        if(! skipFilling && 1==0)
+        if(! skipFilling && 1==1)
         {
           selHistManager->electrons_->fillHistograms(selElectrons, evtWeight);
           selHistManager->muons_->fillHistograms(selMuons, evtWeight);
@@ -3663,6 +3675,29 @@ int main(int argc, char* argv[])
 	  isControlRegion ? mT_WZctrl_leptonW_MET : -1., // CV: BDTOutput for nonresonant_allBMs case not implemented yet !! Temporary solution
           evtWeight);
 
+	if(! skipFilling && 1==1)
+	{
+	  
+	  for (size_t i=0; i < selElectrons.size(); i++)
+	  {
+	    hPhi_forEtaLeqm1p5_selElectrons[genMatch->getIdx()]->Fill(selElectrons[i]->phi());
+	  }
+	  
+	  for (size_t i=0; i < selMuons.size(); i++)
+	  {
+	    hPhi_forEtaLeqm1p5_selMuons[genMatch->getIdx()]->Fill(selMuons[i]->phi());
+	  }
+	  
+	  for (size_t i=0; i < selJetsAK4.size(); i++)
+	  {
+	    hPhi_forEtaLeqm1p5_selAK4jets[genMatch->getIdx()]->Fill(selJetsAK4[i]->phi());
+	    if (i<2)
+	    {
+	      hPhi_forEtaLeqm1p5_selAK4_ptTop2[genMatch->getIdx()]->Fill(selJetsAK4[i]->phi());
+	    }
+	  }
+	}
+	
         if(! skipFilling)
         {
           selHistManager->evtYield_->fillHistograms(eventInfo, evtWeight);
