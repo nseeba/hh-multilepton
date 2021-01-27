@@ -928,7 +928,12 @@ int main(int argc, char* argv[])
   std::map<int, TH1*> hPhi_forEtaLeqm1p5_selAK4jets;
   std::map<int, TH1*> hPhi_forEtaLeqm1p5_selAK4_ptTop2;
   
+  std::map<int, TH1*> hPhi_forEtaLeqm1p5_selElectrons_perEvt;
+  std::map<int, TH1*> hPhi_forEtaLeqm1p5_selMuons_perEvt;
+  std::map<int, TH1*> hPhi_forEtaLeqm1p5_selAK4jets_perEvt;
+  std::map<int, TH1*> hPhi_forEtaLeqm1p5_selAK4_ptTop2_perEvt;
 
+  
   //TH1* histogram_analyzedEntries = fs.make<TH1D>("analyzedEntries", "analyzedEntries", 1, -0.5, +0.5);
   //std::map<std::string, std::map<int, TH1*>> hMEt_All_0;
 
@@ -1063,6 +1068,11 @@ int main(int argc, char* argv[])
 	hPhi_forEtaLeqm1p5_selMuons[idxLepton]      = subD1.make<TH1D>("hPhi_forEtaLeqm1p5_selMuons",      "hPhi_forEtaLeqm1p5_selMuons",       200, -1*TMath::Pi(),TMath::Pi());
 	hPhi_forEtaLeqm1p5_selAK4jets[idxLepton]    = subD1.make<TH1D>("hPhi_forEtaLeqm1p5_selAK4jets",    "hPhi_forEtaLeqm1p5_selAK4jets",     200, -1*TMath::Pi(),TMath::Pi());
 	hPhi_forEtaLeqm1p5_selAK4_ptTop2[idxLepton] = subD1.make<TH1D>("hPhi_forEtaLeqm1p5_selAK4_ptTop2", "hPhi_forEtaLeqm1p5_selAK4_ptTop2",  200, -1*TMath::Pi(),TMath::Pi());
+
+	hPhi_forEtaLeqm1p5_selElectrons_perEvt[idxLepton]  = subD1.make<TH1D>("hPhi_forEtaLeqm1p5_selElectrons_perEvt",  "hPhi_forEtaLeqm1p5_selElectrons_perEvt",   200, -1*TMath::Pi(),TMath::Pi());
+	hPhi_forEtaLeqm1p5_selMuons_perEvt[idxLepton]      = subD1.make<TH1D>("hPhi_forEtaLeqm1p5_selMuons_perEvt",      "hPhi_forEtaLeqm1p5_selMuons_perEvt",       200, -1*TMath::Pi(),TMath::Pi());
+	hPhi_forEtaLeqm1p5_selAK4jets_perEvt[idxLepton]    = subD1.make<TH1D>("hPhi_forEtaLeqm1p5_selAK4jets_perEvt",    "hPhi_forEtaLeqm1p5_selAK4jets_perEvt",     200, -1*TMath::Pi(),TMath::Pi());
+	hPhi_forEtaLeqm1p5_selAK4_ptTop2_perEvt[idxLepton] = subD1.make<TH1D>("hPhi_forEtaLeqm1p5_selAK4_ptTop2_perEvt", "hPhi_forEtaLeqm1p5_selAK4_ptTop2_perEvt",  200, -1*TMath::Pi(),TMath::Pi());
       }
       
     }
@@ -3677,25 +3687,68 @@ int main(int argc, char* argv[])
 
 	if(! skipFilling && 1==1)
 	{
+	  const double eta_HEMissue = -1.5;
 	  
+	  int nEle_HEM = 0;
 	  for (size_t i=0; i < selElectrons.size(); i++)
 	  {
-	    hPhi_forEtaLeqm1p5_selElectrons[genMatch->getIdx()]->Fill(selElectrons[i]->phi());
-	  }
-	  
-	  for (size_t i=0; i < selMuons.size(); i++)
-	  {
-	    hPhi_forEtaLeqm1p5_selMuons[genMatch->getIdx()]->Fill(selMuons[i]->phi());
-	  }
-	  
-	  for (size_t i=0; i < selJetsAK4.size(); i++)
-	  {
-	    hPhi_forEtaLeqm1p5_selAK4jets[genMatch->getIdx()]->Fill(selJetsAK4[i]->phi());
-	    if (i<2)
+	    if (selElectrons[i]->eta() < eta_HEMissue)
 	    {
-	      hPhi_forEtaLeqm1p5_selAK4_ptTop2[genMatch->getIdx()]->Fill(selJetsAK4[i]->phi());
+	      hPhi_forEtaLeqm1p5_selElectrons[genMatch->getIdx()]->Fill(selElectrons[i]->phi(), evtWeight);
+	      nEle_HEM++;
 	    }
 	  }
+	  for (size_t i=0; i < selElectrons.size(); i++)
+	  {
+	    if (selElectrons[i]->eta() < eta_HEMissue)
+	    {
+	      hPhi_forEtaLeqm1p5_selElectrons_perEvt[genMatch->getIdx()]->Fill(selElectrons[i]->phi(), evtWeight * 1./nEle_HEM);
+	    }
+	  }
+
+
+	  int nMu_HEM = 0;
+	  for (size_t i=0; i < selMuons.size(); i++)
+	  {
+	    if (selMuons[i]->eta() < eta_HEMissue)
+	    {
+	      hPhi_forEtaLeqm1p5_selMuons[genMatch->getIdx()]->Fill(selMuons[i]->phi(), evtWeight);
+	      nMu_HEM++;
+	    }
+	  }
+	  for (size_t i=0; i < selMuons.size(); i++)
+	  {
+	    if (selMuons[i]->eta() < eta_HEMissue)
+	    {
+	      hPhi_forEtaLeqm1p5_selMuons_perEvt[genMatch->getIdx()]->Fill(selMuons[i]->phi(), evtWeight * 1./nMu_HEM);
+	    }
+	  }
+
+
+	  int nAK4_HEM = 0;
+	  int nleadingTwoAK4_HEM = 0;
+	  for (size_t i=0; i < selJetsAK4.size(); i++)
+	  {
+	    if ( selJetsAK4[i]->eta() >= eta_HEMissue) continue;
+	    hPhi_forEtaLeqm1p5_selAK4jets[genMatch->getIdx()]->Fill(selJetsAK4[i]->phi(), evtWeight);
+	    nAK4_HEM++;
+	    if (i<2)
+	    {
+	      hPhi_forEtaLeqm1p5_selAK4_ptTop2[genMatch->getIdx()]->Fill(selJetsAK4[i]->phi(), evtWeight);
+	      nleadingTwoAK4_HEM++;
+	    }
+	  }
+	  for (size_t i=0; i < selJetsAK4.size(); i++)
+	  {
+	    if ( selJetsAK4[i]->eta() >= eta_HEMissue) continue;
+	    hPhi_forEtaLeqm1p5_selAK4jets_perEvt[genMatch->getIdx()]->Fill(selJetsAK4[i]->phi(), evtWeight * 1./nAK4_HEM);
+	    if (i<2)
+	    {
+	      hPhi_forEtaLeqm1p5_selAK4_ptTop2_perEvt[genMatch->getIdx()]->Fill(selJetsAK4[i]->phi(), evtWeight * 1./nleadingTwoAK4_HEM);
+	    }
+	  }
+
+	  
 	}
 	
         if(! skipFilling)
