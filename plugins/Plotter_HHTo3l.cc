@@ -16,7 +16,7 @@
 #include <boost/algorithm/string/classification.hpp>
 
 
-const int printLevel = 0;
+const int printLevel = 5;
 const bool scaleSignal_wrtData = true; // true: and scaleSignal_<0: scale signal histograms to have same height/area as data
 
 typedef std::vector<std::string> vstring;
@@ -24,6 +24,8 @@ typedef std::vector<std::string> vstring;
 std::string
 printfHistoIntegral(TH1 *h)
 {
+  if ( ! h) return "";
+  
   double n, en;
   n = h->IntegralAndError(1, h->GetNbinsX(), en);
   printf("  nEvents: %f +- %f",n,en);
@@ -263,9 +265,17 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     } else if ( process.find("Fakes") != std::string::npos || process.find("fakes") != std::string::npos ) {
       histogramFakes = histogramBackground;
       histogramFakes_density = histogramBackground_density;
-    } else if ( process.find("VH") != std::string::npos ) {
-      histogramVH = histogramBackground;
-      histogramVH_density = histogramBackground_density;
+    } else if ( process.find("VH") != std::string::npos || process.find("ZH") != std::string::npos || process.find("WH") != std::string::npos ) {
+      if (histogramVH ==0)
+      {
+	histogramVH = histogramBackground;
+	histogramVH_density = histogramBackground_density;
+      }
+      else
+      {
+	histogramVH->Add(histogramBackground);
+	histogramVH_density->Add(histogramBackground_density);
+      }
     } else if ( process.find("ZZ") != std::string::npos ) { // recent changes: ZZ is splitted into qqZZ and ggZZ
       if (histogramZZ == 0)
       {
@@ -1107,14 +1117,26 @@ void Plotter_HHTo3l::makePlot(double canvasSizeX, double canvasSizeY,
     int numBins_bottom = histogramRatio->GetNbinsX();
     for ( int iBin = 1; iBin <= numBins_bottom; ++iBin ) {
       double binContent = histogramRatio->GetBinContent(iBin);
-      if ( histogramData_blinded && histogramData_blinded->GetBinContent(iBin) >= 0. ) histogramRatio->SetBinContent(iBin, binContent - 1.0);
+      if ( histogramData_blinded && histogramData_blinded->GetBinContent(iBin) > 0. ) histogramRatio->SetBinContent(iBin, binContent - 1.0);
       else histogramRatio->SetBinContent(iBin, -10.);
+      /*if ( histogramData_blinded && histogramData_blinded->GetBinContent(iBin) >= 0. )
+      {
+	if(histogramData_blinded->GetBinContent(iBin) > 0.)  histogramRatio->SetBinContent(iBin, binContent - 1.0);
+	//if(histogramData_blinded->GetBinContent(iBin) == 0.) histogramRatio->SetBinContent(iBin, -1000.0); // DRAW IT OUTSIDE THE RANGE ALWAYS IF DATA = 0
+      }
+      else histogramRatio->SetBinContent(iBin, -10.); */ 
       //std::cout << " bin #" << iBin << " (x = " << histogramRatio->GetBinCenter(iBin) << "): ratio = " << histogramRatio->GetBinContent(iBin) << std::endl;
     }
     if (printLevel > 2)
       std::cout << "After histogramRatio: " << printfHistoIntegral(histogramRatio) << std::endl;
-
+    
     double histogramRatioMax = TMath::Max(histogramRatio->GetMaximum(),TMath::Abs(histogramRatio->GetMinimum()));
+    /*for ( int iBin = 1; iBin <= numBins_bottom; ++iBin ) {
+      if ( histogramData_blinded && histogramData_blinded->GetBinContent(iBin) == 0)
+      {
+	histogramRatio->SetBinContent(iBin, -1000.0); // DRAW IT OUTSIDE THE RANGE ALWAYS IF DATA = 0 
+      }
+      }*/
     if (histogramRatioMax > 2) histogramRatioMax = 2.0;
     histogramRatio->SetTitle("");
     histogramRatio->SetStats(false);
