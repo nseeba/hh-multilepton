@@ -649,7 +649,7 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
             prep_dcard_H.append("%s_hbb" % process)
           else:
             prep_dcard_other_nonfake_backgrounds.append(process)
-        self.prep_dcard_processesToCopy = [ "data_obs" ] + prep_dcard_HH + prep_dcard_H + prep_dcard_other_nonfake_backgrounds + [ "Convs", "data_fakes", "fakes_mc" ]
+        self.prep_dcard_processesToCopy = [ "data_obs" ] + prep_dcard_HH + prep_dcard_H + prep_dcard_other_nonfake_backgrounds + [ "Convs", "data_fakes", "data_flips", "fakes_mc", "flips_mc" ]
         key_hadd_stage2_job = getKey(get_lepton_selection_and_frWeight("Tight", "disabled"), "SS")
         key_prep_dcard_dir = getKey("prepareDatacards")
         prep_dcard_job_tuple = (self.channel, category, "SS", histogramToFit)
