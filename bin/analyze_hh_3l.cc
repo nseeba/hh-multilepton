@@ -80,6 +80,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/WeightHistManager.h" // WeightHistManager
 #include "tthAnalysis/HiggsToTauTau/interface/GenEvtHistManager.h" // GenEvtHistManager
 #include "tthAnalysis/HiggsToTauTau/interface/LHEInfoHistManager.h" // LHEInfoHistManager
+#include "tthAnalysis/HiggsToTauTau/interface/MVAInputVarCorrelationHistManager.h" // MVAInputVarCorrelationHistManager, getKeys()
 #include "tthAnalysis/HiggsToTauTau/interface/leptonTypes.h" // getLeptonType, kElectron, kMuon
 #include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // getBTagWeight_option, getHadTau_genPdgId, isHigherPt, isMatched
 #include "tthAnalysis/HiggsToTauTau/interface/leptonGenMatchingAuxFunctions.h" // getLeptonGenMatch_definitions_3lepton, getLeptonGenMatch_string, getLeptonGenMatch_int
@@ -882,6 +883,7 @@ int main(int argc, char* argv[])
     MEtFilterHistManager* metFilters_;
     EvtHistManager_hh_3l* evt_;
     DatacardHistManager_hh* datacard_;
+    MVAInputVarCorrelationHistManager* mvaInputVarCorrelation_;
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
@@ -1002,6 +1004,19 @@ int main(int argc, char* argv[])
         analysisConfig, eventInfo, HHWeight_calc, HHWeight_calc_LOtoNLO, 
         isDEBUG);
       selHistManager->datacard_->bookHistograms(fs);
+
+      if(! skipBooking)
+      {
+        selHistManager->mvaInputVarCorrelation_ = new MVAInputVarCorrelationHistManager(makeHistManager_cfg(process_and_genMatch,
+            Form("%s/sel/mvaInputVarCorrelation", histogramDir.data()), era_string, central_or_shift));
+        // CV: make correlation plot for MVA input variables used for non-resonant HH signal extraction,
+        //     as defined in hhAnalysis/multilepton/data/BDT_3l_0tau/3l_0tau_nonRes_default_evenTrainModel.xml
+        selHistManager->mvaInputVarCorrelation_->bookHistograms(fs, { 
+          "m3l", "diHiggsVisMass", "mSFOS2l_closestToZ",
+          "dr_LeptonIdx3_AK4jNear_Approach2", "dr_LeptonIdx3_2j_inclusive1j_Approach2", "dr_los_min",
+          "dr_los_max", "nSFOS_3l", "met_LD"
+        });
+      }
 
       if(! skipBooking)
       {
@@ -3674,6 +3689,17 @@ int main(int argc, char* argv[])
           //BDTOutput_Map_nonRes_base["Base"],
 	  isControlRegion ? mT_WZctrl_leptonW_MET : -1., // CV: BDTOutput for nonresonant_allBMs case not implemented yet !! Temporary solution
           evtWeight);
+
+        if(! skipFilling)
+        {
+          //static std::map<selHistManagerType*, bool> mvaInputVarCorrelation_isBooked; // key = selHistManager
+          //if ( !mvaInputVarCorrelation_isBooked[selHistManager] )
+          //{
+          //  selHistManager->mvaInputVarCorrelation_->bookHistograms(fs, getKeys(AllVars_Map));
+          //  mvaInputVarCorrelation_isBooked[selHistManager] = true;
+          //}
+          selHistManager->mvaInputVarCorrelation_->fillHistograms(AllVars_Map, evtWeight);
+        }
 
 	if(! skipFilling && 1==1)
 	{
