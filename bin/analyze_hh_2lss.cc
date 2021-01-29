@@ -1986,6 +1986,13 @@ int main(int argc, char* argv[])
     //BDTOutput_Map_nonRes_base = CreateBDTOutputMap(nonResBase_params, BDT_nonRes_base, BDTInputs_nonRes_base, eventInfo.event, true, "_base");
 
 
+    double lep1_conePt = comp_lep_conePt(*selLepton_lead);
+    double mT_lep1 = comp_MT_met(selLepton_lead, met.pt(), met.phi());
+    //
+    double lep2_conePt = comp_lep_conePt(*selLepton_sublead);
+    double mT_lep2 = comp_MT_met(selLepton_sublead, met.pt(), met.phi());
+    //
+    double max_lep_eta = TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
 
 
     
@@ -2041,8 +2048,23 @@ int main(int argc, char* argv[])
             ( tightElectrons.size() == 2 ) ? leptonPairMass_sel : -1.,
             ( tightMuons.size() == 2 ) ? leptonPairMass_sel : -1.,
             leptonPairCharge_sel,
+	    metP4.pt(),
+	    mhtP4.pt(),
+	    met_LD,
             HT,
             STMET,
+	    //
+	    lep1_conePt,
+	    std::min(10., mindr_lep1_jet),
+	    mT_lep1,
+	    //
+	    lep2_conePt,
+	    std::min(10., mindr_lep2_jet),
+	    mT_lep2,
+	    //
+	    dR_ll,
+	    max_lep_eta,	    
+	    //
             evtWeight);
         }	
 	selHistManager->datacard_->fillHistograms(

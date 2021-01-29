@@ -37,8 +37,23 @@ public:
 		 double electronPairMass,
 		 double muonPairMass,
 		 double leptonPairCharge,
+		 double met,
+		 double mht,
+		 double met_LD,
 		 double HT,
 		 double STMET,
+		 //
+		 double lep1_conePt,
+		 double mindr_lep1_jet,
+		 double mT_lep1,
+		 //
+		 double lep2_conePt,
+		 double mindr_lep2_jet,
+		 double mT_lep2,
+		 //
+		 double dR_ll,
+		 double max_lep_eta,
+		 //		 
                  double evtWeight);
 
   const TH1 *
@@ -56,9 +71,23 @@ public:
   TH1 * histogram_electronPairMass_;
   TH1 * histogram_muonPairMass_;
   TH1 * histogram_leptonPairCharge_;
+  TH1 * histogram_met_;
+  TH1 * histogram_mht_;
+  TH1 * histogram_met_LD_;
   TH1 * histogram_HT_;
   TH1 * histogram_STMET_;
   TH1 * histogram_EventCounter_;
+  //
+  TH1 * histogram_lep1_conePt_;
+  TH1 * histogram_mindr_lep1_jet_;
+  TH1 * histogram_mT_lep1_;
+  //
+  TH1 * histogram_lep2_conePt_;
+  TH1 * histogram_mindr_lep2_jet_;
+  TH1 * histogram_mT_lep2_;
+  //
+  TH1 * histogram_dR_ll_;
+  TH1 * histogram_max_lep_eta_;
 };
 
 #endif
