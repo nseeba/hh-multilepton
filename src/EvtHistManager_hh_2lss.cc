@@ -52,8 +52,8 @@ EvtHistManager_hh_2lss::bookHistograms(TFileDirectory & dir)
   histogram_dihiggsMass_wMet_ = book1D(dir, "dihiggsMass_wMet", "dihiggsMass_wMet", 150,  0., 1500.);
   histogram_jetMass_          = book1D(dir, "jetMass",          "jetMass",          150,  0., 1500.);
   histogram_leptonPairMass_   = book1D(dir, "leptonPairMass",   "leptonPairMass",   100,  0.,  200.);
-  histogram_electronPairMass_ = book1D(dir, "electronPairMass", "electronPairMass",  40,  0.,  200.);
-  histogram_muonPairMass_     = book1D(dir, "muonPairMass",     "muonPairMass",      40,  0.,  200.);
+  histogram_electronPairMass_ = book1D(dir, "electronPairMass", "electronPairMass", 100,  0.,  200.);
+  histogram_muonPairMass_     = book1D(dir, "muonPairMass",     "muonPairMass",     100,  0.,  200.);
   histogram_leptonPairCharge_ = book1D(dir, "leptonPairCharge", "leptonPairCharge",   5, -2.5,  +2.5);
   histogram_met_               = book1D(dir, "met",             "met",               200, 0,500);
   histogram_mht_               = book1D(dir, "mht",             "mht",               200, 0,500);
@@ -72,7 +72,7 @@ EvtHistManager_hh_2lss::bookHistograms(TFileDirectory & dir)
 
   histogram_dR_ll_            = book1D(dir, "dR_ll",            "dR_ll",            100, 0,   7);
   histogram_max_lep_eta_      = book1D(dir, "max_lep_eta",      "max_lep_eta",      100, 0, 2.5);
-
+ 
 }
 
 void

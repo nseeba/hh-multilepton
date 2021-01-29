@@ -1833,8 +1833,12 @@ int main(int argc, char* argv[])
 
 
 
-    
-    const bool failsZbosonMassVeto = isfailsZbosonMassVeto(preselLeptonsFull);
+    const bool failsZbosonMassVeto = isfailsZbosonMassVeto(preselLeptonsFull, false, isDEBUG) || (
+        selLepton_lead->is_electron() &&
+        selLepton_sublead->is_electron() &&
+        isfailsZbosonMassVeto({ selLepton_lead, selLepton_sublead }, true, isDEBUG)
+      )
+    ;    
     if ( failsZbosonMassVeto ) {
       if ( run_lumi_eventSelector ) {
 	std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
@@ -2061,8 +2065,8 @@ int main(int argc, char* argv[])
             dihiggsMass_wMet_sel,
             jetMass_sel,
             leptonPairMass_sel,
-            ( tightElectrons.size() == 2 ) ? leptonPairMass_sel : -1.,
-            ( tightMuons.size() == 2 ) ? leptonPairMass_sel : -1.,
+            ( selLepton_lead->is_electron() && selLepton_sublead->is_electron() ) ? leptonPairMass_sel : -1.,
+            ( selLepton_lead->is_muon()     && selLepton_sublead->is_muon()     ) ? leptonPairMass_sel : -1.,
             leptonPairCharge_sel,
 	    metP4.pt(),
 	    mhtP4.pt(),
