@@ -823,7 +823,7 @@ int main(int argc, char* argv[])
       int idxLepton = genMatchDefinition->getIdx();
 
       selHistManagerType* selHistManager = new selHistManagerType();
-      if(! skipBooking && 1==0)
+      if(! skipBooking)
       {
         selHistManager->electrons_ = new ElectronHistManager(makeHistManager_cfg(process_and_genMatch,
             Form("%s/sel/electrons", histogramDir.data()), era_string, central_or_shift, "allHistograms"));
@@ -2029,7 +2029,7 @@ int main(int argc, char* argv[])
       {
         selHistManagerType* selHistManager = selHistManagers[central_or_shift][genMatch->getIdx()];
         assert(selHistManager);
-        if(! skipFilling && 1==0)
+        if(! skipFilling)
         {
           selHistManager->electrons_->fillHistograms(selElectrons, evtWeight);
           if ( selElectrons.size() >= 1 ) {
