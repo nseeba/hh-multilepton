@@ -880,10 +880,10 @@ int main(int argc, char* argv[])
         selHistManager->mvaInputVarCorrelation_ = new MVAInputVarCorrelationHistManager(makeHistManager_cfg(process_and_genMatch,
             Form("%s/sel/mvaInputVarCorrelation", histogramDir.data()), era_string, central_or_shift));
         // CV: make correlation plot for MVA input variables used for non-resonant HH signal extraction,
-        //     as defined in hhAnalysis/multilepton/data/BDT_2lss/2lss_even_half_model_nonres_default.xml
+        //     as defined in hhAnalysis/multilepton/data/BDT_2lss/nonres_default_Sandeep_9vars_usingLepConePt/2lss_even_half_model_nonres_default.xml
         selHistManager->mvaInputVarCorrelation_->bookHistograms(fs, { 
-          "mht", "HT", "lep1_pt", 
-          "mindr_lep1_jet", "mT_lep1", "lep2_pt", 
+          "mht", "HT", "lep1_conePt", 
+          "mindr_lep1_jet", "mT_lep1", "lep2_conePt", 
           "mindr_lep2_jet", "mT_lep2", "dR_ll", 
           "max_lep_eta" 
         });
