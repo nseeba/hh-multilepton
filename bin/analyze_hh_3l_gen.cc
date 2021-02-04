@@ -4467,7 +4467,7 @@ int main(int argc, char* argv[])
 
       bool failsSignalRegionVeto = false;
       if ( isMCClosure_e || isMCClosure_m ) {
-        const bool applySignalRegionVeto = (isMCClosure_e && countElectrons(selLeptons) > 0) || (isMCClosure_m && countMuons(selLeptons) > 0);
+	bool applySignalRegionVeto = (isMCClosure_e && countFakeElectrons(selLeptons) >= 1) || (isMCClosure_m && countFakeMuons(selLeptons) >= 1);
 	if ( applySignalRegionVeto && tightLeptons.size() >= 3 ) failsSignalRegionVeto = true;
       } else if ( electronSelection == kFakeable || muonSelection == kFakeable ) {
 	if ( tightLeptons.size() >= 3 ) failsSignalRegionVeto = true;

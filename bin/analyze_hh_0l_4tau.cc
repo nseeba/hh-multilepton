@@ -1362,7 +1362,10 @@ int main(int argc, char* argv[])
     cutFlowHistManager->fillHistograms("MEt filters", evtWeightRecorder.get(central_or_shift_main));
 
     bool failsSignalRegionVeto = false;
-    if ( hadTauSelection == kFakeable || isMCClosure_t ) {
+    if ( isMCClosure_t ) {
+      bool applySignalRegionVeto_hadTau = isMCClosure_t && countFakeHadTaus(selHadTaus) >= 1;
+      if ( applySignalRegionVeto_hadTau && tightHadTaus.size() >= 4 ) failsSignalRegionVeto = true;
+    } else if ( hadTauSelection == kFakeable ) {
       if ( tightHadTaus.size() >= 4 ) failsSignalRegionVeto = true;
     }
     if ( failsSignalRegionVeto ) {
