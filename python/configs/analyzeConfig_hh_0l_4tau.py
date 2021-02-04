@@ -384,6 +384,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
                   'useNonNominal'            : self.use_nonnominal,
                   'fillGenEvtHistograms'     : True,
                   'selectBDT'                : self.isBDTtraining,
+                  'gen_mHH'                  : self.gen_mHH,
                 }
                 self.createCfg_analyze(self.jobOptions_analyze[key_analyze_job], sample_info, hadTau_selection)
 

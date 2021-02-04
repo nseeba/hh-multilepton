@@ -139,7 +139,7 @@ process.analyze_hh_3l = cms.PSet(
 
 
     # 20201201: 9 variable BDT, used for pre-pre-approval 
-    gen_mHH = cms.vdouble(250,260,270,280,300, 320,350,400,450,500,550,600,650,700,750,800,850,900,1000), ## Set the signal mass range used in the BDT .pkl/.xml/.pb files
+    gen_mHH = cms.vdouble(), ## Set the signal mass range used in the BDT .pkl/.xml/.pb files
     ## -------- USE THIS FOR TMVAInterface (after changing it in the .cc file) -----------------##
     mvaInfo_res = cms.PSet( 
         BDT_xml_FileName_spin0_even = cms.string('hhAnalysis/multilepton/data/BDT_3l_0tau/3l_0tau_spin0_oddTrainModel.xml'),

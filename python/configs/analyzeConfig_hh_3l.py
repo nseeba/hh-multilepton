@@ -437,6 +437,7 @@ class analyzeConfig_hh_3l(analyzeConfig_hh):
                   'useNonNominal'            : self.use_nonnominal,
                   'fillGenEvtHistograms'     : True,
                   'isControlRegion'          : self.isControlRegion,
+                  'gen_mHH'                  : self.gen_mHH,
                 }
                 self.createCfg_analyze(self.jobOptions_analyze[key_analyze_job], sample_info, lepton_selection)
 

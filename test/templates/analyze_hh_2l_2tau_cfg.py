@@ -136,7 +136,7 @@ process.analyze_hh_2l_2tau = cms.PSet(
     selectBDT = cms.bool(False), ## Set it to true for making BDT training Ntuples
     dropZmassveto = cms.bool(False), ## Set it to True to drop the Z mass veto cut
 
-    gen_mHH = cms.vdouble(250,260,270,280,300,350,400,450,500,550,600,650,700,750,800,850,900,1000), ## Set the signal mass range used in the BDT .pkl/.xml/.pb files
+    gen_mHH = cms.vdouble(), ## Set the signal mass range used in the BDT .pkl/.xml/.pb files
     ## -------- USE THIS FOR TMVAInterface (after changing it in the .cc file) -----------------##
     mvaInfo_res = cms.PSet(
         BDT_xml_FileName_even_spin2 = cms.string('hhAnalysis/multilepton/data/BDT_2l_2tau/2l_2tau_spin2_oddTrainModel.xml'), ## "BDT .xml -> Odd train:Even test" to be used for even evt no.

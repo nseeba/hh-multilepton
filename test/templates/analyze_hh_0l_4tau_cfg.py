@@ -116,7 +116,7 @@ process.analyze_hh_0l_4tau = cms.PSet(
 
     selectBDT = cms.bool(False), ## Set it to true for making BDT training Ntuples
 
-    gen_mHH = cms.vdouble(250,260,270,280,300,350,400,450,500,550,600,650,700,750,800,850,900,1000), ## Set the signal mass range used in the BDT .pkl/.xml/.pb files
+    gen_mHH = cms.vdouble(), ## Set the signal mass range used in the BDT .pkl/.xml/.pb files
     mvaInfo_res = cms.PSet(
         BDT_xml_FileName_even_spin2 = cms.string('hhAnalysis/multilepton/data/0l_4tau_odd_half_model_spin2.xml'), ## "BDT .xml -> Odd train:Even test" to be used for even evt no.
         BDT_xml_FileName_odd_spin2 = cms.string('hhAnalysis/multilepton/data/0l_4tau_even_half_model_spin2.xml'), ## "BDT .xml -> Even train:Odd test" to be used for odd evt no.
