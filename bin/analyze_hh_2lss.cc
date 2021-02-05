@@ -1953,6 +1953,16 @@ int main(int argc, char* argv[])
     }
 
 
+
+    double lep1_conePt = comp_lep_conePt(*selLepton_lead);
+    double mT_lep1     = std::min(150., comp_MT_met(selLepton_lead, met.pt(), met.phi()));
+    //
+    double lep2_conePt = comp_lep_conePt(*selLepton_sublead);
+    double mT_lep2     = std::min(150., comp_MT_met(selLepton_sublead, met.pt(), met.phi()));
+    //
+    double max_lep_eta = TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
+    
+    
     //Gathering final BDT Inputs
 
     AllVars_Map["gen_mHH"]                                   =       250.; // setting a Dummy value which will be reset depending on mass hypothesis
@@ -1972,12 +1982,12 @@ int main(int argc, char* argv[])
     AllVars_Map["lep1_conePt"] =                     comp_lep_conePt(*selLepton_lead);
     AllVars_Map["lep1_eta"] =                        selLepton_lead->eta();
     AllVars_Map["mindr_lep1_jet"] =                  std::min(10., mindr_lep1_jet) ;
-    AllVars_Map["mT_lep1"] =                         comp_MT_met(selLepton_lead, met.pt(), met.phi());
+    AllVars_Map["mT_lep1"] =                         mT_lep1;
     AllVars_Map["lep2_pt"] =                         selLepton_sublead->pt();
     AllVars_Map["lep2_conePt"] =                     comp_lep_conePt(*selLepton_sublead);
     AllVars_Map["lep2_eta"] =                        selLepton_sublead->eta();
     AllVars_Map["mindr_lep2_jet"] =                  std::min(10., mindr_lep2_jet) ;
-    AllVars_Map["mT_lep2"] =                         comp_MT_met(selLepton_sublead, met.pt(), met.phi());
+    AllVars_Map["mT_lep2"] =                         mT_lep2;
     AllVars_Map["dR_ll"] =                           dR_ll;
     AllVars_Map["pT_ll"] =                           pT_ll;
     AllVars_Map["max_lep_eta"] =                     TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
@@ -2006,13 +2016,6 @@ int main(int argc, char* argv[])
     //BDTOutput_Map_nonRes_base = CreateBDTOutputMap(nonResBase_params, BDT_nonRes_base, BDTInputs_nonRes_base, eventInfo.event, true, "_base");
 
 
-    double lep1_conePt = comp_lep_conePt(*selLepton_lead);
-    double mT_lep1 = comp_MT_met(selLepton_lead, met.pt(), met.phi());
-    //
-    double lep2_conePt = comp_lep_conePt(*selLepton_sublead);
-    double mT_lep2 = comp_MT_met(selLepton_sublead, met.pt(), met.phi());
-    //
-    double max_lep_eta = TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
 
 
     
@@ -2183,12 +2186,12 @@ int main(int argc, char* argv[])
         ("lep1_conePt",                    comp_lep_conePt(*selLepton_lead))
 	("lep1_eta",                       selLepton_lead->eta())
 	("mindr_lep1_jet",                 std::min(10., mindr_lep1_jet) )
-        ("mT_lep1",                        comp_MT_met(selLepton_lead, met.pt(), met.phi()))
+        ("mT_lep1",                        mT_lep1)
 	("lep2_pt",                        selLepton_sublead->pt())
         ("lep2_conePt",                    comp_lep_conePt(*selLepton_sublead))
 	("lep2_eta",                       selLepton_sublead->eta())
 	("mindr_lep2_jet",                 std::min(10., mindr_lep2_jet) )
-        ("mT_lep2",                        comp_MT_met(selLepton_sublead, met.pt(), met.phi()))
+        ("mT_lep2",                        mT_lep2)
 	("dR_ll",                          dR_ll)
 	("pT_ll",                          pT_ll)
 	("max_lep_eta",                    TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta())))
