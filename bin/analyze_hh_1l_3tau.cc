@@ -1670,8 +1670,8 @@ int main(int argc, char* argv[])
 
     bool failsSignalRegionVeto = false;
     if ( isMCClosure_e || isMCClosure_m || isMCClosure_t ) {
-      const bool applySignalRegionVeto_lepton = (isMCClosure_e && countElectrons(selLeptons) > 0) || (isMCClosure_m && countMuons(selLeptons) > 0);
-      const bool & applySignalRegionVeto_hadTau = isMCClosure_t;
+      bool applySignalRegionVeto_lepton = (isMCClosure_e && countFakeElectrons(selLeptons) >= 1) || (isMCClosure_m && countFakeMuons(selLeptons) >= 1);
+      bool applySignalRegionVeto_hadTau = isMCClosure_t && countFakeHadTaus(selHadTaus) >= 1;
       if ( applySignalRegionVeto_lepton && tightLeptons.size() >= 1 ) failsSignalRegionVeto = true;
       if ( applySignalRegionVeto_hadTau && tightHadTaus.size() >= 3 ) failsSignalRegionVeto = true;
     } else if ( electronSelection == kFakeable || muonSelection == kFakeable || hadTauSelection == kFakeable ) {

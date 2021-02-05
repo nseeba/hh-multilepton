@@ -881,13 +881,13 @@ int main(int argc, char* argv[])
       if(! skipBooking)
       {
         // CV: make correlation plot for MVA input variables used for non-resonant HH signal extraction,
-        //     as defined in hhAnalysis/multilepton/data/BDT_2lss/2lss_even_half_model_nonres_default.xml
+        //     as defined in hhAnalysis/multilepton/data/BDT_2lss/nonres_default_Sandeep_9vars_usingLepConePt/2lss_even_half_model_nonres_default.xml
         std::vector<std::string> mvaInputVariables = { 
-          "mht", "HT", "lep1_pt", 
-          "mindr_lep1_jet", "mT_lep1", "lep2_pt", 
+          "mht", "HT", "lep1_conePt", 
+          "mindr_lep1_jet", "mT_lep1", "lep2_conePt", 
           "mindr_lep2_jet", "mT_lep2", "dR_ll", 
           "max_lep_eta" 
-        };        
+        };
         selHistManager->mvaInputVarCorrelation_ = new MVAInputVarCorrelationHistManager(makeHistManager_cfg(process_and_genMatch,
             Form("%s/sel/mvaInputVarCorrelation", histogramDir.data()), era_string, central_or_shift));
         selHistManager->mvaInputVarCorrelation_->bookHistograms(fs, mvaInputVariables);
@@ -1900,7 +1900,7 @@ int main(int argc, char* argv[])
 
     bool failsSignalRegionVeto = false;
     if ( isMCClosure_e || isMCClosure_m ) {
-      const bool applySignalRegionVeto_lepton = (isMCClosure_e && countElectrons(selLeptons) > 0) || (isMCClosure_m && countMuons(selLeptons) > 0);
+      bool applySignalRegionVeto_lepton = (isMCClosure_e && countFakeElectrons(selLeptons) >= 1) || (isMCClosure_m && countFakeMuons(selLeptons) >= 1); // Revet to the old MCClosure condition
       if ( applySignalRegionVeto_lepton && tightLeptons.size() >= 2 ) failsSignalRegionVeto = true;
     } else if ( electronSelection == kFakeable || muonSelection == kFakeable ) {
       if ( tightLeptons.size() >= 2 ) failsSignalRegionVeto = true;
