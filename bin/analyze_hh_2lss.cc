@@ -803,6 +803,9 @@ int main(int argc, char* argv[])
     EvtHistManager_hh_2lss* evt_;
     DatacardHistManager_hh* datacard_;
     MVAInputVarCorrelationHistManager* mvaInputVarCorrelation_;
+    //MVAInputVarCorrelationHistManager* mvaInputVarCorrelation_ee_;
+    //MVAInputVarCorrelationHistManager* mvaInputVarCorrelation_em_;
+    //MVAInputVarCorrelationHistManager* mvaInputVarCorrelation_mm_;
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
   };
@@ -877,16 +880,26 @@ int main(int argc, char* argv[])
 
       if(! skipBooking)
       {
-        selHistManager->mvaInputVarCorrelation_ = new MVAInputVarCorrelationHistManager(makeHistManager_cfg(process_and_genMatch,
-            Form("%s/sel/mvaInputVarCorrelation", histogramDir.data()), era_string, central_or_shift));
         // CV: make correlation plot for MVA input variables used for non-resonant HH signal extraction,
         //     as defined in hhAnalysis/multilepton/data/BDT_2lss/2lss_even_half_model_nonres_default.xml
-        selHistManager->mvaInputVarCorrelation_->bookHistograms(fs, { 
+        std::vector<std::string> mvaInputVariables = { 
           "mht", "HT", "lep1_pt", 
           "mindr_lep1_jet", "mT_lep1", "lep2_pt", 
           "mindr_lep2_jet", "mT_lep2", "dR_ll", 
           "max_lep_eta" 
-        });
+        };        
+        selHistManager->mvaInputVarCorrelation_ = new MVAInputVarCorrelationHistManager(makeHistManager_cfg(process_and_genMatch,
+            Form("%s/sel/mvaInputVarCorrelation", histogramDir.data()), era_string, central_or_shift));
+        selHistManager->mvaInputVarCorrelation_->bookHistograms(fs, mvaInputVariables);
+        //selHistManager->mvaInputVarCorrelation_ee_ = new MVAInputVarCorrelationHistManager(makeHistManager_cfg(process_and_genMatch,
+        //    Form("%s/sel/mvaInputVarCorrelation_ee", histogramDir.data()), era_string, central_or_shift));
+        //selHistManager->mvaInputVarCorrelation_ee_->bookHistograms(fs, mvaInputVariables);
+        //selHistManager->mvaInputVarCorrelation_em_ = new MVAInputVarCorrelationHistManager(makeHistManager_cfg(process_and_genMatch,
+        //    Form("%s/sel/mvaInputVarCorrelation_em", histogramDir.data()), era_string, central_or_shift));
+        //selHistManager->mvaInputVarCorrelation_em_->bookHistograms(fs, mvaInputVariables);
+        //selHistManager->mvaInputVarCorrelation_mm_ = new MVAInputVarCorrelationHistManager(makeHistManager_cfg(process_and_genMatch,
+        //    Form("%s/sel/mvaInputVarCorrelation_mm", histogramDir.data()), era_string, central_or_shift));
+        //selHistManager->mvaInputVarCorrelation_mm_->bookHistograms(fs, mvaInputVariables);
       }
 
       if(! skipBooking)
@@ -1264,6 +1277,8 @@ int main(int argc, char* argv[])
     const std::vector<const RecoJet*> cleanedJets = jetCleaningByIndex ?
       jetCleanerByIndex(jet_ptrs, selectBDT ? selLeptons_full : fakeableLeptonsFull, fakeableHadTaus) :
       jetCleaner       (jet_ptrs, selectBDT ? selLeptons_full : fakeableLeptonsFull, fakeableHadTaus)
+      //jetCleanerByIndex(jet_ptrs, selectBDT ? selLeptons : fakeableLeptons, std::vector<const RecoHadTau*>({})) :
+      //jetCleaner       (jet_ptrs, selectBDT ? selLeptons : fakeableLeptons, std::vector<const RecoHadTau*>({}))
     ;
     const std::vector<const RecoJet*> selJets = jetSelector(cleanedJets, isHigherPt);
     const std::vector<const RecoJet*> selBJets_loose = jetSelectorBtagLoose(cleanedJets, isHigherPt);
@@ -1400,6 +1415,7 @@ int main(int argc, char* argv[])
     const RecoMEt met = metReader->read();
     const Particle::LorentzVector& metP4 = met.p4();
     Particle::LorentzVector mhtP4 = compMHT(fakeableLeptonsFull, fakeableHadTaus, selJets);
+    //Particle::LorentzVector mhtP4 = compMHT(fakeableLeptons, {}, selJets);
     double met_LD = compMEt_LD(metP4, mhtP4);
 
     /*
@@ -1427,7 +1443,9 @@ int main(int argc, char* argv[])
       }
       }*/
 
+    //double HT = compHT(fakeableLeptonsFull, fakeableHadTaus, selJets);
     double HT = compHT(fakeableLeptons, {}, selJets);
+    //double STMET = compSTMEt(fakeableLeptonsFull, fakeableHadTaus, selJets);
     double STMET = compSTMEt(fakeableLeptons, {}, selJets, met.p4());
 
 //--- apply final event selection
@@ -1960,24 +1978,24 @@ int main(int argc, char* argv[])
     AllVars_Map["dihiggsVisMass_sel"] =              dihiggsVisMass_sel;
     AllVars_Map["dihiggsMass_wMet_sel"] =            dihiggsMass_wMet_sel;
     AllVars_Map["jetMass_sel"] =                     jetMass_sel;
-    AllVars_Map["leptonPairMass_sel"] =              leptonPairMass_sel;
+    AllVars_Map["leptonPairMass_sel"] =              std::min(250., leptonPairMass_sel);
     AllVars_Map["leptonPairCharge_sel"] =            leptonPairCharge_sel;
-    AllVars_Map["met"] =                             metP4.pt();
-    AllVars_Map["mht"] =                             mhtP4.pt();
-    AllVars_Map["met_LD"] =                          met_LD;
-    AllVars_Map["HT"] =                              HT;
-    AllVars_Map["STMET"] =                           STMET;
+    AllVars_Map["met"] =                             std::min(250., metP4.pt());
+    AllVars_Map["mht"] =                             std::min(250., mhtP4.pt());
+    AllVars_Map["met_LD"] =                          std::min(250., met_LD);
+    AllVars_Map["HT"] =                              std::min(1000., HT);
+    AllVars_Map["STMET"] =                           std::min(1000., STMET);
     AllVars_Map["evtWeight"] =                       evtWeightRecorder.get(central_or_shift_main);
-    AllVars_Map["lep1_pt"] =                         selLepton_lead->pt();
-    AllVars_Map["lep1_conePt"] =                     comp_lep_conePt(*selLepton_lead);
+    AllVars_Map["lep1_pt"] =                         std::min(120., selLepton_lead->pt());
+    AllVars_Map["lep1_conePt"] =                     std::min(120., comp_lep_conePt(*selLepton_lead));
     AllVars_Map["lep1_eta"] =                        selLepton_lead->eta();
     AllVars_Map["mindr_lep1_jet"] =                  std::min(10., mindr_lep1_jet) ;
-    AllVars_Map["mT_lep1"] =                         comp_MT_met(selLepton_lead, met.pt(), met.phi());
-    AllVars_Map["lep2_pt"] =                         selLepton_sublead->pt();
-    AllVars_Map["lep2_conePt"] =                     comp_lep_conePt(*selLepton_sublead);
+    AllVars_Map["mT_lep1"] =                         std::min(150., comp_MT_met(selLepton_lead, met.pt(), met.phi()));
+    AllVars_Map["lep2_pt"] =                         std::min(120., selLepton_sublead->pt());
+    AllVars_Map["lep2_conePt"] =                     std::min(120., comp_lep_conePt(*selLepton_sublead));
     AllVars_Map["lep2_eta"] =                        selLepton_sublead->eta();
     AllVars_Map["mindr_lep2_jet"] =                  std::min(10., mindr_lep2_jet) ;
-    AllVars_Map["mT_lep2"] =                         comp_MT_met(selLepton_sublead, met.pt(), met.phi());
+    AllVars_Map["mT_lep2"] =                         std::min(150., comp_MT_met(selLepton_sublead, met.pt(), met.phi()));
     AllVars_Map["dR_ll"] =                           dR_ll;
     AllVars_Map["pT_ll"] =                           pT_ll;
     AllVars_Map["max_lep_eta"] =                     TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
@@ -2077,10 +2095,14 @@ int main(int argc, char* argv[])
 	    lep1_conePt,
 	    std::min(10., mindr_lep1_jet),
 	    mT_lep1,
+            deltaPhi(selLepton_lead->phi(), metP4.phi()),
+            deltaPhi(selLepton_lead->phi(), mhtP4.phi()),
 	    //
 	    lep2_conePt,
 	    std::min(10., mindr_lep2_jet),
 	    mT_lep2,
+            deltaPhi(selLepton_sublead->phi(), metP4.phi()),
+            deltaPhi(selLepton_sublead->phi(), mhtP4.phi()),
 	    //
 	    dR_ll,
 	    max_lep_eta,	    
@@ -2104,6 +2126,18 @@ int main(int argc, char* argv[])
           //  mvaInputVarCorrelation_isBooked[selHistManager] = true;
           //}
           selHistManager->mvaInputVarCorrelation_->fillHistograms(AllVars_Map, evtWeight);
+          //if ( selLepton_lead->is_electron() && selLepton_sublead->is_electron() )
+          //{
+          //  selHistManager->mvaInputVarCorrelation_ee_->fillHistograms(AllVars_Map, evtWeight);
+          //}
+          //if ( (selLepton_lead->is_electron() && selLepton_sublead->is_muon()) || (selLepton_lead->is_muon() && selLepton_sublead->is_electron()) )
+          //{
+          //  selHistManager->mvaInputVarCorrelation_em_->fillHistograms(AllVars_Map, evtWeight);
+          //}
+          //if ( selLepton_lead->is_muon() && selLepton_sublead->is_muon() )
+          //{
+          //  selHistManager->mvaInputVarCorrelation_mm_->fillHistograms(AllVars_Map, evtWeight);
+          //}
         }
 
         if(! skipFilling)
