@@ -251,7 +251,7 @@ int main(int argc, char* argv[])
   std::string process_string = cfg_analyze.getParameter<std::string>("process");
   bool isMC_ttH = process_string == "TTH";
   bool isMC_tH = process_string == "TH";
-  bool isMC_EWK = process_string == "WZ" || process_string == "ZZ";
+  bool isMC_EWK = process_string == "WZ" || process_string == "ZZ" || process_string == "ggZZ" || process_string == "qqZZ";
   bool isSignal = boost::starts_with(process_string, "signal_") && process_string.find("_hh_") != std::string::npos;
   bool isHH_rwgt_allowed = boost::starts_with(process_string, "signal_ggf_nonresonant_") && process_string.find("cHHH") == std::string::npos;
 
