@@ -238,9 +238,10 @@ int main(int argc, char* argv[])
   std::string treeName = cfg_analyze.getParameter<std::string>("treeName");
 
   std::string process_string = cfg_analyze.getParameter<std::string>("process");
-  bool isMC_ttH = process_string == "TTH";
-  bool isMC_tH = process_string == "TH";
-  bool isMC_EWK = process_string == "WZ" || process_string == "ZZ";
+  bool isMC_ttH = analysisConfig.isMC_ttH();
+  bool isMC_tH = analysisConfig.isMC_tH();
+  bool isMC_EWK = analysisConfig.isMC_EWK();
+  //bool isSignal = boost::starts_with(process_string, "signal_") && process_string.find("_hh_") != std::string::npos;
 
   std::string histogramDir = cfg_analyze.getParameter<std::string>("histogramDir");
   bool isMCClosure_e = histogramDir.find("mcClosure_e") != std::string::npos;
