@@ -92,6 +92,7 @@ process.analyze_hh_3l = cms.PSet(
     cfgMEtFilter = cms.PSet(),
     triggerWhiteList = cms.PSet(),
     apply_hadTauFakeRateSF = cms.bool(False),
+    apply_genPhotonFilter = cms.string("disabled"),
 
     fillGenEvtHistograms = cms.bool(False),
     cfgEvtYieldHistManager = cms.PSet(),

@@ -86,6 +86,7 @@ process.analyze_hh_4l = cms.PSet(
     invert_ZbosonMassVeto = cms.bool(False),
     cfgMEtFilter = cms.PSet(),
     triggerWhiteList = cms.PSet(),
+    apply_genPhotonFilter = cms.string("disabled"),
 
     fillGenEvtHistograms = cms.bool(False),
     cfgEvtYieldHistManager = cms.PSet(),
