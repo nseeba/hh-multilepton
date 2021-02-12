@@ -107,6 +107,14 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None,
     if apply_genPhotonFilter:
       if sample_info["sample_category"] == "XGamma":
         sample_info["genPhotonFilter"] = True # require events to have a prompt gen photon with pT > 20 GeV
+        if sample_name.startswith(('/TGJets', '/TTGJets')):
+          sample_info["sample_category"] = "TT"
+        elif sample_name.startswith('/WGTo'):
+          sample_info["sample_category"] = "W"
+        elif sample_name.startswith('/ZGTo'):
+          sample_info["sample_category"] = "DY"
+        else:
+          raise RuntimeError("Cannot be an XGamma sample: %s" % sample_name)
       elif sample_info["sample_category"] in [ "DY", "TT", "W" ]:
         sample_info["genPhotonFilter"] = False # require events to have no prompt gen photons with pT > 20 GeV
 
