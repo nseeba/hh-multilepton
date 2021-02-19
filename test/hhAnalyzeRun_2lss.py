@@ -14,8 +14,8 @@ import getpass
 # E.g.: ./test/hhAnalyzeRun_2lss.py -v 2017Dec13 -m default -e 2017
 
 mode_choices     = [ 'default', 'forBDTtraining' ]
-sys_choices      = [ 'full', 'internal' ] + systematics.an_opts_hh_multilepton
-systematics.full = systematics.an_hh_multilepton
+sys_choices      = [ 'full', 'internal' ] + systematics.an_opts_hh_multilepton_wAK8
+systematics.full = systematics.an_hh_multilepton_wAK8
 systematics.internal = systematics.an_internal_no_mem
 
 parser = tthAnalyzeParser()
