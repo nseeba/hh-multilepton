@@ -1054,7 +1054,7 @@ int main(int argc, char* argv[])
       selHistManagers[central_or_shift][idxLepton] = selHistManager;
 
       
-      if (central_or_shift == central_or_shift_main) {
+      if (central_or_shift == central_or_shift_main && 0==1) {
 	//TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_string.data()));
 	TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_and_genMatch.data()));
 	/*
@@ -3365,29 +3365,24 @@ int main(int argc, char* argv[])
     //BDTOutput_Map_nonRes_base = CreateBDTOutputMap(nonResBase_params, BDT_nonRes_base, BDTInputs_nonRes_base, eventInfo.event, true, "_base");
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /*
+    std::cout << "BDT spin0: " << "\n";
+    for (auto const &bdt: BDTOutput_Map_spin0)
+    {
+      std::cout << "\t " << bdt.first << ": " << bdt.second << "\n";
+    }
+    std::cout << "BDT spin2: " << "\n";
+    for (auto const &bdt: BDTOutput_Map_spin2)
+    {
+      std::cout << "\t " << bdt.first << ": " << bdt.second << "\n";
+    }
     
+    std::cout << "BDT nonres: " << "\n";
+    for (auto const &bdt: BDTOutput_Map_nonRes)
+    {
+      std::cout << "\t " << bdt.first << ": " << bdt.second << "\n";
+    }
+    */    
 
 
 
@@ -3450,7 +3445,7 @@ int main(int argc, char* argv[])
 	//std::cout << "genMatch Idx: " << genMatch->getIdx() << ", name: " << genMatch->getName() << std::endl;
         selHistManagerType* selHistManager = selHistManagers[central_or_shift][genMatch->getIdx()];
         assert(selHistManager);
-        if(! skipFilling && 1==1)
+        if(! skipFilling )
         {
           selHistManager->electrons_->fillHistograms(selElectrons, evtWeight);
           selHistManager->muons_->fillHistograms(selMuons, evtWeight);
@@ -3465,7 +3460,7 @@ int main(int argc, char* argv[])
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
 	}
-	if(! skipFilling)
+	if(! skipFilling )
         {
           selHistManager->evt_->fillHistograms(
 	    selElectrons.size(),
@@ -3734,7 +3729,7 @@ int main(int argc, char* argv[])
           selHistManager->mvaInputVarCorrelation_->fillHistograms(AllVars_Map, evtWeight);
         }
 
-	if(! skipFilling && 1==1)
+	if(! skipFilling && 0==1)
 	{
 	  const double eta_HEMissue = -1.5;
 	  
