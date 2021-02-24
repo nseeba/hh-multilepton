@@ -843,7 +843,7 @@ int main(int argc, char* argv[])
 		    std::string autoRebin_histo_name = Form("rebinned_%s", histo_name.data());
 		    histo_to_fit->SetName(autoRebin_histo_name.c_str());
 		  }else if(! explicitBinning.empty() && ! apply_automatic_rebinning){
-		    TArrayD histogramExplicitBinning = getTArraDfromVector(explicitBinning);
+		    TArrayD histogramExplicitBinning = getTArrayDfromVector(explicitBinning);
 		    histo_to_fit = getRebinnedHistogram1d(histogramLeptonFakes, 4, histogramExplicitBinning);
 		    std::string rebinned_histo_name = Form("rebinned_%s", histo_name.data());
 		    histo_to_fit->SetName(rebinned_histo_name.c_str());
