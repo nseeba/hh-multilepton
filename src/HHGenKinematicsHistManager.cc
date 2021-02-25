@@ -26,14 +26,21 @@ HHGenKinematicsHistManager::HHGenKinematicsHistManager(const edm::ParameterSet &
 void
 HHGenKinematicsHistManager::bookHistograms(TFileDirectory & dir)
 {
-  histogram_gen_mHH_             = book1D(dir, "gen_mHH",             "gen_mHH",             60, 0., 1200.);
+  int numBins_gen_mHH = 36;
+  double binning_gen_mHH[] = {
+     250,  270,  290,  310,  330,  350,  370, 390,  410,  430, 
+     450,  470,  490,  510,  530,  550,  570, 590,  610,  630, 
+     650,  670,  700,  750,  800,  850,  900, 950, 1000, 1100, 
+    1200, 1300, 1400, 1500, 1750, 2000, 5000
+  };
+  histogram_gen_mHH_             = book1D(dir, "gen_mHH",             "gen_mHH",             numBins_gen_mHH, binning_gen_mHH);
   histogram_gen_absCosThetaStar_ = book1D(dir, "gen_absCosThetaStar", "gen_absCosThetaStar", 10, 0.,   +1.);  
 }
 
 void
 HHGenKinematicsHistManager::fillHistograms(double evtWeight)
 {
-  if ( analysisConfig_.isMC_HH_nonresonant() && (apply_HH_rwgt_ || apply_HH_rwgt_LOtoNLO_) )
+  if ( analysisConfig_.isMC_HH_nonresonant() )
   {
     const double evtWeightErr = 0.;
     double HHReweight = 1.;
@@ -46,7 +53,7 @@ HHGenKinematicsHistManager::fillHistograms(double evtWeight)
     if ( apply_HH_rwgt_LOtoNLO_ )
     {
       assert(HHWeight_calc_LOtoNLO_);
-      HHReweight *= HHWeight_calc_LOtoNLO_->getReWeight("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
+      HHReweight *= HHWeight_calc_LOtoNLO_->getReWeight_V2("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
     }
 
     fillWithOverFlow(histogram_gen_mHH_, eventInfo_.gen_mHH, HHReweight*evtWeight, HHReweight*evtWeightErr);
