@@ -912,7 +912,7 @@ EvtHistManager_hh_3l::EvtHistManager_hh_3l(const edm::ParameterSet & cfg, bool i
   };
   const std::vector<std::string> sysOpts_all = {
     //"mvaOutput_xgb_hh_3l_SUMBk_HH",
-    "EventCounter",
+    //"EventCounter",
     // WZctrl
     "mT_WZctrl_leptonW_MET",
   };

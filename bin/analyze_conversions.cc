@@ -108,7 +108,7 @@
 
 #include "tthAnalysis/HiggsToTauTau/interface/RecoJetCollectionSelectorAK8.h" // RecoJetSelectorAK8
 #include "hhAnalysis/multilepton/interface/RecoJetCollectionSelectorAK8_hh_Wjj.h" // RecoJetSelectorAK8_hh_Wjj
-#include "hhAnalysis/multilepton/interface/EvtHistManager_hh_3l.h" // EvtHistManager_hh_3l
+#include "hhAnalysis/multilepton/interface/EvtHistManager_conversions.h" // EvtHistManager_conversions
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h" // EventInfo
 #include "tthAnalysis/HiggsToTauTau/interface/EventInfoReader.h" // EventInfoReader
 #include "hhAnalysis/multilepton/interface/EvtWeightRecorderHH.h" // EvtWeightRecorderHH
@@ -263,20 +263,20 @@ int main(int argc, char* argv[])
     return EXIT_FAILURE;
   }
 
-  std::cout << "<analyze_hh_3l>:" << std::endl;
+  std::cout << "<analyze_conversions>:" << std::endl;
 
 //--- keep track of time it takes the macro to execute
   TBenchmark clock;
-  clock.Start("analyze_hh_3l");
+  clock.Start("analyze_conversions");
 
 //--- read python configuration parameters
   if ( !edm::readPSetsFrom(argv[1])->existsAs<edm::ParameterSet>("process") )
-    throw cms::Exception("analyze_hh_3l")
+    throw cms::Exception("analyze_conversions")
       << "No ParameterSet 'process' found in configuration file = " << argv[1] << " !!\n";
 
   edm::ParameterSet cfg = edm::readPSetsFrom(argv[1])->getParameter<edm::ParameterSet>("process");
 
-  edm::ParameterSet cfg_analyze = cfg.getParameter<edm::ParameterSet>("analyze_hh_3l");
+  edm::ParameterSet cfg_analyze = cfg.getParameter<edm::ParameterSet>("analyze_conversions");
   AnalysisConfig_hh analysisConfig("HH->multilepton", cfg_analyze);
 
   std::string treeName = cfg_analyze.getParameter<std::string>("treeName");
@@ -294,8 +294,8 @@ int main(int argc, char* argv[])
 
   std::string era_string = cfg_analyze.getParameter<std::string>("era");
   const Era era = get_era(era_string);
-  const bool isControlRegion = cfg_analyze.getParameter<bool>("isControlRegion");
-  std::cout << "isControlRegion: " << isControlRegion << "\n";
+  const bool isControlRegion = true; //cfg_analyze.getParameter<bool>("isControlRegion");
+  std::cout << "isControlRegion: " << isControlRegion << ". \t isControlRegion is set manually to true to run with WZ CR mode. \t **** IMPORTANT ****\n";
 
   // single lepton triggers
   vstring triggerNames_1e = cfg_analyze.getParameter<vstring>("triggers_1e");
@@ -368,7 +368,7 @@ int main(int argc, char* argv[])
   int leptonChargeSelection = -1;
   if      ( leptonChargeSelection_string == "OS" ) leptonChargeSelection = kOS;
   else if ( leptonChargeSelection_string == "SS" ) leptonChargeSelection = kSS;
-  else throw cms::Exception("analyze_hh_3l")
+  else throw cms::Exception("analyze_conversions")
     << "Invalid Configuration parameter 'leptonChargeSelection' = " << leptonChargeSelection_string << " !!\n";
 
   
@@ -421,7 +421,7 @@ int main(int argc, char* argv[])
     eventWeightManager = new EvtWeightManager(additionalEvtWeight);
     eventWeightManager->set_central_or_shift(central_or_shift_main);
   }
-  std::cout << "analyze_hh_3l:: Siddh here4" << std::endl;
+  std::cout << "analyze_conversions:: Siddh here4" << std::endl;
   
   bool isDEBUG = cfg_analyze.getParameter<bool>("isDEBUG");
   if ( isDEBUG ) std::cout << "Warning: DEBUG mode enabled -> trigger selection will not be applied for data !!" << std::endl;
@@ -439,7 +439,7 @@ int main(int argc, char* argv[])
        " -> jetPt_option    = " << jetPt_option          << "\n"
        "--> fatJetPt_option = " << fatJetPt_option       << '\n'
   ;
-  std::cout << "analyze_hh_3l:: Siddh here5" << std::endl;
+  std::cout << "analyze_conversions:: Siddh here5" << std::endl;
   
   edm::ParameterSet cfg_dataToMCcorrectionInterface;
   cfg_dataToMCcorrectionInterface.addParameter<std::string>("era", era_string);
@@ -454,30 +454,30 @@ int main(int argc, char* argv[])
     case Era::k2016: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2016(cfg_dataToMCcorrectionInterface); break;
     case Era::k2017: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2017(cfg_dataToMCcorrectionInterface); break;
     case Era::k2018: dataToMCcorrectionInterface = new Data_to_MC_CorrectionInterface_2018(cfg_dataToMCcorrectionInterface); break;
-    default: throw cmsException("analyze_hh_3l", __LINE__) << "Invalid era = " << static_cast<int>(era);
+    default: throw cmsException("analyze_conversions", __LINE__) << "Invalid era = " << static_cast<int>(era);
   }
-  std::cout << "analyze_hh_3l:: Siddh here6" << std::endl;
+  std::cout << "analyze_conversions:: Siddh here6" << std::endl;
   std::string applyFakeRateWeights_string = cfg_analyze.getParameter<std::string>("applyFakeRateWeights");
   int applyFakeRateWeights = -1;
   if      ( applyFakeRateWeights_string == "disabled" ) applyFakeRateWeights = kFR_disabled;
   else if ( applyFakeRateWeights_string == "3lepton"  ) applyFakeRateWeights = kFR_3lepton;
-  else throw cms::Exception("analyze_hh_3l")
+  else throw cms::Exception("analyze_conversions")
     << "Invalid Configuration parameter 'applyFakeRateWeights' = " << applyFakeRateWeights_string << " !!\n";
-  std::cout << "analyze_hh_3l:: Siddh here7  applyFakeRateWeights_string:" << applyFakeRateWeights_string  << ", applyFakeRateWeights: " << applyFakeRateWeights << ", kFR_3lepton: " << kFR_3lepton  << std::endl;
+  std::cout << "analyze_conversions:: Siddh here7  applyFakeRateWeights_string:" << applyFakeRateWeights_string  << ", applyFakeRateWeights: " << applyFakeRateWeights << ", kFR_3lepton: " << kFR_3lepton  << std::endl;
   
   LeptonFakeRateInterface* leptonFakeRateInterface = 0;
   if ( applyFakeRateWeights == kFR_3lepton) {
     edm::ParameterSet cfg_leptonFakeRateWeight = cfg_analyze.getParameter<edm::ParameterSet>("leptonFakeRateWeight");
-    std::cout << "analyze_hh_3l:: Siddh here7_1 " << std::endl;
+    std::cout << "analyze_conversions:: Siddh here7_1 " << std::endl;
     cfg_leptonFakeRateWeight.addParameter<std::string>("era", era_string);
 
-    std::cout << "analyze_hh_3l:: Siddh here7_2 " << std::endl;
+    std::cout << "analyze_conversions:: Siddh here7_2 " << std::endl;
 
     cfg_leptonFakeRateWeight.addParameter<std::vector<std::string>>("central_or_shifts", central_or_shifts_local);
 
     leptonFakeRateInterface = new LeptonFakeRateInterface(cfg_leptonFakeRateWeight);
   }
-  std::cout << "analyze_hh_3l:: Siddh here8" << std::endl;
+  std::cout << "analyze_conversions:: Siddh here8" << std::endl;
   
   bool fillGenEvtHistograms = cfg_analyze.getParameter<bool>("fillGenEvtHistograms");
   edm::ParameterSet cfg_EvtYieldHistManager = cfg_analyze.getParameter<edm::ParameterSet>("cfgEvtYieldHistManager");
@@ -631,8 +631,8 @@ int main(int argc, char* argv[])
   inputTree -> registerReader(muonReader);
   RecoMuonCollectionGenMatcher muonGenMatcher;
   RecoMuonCollectionSelectorLoose preselMuonSelector(era, -1, isDEBUG);
-  //RecoMuonCollectionSelectorFakeable fakeableMuonSelector(era, -1, isDEBUG);
-  RecoMuonCollectionSelectorFakeable_hh_multilepton fakeableMuonSelector(era, -1, isDEBUG);
+  RecoMuonCollectionSelectorFakeable fakeableMuonSelector_default(era, -1, isDEBUG);
+  RecoMuonCollectionSelectorFakeable_hh_multilepton fakeableMuonSelector_hh_multilepton(era, -1, isDEBUG);
   RecoMuonCollectionSelectorTight tightMuonSelector(era, -1, isDEBUG);
   muonReader->set_mvaTTH_wp(lep_mva_cut_mu);
 
@@ -641,11 +641,24 @@ int main(int argc, char* argv[])
   RecoElectronCollectionGenMatcher electronGenMatcher;
   RecoElectronCollectionCleaner electronCleaner(0.3, isDEBUG);
   RecoElectronCollectionSelectorLoose preselElectronSelector(era, -1, isDEBUG);
-  //RecoElectronCollectionSelectorFakeable fakeableElectronSelector(era, -1, isDEBUG);
-  RecoElectronCollectionSelectorFakeable_hh_multilepton fakeableElectronSelector(era, -1, isDEBUG);
+  RecoElectronCollectionSelectorFakeable fakeableElectronSelector_default(era, -1, isDEBUG);
+  RecoElectronCollectionSelectorFakeable_hh_multilepton fakeableElectronSelector_hh_multilepton(era, -1, isDEBUG);
   RecoElectronCollectionSelectorTight tightElectronSelector(era, -1, isDEBUG);
   electronReader->set_mvaTTH_wp(lep_mva_cut_e);
- 
+
+  Int_t min_nLostHits_fornLostHitsInversion = 1;
+  preselElectronSelector.invert_max_nLostHits(min_nLostHits_fornLostHitsInversion);
+  
+  fakeableElectronSelector_default.invert_conversionVeto();
+  fakeableElectronSelector_default.invert_max_nLostHits(min_nLostHits_fornLostHitsInversion);
+  
+  fakeableElectronSelector_hh_multilepton.invert_conversionVeto();
+  fakeableElectronSelector_hh_multilepton.invert_max_nLostHits(min_nLostHits_fornLostHitsInversion);
+  
+  tightElectronSelector.invert_conversionVeto();
+  tightElectronSelector.invert_max_nLostHits(min_nLostHits_fornLostHitsInversion);
+  std::cout << "Disable conversionVeto and nLostHits " << min_nLostHits_fornLostHitsInversion << " ***** \n";
+  
   RecoHadTauReader* hadTauReader = new RecoHadTauReader(era, branchName_hadTaus, isMC, readGenObjects);
   hadTauReader->setHadTauPt_central_or_shift(hadTauPt_option);
   inputTree -> registerReader(hadTauReader);
@@ -846,9 +859,9 @@ int main(int argc, char* argv[])
   /////////////////////
 
   /*
-  //std::string mvaFileName_hh_3l_SUMBk_HH_pkl = "hhAnalysis/multilepton/data/3l_0tau_HH_XGB_noTopness_evtLevelSUM_HH_res_26Var.pkl"; 
-  std::string mvaFileName_hh_3l_SUMBk_HH_xml = "hhAnalysis/multilepton/data/3l_0tau_HH_XGB_noTopness_evtLevelSUM_HH_res_26Var.xml";
-  std::vector<std::string> mvaInputs_hh_3l_SUMBk_HH = {
+  //std::string mvaFileName_conversions_SUMBk_HH_pkl = "hhAnalysis/multilepton/data/3l_0tau_HH_XGB_noTopness_evtLevelSUM_HH_res_26Var.pkl"; 
+  std::string mvaFileName_conversions_SUMBk_HH_xml = "hhAnalysis/multilepton/data/3l_0tau_HH_XGB_noTopness_evtLevelSUM_HH_res_26Var.xml";
+  std::vector<std::string> mvaInputs_conversions_SUMBk_HH = {
     "lep1_conePt", "lep1_eta", "mindr_lep1_jet", "mT_lep1",
     "lep2_conePt", "lep2_eta", "mindr_lep2_jet", "mT_lep2",
     "lep3_conePt", "lep3_eta", "mindr_lep3_jet", "mT_lep3",
@@ -856,9 +869,9 @@ int main(int argc, char* argv[])
     "met_LD", "m_jj", "diHiggsMass", "mTMetLepton1", "mTMetLepton2",
     "nJet", "nElectron", "sumLeptonCharge", "numSameFlavor_OS"
   };
-  //XGBInterface mva_xgb_hh_3l_SUMBk_HH(mvaFileName_hh_3l_SUMBk_HH_pkl, mvaInputs_hh_3l_SUMBk_HH);
-  TMVAInterface *mva_tmva_hh_3l_SUMBk_HH = new TMVAInterface(mvaFileName_hh_3l_SUMBk_HH_xml, mvaInputs_hh_3l_SUMBk_HH);
-  mva_tmva_hh_3l_SUMBk_HH->enableBDTTransform();
+  //XGBInterface mva_xgb_conversions_SUMBk_HH(mvaFileName_conversions_SUMBk_HH_pkl, mvaInputs_conversions_SUMBk_HH);
+  TMVAInterface *mva_tmva_conversions_SUMBk_HH = new TMVAInterface(mvaFileName_conversions_SUMBk_HH_xml, mvaInputs_conversions_SUMBk_HH);
+  mva_tmva_conversions_SUMBk_HH->enableBDTTransform();
 
   //bool selectBDT = ( cfg_analyze.exists("selectBDT") ) ? cfg_analyze.getParameter<bool>("selectBDT") : false;
   */
@@ -870,8 +883,8 @@ int main(int argc, char* argv[])
 
   vstring categories_evt = {
     //"hh_WjjBoosted", "hh_WjjResolved", "hh_WjjHasOnly1j",
-    ////"hh_3lneg", "hh_3lpos",
-    ////"hh_3l_nonVBF", "hh_3l_VBF"
+    ////"conversionsneg", "conversionspos",
+    ////"conversions_nonVBF", "conversions_VBF"
     //"hh_3e", "hh_3mu", "hh_2e1mu", "hh_1e2mu",
   };
 
@@ -893,7 +906,7 @@ int main(int argc, char* argv[])
     JetHistManager* BJetsAK4_medium_;
     MEtHistManager* met_;
     MEtFilterHistManager* metFilters_;
-    EvtHistManager_hh_3l* evt_;
+    EvtHistManager_conversions* evt_;
     DatacardHistManager_hh* datacard_;
     MVAInputVarCorrelationHistManager* mvaInputVarCorrelation_;
     EvtYieldHistManager* evtYield_;
@@ -1011,7 +1024,7 @@ int main(int argc, char* argv[])
       }
       if(! skipBooking || isControlRegion)
       {
-        selHistManager->evt_ = new EvtHistManager_hh_3l(makeHistManager_cfg(process_and_genMatch,
+        selHistManager->evt_ = new EvtHistManager_conversions(makeHistManager_cfg(process_and_genMatch,
 	  Form("%s/sel/evt", histogramDir.data()), era_string, central_or_shift), isControlRegion);
         selHistManager->evt_->bookHistograms(fs);
       }
@@ -1265,7 +1278,8 @@ int main(int argc, char* argv[])
     "sel lepton charge",
     ">= 1 jets from W->jj",
     "m(ll) > 12 GeV",
-    "Z-boson mass veto",
+    "Z-boson (->mu+ mu-) mass",
+    "1 electron",
     "H->ZZ*->4l veto",
     "met LD",
     "MEt filters",
@@ -1277,7 +1291,7 @@ int main(int argc, char* argv[])
   CutFlowTableHistManager * cutFlowHistManager = new CutFlowTableHistManager(cutFlowTableCfg, cuts);
   cutFlowHistManager->bookHistograms(fs);
 
-  std::cout << "analyze_hh_3l:: Started execution of event level loop:" << std::endl;
+  std::cout << "analyze_conversions:: Started execution of event level loop:" << std::endl;
   while(inputTree -> hasNextEvent() && (! run_lumi_eventSelector || (run_lumi_eventSelector && ! run_lumi_eventSelector -> areWeDone())))
   {
     if(inputTree -> canReport(reportEvery) || printLevel > 1)
@@ -1503,10 +1517,12 @@ int main(int argc, char* argv[])
 	 (selTrigger_2e    && !apply_offline_e_trigger_cuts_2e)    ||
 	 (selTrigger_1mu   && !apply_offline_e_trigger_cuts_1mu)   ||
 	 (selTrigger_1e    && !apply_offline_e_trigger_cuts_1e)    ) {
-      fakeableElectronSelector.disable_offline_e_trigger_cuts();
+      fakeableElectronSelector_default.disable_offline_e_trigger_cuts();
+      fakeableElectronSelector_hh_multilepton.disable_offline_e_trigger_cuts();
       tightElectronSelector.disable_offline_e_trigger_cuts();
     } else {
-      fakeableElectronSelector.enable_offline_e_trigger_cuts();
+      fakeableElectronSelector_default.enable_offline_e_trigger_cuts();
+      fakeableElectronSelector_hh_multilepton.enable_offline_e_trigger_cuts();
       tightElectronSelector.enable_offline_e_trigger_cuts();
     }
     
@@ -1516,7 +1532,10 @@ int main(int argc, char* argv[])
     const std::vector<const RecoMuon*> muon_ptrs = convert_to_ptrs(muons);
     const std::vector<const RecoMuon*> cleanedMuons = muon_ptrs; // CV: no cleaning needed for muons, as they have the highest priority in the overlap removal
     const std::vector<const RecoMuon*> preselMuons = preselMuonSelector(cleanedMuons, isHigherConePt);
-    const std::vector<const RecoMuon*> fakeableMuons = fakeableMuonSelector(preselMuons, isHigherConePt);
+    const std::vector<const RecoMuon*> fakeableMuons = lep_mva_wp == "hh_multilepton" ?
+      fakeableMuonSelector_hh_multilepton(preselMuons, isHigherConePt) :
+      fakeableMuonSelector_default(preselMuons, isHigherConePt)
+      ;
     const std::vector<const RecoMuon*> tightMuons = tightMuonSelector(fakeableMuons, isHigherConePt);
     if(isDEBUG || run_lumi_eventSelector)
     {
@@ -1530,7 +1549,10 @@ int main(int argc, char* argv[])
     const std::vector<const RecoElectron*> cleanedElectrons = electronCleaner(electron_ptrs, preselMuons);
     const std::vector<const RecoElectron*> preselElectrons = preselElectronSelector(cleanedElectrons, isHigherConePt);
     const std::vector<const RecoElectron*> preselElectronsUncleaned = preselElectronSelector(electron_ptrs, isHigherConePt);
-    const std::vector<const RecoElectron*> fakeableElectrons = fakeableElectronSelector(preselElectrons, isHigherConePt);
+    const std::vector<const RecoElectron*> fakeableElectrons = lep_mva_wp == "hh_multilepton" ?
+      fakeableElectronSelector_hh_multilepton(preselElectrons, isHigherConePt) :
+      fakeableElectronSelector_default(preselElectrons, isHigherConePt)
+      ;
     const std::vector<const RecoElectron*> tightElectrons = tightElectronSelector(fakeableElectrons, isHigherConePt);
     if(isDEBUG || run_lumi_eventSelector)
     {
@@ -2174,8 +2196,8 @@ int main(int argc, char* argv[])
     int genMatchIdx_0 = 2; // 0: fakes, 1: Convs, 2: non-fakes
     
     if (genMatches.size() != 1) {
-      std::cout << "analyze_hh_3l: GenMatches in an event: " << genMatches.size() << "\t\t\t ERROR: Code is not ready for it ****" << std::endl;
-      throw cmsException("analyze_hh_3l", __LINE__) << " GenMatches in an event: " << genMatches.size() << "\t\t\t ERROR: Code is not ready for it **** \n";
+      std::cout << "analyze_conversions: GenMatches in an event: " << genMatches.size() << "\t\t\t ERROR: Code is not ready for it ****" << std::endl;
+      throw cmsException("analyze_conversions", __LINE__) << " GenMatches in an event: " << genMatches.size() << "\t\t\t ERROR: Code is not ready for it **** \n";
     }
     
     for (const GenMatchEntry* genMatch : genMatches) {
@@ -2218,31 +2240,35 @@ int main(int argc, char* argv[])
     
     
     bool isSameFlavor_OS = false;
+    bool isZTo2Mu = false;
     double massSameFlavor_OS = -1.;
     int  numSameFlavor_OS_Full = 0;
-    for ( std::vector<const RecoLepton*>::const_iterator lepton1 = preselLeptonsFull.begin();
-    lepton1 != preselLeptonsFull.end(); ++lepton1 ) {
+    for ( std::vector<const RecoLepton*>::const_iterator lepton1 = selLeptons.begin(); // selLeptons <<<<<<<<<<<<<
+    lepton1 != selLeptons.end(); ++lepton1 ) {
       for ( std::vector<const RecoLepton*>::const_iterator lepton2 = lepton1 + 1;
-      lepton2 != preselLeptonsFull.end(); ++lepton2 ) {
+      lepton2 != selLeptons.end(); ++lepton2 ) {
         if ( (*lepton1)->pdgId() == -(*lepton2)->pdgId() ) { // pair of same flavor leptons of opposite charge
           isSameFlavor_OS = true;
 	  numSameFlavor_OS_Full++;
           double mass = ((*lepton1)->p4() + (*lepton2)->p4()).mass();
 	  //hm_SFOS2lpresel_0[genMatchIdx_0]->Fill(mass, evtWeightRecorder.get(central_or_shift_main));
-          if ( std::fabs(mass - z_mass) < std::fabs(massSameFlavor_OS - z_mass) ) massSameFlavor_OS = mass;
+          if ( std::fabs(mass - z_mass) < std::fabs(massSameFlavor_OS - z_mass) ) {
+	    massSameFlavor_OS = mass;
+	    isZTo2Mu = (*lepton1)->is_muon() && (*lepton2)->is_muon();
+	  }
         }
       }
     }
 
-    bool failsZbosonMassVeto = isSameFlavor_OS && std::fabs(massSameFlavor_OS - z_mass) < z_window;
+    bool failsZbosonMassVeto = isSameFlavor_OS && std::fabs(massSameFlavor_OS - z_mass) < z_window && isZTo2Mu; // <<<<<<<<<<
     if ( failsZbosonMassVeto != isControlRegion ) { // WZ Control region 
       if ( run_lumi_eventSelector ) {
 	std::cout << "event " << eventInfo.str() << " FAILS Z-boson veto." << std::endl;
       }
       continue;
     }
-    cutFlowTable.update("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
-    cutFlowHistManager->fillHistograms("Z-boson mass veto", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowTable.update("Z-boson (->mu+ mu-) mass", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms("Z-boson (->mu+ mu-) mass", evtWeightRecorder.get(central_or_shift_main));
 
     /*
     for ( std::vector<const RecoLepton*>::const_iterator lepton1 = preselLeptonsFull.begin();
@@ -2257,6 +2283,15 @@ int main(int argc, char* argv[])
       }*/
 
 
+    if (selElectrons.size() != 1) { // select mu+ mu- e events
+      if ( run_lumi_eventSelector ) {
+	std::cout << "event " << eventInfo.str() << " FAILS 1 electron." << std::endl;
+      }
+      continue;
+    }
+    cutFlowTable.update("1 electron", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms("1 electron", evtWeightRecorder.get(central_or_shift_main));
+    
     
 
     // Check: isfailsHtoZZVeto
@@ -2336,7 +2371,7 @@ int main(int argc, char* argv[])
 
 
 
-    const bool isSameFlavor_OS_FO = isSFOS(fakeableLeptons);
+    //const bool isSameFlavor_OS_FO = isSFOS(fakeableLeptons);
     /*
     hMEt_All_0[genMatchIdx_0]->Fill(met.pt(),      evtWeightRecorder.get(central_or_shift_main));
     hHt_All_0[genMatchIdx_0]->Fill(mht_p4.pt(),    evtWeightRecorder.get(central_or_shift_main));
@@ -2350,15 +2385,18 @@ int main(int argc, char* argv[])
       hHT_SFOS_0[genMatchIdx_0]->Fill(HT,          evtWeightRecorder.get(central_or_shift_main));
       hSTMET_SFOS_0[genMatchIdx_0]->Fill(STMET,    evtWeightRecorder.get(central_or_shift_main));
       }*/
-    
+
+    /*
     double met_LD_cut = 0.;
     if      ( selJetsAK4.size() >= 4 ) met_LD_cut = -1.; // MET LD cut not applied
     else if ( isSameFlavor_OS_FO     ) met_LD_cut = 45.;
-    else                               met_LD_cut = 30.;
-    if ( met_LD_cut > 0 && met_LD < met_LD_cut ) {
+    else                               met_LD_cut = 30.; */
+    //if ( met_LD_cut > 0 && met_LD < met_LD_cut ) {
+    if ( met_LD > 45. ) {
       if ( run_lumi_eventSelector ) {
-    std::cout << "event " << eventInfo.str() << " FAILS MET LD selection." << std::endl;
-	std::cout << " (met_LD = " << met_LD << ", met_LD_cut = " << met_LD_cut << ")" << std::endl;
+	std::cout << "event " << eventInfo.str() << " FAILS MET LD selection." << std::endl;
+	//std::cout << " (met_LD = " << met_LD << ", met_LD_cut = " << met_LD_cut << ")" << std::endl;
+	std::cout << " (met_LD = " << met_LD << ", met_LD_cut = " << 45 << ")" << std::endl;
       }
       continue;
     }
@@ -2490,7 +2528,7 @@ int main(int argc, char* argv[])
     for (int iLepton1 = 0; iLepton1 < 3; iLepton1++) {
       if (selLeptons[iLepton1]->charge() == sumLeptonCharge_3l) {
         double mT = comp_MT_met(selLeptons[iLepton1], met.pt(), met.phi());
-	if (mT < 0.) std::cout << "analyze_hh_3l:: mT (MET+Lepton) < 0 \t\t *** ERROR ***" << std::endl;
+	if (mT < 0.) std::cout << "analyze_conversions:: mT (MET+Lepton) < 0 \t\t *** ERROR ***" << std::endl;
 	if (mTMetLepton1_chargeEqualSumCharge3l < 0.) 			 mTMetLepton1_chargeEqualSumCharge3l = mT;
 	else if (mTMetLepton2_chargeEqualSumCharge3l < 0.)  mTMetLepton2_chargeEqualSumCharge3l = mT;
       }
@@ -2552,8 +2590,8 @@ int main(int argc, char* argv[])
 	dr_los_max = dr1;
       }	
     } else {
-      std::cout << "analyze_hh_3l: Error in calculating dr_os " << std::endl;
-      throw cmsException("analyze_hh_3l", __LINE__) << "Error in calculating dr_os \n";
+      std::cout << "analyze_conversions: Error in calculating dr_os " << std::endl;
+      throw cmsException("analyze_conversions", __LINE__) << "Error in calculating dr_os \n";
     }
 
     double jet1_pt       = selJet1_Wjj ? selJet1_Wjj->pt() : 0.;
@@ -2630,7 +2668,7 @@ int main(int argc, char* argv[])
       
       if (bTag < bTag_Null)
       {
-	throw cms::Exception("analyze_hh_3l")
+	throw cms::Exception("analyze_conversions")
 	  << "jet bTag " <<  bTag << " < bTag_Null (" << bTag_Null << ") **** correct it !!\n";
       }
     }
@@ -2877,8 +2915,8 @@ int main(int argc, char* argv[])
     // Complain if there is a mistake in picking leptons in Approach 2
     if ((selLepton2_H_WW_ll_Approach2->p4() + selLepton1_H_WW_ll_Approach2->p4()).mass() >
 	(selLepton2_H_WW_ll_Approach2->p4() + selLepton_H_WW_ljj_Approach2->p4()).mass() ) { // mistake in picking leptons in Approach 2
-      std::cout << "analyze_hh_3l: mistake in picking leptons in Approach 2" << std::endl;
-      throw cmsException("analyze_hh_3l", __LINE__) << "Error in calculating dr_os n";
+      std::cout << "analyze_conversions: mistake in picking leptons in Approach 2" << std::endl;
+      throw cmsException("analyze_conversions", __LINE__) << "Error in calculating dr_os n";
     }
     
     double mT_LeptonIdx1_Met_Approach2 = comp_MT_met(selLepton1_H_WW_ll_Approach2, met.pt(), met.phi());
@@ -3215,6 +3253,9 @@ int main(int argc, char* argv[])
     // WZ control region ---------------------------
     double mT_WZctrl_leptonW_MET = -1.;
 
+    int   nLostHits_selElectron = -1;
+    int   passesConversionVeto_selElectron = -1;
+
     double jetMass_sel_WZctrl_2lss = -1.;
     double leptonPairMass_sel_WZctrl_2lss = -1.;
     double mindr_lep1_jet_WZctrl_2lss = -1.;
@@ -3266,6 +3307,19 @@ int main(int argc, char* argv[])
 
       mT_WZctrl_leptonW_MET = comp_MT_met(selLepton_W, met.pt(), met.phi());
 
+      std::vector<const RecoLepton*> selElectrons_tmp = {selLepton_W};
+      std::vector<const RecoElectron*> selElectron_0 = getIntersection(preselElectrons, selElectrons_tmp, isHigherConePt);
+      //printCollection("selLeptons", selLeptons);
+      //printCollection("selElectron_0", selElectron_0);
+      if (selElectron_0.size() > 0)
+      {
+	nLostHits_selElectron            = selElectron_0[0]->nLostHits();
+	passesConversionVeto_selElectron = selElectron_0[0]->passesConversionVeto();
+	//printf("selElectron (%zu): nLostHits %i, passesConversionVeto %i \n",selElectron_0.size(),nLostHits_selElectron,passesConversionVeto_selElectron);
+      }
+            
+      
+      
       // hh_2lss BDT variables
       const RecoLepton* selLepton1_SS = nullptr;
       const RecoLepton* selLepton2_SS = nullptr;
@@ -3351,7 +3405,7 @@ int main(int argc, char* argv[])
 
 
     
-
+    
     std::map<std::string, double> BDTInputs_spin2 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin2, false);
     std::map<std::string, double> BDTInputs_spin0 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin0, false);
     std::map<std::string, double> BDTInputs_nonRes = InitializeInputVarMap(AllVars_Map, BDTInputVariables_nonRes, true); // Include all Input Var.s except BM indices
@@ -3364,7 +3418,7 @@ int main(int argc, char* argv[])
     BDTOutput_Map_spin0 = CreateBDTOutputMap(gen_mHH, BDT_spin0, BDTInputs_spin0, eventInfo.event, false, "_spin0");
     BDTOutput_Map_nonRes = CreateBDTOutputMap(nonRes_BMs, BDT_nonRes, BDTInputs_nonRes, eventInfo.event, true, "");
     //BDTOutput_Map_nonRes_base = CreateBDTOutputMap(nonResBase_params, BDT_nonRes_base, BDTInputs_nonRes_base, eventInfo.event, true, "_base");
-
+    
 
     /*
     std::cout << "BDT spin0: " << "\n";
@@ -3389,7 +3443,7 @@ int main(int argc, char* argv[])
 
     
     /*
-    const std::map<std::string, double>  mvaInputVariables_hh_3l_SUMBk_HH = {
+    const std::map<std::string, double>  mvaInputVariables_conversions_SUMBk_HH = {
       {"lep1_conePt",         lep1_conePt},
       {"lep1_eta",            selLepton_lead -> eta()},
       {"mindr_lep1_jet",      TMath::Min(10., mindr_lep1_jet)},
@@ -3417,19 +3471,19 @@ int main(int argc, char* argv[])
       {"sumLeptonCharge",     sumLeptonCharge_3l},
       {"numSameFlavor_OS",    numSameFlavor_OS}
     };
-    //const double mvaOutput_xgb_hh_3l_SUMBk_HH_1 = 100; //mva_xgb_hh_3l_SUMBk_HH(mvaInputVariables_hh_3l_SUMBk_HH);
-    const double mvaOutput_tmva_hh_3l_SUMBk_HH = (*mva_tmva_hh_3l_SUMBk_HH)(mvaInputVariables_hh_3l_SUMBk_HH);
-    const double mvaOutput_xgb_hh_3l_SUMBk_HH = mvaOutput_tmva_hh_3l_SUMBk_HH; // #### IMPORTANT ************
+    //const double mvaOutput_xgb_conversions_SUMBk_HH_1 = 100; //mva_xgb_conversions_SUMBk_HH(mvaInputVariables_conversions_SUMBk_HH);
+    const double mvaOutput_tmva_conversions_SUMBk_HH = (*mva_tmva_conversions_SUMBk_HH)(mvaInputVariables_conversions_SUMBk_HH);
+    const double mvaOutput_xgb_conversions_SUMBk_HH = mvaOutput_tmva_conversions_SUMBk_HH; // #### IMPORTANT ************
     */
     
     /*
-    printf("mvaInputVariables_hh_3l_SUMBk_HH:: \n");
-    for (std::map<std::string, double>::const_iterator it=mvaInputVariables_hh_3l_SUMBk_HH.begin(); it != mvaInputVariables_hh_3l_SUMBk_HH.end(); it++) {
+    printf("mvaInputVariables_conversions_SUMBk_HH:: \n");
+    for (std::map<std::string, double>::const_iterator it=mvaInputVariables_conversions_SUMBk_HH.begin(); it != mvaInputVariables_conversions_SUMBk_HH.end(); it++) {
       std::cout << "\t" << it->first << " \t\t  " << it->second << std::endl;      
     }
-    std::cout << "mvaOutput_xgb_hh_3l_SUMBk_HH_1 " << mvaOutput_xgb_hh_3l_SUMBk_HH_1 << std::endl;
-    std::cout << "mvaOutput_tmva_hh_3l_SUMBk_HH " << mvaOutput_tmva_hh_3l_SUMBk_HH << std::endl;
-    std::cout << "mvaOutput_xgb_hh_3l_SUMBk_HH " << mvaOutput_xgb_hh_3l_SUMBk_HH << std::endl;
+    std::cout << "mvaOutput_xgb_conversions_SUMBk_HH_1 " << mvaOutput_xgb_conversions_SUMBk_HH_1 << std::endl;
+    std::cout << "mvaOutput_tmva_conversions_SUMBk_HH " << mvaOutput_tmva_conversions_SUMBk_HH << std::endl;
+    std::cout << "mvaOutput_xgb_conversions_SUMBk_HH " << mvaOutput_xgb_conversions_SUMBk_HH << std::endl;
     */
     
 //--- retrieve gen-matching flags    
@@ -3461,7 +3515,7 @@ int main(int argc, char* argv[])
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
 	}
-	if(! skipFilling  || isControlRegion)
+	if(! skipFilling || isControlRegion)
         {
           selHistManager->evt_->fillHistograms(
 	    selElectrons.size(),
@@ -3705,6 +3759,9 @@ int main(int argc, char* argv[])
 	    mT_lep2_WZctrl_2lss,
 	    dR_ll_WZctrl_2lss,
 	    max_lep_eta_WZctrl_2lss,
+	    //
+	    nLostHits_selElectron,
+	    passesConversionVeto_selElectron,
 	    //
 	    //
 	    //
@@ -4236,7 +4293,7 @@ int main(int argc, char* argv[])
 
   delete inputTree;
 
-  clock.Show("analyze_hh_3l");
+  clock.Show("analyze_conversions");
 
   return EXIT_SUCCESS;
 }
