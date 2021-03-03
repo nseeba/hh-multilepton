@@ -258,7 +258,7 @@ EvtHistManager_conversions::EvtHistManager_conversions(const edm::ParameterSet &
   };
   const std::vector<std::string> sysOpts_all = {
     //"mvaOutput_xgb_conversions_SUMBk_HH",
-    //"EventCounter",
+    "EventCounter",
     // WZctrl
     "mT_WZctrl_leptonW_MET",
   };
