@@ -268,6 +268,7 @@ class EvtHistManager_conversions
   //
   double nLostHits_selElectron,
   double passesConversionVeto_selElectron,
+  double ntightLeptonsFull,
   //
   //
   //  
@@ -530,6 +531,7 @@ class EvtHistManager_conversions
   //
   TH1 * hnLostHits_selElectron_;
   TH1 * hpassesConversionVeto_selElectron_;
+  TH1 * hntightLeptonsFull_;
   //
   //
   //  

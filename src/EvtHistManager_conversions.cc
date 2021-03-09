@@ -254,7 +254,8 @@ EvtHistManager_conversions::EvtHistManager_conversions(const edm::ParameterSet &
     "max_lep_eta_WZctrl_2lss",
     //
     "nLostHits_selElectron",
-    "passesConversionVeto_selElectron"
+    "passesConversionVeto_selElectron",
+    "ntightLeptonsFull"
   };
   const std::vector<std::string> sysOpts_all = {
     //"mvaOutput_xgb_conversions_SUMBk_HH",
@@ -336,6 +337,7 @@ EvtHistManager_conversions::bookHistograms(TFileDirectory & dir)
 
     hnLostHits_selElectron_                            = book1D(dir, "nLostHits_selElectron",                             "nLostHits_selElectron",                           12, -1.5,10.5);
     hpassesConversionVeto_selElectron_                 = book1D(dir, "passesConversionVeto_selElectron",                  "passesConversionVeto_selElectron",                 3, -1.5,1.5);
+    hntightLeptonsFull_                                = book1D(dir, "ntightLeptonsFull",                             "ntightLeptonsFull",                           11, -0.5,10.5);
   }
 
   
@@ -819,6 +821,7 @@ EvtHistManager_conversions::fillHistograms(
   //
   double nLostHits_selElectron,
   double passesConversionVeto_selElectron,
+  double ntightLeptonsFull,
   //
   //
   //  
@@ -901,6 +904,7 @@ EvtHistManager_conversions::fillHistograms(
 
     fillWithOverFlow(hnLostHits_selElectron_,                           nLostHits_selElectron,                             evtWeight, evtWeightErr);
     fillWithOverFlow(hpassesConversionVeto_selElectron_,                passesConversionVeto_selElectron,                  evtWeight, evtWeightErr);
+    fillWithOverFlow(hntightLeptonsFull_,                               ntightLeptonsFull,                             evtWeight, evtWeightErr);
   }
   
 

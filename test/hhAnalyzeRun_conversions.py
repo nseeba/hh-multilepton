@@ -11,7 +11,8 @@ import os
 import sys
 import getpass
 
-# E.g.: ./test/hhAnalyzeRun_3l.py -v 2017Dec13 -m default -e 2017
+# E.g.: ./test/hhAnalyzeRun_3l.py -e 2017 -v 20210226_conversions_2017_Datacards_1 -m default -s full -G -c -A
+
 
 mode_choices     = [ 'default', 'forBDTtraining' ]
 sys_choices      = [ 'full', 'internal' ] + systematics.an_opts_hh_multilepton_wAK8
@@ -24,6 +25,7 @@ parser.add_sys(sys_choices)
 parser.add_preselect()
 parser.add_rle_select()
 parser.add_lep_mva_wp(default_wp = 'hh_multilepton') # alternative: hh_multilepton
+parser.add_ele_ConvsCR(default_option = 'disable_nLostHits_convsVeto') # ['disable_nLostHits_convsVeto', 'invert_nLostHits', 'invert_convsVeto', 'invert_eitherOf_convsVeto_nLostHits', 'invert_both_convsVeto_nLostHits'] 
 parser.add_nonnominal()
 parser.add_hlt_filter()
 parser.add_files_per_job()
@@ -57,6 +59,7 @@ rle_select        = os.path.expanduser(args.rle_select)
 use_nonnominal    = args.original_central
 hlt_filter        = args.hlt_filter
 lep_mva_wp        = args.lep_mva_wp
+ele_ConvsCR       = args.ele_ConvsCR
 files_per_job     = args.files_per_job
 use_home          = args.use_home
 sideband          = args.sideband
@@ -192,6 +195,7 @@ if __name__ == '__main__':
     leptonChargeSelections                = leptonChargeSelections,
     central_or_shifts                     = central_or_shifts,
     lep_mva_wp                            = lep_mva_wp,
+    ele_ConvsCR                           = ele_ConvsCR,
     jet_cleaning_by_index                 = jet_cleaning_by_index,
     gen_matching_by_index                 = gen_matching_by_index,
     max_files_per_job                     = files_per_job,

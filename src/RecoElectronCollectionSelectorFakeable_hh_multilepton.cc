@@ -125,6 +125,36 @@ RecoElectronSelectorFakeable_hh_multilepton::get_max_absEta() const
   return max_absEta_;
 }
 
+void
+RecoElectronSelectorFakeable_hh_multilepton::print_selection_conditions()
+{
+  std::cout << "RecoElectronSelectorFakeable_hh_multilepton::print_selection_conditions():: " << "\n";
+  std::cout << " \t set_selection_flags:" << set_selection_flags_ << "\n";
+  std::cout << " \t apply_offline_e_trigger_cuts_:" << apply_offline_e_trigger_cuts_ << "\n";
+  std::cout << " \t min_lepton_pt_:" << min_lepton_pt_ << "\n";
+  std::cout << " \t min_cone_pt_:" << min_cone_pt_ << "\n";
+  std::cout << " \t max_absEta_:" << max_absEta_ << "\n";
+  std::cout << " \t max_dxy_:" << max_dxy_ << "\n";
+  std::cout << " \t max_dz_:" << max_dz_ << "\n";  
+  std::cout << " \t max_relIso_:" << max_relIso_ << "\n";
+  std::cout << " \t max_sip3d_:" << max_sip3d_ << "\n";
+  std::cout << " \t binning_absEta_:" << binning_absEta_ << "\n";
+  std::cout << " \t min_sigmaEtaEta_trig_:" << min_sigmaEtaEta_trig_ << "\n";
+  std::cout << " \t max_sigmaEtaEta_trig_:" << max_sigmaEtaEta_trig_ << "\n";
+  std::cout << " \t max_HoE_trig_:" << max_HoE_trig_ << "\n";
+  std::cout << " \t min_OoEminusOoP_trig_:" << min_OoEminusOoP_trig_ << "\n";
+  std::cout << " \t min_jetPtRatio_:" << min_jetPtRatio_ << "\n";
+  std::cout << " \t max_jetBtagCSV_forTight_:" << max_jetBtagCSV_forTight_ << "\n";
+  std::cout << " \t max_jetBtagCSV_forFakeableNotTight_:" << max_jetBtagCSV_forFakeableNotTight_ << "\n";
+  std::cout << " \t apply_conversionVeto_:" << apply_conversionVeto_ << "\n";
+  std::cout << " \t max_nLostHits_:" << max_nLostHits_ << "\n";
+  std::cout << " \t invert_conversionVeto_:" << invert_conversionVeto_ << "\n";
+  std::cout << " \t invert_nLostHits_:" << invert_nLostHits_ << "\n";
+  std::cout << " \t min_nLostHits_fornLostHitsInversion_:" << min_nLostHits_fornLostHitsInversion_ << "\n";
+  std::cout << " \t useAssocJetBtag_:" << useAssocJetBtag_ << "\n";
+}
+
+
 bool
 RecoElectronSelectorFakeable_hh_multilepton::operator()(const RecoElectron & electron) const
 {
@@ -369,4 +399,10 @@ void
 RecoElectronCollectionSelectorFakeable_hh_multilepton::invert_conversionVeto()
 {
   selector_.invert_conversionVeto();
+}
+
+void
+RecoElectronCollectionSelectorFakeable_hh_multilepton::print_selection_conditions()
+{
+  selector_.print_selection_conditions();
 }
