@@ -422,7 +422,7 @@ int main(int argc, char* argv[])
   std::cout << "selEventsFileName_output = " << selEventsFileName_output << std::endl;
 
   const double minPt_hadTau_lead    = 40.;
-  const double minPt_hadTau_sublead = 30.;
+  const double minPt_hadTau_sublead = 40.;
   const double minPt_hadTau_third   = 20.;
   const double minPt_hadTau_fourth  = 20.;
 
