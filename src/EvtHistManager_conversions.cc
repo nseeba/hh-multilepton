@@ -255,7 +255,12 @@ EvtHistManager_conversions::EvtHistManager_conversions(const edm::ParameterSet &
     //
     "nLostHits_selElectron",
     "passesConversionVeto_selElectron",
-    "ntightLeptonsFull"
+    "ntightLeptonsFull",
+    "cone_pT_3rdEle",
+    "pT_3rdEle",
+    "eta_3rdEle",
+    "phi_3rdEle",
+    "dR_3rdEle_nearestMu"
   };
   const std::vector<std::string> sysOpts_all = {
     //"mvaOutput_xgb_conversions_SUMBk_HH",
@@ -335,9 +340,15 @@ EvtHistManager_conversions::bookHistograms(TFileDirectory & dir)
     hdR_ll_WZctrl_2lss_                                = book1D(dir, "dR_ll_WZctrl_2lss",                                 "dR_ll_WZctrl_2lss",                               100, 0,   7);
     hmax_lep_eta_WZctrl_2lss_                          = book1D(dir, "max_lep_eta_WZctrl_2lss",                           "max_lep_eta_WZctrl_2lss",                         100, 0,   3);
 
-    hnLostHits_selElectron_                            = book1D(dir, "nLostHits_selElectron",                             "nLostHits_selElectron",                           12, -1.5,10.5);
-    hpassesConversionVeto_selElectron_                 = book1D(dir, "passesConversionVeto_selElectron",                  "passesConversionVeto_selElectron",                 3, -1.5,1.5);
-    hntightLeptonsFull_                                = book1D(dir, "ntightLeptonsFull",                             "ntightLeptonsFull",                           11, -0.5,10.5);
+    hnLostHits_selElectron_                            = book1D(dir, "nLostHits_selElectron",                             "nLostHits_selElectron",                            12, -1.5,10.5);
+    hpassesConversionVeto_selElectron_                 = book1D(dir, "passesConversionVeto_selElectron",                  "passesConversionVeto_selElectron",                  3, -1.5,1.5);
+    hntightLeptonsFull_                                = book1D(dir, "ntightLeptonsFull",                                 "ntightLeptonsFull",                                11, -0.5,10.5);
+
+    hcone_pT_3rdEle_                                   = book1D(dir, "cone_pT_3rdEle",                                    "cone_pT_3rdEle",                                  100, 0, 100);
+    hpT_3rdEle_                                        = book1D(dir, "pT_3rdEle",                                         "pT_3rdEle",                                       100, 0, 100);
+    heta_3rdEle_                                       = book1D(dir, "eta_3rdEle",                                        "eta_3rdEle",                                       40, -2.5, 2.5 );
+    hphi_3rdEle_                                       = book1D(dir, "phi_3rdEle",                                        "phi_3rdEle",                                      100, -1*TMath::Pi(), TMath::Pi());
+    hdR_3rdEle_nearestMu_                              = book1D(dir, "dR_3rdEle_nearestMu",                               "dR_3rdEle_nearestMu",                             100, 0, 7);
   }
 
   
@@ -822,6 +833,12 @@ EvtHistManager_conversions::fillHistograms(
   double nLostHits_selElectron,
   double passesConversionVeto_selElectron,
   double ntightLeptonsFull,
+  double cone_pT_3rdEle,
+  double pT_3rdEle,
+  double eta_3rdEle,
+  double phi_3rdEle,
+  double dR_3rdEle_nearestMu,
+  //
   //
   //
   //  
@@ -904,7 +921,14 @@ EvtHistManager_conversions::fillHistograms(
 
     fillWithOverFlow(hnLostHits_selElectron_,                           nLostHits_selElectron,                             evtWeight, evtWeightErr);
     fillWithOverFlow(hpassesConversionVeto_selElectron_,                passesConversionVeto_selElectron,                  evtWeight, evtWeightErr);
-    fillWithOverFlow(hntightLeptonsFull_,                               ntightLeptonsFull,                             evtWeight, evtWeightErr);
+    fillWithOverFlow(hntightLeptonsFull_,                               ntightLeptonsFull,                                 evtWeight, evtWeightErr);
+
+    fillWithOverFlow(hcone_pT_3rdEle_,                                  cone_pT_3rdEle,                                    evtWeight, evtWeightErr);
+    fillWithOverFlow(hpT_3rdEle_,                                       pT_3rdEle,                                         evtWeight, evtWeightErr);
+    fillWithOverFlow(heta_3rdEle_,                                      eta_3rdEle,                                        evtWeight, evtWeightErr);
+    fillWithOverFlow(hphi_3rdEle_,                                      phi_3rdEle,                                        evtWeight, evtWeightErr);
+    fillWithOverFlow(hdR_3rdEle_nearestMu_,                             dR_3rdEle_nearestMu,                               evtWeight, evtWeightErr);
+    
   }
   
 

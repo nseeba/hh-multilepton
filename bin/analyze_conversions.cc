@@ -3307,6 +3307,13 @@ int main(int argc, char* argv[])
     double dR_ll_WZctrl_2lss = -1.;
     double max_lep_eta_WZctrl_2lss = -1.;
 
+    // conversions control region
+    double cone_pT_3rdEle = -1.;
+    double pT_3rdEle = -1.;
+    double eta_3rdEle = -1.;
+    double phi_3rdEle = -1.;
+    double dR_3rdEle_nearestMu = -1.;
+
     if ( isControlRegion ) // WZ control region
     {
       cutFlowTable.update("isControlRegion: 3l selection_0", evtWeightRecorder.get(central_or_shift_main));
@@ -3453,6 +3460,30 @@ int main(int argc, char* argv[])
       mT_lep2_WZctrl_2lss            = comp_MT_met(selLepton2_SS, met.pt(), met.phi());
       dR_ll_WZctrl_2lss              = deltaR(selLepton1_SS->p4(), selLepton2_SS->p4());
       max_lep_eta_WZctrl_2lss        = TMath::Max(std::abs(selLepton1_SS->eta()), std::abs(selLepton2_SS->eta())) ;
+
+      if (selElectron_0.size() > 0)
+      {
+	// selElectron_0[0]
+	cone_pT_3rdEle = comp_lep_conePt(*selElectron_0[0]);
+	pT_3rdEle = selElectron_0[0]->pt();
+	eta_3rdEle = selElectron_0[0]->eta();
+	phi_3rdEle = selElectron_0[0]->phi();
+
+	dR_3rdEle_nearestMu = 99999.;
+	//printf("ele: pt %g, conept %g, eta %g, phi %g,  pdgId: %i \n",
+	//     pT_3rdEle,cone_pT_3rdEle,eta_3rdEle,phi_3rdEle,  selElectron_0[0]->pdgId());
+	for ( std::vector<const RecoLepton*>::const_iterator selLepton1 = selLeptons.begin();
+	      selLepton1 != selLeptons.end(); ++selLepton1 )
+	{
+	  if ( (*selLepton1) == selElectron_0[0]) continue;
+
+	  //printf("mu: pt %g, conept %g, eta %g, phi %g,  pdgId: %i \n",
+	  //	 (*selLepton1)->pt(),comp_lep_conePt(*(*selLepton1)),(*selLepton1)->eta(),(*selLepton1)->phi(),(*selLepton1)->pdgId());
+	  double dr = deltaR(selElectron_0[0]->p4(), (*selLepton1)->p4());
+	  if (dr < dR_3rdEle_nearestMu) dR_3rdEle_nearestMu = dr;
+	}
+	//printf("dR_3rdEle_nearestMu %g \n",dR_3rdEle_nearestMu);
+      }
       
     }
     // ---------------------------------------------------------------------------------------------------------------
@@ -3875,6 +3906,11 @@ int main(int argc, char* argv[])
 	    nLostHits_selElectron,
 	    passesConversionVeto_selElectron,
 	    tightLeptonsFull.size(),
+	    cone_pT_3rdEle,
+	    pT_3rdEle,
+	    eta_3rdEle,
+	    phi_3rdEle,
+	    dR_3rdEle_nearestMu,
 	    //
 	    //
 	    //

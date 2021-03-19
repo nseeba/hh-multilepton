@@ -577,8 +577,12 @@ int main(int argc, char* argv[])
   const HHWeightInterfaceLOtoNLO* HHWeight_calc_LOtoNLO = nullptr;
   if(apply_HH_rwgt_LOtoNLO)
   {
-    HHWeight_calc_LOtoNLO = new HHWeightInterfaceLOtoNLO(era, apply_HH_coupling_fix_CMS, 10., isDEBUG);
+    //HHWeight_calc_LOtoNLO = new HHWeightInterfaceLOtoNLO(era, apply_HH_coupling_fix_CMS, 10., isDEBUG);
+    HHWeight_calc_LOtoNLO = new HHWeightInterfaceLOtoNLO(era, apply_HH_coupling_fix_CMS, 10., true);
   }
+  std::cout << "apply_HH_rwgt_LOtoNLO: " << apply_HH_rwgt_LOtoNLO
+	    << ", apply_HH_coupling_fix_CMS: " << apply_HH_coupling_fix_CMS
+	    << "\n";
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
@@ -948,6 +952,11 @@ int main(int argc, char* argv[])
   std::map<int, TH1*> hPhi_forEtaLeqm1p5_selAK4jets_perEvt;
   std::map<int, TH1*> hPhi_forEtaLeqm1p5_selAK4_ptTop2_perEvt;
 
+  std::map<int, TH1*> hgen_mHH_0;
+  std::map<int, TH1*> hgen_mHH_HHrwgt_0;
+  std::map<int, TH1*> hgen_mHH_LOtoNLOrwgt_0;
+  std::map<int, TH1*> hgen_mHH_HHrwgt_LOtoNLOrwgt_0;
+  std::map<int, TH1*> hgen_mHH_1;
   
   //TH1* histogram_analyzedEntries = fs.make<TH1D>("analyzedEntries", "analyzedEntries", 1, -0.5, +0.5);
   //std::map<std::string, std::map<int, TH1*>> hMEt_All_0;
@@ -1056,7 +1065,7 @@ int main(int argc, char* argv[])
       selHistManagers[central_or_shift][idxLepton] = selHistManager;
 
       
-      if (central_or_shift == central_or_shift_main && 0==1) {
+      if (central_or_shift == central_or_shift_main && 1==1) {
 	//TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_string.data()));
 	TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_and_genMatch.data()));
 	/*
@@ -1101,6 +1110,12 @@ int main(int argc, char* argv[])
 	hPhi_forEtaLeqm1p5_selMuons_perEvt[idxLepton]      = subD1.make<TH1D>("hPhi_forEtaLeqm1p5_selMuons_perEvt",      "hPhi_forEtaLeqm1p5_selMuons_perEvt",       200, -1*TMath::Pi(),TMath::Pi());
 	hPhi_forEtaLeqm1p5_selAK4jets_perEvt[idxLepton]    = subD1.make<TH1D>("hPhi_forEtaLeqm1p5_selAK4jets_perEvt",    "hPhi_forEtaLeqm1p5_selAK4jets_perEvt",     200, -1*TMath::Pi(),TMath::Pi());
 	hPhi_forEtaLeqm1p5_selAK4_ptTop2_perEvt[idxLepton] = subD1.make<TH1D>("hPhi_forEtaLeqm1p5_selAK4_ptTop2_perEvt", "hPhi_forEtaLeqm1p5_selAK4_ptTop2_perEvt",  200, -1*TMath::Pi(),TMath::Pi());
+
+	hgen_mHH_0[idxLepton] = subD1.make<TH1D>("gen_mHH_0", "gen_mHH_0",  400, 0, 1200);
+	hgen_mHH_HHrwgt_0[idxLepton] = subD1.make<TH1D>("gen_mHH_HHrwgt_0", "gen_mHH_HHrwgt_0",  400, 0, 1200);
+	hgen_mHH_LOtoNLOrwgt_0[idxLepton] = subD1.make<TH1D>("gen_mHH_LOtoNLOrwgt_0", "gen_mHH_LOtoNLOrwgt_0",  400, 0, 1200);
+	hgen_mHH_HHrwgt_LOtoNLOrwgt_0[idxLepton] = subD1.make<TH1D>("gen_mHH_HHrwgt_LOtoNLOrwgt_0", "gen_mHH_HHrwgt_LOtoNLOrwgt_0",  400, 0, 1200);
+	hgen_mHH_1[idxLepton] = subD1.make<TH1D>("gen_mHH_1", "gen_mHH_1",  400, 0, 1200);
       }
       
     }
@@ -1300,7 +1315,8 @@ int main(int argc, char* argv[])
     EvtWeightRecorderHH evtWeightRecorder(central_or_shifts_local, central_or_shift_main, isMC);
     cutFlowTable.update("run:ls:event selection", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("run:ls:event selection", evtWeightRecorder.get(central_or_shift_main));
-
+    if (printLevel > 0) std::cout << "\neventInfo: " << eventInfo
+				  << ", evtWgt: " << evtWeightRecorder.get(central_or_shift_main) << "\n";
     if ( isDEBUG ) {
       std::cout << "event #" << inputTree -> getCurrentMaxEventIdx() << ' ' << eventInfo << '\n';
     }
@@ -1381,6 +1397,9 @@ int main(int argc, char* argv[])
       }
     }
 
+    if (printLevel > 0) std::cout << "eventInfo: " << eventInfo
+				  << ", evtWgt: " << evtWeightRecorder.get(central_or_shift_main) << "\n";
+    
     if(!genPhotonFilter(genPhotons))
     {
       if(isDEBUG || run_lumi_eventSelector)
@@ -1392,6 +1411,9 @@ int main(int argc, char* argv[])
     cutFlowTable.update("gen photon filter", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("gen photon filter", evtWeightRecorder.get(central_or_shift_main));
 
+    if (printLevel > 0) std::cout << "eventInfo: " << eventInfo
+				  << ", evtWgt: " << evtWeightRecorder.get(central_or_shift_main) << "\n";
+    
     eventInfo.reset_productionMode();
     std::vector<GenParticle> genWBosons;
     std::vector<GenParticle> genWJets;
@@ -1411,6 +1433,9 @@ int main(int argc, char* argv[])
     }
 
     if (printLevel > 5) std::cout << "Siddh here10 " << std::endl;
+    if (printLevel > 0) std::cout << "eventInfo_1: " << eventInfo
+				  << ", evtWgt: " << evtWeightRecorder.get(central_or_shift_main) << "\n";
+      
     if(isMC)
     {
       if(apply_genWeight)         evtWeightRecorder.record_genWeight(eventInfo);
@@ -1443,7 +1468,79 @@ int main(int argc, char* argv[])
       }
     }
     if (printLevel > 5) std::cout << "Siddh here12 " << std::endl;
+   
+    
+    if (isMC)
+    {
+      std::map<std::string, double> weightMapHH;
+      if ( apply_HH_rwgt || apply_HH_rwgt_LOtoNLO )
+      {
+	if (printLevel > 0) 
+	  std::cout  << "gem_mHH: " << eventInfo.gen_mHH
+		     << ", cosThetaStar: " << eventInfo.gen_cosThetaStar
+		     << "\n";
+	
+        for ( unsigned int i = 0; i < HHWeightNames.size(); i++ )
+        {
+	  if (printLevel > 0) 
+	    std::cout << "HHBMNames[i]: " <<  HHBMNames[i]
+		      << ", HHWeightNames[i]: " << HHWeightNames[i];
+		      
+	  
+          double HHReweight = 1.;
+          if ( apply_HH_rwgt )
+          {
+            assert(HHWeight_calc);
+            HHReweight = HHWeight_calc->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+	    if (printLevel > 0) std::cout << ", HHWeight->getWeight(): " << HHWeight_calc->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)
+					  << ", HHWeight->getReWeight(): " << HHWeight_calc->getReWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+	  }
+          if ( apply_HH_rwgt_LOtoNLO )
+          {
+            assert(HHWeight_calc_LOtoNLO);
+            HHReweight *= HHWeight_calc_LOtoNLO->getReWeight_V2(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+	    if (printLevel > 0) std::cout << ", HHWeight_LOtoNLO->getReWeight_V2(): " << HHWeight_calc_LOtoNLO->getReWeight_V2(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG); 
+          }
+          weightMapHH[HHWeightNames[i]] = HHReweight;
+	  if (printLevel > 0) std::cout << ", HHReweight: " << HHReweight
+					<< ", evtWgt: " << evtWeightRecorder.get(central_or_shift_main) << "\n";
+        }
+      }
 
+      
+      double gen_mHH_0 = -1;
+      if (genHiggses.size() == 2) {
+	gen_mHH_0 = (genHiggses[0].p4() + genHiggses[1].p4()).mass();
+	hgen_mHH_0[2]->Fill(gen_mHH_0, evtWeightRecorder.get(central_or_shift_main));
+	if ( apply_HH_rwgt )
+	hgen_mHH_HHrwgt_0[2]->Fill(gen_mHH_0,
+				   evtWeightRecorder.get(central_or_shift_main) * 
+				   HHWeight_calc->getWeight("SM", eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG));
+	if ( apply_HH_rwgt_LOtoNLO )
+	hgen_mHH_LOtoNLOrwgt_0[2]->Fill(gen_mHH_0,
+					evtWeightRecorder.get(central_or_shift_main) *
+					HHWeight_calc_LOtoNLO->getReWeight_V2("SM", eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG));
+	if ( apply_HH_rwgt && apply_HH_rwgt_LOtoNLO )
+	hgen_mHH_HHrwgt_LOtoNLOrwgt_0[2]->Fill(gen_mHH_0,
+					       evtWeightRecorder.get(central_or_shift_main) *
+					       HHWeight_calc->getWeight("SM", eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) *
+					       HHWeight_calc_LOtoNLO->getReWeight_V2("SM", eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG));
+	if ( apply_HH_rwgt && apply_HH_rwgt_LOtoNLO )
+	hgen_mHH_1[2]->Fill(gen_mHH_0,
+			    evtWeightRecorder.get(central_or_shift_main) *
+			    weightMapHH["Weight_SM"]);
+	if (printLevel > 0) std::cout << "weightMapHH[Weight_SM]: " << weightMapHH["Weight_SM"] << "\n";
+      }
+      if (printLevel > 0)
+      {
+	std::cout << "eventInfo.gen_mHH: " << eventInfo.gen_mHH << ", genHiggses.size(): " << genHiggses.size()
+		  << ", gen_mHH: " << gen_mHH_0
+		  << "\n"; 
+      }
+
+    }
+
+    
     bool isTriggered_1e = hltPaths_isTriggered(triggers_1e, triggerWhiteList, eventInfo, isMC, isDEBUG);
     bool isTriggered_1mu = hltPaths_isTriggered(triggers_1mu, triggerWhiteList, eventInfo, isMC, isDEBUG);
     bool isTriggered_2e = hltPaths_isTriggered(triggers_2e, triggerWhiteList, eventInfo, isMC, isDEBUG);

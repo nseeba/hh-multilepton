@@ -11,7 +11,7 @@ import os
 import sys
 import getpass
 
-# E.g.: ./test/hhAnalyzeRun_3l.py -e 2017 -v 20210226_conversions_2017_Datacards_1 -m default -s full -G -c -A
+# E.g.: ./test/hhAnalyzeRun_conversions.py -e 2016 -v version -m default -c -ele_ConvsCR invert_eitherOf_convsVeto_nLostHits -A  -s full -G
 
 
 mode_choices     = [ 'default', 'forBDTtraining' ]
@@ -25,7 +25,7 @@ parser.add_sys(sys_choices)
 parser.add_preselect()
 parser.add_rle_select()
 parser.add_lep_mva_wp(default_wp = 'hh_multilepton') # alternative: hh_multilepton
-parser.add_ele_ConvsCR(default_option = 'disable_nLostHits_convsVeto') # ['disable_nLostHits_convsVeto', 'invert_nLostHits', 'invert_convsVeto', 'invert_eitherOf_convsVeto_nLostHits', 'invert_both_convsVeto_nLostHits'] 
+parser.add_ele_ConvsCR(default_option = 'invert_eitherOf_convsVeto_nLostHits') # ['disable_nLostHits_convsVeto', 'invert_nLostHits', 'invert_convsVeto', 'invert_eitherOf_convsVeto_nLostHits', 'invert_both_convsVeto_nLostHits'] 
 parser.add_nonnominal()
 parser.add_hlt_filter()
 parser.add_files_per_job()
