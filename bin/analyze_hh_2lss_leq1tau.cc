@@ -2177,7 +2177,7 @@ int main(int argc, char* argv[])
     double lep2_conePt = comp_lep_conePt(*selLepton_sublead);
     double mT_lep2     = std::min(150., comp_MT_met(selLepton_sublead, met.pt(), met.phi()));
     //
-    double max_lep_eta = TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
+    //double max_lep_eta = TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
 
     double mT_lep1_met = mT_lep1;
     double mT_lep2_met = mT_lep2;
