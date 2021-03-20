@@ -9,12 +9,12 @@
  *
  */
 
-#include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h"          // HistManagerBase
-#include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h"                // EventInfo
-#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface2.h"       // HHWeightInterface2
-#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterfaceLOtoNLO.h" // HHWeightInterfaceLOtoNLO
-#include "hhAnalysis/multilepton/interface/AnalysisConfig_hh.h"           // AnalysisConfig_hh
-#include "hhAnalysis/multilepton/interface/EventCategoryBase.h"           // EventCategoryBase
+#include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h"      // HistManagerBase
+#include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h"            // EventInfo
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterfaceLO.h"  // HHWeightInterfaceLO
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterfaceNLO.h" // HHWeightInterfaceNLO
+#include "hhAnalysis/multilepton/interface/AnalysisConfig_hh.h"       // AnalysisConfig_hh
+#include "hhAnalysis/multilepton/interface/EventCategoryBase.h"       // EventCategoryBase
 
 #include <string>
 #include <vector>
@@ -29,15 +29,15 @@ class DatacardHistManagerBase_hh
   DatacardHistManagerBase_hh(const edm::ParameterSet & cfg,
                              const AnalysisConfig_hh & analysisConfig, 
                              const EventInfo & eventInfo, 
-                             const HHWeightInterface2 * HHWeight_calc,
-                             const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
+                             const HHWeightInterfaceLO * HHWeightLO_calc,
+                             const HHWeightInterfaceNLO * HHWeightNLO_calc,
                              bool isDEBUG = false,
                              bool fillHistograms_nonresonant = true, bool fillHistograms_resonant_spin0 = true, bool fillHistograms_resonant_spin2 = true);
   DatacardHistManagerBase_hh(const edm::ParameterSet & cfg,
                              const AnalysisConfig_hh & analysisConfig, 
                              const EventInfo & eventInfo, 
-                             const HHWeightInterface2 * HHWeight_calc,
-                             const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
+                             const HHWeightInterfaceLO * HHWeightLO_calc,
+                             const HHWeightInterfaceNLO * HHWeightNLO_calc,
                              const EventCategoryBase * eventCategoryBase,
                              bool isDEBUG = false,
                              bool fillHistograms_nonresonant = true, bool fillHistograms_resonant_spin0 = true, bool fillHistograms_resonant_spin2 = true);
@@ -56,10 +56,10 @@ class DatacardHistManagerBase_hh
 
   const AnalysisConfig_hh & analysisConfig_;
   const EventInfo & eventInfo_;
-  const HHWeightInterface2 * HHWeight_calc_;
-  bool apply_HH_rwgt_;
-  const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO_;
-  bool apply_HH_rwgt_LOtoNLO_;
+  const HHWeightInterfaceLO * HHWeightLO_calc_;
+  bool apply_HH_rwgt_lo_;
+  const HHWeightInterfaceNLO * HHWeightNLO_calc_;
+  bool apply_HH_rwgt_nlo_;
   std::map<std::string, double> HHReweightMap_;
   const EventCategoryBase * eventCategoryBase_;
   std::vector<int> categories_;

@@ -10,12 +10,12 @@
  *
  */
 
-#include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h"          // HistManagerBase
-#include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h"                // EventInfo
-#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface2.h"       // HHWeightInterface2
-#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterfaceLOtoNLO.h" // HHWeightInterfaceLOtoNLO
-#include "hhAnalysis/multilepton/interface/AnalysisConfig_hh.h"           // AnalysisConfig_hh
-#include "tthAnalysis/HiggsToTauTau/interface/LHEParticle.h"              // LHEParticle
+#include "tthAnalysis/HiggsToTauTau/interface/HistManagerBase.h"      // HistManagerBase
+#include "tthAnalysis/HiggsToTauTau/interface/EventInfo.h"            // EventInfo
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterfaceLO.h"  // HHWeightInterfaceLO
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterfaceNLO.h" // HHWeightInterfaceNLO
+#include "hhAnalysis/multilepton/interface/AnalysisConfig_hh.h"       // AnalysisConfig_hh
+#include "tthAnalysis/HiggsToTauTau/interface/LHEParticle.h"          // LHEParticle
 
 class HHGenKinematicsHistManager
   : public HistManagerBase
@@ -24,8 +24,8 @@ class HHGenKinematicsHistManager
   HHGenKinematicsHistManager(const edm::ParameterSet & cfg,
                              const AnalysisConfig_hh & analysisConfig, 
                              const EventInfo & eventInfo, 
-                             const HHWeightInterface2 * HHWeight_calc,
-                             const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO);
+                             const HHWeightInterfaceLO * HHWeightLO_calc,
+                             const HHWeightInterfaceNLO * HHWeightNLO_calc);
   ~HHGenKinematicsHistManager() {}
 
   /// book and fill histograms
@@ -38,10 +38,10 @@ class HHGenKinematicsHistManager
  private:
   const AnalysisConfig_hh & analysisConfig_;
   const EventInfo & eventInfo_;
-  const HHWeightInterface2 * HHWeight_calc_;
-  bool apply_HH_rwgt_;
-  const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO_;
-  bool apply_HH_rwgt_LOtoNLO_;
+  const HHWeightInterfaceLO * HHWeightLO_calc_;
+  bool apply_HH_rwgt_lo_;
+  const HHWeightInterfaceNLO * HHWeightNLO_calc_;
+  bool apply_HH_rwgt_nlo_;
 
   TH1 * histogram_gen_mHH_;
   TH1 * histogram_gen_absCosThetaStar_;

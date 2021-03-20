@@ -14,8 +14,8 @@
 DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet & cfg,
                                                        const AnalysisConfig_hh & analysisConfig, 
                                                        const EventInfo & eventInfo, 
-                                                       const HHWeightInterface2 * HHWeight_calc,
-                                                       const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
+                                                       const HHWeightInterfaceLO * HHWeightLO_calc,
+                                                       const HHWeightInterfaceNLO * HHWeightNLO_calc,
                                                        bool isDEBUG,
                                                        bool fillHistograms_nonresonant,
                                                        bool fillHistograms_resonant_spin0,
@@ -23,10 +23,10 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
   : HistManagerBase(cfg)
   , analysisConfig_(analysisConfig)
   , eventInfo_(eventInfo)
-  , HHWeight_calc_(HHWeight_calc)
-  , apply_HH_rwgt_(HHWeight_calc_ != nullptr)
-  , HHWeight_calc_LOtoNLO_(HHWeight_calc_LOtoNLO)
-  , apply_HH_rwgt_LOtoNLO_(HHWeight_calc_LOtoNLO_ != nullptr)
+  , HHWeightLO_calc_(HHWeightLO_calc)
+  , apply_HH_rwgt_lo_(HHWeightLO_calc_ != nullptr)
+  , HHWeightNLO_calc_(HHWeightNLO_calc)
+  , apply_HH_rwgt_nlo_(HHWeightNLO_calc_ != nullptr)
   , eventCategoryBase_(nullptr)
   , fillHistograms_nonresonant_(fillHistograms_nonresonant)
   , fillHistograms_resonant_spin0_(fillHistograms_resonant_spin0)
@@ -40,8 +40,8 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
 DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet & cfg,
                                                        const AnalysisConfig_hh & analysisConfig, 
                                                        const EventInfo & eventInfo, 
-                                                       const HHWeightInterface2 * HHWeight_calc,
-                                                       const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
+                                                       const HHWeightInterfaceLO * HHWeightLO_calc,
+                                                       const HHWeightInterfaceNLO * HHWeightNLO_calc,
                                                        const EventCategoryBase * eventCategoryBase,
                                                        bool isDEBUG,
                                                        bool fillHistograms_nonresonant,
@@ -50,10 +50,10 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
   : HistManagerBase(cfg)
   , analysisConfig_(analysisConfig)
   , eventInfo_(eventInfo)
-  , HHWeight_calc_(HHWeight_calc)
-  , apply_HH_rwgt_(HHWeight_calc_ != nullptr)
-  , HHWeight_calc_LOtoNLO_(HHWeight_calc_LOtoNLO)
-  , apply_HH_rwgt_LOtoNLO_(HHWeight_calc_LOtoNLO_ != nullptr)
+  , HHWeightLO_calc_(HHWeightLO_calc)
+  , apply_HH_rwgt_lo_(HHWeightLO_calc_ != nullptr)
+  , HHWeightNLO_calc_(HHWeightNLO_calc)
+  , apply_HH_rwgt_nlo_(HHWeightNLO_calc_ != nullptr)
   , eventCategoryBase_(eventCategoryBase)
   , fillHistograms_nonresonant_(fillHistograms_nonresonant)
   , fillHistograms_resonant_spin0_(fillHistograms_resonant_spin0)
@@ -288,21 +288,21 @@ DatacardHistManagerBase_hh::bookHistograms(TFileDirectory & dir)
 void
 DatacardHistManagerBase_hh::compHHReweightMap()
 {
-  if ( analysisConfig_.isMC_HH_nonresonant() && (apply_HH_rwgt_ || apply_HH_rwgt_LOtoNLO_) )
+  if ( analysisConfig_.isMC_HH_nonresonant() && (apply_HH_rwgt_lo_ || apply_HH_rwgt_nlo_) )
   {
     for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_nonresonant_.begin();
           histogramName != histogramNames_mvaOutput_nonresonant_.end(); ++histogramName ) {
       const std::string& bmName = histogramName->first;
       double HHReweight = 1.;
-      if ( apply_HH_rwgt_ )
+      if ( apply_HH_rwgt_lo_ )
       {
-        assert(HHWeight_calc_);
-        HHReweight = HHWeight_calc_->getReWeight(bmName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);
+        assert(HHWeightLO_calc_);
+        HHReweight = HHWeightLO_calc_->getReWeight(bmName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);
       }
-      if ( apply_HH_rwgt_LOtoNLO_ )
+      if ( apply_HH_rwgt_nlo_ )
       {
-        assert(HHWeight_calc_LOtoNLO_);
-        HHReweight *= HHWeight_calc_LOtoNLO_->getReWeight_V2(bmName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);
+        assert(HHWeightNLO_calc_);
+        HHReweight *= HHWeightNLO_calc_->getReWeight_V2(bmName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);
       }
       HHReweightMap_[histogramName->first] = HHReweight;
     }

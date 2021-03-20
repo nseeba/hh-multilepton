@@ -7,13 +7,13 @@
 DatacardHistManager_hh_multiclass::DatacardHistManager_hh_multiclass(const edm::ParameterSet & cfg,
                                                                      const AnalysisConfig_hh & analysisConfig, 
                                                                      const EventInfo & eventInfo, 
-                                                                     const HHWeightInterface2 * HHWeight_calc,
-                                                                     const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
+                                                                     const HHWeightInterfaceLO * HHWeightLO_calc,
+                                                                     const HHWeightInterfaceNLO * HHWeightNLO_calc,
                                                                      const std::vector<std::string> & classes,
                                                                      bool isDEBUG,
                                                                      bool fillHistograms_nonresonant, bool fillHistograms_resonant_spin0, bool fillHistograms_resonant_spin2)
   : DatacardHistManagerBase_hh(
-      cfg, analysisConfig, eventInfo, HHWeight_calc, HHWeight_calc_LOtoNLO, isDEBUG, 
+      cfg, analysisConfig, eventInfo, HHWeightLO_calc, HHWeightNLO_calc, isDEBUG, 
       fillHistograms_nonresonant, fillHistograms_resonant_spin0, fillHistograms_resonant_spin2
     )
 {
@@ -33,13 +33,13 @@ DatacardHistManager_hh_multiclass::DatacardHistManager_hh_multiclass(const edm::
 DatacardHistManager_hh_multiclass::DatacardHistManager_hh_multiclass(const edm::ParameterSet & cfg,
                                                                      const AnalysisConfig_hh & analysisConfig, 
                                                                      const EventInfo & eventInfo, 
-                                                                     const HHWeightInterface2 * HHWeight_calc,
-                                                                     const HHWeightInterfaceLOtoNLO * HHWeight_calc_LOtoNLO,
+                                                                     const HHWeightInterfaceLO * HHWeightLO_calc,
+                                                                     const HHWeightInterfaceNLO * HHWeightNLO_calc,
                                                                      const EventCategory_multiclass * eventCategory,
                                                                      bool isDEBUG,
                                                                      bool fillHistograms_nonresonant, bool fillHistograms_resonant_spin0, bool fillHistograms_resonant_spin2)
   : DatacardHistManagerBase_hh(
-      cfg, analysisConfig, eventInfo, HHWeight_calc, HHWeight_calc_LOtoNLO, eventCategory, isDEBUG,
+      cfg, analysisConfig, eventInfo, HHWeightLO_calc, HHWeightNLO_calc, eventCategory, isDEBUG,
       fillHistograms_nonresonant, fillHistograms_resonant_spin0, fillHistograms_resonant_spin2
     )
   , eventCategory_(eventCategory)
@@ -188,7 +188,7 @@ DatacardHistManager_hh_multiclass::fillHistograms(const std::map<std::string, st
             {
               double evtWeight_reweighted = evtWeight;
               double evtWeightErr_reweighted = evtWeightErr;
-              if ( analysisConfig_.isMC_HH_nonresonant() && apply_HH_rwgt_ )
+              if ( analysisConfig_.isMC_HH_nonresonant() && (apply_HH_rwgt_lo_ || apply_HH_rwgt_nlo_) )
               {
                 const std::string& bmName = histogramName->first;
                 std::map<std::string, double>::const_iterator HHReweight = HHReweightMap_.find(bmName);
