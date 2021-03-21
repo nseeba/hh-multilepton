@@ -930,7 +930,6 @@ int main(int argc, char* argv[])
   std::map<int, TH1*> hPhi_forEtaLeqm1p5_selMuons_perEvt;
   std::map<int, TH1*> hPhi_forEtaLeqm1p5_selAK4jets_perEvt;
   std::map<int, TH1*> hPhi_forEtaLeqm1p5_selAK4_ptTop2_perEvt;
-
   
   //TH1* histogram_analyzedEntries = fs.make<TH1D>("analyzedEntries", "analyzedEntries", 1, -0.5, +0.5);
   //std::map<std::string, std::map<int, TH1*>> hMEt_All_0;
@@ -1039,7 +1038,7 @@ int main(int argc, char* argv[])
       selHistManagers[central_or_shift][idxLepton] = selHistManager;
 
       
-      if (central_or_shift == central_or_shift_main && 0==1) {
+      if (central_or_shift == central_or_shift_main) {
 	//TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_string.data()));
 	TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_and_genMatch.data()));
 	/*
@@ -1283,7 +1282,8 @@ int main(int argc, char* argv[])
     EvtWeightRecorderHH evtWeightRecorder(central_or_shifts_local, central_or_shift_main, isMC);
     cutFlowTable.update("run:ls:event selection", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("run:ls:event selection", evtWeightRecorder.get(central_or_shift_main));
-
+    if (printLevel > 0) std::cout << "\neventInfo: " << eventInfo
+				  << ", evtWgt: " << evtWeightRecorder.get(central_or_shift_main) << "\n";
     if ( isDEBUG ) {
       std::cout << "event #" << inputTree -> getCurrentMaxEventIdx() << ' ' << eventInfo << '\n';
     }
@@ -1364,6 +1364,9 @@ int main(int argc, char* argv[])
       }
     }
 
+    if (printLevel > 0) std::cout << "eventInfo: " << eventInfo
+				  << ", evtWgt: " << evtWeightRecorder.get(central_or_shift_main) << "\n";
+    
     if(!genPhotonFilter(genPhotons))
     {
       if(isDEBUG || run_lumi_eventSelector)
@@ -1375,6 +1378,9 @@ int main(int argc, char* argv[])
     cutFlowTable.update("gen photon filter", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("gen photon filter", evtWeightRecorder.get(central_or_shift_main));
 
+    if (printLevel > 0) std::cout << "eventInfo: " << eventInfo
+				  << ", evtWgt: " << evtWeightRecorder.get(central_or_shift_main) << "\n";
+    
     eventInfo.reset_productionMode();
     std::vector<GenParticle> genWBosons;
     std::vector<GenParticle> genWJets;
@@ -1394,6 +1400,9 @@ int main(int argc, char* argv[])
     }
 
     if (printLevel > 5) std::cout << "Siddh here10 " << std::endl;
+    if (printLevel > 0) std::cout << "eventInfo_1: " << eventInfo
+				  << ", evtWgt: " << evtWeightRecorder.get(central_or_shift_main) << "\n";
+      
     if(isMC)
     {
       if(apply_genWeight)         evtWeightRecorder.record_genWeight(eventInfo);
@@ -1401,18 +1410,6 @@ int main(int argc, char* argv[])
       if(eventWeightManager)      evtWeightRecorder.record_auxWeight(eventWeightManager);
       if(l1PreFiringWeightReader) evtWeightRecorder.record_l1PrefireWeight(l1PreFiringWeightReader);
       if(apply_topPtReweighting)  evtWeightRecorder.record_toppt_rwgt(eventInfo.topPtRwgtSF);
-      if ( apply_HH_rwgt_lo )
-      {
-        evtWeightRecorder.record_hhWeight_lo(HHWeightLO_calc, eventInfo, isDEBUG);
-        // CV: applying the NLO weight without applying the LO weight as well
-        //     does not make sense for the Run-2 LO HH MC samples,
-        //     as the LO weight needs to be applied in order to fix the coupling bug
-        //     present in the LO HH MC samples for 2016, 2017, and 2018
-        if ( apply_HH_rwgt_nlo )
-        {
-          evtWeightRecorder.record_hhWeight_nlo(HHWeightNLO_calc, eventInfo, isDEBUG);
-        }
-      }
       lheInfoReader->read();
       psWeightReader->read();
       evtWeightRecorder.record_lheScaleWeight(lheInfoReader);

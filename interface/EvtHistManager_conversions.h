@@ -268,6 +268,12 @@ class EvtHistManager_conversions
   //
   double nLostHits_selElectron,
   double passesConversionVeto_selElectron,
+  double ntightLeptonsFull,
+  double cone_pT_3rdEle,
+  double pT_3rdEle,
+  double eta_3rdEle,
+  double phi_3rdEle,
+  double dR_3rdEle_nearestMu,
   //
   //
   //  
@@ -530,6 +536,12 @@ class EvtHistManager_conversions
   //
   TH1 * hnLostHits_selElectron_;
   TH1 * hpassesConversionVeto_selElectron_;
+  TH1 * hntightLeptonsFull_;
+  TH1 * hcone_pT_3rdEle_;
+  TH1 * hpT_3rdEle_;
+  TH1 * heta_3rdEle_;
+  TH1 * hphi_3rdEle_;
+  TH1 * hdR_3rdEle_nearestMu_;  
   //
   //
   //  

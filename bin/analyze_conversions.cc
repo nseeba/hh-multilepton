@@ -295,6 +295,28 @@ int main(int argc, char* argv[])
   const bool isControlRegion = true; //cfg_analyze.getParameter<bool>("isControlRegion");
   std::cout << "isControlRegion: " << isControlRegion << ". \t isControlRegion is set manually to true to run with WZ CR mode. \t **** IMPORTANT ****\n";
 
+  const std::string ele_ConvsCR = cfg_analyze.getParameter<std::string>("ele_ConvsCR"); // ['disable_nLostHits_convsVeto', 'invert_nLostHits', 'invert_convsVeto', 'invert_eitherOf_convsVeto_nLostHits', 'invert_both_convsVeto_nLostHits'] 
+  const bool ele_ConvsCR_disable_nLostHits_convsVeto = (ele_ConvsCR.compare("disable_nLostHits_convsVeto") == 0);
+  const bool ele_ConvsCR_invert_nLostHits            = (ele_ConvsCR.compare("invert_nLostHits") == 0);
+  const bool ele_ConvsCR_invert_convsVeto            = (ele_ConvsCR.compare("invert_convsVeto") == 0);
+  const bool ele_ConvsCR_invert_eitherOf_convsVeto_nLostHits  = (ele_ConvsCR.compare("invert_eitherOf_convsVeto_nLostHits") == 0);
+  const bool ele_ConvsCR_invert_both_convsVeto_nLostHits      = (ele_ConvsCR.compare("invert_both_convsVeto_nLostHits") == 0);
+  std::cout << "ele_ConvsCR: " << ele_ConvsCR
+	    << ", \t ele_ConvsCR_disable_nLostHits_convsVeto: " << ele_ConvsCR_disable_nLostHits_convsVeto
+	    << ", ele_ConvsCR_invert_nLostHits: " << ele_ConvsCR_invert_nLostHits
+	    << ", ele_ConvsCR_invert_convsVeto: " << ele_ConvsCR_invert_convsVeto
+	    << ", ele_ConvsCR_invert_eitherOf_convsVeto_nLostHits: " << ele_ConvsCR_invert_eitherOf_convsVeto_nLostHits
+	    << ", ele_ConvsCR_invert_both_convsVeto_nLostHits: " << ele_ConvsCR_invert_both_convsVeto_nLostHits
+	    << "\n";
+  if ( ! (ele_ConvsCR_disable_nLostHits_convsVeto ||
+	 ele_ConvsCR_invert_nLostHits ||
+	 ele_ConvsCR_invert_convsVeto ||
+	 ele_ConvsCR_invert_eitherOf_convsVeto_nLostHits ||
+	  ele_ConvsCR_invert_both_convsVeto_nLostHits) ) {
+    throw cms::Exception("analyze_conversions")
+      << "None of the ele_ConvsCR_option (" << ele_ConvsCR << ") is set !!\n";
+  }
+
   // single lepton triggers
   vstring triggerNames_1e = cfg_analyze.getParameter<vstring>("triggers_1e");
   std::vector<hltPath*> triggers_1e = create_hltPaths(triggerNames_1e, "triggers_1e");
@@ -609,18 +631,28 @@ int main(int argc, char* argv[])
   RecoElectronCollectionSelectorTight tightElectronSelector(era, -1, isDEBUG);
   electronReader->set_mvaTTH_wp(lep_mva_cut_e);
 
-  Int_t min_nLostHits_fornLostHitsInversion = 1;
-  preselElectronSelector.invert_max_nLostHits(min_nLostHits_fornLostHitsInversion);
+  Int_t min_nLostHits_fornLostHitsInversion_forSelector = 0;
+  preselElectronSelector.invert_max_nLostHits(min_nLostHits_fornLostHitsInversion_forSelector);
   
-  fakeableElectronSelector_default.invert_conversionVeto();
-  fakeableElectronSelector_default.invert_max_nLostHits(min_nLostHits_fornLostHitsInversion);
+  //fakeableElectronSelector_default.invert_conversionVeto();
+  fakeableElectronSelector_default.disable_conversionVeto();
+  fakeableElectronSelector_default.invert_max_nLostHits(min_nLostHits_fornLostHitsInversion_forSelector);
   
-  fakeableElectronSelector_hh_multilepton.invert_conversionVeto();
-  fakeableElectronSelector_hh_multilepton.invert_max_nLostHits(min_nLostHits_fornLostHitsInversion);
+  //fakeableElectronSelector_hh_multilepton.invert_conversionVeto();
+  fakeableElectronSelector_hh_multilepton.disable_conversionVeto();
+  fakeableElectronSelector_hh_multilepton.invert_max_nLostHits(min_nLostHits_fornLostHitsInversion_forSelector);
   
-  tightElectronSelector.invert_conversionVeto();
-  tightElectronSelector.invert_max_nLostHits(min_nLostHits_fornLostHitsInversion);
-  std::cout << "Disable conversionVeto and nLostHits " << min_nLostHits_fornLostHitsInversion << " ***** \n";
+  //tightElectronSelector.invert_conversionVeto();
+  tightElectronSelector.disable_conversionVeto();
+  tightElectronSelector.invert_max_nLostHits(min_nLostHits_fornLostHitsInversion_forSelector);
+  std::cout << "Disable conversionVeto and set nLostHits >= " << min_nLostHits_fornLostHitsInversion_forSelector << " ***** \n";
+
+  std::cout << "Print ElectronSelector conditions:: \n";
+  preselElectronSelector.print_selection_conditions();
+  fakeableElectronSelector_default.print_selection_conditions();
+  fakeableElectronSelector_hh_multilepton.print_selection_conditions();
+  tightElectronSelector.print_selection_conditions();
+  
   
   RecoHadTauReader* hadTauReader = new RecoHadTauReader(era, branchName_hadTaus, isMC, readGenObjects);
   hadTauReader->setHadTauPt_central_or_shift(hadTauPt_option);
@@ -1493,7 +1525,7 @@ int main(int argc, char* argv[])
       fakeableMuonSelector_default(preselMuons, isHigherConePt)
       ;
     const std::vector<const RecoMuon*> tightMuons = tightMuonSelector(fakeableMuons, isHigherConePt);
-    if(isDEBUG || run_lumi_eventSelector)
+    if(isDEBUG || (run_lumi_eventSelector && printLevel > 0))
     {
       printCollection("preselMuons",   preselMuons);
       printCollection("fakeableMuons", fakeableMuons);
@@ -1510,7 +1542,7 @@ int main(int argc, char* argv[])
       fakeableElectronSelector_default(preselElectrons, isHigherConePt)
       ;
     const std::vector<const RecoElectron*> tightElectrons = tightElectronSelector(fakeableElectrons, isHigherConePt);
-    if(isDEBUG || run_lumi_eventSelector)
+    if(isDEBUG || (run_lumi_eventSelector && printLevel > 0))
     {
       printCollection("preselElectrons",   preselElectrons);
       printCollection("preselElectronsUncleaned", preselElectronsUncleaned);
@@ -1553,7 +1585,7 @@ int main(int argc, char* argv[])
     const std::vector<const RecoHadTau*> fakeableHadTaus = fakeableHadTauSelector(cleanedHadTaus, isHigherPt);
     const std::vector<const RecoHadTau*> selHadTaus = tightHadTauSelector(cleanedHadTaus, isHigherPt);
 
-    if(isDEBUG || run_lumi_eventSelector)
+    if(isDEBUG || (run_lumi_eventSelector && printLevel > 0))
     {
       printCollection("selMuons", selMuons);
       printCollection("selElectrons", selElectrons);
@@ -1574,7 +1606,7 @@ int main(int argc, char* argv[])
     const std::vector<const RecoJet*> selBJetsAK4_medium = jetSelectorAK4_bTagMedium(cleanedJetsAK4, isHigherPt);
     //int numSelJetsPtGt40 = countHighPtObjects(selJetsAK4, 40.);
     
-    if(isDEBUG || run_lumi_eventSelector)
+    if(isDEBUG || (run_lumi_eventSelector && printLevel > 0))
     {
       printCollection("uncleanedJetsAK4", jet_ptrs_ak4);
       printCollection("selJetsAK4",       selJetsAK4);
@@ -1664,7 +1696,7 @@ int main(int argc, char* argv[])
 //--- apply preselection
     // require exactly three leptons passing loose preselection criteria to avoid overlap with 4l category
     if ( !(preselLeptonsFull.size() >= 3) ) {
-      if ( run_lumi_eventSelector ) {
+      if ( run_lumi_eventSelector && printLevel > 0 ) {
         std::cout << "event " << eventInfo.str() << " FAILS preselLeptons selection." << std::endl;
         printCollection("preselLeptons", preselLeptonsFull);
       }
@@ -1684,7 +1716,7 @@ int main(int argc, char* argv[])
 //--- apply final event selection
     // require exactly three leptons passing tight selection criteria of final event selection
     if ( !(selLeptons.size() >= 3) ) {
-      if ( run_lumi_eventSelector ) {
+      if ( run_lumi_eventSelector  && printLevel > 0) {
     std::cout << "event " << eventInfo.str() << " FAILS selLeptons selection." << std::endl;
 	printCollection("selLeptons", selLeptons);
 	//printCollection("preselLeptons", preselLeptons);
@@ -1756,6 +1788,7 @@ int main(int argc, char* argv[])
       }
     }
 
+    /* //select >=3 tight leptons
     // require exactly three leptons passing tight selection criteria, to avoid overlap with 4l channel
     if ( !(tightLeptonsFull.size() <= 3) ) {
       if ( run_lumi_eventSelector ) {
@@ -1764,16 +1797,16 @@ int main(int argc, char* argv[])
       }
       continue;
     }
-     cutFlowTable.update("<= 3 tight sel leptons", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowTable.update("<= 3 tight sel leptons", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("<= 3 tight sel leptons", evtWeightRecorder.get(central_or_shift_main));
-   
+    */
 
     // require that trigger paths match lepton flavor (for fakeable leptons)
     if ( !((fakeableElectrons.size() >= 3 &&                              (selTrigger_3e    || selTrigger_2e  || selTrigger_1e                                      )) ||
 	   (fakeableElectrons.size() >= 2 && fakeableMuons.size() >= 1 && (selTrigger_2e1mu || selTrigger_2e  || selTrigger_1e1mu || selTrigger_1mu || selTrigger_1e)) ||
 	   (fakeableElectrons.size() >= 1 && fakeableMuons.size() >= 2 && (selTrigger_1e2mu || selTrigger_2mu || selTrigger_1e1mu || selTrigger_1mu || selTrigger_1e)) ||
 	   (                                 fakeableMuons.size() >= 3 && (selTrigger_3mu   || selTrigger_2mu || selTrigger_1mu                                     ))) ) {
-      if ( run_lumi_eventSelector ) {
+      if ( (run_lumi_eventSelector && printLevel > 0) ) {
         std::cout << "event " << eventInfo.str() << " FAILS trigger selection for given fakeableLepton multiplicity." << std::endl;
 	std::cout << " (#fakeableElectrons = " << fakeableElectrons.size()
 		  << ", #fakeableMuons = " << fakeableMuons.size()
@@ -1816,7 +1849,7 @@ int main(int argc, char* argv[])
       bool selTrigger_MuonEG = selTrigger_1e1mu || selTrigger_2e1mu || selTrigger_1e2mu;
 
       if ( selTrigger_SingleElectron && (isTriggered_SingleMuon || isTriggered_DoubleMuon || isTriggered_MuonEG) ) {
-	if ( run_lumi_eventSelector ) {
+	if ( (run_lumi_eventSelector && printLevel > 0) ) {
           std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
 	  std::cout << " (selTrigger_SingleElectron = " << selTrigger_SingleElectron
 		    << ", isTriggered_SingleMuon = " << isTriggered_SingleMuon
@@ -1826,7 +1859,7 @@ int main(int argc, char* argv[])
 	continue;
       }
       if ( selTrigger_SingleElectron && isTriggered_DoubleEG && era != Era::k2018 ) {
-        if ( run_lumi_eventSelector ) {
+        if ( (run_lumi_eventSelector && printLevel > 0) ) {
           std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
           std::cout << " (selTrigger_SingleElectron = " << selTrigger_SingleElectron
                     << ", isTriggered_DoubleEG = " << isTriggered_DoubleEG << ")" << std::endl;
@@ -1834,7 +1867,7 @@ int main(int argc, char* argv[])
         continue;
       }
       if ( selTrigger_DoubleEG && (isTriggered_DoubleMuon || isTriggered_MuonEG) ) {
-	if ( run_lumi_eventSelector ) {
+	if ( (run_lumi_eventSelector && printLevel > 0) ) {
           std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
 	  std::cout << " (selTrigger_DoubleEG = " << selTrigger_DoubleEG
 		    << ", isTriggered_DoubleMuon = " << isTriggered_DoubleMuon
@@ -1843,7 +1876,7 @@ int main(int argc, char* argv[])
 	continue;
       }
       if ( selTrigger_SingleMuon && (isTriggered_DoubleEG || isTriggered_DoubleMuon || isTriggered_MuonEG) ) {
-	if ( run_lumi_eventSelector ) {
+	if ( (run_lumi_eventSelector && printLevel > 0) ) {
           std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
 	  std::cout << " (selTrigger_SingleMuon = " << selTrigger_SingleMuon
 		    << ", isTriggered_DoubleEG = " << isTriggered_DoubleEG
@@ -1853,7 +1886,7 @@ int main(int argc, char* argv[])
 	continue;
       }
       if ( selTrigger_MuonEG && isTriggered_DoubleMuon ) {
-	if ( run_lumi_eventSelector ) {
+	if ( (run_lumi_eventSelector && printLevel > 0) ) {
           std::cout << "event " << eventInfo.str() << " FAILS trigger selection." << std::endl;
 	  std::cout << " (selTrigger_MuonEG = " << selTrigger_MuonEG
 		    << ", isTriggered_DoubleMuon = " << isTriggered_DoubleMuon << ")" << std::endl;
@@ -1880,7 +1913,7 @@ int main(int argc, char* argv[])
       };
       if(! hltFilter(trigger_bits, fakeableLeptons, {}))
       {
-        if(run_lumi_eventSelector || isDEBUG)
+        if((run_lumi_eventSelector && printLevel > 0) || isDEBUG)
         {
           std::cout << "event " << eventInfo.str() << " FAILS HLT filter matching\n";
         }
@@ -1892,7 +1925,7 @@ int main(int argc, char* argv[])
 
 
     if ( (selBJetsAK4_loose.size() >= 2 || selBJetsAK4_medium.size() >= 1) ) {
-      if ( run_lumi_eventSelector ) {
+      if ( (run_lumi_eventSelector && printLevel > 0) ) {
     std::cout << "event " << eventInfo.str() << " FAILS selBJets selection." << std::endl;
 	printCollection("selJetsAK4", selJetsAK4);
 	printCollection("selBJetsAK4_loose", selBJetsAK4_loose);
@@ -1905,7 +1938,7 @@ int main(int argc, char* argv[])
 
     
     if ( selHadTaus.size() > 0 ) {
-      if ( run_lumi_eventSelector ) {
+      if ( (run_lumi_eventSelector && printLevel > 0) ) {
     std::cout << "event " << eventInfo.str() << " FAILS selHadTaus veto." << std::endl;
 	printCollection("selHadTaus", selHadTaus);
       }
@@ -1964,7 +1997,7 @@ int main(int argc, char* argv[])
     std::vector<const RecoJetAK8*> jet_ptrs_ak8_Wjj = convert_to_ptrs(jets_ak8_Wjj);    
     std::vector<const RecoJetAK8*> selJetsAK8_selectorAK8 = jetSelectorAK8(jet_ptrs_ak8_Wjj, isHigherPt); 
     
-    if(isDEBUG || run_lumi_eventSelector) 
+    if(isDEBUG || (run_lumi_eventSelector && printLevel > 0)) 
     {
       printCollection("uncleaned AK8 jets (Wjj)", jet_ptrs_ak8_Wjj);        
     }
@@ -2135,7 +2168,7 @@ int main(int argc, char* argv[])
     if ( ! isControlRegion )
     {
       if ( !(selJet1_Wjj || selJet2_Wjj) ) {
-	if ( run_lumi_eventSelector ) {
+	if ( run_lumi_eventSelector && printLevel > 0 ) {
 	  std::cout << "event " << eventInfo.str() << " FAILS >= 1 jets from W->jj selection\n";
 	}
 	continue;
@@ -2384,6 +2417,11 @@ int main(int argc, char* argv[])
     cutFlowTable.update("MEt filters", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("MEt filters", evtWeightRecorder.get(central_or_shift_main));
 
+
+
+    
+
+    
     bool failsSignalRegionVeto = false;
     if ( isMCClosure_e || isMCClosure_m ) {
       bool applySignalRegionVeto = (isMCClosure_e && countFakeElectrons(selLeptons) >= 1) || (isMCClosure_m && countFakeMuons(selLeptons) >= 1);
@@ -2392,7 +2430,7 @@ int main(int argc, char* argv[])
     } else if ( electronSelection == kFakeable || muonSelection == kFakeable ) {
       if ( tightLeptons.size() >= 3 ) failsSignalRegionVeto = true;
     }
-    if ( run_lumi_eventSelector ) {
+    if ( run_lumi_eventSelector && printLevel > 0 ) {
       std::cout << "isMCClosure_e: " << isMCClosure_e << ", isMCClosure_m: " << isMCClosure_m
 		<< ", countFakeElectrons(selLeptons): " << countFakeElectrons(selLeptons)
 		<< ", countFakeMuons(selLeptons): " << countFakeMuons(selLeptons)
@@ -2414,12 +2452,15 @@ int main(int argc, char* argv[])
     cutFlowTable.update("signal region veto", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("signal region veto", evtWeightRecorder.get(central_or_shift_main));
 
-    if ( run_lumi_eventSelector || printLevel > 5) {
+    if ( run_lumi_eventSelector && printLevel > 0) {
       std::cout << "hereSiddh:: Event passing selection " << eventInfo << "\t genMatchIdx_0: " << genMatchIdx_0;
       std::cout << "\nevtWeightRecorder: " << evtWeightRecorder << std::endl; 
     }
 
-
+    /*
+    std::cout << "nselLeptons: " << selLeptons.size() << ", nselMuons: " << selMuons.size() << ", nselElectrons: " << selElectrons.size()
+	       << ", ntightLeptonsFull: " << tightLeptonsFull.size() << ", nfakeableLeptonsFull: " << fakeableLeptonsFull.size() << ", npreselLeptonsFull: " << preselLeptonsFull.size() << "\n";
+    */
     
     /*
     int nEle_3selLep = 0, nMu_3selLep = 0;
@@ -3221,8 +3262,17 @@ int main(int argc, char* argv[])
     double dR_ll_WZctrl_2lss = -1.;
     double max_lep_eta_WZctrl_2lss = -1.;
 
+    // conversions control region
+    double cone_pT_3rdEle = -1.;
+    double pT_3rdEle = -1.;
+    double eta_3rdEle = -1.;
+    double phi_3rdEle = -1.;
+    double dR_3rdEle_nearestMu = -1.;
+
     if ( isControlRegion ) // WZ control region
     {
+      cutFlowTable.update("isControlRegion: 3l selection_0", evtWeightRecorder.get(central_or_shift_main));
+      
       bool passesZbosonMassCut = false;
       double massSFOS = -1.;
       const RecoLepton* selLepton1_Z = nullptr;
@@ -3273,6 +3323,74 @@ int main(int argc, char* argv[])
 	passesConversionVeto_selElectron = selElectron_0[0]->passesConversionVeto();
 	//printf("selElectron (%zu): nLostHits %i, passesConversionVeto %i \n",selElectron_0.size(),nLostHits_selElectron,passesConversionVeto_selElectron);
       }
+
+      
+      if (selElectron_0.size() > 0)
+      {
+	cutFlowTable.update("WZctrl: 3rd electron", evtWeightRecorder.get(central_or_shift_main));
+	
+	if ( selElectron_0[0]->nLostHits() >= 1)
+	{
+	  cutFlowTable.update("WZctrl: 3rd electron w/ >=1 nLostHits", evtWeightRecorder.get(central_or_shift_main));
+	}
+	if ( ! selElectron_0[0]->passesConversionVeto() )
+	{
+	  cutFlowTable.update("WZctrl: 3rd electron fails conversion veto", evtWeightRecorder.get(central_or_shift_main));
+	}
+
+	if ( (! selElectron_0[0]->passesConversionVeto()) || selElectron_0[0]->nLostHits() >= 1 )
+	{
+	  cutFlowTable.update("WZctrl: 3rd electron fails conversion veto or >=1 nLostHits", evtWeightRecorder.get(central_or_shift_main));
+	}
+
+	if ( (! selElectron_0[0]->passesConversionVeto()) && selElectron_0[0]->nLostHits() >= 1 )
+	{
+	  cutFlowTable.update("WZctrl: 3rd electron fails conversion veto && >=1 nLostHits", evtWeightRecorder.get(central_or_shift_main));
+	}
+
+
+	if ( ele_ConvsCR_invert_nLostHits ) {
+	  if ( selElectron_0[0]->nLostHits() < 1 ) {
+	    if ( run_lumi_eventSelector ) {
+	      std::cout << "event " << eventInfo.str() << " FAILS 3rd electron w/ >=1 nLostHits cut ." << std::endl;
+	    }
+	    continue;
+	  }
+	  cutFlowTable.update("WZctrl: 3rd electron w/ >=1 nLostHits cut", evtWeightRecorder.get(central_or_shift_main));
+	}
+
+	if ( ele_ConvsCR_invert_convsVeto ) {
+	  if (  selElectron_0[0]->passesConversionVeto() ) {
+	    if ( run_lumi_eventSelector ) {
+	      std::cout << "event " << eventInfo.str() << " FAILS 3rd electron fails conversion veto cut." << std::endl;
+	    }
+	    continue;
+	  }
+	  cutFlowTable.update("WZctrl: 3rd electron fails conversion veto cut", evtWeightRecorder.get(central_or_shift_main));
+	}
+
+	if ( ele_ConvsCR_invert_eitherOf_convsVeto_nLostHits ) {
+	  if ( ! (( ! selElectron_0[0]->passesConversionVeto())  ||  selElectron_0[0]->nLostHits() >= 1) ) {
+	    if ( run_lumi_eventSelector ) {
+	      std::cout << "event " << eventInfo.str() << " FAILS 3rd electron fails conversion veto || >=1 nLostHits cut." << std::endl;
+	    }
+	    continue;
+	  }
+	  cutFlowTable.update("WZctrl: 3rd electron fails conversion veto || >=1 nLostHits cut", evtWeightRecorder.get(central_or_shift_main));	
+	}
+
+	if ( ele_ConvsCR_invert_both_convsVeto_nLostHits ) {
+	  if ( ! (( ! selElectron_0[0]->passesConversionVeto())  &&  selElectron_0[0]->nLostHits() >= 1) ) {
+	    if ( run_lumi_eventSelector ) {
+	      std::cout << "event " << eventInfo.str() << " FAILS 3rd electron fails conversion veto && >=1 nLostHits cut." << std::endl;
+	    }
+	    continue;
+	  }
+	  cutFlowTable.update("WZctrl: 3rd electron fails conversion veto && >=1 nLostHits cut", evtWeightRecorder.get(central_or_shift_main));	
+	}
+	
+      }
+
             
       
       
@@ -3297,6 +3415,30 @@ int main(int argc, char* argv[])
       mT_lep2_WZctrl_2lss            = comp_MT_met(selLepton2_SS, met.pt(), met.phi());
       dR_ll_WZctrl_2lss              = deltaR(selLepton1_SS->p4(), selLepton2_SS->p4());
       max_lep_eta_WZctrl_2lss        = TMath::Max(std::abs(selLepton1_SS->eta()), std::abs(selLepton2_SS->eta())) ;
+
+      if (selElectron_0.size() > 0)
+      {
+	// selElectron_0[0]
+	cone_pT_3rdEle = comp_lep_conePt(*selElectron_0[0]);
+	pT_3rdEle = selElectron_0[0]->pt();
+	eta_3rdEle = selElectron_0[0]->eta();
+	phi_3rdEle = selElectron_0[0]->phi();
+
+	dR_3rdEle_nearestMu = 99999.;
+	//printf("ele: pt %g, conept %g, eta %g, phi %g,  pdgId: %i \n",
+	//     pT_3rdEle,cone_pT_3rdEle,eta_3rdEle,phi_3rdEle,  selElectron_0[0]->pdgId());
+	for ( std::vector<const RecoLepton*>::const_iterator selLepton1 = selLeptons.begin();
+	      selLepton1 != selLeptons.end(); ++selLepton1 )
+	{
+	  if ( (*selLepton1) == selElectron_0[0]) continue;
+
+	  //printf("mu: pt %g, conept %g, eta %g, phi %g,  pdgId: %i \n",
+	  //	 (*selLepton1)->pt(),comp_lep_conePt(*(*selLepton1)),(*selLepton1)->eta(),(*selLepton1)->phi(),(*selLepton1)->pdgId());
+	  double dr = deltaR(selElectron_0[0]->p4(), (*selLepton1)->p4());
+	  if (dr < dR_3rdEle_nearestMu) dR_3rdEle_nearestMu = dr;
+	}
+	//printf("dR_3rdEle_nearestMu %g \n",dR_3rdEle_nearestMu);
+      }
       
     }
     // ---------------------------------------------------------------------------------------------------------------
@@ -3718,6 +3860,12 @@ int main(int argc, char* argv[])
 	    //
 	    nLostHits_selElectron,
 	    passesConversionVeto_selElectron,
+	    tightLeptonsFull.size(),
+	    cone_pT_3rdEle,
+	    pT_3rdEle,
+	    eta_3rdEle,
+	    phi_3rdEle,
+	    dR_3rdEle_nearestMu,
 	    //
 	    //
 	    //
