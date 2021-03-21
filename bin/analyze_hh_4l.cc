@@ -82,8 +82,8 @@
 #include "tthAnalysis/HiggsToTauTau/interface/TTreeWrapper.h" // TTreeWrapper
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
-#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface_2.h" // HHWeightInterface
-#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterfaceLOtoNLO.h" // HHWeightInterfaceLOtoNLO
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterfaceLO.h" // HHWeightInterfaceLO
+#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterfaceNLO.h" // HHWeightInterfaceNLO
 #include "tthAnalysis/HiggsToTauTau/interface/BM_list.h" // BMS
 #include "tthAnalysis/HiggsToTauTau/interface/NtupleFillerBDT.h" // NtupleFillerBDT
 #include "tthAnalysis/HiggsToTauTau/interface/BtagSFRatioFacility.h" // BtagSFRatioFacility
@@ -461,20 +461,19 @@ int main(int argc, char* argv[])
   std::vector<std::string> HHWeightNames;
   std::vector<std::string> HHBMNames;
   const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
-  const bool apply_HH_rwgt = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt");
-  const HHWeightInterface2* HHWeight_calc = nullptr;
-  if(apply_HH_rwgt)
+  const bool apply_HH_rwgt_lo = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt_lo");
+  const HHWeightInterfaceLO* HHWeightLO_calc = nullptr;
+  if(apply_HH_rwgt_lo)
   {
-    HHWeight_calc = new HHWeightInterface2(hhWeight_cfg);
-    HHWeightNames = HHWeight_calc->get_weight_names();
-    HHBMNames = HHWeight_calc->get_bm_names();
+    HHWeightLO_calc = new HHWeightInterfaceLO(hhWeight_cfg);
+    HHWeightNames = HHWeightLO_calc->get_weight_names();
+    HHBMNames = HHWeightLO_calc->get_bm_names();
   }
-  const bool apply_HH_rwgt_LOtoNLO = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt_LOtoNLO");
-  const bool apply_HH_coupling_fix_CMS = hhWeight_cfg.getParameter<bool>("apply_coupling_fix_Run2");
-  const HHWeightInterfaceLOtoNLO* HHWeight_calc_LOtoNLO = nullptr;
-  if(apply_HH_rwgt_LOtoNLO)
+  const bool apply_HH_rwgt_nlo = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt_nlo");
+  const HHWeightInterfaceNLO* HHWeightNLO_calc = nullptr;
+  if(apply_HH_rwgt_nlo)
   {
-    HHWeight_calc_LOtoNLO = new HHWeightInterfaceLOtoNLO(era, apply_HH_coupling_fix_CMS, 10., isDEBUG);
+    HHWeightNLO_calc = new HHWeightInterfaceNLO(era, false, 10., isDEBUG);
   }
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
@@ -711,7 +710,7 @@ int main(int argc, char* argv[])
 
       selHistManager->datacard_ = new DatacardHistManager_hh(makeHistManager_cfg(process_and_genMatch,
         Form("%s/sel/datacard", histogramDir.data()), era_string, central_or_shift),
-        analysisConfig, eventInfo, HHWeight_calc, HHWeight_calc_LOtoNLO, 
+        analysisConfig, eventInfo, HHWeightLO_calc, HHWeightNLO_calc,
         isDEBUG);
       selHistManager->datacard_->bookHistograms(fs);
 
@@ -758,7 +757,7 @@ int main(int argc, char* argv[])
     bdt_filler = new std::remove_pointer<decltype(bdt_filler)>::type(
       makeHistManager_cfg(process_string, Form("%s/sel/evtntuple", histogramDir.data()), era_string, central_or_shift_main)
     );
-    if(apply_HH_rwgt)
+    if(apply_HH_rwgt_lo)
     {
       for(auto bmName : HHWeightNames)
       {
@@ -1074,6 +1073,18 @@ int main(int argc, char* argv[])
       if(eventWeightManager)      evtWeightRecorder.record_auxWeight(eventWeightManager);
       if(l1PreFiringWeightReader) evtWeightRecorder.record_l1PrefireWeight(l1PreFiringWeightReader);
       if(apply_topPtReweighting)  evtWeightRecorder.record_toppt_rwgt(eventInfo.topPtRwgtSF);
+      if ( apply_HH_rwgt_lo )
+      {
+        evtWeightRecorder.record_hhWeight_lo(HHWeightLO_calc, eventInfo, isDEBUG);
+        // CV: applying the NLO weight without applying the LO weight as well
+        //     does not make sense for the Run-2 LO HH MC samples,
+        //     as the LO weight needs to be applied in order to fix the coupling bug
+        //     present in the LO HH MC samples for 2016, 2017, and 2018
+        if ( apply_HH_rwgt_nlo )
+        {
+          evtWeightRecorder.record_hhWeight_nlo(HHWeightNLO_calc, eventInfo, isDEBUG);
+        }
+      }
       lheInfoReader->read();
       psWeightReader->read();
       evtWeightRecorder.record_lheScaleWeight(lheInfoReader);
@@ -2276,20 +2287,24 @@ int main(int argc, char* argv[])
       evtWeight_BDT *= lep1_frWeight*lep2_frWeight*lep3_frWeight*lep4_frWeight;
 
       std::map<std::string, double> weightMapHH;
-      if ( apply_HH_rwgt || apply_HH_rwgt_LOtoNLO )
+      if ( apply_HH_rwgt_lo || apply_HH_rwgt_nlo )
       {
         for ( unsigned int i = 0; i < HHWeightNames.size(); i++ )
         {
           double HHReweight = 1.;
-          if ( apply_HH_rwgt )
+          if ( apply_HH_rwgt_lo )
           {
-            assert(HHWeight_calc);
-            HHReweight = HHWeight_calc->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
-          }
-          if ( apply_HH_rwgt_LOtoNLO )
-          {
-            assert(HHWeight_calc_LOtoNLO);
-            HHReweight *= HHWeight_calc_LOtoNLO->getReWeight_V2(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+            assert(HHWeightLO_calc);
+            HHReweight = HHWeightLO_calc->getReWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+            // CV: applying the NLO weight without applying the LO weight as well
+            //     does not make sense for the Run-2 LO HH MC samples,
+            //     as the LO weight needs to be applied in order to fix the coupling bug
+            //     present in the LO HH MC samples for 2016, 2017, and 2018
+            if ( apply_HH_rwgt_nlo )
+            {
+              assert(HHWeightNLO_calc);
+              HHReweight *= HHWeightNLO_calc->getReWeight_V2(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+            }
           }
           weightMapHH[HHWeightNames[i]] = HHReweight;
         }

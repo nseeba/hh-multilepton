@@ -3,7 +3,6 @@ import os
 
 from tthAnalysis.HiggsToTauTau.configs.recommendedMEtFilters_cfi import *
 from tthAnalysis.HiggsToTauTau.configs.EvtYieldHistManager_cfi import *
-from tthAnalysis.HiggsToTauTau.configs.hhWeight_cfi import hhWeight
 from tthAnalysis.HiggsToTauTau.analysisSettings import *
 
 process = cms.PSet()
@@ -249,5 +248,4 @@ process.analyze_conversions = cms.PSet(
         branchTypeYaxis = cms.string(''),
     ),
     tHweights = cms.VPSet(),
-    hhWeight_cfg = hhWeight,
 )

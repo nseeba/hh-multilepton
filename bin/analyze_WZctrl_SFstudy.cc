@@ -98,7 +98,6 @@
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
 #include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // findGenLepton_and_NeutrinoFromWBoson
-#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface_2.h" // HHWeightInterface
 #include "tthAnalysis/HiggsToTauTau/interface/BtagSFRatioFacility.h" // BtagSFRatioFacility
 #include "tthAnalysis/HiggsToTauTau/interface/AnalysisConfig.h" // AnalysisConfig
 #include "tthAnalysis/HiggsToTauTau/interface/RecoVertex.h" // RecoVertex
@@ -607,28 +606,7 @@ int main(int argc, char* argv[])
   }
   const std::string default_cat_str = "default";
   std::vector<std::string> evt_cat_strs = { default_cat_str };
-  std::vector<std::string> HHWeightNames;
 
-//--- HH scan
-  const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
-  const bool apply_HH_rwgt = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt");
-  const HHWeightInterface_2 * HHWeight_calc = nullptr;
-  if(apply_HH_rwgt)
-  {
-    HHWeight_calc = new HHWeightInterface_2(hhWeight_cfg);
-    evt_cat_strs = HHWeight_calc->get_bm_names();
-    HHWeightNames = HHWeight_calc->get_weight_names();
-  }
-  const size_t Nscan = evt_cat_strs.size();
-  std::cout << "Number of points being scanned = " << Nscan << '\n';
-  std::cout << "Number of points being scanned = " << Nscan << '\n';
-  if (apply_HH_rwgt)
-  {
-    std::cout << "\n Weights booked = " << apply_HH_rwgt << '\n';
-    for (const std::string catcat : evt_cat_strs) {
-      std::cout << catcat << '\n';
-    }
-  }
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
   {
@@ -1160,11 +1138,6 @@ int main(int argc, char* argv[])
     bdt_filler = new std::remove_pointer<decltype(bdt_filler)>::type(
       makeHistManager_cfg(process_string, Form("%s/sel/evtntuple", histogramDir.data()), era_string, central_or_shift_main)
     );
-    for(const std::string & evt_cat_str: HHWeightNames)
-      {
-    	if (!apply_HH_rwgt) continue;
-	bdt_filler->register_variable<float_type>(Form(evt_cat_str.c_str()));
-      }
     bdt_filler -> register_variable<float_type>(
       "lep1_pt", "lep1_conePt", "lep1_eta", "mindr_lep1_jet", "mT_MEtLep1",
       "lep2_pt", "lep2_conePt", "lep2_eta", "mindr_lep2_jet", "mT_MEtLep2",
@@ -2571,33 +2544,6 @@ int main(int argc, char* argv[])
     std::map<std::string, double> reWeightMapHH;
     std::map<std::string, double> reWeightMapHH_woLeptonSF;
     //std::map<std::string, double> reWeightMapHH_woLeptonSFCor;
-    double HHWeight = 1.0; // X: for the SM point -- the point explicited on this code
-
-    if(apply_HH_rwgt)
-    {
-      assert(HHWeight_calc);
-      weightMapHH = HHWeight_calc->getWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
-      reWeightMapHH = HHWeight_calc->getReWeightMap(eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
-      HHWeight = weightMapHH["Weight_SM"];
-      evtWeightRecorder.record_bm(HHWeight); // SM by default
-      reWeightMapHH_woLeptonSF    = reWeightMapHH;
-      //reWeightMapHH_woLeptonSFCor = reWeightMapHH;
-      
-      if(isDEBUG)
-      { 
-        std::cout << "mhh = " << eventInfo.gen_mHH          << " : "
-          "cost "             << eventInfo.gen_cosThetaStar << " : "
-          "weight = "         << HHWeight                   << '\n'
-          ;
-        std::cout << "Calculated " << weightMapHH.size() << " scan weights\n";
-	for(const auto & kv: weightMapHH)
-        {
-          std::cout << "line = " <<kv.first << "; Weight = " <<  kv.second << '\n';
-        }
-
-        std::cout << '\n';
-      }
-    } 
 
     for(const std::string & central_or_shift: central_or_shifts_local)
     {
@@ -2609,17 +2555,9 @@ int main(int argc, char* argv[])
 	{
 	  continue;
 	}
-	if(apply_HH_rwgt)
-	{
-	  reWeightMapHH[evt_cat_str] *= evtWeight;
-	  reWeightMapHH_woLeptonSF[evt_cat_str] *= evtWeightRecorder_woLeptonSF.get(central_or_shift);
-	}
-	else
-	{
-	  reWeightMapHH[evt_cat_str] = evtWeight;
-	  reWeightMapHH_woLeptonSF[evt_cat_str]    = evtWeightRecorder_woLeptonSF.get(central_or_shift);
-	  //reWeightMapHH_woLeptonSFCor[evt_cat_str] = evtWeightRecorder_woLeptonSFCor.get(central_or_shift);
-	}
+        reWeightMapHH[evt_cat_str] = evtWeight;
+        reWeightMapHH_woLeptonSF[evt_cat_str]    = evtWeightRecorder_woLeptonSF.get(central_or_shift);
+        //reWeightMapHH_woLeptonSFCor[evt_cat_str] = evtWeightRecorder_woLeptonSFCor.get(central_or_shift);
       }
     }
     

@@ -99,8 +99,6 @@
 #include "tthAnalysis/HiggsToTauTau/interface/hltFilter.h" // hltFilter()
 #include "tthAnalysis/HiggsToTauTau/interface/EvtWeightManager.h" // EvtWeightManager
 #include "tthAnalysis/HiggsToTauTau/interface/analysisAuxFunctions.h" // findGenLepton_and_NeutrinoFromWBoson
-#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterface2.h" // HHWeightInterface2
-#include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterfaceLOtoNLO.h" // HHWeightInterfaceLOtoNLO
 #include "tthAnalysis/HiggsToTauTau/interface/BtagSFRatioFacility.h" // BtagSFRatioFacility
 #include "tthAnalysis/HiggsToTauTau/interface/RecoVertex.h" // RecoVertex
 #include "tthAnalysis/HiggsToTauTau/interface/RecoVertexReader.h" // RecoVertexReader
@@ -542,42 +540,6 @@ int main(int argc, char* argv[])
   {
     const double ref_genWeight = cfg_analyze.getParameter<double>("ref_genWeight");
     eventInfo.set_refGetWeight(ref_genWeight);
-  }
-
-//--- HH coupling scan
-  std::vector<std::string> HHWeightNames;
-  std::vector<std::string> HHBMNames;
-  const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
-  const bool apply_HH_rwgt = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt");
-  const HHWeightInterface2* HHWeight_calc = nullptr;
-  std::cout << "apply_HH_rwgt: " << apply_HH_rwgt << "\n";
-  if(apply_HH_rwgt)
-  {
-    HHWeight_calc = new HHWeightInterface2(hhWeight_cfg);
-    HHWeightNames = HHWeight_calc->get_weight_names();
-    HHBMNames     = HHWeight_calc->get_bm_names();
-    std::cout << "HHWeightNames: ";
-    for(auto bmName : HHWeightNames)
-    {
-      std::cout << bmName << ",  "; 
-    }
-    std::cout << "\n";
-    std::cout << "HHBMNames: ";
-    for(auto bmName : HHBMNames)
-    {
-      std::cout << bmName << ",  ";
-    }
-    std::cout << "\n";
-
-    //HHWeightNames = HHBMNames;
-    //std::cout << "Setting HHWeightNames = HHBMNames \n";
-  }
-  const bool apply_HH_rwgt_LOtoNLO = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt_LOtoNLO");
-  const bool apply_HH_coupling_fix_CMS = hhWeight_cfg.getParameter<bool>("apply_coupling_fix_Run2");
-  const HHWeightInterfaceLOtoNLO* HHWeight_calc_LOtoNLO = nullptr;
-  if(apply_HH_rwgt_LOtoNLO)
-  {
-    HHWeight_calc_LOtoNLO = new HHWeightInterfaceLOtoNLO(era, apply_HH_coupling_fix_CMS, 10., isDEBUG);
   }
 
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
@@ -1032,7 +994,7 @@ int main(int argc, char* argv[])
 
       selHistManager->datacard_ = new DatacardHistManager_hh(makeHistManager_cfg(process_and_genMatch,
         Form("%s/sel/datacard", histogramDir.data()), era_string, central_or_shift),
-        analysisConfig, eventInfo, HHWeight_calc, HHWeight_calc_LOtoNLO, 
+        analysisConfig, eventInfo, nullptr, nullptr,
         isDEBUG);
       selHistManager->datacard_->bookHistograms(fs);
 
@@ -1145,13 +1107,6 @@ int main(int argc, char* argv[])
     bdt_filler = new std::remove_pointer<decltype(bdt_filler)>::type(
       makeHistManager_cfg(process_string, Form("%s/sel/evtntuple", histogramDir.data()), era_string, central_or_shift_main)
     );
-    if(apply_HH_rwgt)
-    {
-      for(auto bmName : HHWeightNames)
-      {
-        bdt_filler->register_variable<float_type>(bmName.data());
-      }
-    } 
     bdt_filler -> register_variable<float_type>(
       "lep1_pt", "lep1_conePt", "lep1_eta", "mindr_lep1_jet", "mT_MEtLep1",
       "lep2_pt", "lep2_conePt", "lep2_eta", "mindr_lep2_jet", "mT_MEtLep2",
@@ -3769,12 +3724,12 @@ int main(int argc, char* argv[])
 	    evtWeight	    
 	    );
         }
-	selHistManager->datacard_->fillHistograms(
+        selHistManager->datacard_->fillHistograms(
           BDTOutput_Map_spin2,
           BDTOutput_Map_spin0,
           BDTOutput_Map_nonRes,
           //BDTOutput_Map_nonRes_base["Base"],
-	  isControlRegion ? mT_WZctrl_leptonW_MET : -1., // CV: BDTOutput for nonresonant_allBMs case not implemented yet !! Temporary solution
+          isControlRegion ? mT_WZctrl_leptonW_MET : -1., // CV: BDTOutput for nonresonant_allBMs case not implemented yet !! Temporary solution
           evtWeight);
 
         if(! skipFilling)
@@ -3902,26 +3857,6 @@ int main(int argc, char* argv[])
       double lep2_frWeight = lep2_genLepPt > 0 ? 1.0 : prob_fake_lepton_sublead;
       double lep3_frWeight = lep3_genLepPt > 0 ? 1.0 : prob_fake_lepton_third;
       evtWeight_BDT *= lep1_frWeight*lep2_frWeight*lep3_frWeight;
-
-      std::map<std::string, double> weightMapHH;
-      if ( apply_HH_rwgt || apply_HH_rwgt_LOtoNLO )
-      {
-        for ( unsigned int i = 0; i < HHWeightNames.size(); i++ )
-        {
-          double HHReweight = 1.;
-          if ( apply_HH_rwgt )
-          {
-            assert(HHWeight_calc);
-            HHReweight = HHWeight_calc->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
-          }
-          if ( apply_HH_rwgt_LOtoNLO )
-          {
-            assert(HHWeight_calc_LOtoNLO);
-	    HHReweight *= HHWeight_calc_LOtoNLO->getReWeight_V2(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
-          }
-          weightMapHH[HHWeightNames[i]] = HHReweight;
-        }
-      }
       
       bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
 	("nElectron",                                               selElectrons.size())
@@ -4174,7 +4109,6 @@ int main(int argc, char* argv[])
 	("leptonEffSF",           evtWeightRecorder.get_leptonSF())
 	("data_to_MC_correction", evtWeightRecorder.get_data_to_MC_correction(central_or_shift_main))
 	("FR_Weight",             evtWeightRecorder.get_FR(central_or_shift_main))
-	(weightMapHH)
         .fill()
 	;
     }
