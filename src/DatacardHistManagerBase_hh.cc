@@ -297,12 +297,12 @@ DatacardHistManagerBase_hh::compHHReweightMap()
       if ( apply_HH_rwgt_lo_ )
       {
         assert(HHWeightLO_calc_);
-        HHReweight = HHWeightLO_calc_->getReWeight(bmName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);
+        HHReweight = HHWeightLO_calc_->getRelativeWeight(bmName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);
       }
       if ( apply_HH_rwgt_nlo_ )
       {
         assert(HHWeightNLO_calc_);
-        HHReweight *= HHWeightNLO_calc_->getReWeight_V2(bmName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);
+        HHReweight *= HHWeightNLO_calc_->getRelativeWeight_V2(bmName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);
       }
       HHReweightMap_[histogramName->first] = HHReweight;
     }
