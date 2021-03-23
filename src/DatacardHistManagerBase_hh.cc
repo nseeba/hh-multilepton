@@ -302,7 +302,7 @@ DatacardHistManagerBase_hh::compHHReweightMap()
       if ( apply_HH_rwgt_nlo_ )
       {
         assert(HHWeightNLO_calc_);
-        HHReweight *= HHWeightNLO_calc_->getReWeight_V2(bmName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);
+        HHReweight *= HHWeightNLO_calc_->getReWeight_LOtoNLO_V2(bmName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);
       }
       HHReweightMap_[histogramName->first] = HHReweight;
     }
