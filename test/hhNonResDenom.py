@@ -55,6 +55,8 @@ use_preproc   = args.use_preprocessed
 # Custom arguments
 output_file = args.output_file
 
+version += "_{}".format(mode)
+
 # Use the arguments
 if '{era}' in output_file:
   output_file = output_file.format(era = era)
