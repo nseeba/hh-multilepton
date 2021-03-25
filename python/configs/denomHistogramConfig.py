@@ -469,7 +469,7 @@ class denomHistogramConfig:
                 )
                 self.jobOptions_sbatch[key_file] = {
                     'processName'  : process_name,
-                    'categoryName' : sample_info['sample_category'],
+                    'categoryName' : sample_info['sample_category_hh'],
                     'inputFiles'   : self.inputFiles[key_file],
                     'cfgFile_path' : self.cfgFiles_nonResDenom[key_file],
                     'outputFile'   : self.outputFiles_tmp[key_file],
