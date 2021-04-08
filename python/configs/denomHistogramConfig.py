@@ -99,6 +99,8 @@ class denomHistogramConfig:
             samples,
             max_files_per_job,
             era,
+            binning,
+            use_gen_weight,
             check_output_files,
             running_method,
             num_parallel_jobs,
@@ -116,6 +118,8 @@ class denomHistogramConfig:
         self.samples               = samples
         self.max_files_per_job     = max_files_per_job
         self.era                   = era
+        self.binning               = binning
+        self.use_gen_weight        = use_gen_weight
         self.check_output_files    = check_output_files
         self.verbose               = verbose
         self.dry_run               = dry_run
@@ -168,10 +172,26 @@ class denomHistogramConfig:
         all_dirs = [ DKEY_CFGS, DKEY_HISTO_TMP, DKEY_HISTO, DKEY_PLOTS, DKEY_LOGS, DKEY_SCRIPTS, DKEY_HADD_RT ]
         cfg_dirs = [ DKEY_CFGS, DKEY_LOGS, DKEY_PLOTS, DKEY_SCRIPTS, DKEY_HADD_RT ]
 
+        self.gen_weights = {}
+        if self.use_gen_weight:
+            ref_genweights = os.path.join(
+                os.environ['CMSSW_BASE'], 'src', 'tthAnalysis', 'HiggsToTauTau', 'data', 'refGenWeight_{}.txt'.format(era)
+            )
+            with open(ref_genweights, 'r') as f:
+                for line in f:
+                    line_split = line.strip().split()
+                    assert(len(line_split) == 2)
+                    sample_name = line_split[0]
+                    ref_genweight = float(line_split[1])
+                    assert(sample_name not in self.gen_weights)
+                    self.gen_weights[sample_name] = ref_genweight
+
         for sample_name, sample_info in self.samples.items():
             if not sample_info['use_it']:
                 continue
             process_name = sample_info["process_name_specific"]
+            if self.use_gen_weight:
+                assert(process_name in self.gen_weights)
             key_dir = getKey(process_name)
             for dir_type in all_dirs:
                 if dir_type == DKEY_PLOTS:
@@ -201,7 +221,10 @@ class denomHistogramConfig:
           outputFile: output file of the job -- a ROOT file containing histogram
         """
         lines = jobOptions['inputFiles'] + \
-                [ '', '%s %s %s' % (jobOptions['processName'], jobOptions['categoryName'], jobOptions['outputFile']) ]
+                [ '', '%s %s %s %s %s' % (
+                    jobOptions['processName'], jobOptions['categoryName'], jobOptions['outputFile'],
+                    ('%.6e' % jobOptions['genWeight']) if self.use_gen_weight else '0', self.binning,
+                ) ]
         assert(len(lines) >= 3)
         createFile(jobOptions['cfgFile_path'], lines, nofNewLines = 1)
 
@@ -467,9 +490,11 @@ class denomHistogramConfig:
                 self.scriptFiles_nonResDenom[key_file] = os.path.join(
                     self.dirs[key_dir][DKEY_CFGS], "nonResDenom_%s_%i_cfg.sh" % (process_name, jobId)
                 )
+                ref_genweight = self.gen_weights[process_name] if self.use_gen_weight else 0.
                 self.jobOptions_sbatch[key_file] = {
                     'processName'  : process_name,
                     'categoryName' : sample_info['sample_category_hh'],
+                    'genWeight'    : ref_genweight,
                     'inputFiles'   : self.inputFiles[key_file],
                     'cfgFile_path' : self.cfgFiles_nonResDenom[key_file],
                     'outputFile'   : self.outputFiles_tmp[key_file],

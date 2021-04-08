@@ -11,7 +11,7 @@ import sys
 import getpass
 import re
 
-# E.g.: ./test/hhNonResDenom.py -v 2019May09 -e 2017 -m bbww
+# E.g.: ./test/hhNonResDenom.py -v 2019May09 -e 2017 -m bbww -b nlo
 
 mode_choices = [ 'hh_multilepton', 'hh_bbww', 'hh_bbww_sync' ]
 
@@ -19,6 +19,14 @@ parser = tthAnalyzeParser(default_num_parallel_jobs = 40)
 parser.add_modes(mode_choices)
 parser.add_files_per_job(100)
 parser.add_use_home()
+parser.add_argument('-b','--binning',
+  type = str, dest = 'binning', metavar = 'binning', choices = [ 'lo', 'nlo' ], required = True,
+  help = 'R|Binning',
+)
+parser.add_argument('-g', '--use-gen-weight',
+  dest = 'use_gen_weight', action = 'store_true', default = False,
+  help = 'R|Fill the 2D histograms with gen weights',
+)
 parser.add_argument('-P', '--use-preprocessed',
   dest = 'use_preprocessed', action = 'store_true', default = False,
   help = 'R|Use Ntuples that have not been post-processed yet',
@@ -53,9 +61,11 @@ use_home      = args.use_home
 use_preproc   = args.use_preprocessed
 
 # Custom arguments
-output_file = args.output_file
+binning        = args.binning
+use_gen_weight = args.use_gen_weight
+output_file    = args.output_file
 
-version += "_{}".format(mode)
+version += "_{}_{}".format(mode, binning)
 
 # Use the arguments
 if '{era}' in output_file:
@@ -96,6 +106,8 @@ if __name__ == '__main__':
     samples            = samples,
     max_files_per_job  = files_per_job,
     era                = era,
+    binning            = binning,
+    use_gen_weight     = use_gen_weight,
     check_output_files = check_output_files,
     running_method     = running_method,
     num_parallel_jobs  = num_parallel_jobs,

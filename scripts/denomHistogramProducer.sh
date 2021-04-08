@@ -39,6 +39,8 @@ LAST_LINE=`tail -n1 "$INPUT_FILE"`
 PROCESS_NAME=$(echo "$LAST_LINE" | awk '{print $1}')
 CATEGORY_NAME=$(echo "$LAST_LINE" | awk '{print $2}')
 OUTPUT_FILE=$(echo "$LAST_LINE" | awk '{print $3}')
+REF_GENWEIGHT=$(echo "$LAST_LINE" | awk '{print $4}')
+BINNING=$(echo "$LAST_LINE" | awk '{print $5}')
 
 if [ -z ${OUTPUT_FILE+x} ]; then
   echo "No era provided";
@@ -94,7 +96,8 @@ HADD_FILES="$OUTPUT_FILE_BASENAME"
 for INDEX in ${!INPUT_FILES[@]}; do
   INDEX_INCR=$((INDEX+1));
   TMP_OUTPUT_FILENAME="${OUTPUT_FILE_FILENAME}_${INDEX_INCR}.${OUTPUT_FILE_EXTENSION}";
-  denomHistogramProducer.py -i "${INPUT_FILES[INDEX]}" -p $PROCESS_NAME -c $CATEGORY_NAME -o $TMP_OUTPUT_FILENAME -v;
+  denomHistogramProducer.py \
+    -i "${INPUT_FILES[INDEX]}" -p $PROCESS_NAME -c $CATEGORY_NAME -o $TMP_OUTPUT_FILENAME -g $REF_GENWEIGHT -b $BINNING -v;
   test_exit_code $?;
   HADD_FILES+=" $TMP_OUTPUT_FILENAME";
 done
