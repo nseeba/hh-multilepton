@@ -115,6 +115,7 @@
 #include "hhAnalysis/multilepton/interface/EvtWeightRecorderHH.h" // EvtWeightRecorderHH
 #include "hhAnalysis/multilepton/interface/AnalysisConfig_hh.h" // AnalysisConfig_hh
 #include "hhAnalysis/multilepton/interface/DatacardHistManager_hh.h" // DatacardHistManager_hh
+#include "hhAnalysis/multilepton/interface/HHGenKinematicsHistManager.h" // HHGenKinematicsHistManager
 
 #include "hhAnalysis/multilepton/interface/RecoElectronCollectionSelectorFakeable_hh_multilepton.h" // RecoElectronCollectionSelectorFakeable
 #include "hhAnalysis/multilepton/interface/RecoMuonCollectionSelectorFakeable_hh_multilepton.h" // RecoMuonCollectionSelectorFakeable
@@ -546,6 +547,7 @@ int main(int argc, char* argv[])
   }
 
 //--- HH coupling scan
+  const bool isMC_ggf_HH_nonresonant = process_string.find("signal_ggf_nonresonant") != std::string::npos;
   const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
   const bool apply_HH_rwgt_lo = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt_lo");
   const bool apply_HH_rwgt_nlo = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt_nlo");
@@ -557,12 +559,12 @@ int main(int argc, char* argv[])
   if(apply_HH_rwgt_lo || apply_HH_rwgt_nlo)
   {
     hhWeight_couplings = new HHWeightInterfaceCouplings(hhWeight_cfg);
+    HHWeightNames = hhWeight_couplings->get_weight_names();
+    HHBMNames = hhWeight_couplings->get_bm_names();
 
     if(apply_HH_rwgt_lo)
     {
       HHWeightLO_calc = new HHWeightInterfaceLO(hhWeight_couplings, hhWeight_cfg);
-      HHWeightNames = hhWeight_couplings->get_weight_names();
-      HHBMNames = hhWeight_couplings->get_bm_names();
     }
 
     if(apply_HH_rwgt_nlo)
@@ -570,7 +572,13 @@ int main(int argc, char* argv[])
       HHWeightNLO_calc = new HHWeightInterfaceNLO(hhWeight_couplings, era);
     }
   }
-
+  std::cout << "HHBMNames: ";
+  for (auto HHBMName: HHBMNames) std::cout << HHBMName << ", ";
+  std::cout << "\n";
+  std::cout << "HHWeightNames: ";
+  for (auto HHWeightName: HHWeightNames) std::cout << HHWeightName << ", ";
+  std::cout << "\n";
+  
   const std::vector<edm::ParameterSet> tHweights = cfg_analyze.getParameterSetVector("tHweights");
   if((isMC_tH || isMC_ttH) && ! tHweights.empty())
   {
@@ -942,6 +950,14 @@ int main(int argc, char* argv[])
   //TH1* histogram_analyzedEntries = fs.make<TH1D>("analyzedEntries", "analyzedEntries", 1, -0.5, +0.5);
   //std::map<std::string, std::map<int, TH1*>> hMEt_All_0;
 
+  HHGenKinematicsHistManager* genKinematicsHistManager_HH = NULL;
+  if ( isMC_ggf_HH_nonresonant )
+  {
+    genKinematicsHistManager_HH = new HHGenKinematicsHistManager(makeHistManager_cfg(process_string,
+      Form("%s/sel/genKinematics_HH", histogramDir.data()), era_string, central_or_shift_main),
+      analysisConfig, eventInfo, HHWeightLO_calc, HHWeightNLO_calc);
+    genKinematicsHistManager_HH->bookHistograms(fs);
+  }
   
   for(const std::string & central_or_shift: central_or_shifts_local)
   {
@@ -1122,7 +1138,7 @@ int main(int argc, char* argv[])
     bdt_filler = new std::remove_pointer<decltype(bdt_filler)>::type(
       makeHistManager_cfg(process_string, Form("%s/sel/evtntuple", histogramDir.data()), era_string, central_or_shift_main)
     );
-    if(apply_HH_rwgt_lo)
+    if(apply_HH_rwgt_lo || apply_HH_rwgt_nlo)
     {
       for(auto bmName : HHWeightNames)
       {
@@ -1290,7 +1306,7 @@ int main(int argc, char* argv[])
     EvtWeightRecorderHH evtWeightRecorder(central_or_shifts_local, central_or_shift_main, isMC);
     cutFlowTable.update("run:ls:event selection", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("run:ls:event selection", evtWeightRecorder.get(central_or_shift_main));
-    if (printLevel > 0) std::cout << "\neventInfo: " << eventInfo
+    if (printLevel > 1) std::cout << "\neventInfo: " << eventInfo
 				  << ", evtWgt: " << evtWeightRecorder.get(central_or_shift_main) << "\n";
     if ( isDEBUG ) {
       std::cout << "event #" << inputTree -> getCurrentMaxEventIdx() << ' ' << eventInfo << '\n';
@@ -1372,7 +1388,7 @@ int main(int argc, char* argv[])
       }
     }
 
-    if (printLevel > 0) std::cout << "eventInfo: " << eventInfo
+    if (printLevel > 5) std::cout << "eventInfo: " << eventInfo
 				  << ", evtWgt: " << evtWeightRecorder.get(central_or_shift_main) << "\n";
     
     if(!genPhotonFilter(genPhotons))
@@ -1386,7 +1402,7 @@ int main(int argc, char* argv[])
     cutFlowTable.update("gen photon filter", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("gen photon filter", evtWeightRecorder.get(central_or_shift_main));
 
-    if (printLevel > 0) std::cout << "eventInfo: " << eventInfo
+    if (printLevel > 5) std::cout << "eventInfo: " << eventInfo
 				  << ", evtWgt: " << evtWeightRecorder.get(central_or_shift_main) << "\n";
     
     eventInfo.reset_productionMode();
@@ -1408,7 +1424,7 @@ int main(int argc, char* argv[])
     }
 
     if (printLevel > 5) std::cout << "Siddh here10 " << std::endl;
-    if (printLevel > 0) std::cout << "eventInfo_1: " << eventInfo
+    if (printLevel > 5) std::cout << "eventInfo_1: " << eventInfo
 				  << ", evtWgt: " << evtWeightRecorder.get(central_or_shift_main) << "\n";
       
     if(isMC)
@@ -1443,8 +1459,28 @@ int main(int argc, char* argv[])
           );
         }
       }
+
+      if (genKinematicsHistManager_HH)
+      {
+	double hhWeight1 =
+	  evtWeightRecorder.get_genWeight() *
+	  evtWeightRecorder.get_hhWeight_lo() *
+	  evtWeightRecorder.get_hhWeight_nlo() *
+	  evtWeightRecorder.get_lumiScale(central_or_shift_main);
+      
+	if (printLevel > 5) {
+	  std::cout << "evtWeightRecorder.get_genWeight(): " << evtWeightRecorder.get_genWeight()
+		    << ", evtWeightRecorder.get_hhWeight_lo(): " << evtWeightRecorder.get_hhWeight_lo()
+		    << ", evtWeightRecorder.get_hhWeight_nlo(): " << evtWeightRecorder.get_hhWeight_nlo()
+		    << ",  hhWeight1: " << hhWeight1
+		    << "\n";
+	}
+
+	genKinematicsHistManager_HH->fillHistograms(hhWeight1);
+      }
     }
-    if (printLevel > 5) std::cout << "Siddh here12 " << std::endl;
+    if (printLevel > 6) std::cout << "Siddh here12 " << std::endl;
+    if (printLevel > 0) std::cout << "evtWeightRecorder: " << evtWeightRecorder << std::endl;
 
     bool isTriggered_1e = hltPaths_isTriggered(triggers_1e, triggerWhiteList, eventInfo, isMC, isDEBUG);
     bool isTriggered_1mu = hltPaths_isTriggered(triggers_1mu, triggerWhiteList, eventInfo, isMC, isDEBUG);
@@ -2429,6 +2465,41 @@ int main(int argc, char* argv[])
     }
 
 
+    if (printLevel > 0)
+    {
+      std::cout << "\nevtWeightRecorder: " << evtWeightRecorder << std::endl; 
+    }
+
+    if (printLevel > 0)
+    {
+      printf("HHreweighting:: eventWeight:: %zu \n",HHWeightNames.size());
+      std::map<std::string, double> weightMapHH;
+      if ( apply_HH_rwgt_lo || apply_HH_rwgt_nlo )
+      {
+	for ( unsigned int i = 0; i < HHWeightNames.size(); i++ )
+        {
+	  printf("\t %s: ",HHBMNames[i].c_str());
+          double HHReweight = 1.;
+          if ( apply_HH_rwgt_lo )
+          {
+            assert(HHWeightLO_calc);
+            HHReweight *= HHWeightLO_calc->getRelativeWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+	    printf("\t LO %g,",HHWeightLO_calc->getRelativeWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG));
+          }
+          if ( apply_HH_rwgt_nlo )
+          {
+            assert(HHWeightNLO_calc);
+            HHReweight *= HHWeightNLO_calc->getRelativeWeight_LOtoNLO(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+	    printf("\t NLO %g,",HHWeightNLO_calc->getRelativeWeight_LOtoNLO(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG));
+          }
+          weightMapHH[HHWeightNames[i]] = HHReweight;
+	  printf("\t total %g,\n",HHReweight);
+        }
+      }
+    }
+
+    if (printLevel > 0) std::cout << "Siddh here100" << std::endl;       
+    
     
     /*
     int nEle_3selLep = 0, nMu_3selLep = 0;
@@ -2821,7 +2892,7 @@ int main(int argc, char* argv[])
 
 
     //std::abs(selLepton1_H_WW_ll_Approach0->phi() - selLepton2_H_WW_ll_Approach0->phi());
-    if (printLevel > 0)
+    if (printLevel > 5)
     {
       double dPhi = std::abs(selLepton1_H_WW_ll_Approach0->phi() - selLepton2_H_WW_ll_Approach0->phi());
       if (dPhi > TMath::Pi()) dPhi = 2*TMath::Pi() - dPhi;
@@ -2950,7 +3021,7 @@ int main(int argc, char* argv[])
     const RecoJet* selAK4J_closestToLeptonIdx3_Approach2 = nullptr;
     const RecoJet* selAK4J_2ndclosestToLeptonIdx3_Approach2 = nullptr;
     dr_LeptonIdx3_AK4_min = 99999.;
-    if (printLevel > 0) printf("nselAK4 %zu \n",selJetsAK4.size());
+    if (printLevel > 8) printf("nselAK4 %zu \n",selJetsAK4.size());
     for ( std::vector<const RecoJet*>::const_iterator selJet1 = selJetsAK4.begin();
 	  selJet1 != selJetsAK4.end(); ++selJet1 ) {
       double dr = deltaR(selLepton_H_WW_ljj_Approach2->p4(), (*selJet1)->p4());
@@ -3130,7 +3201,7 @@ int main(int argc, char* argv[])
     const RecoJet* selAK4J_closestToLeptonIdx3_Approach3 = nullptr;
     const RecoJet* selAK4J_2ndclosestToLeptonIdx3_Approach3 = nullptr;
     dr_LeptonIdx3_AK4_min = 99999.;
-    if (printLevel > 0) printf("nselAK4 %zu \n",selJetsAK4.size());
+    if (printLevel > 8) printf("nselAK4 %zu \n",selJetsAK4.size());
     for ( std::vector<const RecoJet*>::const_iterator selJet1 = selJetsAK4.begin();
 	  selJet1 != selJetsAK4.end(); ++selJet1 ) {
       double dr = deltaR(selLepton_H_WW_ljj_Approach3->p4(), (*selJet1)->p4());
@@ -3829,6 +3900,7 @@ int main(int argc, char* argv[])
       (*selEventsFile) << eventInfo.run << ':' << eventInfo.lumi << ':' << eventInfo.event << '\n';
     }
 
+  
     if ( bdt_filler ) {
       double lep1_genLepPt = ( selLepton_lead->genLepton()    ) ? selLepton_lead->genLepton()->pt()    : 0.;
       double lep2_genLepPt = ( selLepton_sublead->genLepton() ) ? selLepton_sublead->genLepton()->pt() : 0.;
@@ -3853,7 +3925,7 @@ int main(int argc, char* argv[])
       {
         for ( unsigned int i = 0; i < HHWeightNames.size(); i++ )
         {
-          double HHReweight = 1.;
+	  double HHReweight = 1.;
           if ( apply_HH_rwgt_lo )
           {
             assert(HHWeightLO_calc);
@@ -3865,8 +3937,9 @@ int main(int argc, char* argv[])
             HHReweight *= HHWeightNLO_calc->getRelativeWeight_LOtoNLO(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
           }
           weightMapHH[HHWeightNames[i]] = HHReweight;
-        }
+	}
       }
+
       
       bdt_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
 	("nElectron",                                               selElectrons.size())

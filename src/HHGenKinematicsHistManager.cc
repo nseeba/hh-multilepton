@@ -33,8 +33,10 @@ HHGenKinematicsHistManager::bookHistograms(TFileDirectory & dir)
      650,  670,  700,  750,  800,  850,  900, 950, 1000, 1100, 
     1200, 1300, 1400, 1500, 1750, 2000, 5000
   };
+  int numBins_gen_absCosThetaStar = 4;
+  double binning_gen_absCosThetaStar[] = { 0.0, 0.4, 0.6, 0.8, 1.0  };
   histogram_gen_mHH_             = book1D(dir, "gen_mHH",             "gen_mHH",             numBins_gen_mHH, binning_gen_mHH);
-  histogram_gen_absCosThetaStar_ = book1D(dir, "gen_absCosThetaStar", "gen_absCosThetaStar", 10, 0.,   +1.);  
+  histogram_gen_absCosThetaStar_ = book1D(dir, "gen_absCosThetaStar", "gen_absCosThetaStar", numBins_gen_absCosThetaStar, binning_gen_absCosThetaStar);  
 }
 
 void
@@ -53,9 +55,10 @@ HHGenKinematicsHistManager::fillHistograms(double evtWeight)
     if ( apply_HH_rwgt_nlo_ )
     {
       assert(HHWeightNLO_calc_);
-      HHReweight *= HHWeightNLO_calc_->getRelativeWeight_LOtoNLO_V2("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
+      //HHReweight *= HHWeightNLO_calc_->getRelativeWeight_LOtoNLO_V2("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
+      HHReweight *= HHWeightNLO_calc_->getRelativeWeight_LOtoNLO("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false); // always 1 for "SM"      
     }
-
+    
     fillWithOverFlow(histogram_gen_mHH_, eventInfo_.gen_mHH, HHReweight*evtWeight, HHReweight*evtWeightErr);
     fillWithOverFlow(histogram_gen_absCosThetaStar_, eventInfo_.gen_cosThetaStar, HHReweight*evtWeight, HHReweight*evtWeightErr);
   }

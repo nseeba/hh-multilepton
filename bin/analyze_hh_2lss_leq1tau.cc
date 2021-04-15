@@ -108,6 +108,7 @@
 #include "hhAnalysis/multilepton/interface/EvtWeightRecorderHH.h" // EvtWeightRecorderHH
 #include "hhAnalysis/multilepton/interface/AnalysisConfig_hh.h" // AnalysisConfig_hh
 #include "hhAnalysis/multilepton/interface/DatacardHistManager_hh.h" // DatacardHistManager_hh
+#include "hhAnalysis/multilepton/interface/HHGenKinematicsHistManager.h" // HHGenKinematicsHistManager
 
 #include "hhAnalysis/multilepton/interface/RecoElectronCollectionSelectorFakeable_hh_multilepton.h"
 #include "hhAnalysis/multilepton/interface/RecoMuonCollectionSelectorFakeable_hh_multilepton.h"
@@ -486,6 +487,7 @@ int main(int argc, char* argv[])
   }
 
 //--- HH coupling scan
+  const bool isMC_ggf_HH_nonresonant = process_string.find("signal_ggf_nonresonant") != std::string::npos;
   const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
   const bool apply_HH_rwgt_lo = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt_lo");
   const bool apply_HH_rwgt_nlo = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt_nlo");
@@ -497,12 +499,12 @@ int main(int argc, char* argv[])
   if(apply_HH_rwgt_lo || apply_HH_rwgt_nlo)
   {
     hhWeight_couplings = new HHWeightInterfaceCouplings(hhWeight_cfg);
+    HHWeightNames = hhWeight_couplings->get_weight_names();
+    HHBMNames = hhWeight_couplings->get_bm_names();
 
     if(apply_HH_rwgt_lo)
     {
       HHWeightLO_calc = new HHWeightInterfaceLO(hhWeight_couplings, hhWeight_cfg);
-      HHWeightNames = hhWeight_couplings->get_weight_names();
-      HHBMNames = hhWeight_couplings->get_bm_names();
     }
 
     if(apply_HH_rwgt_nlo)
@@ -835,6 +837,16 @@ int main(int argc, char* argv[])
   std::map<std::string, GenEvtHistManager*> genEvtHistManager_afterCuts;
   std::map<std::string, LHEInfoHistManager*> lheInfoHistManager;
   std::map<std::string, std::map<int, selHistManagerType*>> selHistManagers;
+
+  HHGenKinematicsHistManager* genKinematicsHistManager_HH = NULL;
+  if ( isMC_ggf_HH_nonresonant )
+  {
+    genKinematicsHistManager_HH = new HHGenKinematicsHistManager(makeHistManager_cfg(process_string,
+      Form("%s/sel/genKinematics_HH", histogramDir.data()), era_string, central_or_shift_main),
+      analysisConfig, eventInfo, HHWeightLO_calc, HHWeightNLO_calc);
+    genKinematicsHistManager_HH->bookHistograms(fs);
+  }
+    
   for(const std::string & central_or_shift: central_or_shifts_local)
   {
     const bool skipBooking = central_or_shift != central_or_shift_main;
@@ -967,7 +979,7 @@ int main(int argc, char* argv[])
     bdt_filler = new std::remove_pointer<decltype(bdt_filler)>::type(
      makeHistManager_cfg(process_string, Form("%s/sel/evtntuple", histogramDir.data()), era_string, central_or_shift_main)
     );
-    if(apply_HH_rwgt_lo)
+    if(apply_HH_rwgt_lo || apply_HH_rwgt_nlo)
     {
       for(auto bmName : HHWeightNames)
       {
@@ -1197,14 +1209,34 @@ int main(int argc, char* argv[])
         }
         genEvtHistManager_beforeCuts[central_or_shift]->fillHistograms(
           genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeightRecorder.get_inclusive(central_or_shift)
-        );
+	  );
         if(eventWeightManager)
         {
           genEvtHistManager_beforeCuts[central_or_shift]->fillHistograms(
             eventWeightManager, evtWeightRecorder.get_inclusive(central_or_shift)
-          );
+	    );
         }
       }
+
+ 
+      if (genKinematicsHistManager_HH)
+      {
+	double hhWeight1 =
+	  evtWeightRecorder.get_genWeight() *
+	  evtWeightRecorder.get_hhWeight_lo() *
+	  evtWeightRecorder.get_hhWeight_nlo() *
+	  evtWeightRecorder.get_lumiScale(central_or_shift_main);
+      
+	if (printLevel > 5) {
+	  std::cout << "evtWeightRecorder.get_genWeight(): " << evtWeightRecorder.get_genWeight()
+		    << ", evtWeightRecorder.get_hhWeight_lo(): " << evtWeightRecorder.get_hhWeight_lo()
+		    << ", evtWeightRecorder.get_hhWeight_nlo(): " << evtWeightRecorder.get_hhWeight_nlo()
+		    << ",  hhWeight1: " << hhWeight1
+		    << "\n";
+	}
+
+	genKinematicsHistManager_HH->fillHistograms(hhWeight1);
+      }     
     }
 
     bool isTriggered_1e = hltPaths_isTriggered(triggers_1e, triggerWhiteList, eventInfo, isMC);
