@@ -95,6 +95,7 @@ class analyzeConfig_hh_0l_4tau(analyzeConfig_hh):
       submission_cmd        = submission_cmd,
       use_dymumu_tau_fr     = True,
       apply_nc_correction   = None,
+      apply_genPhotonFilter = True,
     )
 
     self.hadTau_selections = [ "Tight", "Fakeable" ]

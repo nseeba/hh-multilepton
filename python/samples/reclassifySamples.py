@@ -9,7 +9,7 @@ HH_DECAYMODES_RE = re.compile('_({}$)'.format('|'.join(HH_DECAYMODES)))
 
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 
-def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None, separate_th = True, apply_genPhotonFilter = True):
+def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None, separate_th = True):
 
   sum_events_hh  = copy.deepcopy(samples_era_hh['sum_events'])
   sum_events_bkg = copy.deepcopy(samples_era_bkg['sum_events'])
@@ -103,19 +103,5 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None,
       else:
         assert(sample_name.startswith("/VH"))
         sample_info["use_it"] = False
-
-    if apply_genPhotonFilter:
-      if sample_info["sample_category"] == "XGamma":
-        sample_info["genPhotonFilter"] = True # require events to have a prompt gen photon with pT > 20 GeV
-        if sample_name.startswith(('/TGJets', '/TTGJets')):
-          sample_info["sample_category"] = "TT"
-        elif sample_name.startswith('/WGTo'):
-          sample_info["sample_category"] = "W"
-        elif sample_name.startswith('/ZGTo'):
-          sample_info["sample_category"] = "DY"
-        else:
-          raise RuntimeError("Cannot be an XGamma sample: %s" % sample_name)
-      elif sample_info["sample_category"] in [ "DY", "TT", "W" ]:
-        sample_info["genPhotonFilter"] = False # require events to have no prompt gen photons with pT > 20 GeV
 
   return samples

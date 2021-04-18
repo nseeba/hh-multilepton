@@ -106,6 +106,7 @@ class analyzeConfig_hh_2l_2tau(analyzeConfig_hh):
       submission_cmd        = submission_cmd,
       use_dymumu_tau_fr     = True,
       apply_nc_correction   = False,
+      apply_genPhotonFilter = True,
     )
 
     self.invert_ZbosonMassVeto = invert_ZbosonMassVeto

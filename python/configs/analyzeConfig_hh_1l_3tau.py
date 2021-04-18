@@ -95,6 +95,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
       submission_cmd        = submission_cmd,
       use_dymumu_tau_fr     = True,
       apply_nc_correction   = False,
+      apply_genPhotonFilter = True,
     )
 
     self.lepton_and_hadTau_selections = [ "Tight", "Fakeable" ]
