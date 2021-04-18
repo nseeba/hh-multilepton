@@ -53,7 +53,7 @@ HHGenKinematicsHistManager::fillHistograms(double evtWeight)
     if ( apply_HH_rwgt_nlo_ )
     {
       assert(HHWeightNLO_calc_);
-      HHReweight *= HHWeightNLO_calc_->getRelativeWeight_LOtoNLO_V2("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
+      HHReweight *= HHWeightNLO_calc_->getRelativeWeight_LOtoNLO("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
     }
 
     fillWithOverFlow(histogram_gen_mHH_, eventInfo_.gen_mHH, HHReweight*evtWeight, HHReweight*evtWeightErr);
