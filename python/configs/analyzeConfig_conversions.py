@@ -109,6 +109,7 @@ class analyzeConfig_conversions(analyzeConfig_hh):
       submission_cmd            = submission_cmd,
       use_dymumu_tau_fr         = True,
       apply_nc_correction       = False,
+      apply_genPhotonFilter     = True,
     )
     self.lepton_selections = [ "Tight", "Fakeable" ]
     self.lepton_frWeights = [ "enabled", "disabled" ]
