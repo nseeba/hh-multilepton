@@ -2181,8 +2181,8 @@ const HHWeightInterfaceCouplings * const hhWeight_couplings = new HHWeightInterf
     std::map<std::string, double> BDTInputs_SUM_spin0 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin0, false);
     std::map<std::string, double> BDTInputs_SUM_nonres = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_nonres, true); 
     
-    BDTOutput_SUM_Map_spin2 = CreateResonantMVAOutputMap(gen_mHH, BDT_SUM_spin2, BDTInputs_SUM_spin2, eventInfo.event, "_spin2");
-    BDTOutput_SUM_Map_spin0 = CreateResonantMVAOutputMap(gen_mHH, BDT_SUM_spin0, BDTInputs_SUM_spin0, eventInfo.event, "_spin0");
+    BDTOutput_SUM_Map_spin2 = CreateResonantBDTOutputMap(gen_mHH, BDT_SUM_spin2, BDTInputs_SUM_spin2, eventInfo.event, "_spin2");
+    BDTOutput_SUM_Map_spin0 = CreateResonantBDTOutputMap(gen_mHH, BDT_SUM_spin0, BDTInputs_SUM_spin0, eventInfo.event, "_spin0");
     BDTOutput_SUM_Map_nonres = CreateNonResonantBDTOutputMap(nonRes_BMs, BDT_SUM_nonres, BDTInputs_SUM_nonres, eventInfo.event, hhWeight_couplings);
 
     // For Plotting Input Var.s
