@@ -304,7 +304,7 @@ DatacardHistManagerBase_hh::compHHReweightMap()
         assert(HHWeightNLO_calc_);
         HHReweight *= HHWeightNLO_calc_->getRelativeWeight_LOtoNLO(bmName, eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, isDEBUG_);
       }
-      HHReweightMap_[histogramName->first] = HHReweight;
+      HHReweightMap_[bmName] = HHReweight;
     }
   }
 }

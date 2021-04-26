@@ -160,7 +160,7 @@ process.analyze_hh_2lss_leq1tau = cms.PSet(
         fitFunctionFileName_spin2   = cms.string('hhAnalysis/multilepton/data/BDT_2lss_leq1tau/training_2lss_leq1tau_wUpdatedZveto_mTlepCap150/res_spin2_wPreviousBestHyperparameters/2lss_leq1tau_TProfile_signal_fit_func_spin2.root'), 
         inputVars_spin2 = cms.vstring('leptonPairMass_sel', 'dihiggsVisMass_sel', 'met_LD', 'dR_ll', 'dR_l_Wjets_min', 'dR_l_leadWjet_min', 'dR_l_Wjets_max', 'dR_l_leadWjet_max', 'dR_2j_fromW1', 'mT_lep1', 'gen_mHH'),
     ),
-    nonRes_BMs = cms.vdouble(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+    nonRes_BMs = cms.vstring(),
     mvaInfo_nonRes = cms.PSet( ## [Tweaked hyper-para.s used]
         BDT_xml_FileName_nonRes_even = cms.string('hhAnalysis/multilepton/data/BDT_2lss_leq1tau/training_2lss_leq1tau_wUpdatedZveto_mTlepCap150/nonres_default_wPreviousBestHyperparameters/2lss_leq1tau_odd_half_model_nonres_default.xml'),
         BDT_xml_FileName_nonRes_odd  = cms.string('hhAnalysis/multilepton/data/BDT_2lss_leq1tau/training_2lss_leq1tau_wUpdatedZveto_mTlepCap150/nonres_default_wPreviousBestHyperparameters/2lss_leq1tau_even_half_model_nonres_default.xml'),

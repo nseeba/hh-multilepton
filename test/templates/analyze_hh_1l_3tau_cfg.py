@@ -158,7 +158,7 @@ process.analyze_hh_1l_3tau = cms.PSet(
             'mT_lep', 'gen_mHH'
         ),
     ),
-    nonRes_BMs = cms.vdouble(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+    nonRes_BMs = cms.vstring(),
     mvaInfo_nonres = cms.PSet(
         BDT_xml_FileName_even_nonres = cms.string('hhAnalysis/multilepton/data/1l_3tau_odd_half_model_nonres.xml'),
         BDT_xml_FileName_odd_nonres = cms.string('hhAnalysis/multilepton/data/1l_3tau_even_half_model_nonres.xml'),

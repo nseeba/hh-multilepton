@@ -139,7 +139,7 @@ process.analyze_hh_4l = cms.PSet(
         fitFunctionFileName_spin2 = cms.string('hhAnalysis/multilepton/data/BDT_4l/4l_TProfile_signal_fit_func_spin2.root'), 
         inputVars_spin2 = cms.vstring('dihiggsVisMass_sel', 'maxPtSum_pair1_m', 'maxPtSum_pair2_deltaEtaLep1', 'maxPtSum_pair2_deltaEta', 'maxPtSum_pair2_deltaPhi', 'maxPtSum_pair2_m', 'MET', 'METDeltaPhiLep1', 'HTmiss', 'gen_mHH'),
     ),
-    nonRes_BMs = cms.vdouble(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+    nonRes_BMs = cms.vstring(),
     mvaInfo_nonRes = cms.PSet( ## [Tweaked hyper-para.s used]
         BDT_xml_FileName_nonRes_even = cms.string('hhAnalysis/multilepton/data/BDT_4l/4l_even_half_model_nonres_default.xml'),
         BDT_xml_FileName_nonRes_odd = cms.string('hhAnalysis/multilepton/data/BDT_4l/4l_odd_half_model_nonres_default.xml'),
