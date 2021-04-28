@@ -120,6 +120,8 @@ process.analyze_hh_2lss_leq1tau = cms.PSet(
     branchName_genLeptons = cms.string('GenLep'),
     branchName_genHadTaus = cms.string('GenVisTau'),
     branchName_genPhotons = cms.string('GenPhoton'),
+    branchName_genProxyPhotons = cms.string('GenPhotonCandidate'),
+    branchName_genFromHardProcess = cms.string('GenIsHardProcess'),
     branchName_genJets = cms.string('GenJet'),
     branchName_genHiggses = cms.string('GenHiggs'),
 
@@ -158,7 +160,7 @@ process.analyze_hh_2lss_leq1tau = cms.PSet(
         fitFunctionFileName_spin2   = cms.string('hhAnalysis/multilepton/data/BDT_2lss_leq1tau/res_spin2_v6_fixNonresHHrewgt_wCorrectBkYields/2lss_leq1tau_TProfile_signal_fit_func_spin2.root'), 
         inputVars_spin2 = cms.vstring('leptonPairMass_sel', 'dihiggsVisMass_sel', 'met_LD', 'dR_ll', 'dR_l_Wjets_min', 'dR_l_leadWjet_min', 'dR_l_Wjets_max', 'dR_l_leadWjet_max', 'dR_2j_fromW1', 'mT_lep1', 'gen_mHH'),
     ),
-    nonRes_BMs = cms.vdouble(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+    nonRes_BMs = cms.vstring(),
     mvaInfo_nonRes = cms.PSet( ## [Tweaked hyper-para.s used]
         BDT_xml_FileName_nonRes_even = cms.string('hhAnalysis/multilepton/data/BDT_2lss_leq1tau/nonres_default_v6_fixNonresHHrewgt_wCorrectBkYields/2lss_leq1tau_odd_half_model_nonres_default.xml'),
         BDT_xml_FileName_nonRes_odd  = cms.string('hhAnalysis/multilepton/data/BDT_2lss_leq1tau/nonres_default_v6_fixNonresHHrewgt_wCorrectBkYields/2lss_leq1tau_even_half_model_nonres_default.xml'),

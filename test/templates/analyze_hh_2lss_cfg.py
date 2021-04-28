@@ -120,6 +120,8 @@ process.analyze_hh_2lss = cms.PSet(
     branchName_genLeptons = cms.string('GenLep'),
     branchName_genHadTaus = cms.string('GenVisTau'),
     branchName_genPhotons = cms.string('GenPhoton'),
+    branchName_genProxyPhotons = cms.string('GenPhotonCandidate'),
+    branchName_genFromHardProcess = cms.string('GenIsHardProcess'),
     branchName_genJets = cms.string('GenJet'),
     branchName_genHiggses = cms.string('GenHiggs'),
 
@@ -156,7 +158,7 @@ process.analyze_hh_2lss = cms.PSet(
         fitFunctionFileName_spin2 = cms.string('hhAnalysis/multilepton/data/BDT_2lss/training_2lss_0tau_wUpdatedZveto_mTlepCap150/res_spin2_wSandeepBestHyperparameters/2lss_TProfile_signal_fit_func_spin2.root'),
         inputVars_spin2 = cms.vstring('leptonPairMass_sel', 'met', 'mht', 'HT', 'lep1_conePt', 'mindr_lep1_jet', 'lep2_conePt', 'mindr_lep2_jet', 'dR_ll', 'gen_mHH'),
     ),
-    nonRes_BMs = cms.vdouble(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+    nonRes_BMs = cms.vstring(),
     mvaInfo_nonRes = cms.PSet( ## [Tweaked hyper-para.s used]
         BDT_xml_FileName_nonRes_even = cms.string('hhAnalysis/multilepton/data/BDT_2lss/training_2lss_0tau_wUpdatedZveto_mTlepCap150/nonres_default_wSandeepBestHyperparameters/2lss_odd_half_model_nonres_default.xml'),
         BDT_xml_FileName_nonRes_odd = cms.string('hhAnalysis/multilepton/data/BDT_2lss/training_2lss_0tau_wUpdatedZveto_mTlepCap150/nonres_default_wSandeepBestHyperparameters/2lss_even_half_model_nonres_default.xml'),

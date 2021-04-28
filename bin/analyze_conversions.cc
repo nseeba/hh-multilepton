@@ -515,6 +515,8 @@ int main(int argc, char* argv[])
   std::string branchName_genLeptons = cfg_analyze.getParameter<std::string>("branchName_genLeptons");
   std::string branchName_genHadTaus = cfg_analyze.getParameter<std::string>("branchName_genHadTaus");
   std::string branchName_genPhotons = cfg_analyze.getParameter<std::string>("branchName_genPhotons");
+  std::string branchName_genProxyPhotons = cfg_analyze.getParameter<std::string>("branchName_genProxyPhotons");
+  std::string branchName_genFromHardProcess = cfg_analyze.getParameter<std::string>("branchName_genFromHardProcess");
   std::string branchName_genJets = cfg_analyze.getParameter<std::string>("branchName_genJets");
 
   std::string branchName_muonGenMatch     = cfg_analyze.getParameter<std::string>("branchName_muonGenMatch");
@@ -720,6 +722,8 @@ int main(int argc, char* argv[])
   GenLeptonReader * genLeptonReader = nullptr;
   GenHadTauReader * genHadTauReader = nullptr;
   GenPhotonReader * genPhotonReader = nullptr;
+  GenPhotonReader * genProxyPhotonReader = nullptr;
+  GenParticleReader * genFromHardProcessReader = nullptr;
   GenJetReader * genJetReader = nullptr;
   GenParticleReader * genHiggsReader = nullptr;
   GenParticleReader * genNeutrinoReader = nullptr;
@@ -775,6 +779,15 @@ int main(int argc, char* argv[])
       inputTree -> registerReader(genPhotonReader);
     }
 
+    if(apply_genPhotonFilter)
+    {
+      genProxyPhotonReader = new GenPhotonReader(branchName_genProxyPhotons);
+      inputTree -> registerReader(genProxyPhotonReader);
+
+      genFromHardProcessReader = new GenParticleReader(branchName_genFromHardProcess);
+      inputTree -> registerReader(genFromHardProcessReader);
+    }
+
     genHiggsReader = new GenParticleReader(branchName_genHiggses);
     inputTree->registerReader(genHiggsReader);
     lheInfoReader = new LHEInfoReader(hasLHE);
@@ -808,7 +821,7 @@ int main(int argc, char* argv[])
   std::string fitFunctionFileName_spin2 = mvaInfo_res.getParameter<std::string>("fitFunctionFileName_spin2");
   std::vector<std::string> BDTInputVariables_spin2 = mvaInfo_res.getParameter<std::vector<std::string>>("inputVars_spin2");
   const edm::ParameterSet mvaInfo_nonRes = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_nonRes");
-  std::vector<double> nonRes_BMs = cfg_analyze.getParameter<std::vector<double>>("nonRes_BMs");
+  std::vector<std::string> nonRes_BMs = cfg_analyze.getParameter<std::vector<std::string>>("nonRes_BMs");
   std::string BDTFileName_nonRes_even  = mvaInfo_nonRes.getParameter<std::string>("BDT_xml_FileName_nonRes_even");
   std::string BDTFileName_nonRes_odd   = mvaInfo_nonRes.getParameter<std::string>("BDT_xml_FileName_nonRes_odd");
   std::vector<std::string> BDTInputVariables_nonRes = mvaInfo_nonRes.getParameter<std::vector<std::string>>("inputVars_nonRes"); // Include all Input Var.s except BM indices
@@ -1335,7 +1348,10 @@ int main(int argc, char* argv[])
     std::vector<GenLepton> genElectrons;
     std::vector<GenLepton> genMuons;
     std::vector<GenHadTau> genHadTaus;
+    std::vector<GenPhoton> genPhotonsFinal;
     std::vector<GenPhoton> genPhotons;
+    std::vector<GenPhoton> genProxyPhotons;
+    std::vector<GenParticle> genFromHardProcess;
     std::vector<GenJet> genJets;
     std::vector<GenParticle> genNeutrinos;
     std::vector<GenParticle> genHiggses;
@@ -1361,10 +1377,13 @@ int main(int argc, char* argv[])
         }
       }
       if(genHadTauReader)   genHadTaus = genHadTauReader->read();
-      if(genPhotonReader)   genPhotons = genPhotonReader->read();
+      if(genPhotonReader)   genPhotons = genPhotonReader->read(apply_genPhotonFilter);
       if(genJetReader)      genJets = genJetReader->read();
       if(genHiggsReader)    genHiggses = genHiggsReader->read();
       if(genNeutrinoReader) genNeutrinos = genNeutrinoReader->read();
+
+      if(genProxyPhotonReader)     genProxyPhotons = genProxyPhotonReader->read(apply_genPhotonFilter);
+      if(genFromHardProcessReader) genFromHardProcess = genFromHardProcessReader->read();
 
       if(genMatchToMuonReader)     muonGenMatch = genMatchToMuonReader->read();
       if(genMatchToElectronReader) electronGenMatch = genMatchToElectronReader->read();
@@ -1381,8 +1400,9 @@ int main(int argc, char* argv[])
 	printCollection("genHiggses", genHiggses);
       }
     }
+    genPhotonsFinal = filterByStatus(genPhotons, 1);
 
-    if(!genPhotonFilter(genPhotons))
+    if(!genPhotonFilter(genPhotons, genProxyPhotons, genFromHardProcess))
     {
       if(isDEBUG || run_lumi_eventSelector)
       {
@@ -1433,7 +1453,7 @@ int main(int argc, char* argv[])
           continue;
         }
         genEvtHistManager_beforeCuts[central_or_shift]->fillHistograms(
-          genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeightRecorder.get_inclusive(central_or_shift)
+          genElectrons, genMuons, genHadTaus, genPhotonsFinal, genJets, evtWeightRecorder.get_inclusive(central_or_shift)
         );
         if(eventWeightManager)
         {
@@ -1630,7 +1650,7 @@ int main(int argc, char* argv[])
         }
       }
       if(genHadTauReader)   genHadTaus = genHadTauReader->read();
-      if(genPhotonReader)   genPhotons = genPhotonReader->read();
+      if(genPhotonReader)   genPhotonsFinal = genPhotonReader->read();
       if(genJetReader)      genJets = genJetReader->read();
       if(genHiggsReader)    genHiggses = genHiggsReader->read();
       if(genNeutrinoReader) genNeutrinos = genNeutrinoReader->read();
@@ -1675,7 +1695,7 @@ int main(int argc, char* argv[])
         muonGenMatcher.addGenJetMatch   (preselMuons, genJets);
 
         electronGenMatcher.addGenLeptonMatch(preselElectrons, genElectrons);
-        electronGenMatcher.addGenPhotonMatch(preselElectrons, genPhotons);
+        electronGenMatcher.addGenPhotonMatch(preselElectrons, genPhotonsFinal);
         electronGenMatcher.addGenHadTauMatch(preselElectrons, genHadTaus);
         electronGenMatcher.addGenJetMatch   (preselElectrons, genJets);
 
@@ -3512,9 +3532,9 @@ int main(int argc, char* argv[])
     std::vector<double> nonResBase_params;
     nonResBase_params.push_back(0.);
 
-    BDTOutput_Map_spin2 = CreateBDTOutputMap(gen_mHH, BDT_spin2, BDTInputs_spin2, eventInfo.event, false, "_spin2");
-    BDTOutput_Map_spin0 = CreateBDTOutputMap(gen_mHH, BDT_spin0, BDTInputs_spin0, eventInfo.event, false, "_spin0");
-    BDTOutput_Map_nonRes = CreateBDTOutputMap(nonRes_BMs, BDT_nonRes, BDTInputs_nonRes, eventInfo.event, true, "");
+    BDTOutput_Map_spin2 = CreateResonantBDTOutputMap(gen_mHH, BDT_spin2, BDTInputs_spin2, eventInfo.event, "_spin2");
+    BDTOutput_Map_spin0 = CreateResonantBDTOutputMap(gen_mHH, BDT_spin0, BDTInputs_spin0, eventInfo.event, "_spin0");
+    BDTOutput_Map_nonRes = CreateNonResonantBDTOutputMap(nonRes_BMs, BDT_nonRes, BDTInputs_nonRes, eventInfo.event);
     //BDTOutput_Map_nonRes_base = CreateBDTOutputMap(nonResBase_params, BDT_nonRes_base, BDTInputs_nonRes_base, eventInfo.event, true, "_base");
     
 
@@ -3971,7 +3991,7 @@ int main(int argc, char* argv[])
       if(isMC && ! skipFilling)
       {
         genEvtHistManager_afterCuts[central_or_shift]->fillHistograms(
-          genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeightRecorder.get_inclusive(central_or_shift)
+          genElectrons, genMuons, genHadTaus, genPhotonsFinal, genJets, evtWeightRecorder.get_inclusive(central_or_shift)
         );
         lheInfoHistManager[central_or_shift]->fillHistograms(*lheInfoReader, evtWeight);
         if(eventWeightManager)
@@ -4349,6 +4369,8 @@ int main(int argc, char* argv[])
   delete genLeptonReader;
   delete genHadTauReader;
   delete genPhotonReader;
+  delete genProxyPhotonReader;
+  delete genFromHardProcessReader;
   delete genJetReader;
   delete lheInfoReader;
   delete psWeightReader;

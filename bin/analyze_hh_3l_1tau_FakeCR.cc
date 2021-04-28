@@ -415,14 +415,14 @@ int main(int argc, char* argv[])
   std::string fitFunctionFileName_spin2 = mvaInfo_res.getParameter<std::string>("fitFunctionFileName_spin2");
   std::vector<std::string> BDTInputVariables_spin2 = mvaInfo_res.getParameter<std::vector<std::string>>("inputVars_spin2");
   const edm::ParameterSet mvaInfo_nonRes = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_nonRes");
-  std::vector<double> nonRes_BMs = cfg_analyze.getParameter<std::vector<double>>("nonRes_BMs");
+  std::vector<std::string> nonRes_BMs = cfg_analyze.getParameter<std::vector<std::string>>("nonRes_BMs");
   std::string BDTFileName_nonRes_even  = mvaInfo_nonRes.getParameter<std::string>("BDT_xml_FileName_nonRes_even");
   std::string BDTFileName_nonRes_odd   = mvaInfo_nonRes.getParameter<std::string>("BDT_xml_FileName_nonRes_odd");
   std::vector<std::string> BDTInputVariables_nonRes = mvaInfo_nonRes.getParameter<std::vector<std::string>>("inputVars_nonRes"); // Include all Input Var.s except BM indices
-  const edm::ParameterSet mvaInfo_nonRes_base = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_nonRes_base");
-  std::string BDTFileName_nonRes_base_even  = mvaInfo_nonRes_base.getParameter<std::string>("BDT_xml_FileName_nonRes_base_even");
-  std::string BDTFileName_nonRes_base_odd   = mvaInfo_nonRes_base.getParameter<std::string>("BDT_xml_FileName_nonRes_base_odd");
-  std::vector<std::string> BDTInputVariables_nonRes_base = mvaInfo_nonRes_base.getParameter<std::vector<std::string>>("inputVars_nonRes_base"); // Include all Input Var.s except BM indices
+//  const edm::ParameterSet mvaInfo_nonRes_base = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_nonRes_base");
+//  std::string BDTFileName_nonRes_base_even  = mvaInfo_nonRes_base.getParameter<std::string>("BDT_xml_FileName_nonRes_base_even");
+//  std::string BDTFileName_nonRes_base_odd   = mvaInfo_nonRes_base.getParameter<std::string>("BDT_xml_FileName_nonRes_base_odd");
+//  std::vector<std::string> BDTInputVariables_nonRes_base = mvaInfo_nonRes_base.getParameter<std::vector<std::string>>("inputVars_nonRes_base"); // Include all Input Var.s except BM indices
 
 
   assert(BDTFileName_spin0_odd != "");
@@ -448,12 +448,12 @@ int main(int argc, char* argv[])
   BDT_nonRes->enableBDTTransform();
   std::map<std::string, double> BDTOutput_Map_nonRes;
 
-  assert(BDTFileName_nonRes_base_odd != "");
-  assert(BDTFileName_nonRes_base_even != "");
-  assert(BDTInputVariables_nonRes_base.size() != 0);
-  TMVAInterface* BDT_nonRes_base = new TMVAInterface(BDTFileName_nonRes_base_odd, BDTFileName_nonRes_base_even, BDTInputVariables_nonRes_base);
-  BDT_nonRes_base->enableBDTTransform();
-  std::map<std::string, double> BDTOutput_Map_nonRes_base;
+//  assert(BDTFileName_nonRes_base_odd != "");
+//  assert(BDTFileName_nonRes_base_even != "");
+//  assert(BDTInputVariables_nonRes_base.size() != 0);
+//  TMVAInterface* BDT_nonRes_base = new TMVAInterface(BDTFileName_nonRes_base_odd, BDTFileName_nonRes_base_even, BDTInputVariables_nonRes_base);
+//  BDT_nonRes_base->enableBDTTransform();
+//  std::map<std::string, double> BDTOutput_Map_nonRes_base;
 
   std::map<std::string, double> AllVars_Map;
 
@@ -497,15 +497,13 @@ int main(int argc, char* argv[])
   const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
   const bool apply_HH_rwgt_lo = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt_lo");
   const bool apply_HH_rwgt_nlo = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt_nlo");
-  const HHWeightInterfaceCouplings * hhWeight_couplings = nullptr;
+  const HHWeightInterfaceCouplings * const hhWeight_couplings = new HHWeightInterfaceCouplings(hhWeight_cfg);
   const HHWeightInterfaceLO * HHWeightLO_calc = nullptr;
   const HHWeightInterfaceNLO * HHWeightNLO_calc = nullptr;
   std::vector<std::string> HHWeightNames;
   std::vector<std::string> HHBMNames;
   if(apply_HH_rwgt_lo || apply_HH_rwgt_nlo)
   {
-    hhWeight_couplings = new HHWeightInterfaceCouplings(hhWeight_cfg);
-
     if(apply_HH_rwgt_lo)
     {
       HHWeightLO_calc = new HHWeightInterfaceLO(hhWeight_couplings, hhWeight_cfg);
@@ -2197,15 +2195,15 @@ int main(int argc, char* argv[])
       std::map<std::string, double> BDTInputs_spin2 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin2, false);
       std::map<std::string, double> BDTInputs_spin0 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin0, false);
       std::map<std::string, double> BDTInputs_nonRes = InitializeInputVarMap(AllVars_Map, BDTInputVariables_nonRes, true); // Include all Input Var.s except BM indices
-      std::map<std::string, double> BDTInputs_nonRes_base = InitializeInputVarMap(AllVars_Map, BDTInputVariables_nonRes_base, true); 
+//      std::map<std::string, double> BDTInputs_nonRes_base = InitializeInputVarMap(AllVars_Map, BDTInputVariables_nonRes_base, true);
     
-      std::vector<double> nonResBase_params;
-      nonResBase_params.push_back(0.);
+//      std::vector<double> nonResBase_params;
+//      nonResBase_params.push_back(0.);
 
-      BDTOutput_Map_spin2 = CreateBDTOutputMap(gen_mHH, BDT_spin2, BDTInputs_spin2, eventInfo.event, false, "_spin2");
-      BDTOutput_Map_spin0 = CreateBDTOutputMap(gen_mHH, BDT_spin0, BDTInputs_spin0, eventInfo.event, false, "_spin0");
-      BDTOutput_Map_nonRes = CreateBDTOutputMap(nonRes_BMs, BDT_nonRes, BDTInputs_nonRes, eventInfo.event, true, "");
-      BDTOutput_Map_nonRes_base = CreateBDTOutputMap(nonResBase_params, BDT_nonRes_base, BDTInputs_nonRes_base, eventInfo.event, true, "_base");
+      BDTOutput_Map_spin2 = CreateResonantBDTOutputMap(gen_mHH, BDT_spin2, BDTInputs_spin2, eventInfo.event, "_spin2");
+      BDTOutput_Map_spin0 = CreateResonantBDTOutputMap(gen_mHH, BDT_spin0, BDTInputs_spin0, eventInfo.event, "_spin0");
+      BDTOutput_Map_nonRes = CreateNonResonantBDTOutputMap(nonRes_BMs, BDT_nonRes, BDTInputs_nonRes, eventInfo.event, hhWeight_couplings);
+//      BDTOutput_Map_nonRes_base = CreateBDTOutputMap(nonResBase_params, BDT_nonRes_base, BDTInputs_nonRes_base, eventInfo.event, true, "_base");
 
       double leadMuonPt = selMuons.size()>0 ? selMuons[0]->pt() : -10;
       double leadMuonEta = selMuons.size()>0 ? selMuons[0]->eta() : -10;
@@ -2280,8 +2278,8 @@ int main(int argc, char* argv[])
           BDTOutput_Map_spin2,
           BDTOutput_Map_spin0,
           BDTOutput_Map_nonRes,
-          BDTOutput_Map_nonRes_base["Base"],
-	  // -1., // CV: BDTOutput for nonresonant_allBMs case not implemented yet !!
+//          BDTOutput_Map_nonRes_base["Base"],
+          -1., // CV: BDTOutput for nonresonant_allBMs case not implemented yet !!
           evtWeight);
 
 	//for(const std::string & category: categories_evt)

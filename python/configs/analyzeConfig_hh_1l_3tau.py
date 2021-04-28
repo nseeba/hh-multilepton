@@ -95,6 +95,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
       submission_cmd        = submission_cmd,
       use_dymumu_tau_fr     = True,
       apply_nc_correction   = False,
+      apply_genPhotonFilter = True,
     )
 
     self.lepton_and_hadTau_selections = [ "Tight", "Fakeable" ]
@@ -555,7 +556,7 @@ class analyzeConfig_hh_1l_3tau(analyzeConfig_hh):
           sample_category = sample_info["sample_category_hh"]
           doAdd = False
           if "BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit:
-            if ("SM" in histogramToFit or "BM" in histogramToFit) and 'nonresonant' in sample_category:
+            if ("SM" in histogramToFit or any(nonresPoint in histogramToFit for nonresPoint in NONRESONANT_KEYS)) and 'nonresonant' in sample_category:
               doAdd = True
             if ("spin0" in histogramToFit and "spin0" in sample_category) or ("spin2" in histogramToFit and "spin2" in sample_category):
               startpos = None

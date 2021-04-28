@@ -1,5 +1,8 @@
 import re
 import collections
+import functools
+
+from tthAnalysis.HiggsToTauTau.hhSettings import NONRESONANT_KEYS, NONRESONANT_POINTS
 
 NONRESONANT_RE = re.compile(r'signal_ggf_nonresonant_\w+')
 MASSPOINTS = [ 250., 260., 270., 280., 300., 320., 350., 400., 450., 500., 550., 600., 650., 700., 750., 800., 850., 900., 1000. ]
@@ -9,7 +12,22 @@ def is_nonresonant(sample_category, allow_nlo = False):
     return False
   return bool(NONRESONANT_RE.match(sample_category))
 
-def get_histograms_to_fit(*custom_histograms):
+# credit to: https://stackoverflow.com/a/50107777
+def default_kwargs(**defaultKwargs):
+  def actual_decorator(fn):
+    @functools.wraps(fn)
+    def g(*args, **kwargs):
+      defaultKwargs.update(kwargs)
+      return fn(*args, **defaultKwargs)
+    return g
+  return actual_decorator
+
+# example usages:
+# get_histograms_to_fit('dihiggsVisMass')
+# get_histograms_to_fit('dihiggsVisMass', 'm3l')
+# get_histograms_to_fit('dihiggsVisMass', nonresPoints = [ 'extra' ])
+@default_kwargs(nonresPoints = NONRESONANT_KEYS)
+def get_histograms_to_fit(*custom_histograms, **kwargs):
   histograms_to_fit = collections.OrderedDict()
   if custom_histograms:
     for histogram_name in custom_histograms:
@@ -22,7 +40,14 @@ def get_histograms_to_fit(*custom_histograms):
   for masspoint in MASSPOINTS:
     histograms_to_fit["MVAOutput_%0.0f_spin0" % masspoint] = {}
     histograms_to_fit["MVAOutput_%0.0f_spin2" % masspoint] = {}
-  bmNames = [ "BM1", "BM2", "BM3", "BM4", "BM5", "BM6", "BM7", "BM8", "BM9", "BM10", "BM11", "BM12" ]
-  for bmName in bmNames:
-    histograms_to_fit["MVAOutput_%s" % bmName] = {}
+
+  assert('nonresPoints' in kwargs)
+  nonresPoints = kwargs['nonresPoints']
+  assert(all(nonresPoint in NONRESONANT_POINTS for nonresPoint in nonresPoints))
+  for nonresPoint in nonresPoints:
+    for bmName in NONRESONANT_POINTS[nonresPoint]:
+      mvaOutputName = "MVAOutput_{}{}".format(nonresPoint, bmName)
+      if mvaOutputName in histograms_to_fit:
+        raise ValueError("Encountered duplicate histogram name: %s" % mvaOutputName)
+      histograms_to_fit[mvaOutputName] = {}
   return histograms_to_fit

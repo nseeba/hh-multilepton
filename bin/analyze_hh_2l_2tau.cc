@@ -540,6 +540,8 @@ int main(int argc, char* argv[])
   std::string branchName_genLeptons = cfg_analyze.getParameter<std::string>("branchName_genLeptons");
   std::string branchName_genHadTaus = cfg_analyze.getParameter<std::string>("branchName_genHadTaus");
   std::string branchName_genPhotons = cfg_analyze.getParameter<std::string>("branchName_genPhotons");
+  std::string branchName_genProxyPhotons = cfg_analyze.getParameter<std::string>("branchName_genProxyPhotons");
+  std::string branchName_genFromHardProcess = cfg_analyze.getParameter<std::string>("branchName_genFromHardProcess");
   std::string branchName_genJets = cfg_analyze.getParameter<std::string>("branchName_genJets");
   std::string branchName_genWBosons = cfg_analyze.getParameter<std::string>("branchName_genWBosons");
 
@@ -569,7 +571,7 @@ int main(int argc, char* argv[])
   std::vector<std::string> BDTInputVariables_SUM_spin0 = mvaInfo_res.getParameter<std::vector<std::string>>("inputVars_spin0");
   // Non Resonant Info
   const edm::ParameterSet mvaInfo_nonres = cfg_analyze.getParameter<edm::ParameterSet>("mvaInfo_nonres");
-  std::vector<double> nonRes_BMs = cfg_analyze.getParameter<std::vector<double>>("nonRes_BMs");
+  std::vector<std::string> nonRes_BMs = cfg_analyze.getParameter<std::vector<std::string>>("nonRes_BMs");
   std::string BDTFileName_even_nonres  = mvaInfo_nonres.getParameter<std::string>("BDT_xml_FileName_even_nonres");
   std::string BDTFileName_odd_nonres   = mvaInfo_nonres.getParameter<std::string>("BDT_xml_FileName_odd_nonres");
   std::vector<std::string> BDTInputVariables_SUM_nonres = mvaInfo_nonres.getParameter<std::vector<std::string>>("inputVars_nonres"); // Include all Input Var.s except BM indices
@@ -664,15 +666,13 @@ int main(int argc, char* argv[])
   const edm::ParameterSet hhWeight_cfg = cfg_analyze.getParameterSet("hhWeight_cfg");
   const bool apply_HH_rwgt_lo = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt_lo");
   const bool apply_HH_rwgt_nlo = analysisConfig.isHH_rwgt_allowed() && hhWeight_cfg.getParameter<bool>("apply_rwgt_nlo");
-  const HHWeightInterfaceCouplings * hhWeight_couplings = nullptr;
+const HHWeightInterfaceCouplings * const hhWeight_couplings = new HHWeightInterfaceCouplings(hhWeight_cfg);
   const HHWeightInterfaceLO * HHWeightLO_calc = nullptr;
   const HHWeightInterfaceNLO * HHWeightNLO_calc = nullptr;
   std::vector<std::string> HHWeightNames;
   std::vector<std::string> HHBMNames;
   if(apply_HH_rwgt_lo || apply_HH_rwgt_nlo)
   {
-    hhWeight_couplings = new HHWeightInterfaceCouplings(hhWeight_cfg);
-
     if(apply_HH_rwgt_lo)
     {
       HHWeightLO_calc = new HHWeightInterfaceLO(hhWeight_couplings, hhWeight_cfg);
@@ -803,6 +803,8 @@ int main(int argc, char* argv[])
   GenLeptonReader * genLeptonReader = nullptr;
   GenHadTauReader * genHadTauReader = nullptr;
   GenPhotonReader * genPhotonReader = nullptr;
+  GenPhotonReader * genProxyPhotonReader = nullptr;
+  GenParticleReader * genFromHardProcessReader = nullptr;
   GenParticleReader * genWBosonReader = nullptr;
   GenJetReader * genJetReader = nullptr;
   LHEInfoReader * lheInfoReader = nullptr;
@@ -853,6 +855,15 @@ int main(int argc, char* argv[])
     { 
       genPhotonReader = new GenPhotonReader(branchName_genPhotons);
       inputTree -> registerReader(genPhotonReader);
+    }
+
+    if(apply_genPhotonFilter)
+    {
+      genProxyPhotonReader = new GenPhotonReader(branchName_genProxyPhotons);
+      inputTree -> registerReader(genProxyPhotonReader);
+
+      genFromHardProcessReader = new GenParticleReader(branchName_genFromHardProcess);
+      inputTree -> registerReader(genFromHardProcessReader);
     }
 
     lheInfoReader = new LHEInfoReader(hasLHE);
@@ -1178,6 +1189,9 @@ int main(int argc, char* argv[])
     std::vector<GenLepton> genMuons;
     std::vector<GenHadTau> genHadTaus;
     std::vector<GenPhoton> genPhotons;
+    std::vector<GenPhoton> genPhotonsFinal;
+    std::vector<GenPhoton> genProxyPhotons;
+    std::vector<GenParticle> genFromHardProcess;
     std::vector<GenJet> genJets;
 
     std::vector<GenParticle> muonGenMatch;
@@ -1201,8 +1215,11 @@ int main(int argc, char* argv[])
         }
       }
       if(genHadTauReader) genHadTaus = genHadTauReader->read();
-      if(genPhotonReader) genPhotons = genPhotonReader->read();
+      if(genPhotonReader) genPhotons = genPhotonReader->read(apply_genPhotonFilter);
       if(genJetReader)    genJets = genJetReader->read();
+
+      if(genProxyPhotonReader)     genProxyPhotons = genProxyPhotonReader->read(apply_genPhotonFilter);
+      if(genFromHardProcessReader) genFromHardProcess = genFromHardProcessReader->read();
 
       if(genMatchToMuonReader)     muonGenMatch = genMatchToMuonReader->read();
       if(genMatchToElectronReader) electronGenMatch = genMatchToElectronReader->read();
@@ -1217,8 +1234,9 @@ int main(int argc, char* argv[])
         printCollection("genJets", genJets);
       }
     }
+    genPhotonsFinal = filterByStatus(genPhotons, 1);
 
-    if(!genPhotonFilter(genPhotons))
+    if(!genPhotonFilter(genPhotons, genProxyPhotons, genFromHardProcess))
     {
       if(isDEBUG || run_lumi_eventSelector)
       {
@@ -1258,7 +1276,7 @@ int main(int argc, char* argv[])
           continue;
         }
         genEvtHistManager_beforeCuts[central_or_shift]->fillHistograms(
-          genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeightRecorder.get_inclusive(central_or_shift)
+          genElectrons, genMuons, genHadTaus, genPhotonsFinal, genJets, evtWeightRecorder.get_inclusive(central_or_shift)
         );
         if(eventWeightManager)
         {
@@ -1425,7 +1443,7 @@ int main(int argc, char* argv[])
         }
       }
       if(genHadTauReader) genHadTaus = genHadTauReader->read();
-      if(genPhotonReader) genPhotons = genPhotonReader->read();
+      if(genPhotonReader) genPhotonsFinal = genPhotonReader->read();
       if(genJetReader)    genJets = genJetReader->read();
 
       if(genMatchToMuonReader)     muonGenMatch = genMatchToMuonReader->read();
@@ -1463,7 +1481,7 @@ int main(int argc, char* argv[])
         muonGenMatcher.addGenJetMatch   (preselMuons, genJets);
 
         electronGenMatcher.addGenLeptonMatch(preselElectrons, genElectrons);
-        electronGenMatcher.addGenPhotonMatch(preselElectrons, genPhotons);
+        electronGenMatcher.addGenPhotonMatch(preselElectrons, genPhotonsFinal);
         electronGenMatcher.addGenHadTauMatch(preselElectrons, genHadTaus);
         electronGenMatcher.addGenJetMatch   (preselElectrons, genJets);
 
@@ -2163,9 +2181,9 @@ int main(int argc, char* argv[])
     std::map<std::string, double> BDTInputs_SUM_spin0 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin0, false);
     std::map<std::string, double> BDTInputs_SUM_nonres = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_nonres, true); 
     
-    BDTOutput_SUM_Map_spin2 = CreateBDTOutputMap(gen_mHH, BDT_SUM_spin2, BDTInputs_SUM_spin2, eventInfo.event, false, "_spin2");
-    BDTOutput_SUM_Map_spin0 = CreateBDTOutputMap(gen_mHH, BDT_SUM_spin0, BDTInputs_SUM_spin0, eventInfo.event, false, "_spin0");
-    BDTOutput_SUM_Map_nonres = CreateBDTOutputMap(nonRes_BMs, BDT_SUM_nonres, BDTInputs_SUM_nonres, eventInfo.event, true, "");
+    BDTOutput_SUM_Map_spin2 = CreateResonantBDTOutputMap(gen_mHH, BDT_SUM_spin2, BDTInputs_SUM_spin2, eventInfo.event, "_spin2");
+    BDTOutput_SUM_Map_spin0 = CreateResonantBDTOutputMap(gen_mHH, BDT_SUM_spin0, BDTInputs_SUM_spin0, eventInfo.event, "_spin0");
+    BDTOutput_SUM_Map_nonres = CreateNonResonantBDTOutputMap(nonRes_BMs, BDT_SUM_nonres, BDTInputs_SUM_nonres, eventInfo.event, hhWeight_couplings);
 
     // For Plotting Input Var.s
     std::map<std::string, double> BDTInputs_SUM_spin2_reduced = InitializeInputVarMap(AllVars_Map, BDTInputVariables_SUM_spin2_reduced, false); 
@@ -2253,7 +2271,7 @@ int main(int argc, char* argv[])
       if(isMC && ! skipFilling)
       {
         genEvtHistManager_afterCuts[central_or_shift]->fillHistograms(
-          genElectrons, genMuons, genHadTaus, genPhotons, genJets, evtWeightRecorder.get_inclusive(central_or_shift)
+          genElectrons, genMuons, genHadTaus, genPhotonsFinal, genJets, evtWeightRecorder.get_inclusive(central_or_shift)
         );
         lheInfoHistManager[central_or_shift]->fillHistograms(*lheInfoReader, evtWeight);
         if(eventWeightManager)
@@ -2502,6 +2520,8 @@ int main(int argc, char* argv[])
   delete genLeptonReader;
   delete genHadTauReader;
   delete genPhotonReader;
+  delete genProxyPhotonReader;
+  delete genFromHardProcessReader;
   delete genJetReader;
   delete lheInfoReader;
   delete psWeightReader;
