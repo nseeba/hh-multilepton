@@ -116,6 +116,7 @@
 #include "hhAnalysis/multilepton/interface/AnalysisConfig_hh.h" // AnalysisConfig_hh
 #include "hhAnalysis/multilepton/interface/DatacardHistManager_hh.h" // DatacardHistManager_hh
 #include "hhAnalysis/multilepton/interface/HHGenKinematicsHistManager.h" // HHGenKinematicsHistManager
+#include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow()
 
 #include "hhAnalysis/multilepton/interface/RecoElectronCollectionSelectorFakeable_hh_multilepton.h" // RecoElectronCollectionSelectorFakeable
 #include "hhAnalysis/multilepton/interface/RecoMuonCollectionSelectorFakeable_hh_multilepton.h" // RecoMuonCollectionSelectorFakeable
@@ -145,7 +146,7 @@ const int hadTauSelection_antiElectron = -1; // not applied
 const int hadTauSelection_antiMuon = -1; // not applied
 
 const int printLevel = 0;
-
+const int genHHrewgtHistosLevel = 0; // 0: disable all histos, 1: fill minimum set of histos, 2: fill all histos
 
 double calculateAbsDeltaPhi(double phi1, double phi2)
 {
@@ -556,6 +557,7 @@ int main(int argc, char* argv[])
   const HHWeightInterfaceNLO * HHWeightNLO_calc = nullptr;
   std::vector<std::string> HHWeightNames;
   std::vector<std::string> HHBMNames;
+  const HHWeightInterfaceLO * HHWeightLO_calc_tmp = nullptr;
   if(apply_HH_rwgt_lo || apply_HH_rwgt_nlo)
   {
     hhWeight_couplings = new HHWeightInterfaceCouplings(hhWeight_cfg);
@@ -566,6 +568,7 @@ int main(int argc, char* argv[])
     {
       HHWeightLO_calc = new HHWeightInterfaceLO(hhWeight_couplings, hhWeight_cfg);
     }
+    HHWeightLO_calc_tmp = new HHWeightInterfaceLO(hhWeight_couplings, hhWeight_cfg);
 
     if(apply_HH_rwgt_nlo)
     {
@@ -898,6 +901,7 @@ int main(int argc, char* argv[])
     MVAInputVarCorrelationHistManager* mvaInputVarCorrelation_;
     EvtYieldHistManager* evtYield_;
     WeightHistManager* weights_;
+    HHGenKinematicsHistManager* genKinematicsHistManager_HH_afterEvtSel_wAllWgts_wGenMatch_;
   };
 
   std::map<std::string, GenEvtHistManager*> genEvtHistManager_beforeCuts;
@@ -950,13 +954,117 @@ int main(int argc, char* argv[])
   //TH1* histogram_analyzedEntries = fs.make<TH1D>("analyzedEntries", "analyzedEntries", 1, -0.5, +0.5);
   //std::map<std::string, std::map<int, TH1*>> hMEt_All_0;
 
+  std::cout << "Siddh check here1" << std::endl;
+  int numBins_gen_mHH = 36;
+  double binning_gen_mHH[] = {
+     250,  270,  290,  310,  330,  350,  370, 390,  410,  430, 
+     450,  470,  490,  510,  530,  550,  570, 590,  610,  630, 
+     650,  670,  700,  750,  800,  850,  900, 950, 1000, 1100, 
+    1200, 1300, 1400, 1500, 1750, 2000, 5000
+  };
+  //int numBins_gen_absCosThetaStar = 4;
+  //double binning_gen_absCosThetaStar[] = { 0.0, 0.4, 0.6, 0.8, 1.0  };
+  
+  TFileDirectory subDir_genWgt;
+  TH1** hHHreweight_LO;
+  TH1** hHHreweight_NLO;
+  TH1** hHHreweight_total;
+  TH2** hHHreweight_total_vs_gen_mHH;
+  TH1** hisGenMHHInRange;
+
+  TH1** hHHreweight_total_V1;
+  TH2** hHHreweight_total_V1_vs_gen_mHH;
+  TH1** hHHreweight_NLO_V1;
+  TH2** hHHreweight_NLO_V1_vs_gen_mHH;
+
+  TH1** hHHreweight_total_V2;
+  TH2** hHHreweight_total_V2_vs_gen_mHH;
+  TH1** hHHreweight_NLO_V2;
+  TH2** hHHreweight_NLO_V2_vs_gen_mHH;
+
+  TH1** hHHreweight_NLO_V3;
+  TH2** hHHreweight_NLO_V3_vs_gen_mHH;
+
   HHGenKinematicsHistManager* genKinematicsHistManager_HH = NULL;
+  HHGenKinematicsHistManager* genKinematicsHistManager_HH_afterEvtSel_wGenWgts = NULL;
+  HHGenKinematicsHistManager* genKinematicsHistManager_HH_afterEvtSel_wAllWgts = NULL;
+  
+  if (genHHrewgtHistosLevel > 0)
+  {
+   subDir_genWgt   = fs.mkdir(Form("%s/sel/genKinematics_HH/%s", histogramDir.data(),process_string.data()));  
+   hHHreweight_LO    = new TH1*[HHBMNames.size()];
+   hHHreweight_NLO   = new TH1*[HHBMNames.size()];
+   hHHreweight_total = new TH1*[HHBMNames.size()];
+   hHHreweight_total_vs_gen_mHH = new TH2*[HHBMNames.size()];
+   hisGenMHHInRange = new TH1*[HHBMNames.size()];
+
+   hHHreweight_total_V1 = new TH1*[HHBMNames.size()];
+   hHHreweight_total_V1_vs_gen_mHH = new TH2*[HHBMNames.size()];
+   hHHreweight_NLO_V1 = new TH1*[HHBMNames.size()];
+   hHHreweight_NLO_V1_vs_gen_mHH = new TH2*[HHBMNames.size()];
+
+   hHHreweight_total_V2 = new TH1*[HHBMNames.size()];
+   hHHreweight_total_V2_vs_gen_mHH = new TH2*[HHBMNames.size()];
+   hHHreweight_NLO_V2 = new TH1*[HHBMNames.size()];
+   hHHreweight_NLO_V2_vs_gen_mHH = new TH2*[HHBMNames.size()];
+
+   hHHreweight_NLO_V3 = new TH1*[HHBMNames.size()];
+   hHHreweight_NLO_V3_vs_gen_mHH = new TH2*[HHBMNames.size()];
+
+    
+  
+  for (size_t iBM = 0; iBM < HHBMNames.size(); iBM++)
+  {
+    const char* sBM = HHBMNames[iBM].c_str();
+    hHHreweight_LO[iBM]    = subDir_genWgt.make<TH1D>(Form("HHreweight_LO_%s",sBM),   Form("HHreweight_LO_%s",sBM),    4000,-20.,20.);
+    hHHreweight_NLO[iBM]   = subDir_genWgt.make<TH1D>(Form("HHreweight_NLO_%s",sBM),  Form("HHreweight_NLO_%s",sBM),   4000,-20.,20.);
+    hHHreweight_total[iBM] = subDir_genWgt.make<TH1D>(Form("HHreweight_total_%s",sBM),Form("HHreweight_total_%s",sBM), 4000,-20.,20.);
+    hHHreweight_total_vs_gen_mHH[iBM] = subDir_genWgt.make<TH2D>(Form("HHreweight_total_vs_gen_mHH_%s",sBM),Form("HHreweight_total_vs_gen_mHH_%s",sBM), 4000,-20.,20., numBins_gen_mHH,binning_gen_mHH);
+    hisGenMHHInRange[iBM] = subDir_genWgt.make<TH1D>(Form("isGenMHHInRange_%s",sBM),Form("isGenMHHInRange_%s",sBM), 3,-0.5,2.5);
+
+
+    hHHreweight_total_V1[iBM] = subDir_genWgt.make<TH1D>(Form("HHreweight_total_V1_%s",sBM),Form("HHreweight_total_V1_%s",sBM), 4000,-20.,20.);
+    hHHreweight_total_V1_vs_gen_mHH[iBM] = subDir_genWgt.make<TH2D>(Form("HHreweight_total_V1_vs_gen_mHH_%s",sBM),Form("HHreweight_total_V1_vs_gen_mHH_%s",sBM), 4000,-20.,20., numBins_gen_mHH,binning_gen_mHH);
+    hHHreweight_NLO_V1[iBM] = subDir_genWgt.make<TH1D>(Form("HHreweight_NLO_V1_%s",sBM),Form("HHreweight_NLO_V1_%s",sBM), 4000,-20.,20.);
+    hHHreweight_NLO_V1_vs_gen_mHH[iBM] = subDir_genWgt.make<TH2D>(Form("HHreweight_NLO_V1_vs_gen_mHH_%s",sBM),Form("HHreweight_NLO_V1_vs_gen_mHH_%s",sBM), 4000,-20.,20., numBins_gen_mHH,binning_gen_mHH);
+
+    hHHreweight_total_V2[iBM] = subDir_genWgt.make<TH1D>(Form("HHreweight_total_V2_%s",sBM),Form("HHreweight_total_V2_%s",sBM), 4000,-20.,20.);
+    hHHreweight_total_V2_vs_gen_mHH[iBM] = subDir_genWgt.make<TH2D>(Form("HHreweight_total_V2_vs_gen_mHH_%s",sBM),Form("HHreweight_total_V2_vs_gen_mHH_%s",sBM), 4000,-20.,20., numBins_gen_mHH,binning_gen_mHH);
+    hHHreweight_NLO_V2[iBM] = subDir_genWgt.make<TH1D>(Form("HHreweight_NLO_V2_%s",sBM),Form("HHreweight_NLO_V2_%s",sBM), 4000,-20.,20.);
+    hHHreweight_NLO_V2_vs_gen_mHH[iBM] = subDir_genWgt.make<TH2D>(Form("HHreweight_NLO_V2_vs_gen_mHH_%s",sBM),Form("HHreweight_NLO_V2_vs_gen_mHH_%s",sBM), 4000,-20.,20., numBins_gen_mHH,binning_gen_mHH);
+
+    hHHreweight_NLO_V3[iBM] = subDir_genWgt.make<TH1D>(Form("HHreweight_NLO_V3_%s",sBM),Form("HHreweight_NLO_V3_%s",sBM), 4000,-20.,20.);
+    hHHreweight_NLO_V3_vs_gen_mHH[iBM] = subDir_genWgt.make<TH2D>(Form("HHreweight_NLO_V3_vs_gen_mHH_%s",sBM),Form("HHreweight_NLO_V3_vs_gen_mHH_%s",sBM), 4000,-20.,20., numBins_gen_mHH,binning_gen_mHH);
+    
+  }
+  std::cout << "Siddh check here1_1" << std::endl;
+  
   if ( isMC_ggf_HH_nonresonant )
   {
     genKinematicsHistManager_HH = new HHGenKinematicsHistManager(makeHistManager_cfg(process_string,
       Form("%s/sel/genKinematics_HH", histogramDir.data()), era_string, central_or_shift_main),
-      analysisConfig, eventInfo, HHWeightLO_calc, HHWeightNLO_calc);
+      analysisConfig, eventInfo, hhWeight_couplings, HHWeightLO_calc, HHWeightNLO_calc);
     genKinematicsHistManager_HH->bookHistograms(fs);
+  }
+  std::cout << "Siddh check here2" << std::endl;
+  
+  
+  if ( isMC_ggf_HH_nonresonant )
+  {
+    genKinematicsHistManager_HH_afterEvtSel_wGenWgts = new HHGenKinematicsHistManager(makeHistManager_cfg(process_string,
+      Form("%s/sel/genKinematics_HH_afterEvtSel_wGenWgts", histogramDir.data()), era_string, central_or_shift_main),
+      analysisConfig, eventInfo, hhWeight_couplings, HHWeightLO_calc, HHWeightNLO_calc);
+    genKinematicsHistManager_HH_afterEvtSel_wGenWgts->bookHistograms(fs);
+  }  
+  
+  if ( isMC_ggf_HH_nonresonant )
+  {
+    genKinematicsHistManager_HH_afterEvtSel_wAllWgts = new HHGenKinematicsHistManager(makeHistManager_cfg(process_string,
+      Form("%s/sel/genKinematics_HH_afterEvtSel_wAllWgts", histogramDir.data()), era_string, central_or_shift_main),
+      analysisConfig, eventInfo, hhWeight_couplings, HHWeightLO_calc, HHWeightNLO_calc);
+    genKinematicsHistManager_HH_afterEvtSel_wAllWgts->bookHistograms(fs);
+  }  
+  std::cout << "Siddh check here3" << std::endl;
   }
   
   for(const std::string & central_or_shift: central_or_shifts_local)
@@ -1059,8 +1167,19 @@ int main(int argc, char* argv[])
 	    //"genWeight", "pileupWeight", "triggerWeight", "data_to_MC_correction", "fakeRate" });
 	    
       }
-      selHistManagers[central_or_shift][idxLepton] = selHistManager;
+      
+      if(! skipBooking && genHHrewgtHistosLevel > 0)
+      {
+	if ( isMC_ggf_HH_nonresonant )
+	{
+	  selHistManager->genKinematicsHistManager_HH_afterEvtSel_wAllWgts_wGenMatch_ = new HHGenKinematicsHistManager(makeHistManager_cfg(process_and_genMatch, 
+														Form("%s/sel/genKinematics_HH_afterEvtSel_wAllWgts_wGenMatch", histogramDir.data()), era_string, central_or_shift_main),
+											    analysisConfig, eventInfo, hhWeight_couplings, HHWeightLO_calc, HHWeightNLO_calc);
+	  selHistManager->genKinematicsHistManager_HH_afterEvtSel_wAllWgts_wGenMatch_->bookHistograms(fs);
+	} 
+      }
 
+      selHistManagers[central_or_shift][idxLepton] = selHistManager;
       
       if (central_or_shift == central_or_shift_main) {
 	//TFileDirectory subD1   = fs.mkdir(Form("%s/sel/evt/%s", histogramDir.data(),process_string.data()));
@@ -1460,7 +1579,7 @@ int main(int argc, char* argv[])
         }
       }
 
-      if (genKinematicsHistManager_HH)
+      if ( isMC_ggf_HH_nonresonant && genHHrewgtHistosLevel > 0)
       {
 	double hhWeight1 =
 	  evtWeightRecorder.get_genWeight() *
@@ -1477,6 +1596,141 @@ int main(int argc, char* argv[])
 	}
 
 	genKinematicsHistManager_HH->fillHistograms(hhWeight1);
+
+	 if (printLevel > 6) std::cout << "apply_HH_rwgt_lo: " << apply_HH_rwgt_lo << ",  apply_HH_rwgt_nlo: " << apply_HH_rwgt_nlo << "\n";
+	double wgt_check =
+	  evtWeightRecorder.get_genWeight() *
+	  evtWeightRecorder.get_lumiScale(central_or_shift_main);
+	for ( unsigned int i = 0; i < HHWeightNames.size(); i++ )
+        {
+	  double HHReweight = 1.;
+          if ( apply_HH_rwgt_lo )
+          {
+            assert(HHWeightLO_calc);
+	    double HHRewgt_lo = HHWeightLO_calc->getRelativeWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+            HHReweight *= HHRewgt_lo;
+	    fillWithOverFlow(hHHreweight_LO[i],    evtWeightRecorder.get_hhWeight_lo() * HHRewgt_lo, wgt_check, 0.);
+          }
+	  if ( apply_HH_rwgt_nlo )
+          {
+            assert(HHWeightNLO_calc);
+	    double HHRewgt_nlo = HHWeightNLO_calc->getRelativeWeight_LOtoNLO(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+            HHReweight *= HHRewgt_nlo;
+	    fillWithOverFlow(hHHreweight_NLO[i],   evtWeightRecorder.get_hhWeight_nlo() * HHRewgt_nlo, wgt_check, 0.);
+          }	  	  
+	  fillWithOverFlow(hHHreweight_total[i], evtWeightRecorder.get_hhWeight_lo() * evtWeightRecorder.get_hhWeight_nlo() * HHReweight, wgt_check, 0.);
+	  fillWithOverFlow2d(hHHreweight_total_vs_gen_mHH[i], evtWeightRecorder.get_hhWeight_lo() * evtWeightRecorder.get_hhWeight_nlo() * HHReweight, eventInfo.gen_mHH, wgt_check, 0.);
+	  if      (eventInfo.gen_mHH < binning_gen_mHH[0])                hisGenMHHInRange[i]->Fill(0);
+	  else if (eventInfo.gen_mHH >= binning_gen_mHH[numBins_gen_mHH]) hisGenMHHInRange[i]->Fill(2);
+	  else                                                            hisGenMHHInRange[i]->Fill(1);
+
+	  fillWithOverFlow(hHHreweight_total_V1[i],
+			   (HHWeightLO_calc_tmp->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) *
+			    HHWeightNLO_calc->getWeight_LOtoNLO_V1(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+			   wgt_check, 0.);
+	  fillWithOverFlow2d(hHHreweight_total_V1_vs_gen_mHH[i],
+			     (HHWeightLO_calc_tmp->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) *
+			      HHWeightNLO_calc->getWeight_LOtoNLO_V1(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+			     eventInfo.gen_mHH,	 wgt_check, 0.);
+
+	  fillWithOverFlow(hHHreweight_NLO_V1[i],
+			   (HHWeightNLO_calc->getWeight_LOtoNLO_V1(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+			   wgt_check, 0.);
+	  fillWithOverFlow2d(hHHreweight_NLO_V1_vs_gen_mHH[i],
+			     (HHWeightNLO_calc->getWeight_LOtoNLO_V1(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+			     eventInfo.gen_mHH,	 wgt_check, 0.);
+
+
+	  
+	  fillWithOverFlow(hHHreweight_total_V2[i],
+			   (HHWeightLO_calc_tmp->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) *
+			    HHWeightNLO_calc->getWeight_LOtoNLO_V2(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+			   wgt_check, 0.);
+	  fillWithOverFlow2d(hHHreweight_total_V2_vs_gen_mHH[i],
+			     (HHWeightLO_calc_tmp->getWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) *
+			      HHWeightNLO_calc->getWeight_LOtoNLO_V2(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+			     eventInfo.gen_mHH,	 wgt_check, 0.);
+
+	  fillWithOverFlow(hHHreweight_NLO_V2[i],
+			   (HHWeightNLO_calc->getWeight_LOtoNLO_V2(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+			   wgt_check, 0.);
+	  fillWithOverFlow2d(hHHreweight_NLO_V2_vs_gen_mHH[i],
+			     (HHWeightNLO_calc->getWeight_LOtoNLO_V2(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+			     eventInfo.gen_mHH,	 wgt_check, 0.);
+
+
+	  fillWithOverFlow(hHHreweight_NLO_V3[i],
+			   (HHWeightNLO_calc->getWeight_LOtoNLO_V3(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+			   wgt_check, 0.);
+	  fillWithOverFlow2d(hHHreweight_NLO_V3_vs_gen_mHH[i],
+			     (HHWeightNLO_calc->getWeight_LOtoNLO_V3(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+			     eventInfo.gen_mHH,	 wgt_check, 0.);
+
+
+
+
+
+
+	  if (printLevel > 6)
+	  {
+	    std::cout << "Siddh here12_0: binning_gen_mHH[numBins_gen_mHH] " << binning_gen_mHH[numBins_gen_mHH] << std::endl;
+	    printf("%s::  \n",HHBMNames[i].c_str());
+	    printf("NLO_V1 wgt: lo: %g * %g = %g, nlo: %g * %g = %g,  total: %g \n",
+		   HHWeightLO_calc_tmp->getWeight(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG),
+		   HHWeightLO_calc_tmp->getRelativeWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG),
+		   (HHWeightLO_calc_tmp->getWeight(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) * 
+		    HHWeightLO_calc_tmp->getRelativeWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+		 
+		   HHWeightNLO_calc->getWeight_LOtoNLO_V1(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG),
+		   HHWeightNLO_calc->getRelativeWeight_LOtoNLO_V1(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG),
+		   (HHWeightNLO_calc->getWeight_LOtoNLO_V1(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) *
+		    HHWeightNLO_calc->getRelativeWeight_LOtoNLO_V1(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+		 
+		   (HHWeightLO_calc_tmp->getWeight(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) * 
+		    HHWeightLO_calc_tmp->getRelativeWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) *
+		    HHWeightNLO_calc->getWeight_LOtoNLO_V1(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) *
+		    HHWeightNLO_calc->getRelativeWeight_LOtoNLO_V1(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)) );
+	  
+	    printf("NLO_V2 wgt: lo: %g * %g = %g, nlo: %g * %g = %g,  total: %g \n",
+		   HHWeightLO_calc_tmp->getWeight(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG),
+		   HHWeightLO_calc_tmp->getRelativeWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG),
+		   (HHWeightLO_calc_tmp->getWeight(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) * 
+		    HHWeightLO_calc_tmp->getRelativeWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+		 
+		   HHWeightNLO_calc->getWeight_LOtoNLO_V2(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG),
+		   HHWeightNLO_calc->getRelativeWeight_LOtoNLO_V2(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG),
+		   (HHWeightNLO_calc->getWeight_LOtoNLO_V2(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) *
+		    HHWeightNLO_calc->getRelativeWeight_LOtoNLO_V2(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+
+		   (HHWeightLO_calc_tmp->getWeight(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) * 
+		    HHWeightLO_calc_tmp->getRelativeWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) *
+		    HHWeightNLO_calc->getWeight_LOtoNLO_V2(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) *
+		    HHWeightNLO_calc->getRelativeWeight_LOtoNLO_V2(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG))	    );
+	  
+		  
+	    printf("NLO_V3 wgt: lo: %g * %g = %g, nlo: %g * %g = %g,  total: %g \n",
+		   HHWeightLO_calc_tmp->getWeight(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG),
+		   HHWeightLO_calc_tmp->getRelativeWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG),
+		   (HHWeightLO_calc_tmp->getWeight(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) * 
+		    HHWeightLO_calc_tmp->getRelativeWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+		 
+		   HHWeightNLO_calc->getWeight_LOtoNLO_V3(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG),
+		   HHWeightNLO_calc->getRelativeWeight_LOtoNLO_V3(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG),
+		   (HHWeightNLO_calc->getWeight_LOtoNLO_V3(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) *
+		    HHWeightNLO_calc->getRelativeWeight_LOtoNLO_V3(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG)),
+
+		   (HHWeightLO_calc_tmp->getWeight(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) * 
+		    HHWeightLO_calc_tmp->getRelativeWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) *
+		    HHWeightNLO_calc->getWeight_LOtoNLO_V3(HHBMNames[0], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG) *
+		    HHWeightNLO_calc->getRelativeWeight_LOtoNLO_V3(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG))	   );
+	  
+	    printf("evtWgtRecorder: lo: %g, nlo: %g,  lo * nlo: %g,  relativeWgt: %g,  total: %g \n",
+		   evtWeightRecorder.get_hhWeight_lo(), evtWeightRecorder.get_hhWeight_nlo(),
+		   (evtWeightRecorder.get_hhWeight_lo() * evtWeightRecorder.get_hhWeight_nlo()),
+		   HHReweight,
+		   (evtWeightRecorder.get_hhWeight_lo() * evtWeightRecorder.get_hhWeight_nlo() * HHReweight));
+	  }
+	}
       }
     }
     if (printLevel > 6) std::cout << "Siddh here12 " << std::endl;
@@ -3509,6 +3763,30 @@ int main(int argc, char* argv[])
 //--- retrieve gen-matching flags    
     //std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons);
     //std::cout << "siddh here 10" << std::endl;
+
+
+    if (isMC && genHHrewgtHistosLevel > 0)
+    {
+      if (genKinematicsHistManager_HH_afterEvtSel_wAllWgts)
+      {
+	double hhWeight1 =
+	  evtWeightRecorder.get_genWeight() *
+	  evtWeightRecorder.get_hhWeight_lo() *
+	  evtWeightRecorder.get_hhWeight_nlo() *
+	  evtWeightRecorder.get_lumiScale(central_or_shift_main);
+      
+	if (printLevel > 5) {
+	  std::cout << "evtWeightRecorder.get_genWeight(): " << evtWeightRecorder.get_genWeight()
+		    << ", evtWeightRecorder.get_hhWeight_lo(): " << evtWeightRecorder.get_hhWeight_lo()
+		    << ", evtWeightRecorder.get_hhWeight_nlo(): " << evtWeightRecorder.get_hhWeight_nlo()
+		    << ",  hhWeight1: " << hhWeight1
+		    << "\n";
+	}
+
+	genKinematicsHistManager_HH_afterEvtSel_wGenWgts->fillHistograms(hhWeight1);
+	genKinematicsHistManager_HH_afterEvtSel_wAllWgts->fillHistograms(evtWeightRecorder.get(central_or_shift_main));
+      }
+    }
     
 //--- fill histograms with events passing final selection   
     for(const std::string & central_or_shift: central_or_shifts_local)
@@ -3868,6 +4146,11 @@ int main(int argc, char* argv[])
 	  }
 
 	  
+	}
+
+	if(! skipFilling && isMC_ggf_HH_nonresonant && genHHrewgtHistosLevel > 0)
+        {
+	  selHistManager->genKinematicsHistManager_HH_afterEvtSel_wAllWgts_wGenMatch_->fillHistograms(evtWeight);
 	}
 	
         if(! skipFilling)

@@ -843,7 +843,7 @@ int main(int argc, char* argv[])
   {
     genKinematicsHistManager_HH = new HHGenKinematicsHistManager(makeHistManager_cfg(process_string,
       Form("%s/sel/genKinematics_HH", histogramDir.data()), era_string, central_or_shift_main),
-      analysisConfig, eventInfo, HHWeightLO_calc, HHWeightNLO_calc);
+      analysisConfig, eventInfo, hhWeight_couplings, HHWeightLO_calc, HHWeightNLO_calc);
     genKinematicsHistManager_HH->bookHistograms(fs);
   }
     

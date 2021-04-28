@@ -134,8 +134,11 @@ for sample_name, sample_info in samples.items():
   if sample_name == 'sum_events': continue
   if sample_name.startswith('/Tau/Run'):
     sample_info["use_it"] = False
+  #if not ("signal_ggf_nonresonant" in sample_info["process_name_specific"] and "hh_4v" in sample_info["process_name_specific"]):
+  #if not ("signal_ggf_nonresonant_node" in sample_info["process_name_specific"] ):
+  #  sample_info["use_it"] = False  
 
-
+    
 if __name__ == '__main__':
   print "\n\nget_histograms_to_fit(EventCounter): {}\n\n".format(get_histograms_to_fit("EventCounter"))
   logging.info(
