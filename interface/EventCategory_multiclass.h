@@ -25,7 +25,7 @@ class EventCategory_multiclass
   EventCategory_multiclass() {}
   virtual ~EventCategory_multiclass() {}
 
-  virtual bool isSelected(int for_category, const std::string & for_class) const = 0;
+  virtual bool isSelected(int for_category, const std::string & for_class, bool isNonres) const = 0;
 };
 
 #endif

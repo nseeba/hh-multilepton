@@ -56,7 +56,7 @@ class DatacardHistManager_hh_multiclass
 
  private:
   bool
-  isSelected(int for_category, const std::string & for_class) const;
+    isSelected(int for_category, const std::string & for_class, bool isNonRes) const;
 
   const EventCategory_multiclass * eventCategory_;
   std::map<std::string, int> classToCategoryMap_;

@@ -46,7 +46,6 @@ DatacardHistManager_hh_multiclass::DatacardHistManager_hh_multiclass(const edm::
 {
   // CV: fill histograms for all event categories defined in EventCategoryBase object
   categories_ = eventCategory_->categories();
-
   initialize();
 }
 
@@ -147,7 +146,7 @@ DatacardHistManager_hh_multiclass::fillHistograms(const std::map<std::string, st
                 << "No MVA output provided to fill histogram = '" << histogramName->second << "' !!\n"
                 << "(available MVA outputs = " << format_vstring(get_keys(mvaOutputs_resonant_spin2_unpacked)) << ")\n";
             const std::string & for_class = mvaOutput->second.first;
-            if ( isSelected(categoryEntry->category_, for_class) )
+            if ( isSelected(categoryEntry->category_, for_class, false) )
             {
               fillWithOverFlow(histogram, mvaOutput->second.second, evtWeight, evtWeightErr);
             }
@@ -165,7 +164,7 @@ DatacardHistManager_hh_multiclass::fillHistograms(const std::map<std::string, st
                 << "No MVA output provided to fill histogram = '" << histogramName->second << "' !!\n"
                 << "(available MVA outputs = " << format_vstring(get_keys(mvaOutputs_resonant_spin0_unpacked)) << ")\n";
             const std::string & for_class = mvaOutput->second.first;
-            if ( isSelected(categoryEntry->category_, for_class) )
+            if ( isSelected(categoryEntry->category_, for_class, false) )
             {
               fillWithOverFlow(histogram, mvaOutput->second.second, evtWeight, evtWeightErr);
             }
@@ -184,7 +183,7 @@ DatacardHistManager_hh_multiclass::fillHistograms(const std::map<std::string, st
                 << "No MVA output provided to fill histogram = '" << histogramName->second << "' !!\n"
                 << "(available MVA outputs = " << format_vstring(get_keys(mvaOutputs_nonresonant_unpacked)) << ")\n";
             const std::string & for_class = mvaOutput->second.first;
-            if ( isSelected(categoryEntry->category_, for_class) )
+            if ( isSelected(categoryEntry->category_, for_class, true) )
             {
               double evtWeight_reweighted = evtWeight;
               double evtWeightErr_reweighted = evtWeightErr;
@@ -200,7 +199,7 @@ DatacardHistManager_hh_multiclass::fillHistograms(const std::map<std::string, st
             }
           }
           const std::string & for_class = mvaOutput_nonresonant_allBMs_unpacked.first;
-          if ( isSelected(categoryEntry->category_, for_class) )
+          if ( isSelected(categoryEntry->category_, for_class, true) )
           {
             TH1* histogram = categoryEntry->histograms_mvaOutput_nonresonant_allBMs_[productionMode][decayMode];
             fillWithOverFlow(histogram, mvaOutput_nonresonant_allBMs_unpacked.second, evtWeight, evtWeightErr);
@@ -212,11 +211,11 @@ DatacardHistManager_hh_multiclass::fillHistograms(const std::map<std::string, st
 }
 
 bool
-DatacardHistManager_hh_multiclass::isSelected(int for_category, const std::string & for_class) const
+DatacardHistManager_hh_multiclass::isSelected(int for_category, const std::string & for_class, bool isNonRes) const
 {
   if ( eventCategory_ )
   {
-    return eventCategory_->isSelected(for_category, for_class);
+    return eventCategory_->isSelected(for_category, for_class, isNonRes);
   }
   else
   {
