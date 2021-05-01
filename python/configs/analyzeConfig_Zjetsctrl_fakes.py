@@ -611,7 +611,7 @@ class analyzeConfig_Zjetsctrl_fakes(analyzeConfig_hh):
           if sample_category.startswith("signal"):
             doAdd = False
             if "BDTOutput" in histogramToFit or "MVAOutput" in histogramToFit:
-              if ("SM" in histogramToFit or "BM" in histogramToFit) and 'nonresonant' in sample_category:
+              if ("SM" in histogramToFit or any(nonresPoint in histogramToFit for nonresPoint in NONRESONANT_KEYS)) and 'nonresonant' in sample_category:
                 doAdd = True
               if "spin0" in histogramToFit and "spin0" in sample_category and histogramToFit[9:13] in sample_category:
                 doAdd = True

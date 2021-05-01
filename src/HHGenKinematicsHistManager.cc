@@ -8,19 +8,29 @@
 
 HHGenKinematicsHistManager::HHGenKinematicsHistManager(const edm::ParameterSet & cfg, 
                                                        const AnalysisConfig_hh & analysisConfig,
-                                                       const EventInfo & eventInfo, 
+                                                       const EventInfo & eventInfo,
+						       const HHWeightInterfaceCouplings * hhWeight_couplings,
                                                        const HHWeightInterfaceLO * HHWeightLO_calc,
                                                        const HHWeightInterfaceNLO * HHWeightNLO_calc)
   : HistManagerBase(cfg)
   , analysisConfig_(analysisConfig)
   , eventInfo_(eventInfo)
+  , hhWeight_couplings_(hhWeight_couplings)
   , HHWeightLO_calc_(HHWeightLO_calc)
   , apply_HH_rwgt_lo_(HHWeightLO_calc_ != nullptr)
   , HHWeightNLO_calc_(HHWeightNLO_calc)
   , apply_HH_rwgt_nlo_(HHWeightNLO_calc_ != nullptr)
 {
-  central_or_shiftOptions_["gen_mHH"]             = { "central" };
-  central_or_shiftOptions_["gen_absCosThetaStar"] = { "central" };
+  if (hhWeight_couplings_  != nullptr)
+  {
+    HHWeightNames_ = hhWeight_couplings_->get_weight_names();
+    HHBMNames_ = hhWeight_couplings_->get_bm_names();
+  }
+  for (size_t iBM = 0; iBM < HHBMNames_.size(); iBM++)
+  {
+    central_or_shiftOptions_[Form("gen_mHH_%s",HHBMNames_[iBM].c_str())]             = { "central" };
+    central_or_shiftOptions_[Form("gen_absCosThetaStar_%s",HHBMNames_[iBM].c_str())] = { "central" };
+  }
 }
 
 void
@@ -33,8 +43,16 @@ HHGenKinematicsHistManager::bookHistograms(TFileDirectory & dir)
      650,  670,  700,  750,  800,  850,  900, 950, 1000, 1100, 
     1200, 1300, 1400, 1500, 1750, 2000, 5000
   };
-  histogram_gen_mHH_             = book1D(dir, "gen_mHH",             "gen_mHH",             numBins_gen_mHH, binning_gen_mHH);
-  histogram_gen_absCosThetaStar_ = book1D(dir, "gen_absCosThetaStar", "gen_absCosThetaStar", 10, 0.,   +1.);  
+  int numBins_gen_absCosThetaStar = 4;
+  double binning_gen_absCosThetaStar[] = { 0.0, 0.4, 0.6, 0.8, 1.0  };
+
+  histograms_gen_mHH_ = new TH1*[HHBMNames_.size()];
+  histograms_gen_absCosThetaStar_ = new TH1*[HHBMNames_.size()];
+  for (size_t iBM = 0; iBM < HHBMNames_.size(); iBM++)
+  {
+    histograms_gen_mHH_[iBM]             = book1D(dir, Form("gen_mHH_%s",HHBMNames_[iBM].c_str()),             Form("gen_mHH_%s",HHBMNames_[iBM].c_str()),             numBins_gen_mHH, binning_gen_mHH);
+    histograms_gen_absCosThetaStar_[iBM] = book1D(dir, Form("gen_absCosThetaStar_%s",HHBMNames_[iBM].c_str()), Form("gen_absCosThetaStar_%s",HHBMNames_[iBM].c_str()), numBins_gen_absCosThetaStar, binning_gen_absCosThetaStar);
+  }
 }
 
 void
@@ -42,21 +60,25 @@ HHGenKinematicsHistManager::fillHistograms(double evtWeight)
 {
   if ( analysisConfig_.isMC_HH_nonresonant() )
   {
-    const double evtWeightErr = 0.;
-    double HHReweight = 1.;
-
-    if ( apply_HH_rwgt_lo_ )
+    for (size_t iBM = 0; iBM < HHBMNames_.size(); iBM++)
     {
-      assert(HHWeightLO_calc_);
-      HHReweight = HHWeightLO_calc_->getRelativeWeight("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
-    }
-    if ( apply_HH_rwgt_nlo_ )
-    {
-      assert(HHWeightNLO_calc_);
-      HHReweight *= HHWeightNLO_calc_->getRelativeWeight_LOtoNLO_V2("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
-    }
+      const double evtWeightErr = 0.;
+      double HHReweight = 1.;
 
-    fillWithOverFlow(histogram_gen_mHH_, eventInfo_.gen_mHH, HHReweight*evtWeight, HHReweight*evtWeightErr);
-    fillWithOverFlow(histogram_gen_absCosThetaStar_, eventInfo_.gen_cosThetaStar, HHReweight*evtWeight, HHReweight*evtWeightErr);
+      if ( apply_HH_rwgt_lo_ )
+      {
+	assert(HHWeightLO_calc_);
+	HHReweight = HHWeightLO_calc_->getRelativeWeight(HHBMNames_[iBM], eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
+      }
+      if ( apply_HH_rwgt_nlo_ )
+      {
+	assert(HHWeightNLO_calc_);
+	//HHReweight *= HHWeightNLO_calc_->getRelativeWeight_LOtoNLO_V2("SM", eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false);
+	HHReweight *= HHWeightNLO_calc_->getRelativeWeight_LOtoNLO(HHBMNames_[iBM], eventInfo_.gen_mHH, eventInfo_.gen_cosThetaStar, false); // always 1 for "SM"      
+      }
+    
+      fillWithOverFlow(histograms_gen_mHH_[iBM], eventInfo_.gen_mHH, HHReweight*evtWeight, HHReweight*evtWeightErr);
+      fillWithOverFlow(histograms_gen_absCosThetaStar_[iBM], eventInfo_.gen_cosThetaStar, HHReweight*evtWeight, HHReweight*evtWeightErr);
+    }
   }
 }

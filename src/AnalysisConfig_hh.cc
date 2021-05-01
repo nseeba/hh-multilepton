@@ -43,18 +43,7 @@ AnalysisConfig_hh::AnalysisConfig_hh(const std::string & analysis, const edm::Pa
   }
   std::sort(gen_mHH_.begin(), gen_mHH_.end());
 
-  std::vector<double> nonRes_BMs = cfg.getParameter<std::vector<double>>("nonRes_BMs");
-  for ( auto nonRes_BM : nonRes_BMs ) 
-  {
-    if ( nonRes_BM == 0 )
-    {
-      bmNames_.push_back("SM");
-    }
-    else
-    {
-      bmNames_.push_back(Form("BM%0.0f", nonRes_BM));
-    }
-  }
+  bmNames_ = cfg.getParameter<std::vector<std::string>>("nonRes_BMs");
 
   if      ( analysis_ == kHH_multilepton ) decayModes_HH_ = { "tttt", "zzzz", "wwww", "ttzz", "ttww", "zzww" };
   else if ( analysis_ == kHH_bbWW        ) decayModes_HH_ = { "bbtt", "bbzz", "bbww" };

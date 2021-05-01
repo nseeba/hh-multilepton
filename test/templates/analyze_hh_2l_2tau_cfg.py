@@ -116,6 +116,8 @@ process.analyze_hh_2l_2tau = cms.PSet(
     branchName_genLeptons = cms.string('GenLep'),
     branchName_genHadTaus = cms.string('GenVisTau'),
     branchName_genPhotons = cms.string('GenPhoton'),
+    branchName_genProxyPhotons = cms.string('GenPhotonCandidate'),
+    branchName_genFromHardProcess = cms.string('GenIsHardProcess'),
     branchName_genJets = cms.string('GenJet'),
     branchName_genWBosons = cms.string('GenVbosons'),
 
@@ -151,7 +153,7 @@ process.analyze_hh_2l_2tau = cms.PSet(
         inputVars_spin0 = cms.vstring("Smin_llMEt", "Smin_lltautau", "diHiggsMass", "dr_lep1_tau2", "dr_lep2_tau1", "dr_lep_tau_min_SS", 
                                       "dr_leps", "dr_taus", "mTauTau", "mass_BP2_OS", "gen_mHH"),    
     ),
-    nonRes_BMs = cms.vdouble(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+    nonRes_BMs = cms.vstring(),
     mvaInfo_nonres = cms.PSet(
         BDT_xml_FileName_even_nonres = cms.string('hhAnalysis/multilepton/data/BDT_2l_2tau/2l_2tau_nonRes_default_oddTrainModel.xml'), ## "BDT .xml -> Odd train:Even test" to be used for even evt no. 
         BDT_xml_FileName_odd_nonres = cms.string('hhAnalysis/multilepton/data/BDT_2l_2tau/2l_2tau_nonRes_default_evenTrainModel.xml'), ## "BDT .xml -> Even train:Odd test" to be used for odd evt no.

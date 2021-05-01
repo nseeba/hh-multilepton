@@ -116,6 +116,8 @@ process.analyze_conversions = cms.PSet(
     branchName_genLeptons = cms.string('GenLep'),
     branchName_genHadTaus = cms.string('GenVisTau'),
     branchName_genPhotons = cms.string('GenPhoton'),
+    branchName_genProxyPhotons = cms.string('GenPhotonCandidate'),
+    branchName_genFromHardProcess = cms.string('GenIsHardProcess'),
     branchName_genJets = cms.string('GenJet'),
     branchName_genHiggses = cms.string('GenHiggs'),
 
@@ -151,7 +153,7 @@ process.analyze_conversions = cms.PSet(
         fitFunctionFileName_spin2 = cms.string('hhAnalysis/multilepton/data/BDT_3l_0tau/3l_0tau_spin2_fitFuncs.root'), 
         inputVars_spin2 = cms.vstring('m3l', 'diHiggsVisMass', 'mSFOS2l_closestToZ', 'dr_LeptonIdx3_AK4jNear_Approach2', 'dr_LeptonIdx3_2j_inclusive1j_Approach2', 'dr_los_min', 'dr_los_max', 'nSFOS_3l', 'met_LD', 'gen_mHH'),
     ),
-    nonRes_BMs = cms.vdouble(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+    nonRes_BMs = cms.vstring(),
     mvaInfo_nonRes = cms.PSet( ## [Tweaked hyper-para.s used]
         BDT_xml_FileName_nonRes_even = cms.string('hhAnalysis/multilepton/data/BDT_3l_0tau/3l_0tau_nonRes_default_oddTrainModel.xml'),
         BDT_xml_FileName_nonRes_odd = cms.string('hhAnalysis/multilepton/data/BDT_3l_0tau/3l_0tau_nonRes_default_evenTrainModel.xml'),

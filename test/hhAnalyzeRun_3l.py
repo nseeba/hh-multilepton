@@ -123,8 +123,6 @@ else:
   raise ValueError("Invalid mode: %s" % mode)
 
 hadTauWP_veto_map = {
-  #'dR03mva' : 'Loose',
-  #'deepVSj' : 'Loose',
   'dR03mva' : 'Medium',
   'deepVSj' : 'Medium', 
 }
@@ -134,10 +132,11 @@ for sample_name, sample_info in samples.items():
   if sample_name == 'sum_events': continue
   if sample_name.startswith('/Tau/Run'):
     sample_info["use_it"] = False
-
-
+  if control_region:
+    if sample_info["process_name_specific"].startswith('signal_'):
+      sample_info["use_it"] = False
+    
 if __name__ == '__main__':
-  print "\n\nget_histograms_to_fit(EventCounter): {}\n\n".format(get_histograms_to_fit("EventCounter"))
   logging.info(
     "Running the jobs with the following systematic uncertainties enabled: %s" % \
     ', '.join(central_or_shifts)
@@ -148,38 +147,55 @@ if __name__ == '__main__':
   if sample_filter:
     samples = filter_samples(samples, sample_filter)
 
-  histograms_to_fit = None
+  histograms_to_fit = {}
   if control_region:
-    histograms_to_fit = {
-    "EventCounter" : {},
-    "m3l"      : {},
-    "dihiggsVisMass_sel"      : {},
-    "mSFOS2l_closestToZ"      : {},
-    "dr_LeptonIdx3_AK4jNear_Approach2"      : {},
-    "dr_LeptonIdx3_2j_inclusive1j_Approach2"      : {},
-    "dr_los_min"      : {},
-    "dr_los_max"      : {},
-    "numSameFlavor_OS_3l"      : {},      
-    "met_LD"      : {},
-    "numElectrons"      : {},
-    "numMuons"      : {},
-    "nJetAK4"      : {},
-    "nJetAK8_wSelectorAK8_Wjj"      : {},
-    #
-    "mT_WZctrl_leptonW_MET"      : {},
-    #
-    "jetMass_sel_WZctrl_2lss"      : {},
-    "leptonPairMass_sel_WZctrl_2lss"      : {},      
-    "mindr_lep1_jet_WZctrl_2lss"      : {},
-    "mT_lep1_WZctrl_2lss"      : {},
-    "mindr_lep2_jet_WZctrl_2lss"      : {},      
-    "mT_lep2_WZctrl_2lss"      : {},
-    "dR_ll_WZctrl_2lss"      : {},
-    "max_lep_eta_WZctrl_2lss"      : {},
-    "MVAOutput_allBMs"   : {},
-  }
+    histograms_to_fit_list = [
+      "EventCounter",
+      "m3l",
+      "dihiggsVisMass_sel",
+      "mSFOS2l_closestToZ",
+      "dr_LeptonIdx3_AK4jNear_Approach2",
+      "dr_LeptonIdx3_2j_inclusive1j_Approach2",
+      "dr_los_min",
+      "dr_los_max",
+      "numSameFlavor_OS_3l",
+      "met_LD",
+      "numElectrons",
+      "numMuons",
+      "nJetAK4",
+      "nJetAK8_wSelectorAK8_Wjj",
+      #
+      "mT_WZctrl_leptonW_MET",
+      #
+      "jetMass_sel_WZctrl_2lss",
+      "leptonPairMass_sel_WZctrl_2lss",
+      "mindr_lep1_jet_WZctrl_2lss",
+      "mT_lep1_WZctrl_2lss",
+      "mindr_lep2_jet_WZctrl_2lss",
+      "mT_lep2_WZctrl_2lss",
+      "dR_ll_WZctrl_2lss",
+      "max_lep_eta_WZctrl_2lss",
+      "MVAOutput_allBMs",
+    ]
+    for histogram_to_fit in histograms_to_fit_list:
+      histograms_to_fit[histogram_to_fit] = {}
   else:
-    histograms_to_fit = get_histograms_to_fit("EventCounter","m3l","dihiggsVisMass_sel","mSFOS2l_closestToZ","dr_LeptonIdx3_AK4jNear_Approach2","dr_LeptonIdx3_2j_inclusive1j_Approach2","dr_los_min","dr_los_max","numSameFlavor_OS_3l","met_LD","numElectrons","numMuons","nJetAK4","nJetAK8_wSelectorAK8_Wjj")
+    histograms_to_fit = get_histograms_to_fit(
+      "EventCounter",
+      "m3l",
+      "dihiggsVisMass_sel",
+      "mSFOS2l_closestToZ",
+      "dr_LeptonIdx3_AK4jNear_Approach2",
+      "dr_LeptonIdx3_2j_inclusive1j_Approach2",
+      "dr_los_min",
+      "dr_los_max",
+      "numSameFlavor_OS_3l",
+      "met_LD",
+      "numElectrons",
+      "numMuons",
+      "nJetAK4",
+      "nJetAK8_wSelectorAK8_Wjj"
+    )
   
   analysis = analyzeConfig_hh_3l(
     configDir = os.path.join("/home",       getpass.getuser(), "hhAnalysis", era, version),
