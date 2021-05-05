@@ -32,7 +32,7 @@ class DatacardHistManagerBase_hh
                              const HHWeightInterfaceLO * HHWeightLO_calc,
                              const HHWeightInterfaceNLO * HHWeightNLO_calc,
                              bool isDEBUG = false,
-                             bool fillHistograms_nonresonant = true, bool fillHistograms_resonant_spin0 = true, bool fillHistograms_resonant_spin2 = true);
+                             bool fillHistograms_nonresonant = true, bool fillHistograms_resonant_spin0 = true, bool fillHistograms_resonant_spin2 = true, bool overlap=false);
   DatacardHistManagerBase_hh(const edm::ParameterSet & cfg,
                              const AnalysisConfig_hh & analysisConfig, 
                              const EventInfo & eventInfo, 
@@ -40,7 +40,7 @@ class DatacardHistManagerBase_hh
                              const HHWeightInterfaceNLO * HHWeightNLO_calc,
                              const EventCategoryBase * eventCategoryBase,
                              bool isDEBUG = false,
-                             bool fillHistograms_nonresonant = true, bool fillHistograms_resonant_spin0 = true, bool fillHistograms_resonant_spin2 = true);
+                             bool fillHistograms_nonresonant = true, bool fillHistograms_resonant_spin0 = true, bool fillHistograms_resonant_spin2 = true, bool overlap = false);
   ~DatacardHistManagerBase_hh() {}
 
   /// book histograms
@@ -95,6 +95,7 @@ class DatacardHistManagerBase_hh
   };
   std::vector<categoryEntryType> histograms_in_categories_;
 
+  bool overlap_;
   bool isDEBUG_;
 };
 

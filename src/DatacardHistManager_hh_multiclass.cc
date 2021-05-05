@@ -11,10 +11,10 @@ DatacardHistManager_hh_multiclass::DatacardHistManager_hh_multiclass(const edm::
                                                                      const HHWeightInterfaceNLO * HHWeightNLO_calc,
                                                                      const std::vector<std::string> & classes,
                                                                      bool isDEBUG,
-                                                                     bool fillHistograms_nonresonant, bool fillHistograms_resonant_spin0, bool fillHistograms_resonant_spin2)
+                                                                     bool fillHistograms_nonresonant, bool fillHistograms_resonant_spin0, bool fillHistograms_resonant_spin2, bool overlap)
   : DatacardHistManagerBase_hh(
       cfg, analysisConfig, eventInfo, HHWeightLO_calc, HHWeightNLO_calc, isDEBUG, 
-      fillHistograms_nonresonant, fillHistograms_resonant_spin0, fillHistograms_resonant_spin2
+      fillHistograms_nonresonant, fillHistograms_resonant_spin0, fillHistograms_resonant_spin2, overlap
     )
 {
   // CV: define one event category for each class;
@@ -37,10 +37,10 @@ DatacardHistManager_hh_multiclass::DatacardHistManager_hh_multiclass(const edm::
                                                                      const HHWeightInterfaceNLO * HHWeightNLO_calc,
                                                                      const EventCategory_multiclass * eventCategory,
                                                                      bool isDEBUG,
-                                                                     bool fillHistograms_nonresonant, bool fillHistograms_resonant_spin0, bool fillHistograms_resonant_spin2)
+                                                                     bool fillHistograms_nonresonant, bool fillHistograms_resonant_spin0, bool fillHistograms_resonant_spin2, bool overlap)
   : DatacardHistManagerBase_hh(
       cfg, analysisConfig, eventInfo, HHWeightLO_calc, HHWeightNLO_calc, eventCategory, isDEBUG,
-      fillHistograms_nonresonant, fillHistograms_resonant_spin0, fillHistograms_resonant_spin2
+      fillHistograms_nonresonant, fillHistograms_resonant_spin0, fillHistograms_resonant_spin2, overlap
     )
   , eventCategory_(eventCategory)
 {
@@ -170,7 +170,6 @@ DatacardHistManager_hh_multiclass::fillHistograms(const std::map<std::string, st
             }
           }
         }
-
         if ( fillHistograms_nonresonant_ )
         {
           for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_nonresonant_.begin();

@@ -19,7 +19,8 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
                                                        bool isDEBUG,
                                                        bool fillHistograms_nonresonant,
                                                        bool fillHistograms_resonant_spin0,
-                                                       bool fillHistograms_resonant_spin2)
+                                                       bool fillHistograms_resonant_spin2,
+                                                       bool overlap)
   : HistManagerBase(cfg)
   , analysisConfig_(analysisConfig)
   , eventInfo_(eventInfo)
@@ -34,6 +35,7 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
   , numBinsX_(100)
   , xMin_(0.)
   , xMax_(1.) // 1.
+  , overlap_(overlap)
   , isDEBUG_(isDEBUG)
 {}
 
@@ -46,7 +48,8 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
                                                        bool isDEBUG,
                                                        bool fillHistograms_nonresonant,
                                                        bool fillHistograms_resonant_spin0,
-                                                       bool fillHistograms_resonant_spin2)
+                                                       bool fillHistograms_resonant_spin2,
+                                                       bool overlap)
   : HistManagerBase(cfg)
   , analysisConfig_(analysisConfig)
   , eventInfo_(eventInfo)
@@ -61,6 +64,7 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
   , numBinsX_(100)
   , xMin_(0.) // 0.
   , xMax_(1.) // 1. 
+  , overlap_(overlap)
   , isDEBUG_(isDEBUG)
 {}
 
@@ -92,6 +96,13 @@ DatacardHistManagerBase_hh::initialize()
       central_or_shiftOptions_[histogramName_resonant_spin2] = { "*" };
       std::string key_resonant_spin2 = Form("%0.0f_spin2", gen_mHH);
       histogramNames_mvaOutput_resonant_spin2_[key_resonant_spin2] = histogramName_resonant_spin2;
+      if ( overlap_ && (gen_mHH == 400 || gen_mHH == 450) )
+      {
+        std::string histogramName_resonant_overlap_spin2 = Form("MVAOutput_%0.0f_overlap_spin2", gen_mHH);
+        central_or_shiftOptions_[histogramName_resonant_overlap_spin2] = { "*" };
+        std::string key_resonant_overlap_spin2 = Form("%0.0f_overlap_spin2", gen_mHH);
+        histogramNames_mvaOutput_resonant_spin2_[key_resonant_overlap_spin2] = histogramName_resonant_overlap_spin2;
+      }
     }
     if ( !(analysisConfig_.isMC_HH_nonresonant() || analysisConfig_.isMC_HH_resonant_spin2()) )
     {
@@ -99,6 +110,13 @@ DatacardHistManagerBase_hh::initialize()
       central_or_shiftOptions_[histogramName_resonant_spin0] = { "*" };
       std::string key_resonant_spin0 = Form("%0.0f_spin0", gen_mHH);
       histogramNames_mvaOutput_resonant_spin0_[key_resonant_spin0] = histogramName_resonant_spin0;
+      if ( overlap_ && (gen_mHH == 400 || gen_mHH == 450) )
+      {
+        std::string histogramName_resonant_overlap_spin0 = Form("MVAOutput_%0.0f_overlap_spin0", gen_mHH);
+        central_or_shiftOptions_[histogramName_resonant_overlap_spin0] = { "*" };
+        std::string key_resonant_overlap_spin0 = Form("%0.0f_overlap_spin0", gen_mHH);
+        histogramNames_mvaOutput_resonant_spin0_[key_resonant_overlap_spin0] = histogramName_resonant_overlap_spin0;
+      }
     }
   }
 
@@ -119,7 +137,7 @@ DatacardHistManagerBase_hh::initialize()
   }
   histogramName_mvaOutput_nonresonant_allBMs_ = "MVAOutput_allBMs";
   central_or_shiftOptions_[histogramName_mvaOutput_nonresonant_allBMs_] = { "*" };
-  
+
   if ( analysisConfig_.isMC_HH_resonant() || analysisConfig_.isMC_HH_nonresonant() )
   {
     // CV: do not split fake and conversion contributions by decay mode
@@ -275,7 +293,6 @@ DatacardHistManagerBase_hh::bookHistograms(TFileDirectory & dir)
           TH1* histogram = book1D(dir, histogramName_mvaOutput_nonresonant_allBMs_, histogramName_mvaOutput_nonresonant_allBMs_, numBinsX_, xMin_, xMax_);
           categoryEntry.histograms_mvaOutput_nonresonant_allBMs_[productionMode][decayMode] = histogram;
         }
-
         process_ = processBAK;
       }
     }

@@ -10,10 +10,10 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
                                                const HHWeightInterfaceLO * HHWeightLO_calc,
                                                const HHWeightInterfaceNLO * HHWeightNLO_calc,
                                                bool isDEBUG,
-                                               bool fillHistograms_nonresonant, bool fillHistograms_resonant_spin0, bool fillHistograms_resonant_spin2)
+                                               bool fillHistograms_nonresonant, bool fillHistograms_resonant_spin0, bool fillHistograms_resonant_spin2, bool overlap)
   : DatacardHistManagerBase_hh(
       cfg, analysisConfig, eventInfo, HHWeightLO_calc, HHWeightNLO_calc, isDEBUG, 
-      fillHistograms_nonresonant, fillHistograms_resonant_spin0, fillHistograms_resonant_spin2
+      fillHistograms_nonresonant, fillHistograms_resonant_spin0, fillHistograms_resonant_spin2, overlap
     )
   , eventCategory_(nullptr)
 {
@@ -30,10 +30,10 @@ DatacardHistManager_hh::DatacardHistManager_hh(const edm::ParameterSet & cfg,
                                                const HHWeightInterfaceNLO * HHWeightNLO_calc,
                                                const EventCategory * eventCategory,
                                                bool isDEBUG,
-                                               bool fillHistograms_nonresonant, bool fillHistograms_resonant_spin0, bool fillHistograms_resonant_spin2)
+                                               bool fillHistograms_nonresonant, bool fillHistograms_resonant_spin0, bool fillHistograms_resonant_spin2, bool overlap)
   : DatacardHistManagerBase_hh(
       cfg, analysisConfig, eventInfo, HHWeightLO_calc, HHWeightNLO_calc, eventCategory, isDEBUG, 
-      fillHistograms_nonresonant, fillHistograms_resonant_spin0, fillHistograms_resonant_spin2
+      fillHistograms_nonresonant, fillHistograms_resonant_spin0, fillHistograms_resonant_spin2, overlap
     )
   , eventCategory_(eventCategory)
 {

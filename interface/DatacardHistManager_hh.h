@@ -34,7 +34,7 @@ class DatacardHistManager_hh
                          const HHWeightInterfaceLO * HHWeightLO_calc,
                          const HHWeightInterfaceNLO * HHWeightNLO_calc,
                          bool isDEBUG = false,
-                         bool fillHistograms_nonresonant = true, bool fillHistograms_resonant_spin0 = true, bool fillHistograms_resonant_spin2 = true);
+                         bool fillHistograms_nonresonant = true, bool fillHistograms_resonant_spin0 = true, bool fillHistograms_resonant_spin2 = true, bool overlap=false);
   DatacardHistManager_hh(const edm::ParameterSet & cfg,
                          const AnalysisConfig_hh & analysisConfig, 
                          const EventInfo & eventInfo, 
@@ -42,7 +42,7 @@ class DatacardHistManager_hh
                          const HHWeightInterfaceNLO * HHWeightNLO_calc,
                          const EventCategory * eventCategory,
                          bool isDEBUG = false,
-                         bool fillHistograms_nonresonant = true, bool fillHistograms_resonant_spin0 = true, bool fillHistograms_resonant_spin2 = true);
+                         bool fillHistograms_nonresonant = true, bool fillHistograms_resonant_spin0 = true, bool fillHistograms_resonant_spin2 = true, bool overlap=false);
   ~DatacardHistManager_hh() {}
 
   /// fill histograms
