@@ -128,6 +128,7 @@ process.makePlots = cms.PSet(
             signal_ggf_spin2_1000_hh = cms.string("0.0 +/- 0.20"),
             #            
             signal_ggf_nonresonant_hh = cms.string("0.0 +/- 0.20"),
+            signal_ggf_nonresonant_cHHH1_hh = cms.string("0.0 +/- 0.20"),
         ),
         shape = cms.PSet(
             CMS_ttHl_btag_HF = cms.string("0.00 +/- 1.00"),

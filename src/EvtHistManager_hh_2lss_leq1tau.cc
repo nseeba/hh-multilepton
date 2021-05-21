@@ -3,6 +3,8 @@
 #include "tthAnalysis/HiggsToTauTau/interface/histogramAuxFunctions.h" // fillWithOverFlow(), fillWithOverFlow2d()
 #include <TMath.h>
 
+const int histogramMakingLevel = 2; // 0 / 1 / 2: fill minimum / a few more / all histograms
+
 EvtHistManager_hh_2lss_leq1tau::EvtHistManager_hh_2lss_leq1tau(const edm::ParameterSet & cfg)
   : HistManagerBase(cfg)
 {
@@ -55,6 +57,20 @@ EvtHistManager_hh_2lss_leq1tau::EvtHistManager_hh_2lss_leq1tau(const edm::Parame
   central_or_shiftOptions_["eventCategory"] = { "central" };
 
   central_or_shiftOptions_["nTaus"] = { "central" }; 
+
+  if (histogramMakingLevel >= 2)
+  {
+  central_or_shiftOptions_["mindr_lep1_jet"] = { "central" };
+  central_or_shiftOptions_["mindr_lep2_jet"] = { "central" };
+  central_or_shiftOptions_["pT_ll"] = { "central" };
+  central_or_shiftOptions_["max_lep_eta"] = { "central" };
+  central_or_shiftOptions_["pT_llMEt"] = { "central" };
+  central_or_shiftOptions_["Smin_llMEt"] = { "central" };
+  central_or_shiftOptions_["lep1_conePt"] = { "central" };
+  central_or_shiftOptions_["lep1_eta"] = { "central" };
+  central_or_shiftOptions_["lep2_conePt"] = { "central" };
+  central_or_shiftOptions_["lep2_eta"] = { "central" };
+  }
 
   
 }
@@ -117,66 +133,93 @@ EvtHistManager_hh_2lss_leq1tau::bookHistograms(TFileDirectory & dir)
   histogram_eventCategory_       = book1D(dir, "eventCategory",        "eventCategory",          3, 0.5,3.5);
 
   histogram_nTaus_               = book1D(dir, "nTaus",                "nTaus",                  3, -0.5,2.5);
+
+  if (histogramMakingLevel >= 2)
+  {
+  histogram_mindr_lep1_jet_      = book1D(dir, "mindr_lep1_jet",       "mindr_lep1_jet",       100, 0,   7);
+  histogram_mindr_lep2_jet_      = book1D(dir, "mindr_lep2_jet",       "mindr_lep2_jet",       100, 0,   7);
+  histogram_pT_ll_               = book1D(dir, "pT_ll",                "pT_ll",                150, 0,300);
+  histogram_max_lep_eta_         = book1D(dir, "max_lep_eta",          "max_lep_eta",          100, 0,2.5);
+  histogram_pT_llMEt_            = book1D(dir, "pT_llMEt",             "pT_llMEt",             200, 0,600);
+
+  histogram_Smin_llMEt_          = book1D(dir, "Smin_llMEt",           "Smin_llMEt",           200, 0,600);
+  histogram_lep1_conePt_         = book1D(dir, "lep1_conePt",          "lep1_conePt",          150, 0,300);
+  histogram_lep1_eta_            = book1D(dir, "lep1_eta",             "lep1_eta",             100,-2.5,2.5);
+  histogram_lep2_conePt_         = book1D(dir, "lep2_conePt",          "lep2_conePt",          150, 0,300);
+  histogram_lep2_eta_            = book1D(dir, "lep2_eta",             "lep2_eta",             100,-2.5,2.5);  
+  }
 }
 
 void
 EvtHistManager_hh_2lss_leq1tau::fillHistograms(int numElectrons,
-				       int numMuons,
-				       int numJets,
-				       int numJetsPtGt40,
-				       double dihiggsVisMass,
-				       double dihiggsMass_wMet,
-				       double jetMass,
-				       double leptonPairMass,
-				       double electronPairMass,
-				       double muonPairMass,
-				       double leptonPairCharge,
-				       double HT,
-				       double STMET,
-				       //
-				       //
-				       //
-				       int nElectrons_in_2lss,
-				       //leptonPairMass_sel,
-				       //leptonPairCharge_sel,
-				       double dR_ll,
-				       double dPhi_ll,
-				       //
-				       //nAK4,
-				       int nAK8_w2subjets,
-				       int nWJets_selected,
-				       //
-				       double mass_2j_fromW1,
-				       double mass_2j_fromW2,
-				       double dR_2j_fromW1,
-				       double dR_2j_fromW2,
-				       //
-				       double dR_Wjets_min,
-				       double dR_Wjets_max,
-				       double dR_l_Wjets_min,
-				       double dR_l_Wjets_max,
-				       double dR_l_AK4jets_min,
-				       double dR_l_AK4jets_max,
-				       double dR_l_leadWjet_min,
-				       double dR_l_leadWjet_max,
-				       double dR_l_leadAK4jet_min,
-				       double dR_l_leadAK4jet_max,
-				       //
-				       double met,
-				       double mht,
-				       double met_LD,
-				       //HT,
-				       //STMET,
-				       //
-				       double mT_lep1_met,
-				       double mT_lep2_met,
-				       //
-				       int eventCategory,
-				       //
-				       int nTaus,
-				       //
-				       //		 
-				       double evtWeight)
+					       int numMuons,
+					       int numJets,
+					       int numJetsPtGt40,
+					       double dihiggsVisMass,
+					       double dihiggsMass_wMet,
+					       double jetMass,
+					       double leptonPairMass,
+					       double electronPairMass,
+					       double muonPairMass,
+					       double leptonPairCharge,
+					       double HT,
+					       double STMET,
+					       //
+					       //
+					       //
+					       int nElectrons_in_2lss,
+					       //leptonPairMass_sel,
+					       //leptonPairCharge_sel,
+					       double dR_ll,
+					       double dPhi_ll,
+					       //
+					       //nAK4,
+					       int nAK8_w2subjets,
+					       int nWJets_selected,
+					       //
+					       double mass_2j_fromW1,
+					       double mass_2j_fromW2,
+					       double dR_2j_fromW1,
+					       double dR_2j_fromW2,
+					       //
+					       double dR_Wjets_min,
+					       double dR_Wjets_max,
+					       double dR_l_Wjets_min,
+					       double dR_l_Wjets_max,
+					       double dR_l_AK4jets_min,
+					       double dR_l_AK4jets_max,
+					       double dR_l_leadWjet_min,
+					       double dR_l_leadWjet_max,
+					       double dR_l_leadAK4jet_min,
+					       double dR_l_leadAK4jet_max,
+					       //
+					       double met,
+					       double mht,
+					       double met_LD,
+					       //HT,
+					       //STMET,
+					       //
+					       double mT_lep1_met,
+					       double mT_lep2_met,
+					       //
+					       int eventCategory,
+					       //
+					       int nTaus,
+					       //
+					       //
+					       double mindr_lep1_jet,
+					       double mindr_lep2_jet,
+					       double pT_ll,
+					       double max_lep_eta,
+					       double pT_llMEt,
+					       double Smin_llMEt,
+					       double lep1_conePt,
+					       double lep1_eta,
+					       double lep2_conePt,
+					       double lep2_eta,
+					       //
+					       //		 					       
+					       double evtWeight)
 {
   const double evtWeightErr = 0.;
   fillWithOverFlow(histogram_numElectrons_,     numElectrons,     evtWeight, evtWeightErr);
@@ -248,5 +291,20 @@ EvtHistManager_hh_2lss_leq1tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_eventCategory_, eventCategory, evtWeight, evtWeightErr);
   //
   fillWithOverFlow(histogram_nTaus_, nTaus, evtWeight, evtWeightErr);
+
   
+  if (histogramMakingLevel >= 2)
+  {
+  fillWithOverFlow(histogram_mindr_lep1_jet_, mindr_lep1_jet, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_mindr_lep2_jet_, mindr_lep2_jet, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_pT_ll_, pT_ll, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_max_lep_eta_, max_lep_eta, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_pT_llMEt_, pT_llMEt, evtWeight, evtWeightErr);
+
+  fillWithOverFlow(histogram_Smin_llMEt_, Smin_llMEt, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_lep1_conePt_, lep1_conePt, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_lep1_eta_, lep1_eta, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_lep2_conePt_, lep2_conePt, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_lep2_eta_, lep2_eta, evtWeight, evtWeightErr);  
+  }
 }
