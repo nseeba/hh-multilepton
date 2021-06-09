@@ -4,7 +4,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/cmsException.h" // cmsException()
 #include <TMath.h>
 
-const int analysisRunLevel = 0; // 0: only nEvent histo, 1: all category histo, 2: all histo
+const int analysisRunLevel = 1; // 0: only nEvent histo, 1: all category histo, 2: all histo
 
 EvtHistManager_hh_3l::EvtHistManager_hh_3l(const edm::ParameterSet & cfg, bool isControlRegion)
   : HistManagerBase(cfg)
@@ -908,7 +908,11 @@ EvtHistManager_hh_3l::EvtHistManager_hh_3l(const edm::ParameterSet & cfg, bool i
     "mindr_lep2_jet_WZctrl_2lss",
     "mT_lep2_WZctrl_2lss",
     "dR_ll_WZctrl_2lss",
-    "max_lep_eta_WZctrl_2lss",    
+    "max_lep_eta_WZctrl_2lss",
+    //
+    //
+    // additional
+    "numSameFlavor_OS_FullPresel",
   };
   const std::vector<std::string> sysOpts_all = {
     //"mvaOutput_xgb_hh_3l_SUMBk_HH",

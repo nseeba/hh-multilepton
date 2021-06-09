@@ -942,9 +942,13 @@ int main(int argc, char* argv[])
         // CV: make correlation plot for MVA input variables used for non-resonant HH signal extraction,
         //     as defined in hhAnalysis/multilepton/data/BDT_2lss/nonres_default_Sandeep_9vars_usingLepConePt/2lss_even_half_model_nonres_default.xml
         selHistManager->mvaInputVarCorrelation_->bookHistograms(fs, {
+	    // v6
 	    "leptonPairMass_sel", "dihiggsVisMass_sel", "met_LD",
 	    "dR_ll", "dR_l_Wjets_min", "dR_l_leadWjet_min", "dR_l_Wjets_max",
-	    "dR_l_leadWjet_max", "dR_2j_fromW1", "mT_lep1"
+	    "dR_l_leadWjet_max", "dR_2j_fromW1", "mT_lep1",
+	    // v7p2
+	    "lep1_conePt", "lep2_conePt", "mindr_lep1_jet", "HT", "mindr_lep2_jet",
+	     "mht", "mass_2j_fromW1"
         });
       }
 
@@ -1067,6 +1071,7 @@ int main(int argc, char* argv[])
     "met LD",
     "MEt filters",
     "signal region veto",
+    "nonRes SM BDT > 0.7",
   };
   CutFlowTableHistManager * cutFlowHistManager = new CutFlowTableHistManager(cutFlowTableCfg, cuts);
   cutFlowHistManager->bookHistograms(fs);
@@ -2334,6 +2339,8 @@ int main(int argc, char* argv[])
     AllVars_Map["dR_l_Wjets_max"] =                  dR_l_Wjets_max;
     AllVars_Map["dR_l_leadWjet_max"] =               dR_l_leadWjet_max;
     AllVars_Map["dR_2j_fromW1"] =                    dR_2j_fromW1;
+
+    AllVars_Map["mass_2j_fromW1"] =                  mass_2j_fromW1;
     //AllVars_Map["mT_lep1"] =                         mT_lep1;
 
     
@@ -2354,6 +2361,20 @@ int main(int argc, char* argv[])
 
     
 
+    
+    //#########################################################################
+    //#########################################################################
+    //#########################################################################    
+    if (BDTOutput_Map_nonRes["SM"] < 0.7) continue;
+    //printf("SM BDT (%g) above 0.7 \n",BDTOutput_Map_nonRes["SM"]);
+    cutFlowTable.update("nonRes SM BDT > 0.7", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms("nonRes SM BDT > 0.7", evtWeightRecorder.get(central_or_shift_main));
+    //#########################################################################
+    //#########################################################################
+    //#########################################################################    
+
+
+    
 //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons);
 

@@ -1411,7 +1411,8 @@ int main(int argc, char* argv[])
     "signal region veto",
     "After all cuts: evt category isWjjBoosted",
     "After all cuts: evt category isWjjResolved",
-    "After all cuts: evt category isWjjHasOnly1j"
+    "After all cuts: evt category isWjjHasOnly1j",
+    "nonRes SM BDT > 0.7"
   };
   CutFlowTableHistManager * cutFlowHistManager = new CutFlowTableHistManager(cutFlowTableCfg, cuts);
   cutFlowHistManager->bookHistograms(fs);
@@ -3724,15 +3725,26 @@ int main(int argc, char* argv[])
     for (auto const &bdt: BDTOutput_Map_spin2)
     {
       std::cout << "\t " << bdt.first << ": " << bdt.second << "\n";
-    }
+      }
     
     std::cout << "BDT nonres: " << "\n";
     for (auto const &bdt: BDTOutput_Map_nonRes)
     {
       std::cout << "\t " << bdt.first << ": " << bdt.second << "\n";
     }
-    */    
+    */
 
+    
+    //#########################################################################
+    //#########################################################################
+    //#########################################################################    
+    if (BDTOutput_Map_nonRes["SM"] < 0.7) continue;
+    //printf("SM BDT (%g) above 0.7 \n",BDTOutput_Map_nonRes["SM"]);
+    cutFlowTable.update("nonRes SM BDT > 0.7", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms("nonRes SM BDT > 0.7", evtWeightRecorder.get(central_or_shift_main));
+    //#########################################################################
+    //#########################################################################
+    //#########################################################################    
 
 
     
