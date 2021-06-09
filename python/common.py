@@ -46,7 +46,7 @@ def get_histograms_to_fit(*custom_histograms, **kwargs):
   assert(all(nonresPoint in NONRESONANT_POINTS for nonresPoint in nonresPoints))
   for nonresPoint in nonresPoints:
     for bmName in NONRESONANT_POINTS[nonresPoint]:
-      mvaOutputName = "MVAOutput_{}{}".format(nonresPoint, bmName)
+      mvaOutputName = "MVAOutput_{}".format(bmName)
       if mvaOutputName in histograms_to_fit:
         raise ValueError("Encountered duplicate histogram name: %s" % mvaOutputName)
       histograms_to_fit[mvaOutputName] = {}
