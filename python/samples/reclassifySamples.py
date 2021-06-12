@@ -11,22 +11,25 @@ from tthAnalysis.HiggsToTauTau.analysisSettings import systematics
 
 def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None, separate_th = True):
 
-  sum_events_hh  = copy.deepcopy(samples_era_hh['sum_events'])
-  sum_events_bkg = copy.deepcopy(samples_era_bkg['sum_events'])
+  samples_era_hh_copy = copy.deepcopy(samples_era_hh)
+  samples_era_bkg_copy = copy.deepcopy(samples_era_bkg)
+  sum_events_hh  = copy.deepcopy(samples_era_hh_copy['sum_events'])
+  sum_events_bkg = copy.deepcopy(samples_era_bkg_copy['sum_events'])
   sum_events_ttbar = []
 
-  del samples_era_hh['sum_events']
-  del samples_era_bkg['sum_events']
-  if samples_era_ttbar:
-    sum_events_ttbar = copy.deepcopy(samples_era_ttbar['sum_events'])
-    del samples_era_ttbar['sum_events']
+  del samples_era_hh_copy['sum_events']
+  del samples_era_bkg_copy['sum_events']
 
   if samples_era_ttbar:
+    samples_era_ttbar_copy = copy.deepcopy(samples_era_ttbar)
+    sum_events_ttbar = copy.deepcopy(samples_era_ttbar_copy['sum_events'])
+    del samples_era_ttbar_copy['sum_events']
+
     samples = collections.OrderedDict(itertools.chain(
-      samples_era_bkg.items(), samples_era_hh.items(), samples_era_ttbar.items()
+      samples_era_bkg_copy.items(), samples_era_hh_copy.items(), samples_era_ttbar_copy.items()
     ))
   else:
-    samples = collections.OrderedDict(itertools.chain(samples_era_bkg.items(), samples_era_hh.items()))
+    samples = collections.OrderedDict(itertools.chain(samples_era_bkg_copy.items(), samples_era_hh_copy.items()))
 
   samples['sum_events'] = sum_events_hh + sum_events_bkg + sum_events_ttbar
 
