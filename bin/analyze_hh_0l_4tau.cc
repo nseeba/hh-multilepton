@@ -94,6 +94,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/RecoVertex.h" // RecoVertex
 #include "tthAnalysis/HiggsToTauTau/interface/RecoVertexReader.h" // RecoVertexReader
 #include "tthAnalysis/HiggsToTauTau/interface/GenPhotonFilter.h" // GenPhotonFilter
+#include "tthAnalysis/HiggsToTauTau/interface/RunLumiEventRejector.h" // RunLumiEventRejector
 
 #include "hhAnalysis/multilepton/interface/EvtHistManager_hh_0l_4tau.h" // EvtHistManager_hh_0l_4tau
 #include "hhAnalysis/multilepton/interface/SVfit4tauHistManager_MarkovChain.h" // SVfit4tauHistManager_MarkovChain
@@ -419,6 +420,14 @@ int main(int argc, char* argv[])
     cfg_runLumiEventSelector.addParameter<std::string>("inputFileName", selEventsFileName_input);
     cfg_runLumiEventSelector.addParameter<std::string>("separator", ":");
     run_lumi_eventSelector = new RunLumiEventSelector(cfg_runLumiEventSelector);
+  }
+
+  const bool enable_blacklist = cfg_analyze.getParameter<bool>("enable_blacklist");
+  RunLumiEventRejector * blacklist = nullptr;
+  if(enable_blacklist)
+  {
+    const edm::ParameterSet blacklist_cfg = cfg_analyze.getParameter<edm::ParameterSet>("blacklist");
+    blacklist = new RunLumiEventRejector(blacklist_cfg);
   }
 
   std::string selEventsFileName_output = cfg_analyze.getParameter<std::string>("selEventsFileName_output");
@@ -1430,6 +1439,11 @@ int main(int argc, char* argv[])
     }
     cutFlowTable.update("signal region veto", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms("signal region veto", evtWeightRecorder.get(central_or_shift_main));
+
+    if(blacklist && (*blacklist)(eventInfo))
+    {
+      continue;
+    }
     
     std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4tau(
       *selHadTau_lead, *selHadTau_sublead, *selHadTau_third, *selHadTau_fourth, met, hadTauChargeSelection_string, rnd, 125., 2.);
@@ -2222,6 +2236,7 @@ int main(int argc, char* argv[])
   delete jetToTauFakeRateInterface_failsTrigger;
 
   delete run_lumi_eventSelector;
+  delete blacklist;
 
   delete selEventsFile;
 
