@@ -369,7 +369,8 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     }
   }
   printf("Plotter_HH:: After  yMin: %f,  yMax: %f\n",yMin,yMax);
-  
+  if ( yMax < histogramSum_density->GetMaximum() ) yMax = 10*histogramSum_density->GetMaximum();
+
   if ( histogramData_blinded_density ) {
     histogramData_blinded_density->SetTitle("");
     histogramData_blinded_density->SetStats(false);
