@@ -79,7 +79,7 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None,
       assert(sample_category_lo in xsec_nonres)
       xsec_new = xsec_nonres[sample_category_lo]
 
-      entry_copy = sample_info.copy()
+      entry_copy = copy.deepcopy(sample_info)
       entry_copy.update([
         ('sample_category', sample_category_new),
         ('process_name_specific', process_name_new),
