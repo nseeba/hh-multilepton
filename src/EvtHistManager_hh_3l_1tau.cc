@@ -136,10 +136,10 @@ EvtHistManager_hh_3l_1tau::fillHistograms(int numElectrons,
   if ( dihiggsMass > 0. ) {
     fillWithOverFlow(histogram_dihiggsMass_,     dihiggsMass,         evtWeight,     evtWeightErr);
   }
-  fillWithOverFlow(histogram_dR_smartpair_ll_,   dR_smartpair_ltau,   evtWeight,     evtWeightErr);
-  fillWithOverFlow(histogram_m_smartpair_ll_,    m_smartpair_ltau,    evtWeight,     evtWeightErr);
-  fillWithOverFlow(histogram_dR_smartpair_ltau_, dR_smartpair_ll,     evtWeight,     evtWeightErr);
-  fillWithOverFlow(histogram_m_smartpair_ltau_,  m_smartpair_ll,      evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_dR_smartpair_ltau_,   dR_smartpair_ltau,   evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_m_smartpair_ltau_,    m_smartpair_ltau,    evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_dR_smartpair_ll_, dR_smartpair_ll,     evtWeight,     evtWeightErr);
+  fillWithOverFlow(histogram_m_smartpair_ll_,  m_smartpair_ll,      evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_mllOS_closestToZ_,  mllOS_closestToZ,    evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_leadMuonPt_,        leadMuonPt,    evtWeight,     evtWeightErr);
   fillWithOverFlow(histogram_leadMuonEta_,       leadMuonEta,   evtWeight,     evtWeightErr);
