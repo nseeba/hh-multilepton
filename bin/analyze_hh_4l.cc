@@ -2133,12 +2133,12 @@ int main(int argc, char* argv[])
       continue;
     }
 
-    std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4tau(
-      *selLepton_lead, *selLepton_sublead, *selLepton_third, *selLepton_fourth, met, leptonChargeSelection_string, rnd, 125., 2.);
+    // std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint = compSVfit4tau(
+    //   *selLepton_lead, *selLepton_sublead, *selLepton_third, *selLepton_fourth, met, leptonChargeSelection_string, rnd, 125., 2.);
         
     double dihiggsVisMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4() + selLepton_third->p4() + selLepton_fourth->p4()).mass();
-    double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ? 
-      svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
+    double dihiggsMass = -10; // ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ? 
+    //   svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
 
 //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons);
@@ -2256,7 +2256,7 @@ int main(int argc, char* argv[])
           selHistManager->met_->fillHistograms(met, mht_p4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
 	  selHistManager->evt_->fillHistograms(selElectrons.size(), selMuons.size(), selLeptons.size(), selJets.size(), numSelJetsPtGt40, selBJets_loose.size(), selBJets_medium.size(), dihiggsVisMass_sel, dihiggsMass, HT, STMET, lep1_pt, lep2_pt, lep3_pt, lep4_pt, lep1_conePt, lep2_conePt, lep3_conePt, lep4_conePt, lep1_eta, lep2_eta, lep3_eta, lep4_eta, lep1_phi, lep2_phi, lep3_phi, lep4_phi, lep1_dxy, lep2_dxy, lep3_dxy, lep4_dxy, lep1_dz, lep2_dz, lep3_dz, lep4_dz, pt4l, pt4lParallelHadT, pt4lPerpendicularHadT, mt4l, maxPtSum_pair1_pt, maxPtSum_pair1_eta, maxPtSum_pair1_phi, maxPtSum_pair1_deltaEtaLep1, maxPtSum_pair1_deltaPhiLep1, maxPtSum_pair1_deltaEta, maxPtSum_pair1_deltaPhi, maxPtSum_pair1_deltaR, maxPtSum_pair1_deltaPt, maxPtSum_pair1_m, maxPtSum_pair2_pt, maxPtSum_pair2_eta, maxPtSum_pair2_phi, maxPtSum_pair2_deltaEtaLep1, maxPtSum_pair2_deltaPhiLep1, maxPtSum_pair2_deltaEta, maxPtSum_pair2_deltaPhi, maxPtSum_pair2_deltaR,maxPtSum_pair2_deltaPt, maxPtSum_pair2_m,MET, METParallelHadT, METPerpendicularHadT, METPhi, METDeltaPhiLep1, met_LD, HTmiss, lep1_isElectron, lep1_charge, lep2_isElectron, lep2_charge, lep3_isElectron, lep3_charge, lep4_isElectron, lep4_charge, leptonChargeSum, electronChargeSum, muonChargeSum, nSFOS, evtWeight);
-          selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
+          // selHistManager->svFit4tau_wMassConstraint_->fillHistograms(svFit4tauResults_wMassConstraint, evtWeight);
         }
 
         selHistManager->datacard_->fillHistograms(
