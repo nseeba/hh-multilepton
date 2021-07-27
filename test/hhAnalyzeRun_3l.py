@@ -135,6 +135,9 @@ for sample_name, sample_info in samples.items():
   if control_region:
     if sample_info["process_name_specific"].startswith('signal_'):
       sample_info["use_it"] = False
+  if sample_info["type"] != "data":
+    sample_info["use_it"] = False
+    
     
 if __name__ == '__main__':
   logging.info(

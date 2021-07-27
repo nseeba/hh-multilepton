@@ -44,6 +44,10 @@ class Plotter_HH : public Plotter
 
   double scaleSignal_;
   std::string legendEntrySignal_;
+
+  std::vector<std::string> legendEntriesSignal_;
+  int optionToNormalizeSignalDistributions_;   // 0: don't normalize, 1: normalize w.r.t. area, 2: normalize w.r.t. height
+  
 };
 
 #endif

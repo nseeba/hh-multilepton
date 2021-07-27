@@ -267,7 +267,12 @@ class EvtHistManager_hh_3l
   double max_lep_eta_WZctrl_2lss,    
   //
   //
-  //  
+  //
+  std::map<std::string, double> BDTOutput_Map_spin0,
+  std::map<std::string, double> BDTOutput_Map_spin2,
+  std::map<std::string, double> BDTOutput_Map_nonRes,
+  //
+  //
   double evtWeight);
 
   
@@ -1185,7 +1190,10 @@ class EvtHistManager_hh_3l
   //
   //
   //  
-  
+  TH2 * hBDTOutput_500_spin2_vs_700_spin2_;
+  TH2 * hBDTOutput_500_spin2_vs_900_spin2_;
+  TH2 * hBDTOutput_700_spin2_vs_900_spin2_;
+
 };
 
 #endif

@@ -72,7 +72,12 @@ EvtHistManager_hh_2lss_leq1tau::EvtHistManager_hh_2lss_leq1tau(const edm::Parame
   central_or_shiftOptions_["lep2_eta"] = { "central" };
   }
 
-  
+  if (histogramMakingLevel >= 2)
+  {
+    central_or_shiftOptions_["BDTOutput_500_spin2_vs_700_spin2"] = { "central" };
+    central_or_shiftOptions_["BDTOutput_500_spin2_vs_900_spin2"] = { "central" };
+    central_or_shiftOptions_["BDTOutput_700_spin2_vs_900_spin2"] = { "central" };
+  }
 }
 
 const TH1 *
@@ -148,6 +153,26 @@ EvtHistManager_hh_2lss_leq1tau::bookHistograms(TFileDirectory & dir)
   histogram_lep2_conePt_         = book1D(dir, "lep2_conePt",          "lep2_conePt",          150, 0,300);
   histogram_lep2_eta_            = book1D(dir, "lep2_eta",             "lep2_eta",             100,-2.5,2.5);  
   }
+
+  
+  if (histogramMakingLevel >= 1)
+  {
+    /*
+    // /home/tolange/share/dataCardsHH_unblinding_v1/rawRootFiles/2lss/Run2/newProcName/rebinned_quantile/addSystFakeRates_hh_2lss_leq1tau_hh_2lss_leq1tau_SS_MVAOutput_SM.root 
+    // nonResBDM[SM] binning: 30 [ 0, 0.19, 0.25, 0.3, 0.35, 0.39, 0.42, 0.46, 0.49, 0.52, 0.54, 0.57, 0.59, 0.61, 0.64, 0.66, 0.68, 0.7, 0.72, 0.74, 0.76, 0.78, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.93, 0.95, 1] 
+    int nBins_nonResBDT_SM = 30;
+    double binning_nonResBDT_SM[] = { 0, 0.19, 0.25, 0.3, 0.35, 0.39, 0.42, 0.46, 0.49, 0.52, 0.54, 0.57, 0.59, 0.61, 0.64, 0.66, 0.68, 0.7, 0.72, 0.74, 0.76, 0.78, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.93, 0.95, 1};
+
+    hBDTOutput_500_spin2_vs_700_spin2_                      = book2D(dir, "BDTOutput_500_spin2_vs_700_spin2",                      "BDTOutput_500_spin2_vs_700_spin2",         nBins_nonResBDT_SM,binning_nonResBDT_SM,  nBins_nonResBDT_SM,binning_nonResBDT_SM);
+    hBDTOutput_500_spin2_vs_900_spin2_                      = book2D(dir, "BDTOutput_500_spin2_vs_900_spin2",                      "BDTOutput_500_spin2_vs_900_spin2",         nBins_nonResBDT_SM,binning_nonResBDT_SM,  nBins_nonResBDT_SM,binning_nonResBDT_SM);
+    hBDTOutput_700_spin2_vs_900_spin2_                      = book2D(dir, "BDTOutput_700_spin2_vs_900_spin2",                      "BDTOutput_700_spin2_vs_900_spin2",         nBins_nonResBDT_SM,binning_nonResBDT_SM,  nBins_nonResBDT_SM,binning_nonResBDT_SM);
+    */
+    
+    hBDTOutput_500_spin2_vs_700_spin2_                      = book2D(dir, "BDTOutput_500_spin2_vs_700_spin2",                      "BDTOutput_500_spin2_vs_700_spin2",         100,0,1, 100,0,1);
+    hBDTOutput_500_spin2_vs_900_spin2_                      = book2D(dir, "BDTOutput_500_spin2_vs_900_spin2",                      "BDTOutput_500_spin2_vs_900_spin2",         100,0,1, 100,0,1);
+    hBDTOutput_700_spin2_vs_900_spin2_                      = book2D(dir, "BDTOutput_700_spin2_vs_900_spin2",                      "BDTOutput_700_spin2_vs_900_spin2",         100,0,1, 100,0,1);
+  }
+  
 }
 
 void
@@ -217,6 +242,12 @@ EvtHistManager_hh_2lss_leq1tau::fillHistograms(int numElectrons,
 					       double lep1_eta,
 					       double lep2_conePt,
 					       double lep2_eta,
+					       //
+					       //
+					       //
+					       std::map<std::string, double> BDTOutput_Map_spin0,
+					       std::map<std::string, double> BDTOutput_Map_spin2,
+					       std::map<std::string, double> BDTOutput_Map_nonRes,
 					       //
 					       //		 					       
 					       double evtWeight)
@@ -307,4 +338,12 @@ EvtHistManager_hh_2lss_leq1tau::fillHistograms(int numElectrons,
   fillWithOverFlow(histogram_lep2_conePt_, lep2_conePt, evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_lep2_eta_, lep2_eta, evtWeight, evtWeightErr);  
   }
+
+  if (histogramMakingLevel >= 2)
+  {
+    fillWithOverFlow2d(hBDTOutput_500_spin2_vs_700_spin2_,  BDTOutput_Map_spin2["500_spin2"], BDTOutput_Map_spin2["700_spin2"],  evtWeight, evtWeightErr);
+    fillWithOverFlow2d(hBDTOutput_500_spin2_vs_900_spin2_,  BDTOutput_Map_spin2["500_spin2"], BDTOutput_Map_spin2["900_spin2"],  evtWeight, evtWeightErr);
+    fillWithOverFlow2d(hBDTOutput_700_spin2_vs_900_spin2_,  BDTOutput_Map_spin2["700_spin2"], BDTOutput_Map_spin2["900_spin2"],  evtWeight, evtWeightErr);
+  
+  }  
 }
