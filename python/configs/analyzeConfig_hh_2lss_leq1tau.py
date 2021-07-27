@@ -71,6 +71,7 @@ class analyzeConfig_hh_2lss_leq1tau(analyzeConfig_hh):
         use_nonnominal            = False,
         hlt_filter                = False,
         use_home                  = False,
+        blacklist                 = None,
         submission_cmd            = None,
       ):
     analyzeConfig_hh.__init__(self,
@@ -101,6 +102,7 @@ class analyzeConfig_hh_2lss_leq1tau(analyzeConfig_hh):
       use_dymumu_tau_fr         = True,
       apply_nc_correction       = False,
       apply_genPhotonFilter     = True,
+      blacklist                 = blacklist,
     )
 
     self.lepton_selections = [ "Tight", "Fakeable" ]

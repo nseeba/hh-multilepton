@@ -191,4 +191,8 @@ process.analyze_hh_2l_2tau = cms.PSet(
     ),
     tHweights = cms.VPSet(),
     hhWeight_cfg = hhWeight,
+    blacklist = cms.PSet(
+        inputFileNames = cms.vstring(),
+        sampleName = cms.string(''),
+    ),
 )

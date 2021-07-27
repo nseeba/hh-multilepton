@@ -106,6 +106,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/RecoVertex.h" // RecoVertex
 #include "tthAnalysis/HiggsToTauTau/interface/RecoVertexReader.h" // RecoVertexReader
 #include "tthAnalysis/HiggsToTauTau/interface/GenPhotonFilter.h" // GenPhotonFilter
+#include "tthAnalysis/HiggsToTauTau/interface/RunLumiEventRejector.h" // RunLumiEventRejector
 
 #include "tthAnalysis/HiggsToTauTau/interface/RecoJetCollectionSelectorAK8.h" // RecoJetSelectorAK8
 #include "hhAnalysis/multilepton/interface/RecoJetCollectionSelectorAK8_hh_Wjj.h" // RecoJetSelectorAK8_hh_Wjj
@@ -525,6 +526,14 @@ int main(int argc, char* argv[])
     cfgRunLumiEventSelector.addParameter<std::string>("inputFileName", selEventsFileName_input);
     cfgRunLumiEventSelector.addParameter<std::string>("separator", ":");
     run_lumi_eventSelector = new RunLumiEventSelector(cfgRunLumiEventSelector);
+  }
+
+  const bool enable_blacklist = cfg_analyze.getParameter<bool>("enable_blacklist");
+  RunLumiEventRejector * blacklist = nullptr;
+  if(enable_blacklist)
+  {
+    const edm::ParameterSet blacklist_cfg = cfg_analyze.getParameter<edm::ParameterSet>("blacklist");
+    blacklist = new RunLumiEventRejector(blacklist_cfg);
   }
 
   std::string selEventsFileName_output = cfg_analyze.getParameter<std::string>("selEventsFileName_output");
@@ -3654,6 +3663,12 @@ int main(int argc, char* argv[])
 	continue;
       }
       cutFlowTable.update("WZctrl: Z-boson mass cut", evtWeightRecorder.get(central_or_shift_main));
+
+      if(blacklist && (*blacklist)(eventInfo))
+      {
+        continue;
+      }
+
       const RecoLepton* selLepton_W = nullptr;
       if      ( selLepton1_Z == selLepton_sublead && selLepton2_Z == selLepton_third   ) selLepton_W = selLepton_lead;
       else if ( selLepton1_Z == selLepton_lead    && selLepton2_Z == selLepton_third   ) selLepton_W = selLepton_sublead;
@@ -4700,6 +4715,7 @@ int main(int argc, char* argv[])
   delete leptonFakeRateInterface;
 
   delete run_lumi_eventSelector;
+  delete blacklist;
 
   delete selEventsFile;
 

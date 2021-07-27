@@ -34,6 +34,7 @@ parser.add_sideband()
 parser.add_tau_id()
 parser.enable_regrouped_jerc(default = 'jes')
 parser.add_split_trigger_sys()
+parser.add_blacklist()
 args = parser.parse_args()
 
 # Common arguments
@@ -63,6 +64,7 @@ jet_cleaning      = args.jet_cleaning
 gen_matching      = args.gen_matching
 regroup_jerc      = args.enable_regrouped_jerc
 split_trigger_sys = args.split_trigger_sys
+use_blacklist     = args.use_blacklist
 
 if lep_mva_wp != "hh_multilepton" and use_preselected:
   raise RuntimeError("Cannot use skimmed samples while tightening the prompt lepton MVA cut")
@@ -112,6 +114,12 @@ hadTauWP_map = {
   'deepVSj' : 'Medium',
 }
 hadTau_selection = tau_id + hadTauWP_map[tau_id]
+
+blacklist = []
+if use_blacklist:
+  blacklist.append('postproc')
+  if use_preselected:
+    blacklist.append('skimmed_multilepton')
 
 if mode == "default":
   samples = load_samples(era, suffix = "preselected" if use_preselected else "")
@@ -177,6 +185,7 @@ if __name__ == '__main__':
     use_nonnominal                        = use_nonnominal,
     hlt_filter                            = hlt_filter,
     use_home                              = use_home,
+    blacklist                             = blacklist,
     submission_cmd                        = sys.argv,
   )
 

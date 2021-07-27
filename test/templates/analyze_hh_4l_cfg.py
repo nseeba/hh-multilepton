@@ -164,4 +164,8 @@ process.analyze_hh_4l = cms.PSet(
     ),
     tHweights = cms.VPSet(),
     hhWeight_cfg = hhWeight,
+    blacklist = cms.PSet(
+        inputFileNames = cms.vstring(),
+        sampleName = cms.string(''),
+    ),
 )
