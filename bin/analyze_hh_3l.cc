@@ -1370,6 +1370,53 @@ int main(int argc, char* argv[])
       );
     bdt_filler -> bookTree(fs);
   }
+
+
+  std::vector<string> vResSpins = {"spin0", "spin2"};
+  
+  const bool fillBDTOutputTree = false;
+  NtupleFillerBDT<float, int> * bdtOutput_filler = nullptr;
+  typedef std::remove_pointer<decltype(bdtOutput_filler)>::type::float_type float_type;
+  typedef std::remove_pointer<decltype(bdtOutput_filler)>::type::int_type   int_type;
+  if ( fillBDTOutputTree )
+  {
+    std::cout << "Fill bdtOutput_filler: ";
+    bdtOutput_filler = new std::remove_pointer<decltype(bdtOutput_filler)>::type(
+      makeHistManager_cfg(process_string, Form("%s/sel/evtntuple_BDTOutput", histogramDir.data()), era_string, central_or_shift_main)
+      );
+    
+    for (size_t iSpin = 0; iSpin < vResSpins.size(); iSpin++)
+    {
+      for (size_t imHH=0; imHH < gen_mHH.size(); imHH++)
+      {
+	TString sNodeName = Form("BDTOutput_%g_%s",gen_mHH[imHH],vResSpins[iSpin].c_str());
+	std::cout << sNodeName << ", ";
+	bdtOutput_filler->register_variable<float_type>(sNodeName.Data());
+      }
+      std::cout << "\n";
+    }
+    
+    for (size_t ibm = 0; ibm < nonRes_BMs.size(); ibm++)
+    {
+      TString sNodeName = Form("BDTOutput_nonres_%s",nonRes_BMs[ibm].c_str());
+      std::cout << sNodeName << ", ";
+      bdtOutput_filler->register_variable<float_type>(sNodeName.Data());
+    }
+    std::cout << "\n";
+
+    bdtOutput_filler->register_variable<float_type>("evtWeight");
+    if(apply_HH_rwgt_lo || apply_HH_rwgt_nlo)
+    {
+      for(auto bmName : HHWeightNames)
+      {
+        bdtOutput_filler->register_variable<float_type>(bmName.data());
+      }
+    } 
+    
+    bdtOutput_filler -> bookTree(fs);
+  }
+  
+  
   
   int analyzedEntries = 0;
   int selectedEntries = 0;
@@ -1411,7 +1458,8 @@ int main(int argc, char* argv[])
     "signal region veto",
     "After all cuts: evt category isWjjBoosted",
     "After all cuts: evt category isWjjResolved",
-    "After all cuts: evt category isWjjHasOnly1j"
+    "After all cuts: evt category isWjjHasOnly1j",
+    "nonRes SM BDT > 0.7"
   };
   CutFlowTableHistManager * cutFlowHistManager = new CutFlowTableHistManager(cutFlowTableCfg, cuts);
   cutFlowHistManager->bookHistograms(fs);
@@ -3724,16 +3772,28 @@ int main(int argc, char* argv[])
     for (auto const &bdt: BDTOutput_Map_spin2)
     {
       std::cout << "\t " << bdt.first << ": " << bdt.second << "\n";
-    }
+      }
     
     std::cout << "BDT nonres: " << "\n";
     for (auto const &bdt: BDTOutput_Map_nonRes)
     {
       std::cout << "\t " << bdt.first << ": " << bdt.second << "\n";
     }
-    */    
-
-
+    std::cout << "BDTOutput_Map_spin2[500_spin2]: " << BDTOutput_Map_spin2["500_spin2"] << "\n";
+    */
+      
+    /*
+    //#########################################################################
+    //#########################################################################
+    //#########################################################################    
+    if (BDTOutput_Map_nonRes["SM"] < 0.7) continue;
+    //printf("SM BDT (%g) above 0.7 \n",BDTOutput_Map_nonRes["SM"]);
+    cutFlowTable.update("nonRes SM BDT > 0.7", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms("nonRes SM BDT > 0.7", evtWeightRecorder.get(central_or_shift_main));
+    //#########################################################################
+    //#########################################################################
+    //#########################################################################    
+    */
 
     
     /*
@@ -3783,7 +3843,8 @@ int main(int argc, char* argv[])
 //--- retrieve gen-matching flags    
     //std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons);
     //std::cout << "siddh here 10" << std::endl;
-
+    
+    
 
     if (isMC && genHHrewgtHistosLevel > 0)
     {
@@ -4078,6 +4139,11 @@ int main(int argc, char* argv[])
 	    dR_ll_WZctrl_2lss,
 	    max_lep_eta_WZctrl_2lss,
 	    //
+	    //
+	    //
+	    BDTOutput_Map_spin0,
+	    BDTOutput_Map_spin2,
+	    BDTOutput_Map_nonRes,
 	    //
 	    //
 	    evtWeight	    
@@ -4500,6 +4566,64 @@ int main(int argc, char* argv[])
 	;
     }
 
+
+    if ( fillBDTOutputTree )
+    {
+      double evtWeight_BDT = evtWeightRecorder.get(central_or_shift_main);
+      
+      std::map<std::string, double> weightMapHH;
+      if ( apply_HH_rwgt_lo || apply_HH_rwgt_nlo )
+      {
+        for ( unsigned int i = 0; i < HHWeightNames.size(); i++ )
+        {
+	  double HHReweight = 1.;
+          if ( apply_HH_rwgt_lo )
+          {
+            assert(HHWeightLO_calc);
+            HHReweight *= HHWeightLO_calc->getRelativeWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+          }
+          if ( apply_HH_rwgt_nlo )
+          {
+            assert(HHWeightNLO_calc);
+            HHReweight *= HHWeightNLO_calc->getRelativeWeight_LOtoNLO(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+          }
+          weightMapHH[HHWeightNames[i]] = HHReweight;
+	}
+      }
+
+      std::map<std::string, double> bdtOutputMap;
+      // spin0
+      for (size_t imHH=0; imHH < gen_mHH.size(); imHH++)
+      {
+	TString sNodeName0 = Form("%g_%s",gen_mHH[imHH],vResSpins[0].c_str());
+	TString sNodeName = Form("BDTOutput_%s",sNodeName0.Data());
+	bdtOutputMap[sNodeName.Data()] = BDTOutput_Map_spin0[sNodeName0.Data()];
+      }
+      
+      // spin2
+      for (size_t imHH=0; imHH < gen_mHH.size(); imHH++)
+      {
+	TString sNodeName0 = Form("%g_%s",gen_mHH[imHH],vResSpins[1].c_str());
+	TString sNodeName = Form("BDTOutput_%s",sNodeName0.Data());
+	bdtOutputMap[sNodeName.Data()] = BDTOutput_Map_spin2[sNodeName0.Data()];
+      }
+
+      // nonres
+      for (size_t ibm = 0; ibm < nonRes_BMs.size(); ibm++)
+      {
+	TString sNodeName = Form("BDTOutput_nonres_%s",nonRes_BMs[ibm].c_str());
+	bdtOutputMap[sNodeName.Data()] = BDTOutput_Map_nonRes[nonRes_BMs[ibm].c_str()];	
+      }
+      
+      bdtOutput_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
+	("evtWeight",             evtWeight_BDT)
+	(weightMapHH)
+	(bdtOutputMap)
+	.fill()
+	;
+      
+    }
+    
         
     ++selectedEntries;
     selectedEntries_weighted += evtWeightRecorder.get(central_or_shift_main);

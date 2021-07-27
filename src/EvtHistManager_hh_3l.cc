@@ -4,7 +4,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/cmsException.h" // cmsException()
 #include <TMath.h>
 
-const int analysisRunLevel = 0; // 0: only nEvent histo, 1: all category histo, 2: all histo
+const int analysisRunLevel = 1; // 0: only nEvent histo, 1: all category histo, 2: all histo
 
 EvtHistManager_hh_3l::EvtHistManager_hh_3l(const edm::ParameterSet & cfg, bool isControlRegion)
   : HistManagerBase(cfg)
@@ -908,7 +908,15 @@ EvtHistManager_hh_3l::EvtHistManager_hh_3l(const edm::ParameterSet & cfg, bool i
     "mindr_lep2_jet_WZctrl_2lss",
     "mT_lep2_WZctrl_2lss",
     "dR_ll_WZctrl_2lss",
-    "max_lep_eta_WZctrl_2lss",    
+    "max_lep_eta_WZctrl_2lss",
+    //
+    //
+    // additional
+    "numSameFlavor_OS_FullPresel",
+    //
+    "BDTOutput_500_spin2_vs_700_spin2",
+    "BDTOutput_500_spin2_vs_900_spin2",
+    "BDTOutput_700_spin2_vs_900_spin2",    
   };
   const std::vector<std::string> sysOpts_all = {
     //"mvaOutput_xgb_hh_3l_SUMBk_HH",
@@ -1891,6 +1899,25 @@ EvtHistManager_hh_3l::bookHistograms(TFileDirectory & dir)
   //
 
   
+  if (analysisRunLevel >= 1)
+  {
+    /*
+    // /home/tolange/share/dataCardsHH_unblinding_v1/rawRootFiles/3l/Run2/newProcName/rebinned_quantile/addSystFakeRates_hh_3l_hh_3l_OS_MVAOutput_SM.root 
+    // nonResBDM[SM] binning: 11 [ 0, 0.3, 0.44, 0.54, 0.63, 0.7, 0.77, 0.83, 0.88, 0.92, 0.95, 1]
+    int nBins_nonResBDT_SM = 11;
+    double binning_nonResBDT_SM[] = { 0, 0.3, 0.44, 0.54, 0.63, 0.7, 0.77, 0.83, 0.88, 0.92, 0.95, 1};
+
+    hBDTOutput_500_spin2_vs_700_spin2_                      = book2D(dir, "BDTOutput_500_spin2_vs_700_spin2",                      "BDTOutput_500_spin2_vs_700_spin2",         nBins_nonResBDT_SM,binning_nonResBDT_SM,  nBins_nonResBDT_SM,binning_nonResBDT_SM);
+    hBDTOutput_500_spin2_vs_900_spin2_                      = book2D(dir, "BDTOutput_500_spin2_vs_900_spin2",                      "BDTOutput_500_spin2_vs_900_spin2",         nBins_nonResBDT_SM,binning_nonResBDT_SM,  nBins_nonResBDT_SM,binning_nonResBDT_SM);
+    hBDTOutput_700_spin2_vs_900_spin2_                      = book2D(dir, "BDTOutput_700_spin2_vs_900_spin2",                      "BDTOutput_700_spin2_vs_900_spin2",         nBins_nonResBDT_SM,binning_nonResBDT_SM,  nBins_nonResBDT_SM,binning_nonResBDT_SM);
+    */
+     
+    hBDTOutput_500_spin2_vs_700_spin2_                      = book2D(dir, "BDTOutput_500_spin2_vs_700_spin2",                      "BDTOutput_500_spin2_vs_700_spin2",         100,0,1, 100,0,1);
+    hBDTOutput_500_spin2_vs_900_spin2_                      = book2D(dir, "BDTOutput_500_spin2_vs_900_spin2",                      "BDTOutput_500_spin2_vs_900_spin2",         100,0,1, 100,0,1);
+    hBDTOutput_700_spin2_vs_900_spin2_                      = book2D(dir, "BDTOutput_700_spin2_vs_900_spin2",                      "BDTOutput_700_spin2_vs_900_spin2",         100,0,1, 100,0,1);
+   
+  }
+  
 }
 
 void
@@ -2137,7 +2164,11 @@ EvtHistManager_hh_3l::fillHistograms(
   double max_lep_eta_WZctrl_2lss,    
   //
   //
-  //  
+  //
+  std::map<std::string, double> BDTOutput_Map_spin0,
+  std::map<std::string, double> BDTOutput_Map_spin2,
+  std::map<std::string, double> BDTOutput_Map_nonRes,
+  //
   //
   double evtWeight)
 {
@@ -3331,6 +3362,13 @@ EvtHistManager_hh_3l::fillHistograms(
   }
   }
 
+
+  if (analysisRunLevel >= 1)
+  {
+    fillWithOverFlow2d(hBDTOutput_500_spin2_vs_700_spin2_,  BDTOutput_Map_spin2["500_spin2"], BDTOutput_Map_spin2["700_spin2"],  evtWeight, evtWeightErr);
+    fillWithOverFlow2d(hBDTOutput_500_spin2_vs_900_spin2_,  BDTOutput_Map_spin2["500_spin2"], BDTOutput_Map_spin2["900_spin2"],  evtWeight, evtWeightErr);
+    fillWithOverFlow2d(hBDTOutput_700_spin2_vs_900_spin2_,  BDTOutput_Map_spin2["700_spin2"], BDTOutput_Map_spin2["900_spin2"],  evtWeight, evtWeightErr);
   
+  }
 }
  

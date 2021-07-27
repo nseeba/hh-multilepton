@@ -942,9 +942,13 @@ int main(int argc, char* argv[])
         // CV: make correlation plot for MVA input variables used for non-resonant HH signal extraction,
         //     as defined in hhAnalysis/multilepton/data/BDT_2lss/nonres_default_Sandeep_9vars_usingLepConePt/2lss_even_half_model_nonres_default.xml
         selHistManager->mvaInputVarCorrelation_->bookHistograms(fs, {
+	    // v6
 	    "leptonPairMass_sel", "dihiggsVisMass_sel", "met_LD",
 	    "dR_ll", "dR_l_Wjets_min", "dR_l_leadWjet_min", "dR_l_Wjets_max",
-	    "dR_l_leadWjet_max", "dR_2j_fromW1", "mT_lep1"
+	    "dR_l_leadWjet_max", "dR_2j_fromW1", "mT_lep1",
+	    // v7p2
+	    "lep1_conePt", "lep2_conePt", "mindr_lep1_jet", "HT", "mindr_lep2_jet",
+	     "mht", "mass_2j_fromW1"
         });
       }
 
@@ -1029,6 +1033,56 @@ int main(int argc, char* argv[])
     bdt_filler->bookTree(fs);
   }
 
+
+
+  std::vector<string> vResSpins = {"spin0", "spin2"};
+  
+  const bool fillBDTOutputTree = false;
+  NtupleFillerBDT<float, int> * bdtOutput_filler = nullptr;
+  typedef std::remove_pointer<decltype(bdtOutput_filler)>::type::float_type float_type;
+  typedef std::remove_pointer<decltype(bdtOutput_filler)>::type::int_type   int_type;
+  if ( fillBDTOutputTree )
+  {
+    std::cout << "Fill bdtOutput_filler: ";
+    bdtOutput_filler = new std::remove_pointer<decltype(bdtOutput_filler)>::type(
+      makeHistManager_cfg(process_string, Form("%s/sel/evtntuple_BDTOutput", histogramDir.data()), era_string, central_or_shift_main)
+      );
+    
+    for (size_t iSpin = 0; iSpin < vResSpins.size(); iSpin++)
+    {
+      for (size_t imHH=0; imHH < gen_mHH.size(); imHH++)
+      {
+	TString sNodeName = Form("BDTOutput_%g_%s",gen_mHH[imHH],vResSpins[iSpin].c_str());
+	std::cout << sNodeName << ", ";
+	bdtOutput_filler->register_variable<float_type>(sNodeName.Data());
+      }
+      std::cout << "\n";
+    }
+    
+    for (size_t ibm = 0; ibm < nonRes_BMs.size(); ibm++)
+    {
+      TString sNodeName = Form("BDTOutput_nonres_%s",nonRes_BMs[ibm].c_str());
+      std::cout << sNodeName << ", ";
+      bdtOutput_filler->register_variable<float_type>(sNodeName.Data());
+    }
+    std::cout << "\n";
+
+    bdtOutput_filler->register_variable<float_type>("evtWeight");
+    if(apply_HH_rwgt_lo || apply_HH_rwgt_nlo)
+    {
+      for(auto bmName : HHWeightNames)
+      {
+        bdtOutput_filler->register_variable<float_type>(bmName.data());
+      }
+    } 
+    
+    bdtOutput_filler -> bookTree(fs);
+  }
+
+
+
+  
+
   std::vector<double> NormBM;
   int BM = -10;
 
@@ -1067,6 +1121,7 @@ int main(int argc, char* argv[])
     "met LD",
     "MEt filters",
     "signal region veto",
+    "nonRes SM BDT > 0.7",
   };
   CutFlowTableHistManager * cutFlowHistManager = new CutFlowTableHistManager(cutFlowTableCfg, cuts);
   cutFlowHistManager->bookHistograms(fs);
@@ -2225,7 +2280,7 @@ int main(int argc, char* argv[])
     double lep2_conePt = comp_lep_conePt(*selLepton_sublead);
     double mT_lep2     = std::min(150., comp_MT_met(selLepton_sublead, met.pt(), met.phi()));
     //
-    //double max_lep_eta = TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
+    double max_lep_eta = TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
 
     double mT_lep1_met = mT_lep1;
     double mT_lep2_met = mT_lep2;
@@ -2334,6 +2389,8 @@ int main(int argc, char* argv[])
     AllVars_Map["dR_l_Wjets_max"] =                  dR_l_Wjets_max;
     AllVars_Map["dR_l_leadWjet_max"] =               dR_l_leadWjet_max;
     AllVars_Map["dR_2j_fromW1"] =                    dR_2j_fromW1;
+
+    AllVars_Map["mass_2j_fromW1"] =                  mass_2j_fromW1;
     //AllVars_Map["mT_lep1"] =                         mT_lep1;
 
     
@@ -2354,6 +2411,20 @@ int main(int argc, char* argv[])
 
     
 
+    /*
+    //#########################################################################
+    //#########################################################################
+    //#########################################################################    
+    if (BDTOutput_Map_nonRes["SM"] < 0.7) continue;
+    //printf("SM BDT (%g) above 0.7 \n",BDTOutput_Map_nonRes["SM"]);
+    cutFlowTable.update("nonRes SM BDT > 0.7", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms("nonRes SM BDT > 0.7", evtWeightRecorder.get(central_or_shift_main));
+    //#########################################################################
+    //#########################################################################
+    //#########################################################################    
+    */
+
+    
 //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry*> genMatches = genMatchInterface.getGenMatch(selLeptons);
 
@@ -2449,8 +2520,26 @@ int main(int argc, char* argv[])
 	    //
 	    nTaus,
 	    //
-	    //	    
-            evtWeight);
+	    //
+	    mindr_lep1_jet,
+	    mindr_lep2_jet,
+	    pT_ll,
+	    max_lep_eta,
+	    pT_llMEt,
+	    Smin_llMEt,
+	    lep1_conePt,
+	    selLepton_lead->eta(),
+	    lep2_conePt,
+	    selLepton_sublead->eta(),
+	    //
+	    //
+	    //
+ 	    BDTOutput_Map_spin0,
+	    BDTOutput_Map_spin2,
+	    BDTOutput_Map_nonRes,
+	    //
+	    //
+           evtWeight);
 
 	  for(const std::string & category: evtCategories)
 	  {
@@ -2515,6 +2604,24 @@ int main(int argc, char* argv[])
 		nTaus,
 		//
 		//	    
+		mindr_lep1_jet,
+		mindr_lep2_jet,
+		pT_ll,
+		max_lep_eta,
+		pT_llMEt,
+		Smin_llMEt,
+		lep1_conePt,
+		selLepton_lead->eta(),
+		lep2_conePt,
+		selLepton_sublead->eta(),
+		//
+		//
+		//
+		BDTOutput_Map_spin0,
+		BDTOutput_Map_spin2,
+		BDTOutput_Map_nonRes,
+	    //
+	    //
 		evtWeight);
 	    }
 	  }
@@ -2697,6 +2804,65 @@ int main(int argc, char* argv[])
         .fill()
 	;
     }
+
+
+    if ( fillBDTOutputTree )
+    {
+      double evtWeight_BDT = evtWeightRecorder.get(central_or_shift_main);
+      
+      std::map<std::string, double> weightMapHH;
+      if ( apply_HH_rwgt_lo || apply_HH_rwgt_nlo )
+      {
+        for ( unsigned int i = 0; i < HHWeightNames.size(); i++ )
+        {
+	  double HHReweight = 1.;
+          if ( apply_HH_rwgt_lo )
+          {
+            assert(HHWeightLO_calc);
+            HHReweight *= HHWeightLO_calc->getRelativeWeight(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+          }
+          if ( apply_HH_rwgt_nlo )
+          {
+            assert(HHWeightNLO_calc);
+            HHReweight *= HHWeightNLO_calc->getRelativeWeight_LOtoNLO(HHBMNames[i], eventInfo.gen_mHH, eventInfo.gen_cosThetaStar, isDEBUG);
+          }
+          weightMapHH[HHWeightNames[i]] = HHReweight;
+	}
+      }
+
+      std::map<std::string, double> bdtOutputMap;
+      // spin0
+      for (size_t imHH=0; imHH < gen_mHH.size(); imHH++)
+      {
+	TString sNodeName0 = Form("%g_%s",gen_mHH[imHH],vResSpins[0].c_str());
+	TString sNodeName = Form("BDTOutput_%s",sNodeName0.Data());
+	bdtOutputMap[sNodeName.Data()] = BDTOutput_Map_spin0[sNodeName0.Data()];
+      }
+      
+      // spin2
+      for (size_t imHH=0; imHH < gen_mHH.size(); imHH++)
+      {
+	TString sNodeName0 = Form("%g_%s",gen_mHH[imHH],vResSpins[1].c_str());
+	TString sNodeName = Form("BDTOutput_%s",sNodeName0.Data());
+	bdtOutputMap[sNodeName.Data()] = BDTOutput_Map_spin2[sNodeName0.Data()];
+      }
+
+      // nonres
+      for (size_t ibm = 0; ibm < nonRes_BMs.size(); ibm++)
+      {
+	TString sNodeName = Form("BDTOutput_nonres_%s",nonRes_BMs[ibm].c_str());
+	bdtOutputMap[sNodeName.Data()] = BDTOutput_Map_nonRes[nonRes_BMs[ibm].c_str()];	
+      }
+      
+      bdtOutput_filler -> operator()({ eventInfo.run, eventInfo.lumi, eventInfo.event })
+	("evtWeight",             evtWeight_BDT)
+	(weightMapHH)
+	(bdtOutputMap)
+	.fill()
+	;
+      
+    }
+    
 
     ++selectedEntries;
     selectedEntries_weighted += evtWeightRecorder.get(central_or_shift_main);

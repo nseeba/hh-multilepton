@@ -82,6 +82,23 @@ public:
 		 int nTaus,
 		 //
 		 //
+		 double mindr_lep1_jet,
+		 double mindr_lep2_jet,
+		 double pT_ll,
+		 double max_lep_eta,
+		 double pT_llMEt,
+		 double Smin_llMEt,
+		 double lep1_conePt,
+		 double lep1_eta,
+		 double lep2_conePt,
+		 double lep2_eta,
+		 //
+		 //
+		 //
+		 std::map<std::string, double> BDTOutput_Map_spin0,
+		 std::map<std::string, double> BDTOutput_Map_spin2,
+		 std::map<std::string, double> BDTOutput_Map_nonRes,
+		 //
 		 //		 
                  double evtWeight);
 
@@ -143,6 +160,24 @@ public:
   TH1 * histogram_eventCategory_;
   //
   TH1 * histogram_nTaus_;
+  //
+  //
+  TH1 * histogram_mindr_lep1_jet_;
+  TH1 * histogram_mindr_lep2_jet_;
+  TH1 * histogram_pT_ll_;
+  TH1 * histogram_max_lep_eta_;
+  TH1 * histogram_pT_llMEt_;
+  TH1 * histogram_Smin_llMEt_;
+  TH1 * histogram_lep1_conePt_;
+  TH1 * histogram_lep1_eta_;
+  TH1 * histogram_lep2_conePt_;
+  TH1 * histogram_lep2_eta_;
+  //
+  //
+  //  
+  TH2 * hBDTOutput_500_spin2_vs_700_spin2_;
+  TH2 * hBDTOutput_500_spin2_vs_900_spin2_;
+  TH2 * hBDTOutput_700_spin2_vs_900_spin2_;
 
  
 };
