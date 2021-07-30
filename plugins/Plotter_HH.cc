@@ -12,13 +12,26 @@
 #include <TStyle.h>
 #include <TROOT.h> // gROOT (needed to (re)define colors)
 
+const int printLevel = 4;
 bool isDataBlinded = true; // added by Siddhesh
+
+typedef std::vector<std::string> vstring;
 
 Plotter_HH::Plotter_HH(const TFile* inputFile, const edm::ParameterSet& cfg)
   : Plotter(inputFile, cfg)
 {
   scaleSignal_ = cfg.getParameter<double>("scaleSignal");
   legendEntrySignal_ = cfg.getParameter<std::string>("legendEntrySignal");
+
+  if (cfg.exists("legendEntriesSignal"))
+  {
+    legendEntriesSignal_ = cfg.getParameter<vstring>("legendEntriesSignal");
+  }
+
+  if (cfg.exists("optionToNormalizeSignalDistributions"))
+  {
+    optionToNormalizeSignalDistributions_ = (int)cfg.getParameter<double>("optionToNormalizeSignalDistributions");
+  }  
 }
 
 Plotter_HH::~Plotter_HH()
@@ -47,7 +60,24 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
   if (histogramsSignal.size() > 0)
   {
     histogramSignal = histogramsSignal[0]->histogram_;
+
+    if (histogramsSignal.size() != legendEntriesSignal_.size())
+    {
+      std::cout << "Mismatch in signal processes and signal-legends.. \nTerminating\n " << std::endl;
+      exit(0);
+    }
+    std::cout << "histogramSignal->Integral(): " << histogramSignal->Integral() << "\n";    
   }
+  if (printLevel > 3)
+  {
+    std::cout << "Plotter_HH::makePlot():: histogramsSignal.size: " << histogramsSignal.size();
+    for (size_t i=0; i<histogramsSignal.size(); i++)
+    {
+      std::cout << ",  histogramSignal " << histogramsSignal[i] << " " << histogramsSignal[i]->process_; 
+    }
+    std::cout << "\n";
+  }
+  
   
   TH1* histogramData_density = 0;
   if ( histogramData ) {
@@ -228,6 +258,42 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     }
     if ( scaleSignal_ > 0. ) histogramSignal_density->Scale(scaleSignal_);
   }
+  
+  std::vector<TH1*> histogramsSignal_density;
+  double nSignalEvents_scale = -1.;
+  for (size_t i=0; i<histogramsSignal.size(); i++)
+  {
+    TH1 *hSig = histogramsSignal[i]->histogram_;
+    TH1 *hSig_density = 0;
+    if ( hSig ) checkCompatibleBinning(hSig, histogramData);
+    if ( divideByBinWidth ) {
+      hSig_density = divideHistogramByBinWidth(hSig); 
+    } else {
+      std::string histogramNameSignal_density = Form("%s_NotDivided",hSig->GetName());
+      hSig_density = (TH1*)hSig->Clone(histogramNameSignal_density.data());
+    }
+    std::cout << "Plotter_HH:: " << histogramsSignal[i]->process_ << ":  hSig->Integral(): " << hSig->Integral() << "\n";
+    std::cout << "Plotter_HH:: scaleSignal_: " << scaleSignal_ << ", nSignalEvents_scale: " << nSignalEvents_scale << ", hSig_density->Integral(): " << hSig_density->Integral() << "\n";
+    if ( scaleSignal_ > 0. ) hSig_density->Scale(scaleSignal_);
+    std::cout << "Plotter_HH:: scaleSignal_: " << scaleSignal_ << ", nSignalEvents_scale: " << nSignalEvents_scale << ", hSig_density->Integral(): " << hSig_density->Integral() << "\n";
+    
+    // normalized all signal histograms' area w.r.t. each other
+    if (optionToNormalizeSignalDistributions_ == 1) // normalize w.r.t. area
+    {    
+      if (nSignalEvents_scale < 0.) nSignalEvents_scale = hSig_density->Integral();
+      else                          hSig_density->Scale(nSignalEvents_scale / hSig_density->Integral());
+    }
+    else if (optionToNormalizeSignalDistributions_ == 2) // normalize w.r.t. height
+    {    
+      if (nSignalEvents_scale < 0.) nSignalEvents_scale = hSig_density->GetMaximum();
+      else                          hSig_density->Scale(nSignalEvents_scale / hSig_density->GetMaximum());
+    }
+    std::cout << "Plotter_HH:: scaleSignal_: " << scaleSignal_ << ", nSignalEvents_scale: " << nSignalEvents_scale << ", hSig_density->Integral(): " << hSig_density->Integral() << "\n\n\n";
+    
+    histogramsSignal_density.push_back(hSig_density);
+  }
+
+
   
   TH1* histogramSum_density = 0;
   std::vector<TH1*> histogramsSignal_and_Background_density = histogramsBackground_density;
@@ -412,6 +478,9 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
   const int color_Other       = 851; // light blue
   const int color_Flips       = 1;   // black
 
+  const std::vector<int> lineColor_multiSignal = { 2, 1,   4,  419, 618,   2, 1, 4,   2, 1, 4};
+  const std::vector<int> lineStyle_multiSignal = { 2, 2,   2,    2,   2,   8, 8, 8,   1, 1, 1};  
+
   const std::string legendEntry_DY          = "DY";
   const std::string legendEntry_W           = "W";
   const std::string legendEntry_VV          = "Diboson";
@@ -508,6 +577,9 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     legend->AddEntry(histogramUncertainty_density, "Uncertainty", "f");
   }
 
+  /*
+  // older single signal Draw
+  // plot multi-signal on same plot; this code is below, which works for a single signal type
   if ( histogramSignal_density ) {      
     histogramSignal_density->SetLineWidth(2);
     histogramSignal_density->SetLineStyle(kDashed);
@@ -515,6 +587,28 @@ void Plotter_HH::makePlot(double canvasSizeX, double canvasSizeY,
     histogramSignal_density->Draw("histsame");
     legend->AddEntry(histogramSignal_density, legendEntrySignal_.data(), "l");
   }
+  */
+
+  // plot multi-signal on same plot
+  for (size_t iSig = 0; iSig < histogramsSignal_density.size(); iSig++)
+  {
+    if (iSig >= lineColor_multiSignal.size())
+    {
+      std::cout << "No. of signal histograms are more than size of histogram_color array... Add few more colors.. \nTerminating\n " << std::endl;
+      exit(0);
+    }
+    
+    TH1 *hSig_density = histogramsSignal_density[iSig];
+    std::string legendEntry = legendEntriesSignal_[iSig];
+    std::cout << "Plotter_HHTo3l:: Draw()  hSig_density->Integral(): " << hSig_density->Integral() << ", Max: " << hSig_density->GetMaximum() << ", Min: " << hSig_density->GetMinimum() << ", legendEntry: " << legendEntry << "\n";
+
+    hSig_density->SetLineWidth(5);
+    hSig_density->SetLineStyle(lineStyle_multiSignal[iSig]);
+    hSig_density->SetLineColor(lineColor_multiSignal[iSig]);
+    hSig_density->Draw("histsame");
+    legend->AddEntry(hSig_density, legendEntry.data(), "l");
+  }
+  
 
   if ( histogramData_blinded_density ) {
     std::string histogramNameData_blinded_bins = Form("%s_bins", histogramData_blinded_density->GetName());
