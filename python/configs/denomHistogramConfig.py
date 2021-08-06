@@ -9,6 +9,7 @@ from tthAnalysis.HiggsToTauTau.common import logging, DEPENDENCIES
 
 import os
 import uuid
+import re
 
 DKEY_SCRIPTS    = "scripts"
 DKEY_CFGS       = "cfgs"
