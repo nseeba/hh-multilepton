@@ -1608,9 +1608,9 @@ int main(int argc, char* argv[])
     cutFlowTable.update(">= 2 sel leptons", evtWeightRecorder.get(central_or_shift_main));
     cutFlowHistManager->fillHistograms(">= 2 sel leptons", evtWeightRecorder.get(central_or_shift_main));
     const RecoLepton* selLepton_lead = selLeptons[0];
-    const Particle::LorentzVector& selLeptonP4_lead = selLepton_lead->p4();
+    const Particle::LorentzVector& selLeptonP4_lead = selLepton_lead->cone_p4();
     const RecoLepton* selLepton_sublead = selLeptons[1];
-    const Particle::LorentzVector& selLeptonP4_sublead = selLepton_sublead->p4();
+    const Particle::LorentzVector& selLeptonP4_sublead = selLepton_sublead->cone_p4();
     const leptonChargeFlipGenMatchEntry& selLepton_genMatch = getLeptonChargeFlipGenMatch(leptonGenMatch_definitions, selLepton_lead, selLepton_sublead);
 
     // require exactly two leptons passing tight selection criteria, to avoid overlap with other channels
@@ -2177,8 +2177,8 @@ int main(int argc, char* argv[])
     }
 
     // compute signal extraction observables
-    double dihiggsVisMass_sel = (selJetP4 + selLepton_lead->p4() + selLepton_sublead->p4()).mass();
-    double dihiggsMass_wMet_sel = (selJetP4 + selLepton_lead->p4() + selLepton_sublead->p4() + met.p4()).mass();
+    double dihiggsVisMass_sel = (selJetP4 + selLepton_lead->cone_p4() + selLepton_sublead->cone_p4()).mass();
+    double dihiggsMass_wMet_sel = (selJetP4 + selLepton_lead->cone_p4() + selLepton_sublead->cone_p4() + met.p4()).mass();
     double jetMass_sel = mass_jj_W;
 
     //--- compute variables BDTs used to discriminate . . .
@@ -2195,7 +2195,7 @@ int main(int argc, char* argv[])
     {
       if (abs(selLeptons[i]->pdgId()) == 11) nElectrons_in_2lss++;
     }
-    double leptonPairMass_sel = (selLepton_lead->p4() + selLepton_sublead->p4()).mass();
+    double leptonPairMass_sel = (selLepton_lead->cone_p4() + selLepton_sublead->cone_p4()).mass();
     double leptonPairCharge_sel = selLepton_lead->charge() + selLepton_sublead->charge();
     double dR_ll = deltaR(selLeptonP4_lead, selLeptonP4_sublead);
     double dPhi_ll = calculateAbsDeltaPhi(selLeptonP4_lead.phi(), selLeptonP4_sublead.phi());
