@@ -30,6 +30,12 @@ MHH_BR_NAME = 'mHH_lhe'
 COST_BR_NAME = 'cosThetaStar_lhe'
 GENWEIGHT_BR_NAME = 'genWeight'
 
+def comp_genweight(genweight_br, genweight_ref, use_genweight):
+  weight = 1. if genweight_br[0] > 0 else -1.
+  if use_genweight:
+    weight *= min(abs(genweight_br[0]), 3 * genweight_ref)
+  return weight
+
 parser = argparse.ArgumentParser(
   formatter_class = lambda prog: SmartFormatter(prog, max_help_position = 55)
 )
@@ -117,7 +123,7 @@ if has_evt_brs:
 
     mhh = mhh_br[0]
     cost = cost_br[0]
-    weight = genweight_br[0] / genweight_ref if use_genweight else 1.
+    weight = comp_genweight(genweight_br, genweight_ref, use_genweight)
 
     denominator_process.Fill(mhh, cost, weight)
     denominator_category.Fill(mhh, cost, weight)
@@ -182,8 +188,8 @@ else:
     mhh = higgs_sum.M()
     leading_higgs.Boost(-higgs_sum.BoostVector())
     cost = abs(leading_higgs.CosTheta())
+    weight = comp_genweight(genweight_br, genweight_ref, use_genweight)
 
-    weight = genweight_br[0] / genweight_ref if use_genweight else 1.
     denominator_process.Fill(mhh, cost, weight)
     denominator_category.Fill(mhh, cost, weight)
 

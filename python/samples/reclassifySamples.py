@@ -1,3 +1,5 @@
+from hhAnalysis.multilepton.common import is_nonresonant
+
 import collections
 import itertools
 import copy
@@ -34,6 +36,63 @@ def reclassifySamples(samples_era_hh, samples_era_bkg, samples_era_ttbar = None,
   samples['sum_events'] = sum_events_hh + sum_events_bkg + sum_events_ttbar
 
   from collections import OrderedDict as OD
+
+  duplicate_sfx = 'duplicate'
+  duplicate_sfx_caps = '/{}'.format(duplicate_sfx.upper())
+
+  # first we need to find the cross sections that we're going to assign to the duplicated NLO samples
+  xsec_nonres = {}
+  for sample_name, sample_info in samples.items():
+
+    if not isinstance(sample_info, OD):
+      continue
+
+    sample_category = sample_info["sample_category"]
+    if is_nonresonant(sample_category) and not sample_name.endswith(duplicate_sfx_caps):
+      if sample_category not in xsec_nonres:
+        xsec_nonres[sample_category] = sample_info['xsection']
+      else:
+        assert(xsec_nonres[sample_category] == sample_info['xsection'])
+
+  # duplicate the NLO HH samples
+  new_samples = []
+  new_sums = {}
+  for sample_name, sample_info in samples.items():
+
+    if not isinstance(sample_info, OD):
+      continue
+
+    if sample_info["process_name_specific"].startswith('signal') and 'cHHH' in sample_info["sample_category"]:
+      # this is to make sure that nexted calls of this function doesn't reduplicate the entries
+      assert(not sample_name.endswith(duplicate_sfx_caps))
+      sample_name_new = sample_name + duplicate_sfx_caps
+      sample_category_split = sample_info["sample_category"].split('_')
+      assert(sample_category_split[3].startswith('cHHH'))
+
+      # remove cHHH since this piece of string tells the FW whether or not we want to reweight the samples
+      sample_category_split[3] = 'nlo'
+      sample_category_new = '_'.join(sample_category_split)
+      process_name_new = sample_info["process_name_specific"] + '_{}'.format(duplicate_sfx)
+
+      # normalize the cross section of duplicated samples to 1 pb (in HH production via ggF)
+      sample_category_lo = sample_category_new.replace('_nlo', '')
+      assert(sample_category_lo in xsec_nonres)
+      xsec_new = xsec_nonres[sample_category_lo]
+
+      entry_copy = copy.deepcopy(sample_info)
+      entry_copy.update([
+        ('sample_category', sample_category_new),
+        ('process_name_specific', process_name_new),
+        ('xsection', xsec_new),
+      ])
+      new_samples.append((sample_name_new, entry_copy))
+
+      if sample_category_new not in new_sums:
+        new_sums[sample_category_new] = []
+      new_sums[sample_category_new].append(process_name_new)
+
+  samples.update(new_samples)
+  samples['sum_events'].extend(new_sums.values())
 
   for sample_name, sample_info in samples.items():
 

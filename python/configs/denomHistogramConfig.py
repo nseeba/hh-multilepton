@@ -9,6 +9,7 @@ from tthAnalysis.HiggsToTauTau.common import logging, DEPENDENCIES
 
 import os
 import uuid
+import re
 
 DKEY_SCRIPTS    = "scripts"
 DKEY_CFGS       = "cfgs"
@@ -191,7 +192,7 @@ class denomHistogramConfig:
                 continue
             process_name = sample_info["process_name_specific"]
             if self.use_gen_weight:
-                assert(process_name in self.gen_weights)
+                assert(re.sub('_duplicate$', '', process_name) in self.gen_weights)
             key_dir = getKey(process_name)
             for dir_type in all_dirs:
                 if dir_type == DKEY_PLOTS:
@@ -490,7 +491,8 @@ class denomHistogramConfig:
                 self.scriptFiles_nonResDenom[key_file] = os.path.join(
                     self.dirs[key_dir][DKEY_CFGS], "nonResDenom_%s_%i_cfg.sh" % (process_name, jobId)
                 )
-                ref_genweight = self.gen_weights[process_name] if self.use_gen_weight else 0.
+                process_name_wodupl = re.sub('_duplicate$', '', process_name)
+                ref_genweight = self.gen_weights[process_name_wodupl] if self.use_gen_weight else 0.
                 self.jobOptions_sbatch[key_file] = {
                     'processName'  : process_name,
                     'categoryName' : sample_info['sample_category_hh'],
