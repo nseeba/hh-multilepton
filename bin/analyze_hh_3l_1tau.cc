@@ -1774,7 +1774,7 @@ int main(int argc, char* argv[])
     //std::vector<SVfit4tauResult> svFit4tauResults_wMassConstraint_Z = compSVfit4tau(
     //  *selLepton_lead, *selLepton_sublead, *selLepton_third, *selHadTau, met, chargeSumSelection_string, rnd, 91.2, 2.);
 
-    double dihiggsVisMass_sel = (selLepton_lead->cone_p4() + selLepton_sublead->cone_p4() + selLepton_third->cone_p4() + selHadTau->cone_p4()).mass();
+    double dihiggsVisMass_sel = (selLepton_lead->cone_p4() + selLepton_sublead->cone_p4() + selLepton_third->cone_p4() + selHadTau->p4()).mass();
     //double dihiggsMass = ( svFit4tauResults_wMassConstraint.size() >= 1 && svFit4tauResults_wMassConstraint[0].isValidSolution_ ) ? 
     //  svFit4tauResults_wMassConstraint[0].dihiggs_mass_ : -1.;
 
