@@ -3065,8 +3065,8 @@ int main(int argc, char* argv[])
 
     
     
-    double dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach0 = calculateAbsDeltaPhi((selLepton_H_WW_ljj_Approach0->p4() + met.p4()).phi(), 
-										   (selLepton1_H_WW_ll_Approach0->p4() + selLepton2_H_WW_ll_Approach0->p4()).phi());
+    double dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach0 = calculateAbsDeltaPhi((selLepton_H_WW_ljj_Approach0->cone_p4() + met.p4()).phi(),
+                                                                                   (selLepton1_H_WW_ll_Approach0->cone_p4() + selLepton2_H_WW_ll_Approach0->cone_p4()).phi());
     
     double dPhi_LeptonIdx3_Met_Approach0 = calculateAbsDeltaPhi(selLepton_H_WW_ljj_Approach0->phi(), met.phi());
 
@@ -3259,8 +3259,8 @@ int main(int argc, char* argv[])
     }
 
     
-    double dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2 = calculateAbsDeltaPhi((selLepton_H_WW_ljj_Approach2->p4() + met.p4()).phi(), 
-										   (selLepton1_H_WW_ll_Approach2->p4() + selLepton2_H_WW_ll_Approach2->p4()).phi());
+    double dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach2 = calculateAbsDeltaPhi((selLepton_H_WW_ljj_Approach2->cone_p4() + met.p4()).phi(),
+                                                                                   (selLepton1_H_WW_ll_Approach2->cone_p4() + selLepton2_H_WW_ll_Approach2->cone_p4()).phi());
 
     double dPhi_LeptonIdx3_Met_Approach2 = calculateAbsDeltaPhi(selLepton_H_WW_ljj_Approach2->phi(), met.phi());
     
@@ -3440,8 +3440,8 @@ int main(int argc, char* argv[])
 
 
     
-    double dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach3 = calculateAbsDeltaPhi((selLepton_H_WW_ljj_Approach3->p4() + met.p4()).phi(), 
-										   (selLepton1_H_WW_ll_Approach3->p4() + selLepton2_H_WW_ll_Approach3->p4()).phi());
+    double dPhi_LeptonIdx3plusMet_LeptonIdx1plus2_Approach3 = calculateAbsDeltaPhi((selLepton_H_WW_ljj_Approach3->cone_p4() + met.p4()).phi(),
+                                                                                   (selLepton1_H_WW_ll_Approach3->cone_p4() + selLepton2_H_WW_ll_Approach3->cone_p4()).phi());
 
     double dPhi_LeptonIdx3_Met_Approach3 = calculateAbsDeltaPhi(selLepton_H_WW_ljj_Approach3->phi(), met.phi());
 
