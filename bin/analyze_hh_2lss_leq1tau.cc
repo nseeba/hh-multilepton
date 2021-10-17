@@ -1892,7 +1892,6 @@ int main(int argc, char* argv[])
     jetSelectorAK8_Wjj.getSelector().set_leptons({selLeptons[0], selLeptons[1]});
     std::vector<const RecoJetAK8*> selJetsAK8_Wjj = jetSelectorAK8_Wjj(jet_ptrs_ak8, isHigherPt);    
     std::vector<const RecoJetAK8*> selJetsAK8_Wjj_selected;
-    const RecoJetAK8* selJetAK8_Wjj = nullptr;
 
     std::vector<const RecoJetBase*> selJets_Wjj_WPairwise;
     //const RecoJetBase* selJet1_Wjj   = nullptr;
@@ -2467,8 +2466,8 @@ int main(int argc, char* argv[])
           selHistManager->jets_->fillHistograms(selJets, evtWeight);
           selHistManager->leadJet_->fillHistograms(selJets, evtWeight);
           selHistManager->subleadJet_->fillHistograms(selJets, evtWeight);
-          if ( selJetAK8_Wjj ) {
-            selHistManager->jetsAK8_Wjj_->fillHistograms({ selJetAK8_Wjj }, evtWeight);
+          if ( ! selJetsAK8_Wjj_selected.empty() ) {
+            selHistManager->jetsAK8_Wjj_->fillHistograms(selJetsAK8_Wjj_selected, evtWeight);
           }
           selHistManager->met_->fillHistograms(met, mhtP4, met_LD, evtWeight);
           selHistManager->metFilters_->fillHistograms(metFilters, evtWeight);
