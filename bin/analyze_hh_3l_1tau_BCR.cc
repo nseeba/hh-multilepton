@@ -38,7 +38,6 @@
 #include "tthAnalysis/HiggsToTauTau/interface/RecoMuonReader.h" // RecoMuonReader
 #include "tthAnalysis/HiggsToTauTau/interface/RecoHadTauReader.h" // RecoHadTauReader
 #include "tthAnalysis/HiggsToTauTau/interface/RecoJetReader.h" // RecoJetReader
-#include "tthAnalysis/HiggsToTauTau/interface/RecoJetReaderAK8.h" // RecoJetReaderAK8
 #include "tthAnalysis/HiggsToTauTau/interface/RecoMEtReader.h" // RecoMEtReader
 #include "tthAnalysis/HiggsToTauTau/interface/MEtFilterReader.h" // MEtFilterReader
 #include "tthAnalysis/HiggsToTauTau/interface/GenLeptonReader.h" // GenLeptonReader
