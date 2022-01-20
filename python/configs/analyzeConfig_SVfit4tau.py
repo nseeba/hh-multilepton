@@ -44,6 +44,7 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
         dry_run = False,
         isDebug = False,
         use_home = False,
+        keep_logs = keep_logs,
         submission_cmd = None,
       ):
     analyzeConfig.__init__(self,
@@ -70,6 +71,7 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
       dry_run                   = dry_run,
       isDebug                   = isDebug,
       use_home                  = use_home,
+      keep_logs                 = keep_logs,
       template_dir              = os.path.join(os.getenv('CMSSW_BASE'), 'src', 'hhAnalysis', 'multilepton', 'test', 'templates'),
       submission_cmd            = submission_cmd,
       apply_nc_correction       = None,

@@ -32,6 +32,7 @@ running_method       = args.running_method
 tau_id               = args.tau_id
 jet_cleaning         = args.jet_cleaning
 gen_matching         = args.gen_matching
+keep_logs            = args.keep_logs
 
 # Use the arguments
 max_job_resubmission = 3;
@@ -88,6 +89,7 @@ if __name__ == '__main__':
     num_parallel_jobs               = 100, # KE: run up to 100 'hadd' jobs in parallel on batch system
     dry_run                         = dry_run,
     isDebug                         = debug,
+    keep_logs                       = keep_logs,
     submission_cmd                  = sys.argv,
   )
 
