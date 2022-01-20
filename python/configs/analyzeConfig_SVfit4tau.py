@@ -18,6 +18,7 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
   """
   def __init__(self,
         configDir,
+        localDir,
         outputDir,
         executable_analyze,
         cfgFile_analyze,
@@ -47,6 +48,7 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
       ):
     analyzeConfig.__init__(self,
       configDir                 = configDir,
+      localDir                  = localDir,
       outputDir                 = outputDir,
       executable_analyze        = executable_analyze,
       channel                   = "SVfit4tau",
@@ -131,7 +133,7 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
             continue
           initDict(self.dirs, [ key_dir, dir_type ])
           if dir_type in [ DKEY_CFGS, DKEY_LOGS ]:
-            self.dirs[key_dir][dir_type] = os.path.join(self.configDir, dir_type, self.channel, "_".join([ mode ]), process_name)
+            self.dirs[key_dir][dir_type] = os.path.join(self.get_dir_type(dir_type), dir_type, self.channel, "_".join([ mode ]), process_name)
           else:
             self.dirs[key_dir][dir_type] = os.path.join(self.outputDir, dir_type, self.channel, "_".join([ mode ]), process_name)
     for dir_type in [ DKEY_CFGS, DKEY_SCRIPTS, DKEY_HIST, DKEY_LOGS, DKEY_DCRD, DKEY_PLOT, DKEY_HADD_RT, DKEY_SYNC ]:
@@ -139,7 +141,7 @@ class analyzeConfig_SVfit4tau(analyzeConfig):
         continue
       initDict(self.dirs, [ dir_type ])
       if dir_type in [ DKEY_CFGS, DKEY_SCRIPTS, DKEY_LOGS, DKEY_DCRD, DKEY_PLOT, DKEY_HADD_RT ]:
-        self.dirs[dir_type] = os.path.join(self.configDir, dir_type, self.channel)
+        self.dirs[dir_type] = os.path.join(self.get_dir_type(dir_type), dir_type, self.channel)
       else:
         self.dirs[dir_type] = os.path.join(self.outputDir, dir_type, self.channel)
     ##print "self.dirs = ", self.dirs

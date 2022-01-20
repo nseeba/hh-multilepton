@@ -158,8 +158,9 @@ if __name__ == '__main__':
     hadTau_selection = args.tau_id_wp
 
   analysis = analyzeConfig_hh_2l_2tau(
-    configDir = os.path.join("/home",       getpass.getuser(), "hhAnalysis", era, version),
-    outputDir = os.path.join("/hdfs/local", getpass.getuser(), "hhAnalysis", era, version),
+    configDir = os.path.join("/scratch-persistent", getpass.getuser(), "hhAnalysis", era, version),
+    localDir  = os.path.join("/home",               getpass.getuser(), "hhAnalysis", era, version),
+    outputDir = os.path.join("/hdfs/local",         getpass.getuser(), "hhAnalysis", era, version),
     executable_analyze                    = "analyze_hh_2l_2tau",
     cfgFile_analyze                       = "analyze_hh_2l_2tau_cfg.py",
     samples                               = samples,
