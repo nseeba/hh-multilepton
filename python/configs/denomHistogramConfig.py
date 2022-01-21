@@ -212,6 +212,7 @@ class denomHistogramConfig:
             initDict(self.dirs, [ dir_type ])
             dir_choice = self.configDir if dir_type == DKEY_CFGS else self.localDir
             self.dirs[dir_type] = os.path.join(dir_choice, dir_type)
+            self.filesToClean.append(self.dirs[dir_type])
 
         self.cvmfs_error_log = {}
         self.num_jobs = {
@@ -321,7 +322,6 @@ class denomHistogramConfig:
                     "\t%s" % ":",
                     "",
                 ])
-            self.filesToClean.append(output_file)
         self.phoniesToAdd.append(MAKEFILE_TARGET)
 
     def addToMakefile_hadd(self, lines_makefile):
@@ -351,7 +351,6 @@ class denomHistogramConfig:
                 "\tpython %s" % scriptFiles[key],
                 "",
             ])
-            self.filesToClean.append(cfg['outputFile'])
 
     def addToMakefile_plot(self, lines_makefile):
         cmd_string = "plot_from_histogram.py -i %s -j %s -o %s -x 'm_{HH}' " \
@@ -385,7 +384,6 @@ class denomHistogramConfig:
             plot_files = [
                 jobOptions[key]['jobs'][plot_type]['outputFile'] for plot_type in jobOptions[key]['jobs']
             ]
-            self.filesToClean.extend(plot_files)
             self.targets.extend(plot_files)
 
         for cfg in jobOptions.values():
@@ -422,7 +420,6 @@ class denomHistogramConfig:
                 "",
             ])
             self.num_jobs['hadd'] += 1
-        self.filesToClean.append(self.output_file)
         self.targets.append(self.output_file)
 
     def createMakefile(self, lines_makefile):
