@@ -9,8 +9,8 @@ EvtHistManager_hh_2lss_vbf::EvtHistManager_hh_2lss_vbf(
   central_or_shiftOptions_["numMuons"] = {"central"};
   central_or_shiftOptions_["numJets"] = {"central"};
   central_or_shiftOptions_["numJetsPtGt40"] = {"central"};
-  central_or_shiftOptions_["dihiggsVisMass_"] = {"*"};
-  central_or_shiftOptions_["dihiggsMass_wMet_"] = {"central"};
+  central_or_shiftOptions_["dihiggsVisMass"] = {"*"};
+  central_or_shiftOptions_["dihiggsMass_wMet"] = {"central"};
   central_or_shiftOptions_["EventCounter"] = {"*"};
 }
 
@@ -48,7 +48,7 @@ void EvtHistManager_hh_2lss_vbf::fillHistograms(
   fillWithOverFlow(histogram_numJets_, numJets, evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_numJetsPtGt40_, numJetsPtGt40, evtWeight,
                    evtWeightErr);
-  fillWithOverFlow(histogram_dihiggsVisMass_, dihiggsVisMass_, evtWeight,
+  fillWithOverFlow(histogram_dihiggsVisMass_, dihiggsVisMass, evtWeight,
                    evtWeightErr);
   fillWithOverFlow(histogram_dihiggsMass_wMet_, dihiggsMass_wMet,
                    evtWeight, evtWeightErr);

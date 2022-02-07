@@ -155,7 +155,7 @@ if __name__ == '__main__':
     executable_addBackgrounds             = "addBackgrounds",
     executable_addFakes                   = "addBackgroundLeptonFakes",
     executable_addFlips                   = "addBackgroundLeptonFlips",
-    histograms_to_fit                     = get_histograms_to_fit("dihiggsVisMass_sel"),
+    histograms_to_fit                     = get_histograms_to_fit("dihiggsVisMass"),
     select_rle_output                     = True,
     dry_run                               = dry_run,
     isDebug                               = debug,
