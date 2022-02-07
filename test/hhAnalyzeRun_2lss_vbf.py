@@ -137,7 +137,7 @@ if __name__ == '__main__':
     localDir  = os.path.join("/home",               getpass.getuser(), "hhAnalysis", era, version),
     outputDir = os.path.join("/hdfs/local",         getpass.getuser(), "hhAnalysis", era, version),
     executable_analyze                    = "analyze_hh_2lss_vbf",
-    cfgFile_analyze                       = "analyze_hh_2lss_cfg.py",
+    cfgFile_analyze                       = "analyze_hh_2lss_vbf_cfg.py",
     samples                               = samples,
     hadTauVeto_selection                  = hadTau_selection_veto,
     applyFakeRateWeights                  = "2lepton",

@@ -161,15 +161,15 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  std::cout << "<analyze_hh_2lss>:" << std::endl;
+  std::cout << "<analyze_hh_2lss_vbf>:" << std::endl;
 
   //--- keep track of time it takes the macro to execute
   TBenchmark clock;
-  clock.Start("analyze_hh_2lss");
+  clock.Start("analyze_hh_2lss_vbf");
 
   //--- read python configuration parameters
   if (!edm::readPSetsFrom(argv[1])->existsAs<edm::ParameterSet>("process"))
-    throw cms::Exception("analyze_hh_2lss")
+    throw cms::Exception("analyze_hh_2lss_vbf")
         << "No ParameterSet 'process' found in configuration file = " << argv[1]
         << " !!\n";
 
@@ -177,7 +177,7 @@ int main(int argc, char *argv[]) {
       edm::readPSetsFrom(argv[1])->getParameter<edm::ParameterSet>("process");
 
   edm::ParameterSet cfg_analyze =
-      cfg.getParameter<edm::ParameterSet>("analyze_hh_2lss");
+      cfg.getParameter<edm::ParameterSet>("analyze_hh_2lss_vbf");
   AnalysisConfig_hh analysisConfig("HH->multilepton", cfg_analyze);
 
   std::string treeName = cfg_analyze.getParameter<std::string>("treeName");
@@ -238,7 +238,7 @@ int main(int argc, char *argv[]) {
   else if (leptonChargeSelection_string == "disabled")
     leptonChargeSelection = kDisabled;
   else
-    throw cms::Exception("analyze_hh_2lss")
+    throw cms::Exception("analyze_hh_2lss_vbf")
         << "Invalid Configuration parameter 'leptonChargeSelection' = "
         << leptonChargeSelection_string << " !!\n";
 
@@ -842,7 +842,6 @@ int main(int argc, char *argv[]) {
     EvtHistManager_hh_2lss_vbf *evt_;
     DatacardHistManager_hh *datacard_;
     MVAInputVarCorrelationHistManager *mvaInputVarCorrelation_;
-
     EvtYieldHistManager *evtYield_;
     WeightHistManager *weights_;
   };
@@ -1917,8 +1916,7 @@ int main(int argc, char *argv[]) {
                selJets.size() >= 1) { // semiboosted category
       std::vector<const RecoSubjetAK8 *> selSubjetsAK8 = {
           selJetsAK8_Wjj_selected[0]->subJet1(),
-          selJetsAK8_Wjj_selected[0]
-              ->subJet2()};  // selSubjetsAK8 vector equals subjet1, subjet2
+          selJetsAK8_Wjj_selected[0]->subJet2()};  // selSubjetsAK8 vector equals subjet1, subjet2
       double dm_min = 9999.; // Give huge random values
       size_t idxWJet1 = 9999;
       size_t idxWJet2 = 9999;
@@ -2544,7 +2542,7 @@ int main(int argc, char *argv[]) {
 
   delete inputTree;
 
-  clock.Show("analyze_hh_2lss");
+  clock.Show("analyze_hh_2lss_vbf");
 
   return EXIT_SUCCESS;
 }
