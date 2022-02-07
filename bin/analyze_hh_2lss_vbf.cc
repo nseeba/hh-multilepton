@@ -1004,7 +1004,8 @@ int main(int argc, char *argv[]) {
         "dihiggsVisMass_sel"
         "dihiggsMass_wMet_sel",
         "evtWeight",
-        "vbf_m_jj", "vbf_dEta_jj"
+        "vbf_m_jj",
+        "vbf_dEta_jj"
     );
     bdt_filler->register_variable<int_type>("BM", "nJet", "nJet_vbf", "isVBF",
                                             "nLep", "nLep_loose", "nElec");
@@ -2350,34 +2351,6 @@ int main(int argc, char *argv[]) {
           selHistManager->evt_->fillHistograms(
               selElectrons.size(), selMuons.size(), selJets.size(),
               numSelJetsPtGt40, dihiggsVisMass_sel, dihiggsMass_wMet_sel,
-              //        jetMass_sel,
-              //        leptonPairMass_sel,
-              //        ( selLepton_lead->is_electron() &&
-              //        selLepton_sublead->is_electron() ) ? leptonPairMass_sel
-              //        : -1., ( selLepton_lead->is_muon()     &&
-              //        selLepton_sublead->is_muon()     ) ? leptonPairMass_sel
-              //        : -1., leptonPairCharge_sel,
-              // metP4.pt(),
-              // mhtP4.pt(),
-              // met_LD,
-              //        HT,
-              //        STMET,
-              //
-              // lep1_conePt,
-              // std::min(10., mindr_lep1_jet),
-              // mT_lep1,
-              //        deltaPhi(selLepton_lead->phi(), metP4.phi()),
-              //        deltaPhi(selLepton_lead->phi(), mhtP4.phi()),
-              // //
-              // lep2_conePt,
-              // std::min(10., mindr_lep2_jet),
-              // mT_lep2,
-              //        deltaPhi(selLepton_sublead->phi(), metP4.phi()),
-              //        deltaPhi(selLepton_sublead->phi(), mhtP4.phi()),
-              // //
-              // dR_ll,
-              // max_lep_eta,
-              //
               evtWeight);
         }
         // selHistManager->datacard_->fillHistograms(
@@ -2469,13 +2442,14 @@ int main(int argc, char *argv[]) {
         }
       }
 
-      bdt_filler
-          ->
-          operator()({eventInfo.run, eventInfo.lumi, eventInfo.event})(
-              "dihiggsVisMass_sel", dihiggsVisMass_sel)("dihiggsMass_wMet_sel",
-                                                        dihiggsMass_wMet_sel)(
-              "vbf_m_jj", vbf_m_jj)("vbf_dEta_jj", vbf_dEta_jj)
-          .fill();
+      bdt_filler -> operator()({eventInfo.run, eventInfo.lumi, eventInfo.event})
+          ("dihiggsVisMass_sel",      dihiggsVisMass_sel)
+          ("dihiggsMass_wMet_sel",    dihiggsMass_wMet_sel)
+          ("vbf_m_jj",                vbf_m_jj)
+          ("vbf_dEta_jj",             vbf_dEta_jj)
+          ("evtWeight",               evtWeight_BDT)
+          (weightMapHH)
+        .fill();
     }
 
     ++selectedEntries;

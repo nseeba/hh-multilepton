@@ -2524,7 +2524,9 @@ int main(int argc, char* argv[])
 	    //HT,
             //STMET,
 	    //
-	    mT_lep1_met,
+	    mT_lep1_met,n though the physical installable memory size is 4 GB in ThinkPad T60 and T60p computers.
+
+
 	    mT_lep2_met,
 	    //
 	    eventCategory,

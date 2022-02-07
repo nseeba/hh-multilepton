@@ -22,8 +22,8 @@ public:
   void bookHistograms(TFileDirectory &dir) override;
 
   void fillHistograms(int numElectrons, int numMuons, int numJets,
-                      int numJetsPtGt40, double dihiggsVisMass_sel,
-                      double dihiggsMass_wMet_sel,
+                      int numJetsPtGt40, double dihiggsVisMass,
+                      double dihiggsMass_wMet,
                       double evtWeight);
 
   const TH1 *getHistogram_EventCounter() const;
@@ -33,8 +33,8 @@ private:
   TH1 *histogram_numMuons_;
   TH1 *histogram_numJets_;
   TH1 *histogram_numJetsPtGt40_;
-  TH1 *histogram_dihiggsVisMass_sel_;
-  TH1 *histogram_dihiggsMass_wMet_sel_;
+  TH1 *histogram_dihiggsVisMass_;
+  TH1 *histogram_dihiggsMass_wMet_;
   TH1 *histogram_EventCounter_;
 };
 
