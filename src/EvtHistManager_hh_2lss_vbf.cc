@@ -25,9 +25,9 @@ void EvtHistManager_hh_2lss_vbf::bookHistograms(TFileDirectory &dir) {
   histogram_numJets_ = book1D(dir, "numJets", "numJets", 20, -0.5, +19.5);
   histogram_numJetsPtGt40_ =
       book1D(dir, "numJetsPtGt40", "numJetsPtGt40", 20, -0.5, +19.5);
-  histogram_dihiggsVisMass_ =
+  histogram_dihiggsVisMass_sel_ =
       book1D(dir, "dihiggsVisMass_sel", "dihiggsVisMass_sel", 150, 0., 1500.);
-  histogram_dihiggsMass_wMet_ = book1D(dir, "dihiggsMass_wMet_sel",
+  histogram_dihiggsMass_wMet_sel_ = book1D(dir, "dihiggsMass_wMet_sel",
                                        "dihiggsMass_wMet_sel", 150, 0., 1500.);
   histogram_EventCounter_ =
       book1D(dir, "EventCounter", "EventCounter", 1, -0.5, +0.5);

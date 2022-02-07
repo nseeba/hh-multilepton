@@ -2243,11 +2243,11 @@ int main(int argc, char *argv[]) {
 
     // //Gathering final BDT Inputs
 
-    // AllVars_Map["gen_mHH"]                                   =       250.; //
+    AllVars_Map["gen_mHH"]                                   =       250.; //
     // setting a Dummy value which will be reset depending on mass hypothesis
 
-    // AllVars_Map["dihiggsVisMass_sel"] =              dihiggsVisMass_sel;
-    // AllVars_Map["dihiggsMass_wMet_sel"] =            dihiggsMass_wMet_sel;
+    AllVars_Map["dihiggsVisMass_sel"] =              dihiggsVisMass_sel;
+    AllVars_Map["dihiggsMass_wMet_sel"] =            dihiggsMass_wMet_sel;
     // AllVars_Map["jetMass_sel"] =                     jetMass_sel;
     // AllVars_Map["leptonPairMass_sel"] =              std::min(250.,
     // leptonPairMass_sel); AllVars_Map["leptonPairCharge_sel"] =
@@ -2256,7 +2256,7 @@ int main(int argc, char *argv[]) {
     // mhtP4.pt()); AllVars_Map["met_LD"] = std::min(250., met_LD);
     // AllVars_Map["HT"] =                              std::min(1000., HT);
     // AllVars_Map["STMET"] =                           std::min(1000., STMET);
-    // AllVars_Map["evtWeight"] = evtWeightRecorder.get(central_or_shift_main);
+    AllVars_Map["evtWeight"] = evtWeightRecorder.get(central_or_shift_main);
     // AllVars_Map["lep1_pt"] =                         std::min(120.,
     // selLepton_lead->pt()); AllVars_Map["lep1_conePt"] = std::min(120.,
     // comp_lep_conePt(*selLepton_lead)); AllVars_Map["lep1_eta"] =
@@ -2274,8 +2274,8 @@ int main(int argc, char *argv[]) {
     // AllVars_Map["max_lep_eta"] = TMath::Max(std::abs(selLepton_lead ->
     // eta()), std::abs(selLepton_sublead -> eta())); AllVars_Map["pT_llMEt"] =
     // pT_llMEt; AllVars_Map["Smin_llMEt"] =                      Smin_llMEt;
-    // AllVars_Map["vbf_dEta_jj"] =                     vbf_dEta_jj;
-    // AllVars_Map["vbf_m_jj"] =                        vbf_m_jj;
+    AllVars_Map["vbf_dEta_jj"] =                     vbf_dEta_jj;
+    AllVars_Map["vbf_m_jj"] =                        vbf_m_jj;
     // AllVars_Map["nJet"] = comp_n_jet25_recl(selJets); AllVars_Map["nJet_vbf"]
     // =                        selJetsVBF.size(); AllVars_Map["isVBF"] = isVBF;
     // AllVars_Map["nLep"] =                            selLeptons.size();

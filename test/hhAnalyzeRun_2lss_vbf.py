@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from hhAnalysis.multilepton.configs.analyzeConfig_hh_2lss import analyzeConfig_hh_2lss
+from hhAnalysis.multilepton.configs.analyzeConfig_hh_2lss_vbf import analyzeConfig_hh_2lss
 from hhAnalysis.multilepton.common import get_histograms_to_fit
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics, get_lumi
@@ -155,7 +155,7 @@ if __name__ == '__main__':
     executable_addBackgrounds             = "addBackgrounds",
     executable_addFakes                   = "addBackgroundLeptonFakes",
     executable_addFlips                   = "addBackgroundLeptonFlips",
-    histograms_to_fit                     = get_histograms_to_fit("dihiggsVisMass"),
+    histograms_to_fit                     = get_histograms_to_fit("dihiggsVisMass_sel"),
     select_rle_output                     = True,
     dry_run                               = dry_run,
     isDebug                               = debug,
