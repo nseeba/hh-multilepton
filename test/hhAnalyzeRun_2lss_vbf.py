@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from hhAnalysis.multilepton.configs.analyzeConfig_hh_2lss_vbf import analyzeConfig_hh_2lss
+from hhAnalysis.multilepton.configs.analyzeConfig_hh_2lss_vbf import analyzeConfig_hh_2lss_vbf
 from hhAnalysis.multilepton.common import get_histograms_to_fit
 from tthAnalysis.HiggsToTauTau.jobTools import query_yes_no
 from tthAnalysis.HiggsToTauTau.analysisSettings import systematics, get_lumi
@@ -132,7 +132,7 @@ if __name__ == '__main__':
   if sample_filter:
     samples = filter_samples(samples, sample_filter)
 
-  analysis = analyzeConfig_hh_2lss(
+  analysis = analyzeConfig_hh_2lss_vbf(
     configDir = os.path.join("/scratch-persistent", getpass.getuser(), "hhAnalysis", era, version),
     localDir  = os.path.join("/home",               getpass.getuser(), "hhAnalysis", era, version),
     outputDir = os.path.join("/hdfs/local",         getpass.getuser(), "hhAnalysis", era, version),

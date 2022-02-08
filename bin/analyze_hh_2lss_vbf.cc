@@ -399,7 +399,7 @@ int main(int argc, char *argv[]) {
         cfg_dataToMCcorrectionInterface);
     break;
   default:
-    throw cmsException("analyze_hh_2lss", __LINE__)
+    throw cmsException("analyze_hh_2lss_vbf", __LINE__)
         << "Invalid era = " << static_cast<int>(era);
   }
   const ChargeMisIdRate chargeMisIdRate(era, lep_mva_wp);
@@ -412,7 +412,7 @@ int main(int argc, char *argv[]) {
   else if (applyFakeRateWeights_string == "2lepton")
     applyFakeRateWeights = kFR_2lepton;
   else
-    throw cms::Exception("analyze_hh_2lss")
+    throw cms::Exception("analyze_hh_2ls_vbf")
         << "Invalid Configuration parameter 'applyFakeRateWeights' = "
         << applyFakeRateWeights_string << " !!\n";
 

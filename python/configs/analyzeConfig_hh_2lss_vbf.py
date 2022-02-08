@@ -26,12 +26,12 @@ def getHistogramDir(category, lepton_selection, lepton_frWeight, leptonChargeSel
       histogramDir += "_woFakeRateWeights"
   return histogramDir
 
-class analyzeConfig_hh_2lss(analyzeConfig_hh):
+class analyzeConfig_hh_2lss_vbf(analyzeConfig_hh):
   """Configuration metadata needed to run analysis in a single go.
 
   Sets up a folder structure by defining full path names; no directory creation is delegated here.
 
-  Args specific to analyzeConfig_hh_2lss:
+  Args specific to analyzeConfig_hh_2lss_vbf:
     lepton_selection: either `Tight`, `Loose` or `Fakeable`
 
   See $CMSSW_BASE/src/tthAnalysis/HiggsToTauTau/python/analyzeConfig.py
@@ -184,7 +184,7 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
     return True
 
   def createCfg_analyze(self, jobOptions, sample_info, lepton_selection):
-    """Create python configuration file for the analyze_hh_2lss executable (analysis code)
+    """Create python configuration file for the analyze_hh_2lss_vbf executable (analysis code)
 
     Args:
       inputFiles: list of input files (Ntuples)
@@ -192,7 +192,7 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
       process: either `TT`, `TTW`, `TTZ`, `EWK`, `Rares`, `data_obs`, `ttH_hww`, 'ttH_hzg', 'ttH_hmm', `ttH_hzz` or `ttH_htt`
       is_mc: flag indicating whether job runs on MC (True) or data (False)
       lumi_scale: event weight (= xsection * luminosity / number of events)
-      central_or_shift: either 'central' or one of the systematic uncertainties defined in $CMSSW_BASE/src/hhAnalysis/multilepton/bin/analyze_hh_2lss.cc
+      central_or_shift: either 'central' or one of the systematic uncertainties defined in $CMSSW_BASE/src/hhAnalysis/multilepton/bin/analyze_hh_2lss_vbf.cc
     """
     lepton_frWeight = "disabled" if jobOptions['applyFakeRateWeights'] == "disabled" else "enabled"
     jobOptions['histogramDir'] = getHistogramDir(self.category_inclusive, lepton_selection, lepton_frWeight, jobOptions['leptonChargeSelection'])
@@ -204,7 +204,7 @@ class analyzeConfig_hh_2lss(analyzeConfig_hh):
     jobOptions['leptonFakeRateWeight.histogramName_e'] = self.leptonFakeRateWeight_histogramName_e
     jobOptions['leptonFakeRateWeight.histogramName_mu'] = self.leptonFakeRateWeight_histogramName_mu
 
-    lines = super(analyzeConfig_hh_2lss, self).createCfg_analyze(jobOptions, sample_info)
+    lines = super(analyzeConfig_hh_2lss_vbf, self).createCfg_analyze(jobOptions, sample_info)
     create_cfg(self.cfgFile_analyze, jobOptions['cfgFile_modified'], lines)
 
   def create(self):
