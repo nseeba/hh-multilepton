@@ -81,7 +81,7 @@ class analyzeConfig_hh_2lss_vbf(analyzeConfig_hh):
       localDir                  = localDir,
       outputDir                 = outputDir,
       executable_analyze        = executable_analyze,
-      channel                   = "hh_2lss",
+      channel                   = "hh_2lss_vbf",
       samples                   = samples,
       jet_cleaning_by_index     = jet_cleaning_by_index,
       gen_matching_by_index     = gen_matching_by_index,
@@ -138,8 +138,8 @@ class analyzeConfig_hh_2lss_vbf(analyzeConfig_hh):
     self.outputFile_hadd_stage1_6 = {}
     self.cfgFile_addFlips = os.path.join(self.template_dir, "addBackgroundLeptonFlips_cfg.py")
     self.jobOptions_addFlips = {}
-    self.histogramDir_prep_dcard = "hh_2lss_SS_Tight"
-    self.histogramDir_prep_dcard_OS = "hh_2lss_OS_Tight"
+    self.histogramDir_prep_dcard = "hh_2lss_vbf_SS_Tight"
+    self.histogramDir_prep_dcard_OS = "hh_2lss_vbf_OS_Tight"
     self.make_plots_backgrounds = self.get_makeplots_backgrounds(add_flips = 'data')
     self.make_plots_backgrounds_OS = self.get_makeplots_backgrounds()
     self.cfgFile_make_plots = os.path.join(self.template_dir, "makePlots_hh_2lss_cfg.py")
@@ -152,14 +152,14 @@ class analyzeConfig_hh_2lss_vbf(analyzeConfig_hh):
     self.hlt_filter = hlt_filter
 
     self.categories = [
-      "hh_2lss",
+      "hh_2lss_vbf",
 #      "hh_2lss_0tau", "hh_2lss_1tau"
       
       # "hh_2ess_3j",   "hh_2ess_3j_vbf",   "hh_2ess_3j_nonvbf",   "hh_2muss_3j",   "hh_2muss_3j_vbf",   "hh_2muss_3j_nonvbf",   "hh_1e1muss_3j",   "hh_1e1muss_3j_vbf",   "hh_1e1muss_3j_nonvbf",
       # "hh_2ess_ge3j", "hh_2ess_ge3j_vbf", "hh_2ess_ge3j_nonvbf", "hh_2muss_ge3j", "hh_2muss_ge3j_vbf", "hh_2muss_ge3j_nonvbf", "hh_1e1muss_ge3j", "hh_1e1muss_ge3j_vbf", "hh_1e1muss_ge3j_nonvbf",
       # "hh_2ess_ge4j", "hh_2ess_ge4j_vbf", "hh_2ess_ge4j_nonvbf", "hh_2muss_ge4j", "hh_2muss_ge4j_vbf", "hh_2muss_ge4j_nonvbf", "hh_1e1muss_ge4j", "hh_1e1muss_ge4j_vbf", "hh_1e1muss_ge4j_nonvbf"
     ]
-    self.category_inclusive = "hh_2lss"
+    self.category_inclusive = "hh_2lss_vbf"
 
   def set_BDT_training(self):
     """Run analysis for the purpose of preparing event list files for BDT training.

@@ -3,7 +3,7 @@
 
 /** \class EvtHistManager_hh_2lss
  *
- * Book and fill histograms for event-level quantities in the 2l+2tau_h category
+ * Book and fill histograms for event-level quantities in the 2lss_vbf category
  * of the HH->wwww, WWtt, and WWWW analysis
  *
  * \author Christian Veelken, Tallinn
