@@ -1000,14 +1000,12 @@ int main(int argc, char *argv[]) {
       }
     }
     bdt_filler->register_variable<float_type>(
-        "dihiggsVisMass_sel"
+        "dihiggsVisMass_sel",
         "dihiggsMass_wMet_sel",
         "evtWeight",
         "vbf_m_jj",
         "vbf_dEta_jj"
     );
-    bdt_filler->register_variable<int_type>("BM", "nJet", "nJet_vbf", "isVBF",
-                                            "nLep", "nLep_loose", "nElec");
     bdt_filler->bookTree(fs);
   }
 
