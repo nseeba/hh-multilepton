@@ -11,6 +11,8 @@ EvtHistManager_hh_2lss_vbf::EvtHistManager_hh_2lss_vbf(
   central_or_shiftOptions_["numJetsPtGt40"] = {"central"};
   central_or_shiftOptions_["dihiggsVisMass"] = {"*"};
   central_or_shiftOptions_["dihiggsMass_wMet"] = {"central"};
+  central_or_shiftOptions_["vbf_m_jj"] = {"central"};
+  central_or_shiftOptions_["vbf_dEta_jj"] = {"central"};
   central_or_shiftOptions_["EventCounter"] = {"*"};
 }
 
@@ -31,14 +33,18 @@ void EvtHistManager_hh_2lss_vbf::bookHistograms(TFileDirectory &dir) {
       dir, "dihiggsVisMass", "dihiggsVisMass", 150, 0., 1500.);
   histogram_dihiggsMass_wMet_ = book1D(
       dir, "dihiggsMass_wMet", "dihiggsMass_wMet", 150, 0., 1500.);
+  histogram_vbf_m_jj_ = book1D(
+      dir, "vbf_m_jj", "vbf_m_jj", 40, 0., 4000.);
+  histogram_vbf_dEta_jj_ = book1D(
+      dir, "vbf_dEta_jj", "vbf_dEta_jj", 50, 0.,5.);
   histogram_EventCounter_ = book1D(
       dir, "EventCounter", "EventCounter", 1, -0.5, +0.5);
 }
 
 void EvtHistManager_hh_2lss_vbf::fillHistograms(
     int numElectrons, int numMuons, int numJets, int numJetsPtGt40,
-    double dihiggsVisMass, double dihiggsMass_wMet,
-    double evtWeight)
+    double dihiggsVisMass, double dihiggsMass_wMet, double vbf_m_jj,
+    double vbf_dEta_jj, double evtWeight)
 
 {
   const double evtWeightErr = 0.;
@@ -51,6 +57,10 @@ void EvtHistManager_hh_2lss_vbf::fillHistograms(
   fillWithOverFlow(histogram_dihiggsVisMass_, dihiggsVisMass, evtWeight,
                    evtWeightErr);
   fillWithOverFlow(histogram_dihiggsMass_wMet_, dihiggsMass_wMet,
+                   evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_vbf_m_jj_, vbf_m_jj,
+                   evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_vbf_dEta_jj_, vbf_dEta_jj,
                    evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_EventCounter_, 0., evtWeight, evtWeightErr);
 }

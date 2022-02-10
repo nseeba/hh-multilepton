@@ -2213,6 +2213,7 @@ int main(int argc, char *argv[]) {
                selJetVBF1 + 1;
            selJetVBF2 != selJetsVBF.end();
            ++selJetVBF2) { // Loop over all selected jet 2s
+        if (deltaR((*selJetVBF1)->p4(),(*selJetVBF2)->p4())<0.1) std::cout<< (*selJetVBF1)->p4() << " " << (*selJetVBF2)->p4() << std::endl;
         if (std::abs(deltaR((*selJetVBF2)->p4(), selJet1P4)) == 0)
           continue;
         if (std::abs(deltaR((*selJetVBF2)->p4(), selJet2P4)) == 0)
@@ -2223,18 +2224,19 @@ int main(int argc, char *argv[]) {
           continue;
         double dEta_jj = TMath::Abs(
             (*selJetVBF1)->eta() -
-            (*selJetVBF2)->eta()); // Calculate deltaEta between the 2 jets
+            (*selJetVBF2)->eta());
+         // Calculate deltaEta between the 2 jets
         double m_jj = ((*selJetVBF1)->p4() + (*selJetVBF2)->p4())
                           .mass();         // Calculate the invariant mass
-        if (dEta_jj > 4. && m_jj > 500.) { // If deltaE > 4 and inv mass > 500
-          if (dEta_jj > vbf_dEta_jj)
-            vbf_dEta_jj = dEta_jj; // If new deltaEta is bigger than old then
-                                   // replace the old one
-          if (m_jj > vbf_m_jj)
-            vbf_m_jj = m_jj; // If new inv mass is bigger than old then replace
-                             // the old one
-          // isVBF = true; //If conditions are met then true
-        }
+        // if (dEta_jj > 4. && m_jj > 500.) { // If deltaE > 4 and inv mass > 500
+        //   if (dEta_jj > vbf_dEta_jj)
+        //     vbf_dEta_jj = dEta_jj; // If new deltaEta is bigger than old then
+        //                            // replace the old one
+          if (m_jj > vbf_m_jj){
+            vbf_m_jj = m_jj;
+            vbf_dEta_jj = dEta_jj;
+            if (dEta_jj < 0.1) std::cout<< (*selJetVBF1)->p4() << " " << (*selJetVBF2)->p4() << std::endl;
+          } 
       }
     }
 
@@ -2347,7 +2349,7 @@ int main(int argc, char *argv[]) {
           selHistManager->evt_->fillHistograms(
               selElectrons.size(), selMuons.size(), selJets.size(),
               numSelJetsPtGt40, dihiggsVisMass_sel, dihiggsMass_wMet_sel,
-              evtWeight);
+              vbf_m_jj, vbf_dEta_jj, evtWeight);
         }
         // selHistManager->datacard_->fillHistograms(
         //          BDTOutput_Map_spin2,

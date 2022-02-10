@@ -23,8 +23,8 @@ public:
 
   void fillHistograms(int numElectrons, int numMuons, int numJets,
                       int numJetsPtGt40, double dihiggsVisMass,
-                      double dihiggsMass_wMet,
-                      double evtWeight);
+                      double dihiggsMass_wMet, double vbf_m_jj,
+                      double vbf_dEta_jj, double evtWeight);
 
   const TH1 *getHistogram_EventCounter() const;
 
@@ -35,6 +35,8 @@ private:
   TH1 *histogram_numJetsPtGt40_;
   TH1 *histogram_dihiggsVisMass_;
   TH1 *histogram_dihiggsMass_wMet_;
+  TH1 *histogram_vbf_m_jj_;
+  TH1 *histogram_vbf_dEta_jj_;
   TH1 *histogram_EventCounter_;
 };
 
