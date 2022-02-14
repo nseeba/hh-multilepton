@@ -2232,12 +2232,20 @@ int main(int argc, char *argv[]) {
         //   if (dEta_jj > vbf_dEta_jj)
         //     vbf_dEta_jj = dEta_jj; // If new deltaEta is bigger than old then
         //                            // replace the old one
-          if (m_jj > vbf_m_jj){
+
+          if (m_jj > vbf_m_jj && dEta_jj > vbf_dEta_jj){
             vbf_m_jj = m_jj;
             vbf_dEta_jj = dEta_jj;
-            if (dEta_jj < 0.1) std::cout<< (*selJetVBF1)->p4() << " " << (*selJetVBF2)->p4() << std::endl;
+            std::cout<< (*selJetVBF1)->p4() << " " << (*selJetVBF2)->p4() << std::endl;
+
+            if (dEta_jj < 0.1) {
+              std::cout<< "#########################################" << std::endl;
+              std::cout<< (*selJetVBF1)->p4() << " " << (*selJetVBF2)->p4() << std::endl;
+              std::cout<< "#########################################" << std::endl;
+            }
           } 
       }
+    std::cout<< "*************************************************************" << std::endl;
     }
 
     // //Gathering final BDT Inputs
