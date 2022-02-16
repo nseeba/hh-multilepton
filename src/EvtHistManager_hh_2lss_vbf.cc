@@ -14,6 +14,12 @@ EvtHistManager_hh_2lss_vbf::EvtHistManager_hh_2lss_vbf(
   central_or_shiftOptions_["vbf_m_jj"] = {"central"};
   central_or_shiftOptions_["vbf_dEta_jj"] = {"central"};
   central_or_shiftOptions_["EventCounter"] = {"*"};
+  central_or_shiftOptions_["nJet"] = {"central"};
+  central_or_shiftOptions_["nJet_vbf"] = {"central"};
+  central_or_shiftOptions_["isVBF"] = {"central"};
+  central_or_shiftOptions_["mindr_lep1_jet"] = { "central" };
+  central_or_shiftOptions_["mindr_lep2_jet"] = { "central" };
+  central_or_shiftOptions_["max_jet_eta"] = { "central" };
 }
 
 const TH1 *EvtHistManager_hh_2lss_vbf::getHistogram_EventCounter() const {
@@ -39,12 +45,25 @@ void EvtHistManager_hh_2lss_vbf::bookHistograms(TFileDirectory &dir) {
       dir, "vbf_dEta_jj", "vbf_dEta_jj", 50, 0.,5.);
   histogram_EventCounter_ = book1D(
       dir, "EventCounter", "EventCounter", 1, -0.5, +0.5);
+  histogram_nJet_ = book1D(
+      dir, "nJet", "nJet", 20, -0.5, +19.5);
+  histogram_nJet_vbf_ = book1D(
+      dir, "nJet_vbf", "nJet_vbf", 20, -0.5, +19.5);
+  histogram_isVBF_ = book1D(
+      dir, "isVBF", "isVBF", 20, -0.5, +19.5);
+  histogram_mindr_lep1_jet_   = book1D(dir, "mindr_lep1_jet",   "mindr_lep1_jet",   100, 0,   7);
+  histogram_mindr_lep2_jet_   = book1D(dir, "mindr_lep2_jet",   "mindr_lep2_jet",   100, 0,   7);
+  histogram_max_jet_eta_      = book1D(dir, "max_jet_eta",      "max_jet_eta",      100, 0, 1000);
 }
 
 void EvtHistManager_hh_2lss_vbf::fillHistograms(
     int numElectrons, int numMuons, int numJets, int numJetsPtGt40,
     double dihiggsVisMass, double dihiggsMass_wMet, double vbf_m_jj,
-    double vbf_dEta_jj, double evtWeight)
+    double vbf_dEta_jj, double evtWeight
+    , int nJet, int nJet_vbf, int isVBF,
+    double mindr_lep1_jet, double mindr_lep2_jet,
+    double max_jet_eta
+    )
 
 {
   const double evtWeightErr = 0.;
@@ -63,4 +82,13 @@ void EvtHistManager_hh_2lss_vbf::fillHistograms(
   fillWithOverFlow(histogram_vbf_dEta_jj_, vbf_dEta_jj,
                    evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_EventCounter_, 0., evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_nJet_, nJet,
+                   evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_nJet_vbf_, nJet_vbf,
+                   evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_isVBF_, isVBF,
+                   evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_mindr_lep1_jet_,   mindr_lep1_jet,   evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_mindr_lep2_jet_,   mindr_lep2_jet,   evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_max_jet_eta_,      max_jet_eta,      evtWeight, evtWeightErr);
 }

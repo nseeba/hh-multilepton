@@ -145,6 +145,19 @@ bool hasOverlapJets(const RecoJet *jet,
   return hasOverlap;
 }
 
+
+double comp_maxAbsEta_jet(const std::vector<const RecoJet *> & jets_cleaned){
+  double maxEta = 1.e+3;
+  for(const RecoJet * jet: jets_cleaned)
+  {
+    const double eta = jet->eta();
+    maxEta = std::max(eta, maxEta);
+  }
+  return maxEta;
+}
+
+
+
 /**
  * @brief Produce datacard and control plots for 2lss category of HH analysis.
  */
@@ -936,6 +949,18 @@ int main(int argc, char *argv[]) {
           isDEBUG);
       selHistManager->datacard_->bookHistograms(fs);
 
+      if (!skipBooking) {
+        std::vector<std::string> mvaInputVariables = {
+            "mindr_lep1_jet", "mindr_lep2_jet", "max_jet_eta"};
+        selHistManager->mvaInputVarCorrelation_ =
+            new MVAInputVarCorrelationHistManager(makeHistManager_cfg(
+                process_and_genMatch,
+                Form("%s/sel/mvaInputVarCorrelation", histogramDir.data()),
+                era_string, central_or_shift));
+        selHistManager->mvaInputVarCorrelation_->bookHistograms(
+            fs, mvaInputVariables);
+      }
+
 
       if (!skipBooking) {
         edm::ParameterSet cfg_EvtYieldHistManager_sel = makeHistManager_cfg(
@@ -1004,8 +1029,12 @@ int main(int argc, char *argv[]) {
         "dihiggsMass_wMet_sel",
         "evtWeight",
         "vbf_m_jj",
-        "vbf_dEta_jj"
+        "vbf_dEta_jj",
+        "mindr_lep1_jet",
+        "mindr_lep2_jet",
+        "max_jet_eta"
     );
+    bdt_filler->register_variable<int_type>("nJet", "nJet_vbf", "isVBF");
     bdt_filler->bookTree(fs);
   }
 
@@ -2187,16 +2216,19 @@ int main(int argc, char *argv[]) {
     // selLepton_lead->charge() + selLepton_sublead->charge();
 
     // //--- compute variables BDTs used to discriminate . . .
-    // const double mindr_lep1_jet  = comp_mindr_jet(*selLepton_lead, selJets);
-    // const double mindr_lep2_jet  = comp_mindr_jet(*selLepton_sublead,
-    // selJets); Particle::LorentzVector llP4 = selLeptonP4_lead +
+    const double mindr_lep1_jet  = comp_mindr_jet(*selLepton_lead, selJetsVBF);
+    const double mindr_lep2_jet  = comp_mindr_jet(*selLepton_sublead, selJetsVBF);
+    // Particle::LorentzVector llP4 = selLeptonP4_lead +
     // selLeptonP4_sublead; double dR_ll = deltaR(selLeptonP4_lead,
     // selLeptonP4_sublead); double pT_ll = llP4.pt(); double pT_llMEt = (llP4 +
     // metP4).pt(); double Smin_llMEt = comp_Smin(llP4, metP4.px(), metP4.py());
 
+    int nJet = comp_n_jet25_recl(selJets);
+    int nJet_vbf = selJetsVBF.size();
+
     double vbf_dEta_jj = -1.;
     double vbf_m_jj = -1.;
-    // bool isVBF = false;
+    bool isVBF = false;
     for (std::vector<const RecoJet *>::const_iterator selJetVBF1 =
              selJetsVBF.begin();
          selJetVBF1 != selJetsVBF.end();
@@ -2236,16 +2268,17 @@ int main(int argc, char *argv[]) {
           if (m_jj > vbf_m_jj && dEta_jj > vbf_dEta_jj){
             vbf_m_jj = m_jj;
             vbf_dEta_jj = dEta_jj;
-            std::cout<< (*selJetVBF1)->p4() << " " << (*selJetVBF2)->p4() << std::endl;
+          isVBF = true;
+            //std::cout<< (*selJetVBF1)->p4() << " " << (*selJetVBF2)->p4() << std::endl;
 
-            if (dEta_jj < 0.1) {
-              std::cout<< "#########################################" << std::endl;
-              std::cout<< (*selJetVBF1)->p4() << " " << (*selJetVBF2)->p4() << std::endl;
-              std::cout<< "#########################################" << std::endl;
-            }
+            // if (dEta_jj < 0.1) {
+            //   std::cout<< "#########################################" << std::endl;
+            //   std::cout<< (*selJetVBF1)->p4() << " " << (*selJetVBF2)->p4() << std::endl;
+            //   std::cout<< "#########################################" << std::endl;
+            // }
           } 
       }
-    std::cout<< "*************************************************************" << std::endl;
+    //std::cout<< "*************************************************************" << std::endl;
     }
 
     // //Gathering final BDT Inputs
@@ -2267,24 +2300,28 @@ int main(int argc, char *argv[]) {
     // AllVars_Map["lep1_pt"] =                         std::min(120.,
     // selLepton_lead->pt()); AllVars_Map["lep1_conePt"] = std::min(120.,
     // comp_lep_conePt(*selLepton_lead)); AllVars_Map["lep1_eta"] =
-    // selLepton_lead->eta(); AllVars_Map["mindr_lep1_jet"] = std::min(10.,
-    // mindr_lep1_jet) ; AllVars_Map["mT_lep1"] = std::min(150.,
+    // selLepton_lead->eta();
+    AllVars_Map["mindr_lep1_jet"] = std::min(10., mindr_lep1_jet);
+    //AllVars_Map["mT_lep1"] = std::min(150.,
     // comp_MT_met(selLepton_lead, met.pt(), met.phi())); AllVars_Map["lep2_pt"]
     // =                         std::min(120., selLepton_sublead->pt());
     // AllVars_Map["lep2_conePt"] =                     std::min(120.,
     // comp_lep_conePt(*selLepton_sublead)); AllVars_Map["lep2_eta"] =
-    // selLepton_sublead->eta(); AllVars_Map["mindr_lep2_jet"] = std::min(10.,
-    // mindr_lep2_jet) ; AllVars_Map["mT_lep2"] = std::min(150.,
+    // selLepton_sublead->eta();
+    AllVars_Map["mindr_lep2_jet"] = std::min(10., mindr_lep2_jet);
+    //AllVars_Map["mT_lep2"] = std::min(150.,
     // comp_MT_met(selLepton_sublead, met.pt(), met.phi()));
     // AllVars_Map["dR_ll"] =                           dR_ll;
     // AllVars_Map["pT_ll"] =                           pT_ll;
+    AllVars_Map["max_jet_eta"] = comp_maxAbsEta_jet(selJetsVBF);
     // AllVars_Map["max_lep_eta"] = TMath::Max(std::abs(selLepton_lead ->
     // eta()), std::abs(selLepton_sublead -> eta())); AllVars_Map["pT_llMEt"] =
     // pT_llMEt; AllVars_Map["Smin_llMEt"] =                      Smin_llMEt;
     AllVars_Map["vbf_dEta_jj"] =                     vbf_dEta_jj;
     AllVars_Map["vbf_m_jj"] =                        vbf_m_jj;
-    // AllVars_Map["nJet"] = comp_n_jet25_recl(selJets); AllVars_Map["nJet_vbf"]
-    // =                        selJetsVBF.size(); AllVars_Map["isVBF"] = isVBF;
+    AllVars_Map["nJet"] = comp_n_jet25_recl(selJets);
+    AllVars_Map["nJet_vbf"] = selJetsVBF.size();
+    AllVars_Map["isVBF"] = isVBF;
     // AllVars_Map["nLep"] =                            selLeptons.size();
 
     // std::map<std::string, double> BDTInputs_spin2 =
@@ -2312,6 +2349,7 @@ int main(int argc, char *argv[]) {
     // //
     // double max_lep_eta = TMath::Max(std::abs(selLepton_lead -> eta()),
     // std::abs(selLepton_sublead -> eta()));
+    double max_jet_eta = comp_maxAbsEta_jet(selJetsVBF);
 
     //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry *> genMatches =
@@ -2356,8 +2394,9 @@ int main(int argc, char *argv[]) {
         if (!skipFilling) {
           selHistManager->evt_->fillHistograms(
               selElectrons.size(), selMuons.size(), selJets.size(),
-              numSelJetsPtGt40, dihiggsVisMass_sel, dihiggsMass_wMet_sel,
-              vbf_m_jj, vbf_dEta_jj, evtWeight);
+              numSelJetsPtGt40, dihiggsVisMass_sel, dihiggsMass_wMet_sel, vbf_m_jj, vbf_dEta_jj, evtWeight,
+              nJet, nJet_vbf, isVBF, std::min(10., mindr_lep1_jet), std::min(10., mindr_lep2_jet),
+              max_jet_eta);
         }
         // selHistManager->datacard_->fillHistograms(
         //          BDTOutput_Map_spin2,
@@ -2453,7 +2492,13 @@ int main(int argc, char *argv[]) {
           ("dihiggsMass_wMet_sel",    dihiggsMass_wMet_sel)
           ("vbf_m_jj",                vbf_m_jj)
           ("vbf_dEta_jj",             vbf_dEta_jj)
+          ("nJet_vbf",                selJetsVBF.size())
+          ("isVBF",                   isVBF)
+          ("nJet",                    comp_n_jet25_recl(selJets))
           ("evtWeight",               evtWeight_BDT)
+          ("mindr_lep1_jet",          std::min(10., mindr_lep1_jet))
+          ("mindr_lep2_jet",          std::min(10., mindr_lep2_jet))
+          ("max_jet_eta",             comp_maxAbsEta_jet(selJetsVBF))
           (weightMapHH)
         .fill();
     }
