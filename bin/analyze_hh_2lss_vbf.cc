@@ -38,6 +38,7 @@
 #include "tthAnalysis/HiggsToTauTau/interface/GenLeptonReader.h" // GenLeptonReader
 #include "tthAnalysis/HiggsToTauTau/interface/GenMatchInterface.h" // GenMatchInterface
 #include "tthAnalysis/HiggsToTauTau/interface/GenParticleReader.h" // GenParticleReader
+#include "tthAnalysis/HiggsToTauTau/interface/LHEParticleReader.h" //.LHEParticleReader
 #include "tthAnalysis/HiggsToTauTau/interface/GenPhotonFilter.h" // GenPhotonFilter
 #include "tthAnalysis/HiggsToTauTau/interface/GenPhotonReader.h" // GenPhotonReader
 #include "tthAnalysis/HiggsToTauTau/interface/HHWeightInterfaceCouplings.h" // HHWeightInterfaceCouplings
@@ -147,7 +148,7 @@ bool hasOverlapJets(const RecoJet *jet,
 
 
 double comp_maxAbsEta_jet(const std::vector<const RecoJet *> & jets_cleaned){
-  double maxEta = 1.e+3;
+  double maxEta = 1.e-3;
   for(const RecoJet * jet: jets_cleaned)
   {
     const double eta = jet->eta();
@@ -738,7 +739,11 @@ int main(int argc, char *argv[]) {
   GenParticleReader *genMatchToHadTauReader = nullptr;
   GenParticleReader *genMatchToJetReader = nullptr;
 
+  LHEParticleReader *general_lhe_reader = nullptr;
+
   if (isMC) {
+    general_lhe_reader = new LHEParticleReader("LHEPart");
+    inputTree->registerReader(general_lhe_reader);
     bool readGenPhotons = apply_genPhotonFilter;
     if (!readGenObjects) {
       genLeptonReader = new GenLeptonReader(branchName_genLeptons);
@@ -771,6 +776,7 @@ int main(int argc, char *argv[]) {
       }
     }
 
+
     if (readGenPhotons) {
       genPhotonReader = new GenPhotonReader(branchName_genPhotons);
       inputTree->registerReader(genPhotonReader);
@@ -792,6 +798,7 @@ int main(int argc, char *argv[]) {
     psWeightReader = new PSWeightReader(hasPS, apply_LHE_nom);
     inputTree->registerReader(psWeightReader);
   }
+
 
   const bool selectBDT = cfg_analyze.exists("selectBDT")
                              ? cfg_analyze.getParameter<bool>("selectBDT")
@@ -1030,11 +1037,19 @@ int main(int argc, char *argv[]) {
         "evtWeight",
         "vbf_m_jj",
         "vbf_dEta_jj",
+        "vbf_dR_jj",
         "mindr_lep1_jet",
         "mindr_lep2_jet",
-        "max_jet_eta"
+        "max_jet_eta",
+        "reco_dEta_jj",
+        "reco_m_jj",
+        "reco_dR_jj",
+        "lhe_dEta_jj",
+        "lhe_m_jj",
+        "lhe_dR_jj",
+        "best_m_jj", "best_dEta_jj", "best_dR_jj"
     );
-    bdt_filler->register_variable<int_type>("nJet", "nJet_vbf", "isVBF");
+    bdt_filler->register_variable<int_type>("nJet_vbf", "isVBF");
     bdt_filler->bookTree(fs);
   }
 
@@ -1133,6 +1148,8 @@ int main(int argc, char *argv[]) {
     std::vector<GenParticle> genFromHardProcess;
     std::vector<GenJet> genJets;
     std::vector<GenParticle> genHiggses;
+    std::vector<LHEParticle> lheParticles;
+
 
     std::vector<GenParticle> muonGenMatch;
     std::vector<GenParticle> electronGenMatch;
@@ -1157,6 +1174,16 @@ int main(int argc, char *argv[]) {
       }
       if (genHadTauReader)
         genHadTaus = genHadTauReader->read();
+      if (general_lhe_reader){
+        lheParticles = general_lhe_reader->read();
+        // std::cout << "1st particle id:" << lheParticles[0].pdgId() << endl;
+        // std::cout << "2nd particle id:" << lheParticles[1].pdgId() << endl;
+        // std::cout << "3rd particle id:" << lheParticles[2].pdgId() << endl;
+        // std::cout << "4th particle id:" << lheParticles[3].pdgId() << endl;
+        // std::cout << "3rd particle eta:" << lheParticles[2].eta() << endl;
+        // std::cout << "4th particle eta:" << lheParticles[3].eta() << endl;
+        // std::cout << "____________________________________" << endl;
+      }
       if (genPhotonReader)
         genPhotons = genPhotonReader->read(apply_genPhotonFilter);
       if (genJetReader)
@@ -1419,6 +1446,8 @@ int main(int argc, char *argv[]) {
       }
       if (genHadTauReader)
         genHadTaus = genHadTauReader->read();
+      if (general_lhe_reader)
+        lheParticles = general_lhe_reader->read();
       if (genPhotonReader)
         genPhotonsFinal = genPhotonReader->read();
       if (genJetReader)
@@ -1925,7 +1954,7 @@ int main(int argc, char *argv[]) {
                                 // if condition is satisfied
       }
     }
-
+// ########################################################################################################################################################################################
     math::PtEtaPhiMLorentzVector selJet1P4;
     math::PtEtaPhiMLorentzVector selJet2P4;
     math::PtEtaPhiMLorentzVector selJet3P4;
@@ -2223,12 +2252,84 @@ int main(int argc, char *argv[]) {
     // selLeptonP4_sublead); double pT_ll = llP4.pt(); double pT_llMEt = (llP4 +
     // metP4).pt(); double Smin_llMEt = comp_Smin(llP4, metP4.px(), metP4.py());
 
-    int nJet = comp_n_jet25_recl(selJets);
+    double lhe_dEta_jj = lheParticles[2].eta()-lheParticles[3].eta();
+    double lhe_m_jj = (lheParticles[2].p4() + lheParticles[3].p4()).mass();
+    double lhe_dR_jj = deltaR(lheParticles[2], lheParticles[3]);
+
+    double reco_dEta_jj = -999;
+    double reco_m_jj = -1;
+    double reco_dR_jj = -1;
+
+    math::PtEtaPhiMLorentzVector reco_vbf_jet1;
+    math::PtEtaPhiMLorentzVector reco_vbf_jet2;
+    double dR1 = -1;
+    double dR2 = -1;
+    double bestDR1 = 100000;
+    double bestDR2 = 100000;
+    int bestjet_id1 = 0;
+    int bestjet_id2 = 0;
+    for (size_t j=0; j < selJetsVBF.size(); j++){
+      dR1 = deltaR(lheParticles[2], selJetsVBF[j]->p4());
+      dR2 = deltaR(lheParticles[3], selJetsVBF[j]->p4());
+          if (dR1 < bestDR1){
+              bestDR1 = dR1;
+              bestjet_id1 = j;
+          }
+          if (dR2 < bestDR2){
+              bestDR2 = dR2;
+              bestjet_id2 = j;
+          }
+    }
+    if (bestjet_id1 != bestjet_id2 and bestDR1<0.3 and bestDR2<0.3){
+      reco_vbf_jet1 = selJetsVBF[bestjet_id1]->p4();
+      reco_vbf_jet2 = selJetsVBF[bestjet_id2]->p4();
+      reco_dEta_jj = reco_vbf_jet1.eta()-reco_vbf_jet2.eta();
+      reco_m_jj = (reco_vbf_jet1 + reco_vbf_jet2).mass();
+      reco_dR_jj = deltaR(reco_vbf_jet1, reco_vbf_jet2);
+    }
+
+    // std::cout<< selJets.size() << std::endl;
+
+
+    double best_m_jj = -1.;
+    double best_dEta_jj = -999;
+    double best_dR_jj = -1;
+    for (std::vector<const RecoJet *>::const_iterator selJetVBF1 =
+             selJetsVBF.begin(); selJetVBF1 != selJetsVBF.end();
+         ++selJetVBF1) {
+        for (std::vector<const RecoJet *>::const_iterator selJetVBF2 =
+               selJetVBF1 + 1; selJetVBF2 != selJetsVBF.end();++selJetVBF2) {
+            if ((*selJetVBF1)->eta() > 2.3) {
+               double m_jj_ = ((*selJetVBF1)->p4() + (*selJetVBF2)->p4()).mass();
+               double dEta_jj_ = (*selJetVBF1)->eta()-(*selJetVBF2)->eta();
+               // std::cout<< "************************" << std::endl;
+               // std::cout<< "dEta:" << dEta_jj_ << std::endl;
+               // std::cout<< "Best dEta:" << best_dEta_jj << std::endl;
+               double dR_jj_ = deltaR((*selJetVBF1)->p4(), (*selJetVBF2)->p4());
+                    if (m_jj_ > best_m_jj){
+                    // if (m_jj_ > best_m_jj and dR_jj_ > best_dR_jj ){
+                      best_m_jj = m_jj_;
+                      best_dR_jj = dR_jj_;
+                      best_dEta_jj = dEta_jj_;
+                      // std::cout<< "##########################" << std::endl;
+                      // std::cout<< "Best dEta selected:" << best_dEta_jj << std::endl;
+                      // std::cout<< "##########################" << std::endl;
+                    }
+            // std::cout<< "Best dEta final:" << best_dEta_jj << std::endl;
+            }
+        }
+    }
+    // std::cout<< "____________________________" << std::endl;
+
+
+
     int nJet_vbf = selJetsVBF.size();
 
-    double vbf_dEta_jj = -1.;
+    double vbf_dEta_jj = -999.;
     double vbf_m_jj = -1.;
+    double vbf_dR_jj = -1;
     bool isVBF = false;
+
     for (std::vector<const RecoJet *>::const_iterator selJetVBF1 =
              selJetsVBF.begin();
          selJetVBF1 != selJetsVBF.end();
@@ -2254,9 +2355,8 @@ int main(int argc, char *argv[]) {
           continue;
         if (std::abs(deltaR((*selJetVBF2)->p4(), selJet4P4)) == 0)
           continue;
-        double dEta_jj = TMath::Abs(
-            (*selJetVBF1)->eta() -
-            (*selJetVBF2)->eta());
+        double dEta_jj = (*selJetVBF1)->eta()-(*selJetVBF2)->eta();
+        double dR_jj = deltaR((*selJetVBF1)->p4(), (*selJetVBF2)->p4());
          // Calculate deltaEta between the 2 jets
         double m_jj = ((*selJetVBF1)->p4() + (*selJetVBF2)->p4())
                           .mass();         // Calculate the invariant mass
@@ -2265,9 +2365,10 @@ int main(int argc, char *argv[]) {
         //     vbf_dEta_jj = dEta_jj; // If new deltaEta is bigger than old then
         //                            // replace the old one
 
-          if (m_jj > vbf_m_jj && dEta_jj > vbf_dEta_jj){
+          if (m_jj > vbf_m_jj and dEta_jj > vbf_dEta_jj){
             vbf_m_jj = m_jj;
             vbf_dEta_jj = dEta_jj;
+            vbf_dR_jj = dR_jj;
           isVBF = true;
             //std::cout<< (*selJetVBF1)->p4() << " " << (*selJetVBF2)->p4() << std::endl;
 
@@ -2280,6 +2381,9 @@ int main(int argc, char *argv[]) {
       }
     //std::cout<< "*************************************************************" << std::endl;
     }
+    // std::cout<< "#########################################" << std::endl;
+    // std::cout<< best_m_jj << "new mass|||| old mass" << vbf_m_jj << std::endl;
+    // std::cout<< "_________________________________________" << std::endl;
 
     // //Gathering final BDT Inputs
 
@@ -2319,9 +2423,21 @@ int main(int argc, char *argv[]) {
     // pT_llMEt; AllVars_Map["Smin_llMEt"] =                      Smin_llMEt;
     AllVars_Map["vbf_dEta_jj"] =                     vbf_dEta_jj;
     AllVars_Map["vbf_m_jj"] =                        vbf_m_jj;
-    AllVars_Map["nJet"] = comp_n_jet25_recl(selJets);
+    AllVars_Map["vbf_dR_jj"] =                        vbf_dR_jj;
+    // AllVars_Map["nJet"] = comp_n_jet25_recl(selJets);
     AllVars_Map["nJet_vbf"] = selJetsVBF.size();
     AllVars_Map["isVBF"] = isVBF;
+
+    AllVars_Map["lhe_dEta_jj"] = lhe_dEta_jj;
+    AllVars_Map["lhe_m_jj"] = lhe_m_jj;
+    AllVars_Map["lhe_dR_jj"] = lhe_dR_jj;
+    AllVars_Map["reco_dEta_jj"] = reco_dEta_jj;
+    AllVars_Map["reco_m_jj"] = reco_m_jj;
+    AllVars_Map["reco_dR_jj"] = reco_dR_jj;
+
+    AllVars_Map["best_m_jj"] = best_m_jj;
+    AllVars_Map["best_dEta_jj"] = best_dEta_jj;
+    AllVars_Map["best_dR_jj"] = best_dR_jj;
     // AllVars_Map["nLep"] =                            selLeptons.size();
 
     // std::map<std::string, double> BDTInputs_spin2 =
@@ -2394,9 +2510,10 @@ int main(int argc, char *argv[]) {
         if (!skipFilling) {
           selHistManager->evt_->fillHistograms(
               selElectrons.size(), selMuons.size(), selJets.size(),
-              numSelJetsPtGt40, dihiggsVisMass_sel, dihiggsMass_wMet_sel, vbf_m_jj, vbf_dEta_jj, evtWeight,
-              nJet, nJet_vbf, isVBF, std::min(10., mindr_lep1_jet), std::min(10., mindr_lep2_jet),
-              max_jet_eta);
+              numSelJetsPtGt40, dihiggsVisMass_sel, dihiggsMass_wMet_sel, vbf_m_jj, vbf_dEta_jj, vbf_dR_jj, evtWeight,
+              nJet_vbf, isVBF, std::min(10., mindr_lep1_jet), std::min(10., mindr_lep2_jet),
+              max_jet_eta, reco_dEta_jj, reco_m_jj, reco_dR_jj, lhe_dEta_jj, lhe_m_jj, lhe_dR_jj,
+              best_m_jj, best_dEta_jj, best_dR_jj);
         }
         // selHistManager->datacard_->fillHistograms(
         //          BDTOutput_Map_spin2,
@@ -2492,13 +2609,22 @@ int main(int argc, char *argv[]) {
           ("dihiggsMass_wMet_sel",    dihiggsMass_wMet_sel)
           ("vbf_m_jj",                vbf_m_jj)
           ("vbf_dEta_jj",             vbf_dEta_jj)
+          ("vbf_dR_jj",               vbf_dR_jj)
           ("nJet_vbf",                selJetsVBF.size())
           ("isVBF",                   isVBF)
-          ("nJet",                    comp_n_jet25_recl(selJets))
           ("evtWeight",               evtWeight_BDT)
           ("mindr_lep1_jet",          std::min(10., mindr_lep1_jet))
           ("mindr_lep2_jet",          std::min(10., mindr_lep2_jet))
           ("max_jet_eta",             comp_maxAbsEta_jet(selJetsVBF))
+          ("reco_dEta_jj",            reco_dEta_jj)
+          ("reco_m_jj",               reco_m_jj)
+          ("reco_dR_jj",              reco_dR_jj)
+          ("lhe_dEta_jj",             lhe_dEta_jj)
+          ("lhe_m_jj",                lhe_m_jj)
+          ("lhe_dR_jj",               lhe_dR_jj)
+          ("best_m_jj",               best_m_jj)
+          ("best_dEta_jj",            best_dEta_jj)
+          ("best_dR_jj",              best_dR_jj)
           (weightMapHH)
         .fill();
     }
@@ -2574,6 +2700,8 @@ int main(int argc, char *argv[]) {
   delete genHiggsReader;
   delete lheInfoReader;
   delete psWeightReader;
+  delete general_lhe_reader;
+
 
   for (auto &kv : genEvtHistManager_beforeCuts) {
     delete kv.second;
