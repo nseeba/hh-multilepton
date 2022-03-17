@@ -20,9 +20,9 @@ EvtHistManager_hh_2lss_vbf::EvtHistManager_hh_2lss_vbf(
   central_or_shiftOptions_["mindr_lep1_jet"] = { "central" };
   central_or_shiftOptions_["mindr_lep2_jet"] = { "central" };
   central_or_shiftOptions_["max_jet_eta"] = { "central" };
-  central_or_shiftOptions_["reco_dEta_jj"] = { "central" };
-  central_or_shiftOptions_["reco_m_jj"] = { "central" };
-  central_or_shiftOptions_["reco_dR_jj"] = { "central" };
+  central_or_shiftOptions_["matched_dEta_jj"] = { "central" };
+  central_or_shiftOptions_["matched_m_jj"] = { "central" };
+  central_or_shiftOptions_["matched_dR_jj"] = { "central" };
   central_or_shiftOptions_["lhe_dEta_jj"] = { "central" };
   central_or_shiftOptions_["lhe_m_jj"] = { "central" };
   central_or_shiftOptions_["lhe_dR_jj"] = { "central" };
@@ -63,12 +63,12 @@ void EvtHistManager_hh_2lss_vbf::bookHistograms(TFileDirectory &dir) {
   histogram_mindr_lep1_jet_   = book1D(dir, "mindr_lep1_jet",   "mindr_lep1_jet",   100, 0,   7);
   histogram_mindr_lep2_jet_   = book1D(dir, "mindr_lep2_jet",   "mindr_lep2_jet",   100, 0,   7);
   histogram_max_jet_eta_      = book1D(dir, "max_jet_eta",      "max_jet_eta",      100, 0, 5);
-  histogram_reco_dEta_jj_ = book1D(
-      dir, "reco_dEta_jj", "reco_dEta_jj", 50, -10.,10);
-  histogram_reco_m_jj_ = book1D(
-      dir, "reco_m_jj", "reco_m_jj", 250, 0., 5000);
-  histogram_reco_dR_jj_ = book1D(
-      dir, "reco_dR_jj", "reco_dR_jj", 100, 0., 10);
+  histogram_matched_dEta_jj_ = book1D(
+      dir, "matched_dEta_jj", "matched_dEta_jj", 50, -10.,10);
+  histogram_matched_m_jj_ = book1D(
+      dir, "matched_m_jj", "matched_m_jj", 250, 0., 5000);
+  histogram_matched_dR_jj_ = book1D(
+      dir, "matched_dR_jj", "matched_dR_jj", 100, 0., 10);
   histogram_lhe_dEta_jj_ = book1D(
       dir, "lhe_dEta_jj", "lhe_dEta_jj", 50, -10.,10);
   histogram_lhe_m_jj_ = book1D(
@@ -90,7 +90,7 @@ void EvtHistManager_hh_2lss_vbf::fillHistograms(
     , int nJet_vbf, int isVBF,
     double mindr_lep1_jet, double mindr_lep2_jet,
     double max_jet_eta, 
-    double reco_dEta_jj, double reco_m_jj, double reco_dR_jj, 
+    double matched_dEta_jj, double matched_m_jj, double matched_dR_jj, 
     double lhe_dEta_jj, double lhe_m_jj, double lhe_dR_jj,
     double best_m_jj, double best_dEta_jj, double best_dR_jj
     )
@@ -125,14 +125,14 @@ void EvtHistManager_hh_2lss_vbf::fillHistograms(
   fillWithOverFlow(histogram_mindr_lep1_jet_,   mindr_lep1_jet,   evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_mindr_lep2_jet_,   mindr_lep2_jet,   evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_max_jet_eta_,      max_jet_eta,      evtWeight, evtWeightErr);
-  if(reco_dEta_jj>-999){
-      fillWithOverFlow(histogram_reco_dEta_jj_,     reco_dEta_jj,     evtWeight, evtWeightErr);
+  if(matched_dEta_jj>-999){
+      fillWithOverFlow(histogram_matched_dEta_jj_,     matched_dEta_jj,     evtWeight, evtWeightErr);
   }
-  if(reco_m_jj>0){
-      fillWithOverFlow(histogram_reco_m_jj_,        reco_m_jj,        evtWeight, evtWeightErr);
+  if(matched_m_jj>0){
+      fillWithOverFlow(histogram_matched_m_jj_,        matched_m_jj,        evtWeight, evtWeightErr);
   }
-  if(reco_dR_jj>0){
-      fillWithOverFlow(histogram_reco_dR_jj_,       reco_dR_jj,       evtWeight, evtWeightErr);
+  if(matched_dR_jj>0){
+      fillWithOverFlow(histogram_matched_dR_jj_,       matched_dR_jj,       evtWeight, evtWeightErr);
   }
   fillWithOverFlow(histogram_lhe_dEta_jj_,      lhe_dEta_jj,      evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_lhe_m_jj_,         lhe_m_jj,         evtWeight, evtWeightErr);
