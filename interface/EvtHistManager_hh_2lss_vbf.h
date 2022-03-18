@@ -28,9 +28,9 @@ public:
                       , int nJet_vbf, int isVBF,
                       double mindr_lep1_jet, double mindr_lep2_jet,
                       double max_jet_eta,
-                      double matched_dEta_jj, double matched_m_jj, double matched_dR_jj, 
-                      double lhe_dEta_jj, double lhe_m_jj, double lhe_dR_jj,
-                      double best_m_jj, double best_dEta_jj, double best_dR_jj
+                      double matched_dEta_jj, double matched_m_jj, double matched_dR_jj, double matched_dPhi_jj,
+                      double lhe_dEta_jj, double lhe_m_jj, double lhe_dR_jj, double lhe_dPhi_jj,
+                      double best_m_jj, double best_dEta_jj, double best_dR_jj, double best_dPhi_jj
                       );
 
   const TH1 *getHistogram_EventCounter() const;
@@ -51,14 +51,20 @@ private:
   TH1 *histogram_mindr_lep1_jet_;
   TH1 *histogram_mindr_lep2_jet_;
   TH1 *histogram_max_jet_eta_;
+
   TH1 *histogram_matched_dEta_jj_;
+  TH1 *histogram_matched_dPhi_jj_;
   TH1 *histogram_matched_m_jj_;
   TH1 *histogram_matched_dR_jj_;
+
   TH1 *histogram_lhe_dEta_jj_;
+  TH1 *histogram_lhe_dPhi_jj_;
   TH1 *histogram_lhe_m_jj_;
   TH1 *histogram_lhe_dR_jj_;
+
   TH1 *histogram_best_m_jj_;
   TH1 *histogram_best_dEta_jj_;
+  TH1 *histogram_best_dPhi_jj_;
   TH1 *histogram_best_dR_jj_;
 };
 
