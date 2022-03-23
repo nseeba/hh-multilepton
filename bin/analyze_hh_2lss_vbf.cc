@@ -1041,11 +1041,12 @@ int main(int argc, char *argv[]) {
         "mindr_lep1_jet",
         "mindr_lep2_jet",
         "max_jet_eta",
-        "matched_dEta_jj", "matched_m_jj", "matched_dR_jj", "matched_dPhi_jj",
-        "lhe_dEta_jj", "lhe_m_jj", "lhe_dR_jj", "lhe_dPhi_jj",
-        "best_m_jj", "best_dEta_jj", "best_dR_jj","best_dPhi_jj"
+        "lhe_dEta_jj", "lhe_dPhi_jj", "lhe_m_jj", "lhe_dR_jj",
+        "matched_dEta_jj", "matched_dPhi_jj", "matched_m_jj", "matched_dR_jj",
+        "best_dEta_jj", "best_dPhi_jj", "best_m_jj", "best_dR_jj",
+        "lhe_pt_lead", "lhe_pt_sublead", "matched_pt_lead", "matched_pt_sublead", "best_pt_lead", "best_pt_sublead"
     );
-    bdt_filler->register_variable<int_type>("nJet_vbf", "isVBF");
+    // bdt_filler->register_variable<int_type>("nJet_vbf", "isVBF");
     bdt_filler->bookTree(fs);
   }
 
@@ -2248,15 +2249,32 @@ int main(int argc, char *argv[]) {
     // selLeptonP4_sublead); double pT_ll = llP4.pt(); double pT_llMEt = (llP4 +
     // metP4).pt(); double Smin_llMEt = comp_Smin(llP4, metP4.px(), metP4.py());
 
+
+// LHE particles
     double lhe_dEta_jj = lheParticles[2].eta()-lheParticles[3].eta();
     double lhe_dPhi_jj = lheParticles[2].phi()-lheParticles[3].phi();
     double lhe_m_jj = (lheParticles[2].p4() + lheParticles[3].p4()).mass();
     double lhe_dR_jj = deltaR(lheParticles[2], lheParticles[3]);
+    double lhe_pt_lead = -1;
+    double lhe_pt_sublead = -1;
+    if (lheParticles[2].pt() > lheParticles[3].pt()){
+      lhe_pt_lead = lheParticles[2].pt();
+      lhe_pt_sublead = lheParticles[3].pt();
+    }
+    else{
+      lhe_pt_lead = lheParticles[3].pt();
+      lhe_pt_sublead = lheParticles[2].pt();
+    }
 
+
+// Matched particles
     double matched_dEta_jj = -999;
     double matched_dPhi_jj = -999;
     double matched_m_jj = -1;
     double matched_dR_jj = -1;
+
+    double matched_pt_lead = -1;
+    double matched_pt_sublead = -1;
 
     math::PtEtaPhiMLorentzVector matched_vbf_jet1;
     math::PtEtaPhiMLorentzVector matched_vbf_jet2;
@@ -2266,48 +2284,102 @@ int main(int argc, char *argv[]) {
     double bestDR2 = 100000;
     int bestjet_id1 = 0;
     int bestjet_id2 = 0;
-    for (size_t j=0; j < selJetsVBF.size(); j++){
-      double dR1 = deltaR(lheParticles[2], selJetsVBF[j]->p4());
-      double dR2 = deltaR(lheParticles[3], selJetsVBF[j]->p4());
+    for (size_t j=0; j < jets.size(); j++){
+      double dR1 = deltaR(lheParticles[2], jets[j].p4());
+      // double dR2 = deltaR(lheParticles[3], selJetsVBF[j]->p4());
           if (dR1 < bestDR1){
               bestDR1 = dR1;
               bestjet_id1 = j;
+              // std::cout << "****************" << endl;
+              // std::cout << "Jet1 Pt in loop: " << jets[j].pt() << endl;
+              // std::cout << "Jet1 dR in loop: " << bestDR1 << endl;
           }
-          if (dR2 < bestDR2){
+          // if (dR2 < bestDR2){
+          //     bestDR2 = dR2;
+          //     bestjet_id2 = j;
+          // }
+    }
+
+    for (int j=0; j < static_cast<int>(jets.size()); j++){
+      double dR2 = deltaR(lheParticles[3], jets[j].p4());
+          if (dR2 < bestDR2 and j != bestjet_id1){
               bestDR2 = dR2;
               bestjet_id2 = j;
+              // std::cout << "////////////////" << endl;
+              // std::cout << "Jet2 Pt in loop: " << jets[j].pt() << endl;
+              // std::cout << "Jet2 dR in loop: " << bestDR2 << endl;
           }
     }
-    if (bestjet_id1 != bestjet_id2 and bestDR1<0.3 and bestDR2<0.3){
-      matched_vbf_jet1 = selJetsVBF[bestjet_id1]->p4();
-      matched_vbf_jet2 = selJetsVBF[bestjet_id2]->p4();
+
+    if (bestDR1<0.3 and bestDR2<0.3){
+    // if (bestjet_id1 != bestjet_id2 and bestDR1<0.3 and bestDR2<0.3){
+      matched_vbf_jet1 = jets[bestjet_id1].p4();
+      matched_vbf_jet2 = jets[bestjet_id2].p4();
+      // std::cout << "==================" << endl;
+      // std::cout << "Jet1 Pt final: " << matched_vbf_jet1.pt() << endl;
+      // std::cout << "Jet1 dR final: " << bestDR1 << endl;
+      // std::cout << "Jet2 Pt final: " << matched_vbf_jet2.pt() << endl;
+      // std::cout << "Jet2 dR final: " << bestDR2 << endl;
+      // std::cout << "----------------------------------------------------------------" << endl;
       matched_dEta_jj = matched_vbf_jet1.eta()-matched_vbf_jet2.eta();
       matched_dPhi_jj = matched_vbf_jet1.phi()-matched_vbf_jet2.phi();
       matched_m_jj = (matched_vbf_jet1 + matched_vbf_jet2).mass();
       matched_dR_jj = deltaR(matched_vbf_jet1, matched_vbf_jet2);
+      if (matched_vbf_jet1.pt() > matched_vbf_jet2.pt()){
+        matched_pt_lead = matched_vbf_jet1.pt();
+        matched_pt_sublead = matched_vbf_jet2.pt();
+      }
+      else{
+        matched_pt_lead = matched_vbf_jet2.pt();
+        matched_pt_sublead = matched_vbf_jet1.pt();
+      }
     }
 
+
+// New reco particles
     double best_m_jj = -1.;
     double best_dEta_jj = -999;
     double best_dPhi_jj = -999;
     double best_dR_jj = -1;
-    for (std::vector<const RecoJet *>::const_iterator selJetVBF1 =
-             selJetsVBF.begin(); selJetVBF1 != selJetsVBF.end();
-         ++selJetVBF1) {
-        for (std::vector<const RecoJet *>::const_iterator selJetVBF2 =
-               selJetVBF1 + 1; selJetVBF2 != selJetsVBF.end();++selJetVBF2) {
-            double m_jj_ = ((*selJetVBF1)->p4() + (*selJetVBF2)->p4()).mass();
-            double dEta_jj_ = (*selJetVBF1)->eta()-(*selJetVBF2)->eta();
-            double dPhi_jj_ = (*selJetVBF1)->phi()-(*selJetVBF2)->phi();
-            double dR_jj_ = deltaR((*selJetVBF1)->p4(), (*selJetVBF2)->p4());
+
+    double best_pt_lead = -1;
+    double best_pt_sublead = -1;
+
+    for (std::vector<const RecoJet *>::const_iterator selJetVBF1_ =
+             selJetsVBF.begin(); selJetVBF1_ != selJetsVBF.end();
+         ++selJetVBF1_) {
+        for (std::vector<const RecoJet *>::const_iterator selJetVBF2_ =
+               selJetVBF1_ + 1; selJetVBF2_ != selJetsVBF.end();++selJetVBF2_) {
+            double m_jj_ = ((*selJetVBF1_)->p4() + (*selJetVBF2_)->p4()).mass();
+            double dEta_jj_ = (*selJetVBF1_)->eta()-(*selJetVBF2_)->eta();
+            double dPhi_jj_ = (*selJetVBF1_)->phi()-(*selJetVBF2_)->phi();
+            double dR_jj_ = deltaR((*selJetVBF1_)->p4(), (*selJetVBF2_)->p4());
+            double pt1_ = (*selJetVBF1_)->pt();
+            double pt2_ = (*selJetVBF2_)->pt();
                 if (m_jj_ > best_m_jj){
                   best_m_jj = m_jj_;
                   best_dR_jj = dR_jj_;
                   best_dEta_jj = dEta_jj_;
                   best_dPhi_jj = dPhi_jj_;
+                  if (pt1_ > pt2_){
+                    best_pt_lead = pt1_;
+                    best_pt_sublead = pt2_;
+                  }
+                  else{
+                    best_pt_lead = pt2_;
+                    best_pt_sublead = pt1_;
+                  }
+                  // std::cout << "****************" << endl;
+                  // std::cout << "mass in loop: " << best_m_jj << endl;
+                  // std::cout << "d_eta in loop: " << best_dEta_jj << endl;
+                  // best_dPhi_jj = dPhi_jj_;
                 }
         }
     }
+    // std::cout << "//////////////////" << endl;
+    // std::cout << "mass after: " << best_m_jj << endl;
+    // std::cout << "d_eta after: " << best_dEta_jj << endl;
+    // std::cout << "---------------------------------------------------------------------------------------" << endl;
 
     // double best_m_jj = -1.;
     // double best_dEta_jj = -999;
@@ -2333,12 +2405,12 @@ int main(int argc, char *argv[]) {
 
 
 
-    int nJet_vbf = selJetsVBF.size();
+    // int nJet_vbf = selJetsVBF.size();
 
     double vbf_dEta_jj = -999.;
     double vbf_m_jj = -1.;
     double vbf_dR_jj = -1;
-    bool isVBF = false;
+    // bool isVBF = false;
 
     for (std::vector<const RecoJet *>::const_iterator selJetVBF1 =
              selJetsVBF.begin();
@@ -2379,7 +2451,7 @@ int main(int argc, char *argv[]) {
             vbf_m_jj = m_jj;
             vbf_dEta_jj = dEta_jj;
             vbf_dR_jj = dR_jj;
-          isVBF = true;
+          // isVBF = true;
             //std::cout<< (*selJetVBF1)->p4() << " " << (*selJetVBF2)->p4() << std::endl;
 
             // if (dEta_jj < 0.1) {
@@ -2435,8 +2507,8 @@ int main(int argc, char *argv[]) {
     AllVars_Map["vbf_m_jj"] =                        vbf_m_jj;
     AllVars_Map["vbf_dR_jj"] =                        vbf_dR_jj;
     // AllVars_Map["nJet"] = comp_n_jet25_recl(selJets);
-    AllVars_Map["nJet_vbf"] = selJetsVBF.size();
-    AllVars_Map["isVBF"] = isVBF;
+    // AllVars_Map["nJet_vbf"] = selJetsVBF.size();
+    // AllVars_Map["isVBF"] = isVBF;
 
     AllVars_Map["lhe_dEta_jj"] = lhe_dEta_jj;
     AllVars_Map["lhe_dPhi_jj"] = lhe_dPhi_jj;
@@ -2448,10 +2520,17 @@ int main(int argc, char *argv[]) {
     AllVars_Map["matched_m_jj"] = matched_m_jj;
     AllVars_Map["matched_dR_jj"] = matched_dR_jj;
 
-    AllVars_Map["best_m_jj"] = best_m_jj;
     AllVars_Map["best_dEta_jj"] = best_dEta_jj;
     AllVars_Map["best_dPhi_jj"] = best_dPhi_jj;
+    AllVars_Map["best_m_jj"] = best_m_jj;
     AllVars_Map["best_dR_jj"] = best_dR_jj;
+
+    AllVars_Map["lhe_pt_lead"] = lhe_pt_lead;
+    AllVars_Map["lhe_pt_sublead"] = lhe_pt_sublead;
+    AllVars_Map["matched_pt_lead"] = matched_pt_lead;
+    AllVars_Map["matched_pt_sublead"] = matched_pt_sublead;
+    AllVars_Map["best_pt_lead"] = best_pt_lead;
+    AllVars_Map["best_pt_sublead"] = best_pt_sublead;
     // AllVars_Map["nLep"] =                            selLeptons.size();
 
     // std::map<std::string, double> BDTInputs_spin2 =
@@ -2524,12 +2603,15 @@ int main(int argc, char *argv[]) {
         if (!skipFilling) {
           selHistManager->evt_->fillHistograms(
               selElectrons.size(), selMuons.size(), selJets.size(),
-              numSelJetsPtGt40, dihiggsVisMass_sel, dihiggsMass_wMet_sel, vbf_m_jj, vbf_dEta_jj, vbf_dR_jj, evtWeight,
-              nJet_vbf, isVBF, std::min(10., mindr_lep1_jet), std::min(10., mindr_lep2_jet),
-              max_jet_eta, 
+              numSelJetsPtGt40, dihiggsVisMass_sel, dihiggsMass_wMet_sel,
+              vbf_m_jj, vbf_dEta_jj, vbf_dR_jj, 
+              evtWeight,
+              std::min(10., mindr_lep1_jet), std::min(10., mindr_lep2_jet),
+              max_jet_eta,
+              lhe_dEta_jj, lhe_dPhi_jj, lhe_m_jj, lhe_dR_jj, 
               matched_dEta_jj, matched_dPhi_jj, matched_m_jj, matched_dR_jj, 
-              lhe_dEta_jj, lhe_m_jj, lhe_dR_jj, lhe_dPhi_jj,
-              best_m_jj, best_dEta_jj, best_dPhi_jj, best_dR_jj);
+              best_dEta_jj, best_dPhi_jj, best_m_jj, best_dR_jj,
+              lhe_pt_lead, lhe_pt_sublead, matched_pt_lead, matched_pt_sublead, best_pt_lead, best_pt_sublead);
         }
         // selHistManager->datacard_->fillHistograms(
         //          BDTOutput_Map_spin2,
@@ -2626,27 +2708,32 @@ int main(int argc, char *argv[]) {
           ("vbf_m_jj",                vbf_m_jj)
           ("vbf_dEta_jj",             vbf_dEta_jj)
           ("vbf_dR_jj",               vbf_dR_jj)
-          ("nJet_vbf",                selJetsVBF.size())
-          ("isVBF",                   isVBF)
           ("evtWeight",               evtWeight_BDT)
           ("mindr_lep1_jet",          std::min(10., mindr_lep1_jet))
           ("mindr_lep2_jet",          std::min(10., mindr_lep2_jet))
           ("max_jet_eta",             comp_maxAbsEta_jet(selJetsVBF))
-
-          ("matched_dEta_jj",            matched_dEta_jj)
-          ("matched_dPhi_jj",            matched_dPhi_jj)
-          ("matched_m_jj",               matched_m_jj)
-          ("matched_dR_jj",              matched_dR_jj)
 
           ("lhe_dEta_jj",             lhe_dEta_jj)
           ("lhe_dPhi_jj",             lhe_dPhi_jj)
           ("lhe_m_jj",                lhe_m_jj)
           ("lhe_dR_jj",               lhe_dR_jj)
 
-          ("best_m_jj",               best_m_jj)
+          ("matched_dEta_jj",            matched_dEta_jj)
+          ("matched_dPhi_jj",            matched_dPhi_jj)
+          ("matched_m_jj",               matched_m_jj)
+          ("matched_dR_jj",              matched_dR_jj)
+
           ("best_dEta_jj",            best_dEta_jj)
+          ("best_m_jj",               best_m_jj)
           ("best_dPhi_jj",            best_dPhi_jj)
           ("best_dR_jj",              best_dR_jj)
+
+          ("lhe_pt_lead",              lhe_pt_lead)
+          ("lhe_pt_sublead",           lhe_pt_sublead)
+          ("matched_pt_lead",              matched_pt_lead)
+          ("matched_pt_sublead",              matched_pt_sublead)
+          ("best_pt_lead",              best_pt_lead)
+          ("best_pt_sublead",              best_pt_sublead)
           (weightMapHH)
         .fill();
     }

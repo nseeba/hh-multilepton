@@ -24,13 +24,13 @@ public:
   void fillHistograms(int numElectrons, int numMuons, int numJets,
                       int numJetsPtGt40, double dihiggsVisMass,
                       double dihiggsMass_wMet, double vbf_m_jj,
-                      double vbf_dEta_jj, double vbf_dR_jj, double evtWeight
-                      , int nJet_vbf, int isVBF,
+                      double vbf_dEta_jj, double vbf_dR_jj, double evtWeight,
                       double mindr_lep1_jet, double mindr_lep2_jet,
                       double max_jet_eta,
-                      double matched_dEta_jj, double matched_m_jj, double matched_dR_jj, double matched_dPhi_jj,
-                      double lhe_dEta_jj, double lhe_m_jj, double lhe_dR_jj, double lhe_dPhi_jj,
-                      double best_m_jj, double best_dEta_jj, double best_dR_jj, double best_dPhi_jj
+                      double lhe_dEta_jj, double lhe_dPhi_jj, double lhe_m_jj, double lhe_dR_jj, 
+                      double matched_dEta_jj, double matched_dPhi_jj, double matched_m_jj, double matched_dR_jj,
+                      double best_dEta_jj, double best_dPhi_jj, double best_m_jj, double best_dR_jj,
+                      double lhe_pt_lead, double lhe_pt_sublead, double matched_pt_lead, double matched_pt_sublead, double best_pt_lead, double best_pt_sublead
                       );
 
   const TH1 *getHistogram_EventCounter() const;
@@ -46,26 +46,31 @@ private:
   TH1 *histogram_vbf_dEta_jj_;
   TH1 *histogram_vbf_dR_jj_;
   TH1 *histogram_EventCounter_;
-  TH1 *histogram_nJet_vbf_;
-  TH1 *histogram_isVBF_;
   TH1 *histogram_mindr_lep1_jet_;
   TH1 *histogram_mindr_lep2_jet_;
   TH1 *histogram_max_jet_eta_;
-
-  TH1 *histogram_matched_dEta_jj_;
-  TH1 *histogram_matched_dPhi_jj_;
-  TH1 *histogram_matched_m_jj_;
-  TH1 *histogram_matched_dR_jj_;
 
   TH1 *histogram_lhe_dEta_jj_;
   TH1 *histogram_lhe_dPhi_jj_;
   TH1 *histogram_lhe_m_jj_;
   TH1 *histogram_lhe_dR_jj_;
 
-  TH1 *histogram_best_m_jj_;
+  TH1 *histogram_matched_dEta_jj_;
+  TH1 *histogram_matched_dPhi_jj_;
+  TH1 *histogram_matched_m_jj_;
+  TH1 *histogram_matched_dR_jj_;
+
   TH1 *histogram_best_dEta_jj_;
   TH1 *histogram_best_dPhi_jj_;
+  TH1 *histogram_best_m_jj_;
   TH1 *histogram_best_dR_jj_;
+
+  TH1 *histogram_lhe_pt_lead_;
+  TH1 *histogram_lhe_pt_sublead_;
+  TH1 *histogram_matched_pt_lead_;
+  TH1 *histogram_matched_pt_sublead_;
+  TH1 *histogram_best_pt_lead_;
+  TH1 *histogram_best_pt_sublead_;
 };
 
 #endif

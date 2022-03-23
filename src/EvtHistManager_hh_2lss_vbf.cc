@@ -21,20 +21,27 @@ EvtHistManager_hh_2lss_vbf::EvtHistManager_hh_2lss_vbf(
   central_or_shiftOptions_["mindr_lep2_jet"] = { "central" };
   central_or_shiftOptions_["max_jet_eta"] = { "central" };
 
-  central_or_shiftOptions_["matched_dEta_jj"] = { "central" };
-  central_or_shiftOptions_["matched_m_jj"] = { "central" };
-  central_or_shiftOptions_["matched_dR_jj"] = { "central" };
-  central_or_shiftOptions_["matched_dPhi_jj"] = { "central" };
-
   central_or_shiftOptions_["lhe_dEta_jj"] = { "central" };
+  central_or_shiftOptions_["lhe_dPhi_jj"] = { "central" };
   central_or_shiftOptions_["lhe_m_jj"] = { "central" };
   central_or_shiftOptions_["lhe_dR_jj"] = { "central" };
-  central_or_shiftOptions_["lhe_dPhi_jj"] = { "central" };
 
-  central_or_shiftOptions_["best_m_jj"] = { "central" };
+  central_or_shiftOptions_["matched_dEta_jj"] = { "central" };
+  central_or_shiftOptions_["matched_dPhi_jj"] = { "central" };
+  central_or_shiftOptions_["matched_m_jj"] = { "central" };
+  central_or_shiftOptions_["matched_dR_jj"] = { "central" };
+
   central_or_shiftOptions_["best_dEta_jj"] = { "central" };
-  central_or_shiftOptions_["best_dR_jj"] = { "central" };
   central_or_shiftOptions_["best_dPhi_jj"] = { "central" };
+  central_or_shiftOptions_["best_m_jj"] = { "central" };
+  central_or_shiftOptions_["best_dR_jj"] = { "central" };
+
+  central_or_shiftOptions_["lhe_pt_lead"] = { "central" };
+  central_or_shiftOptions_["lhe_pt_sublead"] = { "central" };
+  central_or_shiftOptions_["matched_pt_lead"] = { "central" };
+  central_or_shiftOptions_["matched_pt_sublead"] = { "central" };
+  central_or_shiftOptions_["best_pt_lead"] = { "central" };
+  central_or_shiftOptions_["best_pt_sublead"] = { "central" };
 }
 
 const TH1 *EvtHistManager_hh_2lss_vbf::getHistogram_EventCounter() const {
@@ -58,56 +65,66 @@ void EvtHistManager_hh_2lss_vbf::bookHistograms(TFileDirectory &dir) {
       dir, "vbf_m_jj", "vbf_m_jj", 250, 0., 5000);
   histogram_vbf_dEta_jj_ = book1D(
       dir, "vbf_dEta_jj", "vbf_dEta_jj", 50, -10.,10);
-  histogram_vbf_dEta_jj_ = book1D(
+  histogram_vbf_dR_jj_ = book1D(
       dir, "vbf_dR_jj", "vbf_dR_jj", 100, 0.,10);
   histogram_EventCounter_ = book1D(
       dir, "EventCounter", "EventCounter", 1, -0.5, +0.5);
-  histogram_nJet_vbf_ = book1D(
-      dir, "nJet_vbf", "nJet_vbf", 20, -0.5, +19.5);
-  histogram_isVBF_ = book1D(
-      dir, "isVBF", "isVBF", 20, -0.5, +19.5);
   histogram_mindr_lep1_jet_   = book1D(dir, "mindr_lep1_jet",   "mindr_lep1_jet",   100, 0,   7);
   histogram_mindr_lep2_jet_   = book1D(dir, "mindr_lep2_jet",   "mindr_lep2_jet",   100, 0,   7);
   histogram_max_jet_eta_      = book1D(dir, "max_jet_eta",      "max_jet_eta",      100, 0, 5);
 
-  histogram_matched_dEta_jj_ = book1D(
-      dir, "matched_dEta_jj", "matched_dEta_jj", 50, -10.,10);
-  histogram_matched_m_jj_ = book1D(
-      dir, "matched_m_jj", "matched_m_jj", 250, 0., 5000);
-  histogram_matched_dR_jj_ = book1D(
-      dir, "matched_dR_jj", "matched_dR_jj", 100, 0., 10);
-  histogram_matched_dPhi_jj_ = book1D(
-      dir, "matched_dPhi_jj", "matched_dPhi_jj", 50, -10.,10);
-
   histogram_lhe_dEta_jj_ = book1D(
       dir, "lhe_dEta_jj", "lhe_dEta_jj", 50, -10.,10);
+  histogram_lhe_dPhi_jj_ = book1D(
+      dir, "lhe_dPhi_jj", "lhe_dPhi_jj", 50, -10.,10);
   histogram_lhe_m_jj_ = book1D(
       dir, "lhe_m_jj", "lhe_m_jj", 250, 0., 5000);
   histogram_lhe_dR_jj_ = book1D(
       dir, "lhe_dR_jj", "lhe_dR_jj", 100, 0., 10);
-  histogram_lhe_dPhi_jj_ = book1D(
-      dir, "lhe_dPhi_jj", "lhe_dPhi_jj", 50, -10.,10);
+
+  histogram_matched_dEta_jj_ = book1D(
+      dir, "matched_dEta_jj", "matched_dEta_jj", 50, -10.,10);
+  histogram_matched_dPhi_jj_ = book1D(
+      dir, "matched_dPhi_jj", "matched_dPhi_jj", 50, -10.,10);
+  histogram_matched_m_jj_ = book1D(
+      dir, "matched_m_jj", "matched_m_jj", 250, 0., 5000);
+  histogram_matched_dR_jj_ = book1D(
+      dir, "matched_dR_jj", "matched_dR_jj", 100, 0., 10);
 
   histogram_best_dEta_jj_ = book1D(
       dir, "best_dEta_jj", "best_dEta_jj", 50, -10.,10);
+  histogram_best_dPhi_jj_ = book1D(
+      dir, "best_dPhi_jj", "best_dPhi_jj", 50, -10.,10);
   histogram_best_m_jj_ = book1D(
       dir, "best_m_jj", "best_m_jj", 250, 0., 5000);
   histogram_best_dR_jj_ = book1D(
       dir, "best_dR_jj", "best_dR_jj", 100, 0., 10);
-  histogram_best_dPhi_jj_ = book1D(
-      dir, "best_dPhi_jj", "best_dPhi_jj", 50, -10.,10);
+
+
+  histogram_lhe_pt_lead_ = book1D(
+      dir, "lhe_pt_lead", "lhe_pt_lead", 100, 0., 1000);
+  histogram_lhe_pt_sublead_ = book1D(
+      dir, "lhe_pt_sublead", "lhe_pt_sublead", 100, 0., 1000);
+  histogram_matched_pt_lead_ = book1D(
+      dir, "matched_pt_lead", "matched_pt_lead", 100, 0., 1000);
+  histogram_matched_pt_sublead_ = book1D(
+      dir, "matched_pt_sublead", "matched_pt_sublead", 100, 0., 1000);
+  histogram_best_pt_lead_ = book1D(
+      dir, "best_pt_lead", "best_pt_lead", 100, 0., 1000);
+  histogram_best_pt_sublead_ = book1D(
+      dir, "best_pt_sublead", "best_pt_sublead", 100, 0., 1000);
 }
 
 void EvtHistManager_hh_2lss_vbf::fillHistograms(
     int numElectrons, int numMuons, int numJets, int numJetsPtGt40,
     double dihiggsVisMass, double dihiggsMass_wMet, double vbf_m_jj,
-    double vbf_dEta_jj, double vbf_dR_jj, double evtWeight
-    , int nJet_vbf, int isVBF,
+    double vbf_dEta_jj, double vbf_dR_jj, double evtWeight,
     double mindr_lep1_jet, double mindr_lep2_jet,
-    double max_jet_eta, 
-    double matched_dEta_jj, double matched_m_jj, double matched_dR_jj, double matched_dPhi_jj,
-    double lhe_dEta_jj, double lhe_m_jj, double lhe_dR_jj, double lhe_dPhi_jj,
-    double best_m_jj, double best_dEta_jj, double best_dR_jj, double best_dPhi_jj
+    double max_jet_eta,
+    double lhe_dEta_jj, double lhe_dPhi_jj, double lhe_m_jj, double lhe_dR_jj,
+    double matched_dEta_jj, double matched_dPhi_jj, double matched_m_jj, double matched_dR_jj,
+    double best_dEta_jj, double best_dPhi_jj, double best_m_jj, double best_dR_jj,
+    double lhe_pt_lead, double lhe_pt_sublead, double matched_pt_lead, double matched_pt_sublead, double best_pt_lead, double best_pt_sublead
     )
 
 {
@@ -122,27 +139,29 @@ void EvtHistManager_hh_2lss_vbf::fillHistograms(
                    evtWeightErr);
   fillWithOverFlow(histogram_dihiggsMass_wMet_, dihiggsMass_wMet,
                    evtWeight, evtWeightErr);
+
   fillWithOverFlow(histogram_vbf_m_jj_, vbf_m_jj,
                    evtWeight, evtWeightErr);
-  if(vbf_dEta_jj>-999){
   fillWithOverFlow(histogram_vbf_dEta_jj_, vbf_dEta_jj,
                    evtWeight, evtWeightErr);
-  }
-  if(vbf_dR_jj>0){
-    fillWithOverFlow(histogram_vbf_dR_jj_, vbf_dR_jj,
+  fillWithOverFlow(histogram_vbf_dR_jj_, vbf_dR_jj,
                      evtWeight, evtWeightErr);
-  }
   fillWithOverFlow(histogram_EventCounter_, 0., evtWeight, evtWeightErr);
-  fillWithOverFlow(histogram_nJet_vbf_, nJet_vbf,
-                   evtWeight, evtWeightErr);
-  fillWithOverFlow(histogram_isVBF_, isVBF,
-                   evtWeight, evtWeightErr);
+
   fillWithOverFlow(histogram_mindr_lep1_jet_,   mindr_lep1_jet,   evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_mindr_lep2_jet_,   mindr_lep2_jet,   evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_max_jet_eta_,      max_jet_eta,      evtWeight, evtWeightErr);
 
+  fillWithOverFlow(histogram_lhe_dEta_jj_,      lhe_dEta_jj,      evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_lhe_dPhi_jj_,      lhe_dPhi_jj,      evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_lhe_m_jj_,         lhe_m_jj,         evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_lhe_dR_jj_,        lhe_dR_jj,        evtWeight, evtWeightErr);
+
   if(matched_dEta_jj>-999){
       fillWithOverFlow(histogram_matched_dEta_jj_,     matched_dEta_jj,     evtWeight, evtWeightErr);
+  }
+  if(matched_dPhi_jj>-999){
+      fillWithOverFlow(histogram_matched_dPhi_jj_,     matched_dPhi_jj,     evtWeight, evtWeightErr);
   }
   if(matched_m_jj>0){
       fillWithOverFlow(histogram_matched_m_jj_,        matched_m_jj,        evtWeight, evtWeightErr);
@@ -150,25 +169,37 @@ void EvtHistManager_hh_2lss_vbf::fillHistograms(
   if(matched_dR_jj>0){
       fillWithOverFlow(histogram_matched_dR_jj_,       matched_dR_jj,       evtWeight, evtWeightErr);
   }
-  if(matched_dPhi_jj>-999){
-      fillWithOverFlow(histogram_matched_dPhi_jj_,     matched_dPhi_jj,     evtWeight, evtWeightErr);
-  }
-
-  fillWithOverFlow(histogram_lhe_dEta_jj_,      lhe_dEta_jj,      evtWeight, evtWeightErr);
-  fillWithOverFlow(histogram_lhe_dPhi_jj_,      lhe_dPhi_jj,      evtWeight, evtWeightErr);
-  fillWithOverFlow(histogram_lhe_m_jj_,         lhe_m_jj,         evtWeight, evtWeightErr);
-  fillWithOverFlow(histogram_lhe_dR_jj_,        lhe_dR_jj,        evtWeight, evtWeightErr);
 
   if(best_dEta_jj>-999){
-    fillWithOverFlow(histogram_best_dEta_jj_,      best_dEta_jj,      evtWeight, evtWeightErr);
-  }
-  if(best_m_jj>0){
-    fillWithOverFlow(histogram_best_m_jj_,         best_m_jj,         evtWeight, evtWeightErr);
-  }
-  if(best_dR_jj>0){
-    fillWithOverFlow(histogram_best_dR_jj_,        best_dR_jj,        evtWeight, evtWeightErr);
+      fillWithOverFlow(histogram_best_dEta_jj_,      best_dEta_jj,      evtWeight, evtWeightErr);
   }
   if(best_dPhi_jj>-999){
-    fillWithOverFlow(histogram_best_dPhi_jj_,      best_dPhi_jj,      evtWeight, evtWeightErr);
+      fillWithOverFlow(histogram_best_dPhi_jj_,      best_dPhi_jj,      evtWeight, evtWeightErr);
   }
+  if(best_m_jj>0){
+      fillWithOverFlow(histogram_best_m_jj_,         best_m_jj,         evtWeight, evtWeightErr);
+  }
+  if(best_dR_jj>0){
+      fillWithOverFlow(histogram_best_dR_jj_,        best_dR_jj,        evtWeight, evtWeightErr);
+  }
+
+  if(lhe_pt_lead>0){
+      fillWithOverFlow(histogram_lhe_pt_lead_,        lhe_pt_lead,        evtWeight, evtWeightErr);
+  }
+  if(lhe_pt_sublead>0){
+      fillWithOverFlow(histogram_lhe_pt_sublead_,        lhe_pt_sublead,        evtWeight, evtWeightErr);
+  }
+  if(matched_pt_lead>0){
+      fillWithOverFlow(histogram_matched_pt_lead_,        matched_pt_lead,        evtWeight, evtWeightErr);
+  }
+  if(matched_pt_sublead>0){
+      fillWithOverFlow(histogram_matched_pt_sublead_,        matched_pt_sublead,        evtWeight, evtWeightErr);
+  }
+  if(best_pt_lead>0){
+      fillWithOverFlow(histogram_best_pt_lead_,        best_pt_lead,        evtWeight, evtWeightErr);
+  }
+  if(best_pt_sublead>0){
+      fillWithOverFlow(histogram_best_pt_sublead_,        best_pt_sublead,        evtWeight, evtWeightErr);
+  }
+
 }
