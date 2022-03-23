@@ -2278,26 +2278,16 @@ int main(int argc, char *argv[]) {
 
     math::PtEtaPhiMLorentzVector matched_vbf_jet1;
     math::PtEtaPhiMLorentzVector matched_vbf_jet2;
-    // double dR1 = -1;
-    // double dR2 = -1;
     double bestDR1 = 100000;
     double bestDR2 = 100000;
     int bestjet_id1 = 0;
     int bestjet_id2 = 0;
     for (size_t j=0; j < jets.size(); j++){
       double dR1 = deltaR(lheParticles[2], jets[j].p4());
-      // double dR2 = deltaR(lheParticles[3], selJetsVBF[j]->p4());
           if (dR1 < bestDR1){
               bestDR1 = dR1;
               bestjet_id1 = j;
-              // std::cout << "****************" << endl;
-              // std::cout << "Jet1 Pt in loop: " << jets[j].pt() << endl;
-              // std::cout << "Jet1 dR in loop: " << bestDR1 << endl;
           }
-          // if (dR2 < bestDR2){
-          //     bestDR2 = dR2;
-          //     bestjet_id2 = j;
-          // }
     }
 
     for (int j=0; j < static_cast<int>(jets.size()); j++){
@@ -2305,22 +2295,12 @@ int main(int argc, char *argv[]) {
           if (dR2 < bestDR2 and j != bestjet_id1){
               bestDR2 = dR2;
               bestjet_id2 = j;
-              // std::cout << "////////////////" << endl;
-              // std::cout << "Jet2 Pt in loop: " << jets[j].pt() << endl;
-              // std::cout << "Jet2 dR in loop: " << bestDR2 << endl;
           }
     }
 
     if (bestDR1<0.3 and bestDR2<0.3){
-    // if (bestjet_id1 != bestjet_id2 and bestDR1<0.3 and bestDR2<0.3){
       matched_vbf_jet1 = jets[bestjet_id1].p4();
       matched_vbf_jet2 = jets[bestjet_id2].p4();
-      // std::cout << "==================" << endl;
-      // std::cout << "Jet1 Pt final: " << matched_vbf_jet1.pt() << endl;
-      // std::cout << "Jet1 dR final: " << bestDR1 << endl;
-      // std::cout << "Jet2 Pt final: " << matched_vbf_jet2.pt() << endl;
-      // std::cout << "Jet2 dR final: " << bestDR2 << endl;
-      // std::cout << "----------------------------------------------------------------" << endl;
       matched_dEta_jj = matched_vbf_jet1.eta()-matched_vbf_jet2.eta();
       matched_dPhi_jj = matched_vbf_jet1.phi()-matched_vbf_jet2.phi();
       matched_m_jj = (matched_vbf_jet1 + matched_vbf_jet2).mass();
@@ -2369,41 +2349,12 @@ int main(int argc, char *argv[]) {
                     best_pt_lead = pt2_;
                     best_pt_sublead = pt1_;
                   }
-                  // std::cout << "****************" << endl;
-                  // std::cout << "mass in loop: " << best_m_jj << endl;
-                  // std::cout << "d_eta in loop: " << best_dEta_jj << endl;
-                  // best_dPhi_jj = dPhi_jj_;
                 }
         }
     }
-    // std::cout << "//////////////////" << endl;
-    // std::cout << "mass after: " << best_m_jj << endl;
-    // std::cout << "d_eta after: " << best_dEta_jj << endl;
-    // std::cout << "---------------------------------------------------------------------------------------" << endl;
-
-    // double best_m_jj = -1.;
-    // double best_dEta_jj = -999;
-    // double best_dR_jj = -1;
-    // for (std::vector<const RecoJet *>::const_iterator selJetVBF1 =
-    //          selJetsVBF.begin(); selJetVBF1 != selJetsVBF.end();
-    //      ++selJetVBF1) {
-    //     for (std::vector<const RecoJet *>::const_iterator selJetVBF2 =
-    //            selJetVBF1 + 1; selJetVBF2 != selJetsVBF.end();++selJetVBF2) {
-    //         if ((*selJetVBF1)->eta() > 2.3) {
-    //            double m_jj_ = ((*selJetVBF1)->p4() + (*selJetVBF2)->p4()).mass();
-    //            double dEta_jj_ = (*selJetVBF1)->eta()-(*selJetVBF2)->eta();
-    //            double dR_jj_ = deltaR((*selJetVBF1)->p4(), (*selJetVBF2)->p4());
-    //                 if (m_jj_ > best_m_jj){
-    //                   best_m_jj = m_jj_;
-    //                   best_dR_jj = dR_jj_;
-    //                   best_dEta_jj = dEta_jj_;
-    //                 }
-    //         }
-    //     }
-    // }
 
 
-
+//Older stuff below
 
     // int nJet_vbf = selJetsVBF.size();
 
