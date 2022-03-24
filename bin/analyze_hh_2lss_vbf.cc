@@ -1951,7 +1951,7 @@ int main(int argc, char *argv[]) {
                                 // if condition is satisfied
       }
     }
-// ########################################################################################################################################################################################
+
     math::PtEtaPhiMLorentzVector selJet1P4;
     math::PtEtaPhiMLorentzVector selJet2P4;
     math::PtEtaPhiMLorentzVector selJet3P4;
@@ -2250,23 +2250,32 @@ int main(int argc, char *argv[]) {
     // metP4).pt(); double Smin_llMEt = comp_Smin(llP4, metP4.px(), metP4.py());
 
 
+
 // LHE particles
-    double lhe_dEta_jj = lheParticles[2].eta()-lheParticles[3].eta();
-    double lhe_dPhi_jj = lheParticles[2].phi()-lheParticles[3].phi();
-    double lhe_m_jj = (lheParticles[2].p4() + lheParticles[3].p4()).mass();
-    double lhe_dR_jj = deltaR(lheParticles[2], lheParticles[3]);
-    double lhe_pt_lead = -1;
-    double lhe_pt_sublead = -1;
-    if (lheParticles[2].pt() > lheParticles[3].pt()){
-      lhe_pt_lead = lheParticles[2].pt();
-      lhe_pt_sublead = lheParticles[3].pt();
-    }
-    else{
-      lhe_pt_lead = lheParticles[3].pt();
-      lhe_pt_sublead = lheParticles[2].pt();
+        double lhe_dEta_jj = -999;
+        double lhe_dPhi_jj = -999;
+        double lhe_m_jj = -1;
+        double lhe_dR_jj = -1;
+        double lhe_pt_lead = -1;
+        double lhe_pt_sublead = -1;
+
+    if (std::abs(lheParticles[2].eta()) < 4.7 and std::abs(lheParticles[3].eta()) < 4.7
+      and lheParticles[2].pt() > 20 and lheParticles[3].pt() > 20){
+        lhe_dEta_jj = lheParticles[2].eta()-lheParticles[3].eta();
+        lhe_dPhi_jj = lheParticles[2].phi()-lheParticles[3].phi();
+        lhe_m_jj = (lheParticles[2].p4() + lheParticles[3].p4()).mass();
+        lhe_dR_jj = deltaR(lheParticles[2], lheParticles[3]);
+        if (lheParticles[2].pt() > lheParticles[3].pt()){
+          lhe_pt_lead = lheParticles[2].pt();
+          lhe_pt_sublead = lheParticles[3].pt();
+        }
+        else{
+          lhe_pt_lead = lheParticles[3].pt();
+          lhe_pt_sublead = lheParticles[2].pt();
+        }
     }
 
-
+// ################################################################################################################################################################################
 // Matched particles
     double matched_dEta_jj = -999;
     double matched_dPhi_jj = -999;
@@ -2282,16 +2291,16 @@ int main(int argc, char *argv[]) {
     double bestDR2 = 100000;
     int bestjet_id1 = 0;
     int bestjet_id2 = 0;
-    for (size_t j=0; j < jets.size(); j++){
-      double dR1 = deltaR(lheParticles[2], jets[j].p4());
+    for (size_t j=0; j < selJetsVBF.size(); j++){
+      double dR1 = deltaR(lheParticles[2], selJetsVBF[j]->p4());
           if (dR1 < bestDR1){
               bestDR1 = dR1;
               bestjet_id1 = j;
           }
     }
 
-    for (int j=0; j < static_cast<int>(jets.size()); j++){
-      double dR2 = deltaR(lheParticles[3], jets[j].p4());
+    for (int j=0; j < static_cast<int>(selJetsVBF.size()); j++){
+      double dR2 = deltaR(lheParticles[3], selJetsVBF[j]->p4());
           if (dR2 < bestDR2 and j != bestjet_id1){
               bestDR2 = dR2;
               bestjet_id2 = j;
@@ -2299,21 +2308,24 @@ int main(int argc, char *argv[]) {
     }
 
     if (bestDR1<0.3 and bestDR2<0.3){
-      matched_vbf_jet1 = jets[bestjet_id1].p4();
-      matched_vbf_jet2 = jets[bestjet_id2].p4();
-      matched_dEta_jj = matched_vbf_jet1.eta()-matched_vbf_jet2.eta();
-      matched_dPhi_jj = matched_vbf_jet1.phi()-matched_vbf_jet2.phi();
-      matched_m_jj = (matched_vbf_jet1 + matched_vbf_jet2).mass();
-      matched_dR_jj = deltaR(matched_vbf_jet1, matched_vbf_jet2);
-      if (matched_vbf_jet1.pt() > matched_vbf_jet2.pt()){
-        matched_pt_lead = matched_vbf_jet1.pt();
-        matched_pt_sublead = matched_vbf_jet2.pt();
+      matched_vbf_jet1 = selJetsVBF[bestjet_id1]->p4();
+      matched_vbf_jet2 = selJetsVBF[bestjet_id2]->p4();
+      if (std::abs(matched_vbf_jet1.eta()) < 4.7 and std::abs(matched_vbf_jet2.eta()) < 4.7
+        and matched_vbf_jet1.pt() > 20 and matched_vbf_jet2.pt() > 20){
+          matched_dEta_jj = matched_vbf_jet1.eta()-matched_vbf_jet2.eta();
+          matched_dPhi_jj = matched_vbf_jet1.phi()-matched_vbf_jet2.phi();
+          matched_m_jj = (matched_vbf_jet1 + matched_vbf_jet2).mass();
+          matched_dR_jj = deltaR(matched_vbf_jet1, matched_vbf_jet2);
+          if (matched_vbf_jet1.pt() > matched_vbf_jet2.pt()){
+            matched_pt_lead = matched_vbf_jet1.pt();
+            matched_pt_sublead = matched_vbf_jet2.pt();
+          }
+          else{
+            matched_pt_lead = matched_vbf_jet2.pt();
+            matched_pt_sublead = matched_vbf_jet1.pt();
+          }
       }
-      else{
-        matched_pt_lead = matched_vbf_jet2.pt();
-        matched_pt_sublead = matched_vbf_jet1.pt();
-      }
-    }
+  }
 
 
 // New reco particles
@@ -2336,7 +2348,8 @@ int main(int argc, char *argv[]) {
             double dR_jj_ = deltaR((*selJetVBF1_)->p4(), (*selJetVBF2_)->p4());
             double pt1_ = (*selJetVBF1_)->pt();
             double pt2_ = (*selJetVBF2_)->pt();
-                if (m_jj_ > best_m_jj){
+                if (m_jj_ > best_m_jj and std::abs((*selJetVBF1_)->eta()) < 4.7 and 
+                  std::abs((*selJetVBF2_)->eta()) < 4.7 and pt1_ > 20 and pt2_ > 20){
                   best_m_jj = m_jj_;
                   best_dR_jj = dR_jj_;
                   best_dEta_jj = dEta_jj_;

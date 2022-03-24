@@ -152,10 +152,18 @@ void EvtHistManager_hh_2lss_vbf::fillHistograms(
   fillWithOverFlow(histogram_mindr_lep2_jet_,   mindr_lep2_jet,   evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_max_jet_eta_,      max_jet_eta,      evtWeight, evtWeightErr);
 
+  if(lhe_dEta_jj>-999){
   fillWithOverFlow(histogram_lhe_dEta_jj_,      lhe_dEta_jj,      evtWeight, evtWeightErr);
+  }
+  if(lhe_dPhi_jj>-999){
   fillWithOverFlow(histogram_lhe_dPhi_jj_,      lhe_dPhi_jj,      evtWeight, evtWeightErr);
+  }
+  if(lhe_m_jj>0){
   fillWithOverFlow(histogram_lhe_m_jj_,         lhe_m_jj,         evtWeight, evtWeightErr);
+  }
+  if(lhe_dR_jj>0){
   fillWithOverFlow(histogram_lhe_dR_jj_,        lhe_dR_jj,        evtWeight, evtWeightErr);
+  }
 
   if(matched_dEta_jj>-999){
       fillWithOverFlow(histogram_matched_dEta_jj_,     matched_dEta_jj,     evtWeight, evtWeightErr);
