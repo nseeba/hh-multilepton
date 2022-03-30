@@ -42,6 +42,15 @@ EvtHistManager_hh_2lss_vbf::EvtHistManager_hh_2lss_vbf(
   central_or_shiftOptions_["matched_pt_sublead"] = { "central" };
   central_or_shiftOptions_["best_pt_lead"] = { "central" };
   central_or_shiftOptions_["best_pt_sublead"] = { "central" };
+
+  central_or_shiftOptions_["genjet_dEta_jj"] = { "central" };
+  central_or_shiftOptions_["genjet_dPhi_jj"] = { "central" };
+  central_or_shiftOptions_["genjet_m_jj"] = { "central" };
+  central_or_shiftOptions_["genjet_dR_jj"] = { "central" };
+
+  central_or_shiftOptions_["mass_jj_W"] = { "central" };
+  central_or_shiftOptions_["mass_jj_W2"] = { "central" };
+  central_or_shiftOptions_["sum_mass_W"] = { "central" };
 }
 
 const TH1 *EvtHistManager_hh_2lss_vbf::getHistogram_EventCounter() const {
@@ -113,6 +122,23 @@ void EvtHistManager_hh_2lss_vbf::bookHistograms(TFileDirectory &dir) {
       dir, "best_pt_lead", "best_pt_lead", 100, 0., 1000);
   histogram_best_pt_sublead_ = book1D(
       dir, "best_pt_sublead", "best_pt_sublead", 100, 0., 1000);
+
+
+  histogram_genjet_dEta_jj_ = book1D(
+      dir, "genjet_dEta_jj", "genjet_dEta_jj", 50, -10.,10);
+  histogram_genjet_dPhi_jj_ = book1D(
+      dir, "genjet_dPhi_jj", "genjet_dPhi_jj", 50, -10.,10);
+  histogram_genjet_m_jj_ = book1D(
+      dir, "genjet_m_jj", "genjet_m_jj", 250, 0., 5000);
+  histogram_genjet_dR_jj_ = book1D(
+      dir, "genjet_dR_jj", "genjet_dR_jj", 100, 0., 10);
+
+  histogram_mass_jj_W_ = book1D(
+      dir, "mass_jj_W", "mass_jj_W", 50, 0., 150);
+  histogram_mass_jj_W2_ = book1D(
+      dir, "mass_jj_W2", "mass_jj_W2", 50, 0., 150);
+  histogram_sum_mass_W_ = book1D(
+      dir, "sum_mass_W", "sum_mass_W", 50, 0., 300);
 }
 
 void EvtHistManager_hh_2lss_vbf::fillHistograms(
@@ -124,7 +150,9 @@ void EvtHistManager_hh_2lss_vbf::fillHistograms(
     double lhe_dEta_jj, double lhe_dPhi_jj, double lhe_m_jj, double lhe_dR_jj,
     double matched_dEta_jj, double matched_dPhi_jj, double matched_m_jj, double matched_dR_jj,
     double best_dEta_jj, double best_dPhi_jj, double best_m_jj, double best_dR_jj,
-    double lhe_pt_lead, double lhe_pt_sublead, double matched_pt_lead, double matched_pt_sublead, double best_pt_lead, double best_pt_sublead
+    double lhe_pt_lead, double lhe_pt_sublead, double matched_pt_lead, double matched_pt_sublead, double best_pt_lead, double best_pt_sublead,
+    double genjet_dEta_jj, double genjet_dPhi_jj, double genjet_m_jj, double genjet_dR_jj,
+    double mass_jj_W, double mass_jj_W2, double sum_mass_W
     )
 
 {
@@ -210,4 +238,26 @@ void EvtHistManager_hh_2lss_vbf::fillHistograms(
       fillWithOverFlow(histogram_best_pt_sublead_,        best_pt_sublead,        evtWeight, evtWeightErr);
   }
 
+  if(genjet_dEta_jj>-999){
+      fillWithOverFlow(histogram_genjet_dEta_jj_,     genjet_dEta_jj,     evtWeight, evtWeightErr);
+  }
+  if(genjet_dPhi_jj>-999){
+      fillWithOverFlow(histogram_genjet_dPhi_jj_,     genjet_dPhi_jj,     evtWeight, evtWeightErr);
+  }
+  if(genjet_m_jj>0){
+      fillWithOverFlow(histogram_genjet_m_jj_,        genjet_m_jj,        evtWeight, evtWeightErr);
+  }
+  if(genjet_dR_jj>0){
+      fillWithOverFlow(histogram_genjet_dR_jj_,       genjet_dR_jj,       evtWeight, evtWeightErr);
+  }
+
+  if(mass_jj_W>0){
+      fillWithOverFlow(histogram_mass_jj_W_,       mass_jj_W,       evtWeight, evtWeightErr);
+  }
+  if(mass_jj_W2>0){
+      fillWithOverFlow(histogram_mass_jj_W2_,       mass_jj_W2,       evtWeight, evtWeightErr);
+  }
+  if(sum_mass_W>0){
+      fillWithOverFlow(histogram_sum_mass_W_,       sum_mass_W,       evtWeight, evtWeightErr);
+  }
 }

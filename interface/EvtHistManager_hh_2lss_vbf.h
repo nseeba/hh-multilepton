@@ -30,7 +30,9 @@ public:
                       double lhe_dEta_jj, double lhe_dPhi_jj, double lhe_m_jj, double lhe_dR_jj, 
                       double matched_dEta_jj, double matched_dPhi_jj, double matched_m_jj, double matched_dR_jj,
                       double best_dEta_jj, double best_dPhi_jj, double best_m_jj, double best_dR_jj,
-                      double lhe_pt_lead, double lhe_pt_sublead, double matched_pt_lead, double matched_pt_sublead, double best_pt_lead, double best_pt_sublead
+                      double lhe_pt_lead, double lhe_pt_sublead, double matched_pt_lead, double matched_pt_sublead, double best_pt_lead, double best_pt_sublead,
+                      double genjet_dEta_jj, double genjet_dPhi_jj, double genjet_m_jj, double genjet_dR_jj,
+                      double mass_jj_W, double mass_jj_W2, double sum_mass_W
                       );
 
   const TH1 *getHistogram_EventCounter() const;
@@ -71,6 +73,15 @@ private:
   TH1 *histogram_matched_pt_sublead_;
   TH1 *histogram_best_pt_lead_;
   TH1 *histogram_best_pt_sublead_;
+
+  TH1 *histogram_genjet_dEta_jj_;
+  TH1 *histogram_genjet_dPhi_jj_;
+  TH1 *histogram_genjet_m_jj_;
+  TH1 *histogram_genjet_dR_jj_;
+
+  TH1 *histogram_mass_jj_W_;
+  TH1 *histogram_mass_jj_W2_;
+  TH1 *histogram_sum_mass_W_;
 };
 
 #endif

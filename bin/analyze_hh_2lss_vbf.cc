@@ -744,14 +744,16 @@ int main(int argc, char *argv[]) {
   if (isMC) {
     general_lhe_reader = new LHEParticleReader("LHEPart");
     inputTree->registerReader(general_lhe_reader);
+    genJetReader = new GenJetReader("GenJet");
+    inputTree->registerReader(genJetReader);
     bool readGenPhotons = apply_genPhotonFilter;
     if (!readGenObjects) {
       genLeptonReader = new GenLeptonReader(branchName_genLeptons);
       inputTree->registerReader(genLeptonReader);
       genHadTauReader = new GenHadTauReader(branchName_genHadTaus);
       inputTree->registerReader(genHadTauReader);
-      genJetReader = new GenJetReader(branchName_genJets);
-      inputTree->registerReader(genJetReader);
+      // genJetReader = new GenJetReader(branchName_genJets);
+      // inputTree->registerReader(genJetReader);
 
       if (genMatchingByIndex) {
         genMatchToMuonReader = new GenParticleReader(branchName_muonGenMatch);
@@ -1044,7 +1046,9 @@ int main(int argc, char *argv[]) {
         "lhe_dEta_jj", "lhe_dPhi_jj", "lhe_m_jj", "lhe_dR_jj",
         "matched_dEta_jj", "matched_dPhi_jj", "matched_m_jj", "matched_dR_jj",
         "best_dEta_jj", "best_dPhi_jj", "best_m_jj", "best_dR_jj",
-        "lhe_pt_lead", "lhe_pt_sublead", "matched_pt_lead", "matched_pt_sublead", "best_pt_lead", "best_pt_sublead"
+        "lhe_pt_lead", "lhe_pt_sublead", "matched_pt_lead", "matched_pt_sublead", "best_pt_lead", "best_pt_sublead",
+        "genjet_dEta_jj", "genjet_dPhi_jj", "genjet_m_jj", "genjet_dR_jj",
+        "mass_jj_W", "mass_jj_W2", "sum_mass_W"
     );
     // bdt_filler->register_variable<int_type>("nJet_vbf", "isVBF");
     bdt_filler->bookTree(fs);
@@ -1185,6 +1189,7 @@ int main(int argc, char *argv[]) {
         genPhotons = genPhotonReader->read(apply_genPhotonFilter);
       if (genJetReader)
         genJets = genJetReader->read();
+      // std::cout << "1st particle eta:" << genJets[0].eta() << endl;
       if (genHiggsReader)
         genHiggses = genHiggsReader->read();
 
@@ -1924,6 +1929,176 @@ int main(int argc, char *argv[]) {
         "sel lepton-pair OS/SS charge",
         evtWeightRecorder.get(central_or_shift_main));
 
+
+// ################################################################################################################################################################################
+// LHE particles
+        double lhe_dEta_jj = -999;
+        double lhe_dPhi_jj = -999;
+        double lhe_m_jj = -1;
+        double lhe_dR_jj = -1;
+        double lhe_pt_lead = -1;
+        double lhe_pt_sublead = -1;
+
+    if (std::abs(lheParticles[2].eta()) < 4.7 and std::abs(lheParticles[3].eta()) < 4.7
+      and lheParticles[2].pt() > 20 and lheParticles[3].pt() > 20){
+        lhe_dEta_jj = lheParticles[2].eta()-lheParticles[3].eta();
+        lhe_dPhi_jj = lheParticles[2].phi()-lheParticles[3].phi();
+        lhe_m_jj = (lheParticles[2].p4() + lheParticles[3].p4()).mass();
+        lhe_dR_jj = deltaR(lheParticles[2], lheParticles[3]);
+        if (lheParticles[2].pt() > lheParticles[3].pt()){
+          lhe_pt_lead = lheParticles[2].pt();
+          lhe_pt_sublead = lheParticles[3].pt();
+        }
+        else{
+          lhe_pt_lead = lheParticles[3].pt();
+          lhe_pt_sublead = lheParticles[2].pt();
+        }
+    }
+
+// Matched particles
+    double matched_dEta_jj = -999;
+    double matched_dPhi_jj = -999;
+    double matched_m_jj = -1;
+    double matched_dR_jj = -1;
+
+    double matched_pt_lead = -1;
+    double matched_pt_sublead = -1;
+
+    math::PtEtaPhiMLorentzVector matched_vbf_jet1;
+    math::PtEtaPhiMLorentzVector matched_vbf_jet2;
+    double bestDR1 = 100000;
+    double bestDR2 = 100000;
+    int bestjet_id1 = 0;
+    int bestjet_id2 = 0;
+    for (size_t j=0; j < selJetsVBF.size(); j++){
+      double dR1 = deltaR(lheParticles[2], selJetsVBF[j]->p4());
+          if (dR1 < bestDR1){
+              bestDR1 = dR1;
+              bestjet_id1 = j;
+          }
+    }
+
+    for (int j=0; j < static_cast<int>(selJetsVBF.size()); j++){
+      double dR2 = deltaR(lheParticles[3], selJetsVBF[j]->p4());
+          if (dR2 < bestDR2 and j != bestjet_id1){
+              bestDR2 = dR2;
+              bestjet_id2 = j;
+          }
+    }
+
+    if (bestDR1<0.3 and bestDR2<0.3){
+      matched_vbf_jet1 = selJetsVBF[bestjet_id1]->p4();
+      matched_vbf_jet2 = selJetsVBF[bestjet_id2]->p4();
+      if (std::abs(matched_vbf_jet1.eta()) < 4.7 and std::abs(matched_vbf_jet2.eta()) < 4.7
+        and matched_vbf_jet1.pt() > 20 and matched_vbf_jet2.pt() > 20){
+          matched_dEta_jj = matched_vbf_jet1.eta()-matched_vbf_jet2.eta();
+          matched_dPhi_jj = matched_vbf_jet1.phi()-matched_vbf_jet2.phi();
+          matched_m_jj = (matched_vbf_jet1 + matched_vbf_jet2).mass();
+          matched_dR_jj = deltaR(matched_vbf_jet1, matched_vbf_jet2);
+          if (matched_vbf_jet1.pt() > matched_vbf_jet2.pt()){
+            matched_pt_lead = matched_vbf_jet1.pt();
+            matched_pt_sublead = matched_vbf_jet2.pt();
+          }
+          else{
+            matched_pt_lead = matched_vbf_jet2.pt();
+            matched_pt_sublead = matched_vbf_jet1.pt();
+          }
+      }
+  }
+
+
+// New reco particles
+    double best_m_jj = -1.;
+    double best_dEta_jj = -999;
+    double best_dPhi_jj = -999;
+    double best_dR_jj = -1;
+
+    double best_pt_lead = -1;
+    double best_pt_sublead = -1;
+
+    math::PtEtaPhiMLorentzVector VBFjet1;
+    math::PtEtaPhiMLorentzVector VBFjet2;
+
+    for (std::vector<const RecoJet *>::const_iterator selJetVBF1_ =
+             selJetsVBF.begin(); selJetVBF1_ != selJetsVBF.end();
+         ++selJetVBF1_) {
+        for (std::vector<const RecoJet *>::const_iterator selJetVBF2_ =
+               selJetVBF1_ + 1; selJetVBF2_ != selJetsVBF.end();++selJetVBF2_) {
+            double m_jj_ = ((*selJetVBF1_)->p4() + (*selJetVBF2_)->p4()).mass();
+            double dEta_jj_ = (*selJetVBF1_)->eta()-(*selJetVBF2_)->eta();
+            double dPhi_jj_ = (*selJetVBF1_)->phi()-(*selJetVBF2_)->phi();
+            double dR_jj_ = deltaR((*selJetVBF1_)->p4(), (*selJetVBF2_)->p4());
+            double pt1_ = (*selJetVBF1_)->pt();
+            double pt2_ = (*selJetVBF2_)->pt();
+                if (m_jj_ > best_m_jj and std::abs((*selJetVBF1_)->eta()) < 4.7 and 
+                  std::abs((*selJetVBF2_)->eta()) < 4.7 and pt1_ > 20 and pt2_ > 20){
+                  best_m_jj = m_jj_;
+                  best_dR_jj = dR_jj_;
+                  best_dEta_jj = dEta_jj_;
+                  best_dPhi_jj = dPhi_jj_;
+                  VBFjet1= (*selJetVBF1_)->p4();
+                  VBFjet2= (*selJetVBF2_)->p4();
+                  if (pt1_ > pt2_){
+                    best_pt_lead = pt1_;
+                    best_pt_sublead = pt2_;
+                  }
+                  else{
+                    best_pt_lead = pt2_;
+                    best_pt_sublead = pt1_;
+                  }
+                }
+        }
+    }
+
+    // std::cout << "VBF jet 1:  " << VBFjet1 << std::endl;
+    // std::cout << "VBF jet 2:  " << VBFjet2 << std::endl;
+
+// Gen jets
+    double genjet_dEta_jj = -999;
+    double genjet_dPhi_jj = -999;
+    double genjet_m_jj = -1;
+    double genjet_dR_jj = -1;
+
+    math::PtEtaPhiMLorentzVector gen_vbf_jet1;
+    math::PtEtaPhiMLorentzVector gen_vbf_jet2;
+    double gbestDR1 = 100000;
+    double gbestDR2 = 100000;
+    int gbestjet_id1 = 0;
+    int gbestjet_id2 = 0;
+    for (size_t j=0; j < genJets.size(); j++){
+      double gdR1 = deltaR(lheParticles[2], genJets[j].p4());
+      // std::cout << "dr1 out of loop: " << gdR1 << std::endl;
+          if (gdR1 < gbestDR1){
+              gbestDR1 = gdR1;
+              gbestjet_id1 = j;
+              // std::cout << "best dr1 in loop: " << gbestDR1 << std::endl;
+          }
+    }
+
+    for (int j=0; j < static_cast<int>(genJets.size()); j++){
+      double gdR2 = deltaR(lheParticles[3], genJets[j].p4());
+          if (gdR2 < gbestDR2 and j != gbestjet_id1){
+              gbestDR2 = gdR2;
+              gbestjet_id2 = j;
+          }
+    }
+
+    if (gbestDR1<0.3 and gbestDR2<0.3){
+      gen_vbf_jet1 = genJets[gbestjet_id1].p4();
+      gen_vbf_jet2 = genJets[gbestjet_id2].p4();
+      if (std::abs(gen_vbf_jet1.eta()) < 4.7 and std::abs(gen_vbf_jet2.eta()) < 4.7
+        and gen_vbf_jet1.pt() > 20 and gen_vbf_jet2.pt() > 20){
+          genjet_dEta_jj = gen_vbf_jet1.eta()-gen_vbf_jet2.eta();
+          genjet_dPhi_jj = gen_vbf_jet1.phi()-gen_vbf_jet2.phi();
+          genjet_m_jj = (gen_vbf_jet1 + gen_vbf_jet2).mass();
+          genjet_dR_jj = deltaR(gen_vbf_jet1, gen_vbf_jet2);
+      }
+  }
+
+
+
+// W selection
+// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     std::vector<RecoJetAK8> jets_ak8 = jetReaderAK8->read();
     std::vector<const RecoJetAK8 *> jet_ptrs_ak8 = convert_to_ptrs(jets_ak8);
     std::vector<const RecoJetAK8 *> selJetsAK8 =
@@ -1939,6 +2114,7 @@ int main(int argc, char *argv[]) {
     bool isEventSemiboosted = false;
     bool isEventResolved = false;
     Particle::LorentzVector selJetP4;
+    Particle::LorentzVector selJetP4_2;
     double mass_jj_W = 0;
     double mass_jj_W2 = 0;
 
@@ -1952,6 +2128,13 @@ int main(int argc, char *argv[]) {
       }
     }
 
+    std::vector<const RecoJet *> selJets_c;
+    for (size_t i = 0; i < selJets.size(); i++) {
+        if (deltaR(VBFjet1, selJets[i]->p4()) != 0 and deltaR(VBFjet2, selJets[i]->p4()) != 0){
+          selJets_c.push_back(selJets[i]);
+        }
+    }
+
     math::PtEtaPhiMLorentzVector selJet1P4;
     math::PtEtaPhiMLorentzVector selJet2P4;
     math::PtEtaPhiMLorentzVector selJet3P4;
@@ -1963,34 +2146,32 @@ int main(int argc, char *argv[]) {
                   selJetsAK8_Wjj_selected[1]->subJet1()->p4() +
                   selJetsAK8_Wjj_selected[1]
                       ->subJet2()
-                      ->p4()); // 4vector of selected jets
+                      ->p4());
       isEventBoosted = true;
     } else if (selJetsAK8_Wjj_selected.size() == 1 &&
                selJets.size() >= 1) { // semiboosted category
       std::vector<const RecoSubjetAK8 *> selSubjetsAK8 = {
           selJetsAK8_Wjj_selected[0]->subJet1(),
-          selJetsAK8_Wjj_selected[0]->subJet2()};  // selSubjetsAK8 vector equals subjet1, subjet2
-      double dm_min = 9999.; // Give huge random values
+          selJetsAK8_Wjj_selected[0]->subJet2()};
+      double dm_min = 9999.;
       size_t idxWJet1 = 9999;
       size_t idxWJet2 = 9999;
       for (size_t iJet1 = 0; iJet1 < selJets.size();
-           iJet1++) { // Loop over iJet1
+           iJet1++) {
         const RecoJet *jet1 =
-            selJets[iJet1]; // jet1 is with index iJet1 in vector selJets
+            selJets[iJet1];
         if (hasOverlapJets(jet1, selSubjetsAK8))
           continue;
 
         for (size_t iJet2 = iJet1 + 1; iJet2 < selJets.size();
-             iJet2++) { // Loop over iJet2
+             iJet2++) {
           const RecoJet *jet2 =
-              selJets[iJet2]; // jet2 is with index iJet2 in vector selJets
+              selJets[iJet2];
           if (hasOverlapJets(jet2, selSubjetsAK8))
             continue;
 
-          double dm = std::fabs((jet1->p4() + jet2->p4()).mass() -
-                                w_mass); // Inv mass of jet1+jet2 - w-mass
-          if (dm < dm_min) { // If new dm smaller than old dm then replace
-                             // values
+          double dm = std::fabs((jet1->p4() + jet2->p4()).mass() - w_mass);
+          if (dm < dm_min) {
             dm_min = dm;
             idxWJet1 = iJet1;
             idxWJet2 = iJet2;
@@ -2001,64 +2182,54 @@ int main(int argc, char *argv[]) {
         selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
                     selJetsAK8_Wjj_selected[0]->subJet2()->p4() +
                     selJets[idxWJet1]->p4() +
-                    selJets[idxWJet2]->p4()); // Create selJet 4vector
+                    selJets[idxWJet2]->p4());
         isEventSemiboosted = true;
-      } else if (!hasOverlapJets(selJets[0],
-                                 selSubjetsAK8)) { // for 1 AK4 jet case
+      } else if (!hasOverlapJets(selJets[0], selSubjetsAK8)) {
         selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
                     selJetsAK8_Wjj_selected[0]->subJet2()->p4() +
-                    selJets[0]->p4()); // Create selJet 4vector
+                    selJets[0]->p4());
         isEventSemiboosted = true;
       }
     } else if (selJetsAK8_Wjj_selected.size() == 0 &&
                selJets.size() >= 1) { // resolved category
       mass_jj_W = 0;
       mass_jj_W2 = 0;
-      for (std::vector<const RecoJet *>::const_iterator selJet1_W =
-               selJets.begin();
-           selJet1_W != selJets.end(); ++selJet1_W) { // Loop over all selJet1s
-        for (std::vector<const RecoJet *>::const_iterator selJet2_W =
-                 selJet1_W + 1;
-             selJet2_W != selJets.end();
-             ++selJet2_W) { // Loop over all SelJet2s
-          double mass_jj = ((*selJet1_W)->p4() + (*selJet2_W)->p4())
-                               .mass(); // Calculate invariant mass of 2 jets
+      for (std::vector<const RecoJet *>::const_iterator selJet1_W = selJets_c.begin();
+           selJet1_W != selJets_c.end(); ++selJet1_W) {
+        for (std::vector<const RecoJet *>::const_iterator selJet2_W = selJet1_W + 1;
+             selJet2_W != selJets_c.end();++selJet2_W) {
+          double mass_jj = ((*selJet1_W)->p4() + (*selJet2_W)->p4()).mass();
           if ((std::fabs(mass_jj - w_mass) < std::fabs(mass_jj_W - w_mass) &&
-               mass_jj < 120) ||
-              mass_jj_W == 0) {
+               mass_jj < 120) || mass_jj_W == 0) {
             mass_jj_W = mass_jj;
             selJet1P4 = (*selJet1_W)->p4();
             selJet2P4 = (*selJet2_W)->p4();
-            // If condition is satisfied then make these equal
-            selJetP4 = (*selJet1_W)->p4() +
-                       (*selJet2_W)->p4(); // 4vector of the selected jets
-            // Off-shell hadronic W
+            selJetP4 = (*selJet1_W)->p4() + (*selJet2_W)->p4();
+
+            // Off-shell W
             for (std::vector<const RecoJet *>::const_iterator selJet3_W =
-                     selJets.begin();
-                 selJet3_W != selJets.end();
-                 ++selJet3_W) { // Loop over all selected jets3
+                     selJets_c.begin();selJet3_W != selJets_c.end();++selJet3_W) {
               for (std::vector<const RecoJet *>::const_iterator selJet4_W =
                        selJet3_W + 1;
-                   selJet4_W != selJets.end();
-                   ++selJet4_W) { // Loop over all selected jets4
+                   selJet4_W != selJets_c.end(); ++selJet4_W) {
                 if (std::abs(deltaR((*selJet1_W)->p4(), (*selJet3_W)->p4())) ==
-                        0 &&
+                        0 or
                     std::abs(deltaR((*selJet2_W)->p4(), (*selJet3_W)->p4())) ==
-                        0 &&
+                        0 or
                     std::abs(deltaR((*selJet1_W)->p4(), (*selJet4_W)->p4())) ==
-                        0 &&
+                        0 or
                     std::abs(deltaR((*selJet2_W)->p4(), (*selJet4_W)->p4())) ==
                         0) {
-                  double mass_jj2 =
-                      ((*selJet3_W)->p4() + (*selJet4_W)->p4())
-                          .mass(); // Calculate invariant mass of 2 jets
-                  if (std::fabs(mass_jj2) < 50 || mass_jj_W2 == 0) {
-                    selJet3P4 = (*selJet3_W)->p4();
-                    selJet4P4 = (*selJet4_W)->p4();
-                    mass_jj_W2 = mass_jj2;
-                    selJet2P4 = (*selJet3_W)->p4() + (*selJet4_W)->p4();
-                    continue;
-                  }
+                  continue;
+                }
+                // std::cout << "###########################" << std::endl;
+                // std::cout << "dR: " << deltaR((*selJet3_W)->p4(), (*selJet4_W)->p4()) << std::endl;
+                double mass_jj2 = ((*selJet3_W)->p4() + (*selJet4_W)->p4()).mass();
+                if (std::fabs(mass_jj2 - 40) < std::fabs(mass_jj_W2 - 40) || mass_jj_W2 == 0) {
+                  selJet3P4 = (*selJet3_W)->p4();
+                  selJet4P4 = (*selJet4_W)->p4();
+                  mass_jj_W2 = mass_jj2;
+                  selJetP4_2 = (*selJet3_W)->p4() + (*selJet4_W)->p4();
                 }
               }
             }
@@ -2068,42 +2239,7 @@ int main(int argc, char *argv[]) {
       isEventResolved = true;
     }
 
-    //     } else if (selJetsAK8_Wjj_selected.size() == 0 && selJets.size() >=
-    //     1) { // resolved category
-    //   mass_jj_W = 0;
-    //   for ( std::vector<const RecoJet*>::const_iterator selJet1_W =
-    //   selJets.begin();
-    //         selJet1_W != selJets.end(); ++selJet1_W ) {//Loop over all
-    //         selJet1s
-    //     for ( std::vector<const RecoJet*>::const_iterator selJet2_W =
-    //     selJet1_W + 1;
-    //           selJet2_W != selJets.end(); ++selJet2_W ) {//Loop over all
-    //           SelJet2s
-    //       double mass_jj = ((*selJet1_W)->p4() +
-    //       (*selJet2_W)->p4()).mass();//Calculate invariant mass of 2 jets if
-    //       ( std::fabs(mass_jj - w_mass) < std::fabs(mass_jj_W - w_mass) ||
-    //       mass_jj_W==0) {
-    //         mass_jj_W = mass_jj;//If condition is satisfied then make these
-    //         equal selJetP4 = (*selJet1_W)->p4() +
-    //         (*selJet2_W)->p4();//4vector of the selected jets int counter =
-    //         0; for ( std::vector<const RecoJet*>::const_iterator selJet3_4 =
-    //         selJets.begin();
-    //               selJet3_4 != selJets.end(); ++selJet3_4 ) {//Loop over all
-    //               selected jets
-    //           if ((*selJet3_4)!=(*selJet1_W) && (*selJet3_4)!=(*selJet2_W)){
-    //             counter++;//if selJet3_4 is NOT equal to selJet1_W) and to
-    //             selJet2_W then add 1 to counter if (counter <= 2){
-    //               selJetP4 += (*selJet3_4)->p4();//If counter <= 2 then  add
-    //               4vector of selJet3_4 to 4vector of the earlier selected
-    //               jets
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    //   isEventResolved = true;
-    // }
+    double sum_mass_W = mass_jj_W + mass_jj_W2;
 
     if (isEventBoosted) {
       cutFlowTable.update("event category criteria passed: boosted",
@@ -2250,123 +2386,6 @@ int main(int argc, char *argv[]) {
     // metP4).pt(); double Smin_llMEt = comp_Smin(llP4, metP4.px(), metP4.py());
 
 
-
-// LHE particles
-        double lhe_dEta_jj = -999;
-        double lhe_dPhi_jj = -999;
-        double lhe_m_jj = -1;
-        double lhe_dR_jj = -1;
-        double lhe_pt_lead = -1;
-        double lhe_pt_sublead = -1;
-
-    if (std::abs(lheParticles[2].eta()) < 4.7 and std::abs(lheParticles[3].eta()) < 4.7
-      and lheParticles[2].pt() > 20 and lheParticles[3].pt() > 20){
-        lhe_dEta_jj = lheParticles[2].eta()-lheParticles[3].eta();
-        lhe_dPhi_jj = lheParticles[2].phi()-lheParticles[3].phi();
-        lhe_m_jj = (lheParticles[2].p4() + lheParticles[3].p4()).mass();
-        lhe_dR_jj = deltaR(lheParticles[2], lheParticles[3]);
-        if (lheParticles[2].pt() > lheParticles[3].pt()){
-          lhe_pt_lead = lheParticles[2].pt();
-          lhe_pt_sublead = lheParticles[3].pt();
-        }
-        else{
-          lhe_pt_lead = lheParticles[3].pt();
-          lhe_pt_sublead = lheParticles[2].pt();
-        }
-    }
-
-// ################################################################################################################################################################################
-// Matched particles
-    double matched_dEta_jj = -999;
-    double matched_dPhi_jj = -999;
-    double matched_m_jj = -1;
-    double matched_dR_jj = -1;
-
-    double matched_pt_lead = -1;
-    double matched_pt_sublead = -1;
-
-    math::PtEtaPhiMLorentzVector matched_vbf_jet1;
-    math::PtEtaPhiMLorentzVector matched_vbf_jet2;
-    double bestDR1 = 100000;
-    double bestDR2 = 100000;
-    int bestjet_id1 = 0;
-    int bestjet_id2 = 0;
-    for (size_t j=0; j < selJetsVBF.size(); j++){
-      double dR1 = deltaR(lheParticles[2], selJetsVBF[j]->p4());
-          if (dR1 < bestDR1){
-              bestDR1 = dR1;
-              bestjet_id1 = j;
-          }
-    }
-
-    for (int j=0; j < static_cast<int>(selJetsVBF.size()); j++){
-      double dR2 = deltaR(lheParticles[3], selJetsVBF[j]->p4());
-          if (dR2 < bestDR2 and j != bestjet_id1){
-              bestDR2 = dR2;
-              bestjet_id2 = j;
-          }
-    }
-
-    if (bestDR1<0.3 and bestDR2<0.3){
-      matched_vbf_jet1 = selJetsVBF[bestjet_id1]->p4();
-      matched_vbf_jet2 = selJetsVBF[bestjet_id2]->p4();
-      if (std::abs(matched_vbf_jet1.eta()) < 4.7 and std::abs(matched_vbf_jet2.eta()) < 4.7
-        and matched_vbf_jet1.pt() > 20 and matched_vbf_jet2.pt() > 20){
-          matched_dEta_jj = matched_vbf_jet1.eta()-matched_vbf_jet2.eta();
-          matched_dPhi_jj = matched_vbf_jet1.phi()-matched_vbf_jet2.phi();
-          matched_m_jj = (matched_vbf_jet1 + matched_vbf_jet2).mass();
-          matched_dR_jj = deltaR(matched_vbf_jet1, matched_vbf_jet2);
-          if (matched_vbf_jet1.pt() > matched_vbf_jet2.pt()){
-            matched_pt_lead = matched_vbf_jet1.pt();
-            matched_pt_sublead = matched_vbf_jet2.pt();
-          }
-          else{
-            matched_pt_lead = matched_vbf_jet2.pt();
-            matched_pt_sublead = matched_vbf_jet1.pt();
-          }
-      }
-  }
-
-
-// New reco particles
-    double best_m_jj = -1.;
-    double best_dEta_jj = -999;
-    double best_dPhi_jj = -999;
-    double best_dR_jj = -1;
-
-    double best_pt_lead = -1;
-    double best_pt_sublead = -1;
-
-    for (std::vector<const RecoJet *>::const_iterator selJetVBF1_ =
-             selJetsVBF.begin(); selJetVBF1_ != selJetsVBF.end();
-         ++selJetVBF1_) {
-        for (std::vector<const RecoJet *>::const_iterator selJetVBF2_ =
-               selJetVBF1_ + 1; selJetVBF2_ != selJetsVBF.end();++selJetVBF2_) {
-            double m_jj_ = ((*selJetVBF1_)->p4() + (*selJetVBF2_)->p4()).mass();
-            double dEta_jj_ = (*selJetVBF1_)->eta()-(*selJetVBF2_)->eta();
-            double dPhi_jj_ = (*selJetVBF1_)->phi()-(*selJetVBF2_)->phi();
-            double dR_jj_ = deltaR((*selJetVBF1_)->p4(), (*selJetVBF2_)->p4());
-            double pt1_ = (*selJetVBF1_)->pt();
-            double pt2_ = (*selJetVBF2_)->pt();
-                if (m_jj_ > best_m_jj and std::abs((*selJetVBF1_)->eta()) < 4.7 and 
-                  std::abs((*selJetVBF2_)->eta()) < 4.7 and pt1_ > 20 and pt2_ > 20){
-                  best_m_jj = m_jj_;
-                  best_dR_jj = dR_jj_;
-                  best_dEta_jj = dEta_jj_;
-                  best_dPhi_jj = dPhi_jj_;
-                  if (pt1_ > pt2_){
-                    best_pt_lead = pt1_;
-                    best_pt_sublead = pt2_;
-                  }
-                  else{
-                    best_pt_lead = pt2_;
-                    best_pt_sublead = pt1_;
-                  }
-                }
-        }
-    }
-
-
 //Older stuff below
 
     // int nJet_vbf = selJetsVBF.size();
@@ -2495,6 +2514,15 @@ int main(int argc, char *argv[]) {
     AllVars_Map["matched_pt_sublead"] = matched_pt_sublead;
     AllVars_Map["best_pt_lead"] = best_pt_lead;
     AllVars_Map["best_pt_sublead"] = best_pt_sublead;
+
+    AllVars_Map["genjet_dEta_jj"] = genjet_dEta_jj;
+    AllVars_Map["genjet_dPhi_jj"] = genjet_dPhi_jj;
+    AllVars_Map["genjet_m_jj"] = genjet_m_jj;
+    AllVars_Map["genjet_dR_jj"] = genjet_dR_jj;
+
+    AllVars_Map["mass_jj_W"] = mass_jj_W;
+    AllVars_Map["mass_jj_W2"] = mass_jj_W2;
+    AllVars_Map["sum_mass_W"] = sum_mass_W;
     // AllVars_Map["nLep"] =                            selLeptons.size();
 
     // std::map<std::string, double> BDTInputs_spin2 =
@@ -2575,7 +2603,10 @@ int main(int argc, char *argv[]) {
               lhe_dEta_jj, lhe_dPhi_jj, lhe_m_jj, lhe_dR_jj, 
               matched_dEta_jj, matched_dPhi_jj, matched_m_jj, matched_dR_jj, 
               best_dEta_jj, best_dPhi_jj, best_m_jj, best_dR_jj,
-              lhe_pt_lead, lhe_pt_sublead, matched_pt_lead, matched_pt_sublead, best_pt_lead, best_pt_sublead);
+              lhe_pt_lead, lhe_pt_sublead, matched_pt_lead, matched_pt_sublead, best_pt_lead, best_pt_sublead,
+              genjet_dEta_jj, genjet_dPhi_jj, genjet_m_jj, genjet_dR_jj,
+              mass_jj_W, mass_jj_W2, sum_mass_W
+              );
         }
         // selHistManager->datacard_->fillHistograms(
         //          BDTOutput_Map_spin2,
@@ -2688,8 +2719,8 @@ int main(int argc, char *argv[]) {
           ("matched_dR_jj",              matched_dR_jj)
 
           ("best_dEta_jj",            best_dEta_jj)
-          ("best_m_jj",               best_m_jj)
           ("best_dPhi_jj",            best_dPhi_jj)
+          ("best_m_jj",               best_m_jj)
           ("best_dR_jj",              best_dR_jj)
 
           ("lhe_pt_lead",              lhe_pt_lead)
@@ -2698,6 +2729,15 @@ int main(int argc, char *argv[]) {
           ("matched_pt_sublead",              matched_pt_sublead)
           ("best_pt_lead",              best_pt_lead)
           ("best_pt_sublead",              best_pt_sublead)
+
+          ("genjet_dEta_jj",            genjet_dEta_jj)
+          ("genjet_dPhi_jj",               genjet_dPhi_jj)
+          ("genjet_m_jj",            genjet_m_jj)
+          ("genjet_dR_jj",              genjet_dR_jj)
+
+          ("mass_jj_W",              mass_jj_W)
+          ("mass_jj_W2",              mass_jj_W2)
+          ("sum_mass_W",              sum_mass_W)
           (weightMapHH)
         .fill();
     }
