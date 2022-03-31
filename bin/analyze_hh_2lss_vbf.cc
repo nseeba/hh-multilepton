@@ -2008,6 +2008,7 @@ int main(int argc, char *argv[]) {
 
 
 // New reco particles
+    std::vector< const RecoJet *> VBFjets;
     double best_m_jj = -1.;
     double best_dEta_jj = -999;
     double best_dPhi_jj = -999;
@@ -2019,9 +2020,14 @@ int main(int argc, char *argv[]) {
     math::PtEtaPhiMLorentzVector VBFjet1;
     math::PtEtaPhiMLorentzVector VBFjet2;
 
+    int vbf_id1 = 0;
+    int best_vbf_id1 = -999;
+    int best_vbf_id2 = -999;
+
     for (std::vector<const RecoJet *>::const_iterator selJetVBF1_ =
              selJetsVBF.begin(); selJetVBF1_ != selJetsVBF.end();
          ++selJetVBF1_) {
+        int vbf_id2 = vbf_id1+1;
         for (std::vector<const RecoJet *>::const_iterator selJetVBF2_ =
                selJetVBF1_ + 1; selJetVBF2_ != selJetsVBF.end();++selJetVBF2_) {
             double m_jj_ = ((*selJetVBF1_)->p4() + (*selJetVBF2_)->p4()).mass();
@@ -2038,6 +2044,8 @@ int main(int argc, char *argv[]) {
                   best_dPhi_jj = dPhi_jj_;
                   VBFjet1= (*selJetVBF1_)->p4();
                   VBFjet2= (*selJetVBF2_)->p4();
+                  best_vbf_id1 = vbf_id1;
+                  best_vbf_id2 = vbf_id2;
                   if (pt1_ > pt2_){
                     best_pt_lead = pt1_;
                     best_pt_sublead = pt2_;
@@ -2047,9 +2055,14 @@ int main(int argc, char *argv[]) {
                     best_pt_sublead = pt1_;
                   }
                 }
+                vbf_id2++;
         }
+      vbf_id1++;
     }
-
+    if(best_vbf_id1 > -999 and best_vbf_id2 > -999){ 
+        VBFjets.push_back(selJetsVBF[best_vbf_id1]);
+        VBFjets.push_back(selJetsVBF[best_vbf_id2]);
+  }
     // std::cout << "VBF jet 1:  " << VBFjet1 << std::endl;
     // std::cout << "VBF jet 2:  " << VBFjet2 << std::endl;
 
@@ -2361,6 +2374,19 @@ int main(int argc, char *argv[]) {
     cutFlowHistManager->fillHistograms(
         "signal region veto", evtWeightRecorder.get(central_or_shift_main));
 
+
+    if (best_m_jj < 400) {
+      if (run_lumi_eventSelector) {
+        std::cout << "event " << eventInfo.str()
+                  << " FAILS VBF pair  selection." << std::endl;
+      }
+      continue;
+    }
+    cutFlowTable.update("VBF requirement",
+                        evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms(
+          "VBF requirement", evtWeightRecorder.get(central_or_shift_main));
+
     if (blacklist && (*blacklist)(eventInfo)) {
       continue;
     }
@@ -2378,8 +2404,8 @@ int main(int argc, char *argv[]) {
     // selLepton_lead->charge() + selLepton_sublead->charge();
 
     // //--- compute variables BDTs used to discriminate . . .
-    const double mindr_lep1_jet  = comp_mindr_jet(*selLepton_lead, selJetsVBF);
-    const double mindr_lep2_jet  = comp_mindr_jet(*selLepton_sublead, selJetsVBF);
+    const double mindr_lep1_jet  = comp_mindr_jet(*selLepton_lead, VBFjets);
+    const double mindr_lep2_jet  = comp_mindr_jet(*selLepton_sublead, VBFjets);
     // Particle::LorentzVector llP4 = selLeptonP4_lead +
     // selLeptonP4_sublead; double dR_ll = deltaR(selLeptonP4_lead,
     // selLeptonP4_sublead); double pT_ll = llP4.pt(); double pT_llMEt = (llP4 +
@@ -2482,7 +2508,7 @@ int main(int argc, char *argv[]) {
     // comp_MT_met(selLepton_sublead, met.pt(), met.phi()));
     // AllVars_Map["dR_ll"] =                           dR_ll;
     // AllVars_Map["pT_ll"] =                           pT_ll;
-    AllVars_Map["max_jet_eta"] = comp_maxAbsEta_jet(selJetsVBF);
+    AllVars_Map["max_jet_eta"] = comp_maxAbsEta_jet(VBFjets);
     // AllVars_Map["max_lep_eta"] = TMath::Max(std::abs(selLepton_lead ->
     // eta()), std::abs(selLepton_sublead -> eta())); AllVars_Map["pT_llMEt"] =
     // pT_llMEt; AllVars_Map["Smin_llMEt"] =                      Smin_llMEt;
