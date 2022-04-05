@@ -51,6 +51,11 @@ EvtHistManager_hh_2lss_vbf::EvtHistManager_hh_2lss_vbf(
   central_or_shiftOptions_["mass_jj_W"] = { "central" };
   central_or_shiftOptions_["mass_jj_W2"] = { "central" };
   central_or_shiftOptions_["sum_mass_W"] = { "central" };
+
+  central_or_shiftOptions_["sum_m_lj"] = { "central" };
+  central_or_shiftOptions_["pT_sum"] = { "central" };
+  central_or_shiftOptions_["m_ll"] = { "central" };
+  central_or_shiftOptions_["isVBF"] = { "central" };
 }
 
 const TH1 *EvtHistManager_hh_2lss_vbf::getHistogram_EventCounter() const {
@@ -139,6 +144,15 @@ void EvtHistManager_hh_2lss_vbf::bookHistograms(TFileDirectory &dir) {
       dir, "mass_jj_W2", "mass_jj_W2", 50, 0., 150);
   histogram_sum_mass_W_ = book1D(
       dir, "sum_mass_W", "sum_mass_W", 50, 0., 300);
+
+  histogram_sum_m_lj_ = book1D(
+      dir, "sum_m_lj", "sum_m_lj", 250, 0., 5000);
+  histogram_pT_sum_ = book1D(
+      dir, "pT_sum", "pT_sum", 100, 0., 1000);
+  histogram_m_ll_ = book1D(
+      dir, "m_ll", "m_ll", 250, 0., 5000);
+  histogram_isVBF_ = book1D(
+      dir, "isVBF", "isVBF", 20, -0.5, +19.5);
 }
 
 void EvtHistManager_hh_2lss_vbf::fillHistograms(
@@ -152,7 +166,8 @@ void EvtHistManager_hh_2lss_vbf::fillHistograms(
     double best_dEta_jj, double best_dPhi_jj, double best_m_jj, double best_dR_jj,
     double lhe_pt_lead, double lhe_pt_sublead, double matched_pt_lead, double matched_pt_sublead, double best_pt_lead, double best_pt_sublead,
     double genjet_dEta_jj, double genjet_dPhi_jj, double genjet_m_jj, double genjet_dR_jj,
-    double mass_jj_W, double mass_jj_W2, double sum_mass_W
+    double mass_jj_W, double mass_jj_W2, double sum_mass_W,
+    double sum_m_lj, double pT_sum, double m_ll, bool isVBF
     )
 
 {
@@ -260,4 +275,15 @@ void EvtHistManager_hh_2lss_vbf::fillHistograms(
   if(sum_mass_W>0){
       fillWithOverFlow(histogram_sum_mass_W_,       sum_mass_W,       evtWeight, evtWeightErr);
   }
+
+  if(sum_m_lj>0){
+      fillWithOverFlow(histogram_sum_m_lj_,       sum_m_lj,       evtWeight, evtWeightErr);
+  }
+  if(pT_sum>0){
+      fillWithOverFlow(histogram_pT_sum_,       pT_sum,       evtWeight, evtWeightErr);
+  }
+  if(m_ll>0){
+      fillWithOverFlow(histogram_m_ll_,       m_ll,       evtWeight, evtWeightErr);
+  }
+  fillWithOverFlow(histogram_isVBF_,       isVBF,       evtWeight, evtWeightErr);
 }

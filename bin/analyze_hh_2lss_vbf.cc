@@ -1048,9 +1048,10 @@ int main(int argc, char *argv[]) {
         "best_dEta_jj", "best_dPhi_jj", "best_m_jj", "best_dR_jj",
         "lhe_pt_lead", "lhe_pt_sublead", "matched_pt_lead", "matched_pt_sublead", "best_pt_lead", "best_pt_sublead",
         "genjet_dEta_jj", "genjet_dPhi_jj", "genjet_m_jj", "genjet_dR_jj",
-        "mass_jj_W", "mass_jj_W2", "sum_mass_W"
+        "mass_jj_W", "mass_jj_W2", "sum_mass_W",
+        "sum_m_lj", "pT_sum", "m_ll"
     );
-    // bdt_filler->register_variable<int_type>("nJet_vbf", "isVBF");
+    bdt_filler->register_variable<int_type>("isVBF");
     bdt_filler->bookTree(fs);
   }
 
@@ -1577,11 +1578,11 @@ int main(int argc, char *argv[]) {
     cutFlowHistManager->fillHistograms(
         ">= 2 sel leptons", evtWeightRecorder.get(central_or_shift_main));
     const RecoLepton *selLepton_lead = selLeptons[0];
-    // const Particle::LorentzVector& selLeptonP4_lead =
-    // selLepton_lead->cone_p4();
+    const Particle::LorentzVector& selLeptonP4_lead =
+    selLepton_lead->cone_p4();
     const RecoLepton *selLepton_sublead = selLeptons[1];
-    // const Particle::LorentzVector& selLeptonP4_sublead =
-    // selLepton_sublead->cone_p4();
+    const Particle::LorentzVector& selLeptonP4_sublead =
+    selLepton_sublead->cone_p4();
     const leptonChargeFlipGenMatchEntry &selLepton_genMatch =
         getLeptonChargeFlipGenMatch(leptonGenMatch_definitions, selLepton_lead,
                                     selLepton_sublead);
@@ -2023,6 +2024,7 @@ int main(int argc, char *argv[]) {
     int vbf_id1 = 0;
     int best_vbf_id1 = -999;
     int best_vbf_id2 = -999;
+    bool isVBF = false;
 
     for (std::vector<const RecoJet *>::const_iterator selJetVBF1_ =
              selJetsVBF.begin(); selJetVBF1_ != selJetsVBF.end();
@@ -2046,6 +2048,7 @@ int main(int argc, char *argv[]) {
                   VBFjet2= (*selJetVBF2_)->p4();
                   best_vbf_id1 = vbf_id1;
                   best_vbf_id2 = vbf_id2;
+                  isVBF = true;
                   if (pt1_ > pt2_){
                     best_pt_lead = pt1_;
                     best_pt_sublead = pt2_;
@@ -2054,17 +2057,25 @@ int main(int argc, char *argv[]) {
                     best_pt_lead = pt2_;
                     best_pt_sublead = pt1_;
                   }
+                  // if (best_m_jj > 400){
+                  //   isVBF = true;
+                  // }
                 }
                 vbf_id2++;
         }
       vbf_id1++;
     }
+
+    double sum_m_lj = -1;
     if(best_vbf_id1 > -999 and best_vbf_id2 > -999){ 
         VBFjets.push_back(selJetsVBF[best_vbf_id1]);
         VBFjets.push_back(selJetsVBF[best_vbf_id2]);
+        // std::cout << "m_lj: " << (selLepton_lead->p4() + selJetsVBF[best_vbf_id1]->p4()).mass()<< std::endl;
+        sum_m_lj = (selLeptonP4_lead + selJetsVBF[best_vbf_id1]->p4()).mass() +
+        (selLeptonP4_sublead + selJetsVBF[best_vbf_id1]->p4()).mass() +
+        (selLeptonP4_lead + selJetsVBF[best_vbf_id2]->p4()).mass() +
+        (selLeptonP4_sublead + selJetsVBF[best_vbf_id2]->p4()).mass();
   }
-    // std::cout << "VBF jet 1:  " << VBFjet1 << std::endl;
-    // std::cout << "VBF jet 2:  " << VBFjet2 << std::endl;
 
 // Gen jets
     double genjet_dEta_jj = -999;
@@ -2320,7 +2331,7 @@ int main(int argc, char *argv[]) {
         "H->ZZ*->4l veto", evtWeightRecorder.get(central_or_shift_main));
 
     if (!(selLepton_lead->is_muon() || selLepton_sublead->is_muon() ||
-          met_LD >= 30.)) {
+          met_LD >= 30. || best_m_jj < 400)) {
       if (run_lumi_eventSelector) {
         std::cout << "event " << eventInfo.str()
                   << " FAILS MET LD selection.\n"
@@ -2402,14 +2413,19 @@ int main(int argc, char *argv[]) {
     // double leptonPairMass_sel = (selLepton_lead->cone_p4() +
     // selLepton_sublead->cone_p4()).mass(); double leptonPairCharge_sel =
     // selLepton_lead->charge() + selLepton_sublead->charge();
-
     // //--- compute variables BDTs used to discriminate . . .
     const double mindr_lep1_jet  = comp_mindr_jet(*selLepton_lead, VBFjets);
     const double mindr_lep2_jet  = comp_mindr_jet(*selLepton_sublead, VBFjets);
-    // Particle::LorentzVector llP4 = selLeptonP4_lead +
-    // selLeptonP4_sublead; double dR_ll = deltaR(selLeptonP4_lead,
-    // selLeptonP4_sublead); double pT_ll = llP4.pt(); double pT_llMEt = (llP4 +
-    // metP4).pt(); double Smin_llMEt = comp_Smin(llP4, metP4.px(), metP4.py());
+    Particle::LorentzVector llP4 = selLeptonP4_lead + selLeptonP4_sublead; 
+    double pT_sum = -1;
+    if (best_pt_lead > 0 and best_pt_sublead > 0){
+      pT_sum = llP4.pt() + best_pt_lead + best_pt_sublead;
+    }
+    double m_ll = llP4.mass();
+    // double dR_ll = deltaR(selLeptonP4_lead,selLeptonP4_sublead);
+    // double pT_ll = llP4.pt();
+    // double pT_llMEt = (llP4 + metP4).pt();
+    // double Smin_llMEt = comp_Smin(llP4, metP4.px(), metP4.py());
 
 
 //Older stuff below
@@ -2517,7 +2533,6 @@ int main(int argc, char *argv[]) {
     AllVars_Map["vbf_dR_jj"] =                        vbf_dR_jj;
     // AllVars_Map["nJet"] = comp_n_jet25_recl(selJets);
     // AllVars_Map["nJet_vbf"] = selJetsVBF.size();
-    // AllVars_Map["isVBF"] = isVBF;
 
     AllVars_Map["lhe_dEta_jj"] = lhe_dEta_jj;
     AllVars_Map["lhe_dPhi_jj"] = lhe_dPhi_jj;
@@ -2549,6 +2564,11 @@ int main(int argc, char *argv[]) {
     AllVars_Map["mass_jj_W"] = mass_jj_W;
     AllVars_Map["mass_jj_W2"] = mass_jj_W2;
     AllVars_Map["sum_mass_W"] = sum_mass_W;
+
+    AllVars_Map["sum_m_lj"] = sum_m_lj;
+    AllVars_Map["pT_sum"] = pT_sum;
+    AllVars_Map["m_ll"] = m_ll;
+    AllVars_Map["isVBF"] = isVBF;
     // AllVars_Map["nLep"] =                            selLeptons.size();
 
     // std::map<std::string, double> BDTInputs_spin2 =
@@ -2576,7 +2596,7 @@ int main(int argc, char *argv[]) {
     // //
     // double max_lep_eta = TMath::Max(std::abs(selLepton_lead -> eta()),
     // std::abs(selLepton_sublead -> eta()));
-    double max_jet_eta = comp_maxAbsEta_jet(selJetsVBF);
+    double max_jet_eta = comp_maxAbsEta_jet(VBFjets);
 
     //--- retrieve gen-matching flags
     std::vector<const GenMatchEntry *> genMatches =
@@ -2631,7 +2651,8 @@ int main(int argc, char *argv[]) {
               best_dEta_jj, best_dPhi_jj, best_m_jj, best_dR_jj,
               lhe_pt_lead, lhe_pt_sublead, matched_pt_lead, matched_pt_sublead, best_pt_lead, best_pt_sublead,
               genjet_dEta_jj, genjet_dPhi_jj, genjet_m_jj, genjet_dR_jj,
-              mass_jj_W, mass_jj_W2, sum_mass_W
+              mass_jj_W, mass_jj_W2, sum_mass_W,
+              sum_m_lj, pT_sum, m_ll, isVBF
               );
         }
         // selHistManager->datacard_->fillHistograms(
@@ -2732,7 +2753,7 @@ int main(int argc, char *argv[]) {
           ("evtWeight",               evtWeight_BDT)
           ("mindr_lep1_jet",          std::min(10., mindr_lep1_jet))
           ("mindr_lep2_jet",          std::min(10., mindr_lep2_jet))
-          ("max_jet_eta",             comp_maxAbsEta_jet(selJetsVBF))
+          ("max_jet_eta",             comp_maxAbsEta_jet(VBFjets))
 
           ("lhe_dEta_jj",             lhe_dEta_jj)
           ("lhe_dPhi_jj",             lhe_dPhi_jj)
@@ -2764,6 +2785,11 @@ int main(int argc, char *argv[]) {
           ("mass_jj_W",              mass_jj_W)
           ("mass_jj_W2",              mass_jj_W2)
           ("sum_mass_W",              sum_mass_W)
+
+          ("sum_m_lj",              sum_m_lj)
+          ("pT_sum",              pT_sum)
+          ("m_ll",              m_ll)
+          ("isVBF",             isVBF)
           (weightMapHH)
         .fill();
     }

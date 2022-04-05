@@ -32,7 +32,8 @@ public:
                       double best_dEta_jj, double best_dPhi_jj, double best_m_jj, double best_dR_jj,
                       double lhe_pt_lead, double lhe_pt_sublead, double matched_pt_lead, double matched_pt_sublead, double best_pt_lead, double best_pt_sublead,
                       double genjet_dEta_jj, double genjet_dPhi_jj, double genjet_m_jj, double genjet_dR_jj,
-                      double mass_jj_W, double mass_jj_W2, double sum_mass_W
+                      double mass_jj_W, double mass_jj_W2, double sum_mass_W,
+                      double sum_m_lj, double pT_sum, double m_ll, bool isVBF
                       );
 
   const TH1 *getHistogram_EventCounter() const;
@@ -82,6 +83,11 @@ private:
   TH1 *histogram_mass_jj_W_;
   TH1 *histogram_mass_jj_W2_;
   TH1 *histogram_sum_mass_W_;
+
+  TH1 *histogram_sum_m_lj_;
+  TH1 *histogram_pT_sum_;
+  TH1 *histogram_m_ll_;
+  TH1 *histogram_isVBF_;
 };
 
 #endif
