@@ -13,6 +13,7 @@
 #include <FWCore/PythonParameterSet/interface/MakeParameterSets.h> // edm::readPSetsFrom()
 #endif
 
+
 #include <TBenchmark.h>     // TBenchmark
 #include <TError.h>         // gErrorAbortLevel, kError
 #include <TLorentzVector.h> // TLorentzVector
@@ -1095,7 +1096,7 @@ int main(int argc, char *argv[]) {
         "mass_jj_W", "mass_jj_W2", "sum_mass_W",
         "sum_m_lj", "pT_sum", "m_ll",
         "maxJetPt_vbf", "minJetPt_vbf", "mindR_vbfJet_W1", "maxdR_vbfJet_W1", "mindR_vbfjet_lep", "maxdR_vbfjet_lep",
-        "dR_h1h2", "pT_h1", "pT_h2", "dR_h1_j1", "dR_h1_j2", "dR_h2_j1", "dR_h2_j2", "mass_h1", "mass_h2"
+        "dR_h1h2", "pT_h1", "pT_h2", "dR_h1_j1", "dR_h1_j2", "dR_h2_j1", "dR_h2_j2", "mass_h1", "mass_h2", "dihiggsm", "dihiggsm_wmet"
     );
     bdt_filler->register_variable<int_type>("isVBF");
     bdt_filler->bookTree(fs);
@@ -2203,7 +2204,8 @@ int main(int argc, char *argv[]) {
          i++) {
       if (selJetsAK8_Wjj[i] && selJetsAK8_Wjj[i]->subJet1() &&
           selJetsAK8_Wjj[i]->subJet2()) {
-        if (deltaR(VBFjet1, selJetsAK8_Wjj[i]->p4()) != 0 and deltaR(VBFjet2, selJetsAK8_Wjj[i]->p4()) != 0){
+        if (deltaR(VBFjet1, selJetsAK8_Wjj[i]->subJet1()->p4()) != 0 and deltaR(VBFjet2, selJetsAK8_Wjj[i]->subJet1()->p4()) != 0
+          and deltaR(VBFjet1, selJetsAK8_Wjj[i]->subJet2()->p4()) != 0 and deltaR(VBFjet2, selJetsAK8_Wjj[i]->subJet2()->p4()) != 0){
             selJetsAK8_Wjj_selected.push_back(selJetsAK8_Wjj[i]);
         } // Add suitable jets to selJetsAK8_Wjj_selected
       }
@@ -2231,12 +2233,26 @@ int main(int argc, char *argv[]) {
     math::PtEtaPhiMLorentzVector selJet2P4;
     math::PtEtaPhiMLorentzVector selJet3P4;
     math::PtEtaPhiMLorentzVector selJet4P4;
-
+    // std::cout << "seljets: " << selJets.size() << std::endl;
+    // std::cout << "seljets cleaned: " << selJets_c.size() << std::endl;
+    // std::cout << "AK8 jets: " << selJetsAK8.size() << std::endl;
+    // std::cout << "AK8 jets Wjj: " << selJetsAK8_Wjj.size()<< std::endl;
+    // std::cout << "AK8 jets Wjj selected: " << selJetsAK8_Wjj_selected.size()<< std::endl;
     if (selJetsAK8_Wjj_selected.size() >= 2) { // boosted category
       selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
                   selJetsAK8_Wjj_selected[0]->subJet2()->p4());
-      selJet2P4 = (selJetsAK8_Wjj_selected[1]->subJet1()->p4() +
+      selJetP4_2 = (selJetsAK8_Wjj_selected[1]->subJet1()->p4() +
                   selJetsAK8_Wjj_selected[1]->subJet2()->p4());
+      // std::cout << "----------------------boosted----------------------------" << std::endl;
+      // std::cout << "AK8 1: " << selJetsAK8_Wjj_selected[0]->p4()<< std::endl;
+      // std::cout << "AK8 1 subjet 1: " << selJetsAK8_Wjj_selected[0]->subJet1()->p4()<< std::endl;
+      // std::cout << "AK8 1 subjet 2: " << selJetsAK8_Wjj_selected[0]->subJet2()->p4()<< std::endl;
+      // std::cout << "AK8 2: " << selJetsAK8_Wjj_selected[1]->p4()<< std::endl;
+      // std::cout << "AK8 2 subjet 1: " << selJetsAK8_Wjj_selected[1]->subJet1()->p4()<< std::endl;
+      // std::cout << "AK8 2 subjet 2: " << selJetsAK8_Wjj_selected[1]->subJet2()->p4()<< std::endl;
+      // std::cout << "1st W: " << selJetP4 << std::endl;
+      // std::cout << "2nd W: " << selJetP4_2 << std::endl;
+      // std::cout << "__________________________________________" << std::endl;
       isEventBoosted = true;
       // selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
       //             selJetsAK8_Wjj_selected[0]->subJet2()->p4() +
@@ -2277,8 +2293,17 @@ int main(int argc, char *argv[]) {
       if (idxWJet1 != 9999 && idxWJet2 != 9999) { // for 2 AK4 jets case
         selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
                     selJetsAK8_Wjj_selected[0]->subJet2()->p4());
-        selJet2P4 = (selJets_c[idxWJet1]->p4() +
+        selJetP4_2 = (selJets_c[idxWJet1]->p4() +
                     selJets_c[idxWJet2]->p4());
+      // std::cout << "---------------semi-boosted----------------" << std::endl;
+      // std::cout << "AK8: " << selJetsAK8_Wjj_selected[0]->p4()<< std::endl;
+      // std::cout << "AK8 1 subjet 1: " << selJetsAK8_Wjj_selected[0]->subJet1()->p4()<< std::endl;
+      // std::cout << "AK8 1 subjet 2: " << selJetsAK8_Wjj_selected[0]->subJet2()->p4()<< std::endl;
+      // std::cout << "Seljet 1: " << selJets_c[idxWJet1]->p4()<< std::endl;
+      // std::cout << "Seljet 2: " << selJets_c[idxWJet2]->p4()<< std::endl;
+      // std::cout << "1st W: " << selJetP4 << std::endl;
+      // std::cout << "2nd W: " << selJetP4_2 << std::endl;
+      // std::cout << "___________________________________________" << std::endl;
         // selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
         //             selJetsAK8_Wjj_selected[0]->subJet2()->p4() +
         //             selJets[idxWJet1]->p4() +
@@ -2287,7 +2312,7 @@ int main(int argc, char *argv[]) {
       } else if (!hasOverlapJets(selJets_c[0], selSubjetsAK8)) {
         selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
                     selJetsAK8_Wjj_selected[0]->subJet2()->p4());
-        selJet2P4 = selJets_c[0]->p4();
+        selJetP4_2 = selJets_c[0]->p4();
         // selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
         //             selJetsAK8_Wjj_selected[0]->subJet2()->p4() +
         //             selJets[0]->p4());
@@ -2307,7 +2332,11 @@ int main(int argc, char *argv[]) {
             mass_jj_W = mass_jj;
             selJet1P4 = (*selJet1_W)->p4();
             selJet2P4 = (*selJet2_W)->p4();
+            // std::cout << "---------------resolved----------------" << std::endl;
+            // std::cout << "selJet1P4: " << (*selJet1_W)->p4()<< std::endl;
+            // std::cout << "selJet2P4: " << (*selJet2_W)->p4()<< std::endl;
             selJetP4 = (*selJet1_W)->p4() + (*selJet2_W)->p4();
+            // std::cout << "1st W: " << selJetP4 << std::endl;
 
             // Off-shell W
             for (std::vector<const RecoJet *>::const_iterator selJet3_W =
@@ -2331,6 +2360,10 @@ int main(int argc, char *argv[]) {
                   selJet4P4 = (*selJet4_W)->p4();
                   mass_jj_W2 = mass_jj2;
                   selJetP4_2 = (*selJet3_W)->p4() + (*selJet4_W)->p4();
+                  // std::cout << "selJet3P4: " << (*selJet3_W)->p4()<< std::endl;
+                  // std::cout << "selJet4P4: " << (*selJet4_W)->p4()<< std::endl;
+                  // std::cout << "2nd W: " << selJetP4_2 << std::endl;
+                  // std::cout << "___________________________________________" << std::endl;
                 }
               }
             }
@@ -2481,16 +2514,14 @@ int main(int argc, char *argv[]) {
 
     // compute signal extraction observables
     double dihiggsVisMass_sel =
-        (selJetP4 + selJet2P4 + selLepton_lead->cone_p4() + selLepton_sublead->cone_p4())
+        (selJetP4 + selJetP4_2 + selLepton_lead->cone_p4() + selLepton_sublead->cone_p4())
             .mass();
-    double dihiggsMass_wMet_sel = (selJetP4 + selJet2P4 + selLepton_lead->cone_p4() +
+    double dihiggsMass_wMet_sel = (selJetP4 + selJetP4_2 + selLepton_lead->cone_p4() +
                                    selLepton_sublead->cone_p4() + met.p4()).mass();
 
     std::vector< math::PtEtaPhiMLorentzVector > Ws;
-    if(mass_jj_W > 0 and mass_jj_W2 > 0){
-      Ws.push_back(selJetP4);
-      Ws.push_back(selJet2P4);
-    }
+    Ws.push_back(selJetP4);
+    Ws.push_back(selJetP4_2);
 
     // Higgs Stuff
     math::PtEtaPhiMLorentzVector Higgs1;
@@ -2504,41 +2535,49 @@ int main(int argc, char *argv[]) {
     int bestW_id1 = 0;
     int bestW_id2 = 0;
 
+    // the highest pt sum
     for (size_t i = 0; i < Ws.size(); i++) {
         double mass_1 = (Ws[i] + selLepton_lead->cone_p4()).mass();
-      if (std::fabs(mass_1 - 125) < std::fabs(mass_h1 - 125)){
-        mass_h1 = mass_1;
-        bestW_id1 = i;
+        double h1_pt = (Ws[i] + selLepton_lead->cone_p4()).pt();
+      if (h1_pt > pT_h1){
+          pT_h1 = h1_pt;
+      // if (mass_1< mass_h1){
+          mass_h1 = mass_1;
+          bestW_id1 = i;
       }
     }
 
     for (int i = 0; i < static_cast<int>(Ws.size()); i++) {
         double mass_2 = (Ws[i] + selLepton_sublead->cone_p4()).mass();
-      if (std::fabs(mass_2 - 125) < std::fabs(mass_h2 - 125) and i != bestW_id1){
+        double h2_pt = (Ws[i] + selLepton_sublead->cone_p4()).pt();
+      if (h2_pt > pT_h2 and i != bestW_id1){
+        pT_h2 = h2_pt;
+      // if (mass_2 < mass_h2 and i != bestW_id1){
         mass_h2 = mass_2;
         bestW_id2 = i;
       }
     }
-    if(mass_h1 < 999 and mass_h2 < 999){
-      Higgs1 = (Ws[bestW_id1] + selLepton_lead->cone_p4());
-      Higgs2 = (Ws[bestW_id2] + selLepton_sublead->cone_p4());
-      dR_h1h2 = deltaR(Higgs1, Higgs2);
-      pT_h1 = Higgs1.pt();
-      pT_h2 = Higgs2.pt();
-    }
+
+    Higgs1 = (Ws[bestW_id1] + selLepton_lead->cone_p4());
+    Higgs2 = (Ws[bestW_id2] + selLepton_sublead->cone_p4());
+    dR_h1h2 = deltaR(Higgs1, Higgs2);
+
     double dR_h1_j1 = -1;
     double dR_h1_j2 = -1;
     double dR_h2_j1 = -1;
     double dR_h2_j2 = -1;
-    if(mass_h1 < 999 and mass_h2 < 999 and VBFjets.size() == 2){
-        dR_h1_j1 = deltaR(Higgs1, VBFjet1);
-        dR_h1_j2 = deltaR(Higgs1, VBFjet2);
-        dR_h2_j1 = deltaR(Higgs2, VBFjet1);
-        dR_h2_j2 = deltaR(Higgs2, VBFjet2);
-    }
-    // std::cout << "H1 mass: " << mass_h1 << std::endl;
-    // std::cout << "H2 mass: " << mass_h2 << std::endl;
-    // std::cout << "--------------------------" << std::endl;
+
+    dR_h1_j1 = deltaR(Higgs1, VBFjet1);
+    dR_h1_j2 = deltaR(Higgs1, VBFjet2);
+    dR_h2_j1 = deltaR(Higgs2, VBFjet1);
+    dR_h2_j2 = deltaR(Higgs2, VBFjet2);
+
+
+    double dihiggsm = -1;
+    double dihiggsm_wmet = -1;
+    dihiggsm = (Higgs1 + Higgs2).mass();
+    dihiggsm_wmet = (Higgs1 + Higgs2 + met.p4()).mass();
+
 
     // double jetMass_sel = mass_jj_W;
     // double leptonPairMass_sel = (selLepton_lead->cone_p4() +
@@ -2734,6 +2773,8 @@ int main(int argc, char *argv[]) {
     AllVars_Map["dR_h2_j2"] = dR_h2_j2;
     AllVars_Map["mass_h1"] = mass_h1;
     AllVars_Map["mass_h2"] = mass_h2;
+    AllVars_Map["dihiggsm"] = dihiggsm;
+    AllVars_Map["dihiggsm_wmet"] = dihiggsm_wmet;
     // AllVars_Map["nLep"] =                            selLeptons.size();
 
     // std::map<std::string, double> BDTInputs_spin2 =
@@ -2820,7 +2861,7 @@ int main(int argc, char *argv[]) {
               mass_jj_W, mass_jj_W2, sum_mass_W,
               sum_m_lj, pT_sum, m_ll, isVBF,
               maxJetPt_vbf, minJetPt_vbf, mindR_vbfJet_W1, maxdR_vbfJet_W1, mindR_vbfjet_lep, maxdR_vbfjet_lep,
-              dR_h1h2, pT_h1, pT_h2, dR_h1_j1, dR_h1_j2, dR_h2_j1, dR_h2_j2, mass_h1, mass_h2
+              dR_h1h2, pT_h1, pT_h2, dR_h1_j1, dR_h1_j2, dR_h2_j1, dR_h2_j2, mass_h1, mass_h2, dihiggsm, dihiggsm_wmet
               );
         }
         // selHistManager->datacard_->fillHistograms(
@@ -2976,6 +3017,8 @@ int main(int argc, char *argv[]) {
           ("dR_h2_j2",             dR_h2_j2)
           ("mass_h1",             mass_h1)
           ("mass_h2",             mass_h2)
+          ("dihiggsm",             dihiggsm)
+          ("dihiggsm_wmet",             dihiggsm_wmet)
           (weightMapHH)
         .fill();
     }
