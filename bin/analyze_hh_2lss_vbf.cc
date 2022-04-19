@@ -1096,7 +1096,8 @@ int main(int argc, char *argv[]) {
         "mass_jj_W", "mass_jj_W2", "sum_mass_W",
         "sum_m_lj", "pT_sum", "m_ll",
         "maxJetPt_vbf", "minJetPt_vbf", "mindR_vbfJet_W1", "maxdR_vbfJet_W1", "mindR_vbfjet_lep", "maxdR_vbfjet_lep",
-        "dR_h1h2", "pT_h1", "pT_h2", "dR_h1_j1", "dR_h1_j2", "dR_h2_j1", "dR_h2_j2", "mass_h1", "mass_h2", "dihiggsm", "dihiggsm_wmet"
+        "dR_h1h2", "pT_h1", "pT_h2", "dR_h1_j1", "dR_h1_j2", "dR_h2_j1", "dR_h2_j2", "mass_h1", "mass_h2",
+        "H1H2_centrality", "vbfj1_cosphi", "vbfj2_cosphi"
     );
     bdt_filler->register_variable<int_type>("isVBF");
     bdt_filler->bookTree(fs);
@@ -2530,8 +2531,8 @@ int main(int argc, char *argv[]) {
     double pT_h1 = -1;
     double pT_h2 = -1;
 
-    double mass_h1 = 999;
-    double mass_h2 = 999;
+    double mass_h1 = 9999;
+    double mass_h2 = 9999;
     int bestW_id1 = 0;
     int bestW_id2 = 0;
 
@@ -2540,8 +2541,8 @@ int main(int argc, char *argv[]) {
         double mass_1 = (Ws[i] + selLepton_lead->cone_p4()).mass();
         double h1_pt = (Ws[i] + selLepton_lead->cone_p4()).pt();
       if (h1_pt > pT_h1){
-          pT_h1 = h1_pt;
       // if (mass_1< mass_h1){
+          pT_h1 = h1_pt;
           mass_h1 = mass_1;
           bestW_id1 = i;
       }
@@ -2551,8 +2552,8 @@ int main(int argc, char *argv[]) {
         double mass_2 = (Ws[i] + selLepton_sublead->cone_p4()).mass();
         double h2_pt = (Ws[i] + selLepton_sublead->cone_p4()).pt();
       if (h2_pt > pT_h2 and i != bestW_id1){
-        pT_h2 = h2_pt;
       // if (mass_2 < mass_h2 and i != bestW_id1){
+        pT_h2 = h2_pt;
         mass_h2 = mass_2;
         bestW_id2 = i;
       }
@@ -2572,11 +2573,12 @@ int main(int argc, char *argv[]) {
     dR_h2_j1 = deltaR(Higgs2, VBFjet1);
     dR_h2_j2 = deltaR(Higgs2, VBFjet2);
 
+    double vbf_eta_avg = (VBFjet1.eta() + VBFjet2.eta())/2;
+    double H1H2_centrality = std::exp(-pow(((Higgs1.eta()-vbf_eta_avg)/(VBFjet1.eta()-VBFjet2.eta())),2)-
+                            pow(((Higgs2.eta()-vbf_eta_avg)/(VBFjet1.eta()-VBFjet2.eta())),2));
 
-    double dihiggsm = -1;
-    double dihiggsm_wmet = -1;
-    dihiggsm = (Higgs1 + Higgs2).mass();
-    dihiggsm_wmet = (Higgs1 + Higgs2 + met.p4()).mass();
+    double vbfj1_cosphi = cos(VBFjet1.phi());
+    double vbfj2_cosphi = cos(VBFjet2.phi());
 
 
     // double jetMass_sel = mass_jj_W;
@@ -2773,8 +2775,11 @@ int main(int argc, char *argv[]) {
     AllVars_Map["dR_h2_j2"] = dR_h2_j2;
     AllVars_Map["mass_h1"] = mass_h1;
     AllVars_Map["mass_h2"] = mass_h2;
-    AllVars_Map["dihiggsm"] = dihiggsm;
-    AllVars_Map["dihiggsm_wmet"] = dihiggsm_wmet;
+
+    AllVars_Map["H1H2_centrality"] = H1H2_centrality;
+    AllVars_Map["vbfj1_cosphi"] = vbfj1_cosphi;
+    AllVars_Map["vbfj2_cosphi"] = vbfj2_cosphi;
+
     // AllVars_Map["nLep"] =                            selLeptons.size();
 
     // std::map<std::string, double> BDTInputs_spin2 =
@@ -2861,7 +2866,8 @@ int main(int argc, char *argv[]) {
               mass_jj_W, mass_jj_W2, sum_mass_W,
               sum_m_lj, pT_sum, m_ll, isVBF,
               maxJetPt_vbf, minJetPt_vbf, mindR_vbfJet_W1, maxdR_vbfJet_W1, mindR_vbfjet_lep, maxdR_vbfjet_lep,
-              dR_h1h2, pT_h1, pT_h2, dR_h1_j1, dR_h1_j2, dR_h2_j1, dR_h2_j2, mass_h1, mass_h2, dihiggsm, dihiggsm_wmet
+              dR_h1h2, pT_h1, pT_h2, dR_h1_j1, dR_h1_j2, dR_h2_j1, dR_h2_j2, mass_h1, mass_h2,
+              H1H2_centrality, vbfj1_cosphi, vbfj2_cosphi
               );
         }
         // selHistManager->datacard_->fillHistograms(
@@ -3017,8 +3023,11 @@ int main(int argc, char *argv[]) {
           ("dR_h2_j2",             dR_h2_j2)
           ("mass_h1",             mass_h1)
           ("mass_h2",             mass_h2)
-          ("dihiggsm",             dihiggsm)
-          ("dihiggsm_wmet",             dihiggsm_wmet)
+
+          ("H1H2_centrality",             H1H2_centrality)
+          ("vbfj1_cosphi",             vbfj1_cosphi)
+          ("vbfj2_cosphi",             vbfj2_cosphi)
+
           (weightMapHH)
         .fill();
     }

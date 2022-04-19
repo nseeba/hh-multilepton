@@ -74,8 +74,10 @@ EvtHistManager_hh_2lss_vbf::EvtHistManager_hh_2lss_vbf(
   central_or_shiftOptions_["dR_h2_j2"] = { "central" };
   central_or_shiftOptions_["mass_h1"] = { "central" };
   central_or_shiftOptions_["mass_h2"] = { "central" };
-  central_or_shiftOptions_["dihiggsm"] = { "central" };
-  central_or_shiftOptions_["dihiggsm_wmet"] = { "central" };
+
+  central_or_shiftOptions_["H1H2_centrality"] = { "central" };
+  central_or_shiftOptions_["vbfj1_cosphi"] = { "central" };
+  central_or_shiftOptions_["vbfj2_cosphi"] = { "central" };
 }
 
 const TH1 *EvtHistManager_hh_2lss_vbf::getHistogram_EventCounter() const {
@@ -206,10 +208,13 @@ void EvtHistManager_hh_2lss_vbf::bookHistograms(TFileDirectory &dir) {
       dir, "mass_h1", "mass_h1", 30, 0., 600);
   histogram_mass_h2_ = book1D(
       dir, "mass_h2", "mass_h2", 30, 0., 600);
-  histogram_dihiggsm_ = book1D(
-      dir, "dihiggsm", "dihiggsm", 150, 0., 1500);
-  histogram_dihiggsm_wmet_ = book1D(
-      dir, "dihiggsm_wmet", "dihiggsm_wmet", 150, 0., 1500);
+
+  histogram_H1H2_centrality_ = book1D(
+      dir, "H1H2_centrality", "H1H2_centrality", 30, 0., 1.2);
+  histogram_vbfj1_cosphi_ = book1D(
+      dir, "vbfj1_cosphi", "vbfj1_cosphi", 30, 0., 1.2);
+  histogram_vbfj2_cosphi_ = book1D(
+      dir, "vbfj2_cosphi", "vbfj2_cosphi", 30, 0., 1.2);
 }
 
 void EvtHistManager_hh_2lss_vbf::fillHistograms(
@@ -227,7 +232,7 @@ void EvtHistManager_hh_2lss_vbf::fillHistograms(
     double sum_m_lj, double pT_sum, double m_ll, bool isVBF,
     double maxJetPt_vbf, double minJetPt_vbf, double mindR_vbfJet_W1, double maxdR_vbfJet_W1, double mindR_vbfjet_lep, double maxdR_vbfjet_lep,
     double dR_h1h2, double pT_h1, double pT_h2, double dR_h1_j1, double dR_h1_j2, double dR_h2_j1, double dR_h2_j2, double mass_h1, double mass_h2,
-    double dihiggsm, double dihiggsm_wmet
+    double H1H2_centrality, double vbfj1_cosphi, double vbfj2_cosphi
     )
 
 {
@@ -388,16 +393,15 @@ void EvtHistManager_hh_2lss_vbf::fillHistograms(
   if(dR_h2_j2>0){
       fillWithOverFlow(histogram_dR_h2_j2_,       dR_h2_j2,       evtWeight, evtWeightErr);
   }
-  if(mass_h1<999){
+  if(mass_h1<9999){
       fillWithOverFlow(histogram_mass_h1_,       mass_h1,       evtWeight, evtWeightErr);
   }
-  if(mass_h2<999){
+  if(mass_h2<9999){
       fillWithOverFlow(histogram_mass_h2_,       mass_h2,       evtWeight, evtWeightErr);
   }
-  if(dihiggsm>0){
-      fillWithOverFlow(histogram_dihiggsm_,       dihiggsm,       evtWeight, evtWeightErr);
-  }
-  if(dihiggsm_wmet>0){
-      fillWithOverFlow(histogram_dihiggsm_wmet_,       dihiggsm_wmet,       evtWeight, evtWeightErr);
-  }
+
+  fillWithOverFlow(histogram_H1H2_centrality_,      H1H2_centrality,      evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_vbfj1_cosphi_,      vbfj1_cosphi,      evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_vbfj2_cosphi_,      vbfj2_cosphi,      evtWeight, evtWeightErr);
+
 }

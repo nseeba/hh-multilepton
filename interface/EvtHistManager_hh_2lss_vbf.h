@@ -36,7 +36,7 @@ public:
                       double sum_m_lj, double pT_sum, double m_ll, bool isVBF,
                       double maxJetPt_vbf, double minJetPt_vbf, double mindR_vbfJet_W1, double maxdR_vbfJet_W1, double mindR_vbfjet_lep, double maxdR_vbfjet_lep,
                       double dR_h1h2, double pT_h1, double pT_h2, double dR_h1_j1, double dR_h1_j2, double dR_h2_j1, double dR_h2_j2, double mass_h1, double mass_h2,
-                      double dihiggsm, double dihiggsm_wmet
+                      double H1H2_centrality, double vbfj1_cosphi, double vbfj2_cosphi
                       );
 
   const TH1 *getHistogram_EventCounter() const;
@@ -109,8 +109,10 @@ private:
   TH1 *histogram_dR_h2_j2_;
   TH1 *histogram_mass_h1_;
   TH1 *histogram_mass_h2_;
-  TH1 *histogram_dihiggsm_;
-  TH1 *histogram_dihiggsm_wmet_;
+
+  TH1 *histogram_H1H2_centrality_;
+  TH1 *histogram_vbfj1_cosphi_;
+  TH1 *histogram_vbfj2_cosphi_;
 };
 
 #endif
