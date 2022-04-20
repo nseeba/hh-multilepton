@@ -2524,6 +2524,16 @@ int main(int argc, char *argv[]) {
     Ws.push_back(selJetP4);
     Ws.push_back(selJetP4_2);
 
+
+    // const RecoLepton *selLepton_lead = selLeptons[0];
+    // const Particle::LorentzVector& selLeptonP4_lead =
+    // selLepton_lead->cone_p4();
+    // const RecoLepton *selLepton_sublead = selLeptons[1];
+    // const Particle::LorentzVector& selLeptonP4_sublead =
+    // selLepton_sublead->cone_p4();
+    // std::vector< math::PtEtaPhiMLorentzVector > Ws;
+    // Ws.push_back(selJetP4);
+
     // Higgs Stuff
     math::PtEtaPhiMLorentzVector Higgs1;
     math::PtEtaPhiMLorentzVector Higgs2;
@@ -2533,35 +2543,83 @@ int main(int argc, char *argv[]) {
 
     double mass_h1 = 9999;
     double mass_h2 = 9999;
-    int bestW_id1 = 0;
-    int bestW_id2 = 0;
+    // double dR1_h = 100000;
+    // double dR2_h = 100000;
 
-    // the highest pt sum
+    int bestW_idx = 0;
+    int bestl_idx = 0;
+
+    // int bestW_id2 = 0;
+    // int bestW_id1_ = 0;
+
+    // double mass_higgs = -1;
+    double dR_h = 100000;
+    double pT_h = -1;
     for (size_t i = 0; i < Ws.size(); i++) {
-        double mass_1 = (Ws[i] + selLepton_lead->cone_p4()).mass();
-        double h1_pt = (Ws[i] + selLepton_lead->cone_p4()).pt();
-      if (h1_pt > pT_h1){
-      // if (mass_1< mass_h1){
-          pT_h1 = h1_pt;
-          mass_h1 = mass_1;
-          bestW_id1 = i;
+      for (size_t j = 0; j < selLeptons.size(); j++){
+        double mass_h = (Ws[i] + selLeptons[j]->cone_p4()).mass();
+        double h_pt = (Ws[i] + selLeptons[j]->cone_p4()).pt();
+        double wl_dr = deltaR(Ws[i], selLeptons[j]->cone_p4());
+        if(wl_dr < dR_h and Ws[i].mass() != 0 and wl_dr < 1.5){
+          mass_h1 = mass_h;
+          dR_h = wl_dr;
+          pT_h = h_pt;
+          bestW_idx = i;
+          bestl_idx = j;
+        }
+        else if(h_pt > pT_h and dR_h == 100000){
+          pT_h = h_pt;
+          mass_h1 = mass_h;
+          dR_h = 100000;
+          bestW_idx = i;
+          bestl_idx = j;
+        }
       }
     }
 
-    for (int i = 0; i < static_cast<int>(Ws.size()); i++) {
-        double mass_2 = (Ws[i] + selLepton_sublead->cone_p4()).mass();
-        double h2_pt = (Ws[i] + selLepton_sublead->cone_p4()).pt();
-      if (h2_pt > pT_h2 and i != bestW_id1){
-      // if (mass_2 < mass_h2 and i != bestW_id1){
-        pT_h2 = h2_pt;
-        mass_h2 = mass_2;
-        bestW_id2 = i;
-      }
-    }
+    int badW_idx = (bestW_idx +1) % 2;
+    int badl_idx = (bestl_idx +1) % 2;
+    Higgs1 = (Ws[bestW_idx] + selLeptons[bestl_idx]->cone_p4());
+    Higgs2 = (Ws[badW_idx] + selLeptons[badl_idx]->cone_p4());
 
-    Higgs1 = (Ws[bestW_id1] + selLepton_lead->cone_p4());
-    Higgs2 = (Ws[bestW_id2] + selLepton_sublead->cone_p4());
+    pT_h1 = Higgs1.pt();
+    pT_h2 = Higgs2.pt();
+    mass_h1 = Higgs1.mass();
+    mass_h2 = Higgs2.mass();
     dR_h1h2 = deltaR(Higgs1, Higgs2);
+
+    // for (size_t i = 0; i < Ws.size(); i++) {
+    //     double mass_1 = (Ws[i] + selLepton_lead->cone_p4()).mass();
+    //     double h1_pt = (Ws[i] + selLepton_lead->cone_p4()).pt();
+    //     double h1_dr = deltaR(Ws[i], selLepton_lead->cone_p4());
+    //   // if (h1_pt > pT_h1){
+    //   // if (mass_1< mass_h1){
+    //   if (h1_dr < dR1_h){
+    //       pT_h1 = h1_pt;
+    //       mass_h1 = mass_1;
+    //       dR1_h = h1_dr;
+    //       bestW_id1 = i;
+    //   }
+    // }
+
+    // for (int i = 0; i < static_cast<int>(Ws.size()); i++) {
+    //     double mass_2 = (Ws[i] + selLepton_sublead->cone_p4()).mass();
+    //     double h2_pt = (Ws[i] + selLepton_sublead->cone_p4()).pt();
+    //     double h2_dr = deltaR(Ws[i], selLepton_sublead->cone_p4());
+    //   // if (h2_pt > pT_h2 and i != bestW_id1){
+    //   // if (mass_2 < mass_h2 and i != bestW_id1){
+    //     if (h2_dr < dR2_h and i != bestW_id1){
+    //     pT_h2 = h2_pt;
+    //     mass_h2 = mass_2;
+    //     dR2_h = h2_dr;
+    //     bestW_id2 = i;
+
+    //   }
+    // }
+
+    // Higgs1 = (Ws[bestW_id1] + selLepton_lead->cone_p4());
+    // Higgs2 = (Ws[bestW_id2] + selLepton_sublead->cone_p4());
+    // dR_h1h2 = deltaR(Higgs1, Higgs2);
 
     double dR_h1_j1 = -1;
     double dR_h1_j2 = -1;
@@ -2593,12 +2651,12 @@ int main(int argc, char *argv[]) {
 
     double mindR_vbfJet_W1 =-1;
     double maxdR_vbfJet_W1 = -1;
-    if(VBFjets.size()==2){
+    // if(VBFjets.size()==2){
       double dr_j1_W = deltaR(selJetP4, VBFjet1);
       double dr_j2_W = deltaR(selJetP4, VBFjet2);
       mindR_vbfJet_W1 = std::min(dr_j1_W, dr_j2_W);
       maxdR_vbfJet_W1 = std::max(dr_j1_W, dr_j2_W);
-    }
+    // }
 
     double mindR_vbfjet_lep = std::min(mindR_vbfjet_lep1, mindR_vbfjet_lep2);
     double maxdR_vbfjet_lep = std::max(mindR_vbfjet_lep1, mindR_vbfjet_lep2);

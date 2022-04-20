@@ -210,7 +210,7 @@ void EvtHistManager_hh_2lss_vbf::bookHistograms(TFileDirectory &dir) {
       dir, "mass_h2", "mass_h2", 30, 0., 600);
 
   histogram_H1H2_centrality_ = book1D(
-      dir, "H1H2_centrality", "H1H2_centrality", 30, 0., 1.2);
+      dir, "H1H2_centrality", "H1H2_centrality", 30, 0., 1.5);
   histogram_vbfj1_cosphi_ = book1D(
       dir, "vbfj1_cosphi", "vbfj1_cosphi", 30, 0., 1.2);
   histogram_vbfj2_cosphi_ = book1D(
@@ -399,8 +399,9 @@ void EvtHistManager_hh_2lss_vbf::fillHistograms(
   if(mass_h2<9999){
       fillWithOverFlow(histogram_mass_h2_,       mass_h2,       evtWeight, evtWeightErr);
   }
-
-  fillWithOverFlow(histogram_H1H2_centrality_,      H1H2_centrality,      evtWeight, evtWeightErr);
+  if(H1H2_centrality>0){
+    fillWithOverFlow(histogram_H1H2_centrality_,      H1H2_centrality,      evtWeight, evtWeightErr);
+  }
   fillWithOverFlow(histogram_vbfj1_cosphi_,      vbfj1_cosphi,      evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_vbfj2_cosphi_,      vbfj2_cosphi,      evtWeight, evtWeightErr);
 
