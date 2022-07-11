@@ -2513,7 +2513,7 @@ int main(int argc, char *argv[]) {
         InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin0, false);
     std::map<std::string, double> BDTInputs_nonRes = InitializeInputVarMap(
         AllVars_Map, BDTInputVariables_nonRes,
-        true); // Include all Input Var.s except BM indices
+        true); // Include all Input Var.s except   indices
     // std::map<std::string, double> BDTInputs_nonRes_base =
     // InitializeInputVarMap(AllVars_Map, BDTInputVariables_nonRes_base, true);
 

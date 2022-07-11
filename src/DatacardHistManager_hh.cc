@@ -153,3 +153,67 @@ DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & mva
     }
   }
 }
+
+void
+DatacardHistManager_hh::fillHistograms(const std::map<std::string, double> & mvaOutputs_nonresonant,
+                                       double mvaOutput_nonresonant_allBMs,
+                                       double evtWeight)
+{
+  const double evtWeightErr = 0.;
+
+  compHHReweightMap();
+
+  for ( std::vector<categoryEntryType>::iterator categoryEntry = histograms_in_categories_.begin(); 
+        categoryEntry != histograms_in_categories_.end(); ++categoryEntry ) {
+    if ( categoryEntry->category_ != -1 )
+    {
+      assert(eventCategory_);
+      if ( !eventCategory_->isSelected(categoryEntry->category_) ) continue;
+    }
+    for ( const auto & decayMode: decayModes_ )
+    {
+      if (! ( decayMode == "*" ||
+            (analysisConfig_.isMC_HH() && decayMode == eventInfo_.getDiHiggsDecayModeString()) ||
+            (analysisConfig_.isMC_H()  && decayMode == eventInfo_.getDecayModeString())        ))
+      {
+        continue;
+      }
+      for ( const auto & productionMode: productionModes_ )
+      {
+        if ( ! ( productionMode == "*" ||
+                 (analysisConfig_.isMC_VH() && productionMode == eventInfo_.getProductionModeString()) ))
+        {
+          continue;
+        }
+
+        if ( fillHistograms_nonresonant_ )
+        {
+          for ( std::map<std::string, std::string>::const_iterator histogramName = histogramNames_mvaOutput_nonresonant_.begin();
+                histogramName != histogramNames_mvaOutput_nonresonant_.end(); ++histogramName ) {
+            const std::string & key_nonresonant = histogramName->first;
+            boost::variant<TH1*, TH2*> histogram = categoryEntry->histograms_mvaOutput_nonresonant_[productionMode][decayMode][key_nonresonant];
+            TH1* histogram_boost = boost::get<TH1*>(histogram);
+            std::map<std::string, double>::const_iterator mvaOutput = mvaOutputs_nonresonant.find(key_nonresonant);
+            if ( mvaOutput == mvaOutputs_nonresonant.end() )
+              throw cmsException(this, __func__, __LINE__)
+                << "No MVA output provided to fill histogram = '" << histogramName->second << "' !!\n"
+                << "(available MVA outputs = " << format_vstring(get_keys(mvaOutputs_nonresonant)) << ")\n";
+            double evtWeight_reweighted = evtWeight;
+            double evtWeightErr_reweighted = evtWeightErr;
+            if ( analysisConfig_.isMC_HH_nonresonant() && (apply_HH_rwgt_lo_ || apply_HH_rwgt_nlo_) )
+            {
+              const std::string& bmName = histogramName->first;
+              std::map<std::string, double>::const_iterator HHReweight = HHReweightMap_.find(bmName);
+              assert(HHReweight != HHReweightMap_.end());
+              evtWeight_reweighted *= HHReweight->second;
+              evtWeightErr_reweighted *= HHReweight->second;
+            }
+            fillWithOverFlow(histogram_boost, mvaOutput->second, evtWeight_reweighted, evtWeightErr_reweighted);
+          }
+          TH1* histogram = categoryEntry->histograms_mvaOutput_nonresonant_allBMs_[productionMode][decayMode];
+          fillWithOverFlow(histogram, mvaOutput_nonresonant_allBMs, evtWeight, evtWeightErr);
+        }
+      }
+    }
+  }
+}

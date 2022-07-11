@@ -1,0 +1,246 @@
+{
+    "correlations": {
+        "feature_importances": {}, 
+        "dropped": [
+            {
+                "feature": "maxJetPt_vbf", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "vbf_pt_lead", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "minJetPt_vbf", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "sum_mass_W", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "dihiggsMass_wMet_sel", 
+                "feature_importance": {}
+            }
+        ]
+    }, 
+    "optimization_0": {
+        "feature_importances": {
+            "maxdR_vbfjet_lep": 14, 
+            "pT_h2": 11, 
+            "pT_h1": 12, 
+            "H1H2_centrality": 23, 
+            "vbf_pt_sublead": 27, 
+            "vbf_dEta_jj": 10, 
+            "minJetEta_vbf": 8, 
+            "vbfj1_cosphi": 10, 
+            "pT_sum": 30, 
+            "maxJetEta_vbf": 8, 
+            "vbfj2_cosphi": 15, 
+            "mindR_vbfJet_W1": 4, 
+            "mass_jj_W": 6, 
+            "dR_h1h2": 17, 
+            "sum_m_lj": 24, 
+            "maxdR_vbfJet_W1": 7, 
+            "vbf_dR_jj": 15, 
+            "m_ll": 37, 
+            "dR_h2_j1": 10, 
+            "dR_h2_j2": 15, 
+            "vbf_m_jj": 43, 
+            "vbf_dPhi_jj": 1, 
+            "dR_h1_j1": 11, 
+            "dihiggsVisMass_sel": 6, 
+            "dR_h1_j2": 14, 
+            "mindR_vbfjet_lep": 5, 
+            "mass_jj_W2": 6, 
+            "mass_h1": 18, 
+            "mass_h2": 25, 
+            "mindR_vbfjet_lep1": 7, 
+            "mindR_vbfjet_lep2": 5
+        }, 
+        "dropped": [
+            {
+                "feature": "mindR_vbfjet_lep", 
+                "feature_importance": 5
+            }, 
+            {
+                "feature": "mindR_vbfJet_W1", 
+                "feature_importance": 4
+            }, 
+            {
+                "feature": "vbf_dPhi_jj", 
+                "feature_importance": 1
+            }, 
+            {
+                "feature": "mindR_vbfjet_lep2", 
+                "feature_importance": 5
+            }, 
+            {
+                "feature": "mass_jj_W2", 
+                "feature_importance": 6
+            }
+        ]
+    }, 
+    "optimization_1": {
+        "feature_importances": {
+            "maxdR_vbfjet_lep": 14, 
+            "pT_h2": 15, 
+            "pT_h1": 12, 
+            "H1H2_centrality": 25, 
+            "sum_m_lj": 19, 
+            "vbf_dEta_jj": 14, 
+            "minJetEta_vbf": 15, 
+            "vbfj1_cosphi": 11, 
+            "pT_sum": 24, 
+            "maxJetEta_vbf": 15, 
+            "vbfj2_cosphi": 11, 
+            "mass_jj_W": 8, 
+            "dR_h1h2": 21, 
+            "vbf_pt_sublead": 29, 
+            "maxdR_vbfJet_W1": 18, 
+            "vbf_dR_jj": 20, 
+            "m_ll": 35, 
+            "dR_h2_j1": 5, 
+            "dR_h2_j2": 10, 
+            "vbf_m_jj": 37, 
+            "dR_h1_j1": 15, 
+            "dihiggsVisMass_sel": 6, 
+            "dR_h1_j2": 10, 
+            "mass_h1": 19, 
+            "mass_h2": 26, 
+            "mindR_vbfjet_lep1": 11
+        }, 
+        "dropped": [
+            {
+                "feature": "dR_h2_j1", 
+                "feature_importance": 5
+            }, 
+            {
+                "feature": "dihiggsVisMass_sel", 
+                "feature_importance": 6
+            }, 
+            {
+                "feature": "mass_jj_W", 
+                "feature_importance": 8
+            }, 
+            {
+                "feature": "dR_h2_j2", 
+                "feature_importance": 10
+            }, 
+            {
+                "feature": "dR_h1_j2", 
+                "feature_importance": 10
+            }
+        ]
+    }, 
+    "optimization_2": {
+        "feature_importances": {
+            "m_ll": 44, 
+            "dR_h1_j1": 13, 
+            "maxdR_vbfjet_lep": 18, 
+            "vbf_dR_jj": 22, 
+            "pT_h2": 19, 
+            "maxdR_vbfJet_W1": 8, 
+            "pT_h1": 13, 
+            "H1H2_centrality": 23, 
+            "sum_m_lj": 26, 
+            "maxJetEta_vbf": 14, 
+            "mass_h1": 20, 
+            "vbfj2_cosphi": 16, 
+            "minJetEta_vbf": 13, 
+            "vbfj1_cosphi": 12, 
+            "dR_h1h2": 22, 
+            "vbf_m_jj": 39, 
+            "mass_h2": 27, 
+            "mindR_vbfjet_lep1": 15, 
+            "vbf_pt_sublead": 35, 
+            "vbf_dEta_jj": 18, 
+            "pT_sum": 29
+        }, 
+        "dropped": [
+            {
+                "feature": "pT_h1", 
+                "feature_importance": 13
+            }, 
+            {
+                "feature": "maxdR_vbfJet_W1", 
+                "feature_importance": 8
+            }, 
+            {
+                "feature": "dR_h1_j1", 
+                "feature_importance": 13
+            }, 
+            {
+                "feature": "vbfj1_cosphi", 
+                "feature_importance": 12
+            }, 
+            {
+                "feature": "minJetEta_vbf", 
+                "feature_importance": 13
+            }
+        ]
+    }, 
+    "optimization_3": {
+        "feature_importances": {
+            "m_ll": 49, 
+            "maxdR_vbfjet_lep": 24, 
+            "vbf_dR_jj": 29, 
+            "pT_h2": 20, 
+            "H1H2_centrality": 27, 
+            "pT_sum": 34, 
+            "vbf_dEta_jj": 14, 
+            "mass_h1": 28, 
+            "vbfj2_cosphi": 16, 
+            "maxJetEta_vbf": 21, 
+            "sum_m_lj": 30, 
+            "dR_h1h2": 25, 
+            "vbf_m_jj": 45, 
+            "mass_h2": 32, 
+            "mindR_vbfjet_lep1": 14, 
+            "vbf_pt_sublead": 37
+        }, 
+        "dropped": [
+            {
+                "feature": "vbf_dEta_jj", 
+                "feature_importance": 14
+            }, 
+            {
+                "feature": "mindR_vbfjet_lep1", 
+                "feature_importance": 14
+            }, 
+            {
+                "feature": "pT_h2", 
+                "feature_importance": 20
+            }, 
+            {
+                "feature": "vbfj2_cosphi", 
+                "feature_importance": 16
+            }, 
+            {
+                "feature": "maxJetEta_vbf", 
+                "feature_importance": 21
+            }
+        ]
+    }, 
+    "optimization_4": {
+        "feature_importances": {
+            "sum_m_lj": 45, 
+            "vbf_dR_jj": 37, 
+            "m_ll": 50, 
+            "H1H2_centrality": 37, 
+            "pT_sum": 41, 
+            "maxdR_vbfjet_lep": 26, 
+            "mass_h1": 27, 
+            "dR_h1h2": 40, 
+            "vbf_m_jj": 52, 
+            "mass_h2": 38, 
+            "vbf_pt_sublead": 51
+        }, 
+        "dropped": [
+            {
+                "feature": "maxdR_vbfjet_lep", 
+                "feature_importance": 26
+            }
+        ]
+    }
+}

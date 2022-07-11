@@ -46,6 +46,7 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
   }
 }
 
+
 DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet & cfg,
                                                        const AnalysisConfig_hh & analysisConfig, 
                                                        const EventInfo & eventInfo, 
@@ -317,6 +318,11 @@ DatacardHistManagerBase_hh::bookHistograms(TFileDirectory & dir)
                 histogramName != histogramNames_mvaOutput_nonresonant_.end(); ++histogramName ) {
             TH1* histogram = book1D(dir, histogramName->second, histogramName->second, numBinsX_, xMin_, xMax_);
             categoryEntry.histograms_mvaOutput_nonresonant_[productionMode][decayMode][histogramName->first] = histogram;
+            TH2* histogram_2d = book2D(dir, histogramName->second, histogramName->second, numBinsX_, xMin_, xMax_, numBinsX_, xMin_, xMax_);
+            // std::cout << "dir: "<< dir << std::endl;
+            categoryEntry.histograms_2DOutput_nonresonant_[productionMode][decayMode][histogramName->first] = histogram_2d;
+            // TFileDirectory::new_TDF = TFileDirectory::TFileDirectory(dir.fullPath() + "_2d");
+
           }
           TH1* histogram = book1D(dir, histogramName_mvaOutput_nonresonant_allBMs_, histogramName_mvaOutput_nonresonant_allBMs_, numBinsX_, xMin_, xMax_);
           categoryEntry.histograms_mvaOutput_nonresonant_allBMs_[productionMode][decayMode] = histogram;

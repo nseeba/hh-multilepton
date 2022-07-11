@@ -88,15 +88,16 @@ void dumpEventYields_Stage2()
 
   TH1::AddDirectory(false);
   
-  bool showDataYield = false;
+  bool showDataYield = true;
   typedef std::vector<std::string> vstring;
   vstring channels;
   //channels.push_back("hh_0l_4tau");
   //channels.push_back("hh_1l_3tau");
   //channels.push_back("hh_2l_2tau");
   //channels.push_back("hh_3l_1tau");
-  channels.push_back("hh_4l");
+  // channels.push_back("hh_4l");
   //channels.push_back("hh_2lss");
+  channels.push_back("hh_2lss_vbf");
 
   /*
   int Era = 2016; 
@@ -106,19 +107,19 @@ void dumpEventYields_Stage2()
   std::cout << "scaling (Era: "<< Era  << ")  signal and background yields to L=" << lumi_projection_2016 << "fb^-1 @ 13 TeV." << std::endl;
   */
 
-  int Era = 2017; 
-  double lumi_datacard_2017 = 41.5;
-  double lumi_projection_2017 = 41.5;
-  double lumi_SF = lumi_projection_2017/lumi_datacard_2017;
-  std::cout << "scaling (Era: "<< Era  << ")  signal and background yields to L=" << lumi_projection_2017 << "fb^-1 @ 13 TeV." << std::endl;
+  // int Era = 2017; 
+  // double lumi_datacard_2017 = 41.5;
+  // double lumi_projection_2017 = 41.5;
+  // double lumi_SF = lumi_projection_2017/lumi_datacard_2017;
+  // std::cout << "scaling (Era: "<< Era  << ")  signal and background yields to L=" << lumi_projection_2017 << "fb^-1 @ 13 TeV." << std::endl;
 
-  /*
+  
   int Era = 2018; 
   double lumi_datacard_2018 = 59.7;
   double lumi_projection_2018 = 59.7;
   double lumi_SF = lumi_projection_2018/lumi_datacard_2018;
   std::cout << "scaling (Era: "<< Era  << ")  signal and background yields to L=" << lumi_projection_2018 << "fb^-1 @ 13 TeV." << std::endl;
-  */
+  
 
 
   // --------- Tight sumOS filePaths -----------
@@ -136,7 +137,7 @@ void dumpEventYields_Stage2()
   //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2017/2020Mar3_SS_Only/histograms/hh_2l_2tau/";
   //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2017/2020Mar3_deepVSjLoose_SS_Only/histograms/hh_2l_2tau/";
   //std::string inputFilePath = "/hdfs/local/ram/hhAnalysis/2017/2020Mar3_deepVSjVLoose_SS_Only/histograms/hh_2l_2tau/";
-  std::string inputFilePath = "/hdfs/local/tokramer/hhAnalysis/2017/firstTest/histograms/hh_4l/";
+  // std::string inputFilePath = "/hdfs/local/tokramer/hhAnalysis/2017/firstTest/histograms/hh_4l/";
 
   // 3l 1 tau file path
   // std::string inputFilePath = "/hdfs/local/tolange/hhAnalysis/2017/march2020/histograms/hh_3l_1tau/";
@@ -155,11 +156,14 @@ void dumpEventYields_Stage2()
   //std::string Tau_ID = "deepVSjMedium (2017)";
   //std::string Tau_ID = "deepVSjLoose (2017)";
   //std::string Tau_ID = "deepVSjVLoose (2017)";
-  std::string Tau_ID = "deepVSjVVLoose (2017)";
+  // std::string Tau_ID = "deepVSjVVLoose (2017)";
 
 
   //std::string inputFilePath = "/hdfs/local/sbhowmik/hhAnalysis/2017/2018Sept27/histograms/hh_2lss/";
   //std::string inputFilePath = "/hdfs/local/sbhowmik/hhAnalysis/2017/2017Sept29/histograms/hh_2lss/";
+
+// ----------2lss_vbf path--------------
+  std::string inputFilePath = "/hdfs/local/norman/hhAnalysis/2018/vbf_default_withcut_2/histograms/hh_2lss_vbf/";
 
   std::map<std::string, std::string> inputFileNames; // key = channel
   // inputFileNames["hh_0l_4tau"] = "hh_0l_4tau/histograms_harvested_stage2_hh_0l_4tau_Tight_OS.root";
@@ -172,19 +176,22 @@ void dumpEventYields_Stage2()
     //inputFileNames["hh_2l_2tau"] = "Tight_sumSS/hadd/histograms_harvested_stage2_hh_2l_2tau_disabled_disabled_Tight_SS.root";
   //}
   // inputFileNames["hh_3l_1tau"] = "hh_3l_1tau/histograms_harvested_stage2_hh_3l_1tau_Tight_OS.root";
-  inputFileNames["hh_4l"]      = "Tight_OS/hadd/hadd_stage2_Tight_OS.root";
+  // inputFileNames["hh_4l"]      = "Tight_OS/hadd/hadd_stage2_Tight_OS.root";
   //inputFileNames["hh_2lss"] = "histograms_harvested_stage2_hh_2lss_Tight_SS.root";
   //inputFileNames["hh_2lss"] = "histograms_harvested_stage2_hh_2lss_Tight_OS.root";
 
   //inputFileNames["hh_3l_1tau"] = "Tight_OS/hadd/hadd_stage2_Tight_OS.root";
-  inputFileNames["hh_3l_1tau"] = "Tight_SS/hadd/hadd_stage2_Tight_SS.root";
+  // inputFileNames["hh_3l_1tau"] = "Tight_SS/hadd/hadd_stage2_Tight_SS.root";
   //inputFileNames["hh_3l_1tau"] = "Fakeable_wFakeRateWeights_OS/hadd/hadd_stage2_Fakeable_wFakeRateWeights_OS.root";
+
+  inputFileNames["hh_2lss_vbf"] = "Tight_SS/hadd/hadd_stage2_Tight_SS.root";
+  // inputFileNames["hh_2lss_vbf"] = "Tight_OS/hadd/hadd_stage2_Tight_OS.root";
 
   std::map<std::string, std::string> directories; // key = channel
   // directories["hh_0l_4tau"] = "hh_0l_4tau_OS_Tight/sel/evt";
   // directories["hh_1l_3tau"] = "hh_1l_3tau_OS_Tight/sel/evt";
   // directories["hh_3l_1tau"] = "hh_3l_1tau_OS_lepTight_tauTight/sel/evt";
-   directories["hh_4l"]      = "hh_4l_OS_Tight/sel/evt";
+   // directories["hh_4l"]      = "hh_4l_OS_Tight/sel/evt";
   //directories["hh_2lss"] = "hh_2lss_SS_Tight/sel/evt";
   //directories["hh_2lss"] = "hh_2lss_OS_Tight/sel/evt";
 
@@ -192,10 +199,11 @@ void dumpEventYields_Stage2()
   //directories["hh_2l_2tau"] = "hh_2l_2tau_sumSS_Tight/sel/evt";
 
    // directories["hh_3l_1tau"] = "hh_3l_1tau_OS_lepTight_tauTight/sel/evt";
-   directories["hh_3l_1tau"] = "hh_3l_1tau_SS_lepTight_tauTight/sel/evt";
+   // directories["hh_3l_1tau"] = "hh_3l_1tau_SS_lepTight_tauTight/sel/evt";
    // directories["hh_3l_1tau"] = "hh_3l_1tau_OS_lepFakeable_tauFakeable_wFakeRateWeights/sel/evt";
 
-
+  directories["hh_2lss_vbf"] = "hh_2lss_vbf_SS_Tight/sel/evt";
+  // directories["hh_2lss_vbf"] = "hh_2lss_vbf_OS_Tight/sel/evt";
 
   std::map<std::string, vstring> signal_processes; // key = channel
   //signal_processes["hh_2l_2tau"].push_back("signal_spin0_400_hh");
@@ -206,51 +214,56 @@ void dumpEventYields_Stage2()
   //signal_processes["hh_2lss"].push_back("signal_ggf_spin0_400_hh_wwtt");
   //signal_processes["hh_2lss"].push_back("signal_ggf_spin0_400_hh_wwww");
   //signal_processes["hh_2lss"].push_back("signal_spin0_400_hh");
-  signal_processes["hh_4l"].push_back("signal_ggf_spin0_400_hh_tttt");
-  signal_processes["hh_4l"].push_back("signal_ggf_spin0_400_hh_wwtt");
-  signal_processes["hh_4l"].push_back("signal_ggf_spin0_400_hh_wwww");
-  signal_processes["hh_4l"].push_back("signal_spin0_400_hh");
-  signal_processes["hh_4l"].push_back("signal_ggf_nonresonant_hh_wwww");
-  signal_processes["hh_4l"].push_back("signal_ggf_nonresonant_hh_wwtt");
-  signal_processes["hh_4l"].push_back("signal_ggf_nonresonant_hh_tttt");
+  // signal_processes["hh_4l"].push_back("signal_ggf_spin0_400_hh_tttt");
+  // signal_processes["hh_4l"].push_back("signal_ggf_spin0_400_hh_wwtt");
+  // signal_processes["hh_4l"].push_back("signal_ggf_spin0_400_hh_wwww");
+  // signal_processes["hh_4l"].push_back("signal_spin0_400_hh");
+  // signal_processes["hh_4l"].push_back("signal_ggf_nonresonant_hh_wwww");
+  // signal_processes["hh_4l"].push_back("signal_ggf_nonresonant_hh_wwtt");
+  // signal_processes["hh_4l"].push_back("signal_ggf_nonresonant_hh_tttt");
 
-  signal_processes["hh_3l_1tau"].push_back("signal_ggf_spin0_400_hh_tttt");
-  signal_processes["hh_3l_1tau"].push_back("signal_ggf_spin0_400_hh_wwtt");
-  signal_processes["hh_3l_1tau"].push_back("signal_ggf_spin0_400_hh_wwww");
-  signal_processes["hh_3l_1tau"].push_back("signal_spin0_400_hh");
-  signal_processes["hh_3l_1tau"].push_back("signal_ggf_nonresonant_hh_wwww");
-  signal_processes["hh_3l_1tau"].push_back("signal_ggf_nonresonant_hh_wwtt");
-  signal_processes["hh_3l_1tau"].push_back("signal_ggf_nonresonant_hh_tttt");
+  // signal_processes["hh_3l_1tau"].push_back("signal_ggf_spin0_400_hh_tttt");
+  // signal_processes["hh_3l_1tau"].push_back("signal_ggf_spin0_400_hh_wwtt");
+  // signal_processes["hh_3l_1tau"].push_back("signal_ggf_spin0_400_hh_wwww");
+  // signal_processes["hh_3l_1tau"].push_back("signal_spin0_400_hh");
+  // signal_processes["hh_3l_1tau"].push_back("signal_ggf_nonresonant_hh_wwww");
+  // signal_processes["hh_3l_1tau"].push_back("signal_ggf_nonresonant_hh_wwtt");
+  // signal_processes["hh_3l_1tau"].push_back("signal_ggf_nonresonant_hh_tttt");
+
+  // 2lss_vbf
+  signal_processes["hh_2lss_vbf"].push_back("signal_vbf_nonresonant_1_1_1_hh");
+  signal_processes["hh_2lss_vbf"].push_back("signal_vbf_nonresonant_1_2_1_hh");
+  signal_processes["hh_2lss_vbf"].push_back("signal_ggf_nonresonant_cHHH1_hh");
 
   std::vector<std::string> signal_process_parts;
   signal_process_parts.push_back("");
   signal_process_parts.push_back("_Convs");
   signal_process_parts.push_back("_fake");
-  
+
   std::map<std::string, vstring> background_processes; // key = channel
-  background_processes["hh_4l"].push_back("VH");
-  background_processes["hh_4l"].push_back("TT");
-  background_processes["hh_4l"].push_back("ZZ");
-  background_processes["hh_4l"].push_back("WZ");
-  background_processes["hh_4l"].push_back("WW");
-  background_processes["hh_4l"].push_back("DY");
-  background_processes["hh_4l"].push_back("W");
-  background_processes["hh_4l"].push_back("TTWW");
-  background_processes["hh_4l"].push_back("TTW");
-  background_processes["hh_4l"].push_back("TTZ");
-  background_processes["hh_4l"].push_back("TTH");
-  background_processes["hh_4l"].push_back("TH");
-  background_processes["hh_4l"].push_back("qqH");
-  background_processes["hh_4l"].push_back("ggH");
-  background_processes["hh_4l"].push_back("XGamma");
-  background_processes["hh_4l"].push_back("Other");
-  background_processes["hh_4l"].push_back("Convs");
-  background_processes["hh_4l"].push_back("fakes_mc");
-  background_processes["hh_4l"].push_back("data_fakes");
-  background_processes["hh_4l"].push_back("flips_mc");
-  if(showDataYield){
-    background_processes["hh_4l"].push_back("data_obs");
-  }
+  // background_processes["hh_4l"].push_back("VH");
+  // background_processes["hh_4l"].push_back("TT");
+  // background_processes["hh_4l"].push_back("ZZ");
+  // background_processes["hh_4l"].push_back("WZ");
+  // background_processes["hh_4l"].push_back("WW");
+  // background_processes["hh_4l"].push_back("DY");
+  // background_processes["hh_4l"].push_back("W");
+  // background_processes["hh_4l"].push_back("TTWW");
+  // background_processes["hh_4l"].push_back("TTW");
+  // background_processes["hh_4l"].push_back("TTZ");
+  // background_processes["hh_4l"].push_back("TTH");
+  // background_processes["hh_4l"].push_back("TH");
+  // background_processes["hh_4l"].push_back("qqH");
+  // background_processes["hh_4l"].push_back("ggH");
+  // background_processes["hh_4l"].push_back("XGamma");
+  // background_processes["hh_4l"].push_back("Other");
+  // background_processes["hh_4l"].push_back("Convs");
+  // background_processes["hh_4l"].push_back("fakes_mc");
+  // background_processes["hh_4l"].push_back("data_fakes");
+  // background_processes["hh_4l"].push_back("flips_mc");
+  // if(showDataYield){
+  //   background_processes["hh_4l"].push_back("data_obs");
+  // }
   /*
   background_processes["hh_2l_2tau"].push_back("VH");
   background_processes["hh_2l_2tau"].push_back("TT");
@@ -295,28 +308,49 @@ void dumpEventYields_Stage2()
   //background_processes["hh_2lss"].push_back("fakes_mc");
   */
 
-  background_processes["hh_3l_1tau"].push_back("VH");
-  background_processes["hh_3l_1tau"].push_back("TT");
-  background_processes["hh_3l_1tau"].push_back("ZZ");
-  background_processes["hh_3l_1tau"].push_back("WZ");
-  background_processes["hh_3l_1tau"].push_back("WW");
-  background_processes["hh_3l_1tau"].push_back("DY");
-  background_processes["hh_3l_1tau"].push_back("W");
-  background_processes["hh_3l_1tau"].push_back("TTWW");
-  background_processes["hh_3l_1tau"].push_back("TTW");
-  background_processes["hh_3l_1tau"].push_back("TTZ");
-  background_processes["hh_3l_1tau"].push_back("TTH");
-  background_processes["hh_3l_1tau"].push_back("TH");
-  background_processes["hh_3l_1tau"].push_back("qqH");
-  background_processes["hh_3l_1tau"].push_back("ggH");
-  background_processes["hh_3l_1tau"].push_back("XGamma");
-  background_processes["hh_3l_1tau"].push_back("Other");
-  background_processes["hh_3l_1tau"].push_back("Convs");
-  background_processes["hh_3l_1tau"].push_back("fakes_mc");
-  background_processes["hh_3l_1tau"].push_back("data_fakes");
-  background_processes["hh_3l_1tau"].push_back("flips_mc");
+  // background_processes["hh_3l_1tau"].push_back("VH");
+  // background_processes["hh_3l_1tau"].push_back("TT");
+  // background_processes["hh_3l_1tau"].push_back("ZZ");
+  // background_processes["hh_3l_1tau"].push_back("WZ");
+  // background_processes["hh_3l_1tau"].push_back("WW");
+  // background_processes["hh_3l_1tau"].push_back("DY");
+  // background_processes["hh_3l_1tau"].push_back("W");
+  // background_processes["hh_3l_1tau"].push_back("TTWW");
+  // background_processes["hh_3l_1tau"].push_back("TTW");
+  // background_processes["hh_3l_1tau"].push_back("TTZ");
+  // background_processes["hh_3l_1tau"].push_back("TTH");
+  // background_processes["hh_3l_1tau"].push_back("TH");
+  // background_processes["hh_3l_1tau"].push_back("qqH");
+  // background_processes["hh_3l_1tau"].push_back("ggH");
+  // background_processes["hh_3l_1tau"].push_back("XGamma");
+  // background_processes["hh_3l_1tau"].push_back("Other");
+  // background_processes["hh_3l_1tau"].push_back("Convs");
+  // background_processes["hh_3l_1tau"].push_back("fakes_mc");
+  // background_processes["hh_3l_1tau"].push_back("data_fakes");
+  // background_processes["hh_3l_1tau"].push_back("flips_mc");
+
+
+  background_processes["hh_2lss_vbf"].push_back("VH");
+  background_processes["hh_2lss_vbf"].push_back("TT");
+  background_processes["hh_2lss_vbf"].push_back("ZZ");
+  background_processes["hh_2lss_vbf"].push_back("WZ");
+  background_processes["hh_2lss_vbf"].push_back("WW");
+  background_processes["hh_2lss_vbf"].push_back("DY");
+  background_processes["hh_2lss_vbf"].push_back("W");
+  background_processes["hh_2lss_vbf"].push_back("TTWW");
+  background_processes["hh_2lss_vbf"].push_back("TTW");
+  background_processes["hh_2lss_vbf"].push_back("TTZ");
+  background_processes["hh_2lss_vbf"].push_back("TTH");
+  background_processes["hh_2lss_vbf"].push_back("TH");
+  background_processes["hh_2lss_vbf"].push_back("qqH");
+  background_processes["hh_2lss_vbf"].push_back("ggH");
+  background_processes["hh_2lss_vbf"].push_back("Other");
+  background_processes["hh_2lss_vbf"].push_back("Convs");
+  background_processes["hh_2lss_vbf"].push_back("fakes_mc");
+  background_processes["hh_2lss_vbf"].push_back("data_fakes");
+  background_processes["hh_2lss_vbf"].push_back("flips_mc");
   if(showDataYield){
-    background_processes["hh_4l"].push_back("data_obs");
+    background_processes["hh_2lss_vbf"].push_back("data_obs");
   }
   
   std::vector<std::string> background_process_parts;
@@ -338,7 +372,7 @@ void dumpEventYields_Stage2()
       assert(0);
 
     }
-    std::cout<< "\\begin{frame}{ Event Yields: " <<  Tau_ID <<  "} " << std::endl;
+    // std::cout<< "\\begin{frame}{ Event Yields: " <<  Tau_ID <<  "} " << std::endl;
     std::cout<< "\\fontsize{7pt}{8}\\selectfont  " << std::endl;
     std::cout << " \\begin{table}[htbp]" << std::endl;
     std::string category_name = directories[*channel];
