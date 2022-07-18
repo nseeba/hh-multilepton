@@ -18,7 +18,7 @@ process.fwliteOutput = cms.PSet(
     fileName = cms.string('')
 )
 
-process.analyze_hh_2lss_leq1tau = cms.PSet(
+process.analyze_hh_2lss_leq1tau_vbf = cms.PSet(
     treeName = cms.string('Events'),
 
     process = cms.string(''),
