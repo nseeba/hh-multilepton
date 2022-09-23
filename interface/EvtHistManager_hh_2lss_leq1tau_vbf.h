@@ -36,7 +36,9 @@ public:
                       double sum_m_lj, double pT_sum, double m_ll, bool isVBF,
                       double maxJetPt_vbf, double minJetPt_vbf, double mindR_vbfJet_W1, double maxdR_vbfJet_W1, double mindR_vbfjet_lep, double maxdR_vbfjet_lep,
                       double dR_h1h2, double pT_h1, double pT_h2, double dR_h1_j1, double dR_h1_j2, double dR_h2_j1, double dR_h2_j2, double mass_h1, double mass_h2,
-                      double H1H2_centrality, double vbfj1_cosphi, double vbfj2_cosphi
+                      double H1H2_centrality, double vbfj1_cosphi, double vbfj2_cosphi, double m_l_tau, double dR_l_tau, double mT_lep_tau, double charge_ltau,
+                      double dihiggsVisMass_comp, double dihiggsVisMass_wMET_comp, double z_lep1, double z_lep2, double dR_jj_ll
+
                       );
 
    const TH1 *getHistogram_EventCounter() const;
@@ -92,6 +94,18 @@ private:
   TH1 *histogram_H1H2_centrality_;
   TH1 *histogram_vbfj1_cosphi_;
   TH1 *histogram_vbfj2_cosphi_;
+
+  TH1 *histogram_m_l_tau_;
+  TH1 *histogram_dR_l_tau_;
+  TH1 *histogram_mT_lep_tau_;
+  TH1 *histogram_charge_ltau_;
+
+  TH1 *histogram_dihiggsVisMass_comp_;
+  TH1 *histogram_dihiggsVisMass_wMET_comp_;
+
+  TH1 *histogram_z_lep1_;
+  TH1 *histogram_z_lep2_;
+  TH1 *histogram_dR_jj_ll_;
 };
 
 #endif

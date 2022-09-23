@@ -60,6 +60,18 @@ EvtHistManager_hh_2lss_leq1tau_vbf::EvtHistManager_hh_2lss_leq1tau_vbf(const edm
   central_or_shiftOptions_["H1H2_centrality"] = { "central" };
   central_or_shiftOptions_["vbfj1_cosphi"] = { "central" };
   central_or_shiftOptions_["vbfj2_cosphi"] = { "central" };
+
+  central_or_shiftOptions_["m_l_tau"] = { "central" };
+  central_or_shiftOptions_["dR_l_tau"] = { "central" };
+  central_or_shiftOptions_["mT_lep_tau"] = { "central" };
+  central_or_shiftOptions_["charge_ltau"] = { "central" };
+
+  central_or_shiftOptions_["dihiggsVisMass_comp"] = { "central" };
+  central_or_shiftOptions_["dihiggsVisMass_wMET_comp"] = { "central" };
+
+  central_or_shiftOptions_["z_lep1"] = { "central" };
+  central_or_shiftOptions_["z_lep2"] = { "central" };
+  central_or_shiftOptions_["dR_jj_ll"] = { "central" };
 }
 
 
@@ -157,6 +169,27 @@ void EvtHistManager_hh_2lss_leq1tau_vbf::bookHistograms(TFileDirectory &dir) {
       dir, "vbfj1_cosphi", "vbfj1_cosphi", 30, 0., 1.2);
   histogram_vbfj2_cosphi_ = book1D(
       dir, "vbfj2_cosphi", "vbfj2_cosphi", 30, 0., 1.2);
+
+  histogram_m_l_tau_ = book1D(
+      dir, "m_l_tau", "m_l_tau", 30, 0., 600);
+  histogram_dR_l_tau_ = book1D(
+      dir, "dR_l_tau", "dR_l_tau", 30, 0., 10);
+  histogram_mT_lep_tau_ = book1D(
+      dir, "mT_lep_tau", "mT_lep_tau", 30, 0., 600);
+  histogram_charge_ltau_ = book1D(
+      dir, "charge_ltau", "charge_ltau", 10, -2., 2);
+
+  histogram_dihiggsVisMass_comp_ = book1D(
+      dir, "dihiggsVisMass_comp", "dihiggsVisMass_comp", 150, 0., 1500);
+  histogram_dihiggsVisMass_wMET_comp_ = book1D(
+      dir, "dihiggsVisMass_wMET_comp", "dihiggsVisMass_wMET_comp", 150, 0., 1500);
+
+  histogram_z_lep1_ = book1D(
+      dir, "z_lep1", "z_lep1", 30, 0., 5);
+  histogram_z_lep2_ = book1D(
+      dir, "z_lep2", "z_lep2", 30, 0., 30);
+  histogram_dR_jj_ll_ = book1D(
+      dir, "dR_jj_ll", "dR_jj_ll", 100, 0., 10);
 }
 
 void EvtHistManager_hh_2lss_leq1tau_vbf::fillHistograms(
@@ -172,7 +205,8 @@ void EvtHistManager_hh_2lss_leq1tau_vbf::fillHistograms(
     double sum_m_lj, double pT_sum, double m_ll, bool isVBF,
     double maxJetPt_vbf, double minJetPt_vbf, double mindR_vbfJet_W1, double maxdR_vbfJet_W1, double mindR_vbfjet_lep, double maxdR_vbfjet_lep,
     double dR_h1h2, double pT_h1, double pT_h2, double dR_h1_j1, double dR_h1_j2, double dR_h2_j1, double dR_h2_j2, double mass_h1, double mass_h2,
-    double H1H2_centrality, double vbfj1_cosphi, double vbfj2_cosphi
+    double H1H2_centrality, double vbfj1_cosphi, double vbfj2_cosphi, double m_l_tau, double dR_l_tau, double mT_lep_tau, double charge_ltau ,
+    double dihiggsVisMass_comp, double dihiggsVisMass_wMET_comp, double z_lep1, double z_lep2, double dR_jj_ll
     )
 
 {
@@ -288,4 +322,29 @@ void EvtHistManager_hh_2lss_leq1tau_vbf::fillHistograms(
   fillWithOverFlow(histogram_vbfj1_cosphi_,      vbfj1_cosphi,      evtWeight, evtWeightErr);
   fillWithOverFlow(histogram_vbfj2_cosphi_,      vbfj2_cosphi,      evtWeight, evtWeightErr);
 
+
+  if(m_l_tau<999){
+    fillWithOverFlow(histogram_m_l_tau_,      m_l_tau,      evtWeight, evtWeightErr);
+  }
+  if(dR_l_tau>0){
+    fillWithOverFlow(histogram_dR_l_tau_,      dR_l_tau,      evtWeight, evtWeightErr);
+  }
+  if(mT_lep_tau>0){
+    fillWithOverFlow(histogram_mT_lep_tau_,      mT_lep_tau,      evtWeight, evtWeightErr);
+  }
+  if(charge_ltau>-999){
+    fillWithOverFlow(histogram_charge_ltau_,      charge_ltau,      evtWeight, evtWeightErr);
+  }
+
+  fillWithOverFlow(histogram_dihiggsVisMass_comp_, dihiggsVisMass_comp, evtWeight,
+                   evtWeightErr);
+  fillWithOverFlow(histogram_dihiggsVisMass_wMET_comp_, dihiggsVisMass_wMET_comp,
+                   evtWeight, evtWeightErr);
+
+  fillWithOverFlow(histogram_z_lep1_, z_lep1, evtWeight,
+                   evtWeightErr);
+  fillWithOverFlow(histogram_z_lep2_, z_lep2,
+                   evtWeight, evtWeightErr);
+  fillWithOverFlow(histogram_dR_jj_ll_, dR_jj_ll, evtWeight,
+                   evtWeightErr);
 }

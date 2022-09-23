@@ -928,7 +928,7 @@ int main(int argc, char* argv[])
 //         });
 //       }
 
-// VBF BDT stuff
+// // VBF BDT stuff
       if(! skipBooking)
       {
         selHistManager->mvaInputVarCorrelation_ = new MVAInputVarCorrelationHistManager(makeHistManager_cfg(process_and_genMatch,
@@ -990,41 +990,12 @@ int main(int argc, char* argv[])
         bdt_filler->register_variable<float_type>(bmName.data());
       }
     }
-  //   // Original 2lss BDT
-  //   bdt_filler->register_variable<float_type>(
-  //     "dihiggsVisMass_sel", "dihiggsMass_wMet_sel", "jetMass_sel", "leptonPairMass_sel", "leptonPairCharge_sel",
-  //     "met", "mht", "met_LD",
-  //     "HT", "STMET",
-  //     "evtWeight",
-  //     "lep1_pt", "lep1_conePt", "lep1_eta", "mindr_lep1_jet", "mT_lep1",
-  //     "lep2_pt", "lep2_conePt", "lep2_eta", "mindr_lep2_jet", "mT_lep2",
-  //     "dR_ll", "pT_ll", "max_lep_eta",
-  //     "pT_llMEt", "Smin_llMEt",
-  //     "vbf_m_jj", "vbf_dEta_jj",
-  //     //
-  //     "dPhi_ll",
-  //     "mass_2j_fromW1", "mass_2j_fromW2", "dR_2j_fromW1", "dR_2j_fromW2",
-  //     "dR_Wjets_min", "dR_Wjets_max", "dR_l_Wjets_min",
-  //     "dR_l_Wjets_max", "dR_l_AK4jets_min", "dR_l_AK4jets_max", "dR_l_leadWjet_min", "dR_l_leadWjet_max", "dR_l_leadAK4jet_min", "dR_l_leadAK4jet_max",      
-  //     //
-  //     "THWeight", "mhh_gen", "costS_gen",
-  //     "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "data_to_MC_correction","FR_Weight", "lep1_frWeight", "lep2_frWeight", "evtWeight"
-  //   );
-  //   bdt_filler->register_variable<int_type>(
-  //     "BM", "nJet", "nJet_vbf", "isVBF", "nLep", "nLep_loose", "nElec",
-  //     //
-  //     "nElectrons_in_2lss",
-  //     "nAK8_w2subjets", "nWJets_selected",
-  //     "nTaus",
-  //     "eventCategory"
-  //   );
-  //   bdt_filler->bookTree(fs);
-  // }
-
     // VBF BDT
     bdt_filler->register_variable<float_type>(
         "dihiggsVisMass_sel",
         "dihiggsMass_wMet_sel",
+        "met", "mht", "met_LD",
+        "HT", "STMET",
         "evtWeight",
         "mindR_vbfjet_lep1",
         "mindR_vbfjet_lep2",
@@ -1035,15 +1006,47 @@ int main(int argc, char* argv[])
         "sum_m_lj", "pT_sum", "m_ll",
         "maxJetPt_vbf", "minJetPt_vbf", "mindR_vbfJet_W1", "maxdR_vbfJet_W1", "mindR_vbfjet_lep", "maxdR_vbfjet_lep",
         "dR_h1h2", "pT_h1", "pT_h2", "dR_h1_j1", "dR_h1_j2", "dR_h2_j1", "dR_h2_j2", "mass_h1", "mass_h2",
-        "H1H2_centrality", "vbfj1_cosphi", "vbfj2_cosphi"
+        "H1H2_centrality", "vbfj1_cosphi", "vbfj2_cosphi", "m_l_tau", "dR_l_tau", "mT_lep_tau", "charge_ltau",
+        "z_lep1", "z_lep2", "dR_jj_ll"
     );
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bdt_filler->register_variable<int_type>(
-      "BM", "nJet", "nJet_vbf", "isVBF", "nLep", "nLep_loose", "nElec",
+      "isVBF", "BM", "nJet", "nJet_vbf", "nLep", "nLep_loose", "nElec",
       "eventCategory"
     );
     bdt_filler->bookTree(fs);
   }
+
+
+// Original 2lss leq1tau bdt
+  //   bdt_filler->register_variable<float_type>(
+  //     "dihiggsVisMass_sel", "dihiggsMass_wMet_sel", "jetMass_sel", "leptonPairMass_sel", "leptonPairCharge_sel",
+  //     "met", "mht", "met_LD",
+  //     "HT", "STMET",
+  //     "evtWeight",
+  //     "lep1_pt", "lep1_conePt", "lep1_eta", "mindr_lep1_jet", "mT_lep1",
+  //     "lep2_pt", "lep2_conePt", "lep2_eta", "mindr_lep2_jet", "mT_lep2",
+  //     "dR_ll", "pT_ll", "max_lep_eta",
+  //     "pT_llMEt", "Smin_llMEt",
+  //     "vbf_m_jj", "vbf_dEta_jj",
+  //     "dPhi_ll",
+  //     "mass_2j_fromW1", "mass_2j_fromW2", "dR_2j_fromW1", "dR_2j_fromW2",
+  //     "dR_Wjets_min", "dR_Wjets_max", "dR_l_Wjets_min",
+  //     "dR_l_Wjets_max", "dR_l_AK4jets_min", "dR_l_AK4jets_max", "dR_l_leadWjet_min", "dR_l_leadWjet_max", "dR_l_leadAK4jet_min", "dR_l_leadAK4jet_max",
+  //     "THWeight", "mhh_gen", "costS_gen",
+  //     "genWeight" , "lheWeight" , "pileupWeight", "triggerWeight", "btagWeight", "leptonEffSF", "data_to_MC_correction","FR_Weight", "lep1_frWeight", "lep2_frWeight", "evtWeight",
+  //     "m_l_tau", "dR_l_tau", "mT_lep_tau", "charge_ltau"
+  //   );
+  //   bdt_filler->register_variable<int_type>(
+  //     "BM", "nJet", "nJet_vbf", "isVBF", "nLep", "nLep_loose", "nElec",
+  //     "nElectrons_in_2lss",
+  //     "nAK8_w2subjets", "nWJets_selected",
+  //     "nTaus",
+  //     "eventCategory"
+  //   );
+  //   bdt_filler->bookTree(fs);
+  // }
+
 
 
 // Original bdt spin stuff
@@ -1967,6 +1970,233 @@ int main(int argc, char* argv[])
 
 
 // W boson stuff//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // std::vector<RecoJetAK8> jets_ak8 = jetReaderAK8->read();
+    // std::vector<const RecoJetAK8 *> jet_ptrs_ak8 = convert_to_ptrs(jets_ak8);
+    // std::vector<const RecoJetAK8 *> selJetsAK8 =
+    //     jetSelectorAK8(jet_ptrs_ak8, isHigherPt);
+    // jetSelectorAK8_Wjj.getSelector().set_leptons(
+    //     {selLeptons[0], selLeptons[1]});
+    // std::vector<const RecoJetAK8 *> selJetsAK8_Wjj =
+    //     jetSelectorAK8_Wjj(jet_ptrs_ak8, isHigherPt);
+    // std::vector<const RecoJetAK8 *> selJetsAK8_Wjj_selected;
+    // const RecoJetAK8 *selJetAK8_Wjj = nullptr;
+
+    // bool isEventBoosted = false;
+    // bool isEventSemiboosted = false;
+    // bool isEventResolved = false;
+    // Particle::LorentzVector selJetP4;
+    // Particle::LorentzVector selJetP4_2;
+    // double mass_jj_W = 0;
+    // double mass_jj_W2 = 0;
+
+    // for (size_t i = 0; i < selJetsAK8_Wjj.size();
+    //      i++) {
+    //   if (selJetsAK8_Wjj[i] && selJetsAK8_Wjj[i]->subJet1() &&
+    //       selJetsAK8_Wjj[i]->subJet2()) {
+    //     if (deltaR(VBFjet1, selJetsAK8_Wjj[i]->subJet1()->p4()) != 0 and deltaR(VBFjet2, selJetsAK8_Wjj[i]->subJet1()->p4()) != 0
+    //       and deltaR(VBFjet1, selJetsAK8_Wjj[i]->subJet2()->p4()) != 0 and deltaR(VBFjet2, selJetsAK8_Wjj[i]->subJet2()->p4()) != 0){
+    //         selJetsAK8_Wjj_selected.push_back(selJetsAK8_Wjj[i]);
+    //     } // Add suitable jets to selJetsAK8_Wjj_selected
+    //   }
+    // }
+
+    // // for (size_t i = 0; i < selJetsAK8_Wjj.size();
+    // //      i++) { // Loop over all selJetsAK8
+    // //   if (selJetsAK8_Wjj[i] && selJetsAK8_Wjj[i]->subJet1() &&
+    // //       selJetsAK8_Wjj[i]->subJet2()) {
+    // //     selJetsAK8_Wjj_selected.push_back(
+    // //         selJetsAK8_Wjj[i]); // Add suitable jets to selJetsAK8_Wjj_selected
+    // //                             // if condition is satisfied
+    // //   }
+    // // }
+
+    // std::vector<const RecoJet *> selJets_c;
+    // for (size_t i = 0; i < selJets.size(); i++) {
+    //     if (deltaR(VBFjet1, selJets[i]->p4()) != 0 and deltaR(VBFjet2, selJets[i]->p4()) != 0){
+    //       selJets_c.push_back(selJets[i]);
+    //     }
+    // }
+
+
+    // math::PtEtaPhiMLorentzVector selJet1P4;
+    // math::PtEtaPhiMLorentzVector selJet2P4;
+    // math::PtEtaPhiMLorentzVector selJet3P4;
+    // math::PtEtaPhiMLorentzVector selJet4P4;
+    // // std::cout << "seljets: " << selJets.size() << std::endl;
+    // // std::cout << "seljets cleaned: " << selJets_c.size() << std::endl;
+    // // std::cout << "AK8 jets: " << selJetsAK8.size() << std::endl;
+    // // std::cout << "AK8 jets Wjj: " << selJetsAK8_Wjj.size()<< std::endl;
+    // // std::cout << "AK8 jets Wjj selected: " << selJetsAK8_Wjj_selected.size()<< std::endl;
+    // if (selJetsAK8_Wjj_selected.size() >= 2) { // boosted category
+    //   selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
+    //               selJetsAK8_Wjj_selected[0]->subJet2()->p4());
+    //   selJetP4_2 = (selJetsAK8_Wjj_selected[1]->subJet1()->p4() +
+    //               selJetsAK8_Wjj_selected[1]->subJet2()->p4());
+    //   // std::cout << "----------------------boosted----------------------------" << std::endl;
+    //   // std::cout << "AK8 1: " << selJetsAK8_Wjj_selected[0]->p4()<< std::endl;
+    //   // std::cout << "AK8 1 subjet 1: " << selJetsAK8_Wjj_selected[0]->subJet1()->p4()<< std::endl;
+    //   // std::cout << "AK8 1 subjet 2: " << selJetsAK8_Wjj_selected[0]->subJet2()->p4()<< std::endl;
+    //   // std::cout << "AK8 2: " << selJetsAK8_Wjj_selected[1]->p4()<< std::endl;
+    //   // std::cout << "AK8 2 subjet 1: " << selJetsAK8_Wjj_selected[1]->subJet1()->p4()<< std::endl;
+    //   // std::cout << "AK8 2 subjet 2: " << selJetsAK8_Wjj_selected[1]->subJet2()->p4()<< std::endl;
+    //   // std::cout << "1st W: " << selJetP4.mass() << std::endl;
+    //   // std::cout << "2nd W: " << selJetP4_2.mass() << std::endl;
+    //   // std::cout << "__________________________________________" << std::endl;
+    //   isEventBoosted = true;
+    //   // selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
+    //   //             selJetsAK8_Wjj_selected[0]->subJet2()->p4() +
+    //   //             selJetsAK8_Wjj_selected[1]->subJet1()->p4() +
+    //   //             selJetsAK8_Wjj_selected[1]
+    //   //                 ->subJet2()
+    //   //                 ->p4());
+    // } else if (selJetsAK8_Wjj_selected.size() == 1 &&
+    //            selJets_c.size() >= 1) { // semiboosted category
+    //   std::vector<const RecoSubjetAK8 *> selSubjetsAK8 = {
+    //       selJetsAK8_Wjj_selected[0]->subJet1(),
+    //       selJetsAK8_Wjj_selected[0]->subJet2()};
+    //   double dm_min = 9999.;
+    //   size_t idxWJet1 = 9999;
+    //   size_t idxWJet2 = 9999;
+    //   for (size_t iJet1 = 0; iJet1 < selJets_c.size();
+    //        iJet1++) {
+    //     const RecoJet *jet1 =
+    //         selJets_c[iJet1];
+    //     if (hasOverlapJets(jet1, selSubjetsAK8))
+    //       continue;
+
+    //     for (size_t iJet2 = iJet1 + 1; iJet2 < selJets_c.size();
+    //          iJet2++) {
+    //       const RecoJet *jet2 =
+    //           selJets_c[iJet2];
+    //       if (hasOverlapJets(jet2, selSubjetsAK8))
+    //         continue;
+
+    //       double dm = std::fabs((jet1->p4() + jet2->p4()).mass() - w_mass);
+    //       if (dm < dm_min) {
+    //         dm_min = dm;
+    //         idxWJet1 = iJet1;
+    //         idxWJet2 = iJet2;
+    //       }
+    //     }
+    //   }
+    //   if (idxWJet1 != 9999 && idxWJet2 != 9999) { // for 2 AK4 jets case
+    //     selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
+    //                 selJetsAK8_Wjj_selected[0]->subJet2()->p4());
+    //     selJetP4_2 = (selJets_c[idxWJet1]->p4() +
+    //                 selJets_c[idxWJet2]->p4());
+    //   // std::cout << "---------------semi-boosted----------------" << std::endl;
+    //   // std::cout << "AK8: " << selJetsAK8_Wjj_selected[0]->p4()<< std::endl;
+    //   // std::cout << "AK8 1 subjet 1: " << selJetsAK8_Wjj_selected[0]->subJet1()->p4()<< std::endl;
+    //   // std::cout << "AK8 1 subjet 2: " << selJetsAK8_Wjj_selected[0]->subJet2()->p4()<< std::endl;
+    //   // std::cout << "Seljet 1: " << selJets_c[idxWJet1]->p4()<< std::endl;
+    //   // std::cout << "Seljet 2: " << selJets_c[idxWJet2]->p4()<< std::endl;
+    //   // std::cout << "1st W: " << selJetP4.mass() << std::endl;
+    //   // std::cout << "2nd W: " << selJetP4_2.mass() << std::endl;
+    //   // std::cout << "___________________________________________" << std::endl;
+    //     // selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
+    //     //             selJetsAK8_Wjj_selected[0]->subJet2()->p4() +
+    //     //             selJets[idxWJet1]->p4() +
+    //     //             selJets[idxWJet2]->p4());
+    //     isEventSemiboosted = true;
+    //   } else if (!hasOverlapJets(selJets_c[0], selSubjetsAK8)) {
+    //     selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
+    //                 selJetsAK8_Wjj_selected[0]->subJet2()->p4());
+    //     selJetP4_2 = selJets_c[0]->p4();
+    //     // selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
+    //     //             selJetsAK8_Wjj_selected[0]->subJet2()->p4() +
+    //     //             selJets[0]->p4());
+    //     isEventSemiboosted = true;
+    //   }
+    // } else if (selJetsAK8_Wjj_selected.size() == 0 &&
+    //            selJets_c.size() >= 1) { // resolved category
+    //   mass_jj_W = 0;
+    //   mass_jj_W2 = 0;
+    //   for (std::vector<const RecoJet *>::const_iterator selJet1_W = selJets_c.begin();
+    //        selJet1_W != selJets_c.end(); ++selJet1_W) {
+    //     for (std::vector<const RecoJet *>::const_iterator selJet2_W = selJet1_W + 1;
+    //          selJet2_W != selJets_c.end();++selJet2_W) {
+    //       double mass_jj = ((*selJet1_W)->p4() + (*selJet2_W)->p4()).mass();
+    //       if ((std::fabs(mass_jj - w_mass) < std::fabs(mass_jj_W - w_mass) &&
+    //            mass_jj < 120) || mass_jj_W == 0) {
+    //         mass_jj_W = mass_jj;
+    //         selJet1P4 = (*selJet1_W)->p4();
+    //         selJet2P4 = (*selJet2_W)->p4();
+    //         // std::cout << "---------------resolved----------------" << std::endl;
+    //         // std::cout << "selJet1P4: " << (*selJet1_W)->p4()<< std::endl;
+    //         // std::cout << "selJet2P4: " << (*selJet2_W)->p4()<< std::endl;
+    //         selJetP4 = (*selJet1_W)->p4() + (*selJet2_W)->p4();
+    //         // std::cout << "1st W: " << selJetP4.mass() << std::endl;
+
+    //         // Off-shell W
+    //         for (std::vector<const RecoJet *>::const_iterator selJet3_W =
+    //                  selJets_c.begin();selJet3_W != selJets_c.end();++selJet3_W) {
+    //           for (std::vector<const RecoJet *>::const_iterator selJet4_W =
+    //                    selJet3_W + 1;
+    //                selJet4_W != selJets_c.end(); ++selJet4_W) {
+    //             if (std::abs(deltaR((*selJet1_W)->p4(), (*selJet3_W)->p4())) ==
+    //                     0 or
+    //                 std::abs(deltaR((*selJet2_W)->p4(), (*selJet3_W)->p4())) ==
+    //                     0 or
+    //                 std::abs(deltaR((*selJet1_W)->p4(), (*selJet4_W)->p4())) ==
+    //                     0 or
+    //                 std::abs(deltaR((*selJet2_W)->p4(), (*selJet4_W)->p4())) ==
+    //                     0) {
+    //               continue;
+    //             }
+    //             double mass_jj2 = ((*selJet3_W)->p4() + (*selJet4_W)->p4()).mass();
+    //             if (std::fabs(mass_jj2 - 40) < std::fabs(mass_jj_W2 - 40) || mass_jj_W2 == 0) {
+    //               selJet3P4 = (*selJet3_W)->p4();
+    //               selJet4P4 = (*selJet4_W)->p4();
+    //               mass_jj_W2 = mass_jj2;
+    //               selJetP4_2 = (*selJet3_W)->p4() + (*selJet4_W)->p4();
+    //               // std::cout << "selJet3P4: " << (*selJet3_W)->p4()<< std::endl;
+    //               // std::cout << "selJet4P4: " << (*selJet4_W)->p4()<< std::endl;
+    //               // std::cout << "2nd W: " << selJetP4_2.mass() << std::endl;
+    //               // std::cout << "___________________________________________" << std::endl;
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    //   isEventResolved = true;
+    // }
+
+    // double sum_mass_W = mass_jj_W + mass_jj_W2;
+
+    // if (isEventBoosted) {
+    //   cutFlowTable.update("event category criteria passed: boosted",
+    //                       evtWeightRecorder.get(central_or_shift_main));
+    //   cutFlowHistManager->fillHistograms(
+    //       "event category criteria passed: boosted",
+    //       evtWeightRecorder.get(central_or_shift_main));
+    // }
+    // if (isEventSemiboosted) {
+    //   cutFlowTable.update("event category criteria passed: semiboosted",
+    //                       evtWeightRecorder.get(central_or_shift_main));
+    //   cutFlowHistManager->fillHistograms(
+    //       "event category criteria passed: semiboosted",
+    //       evtWeightRecorder.get(central_or_shift_main));
+    // }
+    // if (isEventResolved) {
+    //   cutFlowTable.update("event category criteria passed: resolved",
+    //                       evtWeightRecorder.get(central_or_shift_main));
+    //   cutFlowHistManager->fillHistograms(
+    //       "event category criteria passed: resolved",
+    //       evtWeightRecorder.get(central_or_shift_main));
+    // }
+
+    // if (!(isEventBoosted || isEventSemiboosted || isEventResolved))
+    //   continue;
+
+    // cutFlowTable.update(
+    //     "event category criteria passed: boosted / semiboosted / resolved",
+    //     evtWeightRecorder.get(central_or_shift_main));
+    // cutFlowHistManager->fillHistograms(
+    //     "event category criteria passed: boosted / semiboosted / resolved",
+    //     evtWeightRecorder.get(central_or_shift_main));
+
+// // leq1tau w stuff
     std::vector<RecoJetAK8> jets_ak8 = jetReaderAK8->read();
     std::vector<const RecoJetAK8 *> jet_ptrs_ak8 = convert_to_ptrs(jets_ak8);
     std::vector<const RecoJetAK8 *> selJetsAK8 =
@@ -2005,361 +2235,255 @@ int main(int argc, char* argv[])
     }
 
 
-    math::PtEtaPhiMLorentzVector selJet1P4;
-    math::PtEtaPhiMLorentzVector selJet2P4;
-    math::PtEtaPhiMLorentzVector selJet3P4;
-    math::PtEtaPhiMLorentzVector selJet4P4;
+    std::vector<const RecoJetBase*> selJets_Wjj_WPairwise;
 
 
-    if (selJetsAK8_Wjj_selected.size() >= 2) { // boosted category
-      selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
-                  selJetsAK8_Wjj_selected[0]->subJet2()->p4());
-      selJetP4_2 = (selJetsAK8_Wjj_selected[1]->subJet1()->p4() +
-                  selJetsAK8_Wjj_selected[1]->subJet2()->p4());
+    if (selJetsAK8_Wjj_selected.size() >= 2) // boosted category ----------------------------------------------------------------------------------------------------------------------
+    { 
+      // selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() + selJetsAK8_Wjj_selected[0]->subJet2()->p4());
+      selJets_Wjj_WPairwise.push_back(selJetsAK8_Wjj_selected[0]->subJet1());
+      selJets_Wjj_WPairwise.push_back(selJetsAK8_Wjj_selected[0]->subJet2());
+
+      // selJetP4_2 = (selJetsAK8_Wjj_selected[1]->subJet1()->p4() + selJetsAK8_Wjj_selected[1]->subJet2()->p4());
+      selJets_Wjj_WPairwise.push_back(selJetsAK8_Wjj_selected[1]->subJet1());
+      selJets_Wjj_WPairwise.push_back(selJetsAK8_Wjj_selected[1]->subJet2());
       isEventBoosted = true;
-    } else if (selJetsAK8_Wjj_selected.size() == 1 &&
-               selJets_c.size() >= 1) { // semiboosted category
-      std::vector<const RecoSubjetAK8 *> selSubjetsAK8 = {
-          selJetsAK8_Wjj_selected[0]->subJet1(),
-          selJetsAK8_Wjj_selected[0]->subJet2()};
+
+      if (printLevel > 5)
+      {
+	std::cout << "isEventBoosted:  selJets.size() " << selJets.size() << ", selJetsAK8_Wjj_selected.size() " << selJetsAK8_Wjj_selected.size() << ", selJets_Wjj_WPairwise.size() " << selJets_Wjj_WPairwise.size() << "\n";
+      }      
+    }
+    else if (selJetsAK8_Wjj_selected.size() == 1) // semiboosted category --------------------------------------------------------------------------------------
+    {
+      isEventSemiboosted = true;
+      
+      std::vector<const RecoSubjetAK8*> selSubjetsAK8 = { selJetsAK8_Wjj_selected[0]->subJet1(), selJetsAK8_Wjj_selected[0]->subJet2() };
       double dm_min = 9999.;
       size_t idxWJet1 = 9999;
       size_t idxWJet2 = 9999;
-      for (size_t iJet1 = 0; iJet1 < selJets_c.size();
-           iJet1++) {
-        const RecoJet *jet1 =
-            selJets_c[iJet1];
-        if (hasOverlapJets(jet1, selSubjetsAK8))
-          continue;
+      for (size_t iJet1=0; iJet1 < selJets_c.size(); iJet1++ ) {
+	const RecoJet *jet1 = selJets_c[iJet1];
+	if (hasOverlapJets(jet1, selSubjetsAK8)) continue;
+	
+	for (size_t iJet2=iJet1+1; iJet2 < selJets_c.size(); iJet2++ ) {
+	  const RecoJet *jet2 = selJets_c[iJet2];
+	  if (hasOverlapJets(jet2, selSubjetsAK8)) continue;
 
-        for (size_t iJet2 = iJet1 + 1; iJet2 < selJets_c.size();
-             iJet2++) {
-          const RecoJet *jet2 =
-              selJets_c[iJet2];
-          if (hasOverlapJets(jet2, selSubjetsAK8))
-            continue;
-
-          double dm = std::fabs((jet1->p4() + jet2->p4()).mass() - w_mass);
-          if (dm < dm_min) {
-            dm_min = dm;
-            idxWJet1 = iJet1;
-            idxWJet2 = iJet2;
-          }
-        }
+	  double dm = std::fabs((jet1->p4() + jet2->p4()).mass() - w_mass);
+	  if (dm < dm_min) {
+	    dm_min = dm;
+	    idxWJet1 = iJet1;
+	    idxWJet2 = iJet2;
+	    }	  
+	}
+      }      
+      
+      selJets_Wjj_WPairwise.push_back(selJetsAK8_Wjj_selected[0]->subJet1());
+      selJets_Wjj_WPairwise.push_back(selJetsAK8_Wjj_selected[0]->subJet2());
+      
+      if (idxWJet1 != 9999 && idxWJet2 != 9999) // for 2 AK4 jets case
+      { 
+	selJets_Wjj_WPairwise.push_back(selJets_c[idxWJet1]);
+	selJets_Wjj_WPairwise.push_back(selJets_c[idxWJet2]);
       }
-      if (idxWJet1 != 9999 && idxWJet2 != 9999) { // for 2 AK4 jets case
-        selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
-                    selJetsAK8_Wjj_selected[0]->subJet2()->p4());
-        selJetP4_2 = (selJets_c[idxWJet1]->p4() +
-                    selJets_c[idxWJet2]->p4());
-        isEventSemiboosted = true;
-      } else if (!hasOverlapJets(selJets_c[0], selSubjetsAK8)) {
-        selJetP4 = (selJetsAK8_Wjj_selected[0]->subJet1()->p4() +
-                    selJetsAK8_Wjj_selected[0]->subJet2()->p4());
-        selJetP4_2 = selJets_c[0]->p4();
-        isEventSemiboosted = true;
+      else if ( selJets_c.size() > 0 && ! hasOverlapJets(selJets_c[0], selSubjetsAK8) ) // for 1 AK4 jet case 
+      { 
+	selJets_Wjj_WPairwise.push_back(selJets_c[0]);
+	isEventSemiboosted = true;
+	
+	if (printLevel > 5)
+	{
+	  std::cout << "isEventSemiboosted 1 AK4 :  selJets_c.size() " << selJets_c.size() << ", selJetsAK8_Wjj_selected.size() " << selJetsAK8_Wjj_selected.size() << ", selJets_Wjj_WPairwise.size() " << selJets_Wjj_WPairwise.size() << "\n";
+	}
       }
-    } else if (selJetsAK8_Wjj_selected.size() == 0 &&
-               selJets_c.size() >= 1) { // resolved category
-      mass_jj_W = 0;
-      mass_jj_W2 = 0;
-      for (std::vector<const RecoJet *>::const_iterator selJet1_W = selJets_c.begin();
-           selJet1_W != selJets_c.end(); ++selJet1_W) {
-        for (std::vector<const RecoJet *>::const_iterator selJet2_W = selJet1_W + 1;
-             selJet2_W != selJets_c.end();++selJet2_W) {
-          double mass_jj = ((*selJet1_W)->p4() + (*selJet2_W)->p4()).mass();
-          if ((std::fabs(mass_jj - w_mass) < std::fabs(mass_jj_W - w_mass) &&
-               mass_jj < 120) || mass_jj_W == 0) {
-            mass_jj_W = mass_jj;
-            selJet1P4 = (*selJet1_W)->p4();
-            selJet2P4 = (*selJet2_W)->p4();
-            selJetP4 = (*selJet1_W)->p4() + (*selJet2_W)->p4();
-
-
-            // Off-shell W
-            for (std::vector<const RecoJet *>::const_iterator selJet3_W =
-                     selJets_c.begin();selJet3_W != selJets_c.end();++selJet3_W) {
-              for (std::vector<const RecoJet *>::const_iterator selJet4_W =
-                       selJet3_W + 1;
-                   selJet4_W != selJets_c.end(); ++selJet4_W) {
-                if (std::abs(deltaR((*selJet1_W)->p4(), (*selJet3_W)->p4())) ==
-                        0 or
-                    std::abs(deltaR((*selJet2_W)->p4(), (*selJet3_W)->p4())) ==
-                        0 or
-                    std::abs(deltaR((*selJet1_W)->p4(), (*selJet4_W)->p4())) ==
-                        0 or
-                    std::abs(deltaR((*selJet2_W)->p4(), (*selJet4_W)->p4())) ==
-                        0) {
-                  continue;
-                }
-                double mass_jj2 = ((*selJet3_W)->p4() + (*selJet4_W)->p4()).mass();
-                if (std::fabs(mass_jj2 - 40) < std::fabs(mass_jj_W2 - 40) || mass_jj_W2 == 0) {
-                  selJet3P4 = (*selJet3_W)->p4();
-                  selJet4P4 = (*selJet4_W)->p4();
-                  mass_jj_W2 = mass_jj2;
-                  selJetP4_2 = (*selJet3_W)->p4() + (*selJet4_W)->p4();
-                }
-              }
-            }
-          }
-        }
-      }
-      isEventResolved = true;
+      
     }
+    else if (selJetsAK8_Wjj_selected.size() == 0 && (int)selJets_c.size() >= minNumJets) // resolved category --------------------------------------------------------------------------------------
+    {
+      isEventResolved = true;
+      
+      double dm_min = 9999.;
+      size_t idxWJet1 = 9999;
+      size_t idxWJet2 = 9999;
+      size_t idxWJet3 = 9999;
+      size_t idxWJet4 = 9999;
+      
+      // 1st W->jj pair
+      for (size_t iJet1=0; iJet1 < selJets_c.size(); iJet1++ ) {
+	const RecoJet *jet1 = selJets_c[iJet1];
+	
+	for (size_t iJet2=iJet1+1; iJet2 < selJets_c.size(); iJet2++ ) {
+	  const RecoJet *jet2 = selJets_c[iJet2];
 
-    double sum_mass_W = mass_jj_W + mass_jj_W2;
+	  double dm = std::fabs((jet1->p4() + jet2->p4()).mass() - w_mass);
+	  if (dm < dm_min) {
+	    dm_min = dm;
+	    idxWJet1 = iJet1;
+	    idxWJet2 = iJet2;
+	  }  
+	}
+      }      
+
+      // 2nd W->jj pair
+      dm_min = 9999.;
+      for (size_t iJet3=0; iJet3 < selJets_c.size(); iJet3++ ) {
+	if (iJet3 == idxWJet1 || iJet3 == idxWJet2) continue;
+	const RecoJet *jet3 = selJets_c[iJet3];
+	
+	for (size_t iJet4=iJet3+1; iJet4 < selJets_c.size(); iJet4++ ) {
+	  if (iJet4 == idxWJet1 || iJet4 == idxWJet2) continue;
+	  const RecoJet *jet4 = selJets_c[iJet4];
+
+	  double dm = std::fabs((jet3->p4() + jet4->p4()).mass() - w_mass);
+	  if (dm < dm_min) {
+	    dm_min = dm;
+	    idxWJet3 = iJet3;
+	    idxWJet4 = iJet4;
+	  }
+	}
+      }
+      
+      if (idxWJet1 != 9999 && idxWJet2 != 9999 && idxWJet3 != 9999 && idxWJet4 != 9999) // nAK4 >= 4
+      {
+	selJets_Wjj_WPairwise.push_back(selJets_c[idxWJet1]);
+	selJets_Wjj_WPairwise.push_back(selJets_c[idxWJet2]);
+
+	selJets_Wjj_WPairwise.push_back(selJets_c[idxWJet3]);
+	selJets_Wjj_WPairwise.push_back(selJets_c[idxWJet4]);
+      }
+      else if (idxWJet1 != 9999 && idxWJet2 != 9999) // nAK4: 2 or 3
+      {
+	selJets_Wjj_WPairwise.push_back(selJets_c[idxWJet1]);
+	selJets_Wjj_WPairwise.push_back(selJets_c[idxWJet2]);
+
+	// for nAK4 = 3
+	for (size_t iJet3=0; iJet3 < selJets_c.size(); iJet3++ ) {
+	  bool isJetSelected = false;
+
+	  for (size_t iJetSelected = 0; iJetSelected < selJets_Wjj_WPairwise.size(); iJetSelected++) {
+	    if (selJets_c[iJet3] == selJets_Wjj_WPairwise[iJetSelected]) isJetSelected = true;
+	  }
+
+	  if ( ! isJetSelected ) selJets_Wjj_WPairwise.push_back(selJets_c[iJet3]);
+	}
+	
+	if (selJets_Wjj_WPairwise.size() > 2 && selJets_c.size() <= 2)
+	{
+	  throw cms::Exception("analyze_hh_2lss_leq1tau_vbf")
+	    << "ERROR:  selJets_Wjj_WPairwise.size() > 2 && selJets.size() <= 2  !!\n";
+	}
+	
+	if (selJets_Wjj_WPairwise.size() > 3)
+	{
+	  throw cms::Exception("analyze_hh_2lss_leq1tau_vbf")
+	    << "ERROR:  selJets_Wjj_WPairwise.size() > 3, but idxWJet3 == 9999 && idxWJet4 == 9999  !!\n";
+	}
+      }
+      else
+      {
+	throw cms::Exception("analyze_hh_2lss_leq1tau_vbf")
+	  << "ERROR:  selJets.size() " << selJets.size() << " but idxWJet1 == 9999 && idxWJet2 == 9999  !!\n";
+      }      
+    }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Particle::LorentzVector selJetP4;
+    // for (size_t iJet = 0; iJet < selJets_Wjj_WPairwise.size(); iJet++) selJetP4 += selJets_Wjj_WPairwise[iJet]->p4();
+    // std::cout << "#########################################################################################" << std::endl;
+    // std::cout << "selJets_Wjj_WPairwise amount: " << selJets_Wjj_WPairwise.size() << std::endl;
+    // std::cout << "-----------------------------------------------------------------------------------------" << std::endl;
+    
+    if ( !((int)selJets_Wjj_WPairwise.size() >= minNumJets) ) {
+      if ( run_lumi_eventSelector ) {
+	std::cout << "event " << eventInfo.str() << " FAILS selJets selection." << std::endl;
+	printCollection("selJets_c", selJets_c);
+	printCollection("selJets_Wjj_WPairwise", selJets_Wjj_WPairwise);
+      }
+      continue;
+    }
+    cutFlowTable.update(">= N jets", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms(">= N jets", evtWeightRecorder.get(central_or_shift_main));
+    
 
     if (isEventBoosted) {
-      cutFlowTable.update("event category criteria passed: boosted",
-                          evtWeightRecorder.get(central_or_shift_main));
-      cutFlowHistManager->fillHistograms(
-          "event category criteria passed: boosted",
-          evtWeightRecorder.get(central_or_shift_main));
+      cutFlowTable.update("event category criteria passed: boosted", evtWeightRecorder.get(central_or_shift_main));
+      cutFlowHistManager->fillHistograms("event category criteria passed: boosted", evtWeightRecorder.get(central_or_shift_main));
     }
     if (isEventSemiboosted) {
-      cutFlowTable.update("event category criteria passed: semiboosted",
-                          evtWeightRecorder.get(central_or_shift_main));
-      cutFlowHistManager->fillHistograms(
-          "event category criteria passed: semiboosted",
-          evtWeightRecorder.get(central_or_shift_main));
+      cutFlowTable.update("event category criteria passed: semiboosted", evtWeightRecorder.get(central_or_shift_main));
+      cutFlowHistManager->fillHistograms("event category criteria passed: semiboosted", evtWeightRecorder.get(central_or_shift_main));
     }
     if (isEventResolved) {
-      cutFlowTable.update("event category criteria passed: resolved",
-                          evtWeightRecorder.get(central_or_shift_main));
-      cutFlowHistManager->fillHistograms(
-          "event category criteria passed: resolved",
-          evtWeightRecorder.get(central_or_shift_main));
+      cutFlowTable.update("event category criteria passed: resolved", evtWeightRecorder.get(central_or_shift_main));
+      cutFlowHistManager->fillHistograms("event category criteria passed: resolved", evtWeightRecorder.get(central_or_shift_main));
     }
 
-    if (!(isEventBoosted || isEventSemiboosted || isEventResolved))
-      continue;
 
-    cutFlowTable.update(
-        "event category criteria passed: boosted / semiboosted / resolved",
-        evtWeightRecorder.get(central_or_shift_main));
-    cutFlowHistManager->fillHistograms(
-        "event category criteria passed: boosted / semiboosted / resolved",
-        evtWeightRecorder.get(central_or_shift_main));
-
-// // leq1tau w stuff
-//     std::vector<RecoJetAK8> jets_ak8 = jetReaderAK8->read();
-//     std::vector<const RecoJetAK8*> jet_ptrs_ak8 = convert_to_ptrs(jets_ak8);
-//     std::vector<const RecoJetAK8*> selJetsAK8 = jetSelectorAK8(jet_ptrs_ak8, isHigherPt);
+    if ( !(isEventBoosted || isEventSemiboosted || isEventResolved)) continue;
     
-//     jetSelectorAK8_Wjj.getSelector().set_leptons({selLeptons[0], selLeptons[1]});
-//     std::vector<const RecoJetAK8*> selJetsAK8_Wjj = jetSelectorAK8_Wjj(jet_ptrs_ak8, isHigherPt);    
-//     std::vector<const RecoJetAK8*> selJetsAK8_Wjj_selected;
-
-//     std::vector<const RecoJetBase*> selJets_Wjj_WPairwise;
-//     //const RecoJetBase* selJet1_Wjj   = nullptr;
-//     //const RecoJetBase* selJet2_Wjj   = nullptr;
-
-//     bool isEventBoosted     = false;
-//     bool isEventSemiboosted = false;
-//     bool isEventResolved    = false;
-    
-//     double mass_jj_W = 0;
-//     double mass_jj_W2 = 0;
-     
-//     if ( isDEBUG || run_lumi_eventSelector ) {
-//       printCollection("uncleaned AK8 jets", jet_ptrs_ak8);
-//       //printWjj(jet_ptrs_ak8, jetSelectorAK8_Wjj, genWBosons, genWJets);
-//     }
-
-
-//     // fill selJetsAK8_Wjj_selected
-//     for (size_t i=0; i<selJetsAK8_Wjj.size(); i++) {
-//       if (selJetsAK8_Wjj[i] && selJetsAK8_Wjj[i]->subJet1() && selJetsAK8_Wjj[i]->subJet2()) {
-// 	selJetsAK8_Wjj_selected.push_back(selJetsAK8_Wjj[i]);
-//       }      
-//     }
-
-//     if (selJetsAK8_Wjj_selected.size() >= 2) // boosted category ----------------------------------------------------------------------------------------------------------------------
-//     { 
-//       selJets_Wjj_WPairwise.push_back(selJetsAK8_Wjj_selected[0]->subJet1());
-//       selJets_Wjj_WPairwise.push_back(selJetsAK8_Wjj_selected[0]->subJet2());
-
-//       selJets_Wjj_WPairwise.push_back(selJetsAK8_Wjj_selected[1]->subJet1());
-//       selJets_Wjj_WPairwise.push_back(selJetsAK8_Wjj_selected[1]->subJet2());
-//       isEventBoosted = true;
-
-//       if (printLevel > 5)
-//       {
-// 	std::cout << "isEventBoosted:  selJets.size() " << selJets.size() << ", selJetsAK8_Wjj_selected.size() " << selJetsAK8_Wjj_selected.size() << ", selJets_Wjj_WPairwise.size() " << selJets_Wjj_WPairwise.size() << "\n";
-//       }      
-//     }
-//     else if (selJetsAK8_Wjj_selected.size() == 1) // semiboosted category --------------------------------------------------------------------------------------
-//     {
-//       isEventSemiboosted = true;
-      
-//       std::vector<const RecoSubjetAK8*> selSubjetsAK8 = { selJetsAK8_Wjj_selected[0]->subJet1(), selJetsAK8_Wjj_selected[0]->subJet2() };
-//       double dm_min = 9999.;
-//       size_t idxWJet1 = 9999;
-//       size_t idxWJet2 = 9999;
-//       for (size_t iJet1=0; iJet1 < selJets.size(); iJet1++ ) {
-// 	const RecoJet *jet1 = selJets[iJet1];
-// 	if (hasOverlapJets(jet1, selSubjetsAK8)) continue;
-	
-// 	for (size_t iJet2=iJet1+1; iJet2 < selJets.size(); iJet2++ ) {
-// 	  const RecoJet *jet2 = selJets[iJet2];
-// 	  if (hasOverlapJets(jet2, selSubjetsAK8)) continue;
-
-// 	  double dm = std::fabs((jet1->p4() + jet2->p4()).mass() - w_mass);
-// 	  if (dm < dm_min) {
-// 	    dm_min = dm;
-// 	    idxWJet1 = iJet1;
-// 	    idxWJet2 = iJet2;
-// 	    }	  
-// 	}
-//       }      
-      
-//       selJets_Wjj_WPairwise.push_back(selJetsAK8_Wjj_selected[0]->subJet1());
-//       selJets_Wjj_WPairwise.push_back(selJetsAK8_Wjj_selected[0]->subJet2());
-      
-//       if (idxWJet1 != 9999 && idxWJet2 != 9999) // for 2 AK4 jets case
-//       { 
-// 	selJets_Wjj_WPairwise.push_back(selJets[idxWJet1]);
-// 	selJets_Wjj_WPairwise.push_back(selJets[idxWJet2]);
-//       }
-//       else if ( selJets.size() > 0 && ! hasOverlapJets(selJets[0], selSubjetsAK8) ) // for 1 AK4 jet case 
-//       { 
-// 	selJets_Wjj_WPairwise.push_back(selJets[0]);
-// 	isEventSemiboosted = true;
-	
-// 	if (printLevel > 5)
-// 	{
-// 	  std::cout << "isEventSemiboosted 1 AK4 :  selJets.size() " << selJets.size() << ", selJetsAK8_Wjj_selected.size() " << selJetsAK8_Wjj_selected.size() << ", selJets_Wjj_WPairwise.size() " << selJets_Wjj_WPairwise.size() << "\n";
-// 	}
-//       }
-      
-//     }
-//     else if (selJetsAK8_Wjj_selected.size() == 0 && (int)selJets.size() >= minNumJets) // resolved category --------------------------------------------------------------------------------------
-//     {
-//       isEventResolved = true;
-      
-//       double dm_min = 9999.;
-//       size_t idxWJet1 = 9999;
-//       size_t idxWJet2 = 9999;
-//       size_t idxWJet3 = 9999;
-//       size_t idxWJet4 = 9999;
-      
-//       // 1st W->jj pair
-//       for (size_t iJet1=0; iJet1 < selJets.size(); iJet1++ ) {
-// 	const RecoJet *jet1 = selJets[iJet1];
-	
-// 	for (size_t iJet2=iJet1+1; iJet2 < selJets.size(); iJet2++ ) {
-// 	  const RecoJet *jet2 = selJets[iJet2];
-
-// 	  double dm = std::fabs((jet1->p4() + jet2->p4()).mass() - w_mass);
-// 	  if (dm < dm_min) {
-// 	    dm_min = dm;
-// 	    idxWJet1 = iJet1;
-// 	    idxWJet2 = iJet2;
-// 	  }  
-// 	}
-//       }      
-
-//       // 2nd W->jj pair
-//       dm_min = 9999.;
-//       for (size_t iJet3=0; iJet3 < selJets.size(); iJet3++ ) {
-// 	if (iJet3 == idxWJet1 || iJet3 == idxWJet2) continue;
-// 	const RecoJet *jet3 = selJets[iJet3];
-	
-// 	for (size_t iJet4=iJet3+1; iJet4 < selJets.size(); iJet4++ ) {
-// 	  if (iJet4 == idxWJet1 || iJet4 == idxWJet2) continue;
-// 	  const RecoJet *jet4 = selJets[iJet4];
-
-// 	  double dm = std::fabs((jet3->p4() + jet4->p4()).mass() - w_mass);
-// 	  if (dm < dm_min) {
-// 	    dm_min = dm;
-// 	    idxWJet3 = iJet3;
-// 	    idxWJet4 = iJet4;
-// 	  }
-// 	}
-//       }
-      
-//       if (idxWJet1 != 9999 && idxWJet2 != 9999 && idxWJet3 != 9999 && idxWJet4 != 9999) // nAK4 >= 4
-//       {
-// 	selJets_Wjj_WPairwise.push_back(selJets[idxWJet1]);
-// 	selJets_Wjj_WPairwise.push_back(selJets[idxWJet2]);
-
-// 	selJets_Wjj_WPairwise.push_back(selJets[idxWJet3]);
-// 	selJets_Wjj_WPairwise.push_back(selJets[idxWJet4]);
-//       }
-//       else if (idxWJet1 != 9999 && idxWJet2 != 9999) // nAK4: 2 or 3
-//       {
-// 	selJets_Wjj_WPairwise.push_back(selJets[idxWJet1]);
-// 	selJets_Wjj_WPairwise.push_back(selJets[idxWJet2]);
-
-// 	// for nAK4 = 3
-// 	for (size_t iJet3=0; iJet3 < selJets.size(); iJet3++ ) {
-// 	  bool isJetSelected = false;
-
-// 	  for (size_t iJetSelected = 0; iJetSelected < selJets_Wjj_WPairwise.size(); iJetSelected++) {
-// 	    if (selJets[iJet3] == selJets_Wjj_WPairwise[iJetSelected]) isJetSelected = true;
-// 	  }
-
-// 	  if ( ! isJetSelected ) selJets_Wjj_WPairwise.push_back(selJets[iJet3]);
-// 	}
-	
-// 	if (selJets_Wjj_WPairwise.size() > 2 && selJets.size() <= 2)
-// 	{
-// 	  throw cms::Exception("analyze_hh_2lss_leq1tau_vbf")
-// 	    << "ERROR:  selJets_Wjj_WPairwise.size() > 2 && selJets.size() <= 2  !!\n";
-// 	}
-	
-// 	if (selJets_Wjj_WPairwise.size() > 3)
-// 	{
-// 	  throw cms::Exception("analyze_hh_2lss_leq1tau_vbf")
-// 	    << "ERROR:  selJets_Wjj_WPairwise.size() > 3, but idxWJet3 == 9999 && idxWJet4 == 9999  !!\n";
-// 	}
-//       }
-//       else
-//       {
-// 	throw cms::Exception("analyze_hh_2lss_leq1tau_vbf")
-// 	  << "ERROR:  selJets.size() " << selJets.size() << " but idxWJet1 == 9999 && idxWJet2 == 9999  !!\n";
-//       }      
-//     }
-
-//     Particle::LorentzVector selJetP4;
-//     for (size_t iJet = 0; iJet < selJets_Wjj_WPairwise.size(); iJet++) selJetP4 += selJets_Wjj_WPairwise[iJet]->p4();
-
-    
-//     if ( !((int)selJets_Wjj_WPairwise.size() >= minNumJets) ) {
-//       if ( run_lumi_eventSelector ) {
-// 	std::cout << "event " << eventInfo.str() << " FAILS selJets selection." << std::endl;
-// 	printCollection("selJets", selJets);
-// 	printCollection("selJets_Wjj_WPairwise", selJets_Wjj_WPairwise);
-//       }
-//       continue;
-//     }
-//     cutFlowTable.update(">= N jets", evtWeightRecorder.get(central_or_shift_main));
-//     cutFlowHistManager->fillHistograms(">= N jets", evtWeightRecorder.get(central_or_shift_main));
-    
-
-//     if (isEventBoosted) {
-//       cutFlowTable.update("event category criteria passed: boosted", evtWeightRecorder.get(central_or_shift_main));
-//       cutFlowHistManager->fillHistograms("event category criteria passed: boosted", evtWeightRecorder.get(central_or_shift_main));
-//     }
-//     if (isEventSemiboosted) {
-//       cutFlowTable.update("event category criteria passed: semiboosted", evtWeightRecorder.get(central_or_shift_main));
-//       cutFlowHistManager->fillHistograms("event category criteria passed: semiboosted", evtWeightRecorder.get(central_or_shift_main));
-//     }
-//     if (isEventResolved) {
-//       cutFlowTable.update("event category criteria passed: resolved", evtWeightRecorder.get(central_or_shift_main));
-//       cutFlowHistManager->fillHistograms("event category criteria passed: resolved", evtWeightRecorder.get(central_or_shift_main));
-//     }
-
-
-//     if ( !(isEventBoosted || isEventSemiboosted || isEventResolved)) continue;
-    
-//     cutFlowTable.update("event category criteria passed: boosted / semiboosted / resolved", evtWeightRecorder.get(central_or_shift_main));
-//     cutFlowHistManager->fillHistograms("event category criteria passed: boosted / semiboosted / resolved", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowTable.update("event category criteria passed: boosted / semiboosted / resolved", evtWeightRecorder.get(central_or_shift_main));
+    cutFlowHistManager->fillHistograms("event category criteria passed: boosted / semiboosted / resolved", evtWeightRecorder.get(central_or_shift_main));
 
    
+    // W selection from selJets_Wjj_WPairwise /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // double dR_w_jj = 999;
+    double Wj1_idx = -999;
+    double Wj2_idx = -999;
+    double W_m_jj = 0;
+    // std::cout << "#########################################################################################" << std::endl;
+    // std::cout << "selJets_Wjj_WPairwise amount: " << selJets_Wjj_WPairwise.size() << std::endl;
+    for (size_t iJet = 0; iJet < selJets_Wjj_WPairwise.size(); iJet++){
+      // std::cout << "Jet i: " << selJets_Wjj_WPairwise[iJet]->p4() << std::endl;
+      for (size_t jJet = iJet + 1; jJet < selJets_Wjj_WPairwise.size(); jJet++){
+        // selJetP4 = selJets_Wjj_WPairwise[iJet]->p4();
+        double wj_dr = deltaR(selJets_Wjj_WPairwise[iJet]->p4(), selJets_Wjj_WPairwise[jJet]->p4());
+        double W_j1_idx = iJet;
+        double W_j2_idx = jJet;
+        double m_jj_w = (selJets_Wjj_WPairwise[iJet]->p4() + selJets_Wjj_WPairwise[jJet]->p4()).mass();
+        // std::cout << "i: " << iJet << std::endl;
+        // std::cout << "j: " << jJet << std::endl;
+        // std::cout << "Jet i: " << selJets_Wjj_WPairwise[iJet]->p4() << std::endl;
+        // std::cout << "Jet j: " << selJets_Wjj_WPairwise[jJet]->p4()<< std::endl;
+        // std::cout << "deltaR: " << wj_dr<< std::endl;
+        // std::cout << "W mass: " << m_jj_w<< std::endl;
+        // std::cout << "_____________________________________________________________" << std::endl;
+        if ((std::fabs(m_jj_w - w_mass) < std::fabs(W_m_jj - w_mass) && m_jj_w < 120) || W_m_jj==0) {
+          // dR_w_jj = wj_dr;
+          Wj1_idx = W_j1_idx;
+          Wj2_idx = W_j2_idx;
+          W_m_jj = m_jj_w;
+          selJetP4 = selJets_Wjj_WPairwise[Wj1_idx]->p4() + selJets_Wjj_WPairwise[Wj2_idx]->p4();
+          mass_jj_W = selJetP4.mass();
+        }
+        // if (wj_dr < dR_w_jj) {
+        //   dR_w_jj = wj_dr;
+        //   Wj1_idx = W_j1_idx;
+        //   Wj2_idx = W_j2_idx;
+        //   W_m_jj = m_jj_w;
+        // }
+      }
+    }
+
+    for (size_t k = 0; k < selJets_Wjj_WPairwise.size(); k++){
+      if (k != Wj1_idx && k != Wj2_idx){
+        selJetP4_2 += selJets_Wjj_WPairwise[k]->p4();
+        mass_jj_W2 = selJetP4_2.mass();
+      }
+    }
+
+        // std::cout << "i chosen: " << Wj1_idx << std::endl;
+        // std::cout << "j chosen: " << Wj2_idx << std::endl;
+        // std::cout << "Jet i chosen: " << selJets_Wjj_WPairwise[Wj1_idx]->p4() << std::endl;
+        // std::cout << "Jet j chosen: " << selJets_Wjj_WPairwise[Wj2_idx]->p4()<< std::endl;
+        // std::cout << "deltaR: " << dR_w_jj<< std::endl;
+        // std::cout << "W1 mass chosen: " << W_m_jj<< std::endl;
+        // std::cout << "W1 vector mass: " << selJetP4.mass() << std::endl;
+        // std::cout << "W2 vector mass: " << selJetP4_2.mass() << std::endl;
+        // std::cout << "------------------------------------------------------------------------------------------" << std::endl;
 
 
-
+    double sum_mass_W = mass_jj_W + mass_jj_W2;
 
 
  //    const bool failsZbosonMassVeto = isfailsZbosonMassVeto(preselLeptonsFull, false, isDEBUG) || (
@@ -2433,17 +2557,88 @@ int main(int argc, char* argv[])
       continue;
     }
 
-    // compute signal extraction observables ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    double dihiggsVisMass_sel =
-        (selJetP4 + selJetP4_2 + selLepton_lead->cone_p4() + selLepton_sublead->cone_p4())
-            .mass();
-    double dihiggsMass_wMet_sel = (selJetP4 + selJetP4_2 + selLepton_lead->cone_p4() +
-                                   selLepton_sublead->cone_p4() + met.p4()).mass();
+// Tau vars
+    double m_l_tau = 999;
+    double dR_l_tau = -1;
+    int l_idx = 0;
+    int tau_idx = 0;
+    double mT_lep_tau = -1;
+    double charge_ltau = -999;
+
+
+// if (selHadTaus.size() > 0){
+//     std::cout << "tau amount:  " << selHadTaus.size() << std::endl;
+//     std::cout << "lep amount:  " << selLeptons.size() << std::endl;
+// }
+    for (size_t i = 0; i < selLeptons.size(); i++){
+      for (size_t j = 0; j < selHadTaus.size(); j++){
+        double m_lt = (selLeptons[i]->cone_p4() + selHadTaus[j]->p4()).mass();
+        double dR_lt = deltaR(selLeptons[i]->cone_p4(), selHadTaus[j]->p4());
+        double c_ltau = selLeptons[i]->charge() * selHadTaus[j]->charge();
+        int lep_index = i;
+        int tau_index = j;
+        // if (selHadTaus.size() > 0){
+        // std::cout << "mass lepton tau loop:  " << m_lt << std::endl;
+        // std::cout << "dR lepton tau loop:  " << dR_lt << std::endl;
+        // std::cout << "lepton index loop:  " << lep_index << std::endl;
+        // std::cout << "tau index loochargep:  " << tau_index << std::endl;
+        // std::cout << "tau charge:  " << selHadTaus[j]->charge() << std::endl;
+        // std::cout << "lep charge:  " << selLeptons[i]->charge() << std::endl;
+        // std::cout << "_________________________________________________" << std::endl;
+        //   }
+      if (m_lt<m_l_tau and selHadTaus[j]->charge()*selLeptons[i]->charge()<0){
+        m_l_tau = m_lt;
+        l_idx = lep_index;
+        tau_idx = tau_index;
+        dR_l_tau = dR_lt;
+        charge_ltau = c_ltau;
+        // std::cout << "lep tau pair charge:  " << selHadTaus[j]->charge()*selLeptons[i]->charge() << std::endl;
+        // std::cout << "lepton index chosen:  " << l_idx << std::endl;
+        // std::cout << "tau index chosen:  " << tau_idx << std::endl;
+        // std::cout << "tau charge:  " << selHadTaus[tau_idx]->charge() << std::endl;
+        // std::cout << "lep charge:  " << selLeptons[l_idx]->charge() << std::endl;
+        // std::cout << "///////////////////////////////////////////////////////////////" << std::endl;
+        }
+      }
+    }
+
+if (selHadTaus.size()>0){
+  mT_lep_tau = comp_massL2(selLeptons[l_idx], selHadTaus[tau_idx], met.pt(), met.phi());
+  // std::cout << "transverse mass:  " << mT_lep_tau << std::endl;
+  // std::cout << "lepton index chosen:  " << l_idx << std::endl;
+  // std::cout << "tau index chosen:  " << tau_idx << std::endl;
+  // std::cout << "tau charge:  " << selHadTaus[tau_idx]->charge() << std::endl;
+  // std::cout << "lep charge:  " << selLeptons[l_idx]->charge() << std::endl;
+  // std::cout << "///////////////////////////////////////////////////////////////" << std::endl;
+  // std::cout << "tau mass: " << selHadTaus[tau_idx]->mass() << std::endl;
+}
+
+// if (selHadTaus.size()>0){
+//     std::cout << "#########################################################################################" << std::endl;
+//     std::cout << "selJets_Wjj_WPairwise amount: " << selJets_Wjj_WPairwise.size() << std::endl;
+//     // std::cout << "tau amount: " << selHadTaus.size() << std::endl;
+//     std::cout << "deltaR: " << dR_w_jj<< std::endl;
+//     std::cout << "W1 vector mass: " << selJetP4.mass() << std::endl;
+//     std::cout << "W2 vector mass: " << selJetP4_2.mass() << std::endl;
+//     std::cout << "------------------------------------------------------------------------------------------" << std::endl;
+//   }
+
+
+
+    // compute signal extraction observables ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    double dihiggsVisMass_sel = (selJetP4 + selJetP4_2 + selLepton_lead->cone_p4() + selLepton_sublead->cone_p4()).mass();
+    double dihiggsMass_wMet_sel = (selJetP4 + selJetP4_2 + selLepton_lead->cone_p4() + selLepton_sublead->cone_p4() + met.p4()).mass();
+
+    if (selHadTaus.size()>0){
+        dihiggsVisMass_sel = (selJetP4 + selLepton_lead->cone_p4() + selLepton_sublead->cone_p4() + selHadTaus[tau_idx]->p4()).mass();
+        dihiggsMass_wMet_sel = (selJetP4 + selLepton_lead->cone_p4() + selLepton_sublead->cone_p4() + selHadTaus[tau_idx]->p4() + met.p4()).mass();
+    }
 
     std::vector< math::PtEtaPhiMLorentzVector > Ws;
     Ws.push_back(selJetP4);
     Ws.push_back(selJetP4_2);
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
     // vbf BDT vars
@@ -2460,9 +2655,13 @@ int main(int argc, char* argv[])
 
     int bestW_idx = 0;
     int bestl_idx = 0;
-
+    // std::cout << "------------------------------------------" << std::endl;
+    // std::cout << "W amount: " << Ws.size() << std::endl;
+    // std::cout << "W1 mass: " << Ws[0].mass() << std::endl;
+    // std::cout << "W2 mass: " << Ws[1].mass() << std::endl;
     double dR_h = 100000;
     double pT_h = -1;
+
     for (size_t i = 0; i < Ws.size(); i++) {
       for (size_t j = 0; j < selLeptons.size(); j++){
         double mass_h = (Ws[i] + selLeptons[j]->cone_p4()).mass();
@@ -2472,29 +2671,56 @@ int main(int argc, char* argv[])
           mass_h1 = mass_h;
           dR_h = wl_dr;
           pT_h = h_pt;
+          // std::cout << "Higgs mass loop1: "<< mass_h1 << std::endl;
+          // std::cout << "Higgs dr loop1: "<< dR_h << std::endl;
+          // std::cout << "Higgs pt loop1: "<< pT_h << std::endl;
+          // std::cout << "_________________________________________--" << std::endl;
           bestW_idx = i;
           bestl_idx = j;
         }
         else if(h_pt > pT_h and dR_h == 100000){
           pT_h = h_pt;
           mass_h1 = mass_h;
+          // std::cout << "Higgs mass loop2: "<< mass_h1 << std::endl;
+          // std::cout << "Higgs pt loop2: "<< pT_h << std::endl;
+          // std::cout << "_________________________________________--" << std::endl;
           dR_h = 100000;
           bestW_idx = i;
           bestl_idx = j;
         }
       }
     }
+    // std::cout << "Higgs mass chosen: "<< mass_h1 << std::endl;
+    // std::cout << "##############---##############" << std::endl;
 
     int badW_idx = (bestW_idx +1) % 2;
     int badl_idx = (bestl_idx +1) % 2;
+
+  if (selHadTaus.size()>0 && l_idx == badl_idx){
+      Higgs1 = (Ws[bestW_idx] + selLeptons[bestl_idx]->cone_p4());
+      Higgs2 = (selHadTaus[tau_idx]->p4() + selLeptons[badl_idx]->cone_p4());
+      // std::cout << "Higgs W mass: "<< Higgs1.mass() << std::endl;
+      // std::cout << "Higgs Tau mass: "<< Higgs2.mass() << std::endl;
+  }
+  else if (selHadTaus.size()>0 && l_idx == bestl_idx){
+    Higgs1 = (selHadTaus[tau_idx]->p4() + selLeptons[bestl_idx]->cone_p4());
+    Higgs2 = (Ws[badW_idx] + selLeptons[badl_idx]->cone_p4());
+      // std::cout << "Higgs W mass: "<< Higgs1.mass() << std::endl;
+      // std::cout << "Higgs Tau mass: "<< Higgs2.mass() << std::endl;
+  }
+  else{
     Higgs1 = (Ws[bestW_idx] + selLeptons[bestl_idx]->cone_p4());
     Higgs2 = (Ws[badW_idx] + selLeptons[badl_idx]->cone_p4());
+  }
 
     pT_h1 = Higgs1.pt();
     pT_h2 = Higgs2.pt();
     mass_h1 = Higgs1.mass();
     mass_h2 = Higgs2.mass();
     dR_h1h2 = deltaR(Higgs1, Higgs2);
+
+    double dihiggsVisMass_comp = (Higgs1 + Higgs2).mass();
+    double dihiggsVisMass_wMET_comp = (Higgs1 + Higgs2 + met.p4()).mass();
 
 
     // vbf BDT vars
@@ -2539,15 +2765,28 @@ int main(int argc, char* argv[])
       pT_sum = llP4.pt() + vbf_pt_lead + vbf_pt_sublead;
     }
     double m_ll = llP4.mass();
+
+    // some more vars for vbf vs ggf bdt
+    double z_lep1 = (selLepton_lead->eta()-(VBFjet1.eta()+VBFjet2.eta())/2)/(VBFjet1.eta()-VBFjet2.eta());
+    double z_lep2 = (selLepton_sublead->eta()-(VBFjet1.eta()+VBFjet2.eta())/2)/(VBFjet1.eta()-VBFjet2.eta());
+    double dR_jj_ll = deltaR(VBFjet1+VBFjet2,selLepton_lead->cone_p4()+selLepton_sublead->cone_p4());
+
+    std::cout << "mean vbf jet pair eta: " << (VBFjet1.eta()+VBFjet2.eta())/2 << std::endl;
+    std::cout << "vbf jet pair deta: " << VBFjet1.eta()-VBFjet2.eta() << std::endl;
+    std::cout << "sellepton lead eta: " << selLepton_lead->eta() << std::endl;
+    std::cout << "sellepton sublead eta: " << selLepton_sublead->eta() << std::endl;
+    std::cout << "z_lep1: " << z_lep1 << std::endl;
+    std::cout << "z_lep2: " << z_lep2 << std::endl;
+        std::cout << "-----------------------------------------------------"  << std::endl;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Original 2lss BDT vars
     const double mindr_lep1_jet = comp_mindr_jet(*selLepton_lead, selJets);
     const double mindr_lep2_jet = comp_mindr_jet(*selLepton_sublead, selJets);
     double jetMass_sel = mass_jj_W + mass_jj_W2;
-    double leptonPairMass_sel = (selLepton_lead->cone_p4() + selLepton_sublead->cone_p4()).mass();
-    double leptonPairCharge_sel = selLepton_lead->charge() + selLepton_sublead->charge();
-    double dR_ll = deltaR(selLeptonP4_lead,selLeptonP4_sublead);
+    // double leptonPairMass_sel = (selLepton_lead->cone_p4() + selLepton_sublead->cone_p4()).mass();
+    // double leptonPairCharge_sel = selLepton_lead->charge() + selLepton_sublead->charge();
+    // double dR_ll = deltaR(selLeptonP4_lead,selLeptonP4_sublead);
     double pT_ll = llP4.pt();
     double pT_llMEt = (llP4 + metP4).pt();
     double Smin_llMEt = comp_Smin(llP4, metP4.px(), metP4.py());
@@ -2557,130 +2796,130 @@ int main(int argc, char* argv[])
     // double dihiggsMass_wMet_sel = (selJetP4 + selLepton_lead->cone_p4() + selLepton_sublead->cone_p4() + met.p4()).mass();
     // double jetMass_sel = mass_jj_W;
 
- //    //--- compute variables BDTs used to discriminate . . .
- //    const double mindr_lep1_jet  = comp_mindr_jet(*selLepton_lead, selJets);
- //    const double mindr_lep2_jet  = comp_mindr_jet(*selLepton_sublead, selJets);
- //    Particle::LorentzVector llP4 = selLeptonP4_lead + selLeptonP4_sublead;
- //    double pT_ll = llP4.pt();
- //    double pT_llMEt = (llP4 + metP4).pt();
- //    double Smin_llMEt = comp_Smin(llP4, metP4.px(), metP4.py());
+    // //--- compute variables BDTs used to discriminate . . .
+    // const double mindr_lep1_jet  = comp_mindr_jet(*selLepton_lead, selJets);
+    // const double mindr_lep2_jet  = comp_mindr_jet(*selLepton_sublead, selJets);
+    // Particle::LorentzVector llP4 = selLeptonP4_lead + selLeptonP4_sublead;
+    // double pT_ll = llP4.pt();
+    // double pT_llMEt = (llP4 + metP4).pt();
+    // double Smin_llMEt = comp_Smin(llP4, metP4.px(), metP4.py());
 
 
- //    int nElectrons_in_2lss = 0;
- //    for (size_t i=0; i<2; i++)
- //    {
- //      if (abs(selLeptons[i]->pdgId()) == 11) nElectrons_in_2lss++;
- //    }
- //    double leptonPairMass_sel = (selLepton_lead->cone_p4() + selLepton_sublead->cone_p4()).mass();
- //    double leptonPairCharge_sel = selLepton_lead->charge() + selLepton_sublead->charge();
- //    double dR_ll = deltaR(selLeptonP4_lead, selLeptonP4_sublead);
- //    double dPhi_ll = calculateAbsDeltaPhi(selLeptonP4_lead.phi(), selLeptonP4_sublead.phi());
+    int nElectrons_in_2lss = 0;
+    for (size_t i=0; i<2; i++)
+    {
+      if (abs(selLeptons[i]->pdgId()) == 11) nElectrons_in_2lss++;
+    }
+    double leptonPairMass_sel = (selLepton_lead->cone_p4() + selLepton_sublead->cone_p4()).mass();
+    double leptonPairCharge_sel = selLepton_lead->charge() + selLepton_sublead->charge();
+    double dR_ll = deltaR(selLeptonP4_lead, selLeptonP4_sublead);
+    double dPhi_ll = calculateAbsDeltaPhi(selLeptonP4_lead.phi(), selLeptonP4_sublead.phi());
     
 
- //    //int nAK4 = selJets.size();
- //    int nAK8_w2subjets = selJetsAK8_Wjj_selected.size();
- //    int nWJets_selected = selJets_Wjj_WPairwise.size();
- //    double mass_2j_fromW1 = -1;
- //    double mass_2j_fromW2 = -1;
- //    double dR_2j_fromW1   = -1;
- //    double dR_2j_fromW2   = -1;
+    //int nAK4 = selJets.size();
+    int nAK8_w2subjets = selJetsAK8_Wjj_selected.size();
+    int nWJets_selected = selJets_Wjj_WPairwise.size();
+    double mass_2j_fromW1 = -1;
+    double mass_2j_fromW2 = -1;
+    double dR_2j_fromW1   = -1;
+    double dR_2j_fromW2   = -1;
 
- //    if (selJets_Wjj_WPairwise.size() >= 2)
- //    {
- //      mass_2j_fromW1 = (selJets_Wjj_WPairwise[0]->p4() + selJets_Wjj_WPairwise[1]->p4()).mass();
- //      dR_2j_fromW1   = deltaR(selJets_Wjj_WPairwise[0]->p4(), selJets_Wjj_WPairwise[1]->p4());
- //    }
- //    if (selJets_Wjj_WPairwise.size() >= 4)
- //    {
- //      mass_2j_fromW2 = (selJets_Wjj_WPairwise[2]->p4() + selJets_Wjj_WPairwise[3]->p4()).mass();
- //      dR_2j_fromW2   = deltaR(selJets_Wjj_WPairwise[2]->p4(), selJets_Wjj_WPairwise[3]->p4());
- //    }
+    if (selJets_Wjj_WPairwise.size() >= 2)
+    {
+      mass_2j_fromW1 = (selJets_Wjj_WPairwise[0]->p4() + selJets_Wjj_WPairwise[1]->p4()).mass();
+      dR_2j_fromW1   = deltaR(selJets_Wjj_WPairwise[0]->p4(), selJets_Wjj_WPairwise[1]->p4());
+    }
+    if (selJets_Wjj_WPairwise.size() >= 4)
+    {
+      mass_2j_fromW2 = (selJets_Wjj_WPairwise[2]->p4() + selJets_Wjj_WPairwise[3]->p4()).mass();
+      dR_2j_fromW2   = deltaR(selJets_Wjj_WPairwise[2]->p4(), selJets_Wjj_WPairwise[3]->p4());
+    }
 
- //    double dR_Wjets_min = 99999.;
- //    double dR_Wjets_max = -1;
- //    double dR_l_Wjets_min = 99999.;
- //    double dR_l_Wjets_max = -1;
- //    double dR_l_AK4jets_min = 99999.;
- //    double dR_l_AK4jets_max = -1;
- //    double dR_l_leadWjet_min = 99999.;
- //    double dR_l_leadWjet_max = -1;
- //    double dR_l_leadAK4jet_min = 99999.;
- //    double dR_l_leadAK4jet_max = -1;
+    double dR_Wjets_min = 99999.;
+    double dR_Wjets_max = -1;
+    double dR_l_Wjets_min = 99999.;
+    double dR_l_Wjets_max = -1;
+    double dR_l_AK4jets_min = 99999.;
+    double dR_l_AK4jets_max = -1;
+    double dR_l_leadWjet_min = 99999.;
+    double dR_l_leadWjet_max = -1;
+    double dR_l_leadAK4jet_min = 99999.;
+    double dR_l_leadAK4jet_max = -1;
 
- //    const RecoJetBase* selJet_Wjj_WPairwise_ptLead = nullptr;
- //    double pt_selJet_Wjj_WPairwise_ptLead = 0;
- //    for (size_t iJet1 = 0; iJet1 < selJets_Wjj_WPairwise.size(); iJet1++)
- //    {
- //      // selJet_Wjj_WPairwise_ptLead
- //      if (selJets_Wjj_WPairwise[iJet1]->pt() > pt_selJet_Wjj_WPairwise_ptLead )
- //      {
-	// selJet_Wjj_WPairwise_ptLead    = selJets_Wjj_WPairwise[iJet1];
-	// pt_selJet_Wjj_WPairwise_ptLead = selJets_Wjj_WPairwise[iJet1]->pt();
- //      }
+    const RecoJetBase* selJet_Wjj_WPairwise_ptLead = nullptr;
+    double pt_selJet_Wjj_WPairwise_ptLead = 0;
+    for (size_t iJet1 = 0; iJet1 < selJets_Wjj_WPairwise.size(); iJet1++)
+    {
+      // selJet_Wjj_WPairwise_ptLead
+      if (selJets_Wjj_WPairwise[iJet1]->pt() > pt_selJet_Wjj_WPairwise_ptLead )
+      {
+	selJet_Wjj_WPairwise_ptLead    = selJets_Wjj_WPairwise[iJet1];
+	pt_selJet_Wjj_WPairwise_ptLead = selJets_Wjj_WPairwise[iJet1]->pt();
+      }
 
- //      // dR_Wjets 
- //      for (size_t iJet2 = iJet1+1; iJet2 < selJets_Wjj_WPairwise.size(); iJet2++)
- //      {
-	// double  dr = deltaR(selJets_Wjj_WPairwise[iJet1]->p4(), selJets_Wjj_WPairwise[iJet2]->p4());
-	// if (dr < dR_Wjets_min) dR_Wjets_min = dr;
-	// if (dr > dR_Wjets_max) dR_Wjets_max = dr;	
- //      }
- //    }
+      // dR_Wjets 
+      for (size_t iJet2 = iJet1+1; iJet2 < selJets_Wjj_WPairwise.size(); iJet2++)
+      {
+	double  dr = deltaR(selJets_Wjj_WPairwise[iJet1]->p4(), selJets_Wjj_WPairwise[iJet2]->p4());
+	if (dr < dR_Wjets_min) dR_Wjets_min = dr;
+	if (dr > dR_Wjets_max) dR_Wjets_max = dr;	
+      }
+    }
 
- //    for (size_t iLep = 0; iLep < 2; iLep++)
- //    {
- //      double dr;
+    for (size_t iLep = 0; iLep < 2; iLep++)
+    {
+      double dr;
 
- //      // dR_l_Wjets min, max
- //      for (size_t iJet = 0; iJet < selJets_Wjj_WPairwise.size(); iJet++)
- //      {
-	// dr = deltaR(selLeptons[iLep]->p4(), selJets_Wjj_WPairwise[iJet]->p4());
-	// if (dr < dR_l_Wjets_min) dR_l_Wjets_min = dr;
-	// if (dr > dR_l_Wjets_max) dR_l_Wjets_max = dr;
- //      }
+      // dR_l_Wjets min, max
+      for (size_t iJet = 0; iJet < selJets_Wjj_WPairwise.size(); iJet++)
+      {
+	dr = deltaR(selLeptons[iLep]->p4(), selJets_Wjj_WPairwise[iJet]->p4());
+	if (dr < dR_l_Wjets_min) dR_l_Wjets_min = dr;
+	if (dr > dR_l_Wjets_max) dR_l_Wjets_max = dr;
+      }
 
- //      // dR_l_leadWjet min, max
- //      dr = deltaR(selLeptons[iLep]->p4(), selJet_Wjj_WPairwise_ptLead->p4());
- //      if (dr < dR_l_leadWjet_min) dR_l_leadWjet_min = dr;
- //      if (dr > dR_l_leadWjet_max) dR_l_leadWjet_max = dr;
+      // dR_l_leadWjet min, max
+      dr = deltaR(selLeptons[iLep]->p4(), selJet_Wjj_WPairwise_ptLead->p4());
+      if (dr < dR_l_leadWjet_min) dR_l_leadWjet_min = dr;
+      if (dr > dR_l_leadWjet_max) dR_l_leadWjet_max = dr;
 
- //      // dR_l_AK4jets
- //      for (size_t iJet = 0; iJet < selJets.size(); iJet++)
- //      {
-	// dr = deltaR(selLeptons[iLep]->p4(), selJets[iJet]->p4());
-	// if (dr < dR_l_AK4jets_min) dR_l_AK4jets_min = dr;
-	// if (dr > dR_l_AK4jets_max) dR_l_AK4jets_max = dr;
- //      }
+      // dR_l_AK4jets
+      for (size_t iJet = 0; iJet < selJets.size(); iJet++)
+      {
+	dr = deltaR(selLeptons[iLep]->p4(), selJets[iJet]->p4());
+	if (dr < dR_l_AK4jets_min) dR_l_AK4jets_min = dr;
+	if (dr > dR_l_AK4jets_max) dR_l_AK4jets_max = dr;
+      }
 
- //      // dR_l_leadAK4jet min, max
- //      if (selJets.size() > 0)
- //      {
-	// dr = deltaR(selLeptons[iLep]->p4(), selJets[0]->p4());
-	// if (dr < dR_l_leadAK4jet_min) dR_l_leadAK4jet_min = dr;
-	// if (dr > dR_l_leadAK4jet_max) dR_l_leadAK4jet_max = dr;
- //      }
- //    }
+      // dR_l_leadAK4jet min, max
+      if (selJets.size() > 0)
+      {
+	dr = deltaR(selLeptons[iLep]->p4(), selJets[0]->p4());
+	if (dr < dR_l_leadAK4jet_min) dR_l_leadAK4jet_min = dr;
+	if (dr > dR_l_leadAK4jet_max) dR_l_leadAK4jet_max = dr;
+      }
+    }
 
- //    double lep1_conePt = comp_lep_conePt(*selLepton_lead);
- //    double mT_lep1     = std::min(150., comp_MT_met(selLepton_lead, met.pt(), met.phi()));
- //    //
- //    double lep2_conePt = comp_lep_conePt(*selLepton_sublead);
- //    double mT_lep2     = std::min(150., comp_MT_met(selLepton_sublead, met.pt(), met.phi()));
- //    //
- //    double max_lep_eta = TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
+    double lep1_conePt = comp_lep_conePt(*selLepton_lead);
+    double mT_lep1     = std::min(150., comp_MT_met(selLepton_lead, met.pt(), met.phi()));
+    //
+    double lep2_conePt = comp_lep_conePt(*selLepton_sublead);
+    double mT_lep2     = std::min(150., comp_MT_met(selLepton_sublead, met.pt(), met.phi()));
+    //
+    double max_lep_eta = TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
 
- //    double mT_lep1_met = mT_lep1;
- //    double mT_lep2_met = mT_lep2;
+    double mT_lep1_met = mT_lep1;
+    double mT_lep2_met = mT_lep2;
     
 
- //    int eventCategory = 0;
- //    if      ( isEventBoosted )     eventCategory = 1;
- //    else if ( isEventSemiboosted ) eventCategory = 2;
- //    else if ( isEventResolved )    eventCategory = 3;
+    int eventCategory = 0;
+    if      ( isEventBoosted )     eventCategory = 1;
+    else if ( isEventSemiboosted ) eventCategory = 2;
+    else if ( isEventResolved )    eventCategory = 3;
     
     
- //    std::vector<std::string> evtCategories;
- //    int nTaus = (int)selHadTaus.size();
+    std::vector<std::string> evtCategories;
+    int nTaus = (int)selHadTaus.size();
 
 
 
@@ -2709,6 +2948,11 @@ int main(int argc, char* argv[])
 
     AllVars_Map["dihiggsVisMass_sel"] =              dihiggsVisMass_sel;
     AllVars_Map["dihiggsMass_wMet_sel"] =            dihiggsMass_wMet_sel;
+    AllVars_Map["met"] =                             std::min(250., metP4.pt());
+    AllVars_Map["mht"] =                             std::min(250.,mhtP4.pt());
+    AllVars_Map["met_LD"] =                          std::min(250., met_LD);
+    AllVars_Map["HT"] =                              std::min(1000., HT);
+    AllVars_Map["STMET"] =                           std::min(1000., STMET);
     AllVars_Map["evtWeight"] = evtWeightRecorder.get(central_or_shift_main);
     AllVars_Map["mindR_vbfjet_lep1"] = std::min(10., mindR_vbfjet_lep1);
     AllVars_Map["mindR_vbfjet_lep2"] = std::min(10., mindR_vbfjet_lep2);
@@ -2748,15 +2992,14 @@ int main(int argc, char* argv[])
     AllVars_Map["H1H2_centrality"] = H1H2_centrality;
     AllVars_Map["vbfj1_cosphi"] = vbfj1_cosphi;
     AllVars_Map["vbfj2_cosphi"] = vbfj2_cosphi;
+    AllVars_Map["m_l_tau"] = m_l_tau;
+    AllVars_Map["dR_l_tau"] = dR_l_tau;
+    AllVars_Map["mT_lep_tau"] = mT_lep_tau;
+    AllVars_Map["charge_ltau"] = charge_ltau;
 
     AllVars_Map["jetMass_sel"] =                     jetMass_sel;
     AllVars_Map["leptonPairMass_sel"] =              std::min(250.,leptonPairMass_sel);
     AllVars_Map["leptonPairCharge_sel"] =            leptonPairCharge_sel;
-    AllVars_Map["met"] =                             std::min(250., metP4.pt());
-    AllVars_Map["mht"] =                             std::min(250.,mhtP4.pt());
-    AllVars_Map["met_LD"] =                          std::min(250., met_LD);
-    AllVars_Map["HT"] =                              std::min(1000., HT);
-    AllVars_Map["STMET"] =                           std::min(1000., STMET);
     AllVars_Map["lep1_pt"] =                         std::min(120.,selLepton_lead->pt());
     AllVars_Map["lep1_conePt"] =                     std::min(120.,comp_lep_conePt(*selLepton_lead));
     AllVars_Map["lep1_eta"] =                        selLepton_lead->eta();
@@ -2777,59 +3020,26 @@ int main(int argc, char* argv[])
     AllVars_Map["nLep"] =                            selLeptons.size();
 
 
-    //Gathering final BDT Inputs--------------------Original 2lss bdt---------------------------
+    AllVars_Map["THWeight"] =                        THWeight;
 
-    // AllVars_Map["gen_mHH"]                                   =       250.; // setting a Dummy value which will be reset depending on mass hypothesis
+    //AllVars_Map["leptonPairMass_sel"] =            leptonPairMass_sel;
+    //AllVars_Map["dihiggsVisMass_sel"] =            dihiggsVisMass_sel;
+    //AllVars_Map["met_LD"] =                          met_LD;
+    //AllVars_Map["dR_ll"] =                           dR_ll;
+    AllVars_Map["dR_l_Wjets_min"] =                  dR_l_Wjets_min;
 
-    // AllVars_Map["dihiggsVisMass_sel"] =              dihiggsVisMass_sel;
-    // AllVars_Map["dihiggsMass_wMet_sel"] =            dihiggsMass_wMet_sel;
-    // AllVars_Map["jetMass_sel"] =                     jetMass_sel;
-    // AllVars_Map["leptonPairMass_sel"] =              leptonPairMass_sel;
-    // AllVars_Map["leptonPairCharge_sel"] =            leptonPairCharge_sel;
-    // AllVars_Map["met"] =                             metP4.pt();
-    // AllVars_Map["mht"] =                             mhtP4.pt();
-    // AllVars_Map["met_LD"] =                          met_LD;
-    // AllVars_Map["HT"] =                              HT;
-    // AllVars_Map["STMET"] =                           STMET;
-    // AllVars_Map["evtWeight"] =                       evtWeightRecorder.get(central_or_shift_main);
-    // AllVars_Map["lep1_pt"] =                         selLepton_lead->pt();
-    // AllVars_Map["lep1_conePt"] =                     lep1_conePt;
-    // AllVars_Map["lep1_eta"] =                        selLepton_lead->eta();
-    // AllVars_Map["mindr_lep1_jet"] =                  std::min(10., mindr_lep1_jet) ;
-    // AllVars_Map["mT_lep1"] =                         mT_lep1;
-    // AllVars_Map["lep2_pt"] =                         selLepton_sublead->pt();
-    // AllVars_Map["lep2_conePt"] =                     lep2_conePt;
-    // AllVars_Map["lep2_eta"] =                        selLepton_sublead->eta();
-    // AllVars_Map["mindr_lep2_jet"] =                  std::min(10., mindr_lep2_jet) ;
-    // AllVars_Map["mT_lep2"] =                         mT_lep2;
-    // AllVars_Map["dR_ll"] =                           dR_ll;
-    // AllVars_Map["pT_ll"] =                           pT_ll;
-    // AllVars_Map["max_lep_eta"] =                     TMath::Max(std::abs(selLepton_lead -> eta()), std::abs(selLepton_sublead -> eta()));
-    // AllVars_Map["pT_llMEt"] =                        pT_llMEt;
-    // AllVars_Map["Smin_llMEt"] =                      Smin_llMEt;
-    // AllVars_Map["vbf_dEta_jj"] =                     vbf_dEta_jj;
-    // AllVars_Map["vbf_m_jj"] =                        vbf_m_jj;
-    // AllVars_Map["nJet"] =                            comp_n_jet25_recl(selJets);
-    // AllVars_Map["nJet_vbf"] =                        selJetsVBF.size();
-    // AllVars_Map["isVBF"] =                           isVBF;
-    // AllVars_Map["nLep"] =                            selLeptons.size();
-    // AllVars_Map["THWeight"] =                        THWeight;
+    AllVars_Map["dR_l_leadWjet_min"] =               dR_l_leadWjet_min;
+    AllVars_Map["dR_l_Wjets_max"] =                  dR_l_Wjets_max;
+    AllVars_Map["dR_l_leadWjet_max"] =               dR_l_leadWjet_max;
+    AllVars_Map["dR_2j_fromW1"] =                    dR_2j_fromW1;
+    AllVars_Map["dR_2j_fromW2"] =                    dR_2j_fromW2;
 
-    // //AllVars_Map["leptonPairMass_sel"] =            leptonPairMass_sel;
-    // //AllVars_Map["dihiggsVisMass_sel"] =            dihiggsVisMass_sel;
-    // //AllVars_Map["met_LD"] =                          met_LD;
-    // //AllVars_Map["dR_ll"] =                           dR_ll;
-    // AllVars_Map["dR_l_Wjets_min"] =                  dR_l_Wjets_min;
-
-    // AllVars_Map["dR_l_leadWjet_min"] =               dR_l_leadWjet_min;
-    // AllVars_Map["dR_l_Wjets_max"] =                  dR_l_Wjets_max;
-    // AllVars_Map["dR_l_leadWjet_max"] =               dR_l_leadWjet_max;
-    // AllVars_Map["dR_2j_fromW1"] =                    dR_2j_fromW1;
-
-    // AllVars_Map["mass_2j_fromW1"] =                  mass_2j_fromW1;
-    // //AllVars_Map["mT_lep1"] =                         mT_lep1;
-
-    
+    AllVars_Map["mass_2j_fromW1"] =                  mass_2j_fromW1;
+    AllVars_Map["mass_2j_fromW2"] =                  mass_2j_fromW2;
+    //AllVars_Map["mT_lep1"] =                         mT_lep1;
+    AllVars_Map["z_lep1"] = z_lep1;
+    AllVars_Map["z_lep2"] = z_lep2;
+    AllVars_Map["dR_jj_ll"] = dR_jj_ll;
 
 
     // std::map<std::string, double> BDTInputs_spin2 = InitializeInputVarMap(AllVars_Map, BDTInputVariables_spin2, false);
@@ -2847,14 +3057,14 @@ int main(int argc, char* argv[])
     BDTOutput_Map_nonRes_vbf = CreateNonResonantBDTOutputMap(nonRes_BMs_vbf, BDT_nonRes_vbf, BDTInputs_nonRes_vbf, eventInfo.event, hhWeight_couplings);
 
 // Original 2lss BDT vars
-    double lep1_conePt = comp_lep_conePt(*selLepton_lead);
-    double mT_lep1 = comp_MT_met(selLepton_lead, met.pt(), met.phi());
-    //
-    double lep2_conePt = comp_lep_conePt(*selLepton_sublead);
-    double mT_lep2 = comp_MT_met(selLepton_sublead, met.pt(), met.phi());
-    //
-    double max_lep_eta = TMath::Max(std::abs(selLepton_lead -> eta()),
-    std::abs(selLepton_sublead -> eta()));
+    // double lep1_conePt = comp_lep_conePt(*selLepton_lead);
+    // double mT_lep1 = comp_MT_met(selLepton_lead, met.pt(), met.phi());
+    // //
+    // double lep2_conePt = comp_lep_conePt(*selLepton_sublead);
+    // double mT_lep2 = comp_MT_met(selLepton_sublead, met.pt(), met.phi());
+    // //
+    // double max_lep_eta = TMath::Max(std::abs(selLepton_lead -> eta()),
+    // std::abs(selLepton_sublead -> eta()));
 
 
     double maxJetEta_vbf = comp_maxAbsEta_jet(VBFjets);
@@ -2912,7 +3122,8 @@ int main(int argc, char* argv[])
               sum_m_lj, pT_sum, m_ll, isVBF,
               maxJetPt_vbf, minJetPt_vbf, mindR_vbfJet_W1, maxdR_vbfJet_W1, mindR_vbfjet_lep, maxdR_vbfjet_lep,
               dR_h1h2, pT_h1, pT_h2, dR_h1_j1, dR_h1_j2, dR_h2_j1, dR_h2_j2, mass_h1, mass_h2,
-              H1H2_centrality, vbfj1_cosphi, vbfj2_cosphi
+              H1H2_centrality, vbfj1_cosphi, vbfj2_cosphi, m_l_tau, dR_l_tau, mT_lep_tau, charge_ltau, 
+              dihiggsVisMass_comp, dihiggsVisMass_wMET_comp, z_lep1, z_lep2, dR_jj_ll
               );
 
     // for(const std::string & category: evtCategories)
@@ -3174,6 +3385,12 @@ int main(int argc, char* argv[])
           ("dihiggsVisMass_sel",      dihiggsVisMass_sel)
           ("dihiggsMass_wMet_sel",    dihiggsMass_wMet_sel)
 
+          ("met",                            metP4.pt())
+          ("mht",                            mhtP4.pt())
+          ("met_LD",                         met_LD)
+          ("HT",                             HT)
+          ("STMET",                          STMET)
+
           ("evtWeight",               evtWeight_BDT)
           ("mindR_vbfjet_lep1",          std::min(10., mindR_vbfjet_lep1))
           ("mindR_vbfjet_lep2",          std::min(10., mindR_vbfjet_lep2))
@@ -3219,6 +3436,23 @@ int main(int argc, char* argv[])
           ("vbfj1_cosphi",             vbfj1_cosphi)
           ("vbfj2_cosphi",             vbfj2_cosphi)
 
+          ("m_l_tau",             m_l_tau)
+          ("dR_l_tau",             dR_l_tau)
+          ("mT_lep_tau",             mT_lep_tau)
+          ("charge_ltau",             charge_ltau)
+
+          ("z_lep1",             z_lep1)
+          ("z_lep2",             z_lep2)
+          ("dR_jj_ll",             dR_jj_ll)
+
+          ("BM",                             BM)
+          ("nJet",                           comp_n_jet25_recl(selJets))
+          ("nJet_vbf",                       selJetsVBF.size())
+          ("nLep",                           selLeptons.size())
+          ("nLep_loose",                     preselLeptonsFull.size())
+          ("nElec",                          selElectrons.size())
+          ("eventCategory",                  eventCategory)
+
           (weightMapHH)
         .fill();
     }
@@ -3255,6 +3489,12 @@ int main(int argc, char* argv[])
 // 	("Smin_llMEt",                     Smin_llMEt)
 // 	("vbf_dEta_jj",                    vbf_dEta_jj)
 // 	("vbf_m_jj",                       vbf_m_jj)
+
+//   ("m_l_tau",             m_l_tau)
+//   ("dR_l_tau",             dR_l_tau)
+//   ("mT_lep_tau",             mT_lep_tau)
+//   ("charge_ltau",             charge_ltau)
+
 // 	("nJet",                           comp_n_jet25_recl(selJets))
 // 	("nJet_vbf",                       selJetsVBF.size())
 // 	("isVBF",                          isVBF)

@@ -1,0 +1,364 @@
+{
+    "correlations": {
+        "feature_importances": {}, 
+        "dropped": [
+            {
+                "feature": "HT", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "dR_l_AK4jets_min", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "dihiggsVisMass_sel", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "met_LD", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "Smin_llMEt", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "isVBF", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "dR_l_tau", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "charge_ltau", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "nTaus", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "eventCategory", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "dR_ll", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "pT_ll", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "dR_Wjets_min", 
+                "feature_importance": {}
+            }, 
+            {
+                "feature": "mass_2j_fromW2", 
+                "feature_importance": {}
+            }
+        ]
+    }, 
+    "optimization_0": {
+        "feature_importances": {
+            "STMET": 101, 
+            "dR_Wjets_max": 30, 
+            "leptonPairMass_sel": 63, 
+            "max_lep_eta": 35, 
+            "jetMass_sel": 13, 
+            "nWJets_selected": 16, 
+            "mT_lep1": 37, 
+            "dihiggsMass_wMet_sel": 87, 
+            "mindr_lep2_jet": 74, 
+            "lep2_conePt": 59, 
+            "dR_l_leadAK4jet_max": 20, 
+            "nJet": 37, 
+            "mT_lep_tau": 9, 
+            "nAK8_w2subjets": 39, 
+            "dR_l_leadWjet_min": 75, 
+            "dR_2j_fromW2": 11, 
+            "dR_l_AK4jets_max": 7, 
+            "vbf_m_jj": 24, 
+            "lep1_eta": 18, 
+            "mindr_lep1_jet": 75, 
+            "m_l_tau": 35, 
+            "lep1_conePt": 29, 
+            "dR_l_Wjets_min": 97, 
+            "vbf_dEta_jj": 35, 
+            "dR_l_Wjets_max": 8, 
+            "nJet_vbf": 72, 
+            "met": 56, 
+            "lep2_eta": 15, 
+            "dR_l_leadWjet_max": 21, 
+            "dPhi_ll": 29, 
+            "mass_2j_fromW1": 23, 
+            "leptonPairCharge_sel": 14, 
+            "nElectrons_in_2lss": 26, 
+            "mT_lep2": 26, 
+            "dR_2j_fromW1": 38, 
+            "dR_l_leadAK4jet_min": 57, 
+            "pT_llMEt": 37, 
+            "mht": 35
+        }, 
+        "dropped": [
+            {
+                "feature": "mT_lep_tau", 
+                "feature_importance": 9
+            }, 
+            {
+                "feature": "dR_l_AK4jets_max", 
+                "feature_importance": 7
+            }, 
+            {
+                "feature": "dR_l_Wjets_max", 
+                "feature_importance": 8
+            }, 
+            {
+                "feature": "dR_2j_fromW2", 
+                "feature_importance": 11
+            }, 
+            {
+                "feature": "jetMass_sel", 
+                "feature_importance": 13
+            }
+        ]
+    }, 
+    "optimization_1": {
+        "feature_importances": {
+            "m_l_tau": 43, 
+            "dR_Wjets_max": 41, 
+            "leptonPairMass_sel": 66, 
+            "max_lep_eta": 28, 
+            "vbf_dEta_jj": 40, 
+            "nWJets_selected": 13, 
+            "mT_lep1": 39, 
+            "mT_lep2": 32, 
+            "lep2_conePt": 54, 
+            "dR_l_leadAK4jet_max": 21, 
+            "nJet": 46, 
+            "mindr_lep2_jet": 65, 
+            "nAK8_w2subjets": 32, 
+            "dR_l_leadWjet_min": 62, 
+            "vbf_m_jj": 26, 
+            "lep1_eta": 14, 
+            "mindr_lep1_jet": 86, 
+            "STMET": 109, 
+            "lep1_conePt": 30, 
+            "dR_l_Wjets_min": 91, 
+            "nJet_vbf": 73, 
+            "met": 58, 
+            "lep2_eta": 18, 
+            "dR_l_leadWjet_max": 20, 
+            "dPhi_ll": 33, 
+            "mass_2j_fromW1": 30, 
+            "leptonPairCharge_sel": 16, 
+            "nElectrons_in_2lss": 27, 
+            "dihiggsMass_wMet_sel": 86, 
+            "dR_2j_fromW1": 36, 
+            "dR_l_leadAK4jet_min": 61, 
+            "pT_llMEt": 40, 
+            "mht": 44
+        }, 
+        "dropped": [
+            {
+                "feature": "nWJets_selected", 
+                "feature_importance": 13
+            }, 
+            {
+                "feature": "lep2_eta", 
+                "feature_importance": 18
+            }, 
+            {
+                "feature": "lep1_eta", 
+                "feature_importance": 14
+            }, 
+            {
+                "feature": "leptonPairCharge_sel", 
+                "feature_importance": 16
+            }, 
+            {
+                "feature": "dR_l_leadWjet_max", 
+                "feature_importance": 20
+            }
+        ]
+    }, 
+    "optimization_2": {
+        "feature_importances": {
+            "m_l_tau": 36, 
+            "dR_Wjets_max": 43, 
+            "leptonPairMass_sel": 63, 
+            "max_lep_eta": 26, 
+            "vbf_dEta_jj": 40, 
+            "mT_lep1": 43, 
+            "dihiggsMass_wMet_sel": 84, 
+            "lep2_conePt": 51, 
+            "dR_l_leadAK4jet_max": 26, 
+            "nJet": 54, 
+            "mindr_lep2_jet": 78, 
+            "nAK8_w2subjets": 33, 
+            "dR_l_leadWjet_min": 77, 
+            "vbf_m_jj": 32, 
+            "mindr_lep1_jet": 88, 
+            "STMET": 120, 
+            "lep1_conePt": 38, 
+            "dR_l_Wjets_min": 106, 
+            "nJet_vbf": 71, 
+            "met": 53, 
+            "dPhi_ll": 35, 
+            "mass_2j_fromW1": 24, 
+            "nElectrons_in_2lss": 28, 
+            "mT_lep2": 37, 
+            "dR_2j_fromW1": 36, 
+            "dR_l_leadAK4jet_min": 64, 
+            "pT_llMEt": 38, 
+            "mht": 58
+        }, 
+        "dropped": [
+            {
+                "feature": "mass_2j_fromW1", 
+                "feature_importance": 24
+            }, 
+            {
+                "feature": "max_lep_eta", 
+                "feature_importance": 26
+            }, 
+            {
+                "feature": "dR_l_leadAK4jet_max", 
+                "feature_importance": 26
+            }, 
+            {
+                "feature": "nElectrons_in_2lss", 
+                "feature_importance": 28
+            }, 
+            {
+                "feature": "vbf_m_jj", 
+                "feature_importance": 32
+            }
+        ]
+    }, 
+    "optimization_3": {
+        "feature_importances": {
+            "STMET": 126, 
+            "dR_Wjets_max": 38, 
+            "leptonPairMass_sel": 80, 
+            "nAK8_w2subjets": 39, 
+            "vbf_dEta_jj": 37, 
+            "mT_lep1": 49, 
+            "mT_lep2": 37, 
+            "lep2_conePt": 62, 
+            "nJet": 51, 
+            "mindr_lep2_jet": 69, 
+            "dR_l_leadWjet_min": 101, 
+            "mindr_lep1_jet": 92, 
+            "m_l_tau": 41, 
+            "lep1_conePt": 59, 
+            "dR_l_Wjets_min": 111, 
+            "nJet_vbf": 62, 
+            "met": 57, 
+            "dPhi_ll": 50, 
+            "dihiggsMass_wMet_sel": 118, 
+            "dR_2j_fromW1": 56, 
+            "dR_l_leadAK4jet_min": 62, 
+            "pT_llMEt": 32, 
+            "mht": 52
+        }, 
+        "dropped": [
+            {
+                "feature": "vbf_dEta_jj", 
+                "feature_importance": 37
+            }, 
+            {
+                "feature": "pT_llMEt", 
+                "feature_importance": 32
+            }, 
+            {
+                "feature": "mT_lep2", 
+                "feature_importance": 37
+            }, 
+            {
+                "feature": "dR_Wjets_max", 
+                "feature_importance": 38
+            }, 
+            {
+                "feature": "nAK8_w2subjets", 
+                "feature_importance": 39
+            }
+        ]
+    }, 
+    "optimization_4": {
+        "feature_importances": {
+            "mindr_lep2_jet": 87, 
+            "m_l_tau": 43, 
+            "dR_l_Wjets_min": 119, 
+            "STMET": 120, 
+            "leptonPairMass_sel": 86, 
+            "mT_lep1": 61, 
+            "dR_l_leadWjet_min": 96, 
+            "lep1_conePt": 52, 
+            "nJet_vbf": 100, 
+            "dR_2j_fromW1": 98, 
+            "met": 48, 
+            "dihiggsMass_wMet_sel": 121, 
+            "dR_l_leadAK4jet_min": 68, 
+            "lep2_conePt": 71, 
+            "dPhi_ll": 69, 
+            "mht": 63, 
+            "nJet": 69, 
+            "mindr_lep1_jet": 105
+        }, 
+        "dropped": [
+            {
+                "feature": "met", 
+                "feature_importance": 48
+            }, 
+            {
+                "feature": "m_l_tau", 
+                "feature_importance": 43
+            }, 
+            {
+                "feature": "lep1_conePt", 
+                "feature_importance": 52
+            }, 
+            {
+                "feature": "mT_lep1", 
+                "feature_importance": 61
+            }, 
+            {
+                "feature": "mht", 
+                "feature_importance": 63
+            }
+        ]
+    }, 
+    "optimization_5": {
+        "feature_importances": {
+            "mindr_lep2_jet": 117, 
+            "STMET": 173, 
+            "dR_l_Wjets_min": 123, 
+            "leptonPairMass_sel": 120, 
+            "dR_l_leadWjet_min": 103, 
+            "nJet_vbf": 119, 
+            "dR_2j_fromW1": 109, 
+            "dihiggsMass_wMet_sel": 108, 
+            "dR_l_leadAK4jet_min": 82, 
+            "lep2_conePt": 73, 
+            "dPhi_ll": 98, 
+            "mindr_lep1_jet": 133, 
+            "nJet": 117
+        }, 
+        "dropped": [
+            {
+                "feature": "lep2_conePt", 
+                "feature_importance": 73
+            }, 
+            {
+                "feature": "dR_l_leadAK4jet_min", 
+                "feature_importance": 82
+            }, 
+            {
+                "feature": "dPhi_ll", 
+                "feature_importance": 98
+            }
+        ]
+    }
+}

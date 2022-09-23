@@ -194,21 +194,21 @@ process.analyze_hh_2lss_leq1tau_vbf = cms.PSet(
     
     nonRes_BMs = cms.vstring(),
     mvaInfo_nonRes = cms.PSet( ## [Tweaked hyper-para.s used]
-        BDT_xml_FileName_nonRes_even = cms.string('hhAnalysis/multilepton/data/BDT_Output_2lss_mod/2lss_odd_half_model_nonres_default.xml'),
-        BDT_xml_FileName_nonRes_odd = cms.string('hhAnalysis/multilepton/data/BDT_Output_2lss_mod/2lss_even_half_model_nonres_default.xml'),
-        inputVars_nonRes = cms.vstring('mht', 'HT', 'lep1_conePt', 'mindr_lep1_jet', 'mT_lep1', 'lep2_conePt', 'mindr_lep2_jet', 'mT_lep2', 'dR_ll', 'max_lep_eta',
+        BDT_xml_FileName_nonRes_even = cms.string('hhAnalysis/multilepton/data/BDT_leq1tau_og/2lss_leq1tau_even_half_model_nonres_default.xml'),
+        BDT_xml_FileName_nonRes_odd = cms.string('hhAnalysis/multilepton/data/BDT_leq1tau_og/2lss_leq1tau_odd_half_model_nonres_default.xml'),
+        inputVars_nonRes = cms.vstring('dR_l_Wjets_min', 'mindr_lep1_jet', 'nJet_vbf', 'STMET', 'mindr_lep2_jet', 'dihiggsMass_wMet_sel', 'dR_l_leadWjet_min', 'leptonPairMass_sel', 'nJet', 'dR_2j_fromW1',
                                        'SM', 'BM1', 'BM2', 'BM3', 'BM4', 'BM5', 'BM6', 'BM7', 'BM8', 'BM9', 'BM10', 'BM11', 'BM12'),
     ),
-    
+
     # without mass cut
     nonRes_BMs_vbf = cms.vstring(),
     mvaInfo_nonRes_vbf = cms.PSet( ## [Tweaked hyper-para.s used]
-        BDT_xml_FileName_nonRes_even_vbf = cms.string('hhAnalysis/multilepton/data/BDT_2lss_vbf/2lss_vbf_even_half_model_nonres_default_woc.xml'),
-        BDT_xml_FileName_nonRes_odd_vbf = cms.string('hhAnalysis/multilepton/data/BDT_2lss_vbf/2lss_vbf_odd_half_model_nonres_default_woc.xml'),
-        inputVars_nonRes_vbf = cms.vstring('vbf_m_jj', 'm_ll', 'maxJetPt_vbf', 'mass_h2', 'vbf_pt_sublead', 'sum_m_lj', 'vbf_dR_jj', 'maxdR_vbfjet_lep', 'dR_h1h2', 'mass_h1',
+        BDT_xml_FileName_nonRes_even_vbf = cms.string('hhAnalysis/multilepton/data/BDT_leq1tau_vbf/2lss_leq1tau_vbf_even_half_model_nonres_default.xml'),
+        BDT_xml_FileName_nonRes_odd_vbf = cms.string('hhAnalysis/multilepton/data/BDT_leq1tau_vbf/2lss_leq1tau_vbf_odd_half_model_nonres_default.xml'),
+        inputVars_nonRes_vbf = cms.vstring('vbf_m_jj', 'HT', 'maxJetPt_vbf', 'dihiggsMass_wMet_sel', 'nJet', 'm_ll', 'maxdR_vbfjet_lep', 'vbf_pt_sublead', 'dR_h1h2', 'vbf_dR_jj',
                                        'SM', 'BM1', 'BM2', 'BM3', 'BM4', 'BM5', 'BM6', 'BM7', 'BM8', 'BM9', 'BM10', 'BM11', 'BM12'),
     ),
-   
+
     evtWeight = cms.PSet(
         apply = cms.bool(False),
         histogramFile = cms.string(''),
