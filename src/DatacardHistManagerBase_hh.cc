@@ -33,7 +33,7 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
   , fillHistograms_nonresonant_(fillHistograms_nonresonant)
   , fillHistograms_resonant_spin0_(fillHistograms_resonant_spin0)
   , fillHistograms_resonant_spin2_(fillHistograms_resonant_spin2)
-  , numBinsX_(100)
+  , numBinsX_(10)
   , xMin_(0.)
   , xMax_(1.) // 1.
   , overlap_(overlap)
@@ -42,7 +42,7 @@ DatacardHistManagerBase_hh::DatacardHistManagerBase_hh(const edm::ParameterSet &
 {
   if ( use2d_ )
   {
-    numBinsX_ =50;
+    numBinsX_ =10;
   }
 }
 

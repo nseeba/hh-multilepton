@@ -2771,13 +2771,13 @@ if (selHadTaus.size()>0){
     double z_lep2 = (selLepton_sublead->eta()-(VBFjet1.eta()+VBFjet2.eta())/2)/(VBFjet1.eta()-VBFjet2.eta());
     double dR_jj_ll = deltaR(VBFjet1+VBFjet2,selLepton_lead->cone_p4()+selLepton_sublead->cone_p4());
 
-    std::cout << "mean vbf jet pair eta: " << (VBFjet1.eta()+VBFjet2.eta())/2 << std::endl;
-    std::cout << "vbf jet pair deta: " << VBFjet1.eta()-VBFjet2.eta() << std::endl;
-    std::cout << "sellepton lead eta: " << selLepton_lead->eta() << std::endl;
-    std::cout << "sellepton sublead eta: " << selLepton_sublead->eta() << std::endl;
-    std::cout << "z_lep1: " << z_lep1 << std::endl;
-    std::cout << "z_lep2: " << z_lep2 << std::endl;
-        std::cout << "-----------------------------------------------------"  << std::endl;
+    // std::cout << "mean vbf jet pair eta: " << (VBFjet1.eta()+VBFjet2.eta())/2 << std::endl;
+    // std::cout << "vbf jet pair deta: " << VBFjet1.eta()-VBFjet2.eta() << std::endl;
+    // std::cout << "sellepton lead eta: " << selLepton_lead->eta() << std::endl;
+    // std::cout << "sellepton sublead eta: " << selLepton_sublead->eta() << std::endl;
+    // std::cout << "z_lep1: " << z_lep1 << std::endl;
+    // std::cout << "z_lep2: " << z_lep2 << std::endl;
+    //     std::cout << "-----------------------------------------------------"  << std::endl;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Original 2lss BDT vars
